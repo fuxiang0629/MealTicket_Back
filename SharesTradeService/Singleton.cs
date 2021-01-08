@@ -132,10 +132,10 @@ namespace SharesTradeService
                 throw new Exception("初始化交易服务器链接出错：打开通达信出错,错误信息：" + sErrInfo);
             }
             var TradeLoginList = GetTradeLoginInfoList();
-            if (TradeClientParallel == "false")
-            {
-                TradeLoginList = TradeLoginList.Take(1).ToList(); 
-            }
+            //if (TradeClientParallel == "false")
+            //{
+            //    TradeLoginList = TradeLoginList.Take(1).ToList(); 
+            //}
 
             AllTradeAccountCodeList = TradeLoginList.Select(e => e.AccountCode).ToList();
 

@@ -28,5 +28,4 @@ D:\项目\饭票\后端\MealTicket_DBCommon\obj\Debug\MealTicket_DBCommon.csproj
 D:\项目\饭票\后端\MealTicket_DBCommon\obj\Debug\MealTicket_DBCommon.csproj.CopyComplete
 D:\项目\饭票\后端\MealTicket_DBCommon\obj\Debug\MealTicket_DBCommon.dll
 D:\项目\饭票\后端\MealTicket_DBCommon\obj\Debug\MealTicket_DBCommon.pdb
-F:\项目\饭票后端\MealTicket_DBCommon\obj\Debug\MealTicket_DBCommon.csprojAssemblyReference.cache
 D:\项目\饭票\后端\MealTicket_DBCommon\obj\Debug\MealTicket_DBCommon.csprojAssemblyReference.cache

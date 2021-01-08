@@ -56,5 +56,10 @@ namespace MealTicket_Web_Handler.Model
         /// 自定义分组列表
         /// </summary>
         public List<long> GroupIdList { get; set; }
+
+        /// <summary>
+        /// 应用分组Id
+        /// </summary>
+        public List<long> UseGroupIdList { get; set; }
     }
 }

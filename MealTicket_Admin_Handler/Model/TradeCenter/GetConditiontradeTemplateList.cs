@@ -13,7 +13,7 @@ namespace MealTicket_Admin_Handler.Model
     public class GetConditiontradeTemplateListRequest : PageRequest
     {
         /// <summary>
-        /// 1买入 2卖出
+        /// 1买入 2卖出 3自动加入
         /// </summary>
         public int Type { get; set; }
     }

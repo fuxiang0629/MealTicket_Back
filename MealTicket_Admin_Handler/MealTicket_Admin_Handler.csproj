@@ -325,6 +325,7 @@
     <Compile Include="Model\TradeCenter\AddConditiontradeTemplateBuyOther.cs" />
     <Compile Include="Model\TradeCenter\AddConditiontradeTemplateBuyOtherGroup.cs" />
     <Compile Include="Model\TradeCenter\AddConditiontradeTemplateBuyOtherPar.cs" />
+    <Compile Include="Model\TradeCenter\AddConditiontradeTemplateJoinDetails.cs" />
     <Compile Include="Model\TradeCenter\AddConditiontradeTemplateSellDetails.cs" />
     <Compile Include="Model\TradeCenter\AddSharesCorrigendum.cs" />
     <Compile Include="Model\TradeCenter\AddSharesDateForbid.cs" />
@@ -355,6 +356,7 @@
     <Compile Include="Model\TradeCenter\GetConditiontradeTemplateBuyOtherGroupList.cs" />
     <Compile Include="Model\TradeCenter\GetConditiontradeTemplateBuyOtherList.cs" />
     <Compile Include="Model\TradeCenter\GetConditiontradeTemplateBuyOtherPar.cs" />
+    <Compile Include="Model\TradeCenter\GetConditiontradeTemplateJoinDetailsList.cs" />
     <Compile Include="Model\TradeCenter\GetConditiontradeTemplateList.cs" />
     <Compile Include="Model\TradeCenter\GetConditiontradeTemplateSellDetailsList.cs" />
     <Compile Include="Model\TradeCenter\GetSharesConditionTrendParPlate.cs" />
@@ -377,6 +379,7 @@
     <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateBuyOther.cs" />
     <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateBuyOtherGroup.cs" />
     <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateBuyOtherPar.cs" />
+    <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateJoinDetails.cs" />
     <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateSellDetails.cs" />
     <Compile Include="Model\TradeCenter\ModifySharesCorrigendum.cs" />
     <Compile Include="Model\TradeCenter\ModifySharesLimitAutoBuy.cs" />

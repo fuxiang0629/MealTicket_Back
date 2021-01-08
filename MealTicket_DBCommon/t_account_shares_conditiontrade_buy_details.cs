@@ -43,5 +43,6 @@ namespace MealTicket_DBCommon
         public bool IsHold { get; set; }
         public int FollowType { get; set; }
         public string EntrustErrorDes { get; set; }
+        public long ToBuyId { get; set; }
     }
 }
