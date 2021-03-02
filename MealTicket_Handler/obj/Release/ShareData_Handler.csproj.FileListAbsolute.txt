@@ -1,0 +1,17 @@
+F:\项目\股票数据处理\ShareData_Handler\bin\Release\ShareData_Handler.dll
+F:\项目\股票数据处理\ShareData_Handler\bin\Release\ShareData_Handler.pdb
+F:\项目\股票数据处理\ShareData_Handler\obj\Release\ShareData_Handler.csproj.CoreCompileInputs.cache
+F:\项目\股票数据处理\ShareData_Handler\obj\Release\ShareData_Handler.dll
+F:\项目\股票数据处理\ShareData_Handler\obj\Release\ShareData_Handler.pdb
+F:\项目\股票数据处理\ShareData_Handler\obj\Release\ShareData_Handler.csproj.CopyComplete
+F:\项目\股票数据处理\ShareData_Handler\bin\Release\ShareData_Handler.dll.config
+F:\项目\股票数据处理\ShareData_Handler\bin\Release\EntityFramework.dll
+F:\项目\股票数据处理\ShareData_Handler\bin\Release\EntityFramework.SqlServer.dll
+F:\项目\股票数据处理\ShareData_Handler\bin\Release\EntityFramework.xml
+F:\项目\股票数据处理\ShareData_Handler\bin\Release\EntityFramework.SqlServer.xml
+F:\项目\股票数据处理\ShareData_Handler\bin\Release\zh-Hans\EntityFramework.resources.dll
+F:\项目\股票数据处理\ShareData_Handler\obj\Release\ShareData_Handler.csprojAssemblyReference.cache
+F:\项目\股票数据处理\ShareData_Handler\bin\Release\FXCommon.dll
+F:\项目\股票数据处理\ShareData_Handler\bin\Release\Oracle.DataAccess.dll
+F:\项目\股票数据处理\ShareData_Handler\bin\Release\FXCommon.pdb
+F:\项目\股票数据处理\ShareData_Handler\bin\Release\zh-Hans\EntityFramework.SqlServer.resources.dll

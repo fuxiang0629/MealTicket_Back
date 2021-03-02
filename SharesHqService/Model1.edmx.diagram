@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="6fd6280c30b940669054320b9220b785" Name="Diagram1" >
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_bars" Width="1.5" PointX="2.75" PointY="0.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_bars_index" Width="1.5" PointX="4.75" PointY="0.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_bars_index_temp" Width="1.5" PointX="0.75" PointY="5.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_bars_temp" Width="1.5" PointX="2.75" PointY="5.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_minutetimedata" Width="1.5" PointX="4.75" PointY="5.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_minutetimedata_temp" Width="1.5" PointX="6.75" PointY="0.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_quotes" Width="1.5" PointX="6.75" PointY="4.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_transactiondata" Width="1.5" PointX="8.75" PointY="9.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_hq_host" Width="1.5" PointX="0.75" PointY="10.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_date" Width="1.5" PointX="3.375" PointY="10.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_date_group" Width="1.5" PointX="11.375" PointY="4.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_time" Width="1.5" PointX="11.375" PointY="7.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_dim_time" Width="1.5" PointX="11.375" PointY="11.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_system_param" Width="1.5" PointX="13.375" PointY="0.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_quotes_temp" Width="1.5" PointX="13.375" PointY="3.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_all" Width="1.5" PointX="5.375" PointY="13.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_all_corrigendum" Width="1.5" PointX="7.375" PointY="13.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

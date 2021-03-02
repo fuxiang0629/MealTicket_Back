@@ -1,0 +1,59 @@
+﻿@using System.Collections.Generic
+@using System.Net.Http.Headers
+@using WebAPI.HelpPage.Models
+
+@model HelpPageApiModel
+
+@{
+    var description = Model.ApiDescription;
+    var hasParameters = description.ParameterDescriptions.Count > 0;
+    var hasRequestSamples = Model.SampleRequests.Count > 0;
+    var hasResponseSamples = Model.SampleResponses.Count > 0;
+    var hasResponseProperties = Model.ResourceProperties.Count > 0;
+}
+<h1>
+    @description.HttpMethod.Method @description.RelativePath
+</h1>
+<div>
+    <p>HttpMethod：@description.HttpMethod.Method</p>
+    <p>URI：@description.RelativePath</p>
+    @{
+        if (description.Documentation != null)
+        {
+            <p>@description.Documentation</p>
+        }
+        else
+        {
+            <p>暂无说明信息</p>
+        }
+
+        if (hasParameters || hasRequestSamples)
+        {
+            <h2>请求信息</h2>
+            if (hasParameters)
+            {
+                <h3>请求参数</h3>
+                @Include("Parameters.cshtml", Model, typeof(HelpPageApiModel))
+            }
+            if (hasRequestSamples)
+            {
+                <h3>请求消息体</h3>
+                var ModelSamples = Model.SampleRequests;
+                @Include("Samples.cshtml", ModelSamples, typeof(IDictionary<MediaTypeHeaderValue, object>))
+            }
+        }
+
+        if (hasResponseSamples)
+        {
+            <h2>响应信息</h2>
+            if (hasResponseProperties)
+            {
+                <h3>响应数据描述</h3>
+                @Include("ResponseDes.cshtml", Model, typeof(HelpPageApiModel))
+            }
+            <h3>响应消息体示例</h3>
+            var ModelSamples = Model.SampleResponses;
+		    @Include("Samples.cshtml", ModelSamples, typeof(IDictionary<MediaTypeHeaderValue, object>))
+        }
+}
+</div>

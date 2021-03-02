@@ -1,0 +1,63 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MealTicket_Admin_Handler.Model
+{
+    class GetInformationList
+    {
+    }
+
+    public class GetInformationListRequest:PageRequest
+    {
+        /// <summary>
+        /// 标题
+        /// </summary>
+        public string Title { get; set; }
+    }
+
+    public class InformationInfo 
+    {
+        /// <summary>
+        /// Id
+        /// </summary>
+        public long Id { get; set; }
+
+        /// <summary>
+        /// 标题
+        /// </summary>
+        public string Title { get; set; }
+
+        /// <summary>
+        /// 内容介绍
+        /// </summary>
+        public string ContentIntroduction { get; set; }
+
+        /// <summary>
+        /// 完整内容
+        /// </summary>
+        public string Content { get; set; }
+
+        /// <summary>
+        /// 开始展示时间
+        /// </summary>
+        public DateTime StartShowTime { get; set; }
+
+        /// <summary>
+        /// 结束展示时间
+        /// </summary>
+        public DateTime EndShowTime { get; set; }
+
+        /// <summary>
+        /// 状态1有效 2无效
+        /// </summary>
+        public int Status { get; set; }
+
+        /// <summary>
+        /// 数据创建时间
+        /// </summary>
+        public DateTime CreateTime { get; set; }
+    }
+}

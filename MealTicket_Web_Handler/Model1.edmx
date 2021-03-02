@@ -1,0 +1,2071 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="meal_ticketModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="t_account_baseinfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Mobile" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="NickName" Type="nvarchar" MaxLength="50" />
+          <Property Name="HeadUrl" Type="varchar" MaxLength="1024" />
+          <Property Name="Sex" Type="int" Nullable="false" />
+          <Property Name="BirthDay" Type="nvarchar" MaxLength="50" />
+          <Property Name="RecommandCode" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="ReferId" Type="bigint" />
+          <Property Name="ForbidStatus" Type="int" Nullable="false" />
+          <Property Name="CashStatus" Type="int" Nullable="false" />
+          <Property Name="MonitorStatus" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="QrCodeUrl" Type="varchar" MaxLength="200" />
+          <Property Name="RegisterPageUrl" Type="varchar" MaxLength="200" />
+          <Property Name="PostersUrl" Type="varchar" MaxLength="200" />
+          <Property Name="PostersComposeUrl" Type="varchar" MaxLength="200" />
+          <Property Name="LoginPassword" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="TransactionPassword" Type="varchar" MaxLength="50" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_follow_rel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountId" Type="bigint" Nullable="false" />
+          <Property Name="FollowAccountId" Type="bigint" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_login_token_web">
+          <Key>
+            <PropertyRef Name="AccountId" />
+          </Key>
+          <Property Name="AccountId" Type="bigint" Nullable="false" />
+          <Property Name="Login_Uuid" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="ExpirationTime" Type="datetime" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+          <Property Name="HeartTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_entrust">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="HoldId" Type="bigint" Nullable="false" />
+          <Property Name="TradeType" Type="int" Nullable="false" />
+          <Property Name="AccountId" Type="bigint" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="SharesHandCount" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="StatusDes" Type="nvarchar(max)" />
+          <Property Name="EntrustCount" Type="int" Nullable="false" />
+          <Property Name="EntrustType" Type="int" Nullable="false" />
+          <Property Name="EntrustPrice" Type="bigint" Nullable="false" />
+          <Property Name="EntrustAmount" Type="bigint" Nullable="false" />
+          <Property Name="DealCount" Type="int" Nullable="false" />
+          <Property Name="SimulateDealCount" Type="int" Nullable="false" />
+          <Property Name="DealPrice" Type="bigint" Nullable="false" />
+          <Property Name="DealAmount" Type="bigint" Nullable="false" />
+          <Property Name="CancelCount" Type="int" Nullable="false" />
+          <Property Name="SoldProfitAmount" Type="bigint" Nullable="false" />
+          <Property Name="FreezeDeposit" Type="bigint" Nullable="false" />
+          <Property Name="BuyService" Type="bigint" Nullable="false" />
+          <Property Name="ProfitService" Type="bigint" Nullable="false" />
+          <Property Name="AdministrationFee" Type="bigint" Nullable="false" />
+          <Property Name="Commission" Type="bigint" Nullable="false" />
+          <Property Name="HandlingFee" Type="bigint" Nullable="false" />
+          <Property Name="SettlementFee" Type="bigint" Nullable="false" />
+          <Property Name="StampFee" Type="bigint" Nullable="false" />
+          <Property Name="TransferFee" Type="bigint" Nullable="false" />
+          <Property Name="ClosingTime" Type="datetime" />
+          <Property Name="IsJoinCanSold" Type="bit" Nullable="false" />
+          <Property Name="IsJoinService" Type="bit" Nullable="false" />
+          <Property Name="IsExecuteClosing" Type="bit" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="HandlerType" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_entrust_follow">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MainAccountId" Type="bigint" Nullable="false" />
+          <Property Name="MainEntrustId" Type="bigint" Nullable="false" />
+          <Property Name="FollowAccountId" Type="bigint" Nullable="false" />
+          <Property Name="FollowEntrustId" Type="bigint" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_entrust_manager">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BuyId" Type="bigint" Nullable="false" />
+          <Property Name="TradeType" Type="int" Nullable="false" />
+          <Property Name="TradeAccountCode" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="EntrustId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="EntrustTime" Type="datetime" Nullable="false" />
+          <Property Name="EntrustCount" Type="int" Nullable="false" />
+          <Property Name="RealEntrustCount" Type="int" Nullable="false" />
+          <Property Name="EntrustType" Type="int" Nullable="false" />
+          <Property Name="EntrustPrice" Type="bigint" Nullable="false" />
+          <Property Name="DealCount" Type="int" Nullable="false" />
+          <Property Name="SimulateDealCount" Type="int" Nullable="false" />
+          <Property Name="DealPrice" Type="bigint" Nullable="false" />
+          <Property Name="DealAmount" Type="bigint" Nullable="false" />
+          <Property Name="CancelCount" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="StatusDes" Type="nvarchar(max)" />
+          <Property Name="CanClear" Type="bit" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_entrust_manager_dealdetails">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="EntrustManagerId" Type="bigint" Nullable="false" />
+          <Property Name="DealPrice" Type="bigint" Nullable="false" />
+          <Property Name="DealCount" Type="int" Nullable="false" />
+          <Property Name="DealAmount" Type="bigint" Nullable="false" />
+          <Property Name="DealId" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DealTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_hold">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountId" Type="bigint" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="InitialFundAmount" Type="bigint" Nullable="false" />
+          <Property Name="FundAmount" Type="bigint" Nullable="false" />
+          <Property Name="BuyTotalCount" Type="int" Nullable="false" />
+          <Property Name="BuyTotalAmount" Type="bigint" Nullable="false" />
+          <Property Name="SoldCount" Type="int" Nullable="false" />
+          <Property Name="SoldAmount" Type="bigint" Nullable="false" />
+          <Property Name="SoldProfitAmount" Type="bigint" Nullable="false" />
+          <Property Name="SellingCount" Type="int" Nullable="false" />
+          <Property Name="ForceSellingCount" Type="int" Nullable="false" />
+          <Property Name="RemainCount" Type="int" Nullable="false" />
+          <Property Name="CanSoldCount" Type="int" Nullable="false" />
+          <Property Name="InitialDeposit" Type="bigint" Nullable="false" />
+          <Property Name="RemainDeposit" Type="bigint" Nullable="false" />
+          <Property Name="MakeupDeposit" Type="bigint" Nullable="false" />
+          <Property Name="ServiceAmount" Type="bigint" Nullable="false" />
+          <Property Name="ServiceFee" Type="bigint" Nullable="false" />
+          <Property Name="LastServiceTime" Type="datetime" Nullable="false" />
+          <Property Name="ClosingTime" Type="datetime" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="ClosingForceStatus" Type="int" Nullable="false" />
+          <Property Name="ClosingForceTime" Type="datetime" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_optional">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountId" Type="bigint" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="IsTrendClose" Type="bit" Nullable="false" />
+          <Property Name="TriCountToday" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_optional_group">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountId" Type="bigint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" />
+          <Property Name="OrderIndex" Type="bigint" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_optional_group_rel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OptionalId" Type="bigint" Nullable="false" />
+          <Property Name="GroupId" Type="bigint" Nullable="false" />
+          <Property Name="GroupIsContinue" Type="bit" Nullable="false" />
+          <Property Name="ValidStartTime" Type="date" />
+          <Property Name="ValidEndTime" Type="date" />
+        </EntityType>
+        <EntityType Name="t_account_shares_optional_seat_rel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OptionalId" Type="bigint" Nullable="false" />
+          <Property Name="SeatId" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_optional_trend_rel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OptionalId" Type="bigint" Nullable="false" />
+          <Property Name="TrendId" Type="bigint" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_optional_trend_rel_par">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RelId" Type="bigint" Nullable="false" />
+          <Property Name="ParamsInfo" Type="nvarchar(max)" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_optional_trend_rel_tri">
+          <Key>
+            <PropertyRef Name="RelId" />
+          </Key>
+          <Property Name="RelId" Type="bigint" Nullable="false" />
+          <Property Name="LastPushTime" Type="datetime" />
+          <Property Name="LastPushRiseRate" Type="int" />
+          <Property Name="LastPushPrice" Type="bigint" />
+          <Property Name="TriCountToday" Type="int" Nullable="false" />
+          <Property Name="MinPushTimeInterval" Type="int" Nullable="false" />
+          <Property Name="MinPushRateInterval" Type="int" Nullable="false" />
+          <Property Name="MinTodayPrice" Type="bigint" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+          <Property Name="LastPushDesc" Type="nvarchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="t_account_shares_optional_trend_rel_tri_record">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OptionalId" Type="bigint" Nullable="false" />
+          <Property Name="RelId" Type="bigint" Nullable="false" />
+          <Property Name="AccountId" Type="bigint" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="SharesName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TrendId" Type="bigint" Nullable="false" />
+          <Property Name="TrendName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TrendDescription" Type="nvarchar" MaxLength="500" />
+          <Property Name="TriPrice" Type="bigint" Nullable="false" />
+          <Property Name="IsPush" Type="bit" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="TriDesc" Type="nvarchar" MaxLength="200" />
+        </EntityType>
+        <EntityType Name="t_account_shares_optional_trend_rel_tri_record_statistic">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountId" Type="bigint" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="SharesName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="TriTotalCount" Type="int" Nullable="false" />
+          <Property Name="TriPushCount" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_seat">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountId" Type="bigint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" />
+          <Property Name="ValidEndTime" Type="datetime" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="SourceForm" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_wallet">
+          <Key>
+            <PropertyRef Name="AccountId" />
+          </Key>
+          <Property Name="AccountId" Type="bigint" Nullable="false" />
+          <Property Name="Deposit" Type="bigint" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_broker_account_info">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountCode" Type="nvarchar" MaxLength="128" Nullable="false" />
+          <Property Name="AccountType" Type="int" Nullable="false" />
+          <Property Name="AccountNo" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="TradeAccountNo0" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="TradeAccountNo1" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Holder0" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="Holder1" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="JyPassword" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="TxPassword" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="BrokerCode" Type="int" Nullable="false" />
+          <Property Name="DepartmentCode" Type="int" Nullable="false" />
+          <Property Name="InitialFunding" Type="bigint" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="SynchronizationStatus" Type="int" Nullable="false" />
+          <Property Name="SynchronizationTime" Type="datetime" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_dim_time">
+          <Key>
+            <PropertyRef Name="the_date" />
+          </Key>
+          <Property Name="the_date" Type="int" Nullable="false" />
+          <Property Name="date_name" Type="nvarchar" MaxLength="30" />
+          <Property Name="the_year" Type="int" />
+          <Property Name="year_name" Type="nvarchar" MaxLength="30" />
+          <Property Name="the_quarter" Type="int" />
+          <Property Name="quarter_name" Type="nvarchar" MaxLength="30" />
+          <Property Name="the_month" Type="int" />
+          <Property Name="month_name" Type="nvarchar" MaxLength="30" />
+          <Property Name="the_week" Type="int" />
+          <Property Name="week_name" Type="nvarchar" MaxLength="30" />
+          <Property Name="week_day" Type="int" />
+          <Property Name="week_day_name" Type="nvarchar" MaxLength="30" />
+        </EntityType>
+        <EntityType Name="t_goods">
+          <Key>
+            <PropertyRef Name="GoodsId" />
+          </Key>
+          <Property Name="GoodsId" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GoodsName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="GoodsDescription" Type="nvarchar" MaxLength="500" />
+          <Property Name="ImgUrl" Type="nvarchar" MaxLength="1024" />
+          <Property Name="GoodsType" Type="int" Nullable="false" />
+          <Property Name="GoodsDetails" Type="nvarchar" MaxLength="2048" Nullable="false" />
+          <Property Name="OrderIndex" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_payment_channel">
+          <Key>
+            <PropertyRef Name="ChannelCode" />
+            <PropertyRef Name="BusinessCode" />
+          </Key>
+          <Property Name="ChannelCode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="BusinessCode" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="ChannelName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="BusinessName" Type="nvarchar" MaxLength="50" />
+          <Property Name="ChannelDescription" Type="nvarchar" MaxLength="1024" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="OrderIndex" Type="int" Nullable="false" />
+          <Property Name="SupportRefund" Type="bit" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_server">
+          <Key>
+            <PropertyRef Name="ServerId" />
+          </Key>
+          <Property Name="ServerId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="OrderIndex" Type="int" Nullable="false" />
+          <Property Name="ServerDes" Type="nvarchar" MaxLength="500" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_server_broker_account_rel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ServerId" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="BrokerAccountId" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_all">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="SharesName" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="SharesPyjc" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="SharesHandCount" Type="int" Nullable="false" />
+          <Property Name="ShareClosedPrice" Type="bigint" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="ForbidStatus" Type="int" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_limit_date">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GroupId" Type="bigint" Nullable="false" />
+          <Property Name="BeginDate" Type="date" Nullable="false" />
+          <Property Name="EndDate" Type="date" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_limit_date_group">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GroupName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_limit_fundmultiple">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MarketName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LimitMarket" Type="int" Nullable="false" />
+          <Property Name="LimitKey" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Priority" Type="int" Nullable="false" />
+          <Property Name="Range" Type="int" Nullable="false" />
+          <Property Name="FundMultiple" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_limit_time">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MarketName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LimitMarket" Type="int" Nullable="false" />
+          <Property Name="LimitKey" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Time1" Type="nvarchar(max)" />
+          <Property Name="Time2" Type="nvarchar(max)" />
+          <Property Name="Time3" Type="nvarchar(max)" />
+          <Property Name="Time4" Type="nvarchar(max)" />
+          <Property Name="Time5" Type="nvarchar(max)" />
+          <Property Name="Time6" Type="nvarchar(max)" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_limit_traderules">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LimitMarket" Type="int" Nullable="false" />
+          <Property Name="LimitKey" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LimitType" Type="int" Nullable="false" />
+          <Property Name="Cordon" Type="int" Nullable="false" />
+          <Property Name="ClosingLine" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_limit_traderules_other">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="RulesId" Type="bigint" Nullable="false" />
+          <Property Name="Times" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Cordon" Type="int" Nullable="false" />
+          <Property Name="ClosingLine" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_markettime">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="SharesName" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="MarketTime" Type="datetime" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="Industry" Type="nvarchar" MaxLength="200" />
+          <Property Name="Business" Type="nvarchar" MaxLength="1024" />
+        </EntityType>
+        <EntityType Name="t_shares_monitor">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_monitor_trend">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_monitor_trend_rel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MonitorId" Type="bigint" Nullable="false" />
+          <Property Name="TrendId" Type="bigint" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_quotes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="PresentPrice" Type="bigint" Nullable="false" />
+          <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
+          <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
+          <Property Name="MaxPrice" Type="bigint" Nullable="false" />
+          <Property Name="MinPrice" Type="bigint" Nullable="false" />
+          <Property Name="TotalCount" Type="int" Nullable="false" />
+          <Property Name="PresentCount" Type="int" Nullable="false" />
+          <Property Name="TotalAmount" Type="bigint" Nullable="false" />
+          <Property Name="InvolCount" Type="int" Nullable="false" />
+          <Property Name="OuterCount" Type="int" Nullable="false" />
+          <Property Name="BuyPrice1" Type="bigint" Nullable="false" />
+          <Property Name="BuyCount1" Type="int" Nullable="false" />
+          <Property Name="BuyPrice2" Type="bigint" Nullable="false" />
+          <Property Name="BuyCount2" Type="int" Nullable="false" />
+          <Property Name="BuyPrice3" Type="bigint" Nullable="false" />
+          <Property Name="BuyCount3" Type="int" Nullable="false" />
+          <Property Name="BuyPrice4" Type="bigint" Nullable="false" />
+          <Property Name="BuyCount4" Type="int" Nullable="false" />
+          <Property Name="BuyPrice5" Type="bigint" Nullable="false" />
+          <Property Name="BuyCount5" Type="int" Nullable="false" />
+          <Property Name="SellPrice1" Type="bigint" Nullable="false" />
+          <Property Name="SellCount1" Type="int" Nullable="false" />
+          <Property Name="SellPrice2" Type="bigint" Nullable="false" />
+          <Property Name="SellCount2" Type="int" Nullable="false" />
+          <Property Name="SellPrice3" Type="bigint" Nullable="false" />
+          <Property Name="SellCount3" Type="int" Nullable="false" />
+          <Property Name="SellPrice4" Type="bigint" Nullable="false" />
+          <Property Name="SellCount4" Type="int" Nullable="false" />
+          <Property Name="SellPrice5" Type="bigint" Nullable="false" />
+          <Property Name="SellCount5" Type="int" Nullable="false" />
+          <Property Name="SpeedUp" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Activity" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_today">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="OrderIndex" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+          <Property Name="ShowName" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_system_param">
+          <Key>
+            <PropertyRef Name="ParamName" />
+          </Key>
+          <Property Name="ParamName" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="1024" />
+          <Property Name="ParamValue" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IsJson" Type="bit" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Function Name="P_AccountLogin_Web" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="mobile" Type="varchar" Mode="In" />
+          <Parameter Name="loginPassword" Type="varchar" Mode="In" />
+          <Parameter Name="errorCode" Type="int" Mode="InOut" />
+          <Parameter Name="errorMessage" Type="nvarchar" Mode="InOut" />
+          <Parameter Name="token" Type="varchar" Mode="InOut" />
+          <Parameter Name="accountId" Type="bigint" Mode="InOut" />
+        </Function>
+        <Function Name="P_ApplyTradeBuy" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="accountId" Type="bigint" Mode="In" />
+          <Parameter Name="market" Type="int" Mode="In" />
+          <Parameter Name="sharesCode" Type="varchar" Mode="In" />
+          <Parameter Name="buyAmount" Type="bigint" Mode="In" />
+          <Parameter Name="fundMultiple" Type="int" Mode="In" />
+          <Parameter Name="entrustPrice" Type="bigint" Mode="In" />
+          <Parameter Name="closingTime" Type="datetime" Mode="In" />
+          <Parameter Name="isFollow" Type="bit" Mode="In" />
+          <Parameter Name="errorCode" Type="int" Mode="InOut" />
+          <Parameter Name="errorMessage" Type="nvarchar" Mode="InOut" />
+          <Parameter Name="buyId" Type="bigint" Mode="InOut" />
+        </Function>
+        <Function Name="P_ApplyTradeCancel" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="accountId" Type="bigint" Mode="In" />
+          <Parameter Name="entrustId" Type="bigint" Mode="In" />
+          <Parameter Name="errorCode" Type="int" Mode="InOut" />
+          <Parameter Name="errorMessage" Type="nvarchar" Mode="InOut" />
+        </Function>
+        <Function Name="P_ApplyTradeSell" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="accountId" Type="bigint" Mode="In" />
+          <Parameter Name="holdId" Type="bigint" Mode="In" />
+          <Parameter Name="sellCount" Type="int" Mode="In" />
+          <Parameter Name="sellType" Type="int" Mode="In" />
+          <Parameter Name="sellPrice" Type="bigint" Mode="In" />
+          <Parameter Name="type" Type="int" Mode="In" />
+          <Parameter Name="isFollow" Type="bit" Mode="In" />
+          <Parameter Name="errorCode" Type="int" Mode="InOut" />
+          <Parameter Name="errorMessage" Type="nvarchar" Mode="InOut" />
+          <Parameter Name="sellId" Type="bigint" Mode="InOut" />
+        </Function>
+        <Function Name="P_CheckAccountLogin_Web" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="token" Type="varchar" Mode="In" />
+          <Parameter Name="errorCode" Type="int" Mode="InOut" />
+          <Parameter Name="errorMessage" Type="nvarchar" Mode="InOut" />
+          <Parameter Name="accountId" Type="bigint" Mode="InOut" />
+        </Function>
+        <Function Name="P_MakeupDeposit" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="accountId" Type="bigint" Mode="In" />
+          <Parameter Name="holdId" Type="bigint" Mode="In" />
+          <Parameter Name="deposit" Type="bigint" Mode="In" />
+          <Parameter Name="errorCode" Type="int" Mode="InOut" />
+          <Parameter Name="errorMessage" Type="nvarchar" Mode="InOut" />
+        </Function>
+        <EntityContainer Name="meal_ticketModelStoreContainer">
+          <EntitySet Name="t_account_baseinfo" EntityType="Self.t_account_baseinfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_follow_rel" EntityType="Self.t_account_follow_rel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_login_token_web" EntityType="Self.t_account_login_token_web" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_entrust" EntityType="Self.t_account_shares_entrust" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_entrust_follow" EntityType="Self.t_account_shares_entrust_follow" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_entrust_manager" EntityType="Self.t_account_shares_entrust_manager" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_entrust_manager_dealdetails" EntityType="Self.t_account_shares_entrust_manager_dealdetails" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_hold" EntityType="Self.t_account_shares_hold" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_optional" EntityType="Self.t_account_shares_optional" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_optional_group" EntityType="Self.t_account_shares_optional_group" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_optional_group_rel" EntityType="Self.t_account_shares_optional_group_rel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_optional_seat_rel" EntityType="Self.t_account_shares_optional_seat_rel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_optional_trend_rel" EntityType="Self.t_account_shares_optional_trend_rel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_optional_trend_rel_par" EntityType="Self.t_account_shares_optional_trend_rel_par" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_optional_trend_rel_tri" EntityType="Self.t_account_shares_optional_trend_rel_tri" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_optional_trend_rel_tri_record" EntityType="Self.t_account_shares_optional_trend_rel_tri_record" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_optional_trend_rel_tri_record_statistic" EntityType="Self.t_account_shares_optional_trend_rel_tri_record_statistic" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_seat" EntityType="Self.t_account_shares_seat" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_wallet" EntityType="Self.t_account_wallet" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_broker_account_info" EntityType="Self.t_broker_account_info" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_dim_time" EntityType="Self.t_dim_time" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_goods" EntityType="Self.t_goods" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_payment_channel" EntityType="Self.t_payment_channel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_server" EntityType="Self.t_server" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_server_broker_account_rel" EntityType="Self.t_server_broker_account_rel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_all" EntityType="Self.t_shares_all" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_limit_date" EntityType="Self.t_shares_limit_date" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_limit_date_group" EntityType="Self.t_shares_limit_date_group" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_limit_fundmultiple" EntityType="Self.t_shares_limit_fundmultiple" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_limit_time" EntityType="Self.t_shares_limit_time" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_limit_traderules" EntityType="Self.t_shares_limit_traderules" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_limit_traderules_other" EntityType="Self.t_shares_limit_traderules_other" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_markettime" EntityType="Self.t_shares_markettime" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_monitor" EntityType="Self.t_shares_monitor" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_monitor_trend" EntityType="Self.t_shares_monitor_trend" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_monitor_trend_rel" EntityType="Self.t_shares_monitor_trend_rel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_quotes" EntityType="Self.t_shares_quotes" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_today" EntityType="Self.t_shares_today" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_system_param" EntityType="Self.t_system_param" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="meal_ticketModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="meal_ticketEntities" annotation:LazyLoadingEnabled="true" >
+          <FunctionImport Name="P_CheckAccountLogin_Web">
+            <Parameter Name="token" Mode="In" Type="String" />
+            <Parameter Name="errorCode" Mode="InOut" Type="Int32" />
+            <Parameter Name="errorMessage" Mode="InOut" Type="String" />
+            <Parameter Name="accountId" Mode="InOut" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="P_AccountLogin_Web">
+            <Parameter Name="mobile" Mode="In" Type="String" />
+            <Parameter Name="loginPassword" Mode="In" Type="String" />
+            <Parameter Name="errorCode" Mode="InOut" Type="Int32" />
+            <Parameter Name="errorMessage" Mode="InOut" Type="String" />
+            <Parameter Name="token" Mode="InOut" Type="String" />
+            <Parameter Name="accountId" Mode="InOut" Type="Int64" />
+          </FunctionImport>
+          <EntitySet Name="t_account_shares_optional" EntityType="meal_ticketModel.t_account_shares_optional" />
+          <EntitySet Name="t_shares_quotes" EntityType="meal_ticketModel.t_shares_quotes" />
+          <EntitySet Name="t_shares_all" EntityType="meal_ticketModel.t_shares_all" />
+          <EntitySet Name="t_shares_monitor_trend_rel" EntityType="meal_ticketModel.t_shares_monitor_trend_rel" />
+          <EntitySet Name="t_account_login_token_web" EntityType="meal_ticketModel.t_account_login_token_web" />
+          <EntitySet Name="t_system_param" EntityType="meal_ticketModel.t_system_param" />
+          <EntitySet Name="t_account_shares_optional_trend_rel" EntityType="meal_ticketModel.t_account_shares_optional_trend_rel" />
+          <EntitySet Name="t_account_shares_optional_trend_rel_par" EntityType="meal_ticketModel.t_account_shares_optional_trend_rel_par" />
+          <EntitySet Name="t_shares_monitor_trend" EntityType="meal_ticketModel.t_shares_monitor_trend" />
+          <EntitySet Name="t_account_shares_seat" EntityType="meal_ticketModel.t_account_shares_seat" />
+          <EntitySet Name="t_account_shares_optional_seat_rel" EntityType="meal_ticketModel.t_account_shares_optional_seat_rel" />
+          <EntitySet Name="t_shares_today" EntityType="meal_ticketModel.t_shares_today" />
+          <EntitySet Name="t_dim_time" EntityType="meal_ticketModel.t_dim_time" />
+          <EntitySet Name="t_account_shares_optional_trend_rel_tri_record" EntityType="meal_ticketModel.t_account_shares_optional_trend_rel_tri_record" />
+          <EntitySet Name="t_shares_limit_date" EntityType="meal_ticketModel.t_shares_limit_date" />
+          <EntitySet Name="t_shares_limit_date_group" EntityType="meal_ticketModel.t_shares_limit_date_group" />
+          <EntitySet Name="t_shares_limit_time" EntityType="meal_ticketModel.t_shares_limit_time" />
+          <EntitySet Name="t_shares_monitor" EntityType="meal_ticketModel.t_shares_monitor" />
+          <EntitySet Name="t_goods" EntityType="meal_ticketModel.t_goods" />
+          <EntitySet Name="t_payment_channel" EntityType="meal_ticketModel.t_payment_channel" />
+          <EntitySet Name="t_account_shares_optional_group" EntityType="meal_ticketModel.t_account_shares_optional_group" />
+          <EntitySet Name="t_shares_markettime" EntityType="meal_ticketModel.t_shares_markettime" />
+          <EntitySet Name="t_account_shares_optional_trend_rel_tri" EntityType="meal_ticketModel.t_account_shares_optional_trend_rel_tri" />
+          <EntitySet Name="t_account_shares_optional_group_rel" EntityType="meal_ticketModel.t_account_shares_optional_group_rel" />
+          <EntitySet Name="t_account_shares_optional_trend_rel_tri_record_statistic" EntityType="meal_ticketModel.t_account_shares_optional_trend_rel_tri_record_statistic" />
+          <EntitySet Name="t_account_follow_rel" EntityType="meal_ticketModel.t_account_follow_rel" />
+          <EntitySet Name="t_account_baseinfo" EntityType="meal_ticketModel.t_account_baseinfo" />
+          <EntitySet Name="t_account_shares_hold" EntityType="meal_ticketModel.t_account_shares_hold" />
+          <EntitySet Name="t_account_wallet" EntityType="meal_ticketModel.t_account_wallet" />
+          <EntitySet Name="t_account_shares_entrust" EntityType="meal_ticketModel.t_account_shares_entrust" />
+          <EntitySet Name="t_account_shares_entrust_follow" EntityType="meal_ticketModel.t_account_shares_entrust_follow" />
+          <EntitySet Name="t_account_shares_entrust_manager" EntityType="meal_ticketModel.t_account_shares_entrust_manager" />
+          <EntitySet Name="t_account_shares_entrust_manager_dealdetails" EntityType="meal_ticketModel.t_account_shares_entrust_manager_dealdetails" />
+          <FunctionImport Name="P_ApplyTradeBuy">
+            <Parameter Name="accountId" Mode="In" Type="Int64" />
+            <Parameter Name="market" Mode="In" Type="Int32" />
+            <Parameter Name="sharesCode" Mode="In" Type="String" />
+            <Parameter Name="buyAmount" Mode="In" Type="Int64" />
+            <Parameter Name="fundMultiple" Mode="In" Type="Int32" />
+            <Parameter Name="entrustPrice" Mode="In" Type="Int64" />
+            <Parameter Name="closingTime" Mode="In" Type="DateTime" />
+            <Parameter Name="isFollow" Mode="In" Type="Boolean" />
+            <Parameter Name="errorCode" Mode="InOut" Type="Int32" />
+            <Parameter Name="errorMessage" Mode="InOut" Type="String" />
+            <Parameter Name="buyId" Mode="InOut" Type="Int64" />
+          </FunctionImport>
+          <EntitySet Name="t_shares_limit_fundmultiple" EntityType="meal_ticketModel.t_shares_limit_fundmultiple" />
+          <EntitySet Name="t_broker_account_info" EntityType="meal_ticketModel.t_broker_account_info" />
+          <EntitySet Name="t_server" EntityType="meal_ticketModel.t_server" />
+          <EntitySet Name="t_server_broker_account_rel" EntityType="meal_ticketModel.t_server_broker_account_rel" />
+          <FunctionImport Name="P_ApplyTradeCancel">
+            <Parameter Name="accountId" Mode="In" Type="Int64" />
+            <Parameter Name="entrustId" Mode="In" Type="Int64" />
+            <Parameter Name="errorCode" Mode="InOut" Type="Int32" />
+            <Parameter Name="errorMessage" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <FunctionImport Name="P_ApplyTradeSell">
+            <Parameter Name="accountId" Mode="In" Type="Int64" />
+            <Parameter Name="holdId" Mode="In" Type="Int64" />
+            <Parameter Name="sellCount" Mode="In" Type="Int32" />
+            <Parameter Name="sellType" Mode="In" Type="Int32" />
+            <Parameter Name="sellPrice" Mode="In" Type="Int64" />
+            <Parameter Name="type" Mode="In" Type="Int32" />
+            <Parameter Name="isFollow" Mode="In" Type="Boolean" />
+            <Parameter Name="errorCode" Mode="InOut" Type="Int32" />
+            <Parameter Name="errorMessage" Mode="InOut" Type="String" />
+            <Parameter Name="sellId" Mode="InOut" Type="Int64" />
+          </FunctionImport>
+          <FunctionImport Name="P_MakeupDeposit">
+            <Parameter Name="accountId" Mode="In" Type="Int64" />
+            <Parameter Name="holdId" Mode="In" Type="Int64" />
+            <Parameter Name="deposit" Mode="In" Type="Int64" />
+            <Parameter Name="errorCode" Mode="InOut" Type="Int32" />
+            <Parameter Name="errorMessage" Mode="InOut" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="t_shares_limit_traderules" EntityType="meal_ticketModel.t_shares_limit_traderules" />
+          <EntitySet Name="t_shares_limit_traderules_other" EntityType="meal_ticketModel.t_shares_limit_traderules_other" />
+        </EntityContainer>
+        <EntityType Name="t_account_shares_optional">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsTrendClose" Type="Boolean" Nullable="false" />
+          <Property Name="TriCountToday" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_quotes">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PresentPrice" Type="Int64" Nullable="false" />
+          <Property Name="ClosedPrice" Type="Int64" Nullable="false" />
+          <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
+          <Property Name="MaxPrice" Type="Int64" Nullable="false" />
+          <Property Name="MinPrice" Type="Int64" Nullable="false" />
+          <Property Name="TotalCount" Type="Int32" Nullable="false" />
+          <Property Name="PresentCount" Type="Int32" Nullable="false" />
+          <Property Name="TotalAmount" Type="Int64" Nullable="false" />
+          <Property Name="InvolCount" Type="Int32" Nullable="false" />
+          <Property Name="OuterCount" Type="Int32" Nullable="false" />
+          <Property Name="BuyPrice1" Type="Int64" Nullable="false" />
+          <Property Name="BuyCount1" Type="Int32" Nullable="false" />
+          <Property Name="BuyPrice2" Type="Int64" Nullable="false" />
+          <Property Name="BuyCount2" Type="Int32" Nullable="false" />
+          <Property Name="BuyPrice3" Type="Int64" Nullable="false" />
+          <Property Name="BuyCount3" Type="Int32" Nullable="false" />
+          <Property Name="BuyPrice4" Type="Int64" Nullable="false" />
+          <Property Name="BuyCount4" Type="Int32" Nullable="false" />
+          <Property Name="BuyPrice5" Type="Int64" Nullable="false" />
+          <Property Name="BuyCount5" Type="Int32" Nullable="false" />
+          <Property Name="SellPrice1" Type="Int64" Nullable="false" />
+          <Property Name="SellCount1" Type="Int32" Nullable="false" />
+          <Property Name="SellPrice2" Type="Int64" Nullable="false" />
+          <Property Name="SellCount2" Type="Int32" Nullable="false" />
+          <Property Name="SellPrice3" Type="Int64" Nullable="false" />
+          <Property Name="SellCount3" Type="Int32" Nullable="false" />
+          <Property Name="SellPrice4" Type="Int64" Nullable="false" />
+          <Property Name="SellCount4" Type="Int32" Nullable="false" />
+          <Property Name="SellPrice5" Type="Int64" Nullable="false" />
+          <Property Name="SellCount5" Type="Int32" Nullable="false" />
+          <Property Name="SpeedUp" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Activity" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_all">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SharesName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="SharesPyjc" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SharesHandCount" Type="Int32" Nullable="false" />
+          <Property Name="ShareClosedPrice" Type="Int64" Nullable="false" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="ForbidStatus" Type="Int32" Nullable="false" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_monitor_trend_rel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MonitorId" Type="Int64" Nullable="false" />
+          <Property Name="TrendId" Type="Int64" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_login_token_web">
+          <Key>
+            <PropertyRef Name="AccountId" />
+          </Key>
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="Login_Uuid" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="ExpirationTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="HeartTime" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_system_param">
+          <Key>
+            <PropertyRef Name="ParamName" />
+          </Key>
+          <Property Name="ParamName" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Name="ParamValue" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsJson" Type="Boolean" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_optional_trend_rel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OptionalId" Type="Int64" Nullable="false" />
+          <Property Name="TrendId" Type="Int64" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_optional_trend_rel_par">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RelId" Type="Int64" Nullable="false" />
+          <Property Name="ParamsInfo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_monitor_trend">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_seat">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ValidEndTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="SourceForm" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_optional_seat_rel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OptionalId" Type="Int64" Nullable="false" />
+          <Property Name="SeatId" Type="Int64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_today">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="OrderIndex" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ShowName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="t_dim_time">
+          <Key>
+            <PropertyRef Name="the_date" />
+          </Key>
+          <Property Name="the_date" Type="Int32" Nullable="false" />
+          <Property Name="date_name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="the_year" Type="Int32" />
+          <Property Name="year_name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="the_quarter" Type="Int32" />
+          <Property Name="quarter_name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="the_month" Type="Int32" />
+          <Property Name="month_name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="the_week" Type="Int32" />
+          <Property Name="week_name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="week_day" Type="Int32" />
+          <Property Name="week_day_name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="t_account_shares_optional_trend_rel_tri_record">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RelId" Type="Int64" Nullable="false" />
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SharesName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TrendId" Type="Int64" Nullable="false" />
+          <Property Name="TrendName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TrendDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="TriPrice" Type="Int64" Nullable="false" />
+          <Property Name="IsPush" Type="Boolean" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="OptionalId" Type="Int64" Nullable="false" />
+          <Property Name="TriDesc" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="t_shares_limit_date">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GroupId" Type="Int64" Nullable="false" />
+          <Property Name="BeginDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_limit_date_group">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GroupName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_limit_time">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MarketName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LimitMarket" Type="Int32" Nullable="false" />
+          <Property Name="LimitKey" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Time1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Time2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Time3" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Time4" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Time5" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Time6" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_monitor">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_goods">
+          <Key>
+            <PropertyRef Name="GoodsId" />
+          </Key>
+          <Property Name="GoodsId" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GoodsName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="GoodsDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ImgUrl" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Name="GoodsType" Type="Int32" Nullable="false" />
+          <Property Name="GoodsDetails" Type="String" Nullable="false" MaxLength="2048" FixedLength="false" Unicode="true" />
+          <Property Name="OrderIndex" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_payment_channel">
+          <Key>
+            <PropertyRef Name="ChannelCode" />
+            <PropertyRef Name="BusinessCode" />
+          </Key>
+          <Property Name="ChannelCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BusinessCode" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="ChannelName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="BusinessName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ChannelDescription" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="OrderIndex" Type="Int32" Nullable="false" />
+          <Property Name="SupportRefund" Type="Boolean" Nullable="false" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_optional_group">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="OrderIndex" Type="Int64" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_markettime">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SharesName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="MarketTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Industry" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Business" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="t_account_shares_optional_trend_rel_tri">
+          <Key>
+            <PropertyRef Name="RelId" />
+          </Key>
+          <Property Name="RelId" Type="Int64" Nullable="false" />
+          <Property Name="LastPushTime" Type="DateTime" Precision="3" />
+          <Property Name="LastPushRiseRate" Type="Int32" />
+          <Property Name="LastPushPrice" Type="Int64" />
+          <Property Name="TriCountToday" Type="Int32" Nullable="false" />
+          <Property Name="MinPushTimeInterval" Type="Int32" Nullable="false" />
+          <Property Name="MinPushRateInterval" Type="Int32" Nullable="false" />
+          <Property Name="MinTodayPrice" Type="Int64" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastPushDesc" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="t_account_shares_optional_group_rel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OptionalId" Type="Int64" Nullable="false" />
+          <Property Name="GroupId" Type="Int64" Nullable="false" />
+          <Property Name="GroupIsContinue" Type="Boolean" Nullable="false" />
+          <Property Name="ValidStartTime" Type="DateTime" Precision="0" />
+          <Property Name="ValidEndTime" Type="DateTime" Precision="0" />
+        </EntityType>
+        <EntityType Name="t_account_shares_optional_trend_rel_tri_record_statistic">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SharesName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="TriTotalCount" Type="Int32" Nullable="false" />
+          <Property Name="TriPushCount" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_follow_rel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="FollowAccountId" Type="Int64" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_baseinfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Mobile" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="NickName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="HeadUrl" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
+          <Property Name="Sex" Type="Int32" Nullable="false" />
+          <Property Name="BirthDay" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RecommandCode" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="ReferId" Type="Int64" />
+          <Property Name="ForbidStatus" Type="Int32" Nullable="false" />
+          <Property Name="MonitorStatus" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="QrCodeUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="RegisterPageUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PostersUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PostersComposeUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="LoginPassword" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TransactionPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CashStatus" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_hold">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="InitialFundAmount" Type="Int64" Nullable="false" />
+          <Property Name="FundAmount" Type="Int64" Nullable="false" />
+          <Property Name="BuyTotalCount" Type="Int32" Nullable="false" />
+          <Property Name="BuyTotalAmount" Type="Int64" Nullable="false" />
+          <Property Name="SoldCount" Type="Int32" Nullable="false" />
+          <Property Name="SoldAmount" Type="Int64" Nullable="false" />
+          <Property Name="SoldProfitAmount" Type="Int64" Nullable="false" />
+          <Property Name="SellingCount" Type="Int32" Nullable="false" />
+          <Property Name="ForceSellingCount" Type="Int32" Nullable="false" />
+          <Property Name="RemainCount" Type="Int32" Nullable="false" />
+          <Property Name="CanSoldCount" Type="Int32" Nullable="false" />
+          <Property Name="InitialDeposit" Type="Int64" Nullable="false" />
+          <Property Name="RemainDeposit" Type="Int64" Nullable="false" />
+          <Property Name="MakeupDeposit" Type="Int64" Nullable="false" />
+          <Property Name="ServiceAmount" Type="Int64" Nullable="false" />
+          <Property Name="ServiceFee" Type="Int64" Nullable="false" />
+          <Property Name="LastServiceTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="ClosingTime" Type="DateTime" Precision="3" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="ClosingForceStatus" Type="Int32" Nullable="false" />
+          <Property Name="ClosingForceTime" Type="DateTime" Precision="3" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_wallet">
+          <Key>
+            <PropertyRef Name="AccountId" />
+          </Key>
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="Deposit" Type="Int64" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_entrust">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="HoldId" Type="Int64" Nullable="false" />
+          <Property Name="TradeType" Type="Int32" Nullable="false" />
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SharesHandCount" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="StatusDes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="EntrustCount" Type="Int32" Nullable="false" />
+          <Property Name="EntrustType" Type="Int32" Nullable="false" />
+          <Property Name="EntrustPrice" Type="Int64" Nullable="false" />
+          <Property Name="EntrustAmount" Type="Int64" Nullable="false" />
+          <Property Name="DealCount" Type="Int32" Nullable="false" />
+          <Property Name="SimulateDealCount" Type="Int32" Nullable="false" />
+          <Property Name="DealPrice" Type="Int64" Nullable="false" />
+          <Property Name="DealAmount" Type="Int64" Nullable="false" />
+          <Property Name="CancelCount" Type="Int32" Nullable="false" />
+          <Property Name="SoldProfitAmount" Type="Int64" Nullable="false" />
+          <Property Name="FreezeDeposit" Type="Int64" Nullable="false" />
+          <Property Name="BuyService" Type="Int64" Nullable="false" />
+          <Property Name="ProfitService" Type="Int64" Nullable="false" />
+          <Property Name="AdministrationFee" Type="Int64" Nullable="false" />
+          <Property Name="Commission" Type="Int64" Nullable="false" />
+          <Property Name="HandlingFee" Type="Int64" Nullable="false" />
+          <Property Name="SettlementFee" Type="Int64" Nullable="false" />
+          <Property Name="StampFee" Type="Int64" Nullable="false" />
+          <Property Name="TransferFee" Type="Int64" Nullable="false" />
+          <Property Name="ClosingTime" Type="DateTime" Precision="3" />
+          <Property Name="IsJoinCanSold" Type="Boolean" Nullable="false" />
+          <Property Name="IsJoinService" Type="Boolean" Nullable="false" />
+          <Property Name="IsExecuteClosing" Type="Boolean" Nullable="false" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="HandlerType" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_entrust_follow">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MainAccountId" Type="Int64" Nullable="false" />
+          <Property Name="MainEntrustId" Type="Int64" Nullable="false" />
+          <Property Name="FollowAccountId" Type="Int64" Nullable="false" />
+          <Property Name="FollowEntrustId" Type="Int64" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_entrust_manager">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BuyId" Type="Int64" Nullable="false" />
+          <Property Name="TradeType" Type="Int32" Nullable="false" />
+          <Property Name="TradeAccountCode" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="EntrustId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="EntrustTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="EntrustCount" Type="Int32" Nullable="false" />
+          <Property Name="RealEntrustCount" Type="Int32" Nullable="false" />
+          <Property Name="EntrustType" Type="Int32" Nullable="false" />
+          <Property Name="EntrustPrice" Type="Int64" Nullable="false" />
+          <Property Name="DealCount" Type="Int32" Nullable="false" />
+          <Property Name="SimulateDealCount" Type="Int32" Nullable="false" />
+          <Property Name="DealPrice" Type="Int64" Nullable="false" />
+          <Property Name="DealAmount" Type="Int64" Nullable="false" />
+          <Property Name="CancelCount" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="StatusDes" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CanClear" Type="Boolean" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_entrust_manager_dealdetails">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="EntrustManagerId" Type="Int64" Nullable="false" />
+          <Property Name="DealPrice" Type="Int64" Nullable="false" />
+          <Property Name="DealCount" Type="Int32" Nullable="false" />
+          <Property Name="DealAmount" Type="Int64" Nullable="false" />
+          <Property Name="DealId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="DealTime" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_limit_fundmultiple">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MarketName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LimitMarket" Type="Int32" Nullable="false" />
+          <Property Name="LimitKey" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Priority" Type="Int32" Nullable="false" />
+          <Property Name="Range" Type="Int32" Nullable="false" />
+          <Property Name="FundMultiple" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_broker_account_info">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountCode" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="AccountType" Type="Int32" Nullable="false" />
+          <Property Name="AccountNo" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="TradeAccountNo0" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="TradeAccountNo1" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Holder0" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Holder1" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="JyPassword" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TxPassword" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BrokerCode" Type="Int32" Nullable="false" />
+          <Property Name="DepartmentCode" Type="Int32" Nullable="false" />
+          <Property Name="InitialFunding" Type="Int64" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="SynchronizationStatus" Type="Int32" Nullable="false" />
+          <Property Name="SynchronizationTime" Type="DateTime" Precision="3" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_server">
+          <Key>
+            <PropertyRef Name="ServerId" />
+          </Key>
+          <Property Name="ServerId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="OrderIndex" Type="Int32" Nullable="false" />
+          <Property Name="ServerDes" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_server_broker_account_rel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ServerId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BrokerAccountId" Type="Int64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_limit_traderules">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LimitMarket" Type="Int32" Nullable="false" />
+          <Property Name="LimitKey" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LimitType" Type="Int32" Nullable="false" />
+          <Property Name="Cordon" Type="Int32" Nullable="false" />
+          <Property Name="ClosingLine" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_limit_traderules_other">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="RulesId" Type="Int64" Nullable="false" />
+          <Property Name="Times" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Cordon" Type="Int32" Nullable="false" />
+          <Property Name="ClosingLine" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="meal_ticketModelStoreContainer" CdmEntityContainer="meal_ticketEntities" >
+          <FunctionImportMapping FunctionImportName="P_CheckAccountLogin_Web" FunctionName="meal_ticketModel.Store.P_CheckAccountLogin_Web" />
+          <FunctionImportMapping FunctionImportName="P_AccountLogin_Web" FunctionName="meal_ticketModel.Store.P_AccountLogin_Web" />
+          <EntitySetMapping Name="t_account_shares_optional">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_optional">
+              <MappingFragment StoreEntitySet="t_account_shares_optional">
+                <ScalarProperty Name="TriCountToday" ColumnName="TriCountToday" />
+                <ScalarProperty Name="IsTrendClose" ColumnName="IsTrendClose" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_quotes">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes">
+              <MappingFragment StoreEntitySet="t_shares_quotes">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="Activity" ColumnName="Activity" />
+                <ScalarProperty Name="SpeedUp" ColumnName="SpeedUp" />
+                <ScalarProperty Name="SellCount5" ColumnName="SellCount5" />
+                <ScalarProperty Name="SellPrice5" ColumnName="SellPrice5" />
+                <ScalarProperty Name="SellCount4" ColumnName="SellCount4" />
+                <ScalarProperty Name="SellPrice4" ColumnName="SellPrice4" />
+                <ScalarProperty Name="SellCount3" ColumnName="SellCount3" />
+                <ScalarProperty Name="SellPrice3" ColumnName="SellPrice3" />
+                <ScalarProperty Name="SellCount2" ColumnName="SellCount2" />
+                <ScalarProperty Name="SellPrice2" ColumnName="SellPrice2" />
+                <ScalarProperty Name="SellCount1" ColumnName="SellCount1" />
+                <ScalarProperty Name="SellPrice1" ColumnName="SellPrice1" />
+                <ScalarProperty Name="BuyCount5" ColumnName="BuyCount5" />
+                <ScalarProperty Name="BuyPrice5" ColumnName="BuyPrice5" />
+                <ScalarProperty Name="BuyCount4" ColumnName="BuyCount4" />
+                <ScalarProperty Name="BuyPrice4" ColumnName="BuyPrice4" />
+                <ScalarProperty Name="BuyCount3" ColumnName="BuyCount3" />
+                <ScalarProperty Name="BuyPrice3" ColumnName="BuyPrice3" />
+                <ScalarProperty Name="BuyCount2" ColumnName="BuyCount2" />
+                <ScalarProperty Name="BuyPrice2" ColumnName="BuyPrice2" />
+                <ScalarProperty Name="BuyCount1" ColumnName="BuyCount1" />
+                <ScalarProperty Name="BuyPrice1" ColumnName="BuyPrice1" />
+                <ScalarProperty Name="OuterCount" ColumnName="OuterCount" />
+                <ScalarProperty Name="InvolCount" ColumnName="InvolCount" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+                <ScalarProperty Name="PresentCount" ColumnName="PresentCount" />
+                <ScalarProperty Name="TotalCount" ColumnName="TotalCount" />
+                <ScalarProperty Name="MinPrice" ColumnName="MinPrice" />
+                <ScalarProperty Name="MaxPrice" ColumnName="MaxPrice" />
+                <ScalarProperty Name="OpenedPrice" ColumnName="OpenedPrice" />
+                <ScalarProperty Name="ClosedPrice" ColumnName="ClosedPrice" />
+                <ScalarProperty Name="PresentPrice" ColumnName="PresentPrice" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_all">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_all">
+              <MappingFragment StoreEntitySet="t_shares_all">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="ForbidStatus" ColumnName="ForbidStatus" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="ShareClosedPrice" ColumnName="ShareClosedPrice" />
+                <ScalarProperty Name="SharesHandCount" ColumnName="SharesHandCount" />
+                <ScalarProperty Name="SharesPyjc" ColumnName="SharesPyjc" />
+                <ScalarProperty Name="SharesName" ColumnName="SharesName" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_monitor_trend_rel">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_monitor_trend_rel">
+              <MappingFragment StoreEntitySet="t_shares_monitor_trend_rel">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="TrendId" ColumnName="TrendId" />
+                <ScalarProperty Name="MonitorId" ColumnName="MonitorId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_login_token_web">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_login_token_web">
+              <MappingFragment StoreEntitySet="t_account_login_token_web">
+                <ScalarProperty Name="HeartTime" ColumnName="HeartTime" />
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ExpirationTime" ColumnName="ExpirationTime" />
+                <ScalarProperty Name="Login_Uuid" ColumnName="Login_Uuid" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_system_param">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_system_param">
+              <MappingFragment StoreEntitySet="t_system_param">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="IsJson" ColumnName="IsJson" />
+                <ScalarProperty Name="ParamValue" ColumnName="ParamValue" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ParamName" ColumnName="ParamName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_optional_trend_rel">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_optional_trend_rel">
+              <MappingFragment StoreEntitySet="t_account_shares_optional_trend_rel">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="TrendId" ColumnName="TrendId" />
+                <ScalarProperty Name="OptionalId" ColumnName="OptionalId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_optional_trend_rel_par">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_optional_trend_rel_par">
+              <MappingFragment StoreEntitySet="t_account_shares_optional_trend_rel_par">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="ParamsInfo" ColumnName="ParamsInfo" />
+                <ScalarProperty Name="RelId" ColumnName="RelId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_monitor_trend">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_monitor_trend">
+              <MappingFragment StoreEntitySet="t_shares_monitor_trend">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_seat">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_seat">
+              <MappingFragment StoreEntitySet="t_account_shares_seat">
+                <ScalarProperty Name="SourceForm" ColumnName="SourceForm" />
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ValidEndTime" ColumnName="ValidEndTime" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_optional_seat_rel">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_optional_seat_rel">
+              <MappingFragment StoreEntitySet="t_account_shares_optional_seat_rel">
+                <ScalarProperty Name="SeatId" ColumnName="SeatId" />
+                <ScalarProperty Name="OptionalId" ColumnName="OptionalId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_today">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_today">
+              <MappingFragment StoreEntitySet="t_shares_today">
+                <ScalarProperty Name="ShowName" ColumnName="ShowName" />
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_dim_time">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_dim_time">
+              <MappingFragment StoreEntitySet="t_dim_time">
+                <ScalarProperty Name="week_day_name" ColumnName="week_day_name" />
+                <ScalarProperty Name="week_day" ColumnName="week_day" />
+                <ScalarProperty Name="week_name" ColumnName="week_name" />
+                <ScalarProperty Name="the_week" ColumnName="the_week" />
+                <ScalarProperty Name="month_name" ColumnName="month_name" />
+                <ScalarProperty Name="the_month" ColumnName="the_month" />
+                <ScalarProperty Name="quarter_name" ColumnName="quarter_name" />
+                <ScalarProperty Name="the_quarter" ColumnName="the_quarter" />
+                <ScalarProperty Name="year_name" ColumnName="year_name" />
+                <ScalarProperty Name="the_year" ColumnName="the_year" />
+                <ScalarProperty Name="date_name" ColumnName="date_name" />
+                <ScalarProperty Name="the_date" ColumnName="the_date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_optional_trend_rel_tri_record">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_optional_trend_rel_tri_record">
+              <MappingFragment StoreEntitySet="t_account_shares_optional_trend_rel_tri_record">
+                <ScalarProperty Name="TriDesc" ColumnName="TriDesc" />
+                <ScalarProperty Name="OptionalId" ColumnName="OptionalId" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="IsPush" ColumnName="IsPush" />
+                <ScalarProperty Name="TriPrice" ColumnName="TriPrice" />
+                <ScalarProperty Name="TrendDescription" ColumnName="TrendDescription" />
+                <ScalarProperty Name="TrendName" ColumnName="TrendName" />
+                <ScalarProperty Name="TrendId" ColumnName="TrendId" />
+                <ScalarProperty Name="SharesName" ColumnName="SharesName" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="RelId" ColumnName="RelId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_limit_date">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_limit_date">
+              <MappingFragment StoreEntitySet="t_shares_limit_date">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="BeginDate" ColumnName="BeginDate" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_limit_date_group">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_limit_date_group">
+              <MappingFragment StoreEntitySet="t_shares_limit_date_group">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_limit_time">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_limit_time">
+              <MappingFragment StoreEntitySet="t_shares_limit_time">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Time6" ColumnName="Time6" />
+                <ScalarProperty Name="Time5" ColumnName="Time5" />
+                <ScalarProperty Name="Time4" ColumnName="Time4" />
+                <ScalarProperty Name="Time3" ColumnName="Time3" />
+                <ScalarProperty Name="Time2" ColumnName="Time2" />
+                <ScalarProperty Name="Time1" ColumnName="Time1" />
+                <ScalarProperty Name="LimitKey" ColumnName="LimitKey" />
+                <ScalarProperty Name="LimitMarket" ColumnName="LimitMarket" />
+                <ScalarProperty Name="MarketName" ColumnName="MarketName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_monitor">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_monitor">
+              <MappingFragment StoreEntitySet="t_shares_monitor">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_goods">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_goods">
+              <MappingFragment StoreEntitySet="t_goods">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
+                <ScalarProperty Name="GoodsDetails" ColumnName="GoodsDetails" />
+                <ScalarProperty Name="GoodsType" ColumnName="GoodsType" />
+                <ScalarProperty Name="ImgUrl" ColumnName="ImgUrl" />
+                <ScalarProperty Name="GoodsDescription" ColumnName="GoodsDescription" />
+                <ScalarProperty Name="GoodsName" ColumnName="GoodsName" />
+                <ScalarProperty Name="GoodsId" ColumnName="GoodsId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_payment_channel">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_payment_channel">
+              <MappingFragment StoreEntitySet="t_payment_channel">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="SupportRefund" ColumnName="SupportRefund" />
+                <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ChannelDescription" ColumnName="ChannelDescription" />
+                <ScalarProperty Name="BusinessName" ColumnName="BusinessName" />
+                <ScalarProperty Name="ChannelName" ColumnName="ChannelName" />
+                <ScalarProperty Name="BusinessCode" ColumnName="BusinessCode" />
+                <ScalarProperty Name="ChannelCode" ColumnName="ChannelCode" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_optional_group">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_optional_group">
+              <MappingFragment StoreEntitySet="t_account_shares_optional_group">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_markettime">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_markettime">
+              <MappingFragment StoreEntitySet="t_shares_markettime">
+                <ScalarProperty Name="Business" ColumnName="Business" />
+                <ScalarProperty Name="Industry" ColumnName="Industry" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="MarketTime" ColumnName="MarketTime" />
+                <ScalarProperty Name="SharesName" ColumnName="SharesName" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_optional_trend_rel_tri">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_optional_trend_rel_tri">
+              <MappingFragment StoreEntitySet="t_account_shares_optional_trend_rel_tri">
+                <ScalarProperty Name="LastPushDesc" ColumnName="LastPushDesc" />
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="MinTodayPrice" ColumnName="MinTodayPrice" />
+                <ScalarProperty Name="MinPushRateInterval" ColumnName="MinPushRateInterval" />
+                <ScalarProperty Name="MinPushTimeInterval" ColumnName="MinPushTimeInterval" />
+                <ScalarProperty Name="TriCountToday" ColumnName="TriCountToday" />
+                <ScalarProperty Name="LastPushPrice" ColumnName="LastPushPrice" />
+                <ScalarProperty Name="LastPushRiseRate" ColumnName="LastPushRiseRate" />
+                <ScalarProperty Name="LastPushTime" ColumnName="LastPushTime" />
+                <ScalarProperty Name="RelId" ColumnName="RelId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_optional_group_rel">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_optional_group_rel">
+              <MappingFragment StoreEntitySet="t_account_shares_optional_group_rel">
+                <ScalarProperty Name="ValidEndTime" ColumnName="ValidEndTime" />
+                <ScalarProperty Name="ValidStartTime" ColumnName="ValidStartTime" />
+                <ScalarProperty Name="GroupIsContinue" ColumnName="GroupIsContinue" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="OptionalId" ColumnName="OptionalId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_optional_trend_rel_tri_record_statistic">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_optional_trend_rel_tri_record_statistic">
+              <MappingFragment StoreEntitySet="t_account_shares_optional_trend_rel_tri_record_statistic">
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="TriPushCount" ColumnName="TriPushCount" />
+                <ScalarProperty Name="TriTotalCount" ColumnName="TriTotalCount" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="SharesName" ColumnName="SharesName" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_follow_rel">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_follow_rel">
+              <MappingFragment StoreEntitySet="t_account_follow_rel">
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="FollowAccountId" ColumnName="FollowAccountId" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_baseinfo">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_baseinfo">
+              <MappingFragment StoreEntitySet="t_account_baseinfo">
+                <ScalarProperty Name="CashStatus" ColumnName="CashStatus" />
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="TransactionPassword" ColumnName="TransactionPassword" />
+                <ScalarProperty Name="LoginPassword" ColumnName="LoginPassword" />
+                <ScalarProperty Name="PostersComposeUrl" ColumnName="PostersComposeUrl" />
+                <ScalarProperty Name="PostersUrl" ColumnName="PostersUrl" />
+                <ScalarProperty Name="RegisterPageUrl" ColumnName="RegisterPageUrl" />
+                <ScalarProperty Name="QrCodeUrl" ColumnName="QrCodeUrl" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="MonitorStatus" ColumnName="MonitorStatus" />
+                <ScalarProperty Name="ForbidStatus" ColumnName="ForbidStatus" />
+                <ScalarProperty Name="ReferId" ColumnName="ReferId" />
+                <ScalarProperty Name="RecommandCode" ColumnName="RecommandCode" />
+                <ScalarProperty Name="BirthDay" ColumnName="BirthDay" />
+                <ScalarProperty Name="Sex" ColumnName="Sex" />
+                <ScalarProperty Name="HeadUrl" ColumnName="HeadUrl" />
+                <ScalarProperty Name="NickName" ColumnName="NickName" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_hold">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_hold">
+              <MappingFragment StoreEntitySet="t_account_shares_hold">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="ClosingForceTime" ColumnName="ClosingForceTime" />
+                <ScalarProperty Name="ClosingForceStatus" ColumnName="ClosingForceStatus" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ClosingTime" ColumnName="ClosingTime" />
+                <ScalarProperty Name="LastServiceTime" ColumnName="LastServiceTime" />
+                <ScalarProperty Name="ServiceFee" ColumnName="ServiceFee" />
+                <ScalarProperty Name="ServiceAmount" ColumnName="ServiceAmount" />
+                <ScalarProperty Name="MakeupDeposit" ColumnName="MakeupDeposit" />
+                <ScalarProperty Name="RemainDeposit" ColumnName="RemainDeposit" />
+                <ScalarProperty Name="InitialDeposit" ColumnName="InitialDeposit" />
+                <ScalarProperty Name="CanSoldCount" ColumnName="CanSoldCount" />
+                <ScalarProperty Name="RemainCount" ColumnName="RemainCount" />
+                <ScalarProperty Name="ForceSellingCount" ColumnName="ForceSellingCount" />
+                <ScalarProperty Name="SellingCount" ColumnName="SellingCount" />
+                <ScalarProperty Name="SoldProfitAmount" ColumnName="SoldProfitAmount" />
+                <ScalarProperty Name="SoldAmount" ColumnName="SoldAmount" />
+                <ScalarProperty Name="SoldCount" ColumnName="SoldCount" />
+                <ScalarProperty Name="BuyTotalAmount" ColumnName="BuyTotalAmount" />
+                <ScalarProperty Name="BuyTotalCount" ColumnName="BuyTotalCount" />
+                <ScalarProperty Name="FundAmount" ColumnName="FundAmount" />
+                <ScalarProperty Name="InitialFundAmount" ColumnName="InitialFundAmount" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_wallet">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_wallet">
+              <MappingFragment StoreEntitySet="t_account_wallet">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Deposit" ColumnName="Deposit" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_entrust">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_entrust">
+              <MappingFragment StoreEntitySet="t_account_shares_entrust">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="HandlerType" ColumnName="HandlerType" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="IsExecuteClosing" ColumnName="IsExecuteClosing" />
+                <ScalarProperty Name="IsJoinService" ColumnName="IsJoinService" />
+                <ScalarProperty Name="IsJoinCanSold" ColumnName="IsJoinCanSold" />
+                <ScalarProperty Name="ClosingTime" ColumnName="ClosingTime" />
+                <ScalarProperty Name="TransferFee" ColumnName="TransferFee" />
+                <ScalarProperty Name="StampFee" ColumnName="StampFee" />
+                <ScalarProperty Name="SettlementFee" ColumnName="SettlementFee" />
+                <ScalarProperty Name="HandlingFee" ColumnName="HandlingFee" />
+                <ScalarProperty Name="Commission" ColumnName="Commission" />
+                <ScalarProperty Name="AdministrationFee" ColumnName="AdministrationFee" />
+                <ScalarProperty Name="ProfitService" ColumnName="ProfitService" />
+                <ScalarProperty Name="BuyService" ColumnName="BuyService" />
+                <ScalarProperty Name="FreezeDeposit" ColumnName="FreezeDeposit" />
+                <ScalarProperty Name="SoldProfitAmount" ColumnName="SoldProfitAmount" />
+                <ScalarProperty Name="CancelCount" ColumnName="CancelCount" />
+                <ScalarProperty Name="DealAmount" ColumnName="DealAmount" />
+                <ScalarProperty Name="DealPrice" ColumnName="DealPrice" />
+                <ScalarProperty Name="SimulateDealCount" ColumnName="SimulateDealCount" />
+                <ScalarProperty Name="DealCount" ColumnName="DealCount" />
+                <ScalarProperty Name="EntrustAmount" ColumnName="EntrustAmount" />
+                <ScalarProperty Name="EntrustPrice" ColumnName="EntrustPrice" />
+                <ScalarProperty Name="EntrustType" ColumnName="EntrustType" />
+                <ScalarProperty Name="EntrustCount" ColumnName="EntrustCount" />
+                <ScalarProperty Name="StatusDes" ColumnName="StatusDes" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="SharesHandCount" ColumnName="SharesHandCount" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="TradeType" ColumnName="TradeType" />
+                <ScalarProperty Name="HoldId" ColumnName="HoldId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_entrust_follow">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_entrust_follow">
+              <MappingFragment StoreEntitySet="t_account_shares_entrust_follow">
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="FollowEntrustId" ColumnName="FollowEntrustId" />
+                <ScalarProperty Name="FollowAccountId" ColumnName="FollowAccountId" />
+                <ScalarProperty Name="MainEntrustId" ColumnName="MainEntrustId" />
+                <ScalarProperty Name="MainAccountId" ColumnName="MainAccountId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_entrust_manager">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_entrust_manager">
+              <MappingFragment StoreEntitySet="t_account_shares_entrust_manager">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="CanClear" ColumnName="CanClear" />
+                <ScalarProperty Name="StatusDes" ColumnName="StatusDes" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="CancelCount" ColumnName="CancelCount" />
+                <ScalarProperty Name="DealAmount" ColumnName="DealAmount" />
+                <ScalarProperty Name="DealPrice" ColumnName="DealPrice" />
+                <ScalarProperty Name="SimulateDealCount" ColumnName="SimulateDealCount" />
+                <ScalarProperty Name="DealCount" ColumnName="DealCount" />
+                <ScalarProperty Name="EntrustPrice" ColumnName="EntrustPrice" />
+                <ScalarProperty Name="EntrustType" ColumnName="EntrustType" />
+                <ScalarProperty Name="RealEntrustCount" ColumnName="RealEntrustCount" />
+                <ScalarProperty Name="EntrustCount" ColumnName="EntrustCount" />
+                <ScalarProperty Name="EntrustTime" ColumnName="EntrustTime" />
+                <ScalarProperty Name="EntrustId" ColumnName="EntrustId" />
+                <ScalarProperty Name="TradeAccountCode" ColumnName="TradeAccountCode" />
+                <ScalarProperty Name="TradeType" ColumnName="TradeType" />
+                <ScalarProperty Name="BuyId" ColumnName="BuyId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_entrust_manager_dealdetails">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_entrust_manager_dealdetails">
+              <MappingFragment StoreEntitySet="t_account_shares_entrust_manager_dealdetails">
+                <ScalarProperty Name="DealTime" ColumnName="DealTime" />
+                <ScalarProperty Name="DealId" ColumnName="DealId" />
+                <ScalarProperty Name="DealAmount" ColumnName="DealAmount" />
+                <ScalarProperty Name="DealCount" ColumnName="DealCount" />
+                <ScalarProperty Name="DealPrice" ColumnName="DealPrice" />
+                <ScalarProperty Name="EntrustManagerId" ColumnName="EntrustManagerId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="P_ApplyTradeBuy" FunctionName="meal_ticketModel.Store.P_ApplyTradeBuy" />
+          <EntitySetMapping Name="t_shares_limit_fundmultiple">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_limit_fundmultiple">
+              <MappingFragment StoreEntitySet="t_shares_limit_fundmultiple">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="FundMultiple" ColumnName="FundMultiple" />
+                <ScalarProperty Name="Range" ColumnName="Range" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="LimitKey" ColumnName="LimitKey" />
+                <ScalarProperty Name="LimitMarket" ColumnName="LimitMarket" />
+                <ScalarProperty Name="MarketName" ColumnName="MarketName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_broker_account_info">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_broker_account_info">
+              <MappingFragment StoreEntitySet="t_broker_account_info">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="SynchronizationTime" ColumnName="SynchronizationTime" />
+                <ScalarProperty Name="SynchronizationStatus" ColumnName="SynchronizationStatus" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="InitialFunding" ColumnName="InitialFunding" />
+                <ScalarProperty Name="DepartmentCode" ColumnName="DepartmentCode" />
+                <ScalarProperty Name="BrokerCode" ColumnName="BrokerCode" />
+                <ScalarProperty Name="TxPassword" ColumnName="TxPassword" />
+                <ScalarProperty Name="JyPassword" ColumnName="JyPassword" />
+                <ScalarProperty Name="Holder1" ColumnName="Holder1" />
+                <ScalarProperty Name="Holder0" ColumnName="Holder0" />
+                <ScalarProperty Name="TradeAccountNo1" ColumnName="TradeAccountNo1" />
+                <ScalarProperty Name="TradeAccountNo0" ColumnName="TradeAccountNo0" />
+                <ScalarProperty Name="AccountNo" ColumnName="AccountNo" />
+                <ScalarProperty Name="AccountType" ColumnName="AccountType" />
+                <ScalarProperty Name="AccountCode" ColumnName="AccountCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_server">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_server">
+              <MappingFragment StoreEntitySet="t_server">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="ServerDes" ColumnName="ServerDes" />
+                <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
+                <ScalarProperty Name="ServerId" ColumnName="ServerId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_server_broker_account_rel">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_server_broker_account_rel">
+              <MappingFragment StoreEntitySet="t_server_broker_account_rel">
+                <ScalarProperty Name="BrokerAccountId" ColumnName="BrokerAccountId" />
+                <ScalarProperty Name="ServerId" ColumnName="ServerId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="P_ApplyTradeCancel" FunctionName="meal_ticketModel.Store.P_ApplyTradeCancel" />
+          <FunctionImportMapping FunctionImportName="P_ApplyTradeSell" FunctionName="meal_ticketModel.Store.P_ApplyTradeSell" />
+          <FunctionImportMapping FunctionImportName="P_MakeupDeposit" FunctionName="meal_ticketModel.Store.P_MakeupDeposit" />
+          <EntitySetMapping Name="t_shares_limit_traderules">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_limit_traderules">
+              <MappingFragment StoreEntitySet="t_shares_limit_traderules">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ClosingLine" ColumnName="ClosingLine" />
+                <ScalarProperty Name="Cordon" ColumnName="Cordon" />
+                <ScalarProperty Name="LimitType" ColumnName="LimitType" />
+                <ScalarProperty Name="LimitKey" ColumnName="LimitKey" />
+                <ScalarProperty Name="LimitMarket" ColumnName="LimitMarket" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_limit_traderules_other">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_limit_traderules_other">
+              <MappingFragment StoreEntitySet="t_shares_limit_traderules_other">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ClosingLine" ColumnName="ClosingLine" />
+                <ScalarProperty Name="Cordon" ColumnName="Cordon" />
+                <ScalarProperty Name="Times" ColumnName="Times" />
+                <ScalarProperty Name="RulesId" ColumnName="RulesId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,9 @@
+2021/1/8 18:27:03
+TrendListenRunner错误。
+System.ArgumentNullException: 值不能为 null。
+参数名: source
+   在 System.Linq.Enumerable.Count[TSource](IEnumerable`1 source)
+   在 MealTicket_Web_Handler.Runner.TrendListenHelper.HandlerAccountTrendListen(Object obj) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\TrendListenHelper.cs:行号 76
+   在 MealTicket_Web_APIService.runner.TrendListenRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TrendListenRunner.cs:行号 40
+   在 FXCommon.Common.Runner.TimerCallBack(Object state) 位置 F:\项目\饭票后端\FXCommon\Common\Runner.cs:行号 62
+

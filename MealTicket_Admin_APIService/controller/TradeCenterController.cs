@@ -1,0 +1,1800 @@
+﻿using MealTicket_Admin_APIService.Filter;
+using MealTicket_Admin_Handler;
+using MealTicket_Admin_Handler.Model;
+using Ninject;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.IO;
+using System.Linq;
+using System.Net.Http;
+using System.Text;
+using System.Threading.Tasks;
+using System.Web.Http;
+
+namespace MealTicket_Admin_APIService.controller
+{
+    [RoutePrefix("tradecenter")]
+    public class TradeCenterController : ApiController
+    {
+        private TradeCenterHandler tradeCenterHandler;
+
+        public TradeCenterController()
+        {
+            tradeCenterHandler = WebApiManager.Kernel.Get<TradeCenterHandler>();
+        }
+
+        #region====行情管理====
+        /// <summary>
+        /// 获取今日行情股票列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("today/shares/list"), HttpPost]
+        [Description("获取今日行情股票列表")]
+        public PageRes<TodaySharesInfo> GetTodaySharesList(GetTodaySharesListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetTodaySharesList(request);
+        }
+
+        /// <summary>
+        /// 添加今日行情股票
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("today/shares/add"), HttpPost]
+        [Description("添加今日行情股票")]
+        public object AddTodayShares(AddTodaySharesRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddTodayShares(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑今日行情股票
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("today/shares/modify"), HttpPost]
+        [Description("编辑今日行情股票")]
+        public object ModifyTodayShares(ModifyTodaySharesRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifyTodayShares(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改今日行情股票状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("today/shares/status/modify"), HttpPost]
+        [Description("修改今日行情股票状态")]
+        public object ModifyTodaySharesStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifyTodaySharesStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除今日行情股票
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("today/shares/delete"), HttpPost]
+        [Description("删除今日行情股票")]
+        public object DeleteTodayShares(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteTodayShares(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取今日行情股票实时数据
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("today/shares/quotes"), HttpPost]
+        [Description("获取今日行情股票实时数据")]
+        public List<TodaySharesQuotesInfo> GetTodaySharesQuotes()
+        {
+            return tradeCenterHandler.GetTodaySharesQuotes();
+        }
+
+        /// <summary>
+        /// 获取股票热门搜索列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/hot/search"), HttpPost]
+        [Description("获取股票热门搜索列表")]
+        public PageRes<SharesHotSearchInfo> GetSharesHotSearch(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesHotSearch(request);
+        }
+
+        /// <summary>
+        /// 获取所有股票列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/list"), HttpPost]
+        [Description("获取所有股票列表")]
+        public PageRes<SharesInfo> GetSharesList(GetSharesListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesList(request);
+        }
+
+        /// <summary>
+        /// 修改股票状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/status/modify"), HttpPost]
+        [Description("修改股票状态")]
+        public object ModifySharesStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改股票限制状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/forbidstatus/modify"), HttpPost]
+        [Description("修改股票限制状态")]
+        public object ModifySharesForbidStatus(ModifySharesForbidStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesForbidStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取停牌设置列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("suspension/list"), HttpPost]
+        [Description("获取停牌设置列表")]
+        public PageRes<SharesSuspensionInfo> GetSharesSuspensionList(GetSharesSuspensionListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesSuspensionList(request);
+        }
+
+        /// <summary>
+        /// 修改停牌设置状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("suspension/status/modify"), HttpPost]
+        [Description("修改停牌设置状态")]
+        public object ModifySharesSuspensionStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesSuspensionStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量导入停/复牌数据
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("shares/suspensionstatus/batch/modify"), HttpPost]
+        [Description("批量上传客户数据")]
+        public async Task<object> BatchModifySharesSuspensionStatus()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var type = int.Parse(provider.FormData["Type"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("gb2312").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<SuspensionInfo> sharesList = new List<SuspensionInfo>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+                            if ((datas.Length < 4 && type == 1) || (datas.Length < 2 && type == 2))
+                            {
+                                continue;
+                            }
+                            var stock = datas[0].Split('.');
+                            if (stock.Count() != 2)
+                            {
+                                continue;
+                            }
+                            if (type == 1)
+                            {
+                                sharesList.Add(new SuspensionInfo
+                                {
+                                    Market = stock[1] == "SZ" ? 0 : 1,
+                                    SharesCode = int.Parse(stock[0]).ToString("000000"),
+                                    SharesName = datas[1],
+                                    SuspensionStartTime = string.IsNullOrEmpty(datas[2]) ? DateTime.Parse("1900-01-01") : DateTime.Parse(datas[2]),
+                                    SuspensionEndTime = string.IsNullOrEmpty(datas[3]) ? DateTime.Parse("9999-12-31") : DateTime.Parse(datas[3])
+                                });
+                            }
+                            else if (type == 2)
+                            {
+                                sharesList.Add(new SuspensionInfo
+                                {
+                                    Market = stock[1] == "SZ" ? 0 : 1,
+                                    SharesCode = int.Parse(stock[0]).ToString("000000"),
+                                });
+                            }
+                            else
+                            {
+                                throw new WebApiException(400, "参数错误");
+                            }
+                        }
+                        tradeCenterHandler.BatchModifySharesSuspensionStatus(type, sharesList);
+                        return sharesList.Count();
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 批量导入上市时间数据
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("shares/markettime/batch/modify"), HttpPost]
+        [Description("批量导入上市时间数据")]
+        public async Task<object> BatchModifySharesMarketTime()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("gb2312").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<MarketTimeInfo> marketTimeList = new List<MarketTimeInfo>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+                            if (datas.Length < 5)
+                            {
+                                continue;
+                            }
+                            var stock = datas[0].Split('.');
+                            if (stock.Count() != 2)
+                            {
+                                continue;
+                            }
+
+                            marketTimeList.Add(new MarketTimeInfo
+                            {
+                                Market = stock[1] == "SZ" ? 0 : 1,
+                                SharesCode = int.Parse(stock[0]).ToString("000000"),
+                                SharesName = datas[1],
+                                MarketTime = string.IsNullOrEmpty(datas[2])?DateTime.Parse("1970-01-01 00:00:00"):DateTime.Parse(datas[2]),
+                                Industry = datas[3],
+                                Business = datas[4],
+                            });
+                        }
+                        tradeCenterHandler.BatchModifySharesMarketTime(marketTimeList);
+                        return marketTimeList.Count();
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 获取股票分笔明细列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/transactiondata/list"), HttpPost]
+        [Description("获取股票分笔明细列表")]
+        public PageRes<SharesTransactionDataInfo> GetSharesTransactionDataList(GetSharesTransactionDataListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesTransactionDataList(request);
+        }
+
+        /// <summary>
+        /// 重置股票分笔明细
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/transactiondata/reset"), HttpPost]
+        [Description("重置股票分笔明细")]
+        public object ResetSharesTransactionData(ResetSharesTransactionDataRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ResetSharesTransactionData(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取股票勘误列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/corrigendum/list"), HttpPost]
+        [Description("获取股票勘误列表")]
+        public PageRes<SharesCorrigendumInfo> GetSharesCorrigendumList(GetSharesCorrigendumListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesCorrigendumList(request);
+        }
+
+        /// <summary>
+        /// 添加股票勘误
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/corrigendum/add"), HttpPost]
+        [Description("添加股票勘误")]
+        public object AddSharesCorrigendum(AddSharesCorrigendumRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesCorrigendum(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑股票勘误
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/corrigendum/modify"), HttpPost]
+        [Description("编辑股票勘误")]
+        public object ModifySharesCorrigendum(ModifySharesCorrigendumRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesCorrigendum(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除股票勘误
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/corrigendum/delete"), HttpPost]
+        [Description("删除股票勘误")]
+        public object DeleteSharesCorrigendum(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesCorrigendum(request);
+            return null;
+        }
+        #endregion
+
+        #region====交易管理====
+        /// <summary>
+        /// 查询禁止股票名单列表
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/forbid/list"), HttpPost]
+        [Description("查询禁止股票名单列表")]
+        public PageRes<SharesForbidInfo> GetSharesForbidList(GetSharesForbidListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesForbidList(request);
+        }
+
+        /// <summary>
+        /// 添加禁止股票名单
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/forbid/add"), HttpPost]
+        [Description("添加禁止股票名单")]
+        public object AddSharesForbid(AddSharesForbidRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesForbid(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑禁止股票名单
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/forbid/modify"), HttpPost]
+        [Description("编辑禁止股票名单")]
+        public object ModifySharesForbid(ModifySharesForbidRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesForbid(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除禁止股票名单
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/forbid/delete"), HttpPost]
+        [Description("删除禁止股票名单")]
+        public object DeleteSharesForbid(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesForbid(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询禁止日期分组列表
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/date/group/forbid/list"), HttpPost]
+        [Description("查询禁止日期分组列表")]
+        public PageRes<SharesDateGroupForbidInfo> GetSharesDateGroupForbidList(GetSharesDateGroupForbidListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesDateGroupForbidList(request);
+        }
+
+        /// <summary>
+        /// 添加禁止日期分组
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/date/group/forbid/add"), HttpPost]
+        [Description("添加禁止日期分组")]
+        public object AddSharesDateGroupForbid(AddSharesDateGroupForbidRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesDateGroupForbid(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑禁止日期分组
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/date/group/forbid/modify"), HttpPost]
+        [Description("编辑禁止日期分组")]
+        public object ModifySharesDateGroupForbid(ModifySharesDateGroupForbidRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesDateGroupForbid(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改禁止日期分组状态
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/date/group/forbid/status/modify"), HttpPost]
+        [Description("修改禁止日期分组状态")]
+        public object ModifySharesDateGroupForbidStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesDateGroupForbidStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除禁止日期分组
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/date/group/forbid/delete"), HttpPost]
+        [Description("删除禁止日期分组")]
+        public object DeleteSharesDateGroupForbid(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesDateGroupForbid(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询禁止日期列表
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/date/forbid/list"), HttpPost]
+        [Description("查询禁止日期列表")]
+        public PageRes<SharesDateForbidInfo> GetSharesDateForbidList(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesDateForbidList(request);
+        }
+
+        /// <summary>
+        /// 添加禁止日期
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/date/forbid/add"), HttpPost]
+        [Description("添加禁止日期")]
+        public object AddSharesDateForbid(AddSharesDateForbidRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesDateForbid(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑禁止日期
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/date/forbid/modify"), HttpPost]
+        [Description("编辑禁止日期")]
+        public object ModifySharesDateForbid(ModifySharesDateForbidRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesDateForbid(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改禁止日期状态
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/date/forbid/status/modify"), HttpPost]
+        [Description("修改禁止日期状态")]
+        public object ModifySharesDateForbidStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesDateForbidStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除禁止日期
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/date/forbid/delete"), HttpPost]
+        [Description("删除禁止日期")]
+        public object DeleteSharesDateForbid(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesDateForbid(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询交易时间分组列表
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/tradetime/group/list"), HttpPost]
+        [Description("查询交易时间分组列表")]
+        public PageRes<SharesTradeTimeGroupInfo> GetSharesTradeTimeGroupList(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesTradeTimeGroupList(request);
+        }
+
+        /// <summary>
+        /// 添加交易时间分组
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/tradetime/group/add"), HttpPost]
+        [Description("添加交易时间分组")]
+        public object AddSharesTradeTimeGroup(AddSharesTradeTimeGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesTradeTimeGroup(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑交易时间分组
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/tradetime/group/modify"), HttpPost]
+        [Description("编辑交易时间分组")]
+        public object ModifySharesTradeTimeGroup(ModifySharesTradeTimeGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesTradeTimeGroup(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑交易时间
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/tradetime/modify"), HttpPost]
+        [Description("编辑交易时间")]
+        public object ModifySharesTradeTime(ModifySharesTradeTimeRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesTradeTime(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除交易时间分组
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/tradetime/group/delete"), HttpPost]
+        [Description("删除交易时间分组")]
+        public object DeleteSharesTradeTimeGroup(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesTradeTimeGroup(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询交易杠杆列表
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/tradelever/list"), HttpPost]
+        [Description("查询交易杠杆列表")]
+        public PageRes<SharesTradeLeverInfo> GetSharesTradeLeverList(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesTradeLeverList(request);
+        }
+
+        /// <summary>
+        /// 添加交易杠杆
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/tradelever/add"), HttpPost]
+        [Description("添加交易杠杆")]
+        public object AddSharesTradeLever(AddSharesTradeLeverRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesTradeLever(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑交易杠杆
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/tradelever/modify"), HttpPost]
+        [Description("编辑交易杠杆")]
+        public object ModifySharesTradeLever(ModifySharesTradeLeverRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesTradeLever(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除交易杠杆
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/tradelever/delete"), HttpPost]
+        [Description("删除交易杠杆")]
+        public object DeleteSharesTradeLever(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesTradeLever(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询平仓规则列表
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/traderules/list"), HttpPost]
+        [Description("查询平仓规则列表")]
+        public PageRes<SharesTradeRulesInfo> GetSharesTradeRulesList(GetSharesTradeRulesListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesTradeRulesList(request);
+        }
+
+        /// <summary>
+        /// 添加平仓规则
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/traderules/add"), HttpPost]
+        [Description("添加平仓规则")]
+        public object AddSharesTradeRules(AddSharesTradeRulesRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesTradeRules(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑平仓规则
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/traderules/modify"), HttpPost]
+        [Description("编辑平仓规则")]
+        public object ModifySharesTradeRules(ModifySharesTradeRulesRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesTradeRules(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改平仓规则状态
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/traderules/status/modify"), HttpPost]
+        [Description("修改平仓规则状态")]
+        public object ModifySharesTradeRulesStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesTradeRulesStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除平仓规则
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/traderules/delete"), HttpPost]
+        [Description("删除平仓规则")]
+        public object DeleteSharesTradeRules(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesTradeRules(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询额外平仓规则列表
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/traderules/other/list"), HttpPost]
+        [Description("查询额外平仓规则列表")]
+        public PageRes<SharesTradeRulesOtherInfo> GetSharesTradeRulesOtherList(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesTradeRulesOtherList(request);
+        }
+
+        /// <summary>
+        /// 添加额外平仓规则
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/traderules/other/add"), HttpPost]
+        [Description("添加额外平仓规则")]
+        public object AddSharesTradeRulesOther(AddSharesTradeRulesOtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesTradeRulesOther(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑额外平仓规则
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/traderules/other/modify"), HttpPost]
+        [Description("编辑额外平仓规则")]
+        public object ModifySharesTradeRulesOther(ModifySharesTradeRulesOtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesTradeRulesOther(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改额外平仓规则状态
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/traderules/other/status/modify"), HttpPost]
+        [Description("修改额外平仓规则状态")]
+        public object ModifySharesTradeRulesOtherStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesTradeRulesOtherStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除额外平仓规则
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/traderules/other/delete"), HttpPost]
+        [Description("删除额外平仓规则")]
+        public object DeleteSharesTradeRulesOther(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesTradeRulesOther(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询仓位规则列表
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/positionrules/list"), HttpPost]
+        [Description("查询仓位规则列表")]
+        public PageRes<SharesPositionRulesInfo> GetSharesPositionRulesList(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesPositionRulesList(request);
+        }
+
+        /// <summary>
+        /// 添加仓位规则
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/positionrules/add"), HttpPost]
+        [Description("添加仓位规则")]
+        public object AddSharesPositionRules(AddSharesPositionRulesRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesPositionRules(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑仓位规则
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/positionrules/modify"), HttpPost]
+        [Description("编辑仓位规则")]
+        public object ModifySharesPositionRules(ModifySharesPositionRulesRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesPositionRules(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改仓位规则状态
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/positionrules/status/modify"), HttpPost]
+        [Description("修改仓位规则状态")]
+        public object ModifySharesPositionRulesStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesPositionRulesStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除仓位规则
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/positionrules/delete"), HttpPost]
+        [Description("删除仓位规则")]
+        public object DeleteSharesPositionRules(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesPositionRules(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询额外仓位规则列表
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/positionrules/other/list"), HttpPost]
+        [Description("查询额外仓位规则列表")]
+        public PageRes<SharesPositionRulesOtherInfo> GetSharesPositionRulesOtherList(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesPositionRulesOtherList(request);
+        }
+
+        /// <summary>
+        /// 添加额外仓位规则
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/positionrules/other/add"), HttpPost]
+        [Description("添加额外仓位规则")]
+        public object AddSharesPositionRulesOther(AddSharesPositionRulesOtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesPositionRulesOther(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑额外仓位规则
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/positionrules/other/modify"), HttpPost]
+        [Description("编辑额外仓位规则")]
+        public object ModifySharesPositionRulesOther(ModifySharesPositionRulesOtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesPositionRulesOther(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改额外仓位规则状态
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/positionrules/other/status/modify"), HttpPost]
+        [Description("修改额外仓位规则状态")]
+        public object ModifySharesPositionRulesOtherStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesPositionRulesOtherStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除额外仓位规则
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/positionrules/other/delete"), HttpPost]
+        [Description("删除额外仓位规则")]
+        public object DeleteSharesPositionRulesOther(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesPositionRulesOther(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询风控规则列表
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/riskrules/list"), HttpPost]
+        [Description("查询风控规则列表")]
+        public PageRes<SharesRiskRulesInfo> GetSharesRiskRulesList(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesRiskRulesList(request);
+        }
+
+        /// <summary>
+        /// 编辑风控规则
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/riskrules/modify"), HttpPost]
+        [Description("编辑风控规则")]
+        public object ModifySharesRiskRules(ModifySharesRiskRulesRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesRiskRules(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改风控规则禁止状态
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/riskrules/forbidstatus/modify"), HttpPost]
+        [Description("修改风控规则禁止状态")]
+        public object ModifySharesRiskRulesForbidStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesRiskRulesForbidStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改风控规则状态
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/riskrules/status/modify"), HttpPost]
+        [Description("修改风控规则状态")]
+        public object ModifySharesRiskRulesStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesRiskRulesStatus(request);
+            return null;
+        }
+        #endregion
+
+        #region====行情监控====
+        /// <summary>
+        /// 获取行情监控列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/list"), HttpPost]
+        [Description("获取行情监控列表")]
+        public PageRes<SharesMonitorInfo> GetSharesMonitorList(GetSharesMonitorListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesMonitorList(request);
+        }
+
+        /// <summary>
+        /// 添加行情监控
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/add"), HttpPost]
+        [Description("添加行情监控")]
+        public object AddSharesMonitor(AddSharesMonitorRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesMonitor(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改行情监控状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/status/modify"), HttpPost]
+        [Description("修改行情监控状态")]
+        public object ModifySharesMonitorStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesMonitorStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除行情监控
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/delete"), HttpPost]
+        [Description("删除行情监控")]
+        public object DeleteSharesMonitor(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesMonitor(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量导入行情监控数据
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("shares/monitor/batch/add"), HttpPost]
+        [Description("批量导入行情监控数据")]
+        public async Task<object> BatchAddSharesMonitor()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("gb2312").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<MarketTimeInfo> marketTimeList = new List<MarketTimeInfo>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+                            if (datas.Length < 2)
+                            {
+                                continue;
+                            }
+                            var stock = datas[0].Split('.');
+                            if (stock.Count() != 2)
+                            {
+                                continue;
+                            }
+
+                            marketTimeList.Add(new MarketTimeInfo
+                            {
+                                Market = stock[1] == "SZ" ? 0 : 1,
+                                SharesCode = int.Parse(stock[0]).ToString("000000"),
+                                SharesName = datas[1]
+                            });
+                        }
+                        return tradeCenterHandler.BatchAddSharesMonitor(marketTimeList);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 获取走势模板列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/trend/list"), HttpPost]
+        [Description("获取走势模板列表")]
+        public PageRes<SharesMonitorTrendInfo> GetSharesMonitorTrendList(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesMonitorTrendList(request);
+        }
+
+        /// <summary>
+        /// 添加走势模板
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/trend/add"), HttpPost]
+        [Description("添加走势模板")]
+        public object AddSharesMonitorTrend(AddSharesMonitorTrendRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesMonitorTrend(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑走势模板
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/trend/modify"), HttpPost]
+        [Description("编辑走势模板")]
+        public object ModifySharesMonitorTrend(ModifySharesMonitorTrendRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesMonitorTrend(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改走势模板状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/trend/status/modify"), HttpPost]
+        [Description("修改走势模板状态")]
+        public object ModifySharesMonitorTrendStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesMonitorTrendStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除走势模板
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/trend/delete"), HttpPost]
+        [Description("删除走势模板")]
+        public object DeleteSharesMonitorTrend(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesMonitorTrend(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取走势模板参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/trend/par"), HttpPost]
+        [Description("获取走势模板参数")]
+        public PageRes<SharesMonitorTrendParInfo> GetSharesMonitorTrendPar(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesMonitorTrendPar(request);
+        }
+
+        /// <summary>
+        /// 添加走势模板参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/trend/par/add"), HttpPost]
+        [Description("添加走势模板参数")]
+        public object AddSharesMonitorTrendPar(AddSharesMonitorTrendParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesMonitorTrendPar(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑走势模板参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/trend/par/modify"), HttpPost]
+        [Description("编辑走势模板参数")]
+        public object ModifySharesMonitorTrendPar(ModifySharesMonitorTrendParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesMonitorTrendPar(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除走势模板参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/trend/par/delete"), HttpPost]
+        [Description("删除走势模板参数")]
+        public object DeleteSharesMonitorTrendPar(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesMonitorTrendPar(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取监控走势关系列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/trend/rel/list"), HttpPost]
+        [Description("获取监控走势关系列表")]
+        public PageRes<SharesMonitorTrendRelInfo> GetSharesMonitorTrendRelList(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesMonitorTrendRelList(request);
+        }
+
+        /// <summary>
+        /// 添加监控走势关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/trend/rel/add"), HttpPost]
+        [Description("添加监控走势关系")]
+        public object AddSharesMonitorTrendRel(AddSharesMonitorTrendRelRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesMonitorTrendRel(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改监控走势关系状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/trend/rel/status/modify"), HttpPost]
+        [Description("修改监控走势关系状态")]
+        public object ModifySharesMonitorTrendRelStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesMonitorTrendRelStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除监控走势关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/trend/rel/delete"), HttpPost]
+        [Description("删除监控走势关系")]
+        public object DeleteSharesMonitorTrendRel(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesMonitorTrendRel(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取监控走势关系参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/trend/rel/par"), HttpPost]
+        [Description("获取监控走势关系参数")]
+        public PageRes<SharesMonitorTrendParInfo> GetSharesMonitorTrendRelPar(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesMonitorTrendRelPar(request);
+        }
+
+        /// <summary>
+        /// 添加监控走势关系参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/trend/rel/par/add"), HttpPost]
+        [Description("添加监控走势关系参数")]
+        public object AddSharesMonitorTrendRelPar(AddSharesMonitorTrendRelParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesMonitorTrendRelPar(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑监控走势关系参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/trend/rel/par/modify"), HttpPost]
+        [Description("编辑监控走势关系参数")]
+        public object ModifySharesMonitorTrendRelPar(ModifySharesMonitorTrendRelParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesMonitorTrendRelPar(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除监控走势关系参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/trend/rel/par/delete"), HttpPost]
+        [Description("删除监控走势关系参数")]
+        public object DeleteSharesMonitorTrendRelPar(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesMonitorTrendRelPar(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取监控股票分笔明细列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/transactiondata/list"), HttpPost]
+        [Description("获取监控股票分笔明细列表")]
+        public PageRes<SharesTransactionDataInfo> GetSharesMonitorTransactionDataList(GetSharesTransactionDataListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesMonitorTransactionDataList(request);
+        }
+
+        /// <summary>
+        /// 重置监控股票分笔明细
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/transactiondata/reset"), HttpPost]
+        [Description("重置监控股票分笔明细")]
+        public object ResetSharesMonitorTransactionData(ResetSharesTransactionDataRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ResetSharesMonitorTransactionData(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量更新监控参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/par/batchupdate"), HttpPost]
+        [Description("批量更新监控参数")]
+        public object BatchUpdateMonitorTrendPar(BatchUpdateMonitorTrendParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.BatchUpdateMonitorTrendPar(request);
+        }
+        #endregion
+    }
+}

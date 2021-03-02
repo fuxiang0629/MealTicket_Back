@@ -1,0 +1,816 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{22EA6A2E-8446-432A-86C7-42C4306B103A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>MealTicket_Admin_Handler</RootNamespace>
+    <AssemblyName>MealTicket_Admin_Handler</AssemblyName>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <DocumentationFile>bin\Release\MealTicket_Admin_Handler.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AopSdk">
+      <HintPath>..\packages\Alipay.AopSdk.2.0.0\lib\net35\AopSdk.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\EntityFramework.6.4.4\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="RabbitMQ.Client, Version=6.0.0.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
+      <HintPath>..\packages\RabbitMQ.Client.6.2.1\lib\net461\RabbitMQ.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=4.0.4.1, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.4.5.3\lib\net461\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.Threading.Channels, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Channels.4.7.1\lib\net461\System.Threading.Channels.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Threading.Tasks.Extensions.4.5.4\lib\net461\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AdminHandler.cs" />
+    <Compile Include="AuthorityHandler.cs" />
+    <Compile Include="BackAccountHandler.cs" />
+    <Compile Include="BusinessHandler.cs" />
+    <Compile Include="FinanceHandler.cs" />
+    <Compile Include="FrontAccountHandler.cs" />
+    <Compile Include="Helper.cs" />
+    <Compile Include="meal_ticketEntities.cs" />
+    <Compile Include="MenuHandler.cs" />
+    <Compile Include="Model1.Context.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.Context.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model1.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Model1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Model\ActionList.cs" />
+    <Compile Include="Model\Admin\AdminLogin.cs" />
+    <Compile Include="Model\Admin\GetAdminBaseInfo.cs" />
+    <Compile Include="Model\Admin\ModifyAdminBaseInfo.cs" />
+    <Compile Include="Model\Admin\ModifyAdminPassword.cs" />
+    <Compile Include="Model\AuthorizationException.cs" />
+    <Compile Include="Model\BackAccount\AddBackAccount.cs" />
+    <Compile Include="Model\BackAccount\AddBackAccountDepartment.cs" />
+    <Compile Include="Model\BackAccount\AddBackAccountPosition.cs" />
+    <Compile Include="Model\BackAccount\AddBackAccountRole.cs" />
+    <Compile Include="Model\BackAccount\BindBackAccountRole.cs" />
+    <Compile Include="Model\BackAccount\BindBackAccountRoleRight.cs" />
+    <Compile Include="Model\BackAccount\GetBackAccountDepartmentList.cs" />
+    <Compile Include="Model\BackAccount\GetBackAccountList.cs" />
+    <Compile Include="Model\BackAccount\GetBackAccountPositionList.cs" />
+    <Compile Include="Model\BackAccount\GetBackAccountRightList.cs" />
+    <Compile Include="Model\BackAccount\GetBackAccountRoleList.cs" />
+    <Compile Include="Model\BackAccount\GetLoginLogList.cs" />
+    <Compile Include="Model\BackAccount\GetOperateLogList.cs" />
+    <Compile Include="Model\BackAccount\ModifyBackAccount.cs" />
+    <Compile Include="Model\BackAccount\ModifyBackAccountDepartment.cs" />
+    <Compile Include="Model\BackAccount\ModifyBackAccountIsAdministrator.cs" />
+    <Compile Include="Model\BackAccount\ModifyBackAccountPassword.cs" />
+    <Compile Include="Model\BackAccount\ModifyBackAccountPosition.cs" />
+    <Compile Include="Model\BackAccount\ModifyBackAccountRole.cs" />
+    <Compile Include="Model\BaseResponse.cs" />
+    <Compile Include="Model\Business\AddBanner.cs" />
+    <Compile Include="Model\Business\AddCustomerServiceSetting.cs" />
+    <Compile Include="Model\Business\AddInformation.cs" />
+    <Compile Include="Model\Business\AddMessage.cs" />
+    <Compile Include="Model\Business\AddMessageTemplate.cs" />
+    <Compile Include="Model\Business\addNotice.cs" />
+    <Compile Include="Model\Business\AddPushTemplate.cs" />
+    <Compile Include="Model\Business\AddSmsTemplate.cs" />
+    <Compile Include="Model\Business\GetAllApiList.cs" />
+    <Compile Include="Model\Business\GetBannerGroupList.cs" />
+    <Compile Include="Model\Business\GetBannerList.cs" />
+    <Compile Include="Model\Business\GetCustomerServiceSettingList.cs" />
+    <Compile Include="Model\Business\GetInformationList.cs" />
+    <Compile Include="Model\Business\GetMessageList.cs" />
+    <Compile Include="Model\Business\GetMessageTemplateList.cs" />
+    <Compile Include="Model\Business\GetNoticeList.cs" />
+    <Compile Include="Model\Business\GetNoticeSmsSendDetails.cs" />
+    <Compile Include="Model\Business\GetNoticeSmsSendRecord.cs" />
+    <Compile Include="Model\Business\GetPageSettingDetails.cs" />
+    <Compile Include="Model\Business\GetPageSettingList.cs" />
+    <Compile Include="Model\Business\GetPushTemplateList.cs" />
+    <Compile Include="Model\Business\GetSmsApiList.cs" />
+    <Compile Include="Model\Business\GetSmsTemplateList.cs" />
+    <Compile Include="Model\Business\ModifyBanner.cs" />
+    <Compile Include="Model\Business\ModifyBannerGroup.cs" />
+    <Compile Include="Model\Business\ModifyCustomerServiceSetting.cs" />
+    <Compile Include="Model\Business\ModifyHelpcenterQuestion.cs" />
+    <Compile Include="Model\Business\ModifyHelpcenterQuestionIsCommon.cs" />
+    <Compile Include="Model\Business\ModifyHelpcenterQuestionIsTop.cs" />
+    <Compile Include="Model\Business\ModifyHelpcenterQuestionType.cs" />
+    <Compile Include="Model\Business\ModifyInformation.cs" />
+    <Compile Include="Model\Business\ModifyMessage.cs" />
+    <Compile Include="Model\Business\ModifyMessageTemplate.cs" />
+    <Compile Include="Model\Business\ModifyNotice.cs" />
+    <Compile Include="Model\Business\ModifyPushTemplate.cs" />
+    <Compile Include="Model\Business\ModifySmsTemplate.cs" />
+    <Compile Include="Model\Business\SavePageSetting.cs" />
+    <Compile Include="Model\DeleteRequest.cs" />
+    <Compile Include="Model\DetailsRequest.cs" />
+    <Compile Include="Model\Finance\alipay_trade_refund_response.cs" />
+    <Compile Include="Model\Finance\FinishCash.cs" />
+    <Compile Include="Model\Finance\GetCashAccountList.cs" />
+    <Compile Include="Model\Finance\GetCashRecordDetails.cs" />
+    <Compile Include="Model\Finance\GetCashRecordList.cs" />
+    <Compile Include="Model\Finance\GetCashTransferRecord.cs" />
+    <Compile Include="Model\Finance\GetPlatformWallet.cs" />
+    <Compile Include="Model\Finance\GetRechargeRecordList.cs" />
+    <Compile Include="Model\Finance\StartCash.cs" />
+    <Compile Include="Model\FrontAccount\AddAccountFundmultiple.cs" />
+    <Compile Include="Model\FrontAccount\AddAccountOptionalGroup.cs" />
+    <Compile Include="Model\FrontAccount\AddAccountOptionalGroupRel.cs" />
+    <Compile Include="Model\FrontAccount\AddFrontAccountFollow.cs" />
+    <Compile Include="Model\FrontAccount\AddFrontAccountMain.cs" />
+    <Compile Include="Model\FrontAccount\AddFrontAccountOptional.cs" />
+    <Compile Include="Model\FrontAccount\AddFrontAccountOptionalTrendPar.cs" />
+    <Compile Include="Model\FrontAccount\AddFrontAccountRecommendPrizeTypeLevel.cs" />
+    <Compile Include="Model\FrontAccount\AddFrontAccountSeat.cs" />
+    <Compile Include="Model\FrontAccount\AddFrontAccountSharesAllot.cs" />
+    <Compile Include="Model\FrontAccount\AddFrontAccountSharesTradeAbnormalRecordDetails.cs" />
+    <Compile Include="Model\FrontAccount\AddFrontAccountTradeParSetting.cs" />
+    <Compile Include="Model\FrontAccount\BatchAddFrontAccountSeat.cs" />
+    <Compile Include="Model\FrontAccount\BatchUpdateOptionalMonitorTrendPar.cs" />
+    <Compile Include="Model\FrontAccount\BindFrontAccountOptionalSeat.cs" />
+    <Compile Include="Model\FrontAccount\CancelFrontAccountSharesTrade.cs" />
+    <Compile Include="Model\FrontAccount\DeleteFrontAccountFollow.cs" />
+    <Compile Include="Model\FrontAccount\ExamineFrontAccountRealName.cs" />
+    <Compile Include="Model\FrontAccount\GetAccountFollowApplyList.cs" />
+    <Compile Include="Model\FrontAccount\GetAccountFundmultipleList.cs" />
+    <Compile Include="Model\FrontAccount\GetAccountOptionalGroup.cs" />
+    <Compile Include="Model\FrontAccount\GetAccountOptionalGroupRelList.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountBankCardList.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountList.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountLoginLog.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountOptionalList.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountOptionalTrend.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountOptionalTrendPar.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountOptionalTrendTri.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountRealNameList.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountRecommendPrizeType.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountRecommendPrizeTypeLevel.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountRegisterLog.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountSeatList.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountSharesAllotDetails.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountSharesAllotRecord.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountSharesDepositChangeRecord.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountSharesFundAmountChangeRecord.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountSharesHoldList.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountSharesHoldStatistics.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountSharesProfitRecord.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountSharesProfitStatistics.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountSharesTradeAbnormalRecordDetails.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountSharesTradeAbnormalRecordList.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountSharesTradeAbnormalRecordListRequest.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountSharesTradeDealRecordList.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountSharesTradeRankList.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountSharesTradeRecordList.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountTradeParSettingList.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountWalletChangeRecord.cs" />
+    <Compile Include="Model\FrontAccount\ModifyAccountFollowApplyStatus.cs" />
+    <Compile Include="Model\FrontAccount\ModifyAccountFundmultiple.cs" />
+    <Compile Include="Model\FrontAccount\ModifyAccountOptionalGroup.cs" />
+    <Compile Include="Model\FrontAccount\ModifyAccountOptionalGroupRelGroupIsContinue.cs" />
+    <Compile Include="Model\FrontAccount\ModifyFrontAccountBaseInfo.cs" />
+    <Compile Include="Model\FrontAccount\ModifyFrontAccountOptionalTrendPar.cs" />
+    <Compile Include="Model\FrontAccount\ModifyFrontAccountOptionalTrendTri.cs" />
+    <Compile Include="Model\FrontAccount\ModifyFrontAccountPassword.cs" />
+    <Compile Include="Model\FrontAccount\ModifyFrontAccountRecommendPrizeTypeLevel.cs" />
+    <Compile Include="Model\FrontAccount\ModifyFrontAccountRefer.cs" />
+    <Compile Include="Model\FrontAccount\ModifyFrontAccountSeat.cs" />
+    <Compile Include="Model\FrontAccount\ModifyFrontAccountSharesAllot.cs" />
+    <Compile Include="Model\FrontAccount\ModifyFrontAccountSharesTradeAbnormalRecordDetails.cs" />
+    <Compile Include="Model\FrontAccount\ModifyFrontAccountTradeParSetting.cs" />
+    <Compile Include="Model\FrontAccount\ModifyFrontAccountTradeStatus.cs" />
+    <Compile Include="Model\FrontAccount\ModifyFrontAccountTransactionPassword.cs" />
+    <Compile Include="Model\FrontAccount\ModifyFrontAccountWallet.cs" />
+    <Compile Include="Model\FrontAccount\SellFrontAccountSharesHold.cs" />
+    <Compile Include="Model\HeadBase.cs" />
+    <Compile Include="Model\ImageObj.cs" />
+    <Compile Include="Model\ImagePath.cs" />
+    <Compile Include="Model\Menu\GetMenuList.cs" />
+    <Compile Include="Model\ModifyStatusRequest.cs" />
+    <Compile Include="Model\PageRequest.cs" />
+    <Compile Include="Model\PageRes.cs" />
+    <Compile Include="Model\Sys\AddBroker.cs" />
+    <Compile Include="Model\Sys\AddBrokerAccount.cs" />
+    <Compile Include="Model\Sys\AddBrokerDepartment.cs" />
+    <Compile Include="Model\Sys\AddBrokerHqHost.cs" />
+    <Compile Include="Model\Sys\AddBrokerTradeHost.cs" />
+    <Compile Include="Model\Sys\AddPushChannelApp.cs" />
+    <Compile Include="Model\Sys\AddPushTag.cs" />
+    <Compile Include="Model\Sys\AddServer.cs" />
+    <Compile Include="Model\Business\AddHelpcenterQuestion.cs" />
+    <Compile Include="Model\Business\AddHelpcenterQuestionType.cs" />
+    <Compile Include="Model\Business\BindHelpcenterQuestionType.cs" />
+    <Compile Include="Model\Sys\AddSmsChannelApp.cs" />
+    <Compile Include="Model\Sys\AddSmsSign.cs" />
+    <Compile Include="Model\Sys\AddSysAppversion.cs" />
+    <Compile Include="Model\Sys\AddSysGoods.cs" />
+    <Compile Include="Model\Sys\AddSysPaymentAccount.cs" />
+    <Compile Include="Model\Sys\BindServerAccount.cs" />
+    <Compile Include="Model\Sys\BindSysPaymentCashChannelRefundAccount.cs" />
+    <Compile Include="Model\Sys\BindSysPaymentCashChannelTransferAccount.cs" />
+    <Compile Include="Model\Sys\BindSysPaymentChannelAccount.cs" />
+    <Compile Include="Model\Sys\DeleteServer.cs" />
+    <Compile Include="Model\Sys\GetBrokerAccountList.cs" />
+    <Compile Include="Model\Sys\GetBrokerAccountPositionInfo.cs" />
+    <Compile Include="Model\Sys\GetBrokerAccountSysPositionDetails.cs" />
+    <Compile Include="Model\Sys\GetBrokerAccountSysPositionInfo.cs" />
+    <Compile Include="Model\Sys\GetBrokerDepartmentList.cs" />
+    <Compile Include="Model\Sys\GetBrokerHqHostList.cs" />
+    <Compile Include="Model\Sys\GetBrokerList.cs" />
+    <Compile Include="Model\Sys\GetBrokerSysHoldAccountList.cs" />
+    <Compile Include="Model\Sys\GetBrokerTradeHostList.cs" />
+    <Compile Include="Model\Sys\GetPushChannelAppList.cs" />
+    <Compile Include="Model\Sys\GetPushChannelList.cs" />
+    <Compile Include="Model\Sys\GetPushTagList.cs" />
+    <Compile Include="Model\Sys\GetServerList.cs" />
+    <Compile Include="Model\Business\GetHelpcenterQuestionList.cs" />
+    <Compile Include="Model\Business\GetHelpcenterQuestionTypeList.cs" />
+    <Compile Include="Model\Sys\GetSmsChannelAppList.cs" />
+    <Compile Include="Model\Sys\GetSmsChannelList.cs" />
+    <Compile Include="Model\Sys\GetSmsSignList.cs" />
+    <Compile Include="Model\Sys\GetSysGoodsList.cs" />
+    <Compile Include="Model\Sys\GetSysParList.cs" />
+    <Compile Include="Model\Sys\GetSysPaymentAccountList.cs" />
+    <Compile Include="Model\Sys\GetSysPaymentCashChannelList.cs" />
+    <Compile Include="Model\Sys\GetSysPaymentChannelAccountList.cs" />
+    <Compile Include="Model\Sys\GetSysPaymentChannelGroup.cs" />
+    <Compile Include="Model\Sys\GetSysPaymentChannelList.cs" />
+    <Compile Include="Model\Sys\GetSysPaymentParList.cs" />
+    <Compile Include="Model\Sys\ModifyBroker.cs" />
+    <Compile Include="Model\Sys\ModifyBrokerAccount.cs" />
+    <Compile Include="Model\Sys\ModifyBrokerDepartment.cs" />
+    <Compile Include="Model\Sys\ModifyBrokerHqHost.cs" />
+    <Compile Include="Model\Sys\ModifyBrokerTradeHost.cs" />
+    <Compile Include="Model\Sys\ModifyPushChannelApp.cs" />
+    <Compile Include="Model\Sys\ModifyPushChannelStatus.cs" />
+    <Compile Include="Model\Sys\ModifyPushTag.cs" />
+    <Compile Include="Model\Sys\ModifyServer.cs" />
+    <Compile Include="Model\Sys\ModifySmsChannelApp.cs" />
+    <Compile Include="Model\Sys\ModifySmsChannelStatus.cs" />
+    <Compile Include="Model\Sys\ModifySmsSign.cs" />
+    <Compile Include="Model\Sys\ModifySysAppversion.cs" />
+    <Compile Include="Model\Sys\ModifySysGoods.cs" />
+    <Compile Include="Model\Sys\ModifySysPar.cs" />
+    <Compile Include="Model\Sys\ModifySysPaymentAccount.cs" />
+    <Compile Include="Model\Sys\ModifySysPaymentCashChannelStatus.cs" />
+    <Compile Include="Model\Sys\ModifySysPaymentChannelGroup.cs" />
+    <Compile Include="Model\Sys\ModifySysPaymentChannelOrderIndex.cs" />
+    <Compile Include="Model\Sys\ModifySysPaymentChannelStatus.cs" />
+    <Compile Include="Model\Sys\ModifySysPaymentPar.cs" />
+    <Compile Include="Model\Sys\RecoveryBrokerAccountSysPosition.cs" />
+    <Compile Include="Model\Sys\GetSysAppversionList.cs" />
+    <Compile Include="Model\TradeCenter\AddSharesCorrigendum.cs" />
+    <Compile Include="Model\TradeCenter\AddSharesDateForbid.cs" />
+    <Compile Include="Model\TradeCenter\AddSharesDateGroupForbid.cs" />
+    <Compile Include="Model\TradeCenter\AddSharesForbid.cs" />
+    <Compile Include="Model\TradeCenter\AddSharesMonitor.cs" />
+    <Compile Include="Model\TradeCenter\AddSharesMonitorTrend.cs" />
+    <Compile Include="Model\TradeCenter\AddSharesMonitorTrendPar.cs" />
+    <Compile Include="Model\TradeCenter\AddSharesMonitorTrendRel.cs" />
+    <Compile Include="Model\TradeCenter\AddSharesMonitorTrendRelPar.cs" />
+    <Compile Include="Model\TradeCenter\AddSharesPositionRules.cs" />
+    <Compile Include="Model\TradeCenter\AddSharesPositionRulesOther.cs" />
+    <Compile Include="Model\TradeCenter\BatchUpdateMonitorTrendPar.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesCorrigendumList.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesMonitorList.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesMonitorTrendList.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesMonitorTrendPar.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesMonitorTrendRelList.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesTransactionDataList.cs" />
+    <Compile Include="Model\TradeCenter\ModifySharesCorrigendum.cs" />
+    <Compile Include="Model\TradeCenter\ModifySharesMonitorTrend.cs" />
+    <Compile Include="Model\TradeCenter\ModifySharesMonitorTrendPar.cs" />
+    <Compile Include="Model\TradeCenter\ModifySharesMonitorTrendRelPar.cs" />
+    <Compile Include="Model\TradeCenter\ModifySharesRiskRules.cs" />
+    <Compile Include="Model\TradeCenter\AddSharesTradeLever.cs" />
+    <Compile Include="Model\TradeCenter\AddSharesTradeRules.cs" />
+    <Compile Include="Model\TradeCenter\AddSharesTradeRulesOther.cs" />
+    <Compile Include="Model\TradeCenter\AddSharesTradeTimeGroup.cs" />
+    <Compile Include="Model\TradeCenter\AddTodayShares.cs" />
+    <Compile Include="Model\TradeCenter\BatchModifySharesSuspensionStatus.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesDateForbidList.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesDateGroupForbidList.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesForbidList.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesHotSearch.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesList.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesPositionRulesList.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesPositionRulesOtherList.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesRiskRulesList.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesSuspensionList.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesTradeLeverList.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesTradeRulesList.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesTradeRulesOtherList.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesTradeTimeGroupList.cs" />
+    <Compile Include="Model\TradeCenter\GetTodaySharesList.cs" />
+    <Compile Include="Model\TradeCenter\GetTodaySharesQuotes.cs" />
+    <Compile Include="Model\FrontAccount\GetFrontAccountSharesTradeTodayStatistics.cs" />
+    <Compile Include="Model\TradeCenter\MarketTimeInfo.cs" />
+    <Compile Include="Model\TradeCenter\ModifySharesDateForbid.cs" />
+    <Compile Include="Model\TradeCenter\ModifySharesDateGroupForbid.cs" />
+    <Compile Include="Model\TradeCenter\ModifySharesForbid.cs" />
+    <Compile Include="Model\TradeCenter\ModifySharesForbidStatus.cs" />
+    <Compile Include="Model\TradeCenter\ModifySharesPositionRules.cs" />
+    <Compile Include="Model\TradeCenter\ModifySharesPositionRulesOther.cs" />
+    <Compile Include="Model\TradeCenter\ModifySharesSuspensionStatus.cs" />
+    <Compile Include="Model\TradeCenter\ModifySharesTradeLever.cs" />
+    <Compile Include="Model\TradeCenter\ModifySharesTradeRules.cs" />
+    <Compile Include="Model\TradeCenter\ModifySharesTradeRulesOther.cs" />
+    <Compile Include="Model\TradeCenter\ModifySharesTradeTime.cs" />
+    <Compile Include="Model\TradeCenter\ModifySharesTradeTimeGroup.cs" />
+    <Compile Include="Model\TradeCenter\ModifyTodayShares.cs" />
+    <Compile Include="Model\TradeCenter\ResetSharesTransactionData.cs" />
+    <Compile Include="Model\TradeCenter\SuspensionInfo.cs" />
+    <Compile Include="Model\TradeCenter\UpdateBrokerAccountPositionInfo.cs" />
+    <Compile Include="Model\VisitLog.cs" />
+    <Compile Include="Model\WebApiException.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RabbitMq\MQHandler.cs" />
+    <Compile Include="ServiceHandler.cs" />
+    <Compile Include="Singleton.cs" />
+    <Compile Include="SysSettingHandler.cs" />
+    <Compile Include="TradeCenterHandler.cs" />
+    <Compile Include="t_account_api.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_bank_card.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_baseinfo.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_cash_record.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_cash_record_details.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_follow_apply_record.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_follow_rel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_loginlog.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_login_token.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_par_setting.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_realname.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_recommend_prize_type.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_recommend_prize_type_level.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_registerLog.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_entrust.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_entrust_manager.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_entrust_manager_dealdetails.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_hold.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_hold_deposit_changelog.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_hold_fundamount_changelog.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_hold_manager.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_optional.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_optional_group.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_optional_group_rel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_optional_seat_rel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_optional_trend_rel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_optional_trend_rel_par.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_optional_trend_rel_tri.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_optional_trend_rel_tri_record.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_optional_trend_rel_tri_record_statistic.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_seat.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_wallet.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_wallet_change_record.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_admin_api.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_admin_baseinfo.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_admin_department.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_admin_loginLog.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_admin_login_token.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_admin_menu.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_admin_operationLog.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_admin_position.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_admin_right.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_admin_right_api_rel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_admin_role.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_admin_role_rel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_admin_role_right_rel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_app_version.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_authority_admin_visitlog.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_bank.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_banner.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_banner_group.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_broker.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_broker_account_info.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_broker_account_info_capital.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_broker_account_info_position.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_broker_account_shares_rel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_broker_account_shares_rel_entrust.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_broker_department.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_broker_host.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_customerservice_setting.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_dim_time.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_goods.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_helpcenter_question_content.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_helpcenter_question_type.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_helpcenter_question_type_content_rel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_information.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_message.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_message_group.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_message_group_rel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_message_template.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_notice_send_record.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_notice_send_record_details.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_notice_setting.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_page_setting.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_payment_account.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_payment_account_settings.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_payment_cash_channel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_payment_cash_channel_refund_account_rel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_payment_cash_channel_transfer_account_rel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_payment_channel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_payment_channel_account_rel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_payment_channel_group.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_platform_wallet.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_push_channel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_push_channel_app.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_push_tag.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_push_template.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_recharge_record.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_server.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_server_broker_account_rel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_all.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_allot.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_allot_account.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_all_corrigendum.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_hq_host.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_limit.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_limit_date.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_limit_date_group.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_limit_fundmultiple.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_limit_fundmultiple_account.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_limit_risk.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_limit_time.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_limit_tradequota.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_limit_tradequota_other.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_limit_traderules.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_limit_traderules_other.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_markettime.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_monitor.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_monitor_trend.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_monitor_trend_par.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_monitor_trend_rel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_monitor_trend_rel_par.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_quotes.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_search.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_suspension.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_today.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_transactiondata.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_sms_channel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_sms_channel_app.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_sms_sign.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_sms_template.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_system_param.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <EntityDeploy Include="Model1.edmx">
+      <Generator>EntityModelCodeGenerator</Generator>
+      <LastGenOutput>Model1.Designer.cs</LastGenOutput>
+    </EntityDeploy>
+    <None Include="Model1.edmx.diagram">
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="Model1.Context.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Model1.Context.cs</LastGenOutput>
+      <DependentUpon>Model1.edmx</DependentUpon>
+    </Content>
+    <Content Include="Model1.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <DependentUpon>Model1.edmx</DependentUpon>
+      <LastGenOutput>Model1.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FXCommon\FXCommon.csproj">
+      <Project>{0ecd9f97-e7b1-42dd-ab4f-ffbbf6216257}</Project>
+      <Name>FXCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NoticeHandler\NoticeHandler.csproj">
+      <Project>{0EEA5E4C-5908-4D0B-A35D-A5DE94D93AB5}</Project>
+      <Name>NoticeHandler</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>这台计算机上缺少此项目引用的 NuGet 程序包。使用“NuGet 程序包还原”可下载这些程序包。有关更多信息，请参见 http://go.microsoft.com/fwlink/?LinkID=322105。缺少的文件是 {0}。</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.props'))" />
+    <Error Condition="!Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\EntityFramework.6.4.4\build\EntityFramework.targets'))" />
+  </Target>
+  <Import Project="..\packages\EntityFramework.6.4.4\build\EntityFramework.targets" Condition="Exists('..\packages\EntityFramework.6.4.4\build\EntityFramework.targets')" />
+</Project>

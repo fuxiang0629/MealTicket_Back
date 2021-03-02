@@ -1,0 +1,77 @@
+2021/1/4 16:31:48
+自选股走势监控处理出错
+System.Runtime.InteropServices.MarshalDirectiveException: 无法封送处理“parameter #1”: 无法封送处理泛型类型。
+   在 MealTicket_Web_Handler.Runner.StockMonitorHelper.AnalysisTrend_LineUp(List`1 lstLineUpParam, List`1& ref_lstLineUpResult)
+   在 MealTicket_Web_Handler.Runner.TrendListenHelper.AnalysisTrend(Object par, Int64 trendId, String sharesCode, Int32 market, Object resultInfo) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\TrendListenHelper.cs:行号 166
+   在 MealTicket_Web_Handler.Runner.TrendListenHelper.HandlerAccountTrendListen(Object obj) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\TrendListenHelper.cs:行号 49
+
+2021/1/4 16:31:57
+自选股走势监控处理出错
+System.Runtime.InteropServices.MarshalDirectiveException: 无法封送处理“parameter #1”: 无法封送处理泛型类型。
+   在 MealTicket_Web_Handler.Runner.StockMonitorHelper.AnalysisTrend_BoxBreach(List`1 lstBoxBreachParam, List`1& ref_lstBoxBreachResult)
+   在 MealTicket_Web_Handler.Runner.TrendListenHelper.AnalysisTrend(Object par, Int64 trendId, String sharesCode, Int32 market, Object resultInfo) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\TrendListenHelper.cs:行号 189
+   在 MealTicket_Web_Handler.Runner.TrendListenHelper.HandlerAccountTrendListen(Object obj) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\TrendListenHelper.cs:行号 49
+
+2021/1/4 17:05:52
+自选股走势监控处理出错
+System.InvalidOperationException: 已有打开的与此 Command 相关联的 DataReader，必须首先将它关闭。
+   在 System.Data.SqlClient.SqlInternalConnectionTds.ValidateConnectionForExecute(SqlCommand command)
+   在 System.Data.SqlClient.SqlInternalTransaction.Rollback()
+   在 System.Data.SqlClient.SqlTransaction.Rollback()
+   在 MealTicket_Web_Handler.Runner.TrendListenHelper.TrendTri(Int64 relId, Int32 market, String sharesCode, Int64 accountId, Int64 trendId, String sharesName, String trendName, String trendDescription, Int64 optionalId) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\TrendListenHelper.cs:行号 305
+   在 MealTicket_Web_Handler.Runner.TrendListenHelper.HandlerAccountTrendListen(Object obj) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\TrendListenHelper.cs:行号 60
+
+2021/1/4 17:05:52
+自选股走势监控处理出错
+System.InvalidOperationException: 已有打开的与此 Command 相关联的 DataReader，必须首先将它关闭。
+   在 System.Data.SqlClient.SqlInternalConnectionTds.ValidateConnectionForExecute(SqlCommand command)
+   在 System.Data.SqlClient.SqlInternalTransaction.Rollback()
+   在 System.Data.SqlClient.SqlTransaction.Rollback()
+   在 MealTicket_Web_Handler.Runner.TrendListenHelper.TrendTri(Int64 relId, Int32 market, String sharesCode, Int64 accountId, Int64 trendId, String sharesName, String trendName, String trendDescription, Int64 optionalId) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\TrendListenHelper.cs:行号 305
+   在 MealTicket_Web_Handler.Runner.TrendListenHelper.HandlerAccountTrendListen(Object obj) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\TrendListenHelper.cs:行号 60
+
+2021/1/4 17:09:21
+自选股走势监控处理出错
+System.InvalidOperationException: 已有打开的与此 Command 相关联的 DataReader，必须首先将它关闭。
+   在 System.Data.SqlClient.SqlInternalConnectionTds.ValidateConnectionForExecute(SqlCommand command)
+   在 System.Data.SqlClient.SqlInternalTransaction.Rollback()
+   在 System.Data.SqlClient.SqlTransaction.Rollback()
+   在 MealTicket_Web_Handler.Runner.TrendListenHelper.TrendTri(Int64 relId, Int32 market, String sharesCode, Int64 accountId, Int64 trendId, String sharesName, String trendName, String trendDescription, Int64 optionalId) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\TrendListenHelper.cs:行号 305
+   在 MealTicket_Web_Handler.Runner.TrendListenHelper.HandlerAccountTrendListen(Object obj) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\TrendListenHelper.cs:行号 60
+
+2021/1/4 17:09:21
+自选股走势监控处理出错
+System.InvalidOperationException: 已有打开的与此 Command 相关联的 DataReader，必须首先将它关闭。
+   在 System.Data.SqlClient.SqlInternalConnectionTds.ValidateConnectionForExecute(SqlCommand command)
+   在 System.Data.SqlClient.SqlInternalTransaction.Rollback()
+   在 System.Data.SqlClient.SqlTransaction.Rollback()
+   在 MealTicket_Web_Handler.Runner.TrendListenHelper.TrendTri(Int64 relId, Int32 market, String sharesCode, Int64 accountId, Int64 trendId, String sharesName, String trendName, String trendDescription, Int64 optionalId) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\TrendListenHelper.cs:行号 305
+   在 MealTicket_Web_Handler.Runner.TrendListenHelper.HandlerAccountTrendListen(Object obj) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\TrendListenHelper.cs:行号 60
+
+2021/1/4 17:11:58
+自选股走势监控处理出错
+System.InvalidOperationException: 已有打开的与此 Command 相关联的 DataReader，必须首先将它关闭。
+   在 System.Data.SqlClient.SqlInternalConnectionTds.ValidateConnectionForExecute(SqlCommand command)
+   在 System.Data.SqlClient.SqlInternalTransaction.Rollback()
+   在 System.Data.SqlClient.SqlTransaction.Rollback()
+   在 MealTicket_Web_Handler.Runner.TrendListenHelper.TrendTri(Int64 relId, Int32 market, String sharesCode, Int64 accountId, Int64 trendId, String sharesName, String trendName, String trendDescription, Int64 optionalId) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\TrendListenHelper.cs:行号 305
+   在 MealTicket_Web_Handler.Runner.TrendListenHelper.HandlerAccountTrendListen(Object obj) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\TrendListenHelper.cs:行号 60
+
+2021/1/4 17:11:58
+自选股走势监控处理出错
+System.InvalidOperationException: 已有打开的与此 Command 相关联的 DataReader，必须首先将它关闭。
+   在 System.Data.SqlClient.SqlInternalConnectionTds.ValidateConnectionForExecute(SqlCommand command)
+   在 System.Data.SqlClient.SqlInternalTransaction.Rollback()
+   在 System.Data.SqlClient.SqlTransaction.Rollback()
+   在 MealTicket_Web_Handler.Runner.TrendListenHelper.TrendTri(Int64 relId, Int32 market, String sharesCode, Int64 accountId, Int64 trendId, String sharesName, String trendName, String trendDescription, Int64 optionalId) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\TrendListenHelper.cs:行号 305
+   在 MealTicket_Web_Handler.Runner.TrendListenHelper.HandlerAccountTrendListen(Object obj) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\TrendListenHelper.cs:行号 60
+
+2021/1/4 17:20:09
+自选股走势监控处理出错
+System.InvalidOperationException: 已有打开的与此 Command 相关联的 DataReader，必须首先将它关闭。
+   在 System.Data.SqlClient.SqlInternalConnectionTds.ValidateConnectionForExecute(SqlCommand command)
+   在 System.Data.SqlClient.SqlInternalTransaction.Rollback()
+   在 System.Data.SqlClient.SqlTransaction.Rollback()
+   在 MealTicket_Web_Handler.Runner.TrendListenHelper.TrendTri(Int64 relId, Int32 market, String sharesCode, Int64 accountId, Int64 trendId, String sharesName, String trendName, String trendDescription, Int64 optionalId) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\TrendListenHelper.cs:行号 310
+   在 MealTicket_Web_Handler.Runner.TrendListenHelper.HandlerAccountTrendListen(Object obj) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\TrendListenHelper.cs:行号 60
+

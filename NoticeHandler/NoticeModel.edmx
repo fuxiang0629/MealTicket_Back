@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="NoticeModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="t_account_baseinfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Mobile" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="NickName" Type="nvarchar" MaxLength="50" />
+          <Property Name="HeadUrl" Type="varchar" MaxLength="1024" />
+          <Property Name="Sex" Type="int" Nullable="false" />
+          <Property Name="BirthDay" Type="nvarchar" MaxLength="50" />
+          <Property Name="RecommandCode" Type="varchar" MaxLength="32" Nullable="false" />
+          <Property Name="ReferId" Type="bigint" />
+          <Property Name="ForbidStatus" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="QrCodeUrl" Type="varchar" MaxLength="200" />
+          <Property Name="RegisterPageUrl" Type="varchar" MaxLength="200" />
+          <Property Name="PostersUrl" Type="varchar" MaxLength="200" />
+          <Property Name="PostersComposeUrl" Type="varchar" MaxLength="200" />
+          <Property Name="LoginPassword" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="TransactionPassword" Type="varchar" MaxLength="50" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <Function Name="P_Notice_Execute" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="apiurl" Type="varchar" Mode="In" />
+          <Parameter Name="accountId" Type="bigint" Mode="In" />
+          <Parameter Name="tempPar" Type="nvarchar(max)" Mode="In" />
+        </Function>
+        <EntityContainer Name="NoticeModelStoreContainer">
+          <EntitySet Name="t_account_baseinfo" EntityType="Self.t_account_baseinfo" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="NoticeModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="NoticeEntities" annotation:LazyLoadingEnabled="true" >
+          <FunctionImport Name="P_Notice_Execute">
+            <Parameter Name="apiurl" Mode="In" Type="String" />
+            <Parameter Name="accountId" Mode="In" Type="Int64" />
+            <Parameter Name="tempPar" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="t_account_baseinfo" EntityType="NoticeModel.t_account_baseinfo" />
+        </EntityContainer>
+        <EntityType Name="t_account_baseinfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Mobile" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="NickName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="HeadUrl" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
+          <Property Name="Sex" Type="Int32" Nullable="false" />
+          <Property Name="BirthDay" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RecommandCode" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="ReferId" Type="Int64" />
+          <Property Name="ForbidStatus" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="QrCodeUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="RegisterPageUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PostersUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PostersComposeUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="LoginPassword" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TransactionPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="NoticeModelStoreContainer" CdmEntityContainer="NoticeEntities" >
+          <FunctionImportMapping FunctionImportName="P_Notice_Execute" FunctionName="NoticeModel.Store.P_Notice_Execute" />
+          <EntitySetMapping Name="t_account_baseinfo">
+            <EntityTypeMapping TypeName="NoticeModel.t_account_baseinfo">
+              <MappingFragment StoreEntitySet="t_account_baseinfo">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="TransactionPassword" ColumnName="TransactionPassword" />
+                <ScalarProperty Name="LoginPassword" ColumnName="LoginPassword" />
+                <ScalarProperty Name="PostersComposeUrl" ColumnName="PostersComposeUrl" />
+                <ScalarProperty Name="PostersUrl" ColumnName="PostersUrl" />
+                <ScalarProperty Name="RegisterPageUrl" ColumnName="RegisterPageUrl" />
+                <ScalarProperty Name="QrCodeUrl" ColumnName="QrCodeUrl" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ForbidStatus" ColumnName="ForbidStatus" />
+                <ScalarProperty Name="ReferId" ColumnName="ReferId" />
+                <ScalarProperty Name="RecommandCode" ColumnName="RecommandCode" />
+                <ScalarProperty Name="BirthDay" ColumnName="BirthDay" />
+                <ScalarProperty Name="Sex" ColumnName="Sex" />
+                <ScalarProperty Name="HeadUrl" ColumnName="HeadUrl" />
+                <ScalarProperty Name="NickName" ColumnName="NickName" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

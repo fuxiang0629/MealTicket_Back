@@ -1,0 +1,45 @@
+2021/1/11 10:13:16
+登录已过期，请重新登录
+MealTicket_Web_Handler.Model.WebApiException: 登录已过期，请重新登录
+   在 MealTicket_Web_Handler.AuthorityHandler.CheckAccountLogin(String userToken, HeadBase baseData) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\AuthorityHandler.cs:行号 55
+   在 MealTicket_Web_APIService.Filter.CheckUserLoginFilter.OnActionExecuting(HttpActionContext actionContext) 位置 F:\项目\饭票后端\MealTicket_Web_APIService\filter\CheckUserLoginFilter.cs:行号 31
+   在 System.Web.Http.Filters.ActionFilterAttribute.OnActionExecutingAsync(HttpActionContext actionContext, CancellationToken cancellationToken)
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Filters.ActionFilterAttribute.<ExecuteActionFilterAsyncCore>d__5.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Filters.ActionFilterAttribute.<CallOnActionExecutedAsync>d__6.MoveNext()
+
+2021/1/11 10:13:48
+登录已过期，请重新登录
+MealTicket_Web_Handler.Model.WebApiException: 登录已过期，请重新登录
+   在 MealTicket_Web_Handler.AuthorityHandler.CheckAccountLogin(String userToken, HeadBase baseData) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\AuthorityHandler.cs:行号 55
+   在 MealTicket_Web_APIService.Filter.CheckUserLoginFilter.OnActionExecuting(HttpActionContext actionContext) 位置 F:\项目\饭票后端\MealTicket_Web_APIService\filter\CheckUserLoginFilter.cs:行号 31
+   在 System.Web.Http.Filters.ActionFilterAttribute.OnActionExecutingAsync(HttpActionContext actionContext, CancellationToken cancellationToken)
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Filters.ActionFilterAttribute.<ExecuteActionFilterAsyncCore>d__5.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Filters.ActionFilterAttribute.<CallOnActionExecutedAsync>d__6.MoveNext()
+
+2021/1/11 13:25:59
+账号未登录,请先登录
+MealTicket_Web_Handler.Model.WebApiException: 账号未登录,请先登录
+   在 MealTicket_Web_Handler.AuthorityHandler.CheckAccountLogin(String userToken, HeadBase baseData) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\AuthorityHandler.cs:行号 55
+   在 MealTicket_Web_APIService.Filter.CheckUserLoginFilter.OnActionExecuting(HttpActionContext actionContext) 位置 F:\项目\饭票后端\MealTicket_Web_APIService\filter\CheckUserLoginFilter.cs:行号 31
+   在 System.Web.Http.Filters.ActionFilterAttribute.OnActionExecutingAsync(HttpActionContext actionContext, CancellationToken cancellationToken)
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Filters.ActionFilterAttribute.<ExecuteActionFilterAsyncCore>d__5.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Filters.ActionFilterAttribute.<CallOnActionExecutedAsync>d__6.MoveNext()
+

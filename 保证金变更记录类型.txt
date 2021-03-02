@@ -1,0 +1,12 @@
+类型   		描述      			关联表
+1011    		提现     		t_account_cash_record
+1012    		提现退回     	t_account_cash_record
+1021   		购买股票		t_account_shares_entrust
+1022		购买股票部成归还	t_account_shares_entrust
+1091   		充值		t_recharge_record
+1031           	后台变更	
+1041		追加保证金 	t_account_shares_hold
+1051		卖出股票		t_account_shares_entrust
+1061		股票交易提成奖励	t_account_shares_entrust
+1062		资金占用费奖励	t_account_shares_hold
+1071		股票派息		t_account_shares_hold	

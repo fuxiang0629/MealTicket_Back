@@ -1,0 +1,549 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="meal_ticketModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="t_account_baseinfo">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Mobile" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="NickName" Type="nvarchar" MaxLength="50" />
+    <Property Name="HeadUrl" Type="varchar" MaxLength="1024" />
+    <Property Name="Sex" Type="int" Nullable="false" />
+    <Property Name="BirthDay" Type="nvarchar" MaxLength="50" />
+    <Property Name="RecommandCode" Type="varchar" MaxLength="32" Nullable="false" />
+    <Property Name="ReferId" Type="bigint" />
+    <Property Name="ForbidStatus" Type="int" Nullable="false" />
+    <Property Name="CashStatus" Type="int" Nullable="false" />
+    <Property Name="MonitorStatus" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="QrCodeUrl" Type="varchar" MaxLength="200" />
+    <Property Name="RegisterPageUrl" Type="varchar" MaxLength="200" />
+    <Property Name="PostersUrl" Type="varchar" MaxLength="200" />
+    <Property Name="PostersComposeUrl" Type="varchar" MaxLength="200" />
+    <Property Name="LoginPassword" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="TransactionPassword" Type="varchar" MaxLength="50" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_entrust">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="HoldId" Type="bigint" Nullable="false" />
+    <Property Name="TradeType" Type="int" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="SharesHandCount" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="StatusDes" Type="nvarchar(max)" />
+    <Property Name="EntrustCount" Type="int" Nullable="false" />
+    <Property Name="EntrustType" Type="int" Nullable="false" />
+    <Property Name="EntrustPrice" Type="bigint" Nullable="false" />
+    <Property Name="EntrustAmount" Type="bigint" Nullable="false" />
+    <Property Name="DealCount" Type="int" Nullable="false" />
+    <Property Name="SimulateDealCount" Type="int" Nullable="false" />
+    <Property Name="DealPrice" Type="bigint" Nullable="false" />
+    <Property Name="DealAmount" Type="bigint" Nullable="false" />
+    <Property Name="CancelCount" Type="int" Nullable="false" />
+    <Property Name="SoldProfitAmount" Type="bigint" Nullable="false" />
+    <Property Name="FreezeDeposit" Type="bigint" Nullable="false" />
+    <Property Name="BuyService" Type="bigint" Nullable="false" />
+    <Property Name="ProfitService" Type="bigint" Nullable="false" />
+    <Property Name="AdministrationFee" Type="bigint" Nullable="false" />
+    <Property Name="Commission" Type="bigint" Nullable="false" />
+    <Property Name="HandlingFee" Type="bigint" Nullable="false" />
+    <Property Name="SettlementFee" Type="bigint" Nullable="false" />
+    <Property Name="StampFee" Type="bigint" Nullable="false" />
+    <Property Name="TransferFee" Type="bigint" Nullable="false" />
+    <Property Name="ClosingTime" Type="datetime" />
+    <Property Name="IsJoinCanSold" Type="bit" Nullable="false" />
+    <Property Name="IsJoinService" Type="bit" Nullable="false" />
+    <Property Name="IsExecuteClosing" Type="bit" Nullable="false" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="HandlerType" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_entrust_manager">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="BuyId" Type="bigint" Nullable="false" />
+    <Property Name="TradeType" Type="int" Nullable="false" />
+    <Property Name="TradeAccountCode" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="EntrustId" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="EntrustTime" Type="datetime" Nullable="false" />
+    <Property Name="EntrustCount" Type="int" Nullable="false" />
+    <Property Name="RealEntrustCount" Type="int" Nullable="false" />
+    <Property Name="EntrustType" Type="int" Nullable="false" />
+    <Property Name="EntrustPrice" Type="bigint" Nullable="false" />
+    <Property Name="DealCount" Type="int" Nullable="false" />
+    <Property Name="SimulateDealCount" Type="int" Nullable="false" />
+    <Property Name="DealPrice" Type="bigint" Nullable="false" />
+    <Property Name="DealAmount" Type="bigint" Nullable="false" />
+    <Property Name="CancelCount" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="StatusDes" Type="nvarchar(max)" />
+    <Property Name="CanClear" Type="bit" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_entrust_manager_dealdetails">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EntrustManagerId" Type="bigint" Nullable="false" />
+    <Property Name="DealPrice" Type="bigint" Nullable="false" />
+    <Property Name="DealCount" Type="int" Nullable="false" />
+    <Property Name="DealAmount" Type="bigint" Nullable="false" />
+    <Property Name="DealId" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="DealTime" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_entrust_manager_dealdetails_real">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="EntrustManagerId" Type="bigint" Nullable="false" />
+    <Property Name="DealPrice" Type="bigint" Nullable="false" />
+    <Property Name="DealCount" Type="int" Nullable="false" />
+    <Property Name="DealAmount" Type="bigint" Nullable="false" />
+    <Property Name="DealId" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="DealTime" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_hold">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="InitialFundAmount" Type="bigint" Nullable="false" />
+    <Property Name="FundAmount" Type="bigint" Nullable="false" />
+    <Property Name="BuyTotalCount" Type="int" Nullable="false" />
+    <Property Name="BuyTotalAmount" Type="bigint" Nullable="false" />
+    <Property Name="SoldCount" Type="int" Nullable="false" />
+    <Property Name="SoldAmount" Type="bigint" Nullable="false" />
+    <Property Name="SoldProfitAmount" Type="bigint" Nullable="false" />
+    <Property Name="SellingCount" Type="int" Nullable="false" />
+    <Property Name="ForceSellingCount" Type="int" Nullable="false" />
+    <Property Name="RemainCount" Type="int" Nullable="false" />
+    <Property Name="CanSoldCount" Type="int" Nullable="false" />
+    <Property Name="InitialDeposit" Type="bigint" Nullable="false" />
+    <Property Name="RemainDeposit" Type="bigint" Nullable="false" />
+    <Property Name="MakeupDeposit" Type="bigint" Nullable="false" />
+    <Property Name="ServiceAmount" Type="bigint" Nullable="false" />
+    <Property Name="ServiceFee" Type="bigint" Nullable="false" />
+    <Property Name="LastServiceTime" Type="datetime" Nullable="false" />
+    <Property Name="ClosingTime" Type="datetime" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="ClosingForceStatus" Type="int" Nullable="false" />
+    <Property Name="ClosingForceTime" Type="datetime" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_hold_manager">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="HoldId" Type="bigint" Nullable="false" />
+    <Property Name="TradeAccountCode" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="TotalCount" Type="int" Nullable="false" />
+    <Property Name="SellingCount" Type="int" Nullable="false" />
+    <Property Name="CanSoldCount" Type="int" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_broker">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="BrokerCode" Type="int" Nullable="false" />
+    <Property Name="BrokerName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Version" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_broker_account_info">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountCode" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="AccountType" Type="int" Nullable="false" />
+    <Property Name="AccountNo" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="TradeAccountNo0" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="TradeAccountNo1" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="Holder0" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="Holder1" Type="varchar" MaxLength="200" Nullable="false" />
+    <Property Name="JyPassword" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="TxPassword" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="BrokerCode" Type="int" Nullable="false" />
+    <Property Name="DepartmentCode" Type="int" Nullable="false" />
+    <Property Name="InitialFunding" Type="bigint" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="SynchronizationStatus" Type="int" Nullable="false" />
+    <Property Name="SynchronizationTime" Type="datetime" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_broker_account_info_capital">
+    <Key>
+      <PropertyRef Name="AccountCode" />
+    </Key>
+    <Property Name="AccountCode" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="TotalBalance" Type="bigint" Nullable="false" />
+    <Property Name="AvailableBalance" Type="bigint" Nullable="false" />
+    <Property Name="FreezeBalance" Type="bigint" Nullable="false" />
+    <Property Name="WithdrawBalance" Type="bigint" Nullable="false" />
+    <Property Name="MarketValue" Type="bigint" Nullable="false" />
+    <Property Name="TotalValue" Type="bigint" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_broker_account_info_position">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountCode" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="SharesName" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="TotalSharesCount" Type="int" Nullable="false" />
+    <Property Name="CanSoldSharesCount" Type="int" Nullable="false" />
+    <Property Name="CostPrice" Type="bigint" Nullable="false" />
+    <Property Name="CurrPrice" Type="bigint" Nullable="false" />
+    <Property Name="BuyCountToday" Type="int" Nullable="false" />
+    <Property Name="SellCountToday" Type="int" Nullable="false" />
+    <Property Name="MarketValue" Type="bigint" Nullable="false" />
+    <Property Name="ProfitValue" Type="bigint" Nullable="false" />
+    <Property Name="ProfitRate" Type="int" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_broker_account_shares_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TradeAccountCode" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="TotalSharesCount" Type="int" Nullable="false" />
+    <Property Name="AccountSharesCount" Type="int" Nullable="false" />
+    <Property Name="SimulateSharesCount" Type="int" Nullable="false" />
+    <Property Name="AccountCanSoldCount" Type="int" Nullable="false" />
+    <Property Name="SimulateCanSoldCount" Type="int" Nullable="false" />
+    <Property Name="AccountSellingCount" Type="int" Nullable="false" />
+    <Property Name="SimulateSellingCount" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_broker_account_shares_rel_entrust">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="RelId" Type="bigint" Nullable="false" />
+    <Property Name="EntrustId" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="EntrustCount" Type="int" Nullable="false" />
+    <Property Name="DealCount" Type="int" Nullable="false" />
+    <Property Name="DealPrice" Type="bigint" Nullable="false" />
+    <Property Name="DealAmount" Type="bigint" Nullable="false" />
+    <Property Name="CancelCount" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="StatusDes" Type="nvarchar(max)" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_broker_department">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="BrokerCode" Type="int" Nullable="false" />
+    <Property Name="DepartmentCode" Type="int" Nullable="false" />
+    <Property Name="DepartmentName" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_broker_host">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="BrokerCode" Type="int" Nullable="false" />
+    <Property Name="IpAddress" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Port" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_dim_time">
+    <Key>
+      <PropertyRef Name="the_date" />
+    </Key>
+    <Property Name="the_date" Type="int" Nullable="false" />
+    <Property Name="date_name" Type="nvarchar" MaxLength="30" />
+    <Property Name="the_year" Type="int" />
+    <Property Name="year_name" Type="nvarchar" MaxLength="30" />
+    <Property Name="the_quarter" Type="int" />
+    <Property Name="quarter_name" Type="nvarchar" MaxLength="30" />
+    <Property Name="the_month" Type="int" />
+    <Property Name="month_name" Type="nvarchar" MaxLength="30" />
+    <Property Name="the_week" Type="int" />
+    <Property Name="week_name" Type="nvarchar" MaxLength="30" />
+    <Property Name="week_day" Type="int" />
+    <Property Name="week_day_name" Type="nvarchar" MaxLength="30" />
+  </EntityType>
+  <EntityType Name="t_notice_hold">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="HoldId" Type="bigint" Nullable="false" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="TimeId" Type="bigint" Nullable="false" />
+    <Property Name="LastNotifyTime" Type="datetime" />
+  </EntityType>
+  <EntityType Name="t_server">
+    <Key>
+      <PropertyRef Name="ServerId" />
+    </Key>
+    <Property Name="ServerId" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="OrderIndex" Type="int" Nullable="false" />
+    <Property Name="ServerDes" Type="nvarchar" MaxLength="500" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_server_broker_account_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ServerId" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="BrokerAccountId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_all">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="SharesName" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="SharesPyjc" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="SharesHandCount" Type="int" Nullable="false" />
+    <Property Name="ShareClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="ForbidStatus" Type="int" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_limit">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="LimitMarket" Type="int" Nullable="false" />
+    <Property Name="LimitKey" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="LimitType" Type="int" Nullable="false" />
+    <Property Name="ForbidType" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_limit_date">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="GroupId" Type="bigint" Nullable="false" />
+    <Property Name="BeginDate" Type="date" Nullable="false" />
+    <Property Name="EndDate" Type="date" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_limit_date_group">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="GroupName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_limit_time">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MarketName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="LimitMarket" Type="int" Nullable="false" />
+    <Property Name="LimitKey" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Time1" Type="nvarchar(max)" />
+    <Property Name="Time2" Type="nvarchar(max)" />
+    <Property Name="Time3" Type="nvarchar(max)" />
+    <Property Name="Time4" Type="nvarchar(max)" />
+    <Property Name="Time5" Type="nvarchar(max)" />
+    <Property Name="Time6" Type="nvarchar(max)" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_limit_tradequota">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="LimitMarket" Type="int" Nullable="false" />
+    <Property Name="LimitKey" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Rate" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_limit_tradequota_other">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="QuotaId" Type="bigint" Nullable="false" />
+    <Property Name="AccountCode" Type="nvarchar" MaxLength="128" Nullable="false" />
+    <Property Name="Rate" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_quotes">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="PresentPrice" Type="bigint" Nullable="false" />
+    <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
+    <Property Name="MaxPrice" Type="bigint" Nullable="false" />
+    <Property Name="MinPrice" Type="bigint" Nullable="false" />
+    <Property Name="TotalCount" Type="int" Nullable="false" />
+    <Property Name="PresentCount" Type="int" Nullable="false" />
+    <Property Name="TotalAmount" Type="bigint" Nullable="false" />
+    <Property Name="InvolCount" Type="int" Nullable="false" />
+    <Property Name="OuterCount" Type="int" Nullable="false" />
+    <Property Name="BuyPrice1" Type="bigint" Nullable="false" />
+    <Property Name="BuyCount1" Type="int" Nullable="false" />
+    <Property Name="BuyPrice2" Type="bigint" Nullable="false" />
+    <Property Name="BuyCount2" Type="int" Nullable="false" />
+    <Property Name="BuyPrice3" Type="bigint" Nullable="false" />
+    <Property Name="BuyCount3" Type="int" Nullable="false" />
+    <Property Name="BuyPrice4" Type="bigint" Nullable="false" />
+    <Property Name="BuyCount4" Type="int" Nullable="false" />
+    <Property Name="BuyPrice5" Type="bigint" Nullable="false" />
+    <Property Name="BuyCount5" Type="int" Nullable="false" />
+    <Property Name="SellPrice1" Type="bigint" Nullable="false" />
+    <Property Name="SellCount1" Type="int" Nullable="false" />
+    <Property Name="SellPrice2" Type="bigint" Nullable="false" />
+    <Property Name="SellCount2" Type="int" Nullable="false" />
+    <Property Name="SellPrice3" Type="bigint" Nullable="false" />
+    <Property Name="SellCount3" Type="int" Nullable="false" />
+    <Property Name="SellPrice4" Type="bigint" Nullable="false" />
+    <Property Name="SellCount4" Type="int" Nullable="false" />
+    <Property Name="SellPrice5" Type="bigint" Nullable="false" />
+    <Property Name="SellCount5" Type="int" Nullable="false" />
+    <Property Name="SpeedUp" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Activity" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_system_param">
+    <Key>
+      <PropertyRef Name="ParamName" />
+    </Key>
+    <Property Name="ParamName" Type="varchar" MaxLength="64" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="1024" />
+    <Property Name="ParamValue" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="IsJson" Type="bit" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_test_deal">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DealPrice" Type="nvarchar" MaxLength="50" />
+    <Property Name="DealCount" Type="nvarchar" MaxLength="50" />
+    <Property Name="DealAmount" Type="nvarchar" MaxLength="50" />
+    <Property Name="DealId" Type="nvarchar" MaxLength="50" />
+    <Property Name="EntrustId" Type="nvarchar" MaxLength="50" />
+  </EntityType>
+  <EntityType Name="t_test_entrust">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SharesCode" Type="nvarchar" MaxLength="50" />
+    <Property Name="SharesName" Type="nvarchar" MaxLength="50" />
+    <Property Name="TradeType" Type="nvarchar" MaxLength="50" />
+    <Property Name="StatusDes" Type="nvarchar" MaxLength="50" />
+    <Property Name="EntrustPrice" Type="nvarchar" MaxLength="50" />
+    <Property Name="EntrustCount" Type="nvarchar" MaxLength="50" />
+    <Property Name="EntrustId" Type="nvarchar" MaxLength="50" />
+    <Property Name="DealPrice" Type="nvarchar" MaxLength="50" />
+    <Property Name="DealCount" Type="nvarchar" MaxLength="50" />
+    <Property Name="IsRead" Type="bit" Nullable="false" />
+  </EntityType>
+  <Function Name="P_Check_TradeTime" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="market" Type="int" Mode="In" />
+    <Parameter Name="sharesCode" Type="varchar" Mode="In" />
+    <Parameter Name="currTime" Type="datetime" Mode="In" />
+    <Parameter Name="errorCode" Type="int" Mode="InOut" />
+  </Function>
+  <Function Name="P_TradeFinish" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="entrustManagerId" Type="bigint" Mode="In" />
+    <Parameter Name="dealPrice" Type="bigint" Mode="In" />
+    <Parameter Name="dealCount" Type="int" Mode="In" />
+  </Function>
+  <Function Name="P_TryToCancelEntrust" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="entrustId" Type="bigint" Mode="In" />
+  </Function>
+  <EntityContainer Name="meal_ticketModelStoreContainer">
+    <EntitySet Name="t_account_baseinfo" EntityType="Self.t_account_baseinfo" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_entrust" EntityType="Self.t_account_shares_entrust" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_entrust_manager" EntityType="Self.t_account_shares_entrust_manager" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_entrust_manager_dealdetails" EntityType="Self.t_account_shares_entrust_manager_dealdetails" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_entrust_manager_dealdetails_real" EntityType="Self.t_account_shares_entrust_manager_dealdetails_real" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_hold" EntityType="Self.t_account_shares_hold" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_hold_manager" EntityType="Self.t_account_shares_hold_manager" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_broker" EntityType="Self.t_broker" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_broker_account_info" EntityType="Self.t_broker_account_info" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_broker_account_info_capital" EntityType="Self.t_broker_account_info_capital" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_broker_account_info_position" EntityType="Self.t_broker_account_info_position" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_broker_account_shares_rel" EntityType="Self.t_broker_account_shares_rel" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_broker_account_shares_rel_entrust" EntityType="Self.t_broker_account_shares_rel_entrust" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_broker_department" EntityType="Self.t_broker_department" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_broker_host" EntityType="Self.t_broker_host" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_dim_time" EntityType="Self.t_dim_time" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_notice_hold" EntityType="Self.t_notice_hold" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_server" EntityType="Self.t_server" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_server_broker_account_rel" EntityType="Self.t_server_broker_account_rel" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_all" EntityType="Self.t_shares_all" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_limit" EntityType="Self.t_shares_limit" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_limit_date" EntityType="Self.t_shares_limit_date" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_limit_date_group" EntityType="Self.t_shares_limit_date_group" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_limit_time" EntityType="Self.t_shares_limit_time" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_limit_tradequota" EntityType="Self.t_shares_limit_tradequota" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_limit_tradequota_other" EntityType="Self.t_shares_limit_tradequota_other" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_quotes" EntityType="Self.t_shares_quotes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_system_param" EntityType="Self.t_system_param" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_test_deal" EntityType="Self.t_test_deal" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_test_entrust" EntityType="Self.t_test_entrust" Schema="dbo" store:Type="Tables" />
+  </EntityContainer>
+</Schema>

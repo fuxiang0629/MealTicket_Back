@@ -1,0 +1,55 @@
+﻿@using System.Collections.ObjectModel
+@using System.Threading
+@using System.Web.Http.Description
+@using WebAPI.HelpPage.ModelDescriptions
+
+@{ Collection<ParameterDescription> parameters = Model.RequestParameters; }
+@if (parameters.Count > 0)
+{
+    <table class="help-page-table">
+        <thead>
+        <tr><th>名称</th><th>描述信息</th><th>级别</th><th>备注信息</th></tr>
+        </thead>
+        <tbody>
+        @{
+    foreach (ParameterDescription parameter in parameters)
+    {
+        var parameterDocumentation = parameter.Documentation ?? "暂无说明.";
+
+                    <tr>
+                        <td class="parameter-name">@parameter.Name</td>
+                        <td class="parameter-documentation">
+                            <p>@parameterDocumentation</p>
+                        </td>
+                        <td class="parameter-name">
+                            <p>@parameter.Level</p>
+                        </td>
+                        <td class="parameter-type">
+                        @{
+            switch (parameter.Source)
+            {
+                case ApiParameterSource.FromBody:
+                                    <p>请求参数通过 <b>消息体</b>传递.
+                                    </p>
+                    break;
+                case ApiParameterSource.FromUri:
+                                    <p>请求消息通过 <b>URI</b>传递.
+                                    </p>
+                    break;
+                case ApiParameterSource.Unknown:
+                default:
+                                    <p>未知.</p>
+                    break;
+            }
+                        }
+                        </td>
+                    </tr>
+    }
+        }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>未知.</p>
+}

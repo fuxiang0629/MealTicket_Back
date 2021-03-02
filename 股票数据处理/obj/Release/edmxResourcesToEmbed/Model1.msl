@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="meal_ticketModelStoreContainer" CdmEntityContainer="meal_ticketEntities">
+    <EntitySetMapping Name="t_account_shares_entrust_manager">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_entrust_manager">
+        <MappingFragment StoreEntitySet="t_account_shares_entrust_manager">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="BuyId" ColumnName="BuyId" />
+          <ScalarProperty Name="TradeType" ColumnName="TradeType" />
+          <ScalarProperty Name="TradeAccountCode" ColumnName="TradeAccountCode" />
+          <ScalarProperty Name="EntrustId" ColumnName="EntrustId" />
+          <ScalarProperty Name="EntrustTime" ColumnName="EntrustTime" />
+          <ScalarProperty Name="EntrustCount" ColumnName="EntrustCount" />
+          <ScalarProperty Name="RealEntrustCount" ColumnName="RealEntrustCount" />
+          <ScalarProperty Name="EntrustType" ColumnName="EntrustType" />
+          <ScalarProperty Name="EntrustPrice" ColumnName="EntrustPrice" />
+          <ScalarProperty Name="DealCount" ColumnName="DealCount" />
+          <ScalarProperty Name="SimulateDealCount" ColumnName="SimulateDealCount" />
+          <ScalarProperty Name="DealPrice" ColumnName="DealPrice" />
+          <ScalarProperty Name="DealAmount" ColumnName="DealAmount" />
+          <ScalarProperty Name="CancelCount" ColumnName="CancelCount" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="StatusDes" ColumnName="StatusDes" />
+          <ScalarProperty Name="CanClear" ColumnName="CanClear" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

@@ -1,0 +1,36 @@
+2020/9/4 17:16:04
+每日清除当天购买委托数据出错
+System.ArgumentNullException: 值不能为 null。
+参数名: connection
+   在 System.Data.Entity.Utilities.Check.NotNull[T](T value, String parameterName)
+   在 System.Data.Entity.Infrastructure.Interception.DbTransactionInterceptionContext.WithConnection(DbConnection connection)
+   在 System.Data.Entity.Infrastructure.Interception.DbTransactionDispatcher.Rollback(DbTransaction transaction, DbInterceptionContext interceptionContext)
+   在 System.Data.Entity.Core.EntityClient.EntityTransaction.Rollback()
+
+2020/9/4 17:17:00
+每日清除当天购买委托数据出错
+System.ArgumentNullException: 值不能为 null。
+参数名: connection
+   在 System.Data.Entity.Utilities.Check.NotNull[T](T value, String parameterName)
+   在 System.Data.Entity.Infrastructure.Interception.DbTransactionInterceptionContext.WithConnection(DbConnection connection)
+   在 System.Data.Entity.Infrastructure.Interception.DbTransactionDispatcher.Rollback(DbTransaction transaction, DbInterceptionContext interceptionContext)
+   在 System.Data.Entity.Core.EntityClient.EntityTransaction.Rollback()
+
+2020/9/4 17:17:49
+每日清除当天购买委托数据出错
+System.ArgumentNullException: 值不能为 null。
+参数名: connection
+   在 System.Data.Entity.Utilities.Check.NotNull[T](T value, String parameterName)
+   在 System.Data.Entity.Infrastructure.Interception.DbTransactionInterceptionContext.WithConnection(DbConnection connection)
+   在 System.Data.Entity.Infrastructure.Interception.DbTransactionDispatcher.Rollback(DbTransaction transaction, DbInterceptionContext interceptionContext)
+   在 System.Data.Entity.Core.EntityClient.EntityTransaction.Rollback()
+
+2020/9/4 17:18:09
+每日清除当天购买委托数据出错
+System.ArgumentNullException: 值不能为 null。
+参数名: connection
+   在 System.Data.Entity.Utilities.Check.NotNull[T](T value, String parameterName)
+   在 System.Data.Entity.Infrastructure.Interception.DbTransactionInterceptionContext.WithConnection(DbConnection connection)
+   在 System.Data.Entity.Infrastructure.Interception.DbTransactionDispatcher.Rollback(DbTransaction transaction, DbInterceptionContext interceptionContext)
+   在 System.Data.Entity.Core.EntityClient.EntityTransaction.Rollback()
+

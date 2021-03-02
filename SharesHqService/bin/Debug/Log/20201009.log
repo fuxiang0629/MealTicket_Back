@@ -1,0 +1,16 @@
+2020/10/9 10:13:54
+更新所有股票数据出错
+System.Data.SqlClient.SqlException (0x80131904): 仅当使用了列列表并且 IDENTITY_INSERT 为 ON 时，才能为表't'中的标识列指定显式值。
+   在 SharesHqService.DataBaseHelper.UpdateAllShares(List`1 list, Int32 market) 位置 F:\项目\饭票后端\SharesHqService\DataBaseHelper.cs:行号 99
+   在 SharesHqService.AllSharesUpdateRunner.Execute() 位置 F:\项目\饭票后端\SharesHqService\更新所有股票基础数据服务\AllSharesUpdateRunner.cs:行号 57
+ClientConnectionId:0e1562cc-e21c-45f9-8c4c-73c324080687
+Error Number:8101,State:1,Class:16
+
+2020/10/9 10:17:09
+更新所有股票数据出错
+System.Data.SqlClient.SqlException (0x80131904): 仅当使用了列列表并且 IDENTITY_INSERT 为 ON 时，才能为表't'中的标识列指定显式值。
+   在 SharesHqService.DataBaseHelper.UpdateAllShares(List`1 list, Int32 market) 位置 F:\项目\饭票后端\SharesHqService\DataBaseHelper.cs:行号 102
+   在 SharesHqService.AllSharesUpdateRunner.Execute() 位置 F:\项目\饭票后端\SharesHqService\更新所有股票基础数据服务\AllSharesUpdateRunner.cs:行号 57
+ClientConnectionId:a9839c2a-09c7-4bfb-8be0-bfded77d6c54
+Error Number:8101,State:1,Class:16
+

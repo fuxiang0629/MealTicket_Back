@@ -1,0 +1,36 @@
+﻿@using WebAPI.HelpPage.Models
+@model HelpPageApiModel
+
+@{
+    var description = Model.ApiDescription;
+    var title = description.HttpMethod.Method + " " + description.RelativePath;
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <title>@title</title>
+    <link type="text/css" href="@ViewBag.HelpRoute/HelpPage_css" rel="stylesheet" />
+</head>
+<body>
+    <div id="body" class="help-page">
+        <section class="featured">
+            <div class="content-wrapper">
+                <p>
+                    <a href="/api/help">返回目录</a>
+                </p>
+            </div>
+        </section>
+        <section class="content-wrapper main-content clear-fix">
+            @Include("HelpPageApiModel.cshtml", Model, typeof(HelpPageApiModel))
+        </section>
+    </div>
+    <div id="foot">
+        <p>
+            Copyright 2018 古迪科技 All Rights Reserved.
+            <a href="">公司网址</a>
+            <a href="">问题反馈</a>
+        </p>
+    </div>
+</body>
+</html>

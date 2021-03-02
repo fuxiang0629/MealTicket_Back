@@ -1,0 +1,14 @@
+2020-12-30 20:14:10
+执行购买队列失败
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: “long”未包含“BuyId”的定义
+   在 CallSite.Target(Closure , CallSite , Object )
+   在 System.Dynamic.UpdateDelegates.UpdateAndExecute1[T0,TRet](CallSite site, T0 arg0)
+   在 SharesTradeService.Handler.MQHandler.BuyConsumer_Received(Object sender, BasicDeliverEventArgs e) 位置 C:\Users\37863\Desktop\项目\饭票后端\SharesTradeService\Handler\MQHandler.cs:行号 211
+
+2020-12-30 20:14:10
+执行卖出队列失败
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: “long”未包含“SellManagerId”的定义
+   在 CallSite.Target(Closure , CallSite , Object )
+   在 System.Dynamic.UpdateDelegates.UpdateAndExecute1[T0,TRet](CallSite site, T0 arg0)
+   在 SharesTradeService.Handler.MQHandler.SellConsumer_Received(Object sender, BasicDeliverEventArgs e) 位置 C:\Users\37863\Desktop\项目\饭票后端\SharesTradeService\Handler\MQHandler.cs:行号 246
+

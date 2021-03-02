@@ -1,0 +1,7 @@
+2020/12/10 14:46:24
+SharesF10UpdateRunner出错
+System.OutOfMemoryException: 引发类型为“System.OutOfMemoryException”的异常。
+   在 System.Text.StringBuilder..ctor(String value, Int32 startIndex, Int32 length, Int32 capacity)
+   在 System.Text.StringBuilder..ctor(Int32 capacity)
+   在 SharesHqService.SharesF10UpdateRunner.Execute() 位置 F:\项目\饭票后端\SharesHqService\更新股票F10数据\SharesF10UpdateRunner.cs:行号 33
+

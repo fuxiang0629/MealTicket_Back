@@ -1,0 +1,238 @@
+2020/8/30 14:34:35
+队列出错了
+System.IO.FileNotFoundException: 未能加载文件或程序集“System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51”或它的某一个依赖项。系统找不到指定的文件。
+文件名:“System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51”
+
+=== 预绑定状态信息 ===
+日志: DisplayName = System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51
+ (Fully-specified)
+日志: Appbase = file:///F:/项目/饭票后端/MealTicket_APIService/bin/Debug/
+日志: 初始 PrivatePath = NULL
+调用程序集: System.Threading.Channels, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51。
+===
+日志: 此绑定从 default 加载上下文开始。
+日志: 正在使用应用程序配置文件: F:\项目\饭票后端\MealTicket_APIService\bin\Debug\MealTicket_APIService.exe.Config
+日志: 使用主机配置文件: 
+日志: 使用 C:\Windows\Microsoft.NET\Framework\v4.0.30319\config\machine.config 的计算机配置文件。
+日志: 在应用程序配置文件中找到重定向: 4.2.0.0 已重定向到 4.2.0.1。
+日志: 策略后引用: System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51
+日志: 尝试下载新的 URL file:///F:/项目/饭票后端/MealTicket_APIService/bin/Debug/System.Threading.Tasks.Extensions.DLL。
+日志: 尝试下载新的 URL file:///F:/项目/饭票后端/MealTicket_APIService/bin/Debug/System.Threading.Tasks.Extensions/System.Threading.Tasks.Extensions.DLL。
+日志: 尝试下载新的 URL file:///F:/项目/饭票后端/MealTicket_APIService/bin/Debug/System.Threading.Tasks.Extensions.EXE。
+日志: 尝试下载新的 URL file:///F:/项目/饭票后端/MealTicket_APIService/bin/Debug/System.Threading.Tasks.Extensions/System.Threading.Tasks.Extensions.EXE。
+
+
+2020/8/30 14:34:41
+操作超时，请重新操作
+MealTicket_Handler.Model.WebApiException: 操作超时，请重新操作
+   在 MealTicket_Handler.TradeHandler.ApplyTradeBuy(ApplyTradeBuyRequest request, HeadBase basedata) 位置 F:\项目\饭票后端\MealTicket_Handler\BusinessHandler\TradeHandler.cs:行号 498
+   在 MealTicket_APIService.controller.TradeController.ApplyTradeBuy(ApplyTradeBuyRequest request) 位置 F:\项目\饭票后端\MealTicket_APIService\controller\TradeController.cs:行号 176
+   在 lambda_method(Closure , Object , Object[] )
+   在 System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.<>c__DisplayClass6_2.<GetExecutor>b__2(Object instance, Object[] methodParameters)
+   在 System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.Execute(Object instance, Object[] arguments)
+   在 System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ExecuteAsync(HttpControllerContext controllerContext, IDictionary`2 arguments, CancellationToken cancellationToken)
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeActionAsyncCore>d__1.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Filters.ActionFilterAttribute.<CallOnActionExecutedAsync>d__6.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Web.Http.Filters.ActionFilterAttribute.<CallOnActionExecutedAsync>d__6.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Filters.ActionFilterAttribute.<ExecuteActionFilterAsyncCore>d__5.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Filters.ActionFilterAttribute.<CallOnActionExecutedAsync>d__6.MoveNext()
+
+2020/8/30 14:38:29
+队列出错了
+System.IO.FileNotFoundException: 未能加载文件或程序集“System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51”或它的某一个依赖项。系统找不到指定的文件。
+文件名:“System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51”
+
+=== 预绑定状态信息 ===
+日志: DisplayName = System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51
+ (Fully-specified)
+日志: Appbase = file:///F:/项目/饭票后端/MealTicket_APIService/bin/Debug/
+日志: 初始 PrivatePath = NULL
+调用程序集: System.Threading.Channels, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51。
+===
+日志: 此绑定从 default 加载上下文开始。
+日志: 正在使用应用程序配置文件: F:\项目\饭票后端\MealTicket_APIService\bin\Debug\MealTicket_APIService.exe.Config
+日志: 使用主机配置文件: 
+日志: 使用 C:\Windows\Microsoft.NET\Framework\v4.0.30319\config\machine.config 的计算机配置文件。
+日志: 在应用程序配置文件中找到重定向: 4.2.0.0 已重定向到 4.2.0.1。
+日志: 策略后引用: System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51
+日志: 尝试下载新的 URL file:///F:/项目/饭票后端/MealTicket_APIService/bin/Debug/System.Threading.Tasks.Extensions.DLL。
+日志: 尝试下载新的 URL file:///F:/项目/饭票后端/MealTicket_APIService/bin/Debug/System.Threading.Tasks.Extensions/System.Threading.Tasks.Extensions.DLL。
+日志: 尝试下载新的 URL file:///F:/项目/饭票后端/MealTicket_APIService/bin/Debug/System.Threading.Tasks.Extensions.EXE。
+日志: 尝试下载新的 URL file:///F:/项目/饭票后端/MealTicket_APIService/bin/Debug/System.Threading.Tasks.Extensions/System.Threading.Tasks.Extensions.EXE。
+
+
+2020/8/30 14:38:32
+操作超时，请重新操作
+MealTicket_Handler.Model.WebApiException: 操作超时，请重新操作
+   在 MealTicket_Handler.TradeHandler.ApplyTradeBuy(ApplyTradeBuyRequest request, HeadBase basedata) 位置 F:\项目\饭票后端\MealTicket_Handler\BusinessHandler\TradeHandler.cs:行号 498
+   在 MealTicket_APIService.controller.TradeController.ApplyTradeBuy(ApplyTradeBuyRequest request) 位置 F:\项目\饭票后端\MealTicket_APIService\controller\TradeController.cs:行号 176
+   在 lambda_method(Closure , Object , Object[] )
+   在 System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.<>c__DisplayClass6_2.<GetExecutor>b__2(Object instance, Object[] methodParameters)
+   在 System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.Execute(Object instance, Object[] arguments)
+   在 System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ExecuteAsync(HttpControllerContext controllerContext, IDictionary`2 arguments, CancellationToken cancellationToken)
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeActionAsyncCore>d__1.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Filters.ActionFilterAttribute.<CallOnActionExecutedAsync>d__6.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Web.Http.Filters.ActionFilterAttribute.<CallOnActionExecutedAsync>d__6.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Filters.ActionFilterAttribute.<ExecuteActionFilterAsyncCore>d__5.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Filters.ActionFilterAttribute.<CallOnActionExecutedAsync>d__6.MoveNext()
+
+2020/8/30 14:38:51
+队列出错了
+System.IO.FileNotFoundException: 未能加载文件或程序集“System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51”或它的某一个依赖项。系统找不到指定的文件。
+文件名:“System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51”
+
+=== 预绑定状态信息 ===
+日志: DisplayName = System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51
+ (Fully-specified)
+日志: Appbase = file:///F:/项目/饭票后端/MealTicket_APIService/bin/Debug/
+日志: 初始 PrivatePath = NULL
+调用程序集: System.Threading.Channels, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51。
+===
+日志: 此绑定从 default 加载上下文开始。
+日志: 正在使用应用程序配置文件: F:\项目\饭票后端\MealTicket_APIService\bin\Debug\MealTicket_APIService.exe.Config
+日志: 使用主机配置文件: 
+日志: 使用 C:\Windows\Microsoft.NET\Framework\v4.0.30319\config\machine.config 的计算机配置文件。
+日志: 在应用程序配置文件中找到重定向: 4.2.0.0 已重定向到 4.2.0.1。
+日志: 策略后引用: System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51
+日志: 相同的绑定已出现过，因 hr = 0x80070002 而失败。
+
+
+2020/8/30 14:38:56
+操作超时，请重新操作
+MealTicket_Handler.Model.WebApiException: 操作超时，请重新操作
+   在 MealTicket_Handler.TradeHandler.ApplyTradeBuy(ApplyTradeBuyRequest request, HeadBase basedata) 位置 F:\项目\饭票后端\MealTicket_Handler\BusinessHandler\TradeHandler.cs:行号 498
+   在 MealTicket_APIService.controller.TradeController.ApplyTradeBuy(ApplyTradeBuyRequest request) 位置 F:\项目\饭票后端\MealTicket_APIService\controller\TradeController.cs:行号 176
+   在 lambda_method(Closure , Object , Object[] )
+   在 System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.<>c__DisplayClass6_2.<GetExecutor>b__2(Object instance, Object[] methodParameters)
+   在 System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.Execute(Object instance, Object[] arguments)
+   在 System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ExecuteAsync(HttpControllerContext controllerContext, IDictionary`2 arguments, CancellationToken cancellationToken)
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeActionAsyncCore>d__1.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Filters.ActionFilterAttribute.<CallOnActionExecutedAsync>d__6.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Web.Http.Filters.ActionFilterAttribute.<CallOnActionExecutedAsync>d__6.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Filters.ActionFilterAttribute.<ExecuteActionFilterAsyncCore>d__5.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Filters.ActionFilterAttribute.<CallOnActionExecutedAsync>d__6.MoveNext()
+
+2020/8/30 14:39:16
+队列出错了
+System.IO.FileNotFoundException: 未能加载文件或程序集“System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51”或它的某一个依赖项。系统找不到指定的文件。
+文件名:“System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51”
+
+=== 预绑定状态信息 ===
+日志: DisplayName = System.Threading.Tasks.Extensions, Version=4.2.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51
+ (Fully-specified)
+日志: Appbase = file:///F:/项目/饭票后端/MealTicket_APIService/bin/Debug/
+日志: 初始 PrivatePath = NULL
+调用程序集: System.Threading.Channels, Version=4.0.2.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51。
+===
+日志: 此绑定从 default 加载上下文开始。
+日志: 正在使用应用程序配置文件: F:\项目\饭票后端\MealTicket_APIService\bin\Debug\MealTicket_APIService.exe.Config
+日志: 使用主机配置文件: 
+日志: 使用 C:\Windows\Microsoft.NET\Framework\v4.0.30319\config\machine.config 的计算机配置文件。
+日志: 在应用程序配置文件中找到重定向: 4.2.0.0 已重定向到 4.2.0.1。
+日志: 策略后引用: System.Threading.Tasks.Extensions, Version=4.2.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51
+日志: 相同的绑定已出现过，因 hr = 0x80070002 而失败。
+
+
+2020/8/30 14:39:38
+操作超时，请重新操作
+MealTicket_Handler.Model.WebApiException: 操作超时，请重新操作
+   在 MealTicket_Handler.TradeHandler.ApplyTradeBuy(ApplyTradeBuyRequest request, HeadBase basedata) 位置 F:\项目\饭票后端\MealTicket_Handler\BusinessHandler\TradeHandler.cs:行号 498
+   在 MealTicket_APIService.controller.TradeController.ApplyTradeBuy(ApplyTradeBuyRequest request) 位置 F:\项目\饭票后端\MealTicket_APIService\controller\TradeController.cs:行号 176
+   在 lambda_method(Closure , Object , Object[] )
+   在 System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.<>c__DisplayClass6_2.<GetExecutor>b__2(Object instance, Object[] methodParameters)
+   在 System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.Execute(Object instance, Object[] arguments)
+   在 System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ExecuteAsync(HttpControllerContext controllerContext, IDictionary`2 arguments, CancellationToken cancellationToken)
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeActionAsyncCore>d__1.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Filters.ActionFilterAttribute.<CallOnActionExecutedAsync>d__6.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Web.Http.Filters.ActionFilterAttribute.<CallOnActionExecutedAsync>d__6.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Filters.ActionFilterAttribute.<ExecuteActionFilterAsyncCore>d__5.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Filters.ActionFilterAttribute.<CallOnActionExecutedAsync>d__6.MoveNext()
+
+2020/8/30 20:39:01
+短信验证码错误
+MealTicket_Handler.Model.WebApiException: 短信验证码错误
+   在 MealTicket_Handler.AccountHandler.AccountRegister(AccountRegisterRequest request, HeadBase basedata) 位置 F:\项目\饭票后端\MealTicket_Handler\BusinessHandler\AccountHandler.cs:行号 263
+   在 MealTicket_APIService.controller.AccountController.AccountRegister(AccountRegisterRequest request) 位置 F:\项目\饭票后端\MealTicket_APIService\controller\AccountController.cs:行号 182
+   在 lambda_method(Closure , Object , Object[] )
+   在 System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.<>c__DisplayClass6_2.<GetExecutor>b__2(Object instance, Object[] methodParameters)
+   在 System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.Execute(Object instance, Object[] arguments)
+   在 System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ExecuteAsync(HttpControllerContext controllerContext, IDictionary`2 arguments, CancellationToken cancellationToken)
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeActionAsyncCore>d__1.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Filters.ActionFilterAttribute.<CallOnActionExecutedAsync>d__6.MoveNext()
+
+2020/8/30 20:39:22
+短信验证码错误
+MealTicket_Handler.Model.WebApiException: 短信验证码错误
+   在 MealTicket_Handler.AccountHandler.AccountRegister(AccountRegisterRequest request, HeadBase basedata) 位置 F:\项目\饭票后端\MealTicket_Handler\BusinessHandler\AccountHandler.cs:行号 263
+   在 MealTicket_APIService.controller.AccountController.AccountRegister(AccountRegisterRequest request) 位置 F:\项目\饭票后端\MealTicket_APIService\controller\AccountController.cs:行号 182
+   在 lambda_method(Closure , Object , Object[] )
+   在 System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.<>c__DisplayClass6_2.<GetExecutor>b__2(Object instance, Object[] methodParameters)
+   在 System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ActionExecutor.Execute(Object instance, Object[] arguments)
+   在 System.Web.Http.Controllers.ReflectedHttpActionDescriptor.ExecuteAsync(HttpControllerContext controllerContext, IDictionary`2 arguments, CancellationToken cancellationToken)
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Controllers.ApiControllerActionInvoker.<InvokeActionAsyncCore>d__1.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 System.Web.Http.Filters.ActionFilterAttribute.<CallOnActionExecutedAsync>d__6.MoveNext()
+

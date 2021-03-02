@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="3e01167b6bdb40a4b7c9e8515d2f29ff" Name="Diagram1" >
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_optional" Width="1.5" PointX="0.75" PointY="4.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_quotes" Width="1.5" PointX="3.375" PointY="4.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_all" Width="1.5" PointX="5.375" PointY="0.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_monitor_trend_rel" Width="1.5" PointX="5.375" PointY="4.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_login_token_web" Width="1.5" PointX="7.375" PointY="0.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_system_param" Width="1.5" PointX="0.75" PointY="7.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_optional_trend_rel" Width="1.5" PointX="7.375" PointY="3.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_optional_trend_rel_par" Width="1.5" PointX="5.375" PointY="7.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_monitor_trend" Width="1.5" PointX="7.375" PointY="6.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_seat" Width="1.5" PointX="9.375" PointY="4.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_optional_seat_rel" Width="1.5" PointX="7.375" PointY="9.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_today" Width="1.5" PointX="9.375" PointY="8.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_dim_time" Width="1.5" PointX="0.75" PointY="10.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_optional_trend_rel_tri_record" Width="1.5" PointX="11.375" PointY="0.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_date" Width="1.5" PointX="11.375" PointY="8.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_date_group" Width="1.5" PointX="5.375" PointY="12.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_time" Width="1.5" PointX="7.375" PointY="12.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_monitor" Width="1.5" PointX="0.75" PointY="0.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_goods" Width="1.5" PointX="9.375" PointY="12.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_payment_channel" Width="1.5" PointX="11.375" PointY="12.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_optional_group" Width="1.5" PointX="13.375" PointY="0.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_markettime" Width="1.5" PointX="13.375" PointY="4.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_optional_trend_rel_tri" Width="1.5" PointX="13.375" PointY="8.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_optional_group_rel" Width="1.5" PointX="13.375" PointY="12.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_optional_trend_rel_tri_record_statistic" Width="1.5" PointX="0.75" PointY="14.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_follow_rel" Width="1.5" PointX="15.375" PointY="0.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_baseinfo" Width="1.5" PointX="15.375" PointY="3.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_hold" Width="1.5" PointX="3.375" PointY="15.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_wallet" Width="1.5" PointX="15.375" PointY="9.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_entrust" Width="1.5" PointX="15.375" PointY="12.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_entrust_follow" Width="1.5" PointX="5.375" PointY="16.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_entrust_manager" Width="1.5" PointX="7.375" PointY="16.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_entrust_manager_dealdetails" Width="1.5" PointX="9.375" PointY="16.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_fundmultiple" Width="1.5" PointX="11.375" PointY="16.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_broker_account_info" Width="1.5" PointX="17.375" PointY="0.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_server" Width="1.5" PointX="17.375" PointY="6.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_server_broker_account_rel" Width="1.5" PointX="17.375" PointY="9.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_traderules" Width="1.5" PointX="17.375" PointY="12.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_traderules_other" Width="1.5" PointX="17.375" PointY="16.75" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

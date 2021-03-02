@@ -1,0 +1,38 @@
+2021/2/26 16:36:30
+队列链接断开重连
+
+
+2021/2/26 16:36:30
+MQ链接异常
+System.TimeoutException: 操作已超时。
+   在 RabbitMQ.Util.BlockingCell`1.WaitForValue(TimeSpan timeout)
+   在 RabbitMQ.Client.Impl.SimpleBlockingRpcContinuation.GetReply(TimeSpan timeout)
+   在 RabbitMQ.Client.Impl.ModelBase.ModelRpc(MethodBase method, ContentHeaderBase header, Byte[] body)
+   在 RabbitMQ.Client.Framing.Impl.Model.BasicQos(UInt32 prefetchSize, UInt16 prefetchCount, Boolean global)
+   在 RabbitMQ.Client.Impl.AutorecoveringModel.BasicQos(UInt32 prefetchSize, UInt16 prefetchCount, Boolean global)
+   在 SharesTradeService.Handler.MQHandler.Reconnect() 位置 F:\项目\饭票后端\SharesTradeService\Handler\MQHandler.cs:行号 117
+
+2021/2/26 18:24:14
+卖出操作出错
+System.Exception: 委托账户不存在
+   在 SharesTradeService.Handler.SharesTradeBusiness.SellSuccess(String tradeAccountCode, SellInfo sellInfo, String tradeEntrustId, meal_ticketEntities db) 位置 F:\项目\饭票后端\SharesTradeService\Handler\SharesTradeBusiness.cs:行号 680
+   在 SharesTradeService.Handler.SharesTradeBusiness.SellTrade(List`1 entrustManagerIdList) 位置 F:\项目\饭票后端\SharesTradeService\Handler\SharesTradeBusiness.cs:行号 596
+
+2021/2/26 18:24:38
+队列链接断开重连
+
+
+2021/2/26 18:26:00
+卖出操作出错
+System.Exception: 委托账户不存在
+   在 SharesTradeService.Handler.SharesTradeBusiness.SellSuccess(String tradeAccountCode, SellInfo sellInfo, String tradeEntrustId, meal_ticketEntities db) 位置 F:\项目\饭票后端\SharesTradeService\Handler\SharesTradeBusiness.cs:行号 680
+   在 SharesTradeService.Handler.SharesTradeBusiness.SellTrade(List`1 entrustManagerIdList) 位置 F:\项目\饭票后端\SharesTradeService\Handler\SharesTradeBusiness.cs:行号 596
+
+2021/2/26 18:26:14
+队列链接断开重连
+
+
+2021/2/26 18:26:21
+队列链接断开重连
+
+

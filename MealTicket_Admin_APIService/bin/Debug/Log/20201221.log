@@ -1,0 +1,944 @@
+2020/12/21 19:58:35
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:58:35
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:58:35
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:58:36
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:58:36
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:58:36
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:58:36
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:58:36
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:58:36
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:58:36
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:58:37
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:58:37
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:58:37
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:58:37
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:58:37
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:58:37
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:58:37
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:58:37
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:58:38
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:58:38
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:58:38
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:06
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:09
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:09
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:09
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:09
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:09
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:10
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:10
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:10
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:10
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:10
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:10
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:10
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:10
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:11
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:11
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:11
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:11
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:11
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:11
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:11
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:12
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:12
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:12
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:12
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:12
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:12
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:12
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:13
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:13
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:13
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:13
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:13
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:13
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:13
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:13
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:13
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:14
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:14
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:14
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:14
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:14
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:14
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:14
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:14
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:15
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:15
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:15
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:15
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:15
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:15
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:16
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:16
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:16
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:16
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:16
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:16
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:16
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:17
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:17
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:17
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:17
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:17
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:17
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:18
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:18
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:18
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:18
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:18
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:18
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:18
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:18
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:19
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:19
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:19
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:19
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:19
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:19
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:20
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:20
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:20
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:20
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:20
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:20
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:20
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:20
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:21
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:21
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:21
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:21
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:21
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:21
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:21
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:22
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:22
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:22
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+
+2020/12/21 19:59:22
+出错了
+System.InvalidOperationException: ExecuteNonQuery: CommandText 属性尚未初始化
+   在 System.Data.SqlClient.SqlCommand.ValidateCommand(String method, Boolean async)
+   在 System.Data.SqlClient.SqlCommand.InternalExecuteNonQuery(TaskCompletionSource`1 completion, String methodName, Boolean sendToPipe, Int32 timeout, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.ExecuteNonQuery()
+   在 MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(List`1 list) 位置 F:\项目\饭票后端\MealTicket_Admin_Handler\TradeCenterHandler.cs:行号 2232
+

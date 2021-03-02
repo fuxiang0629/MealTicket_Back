@@ -1,0 +1,1148 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MealTicket_APIService</name>
+    </assembly>
+    <members>
+        <member name="F:MealTicket_APIService.APIService._manager">
+            <summary>
+            控制api启动关闭的管理对象
+            </summary>
+        </member>
+        <member name="F:MealTicket_APIService.APIService.components">
+            <summary> 
+            必需的设计器变量。
+            </summary>
+        </member>
+        <member name="M:MealTicket_APIService.APIService.Dispose(System.Boolean)">
+            <summary>
+            清理所有正在使用的资源。
+            </summary>
+            <param name="disposing">如果应释放托管资源，为 true；否则为 false。</param>
+        </member>
+        <member name="M:MealTicket_APIService.APIService.InitializeComponent">
+            <summary> 
+            设计器支持所需的方法 - 不要修改
+            使用代码编辑器修改此方法的内容。
+            </summary>
+        </member>
+        <member name="T:MealTicket_APIService.Startup">
+            <summary>
+            Owin启动配置。实现服务的默认配置。
+            </summary>
+        </member>
+        <member name="M:MealTicket_APIService.Startup.InitActionList(System.Web.Http.HttpConfiguration)">
+            <summary>
+            初始化ActionList
+            </summary>
+        </member>
+        <member name="T:MealTicket_APIService.WebApiManager">
+            <summary>
+            Api框架管理器。用于管理框架内部组件的启动和关闭
+            </summary>
+        </member>
+        <member name="P:MealTicket_APIService.WebApiManager.Kernel">
+            <summary>
+            依赖注入
+            </summary>
+        </member>
+        <member name="F:MealTicket_APIService.WebApiManager._app">
+            <summary>
+            owin启动类
+            </summary>
+        </member>
+        <member name="F:MealTicket_APIService.WebApiManager._isstart">
+            <summary>
+            是否正常启动
+            </summary>
+        </member>
+        <member name="M:MealTicket_APIService.WebApiManager.Dispose">
+            <summary>
+            关闭
+            </summary>
+        </member>
+        <member name="M:MealTicket_APIService.WebApiManager.Start(System.String,System.String[])">
+            <summary>
+            启动web api。默认使用框架内部配置。
+            默认启用：
+            1.框架自定义缓存对象
+            2.框架自定义循环任务
+            3.启动api
+            </summary>
+            <param name="url">监听基地址</param>
+            <param name="urls">其他扩展地址</param>
+        </member>
+        <member name="M:MealTicket_APIService.WebApiManager.Start``1(System.String,System.String[])">
+            <summary>
+            启动web api。
+            </summary>
+            <typeparam name="TStartup">启动的配置类，可以使用任何符合Owin规范的配置</typeparam>
+            <param name="url">监听基地址</param>
+            <param name="urls">其他扩展地址</param>
+        </member>
+        <member name="M:MealTicket_APIService.WebApiManager.LoadKernel">
+            <summary>
+            加载依赖注入。
+            可重载方法，返回自定义的依赖注入模块
+            </summary>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.AccountLogin(MealTicket_Handler.Model.AccountLoginRequest)">
+            <summary>
+            用户登入
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.AccountSetTransactionPassword(MealTicket_Handler.Model.AccountSetTransactionPasswordRequest)">
+            <summary>
+            用户首次设置交易密码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.CheckAccountRegister(MealTicket_Handler.Model.CheckAccountRegisterRequest)">
+            <summary>
+            检查手机号是否已经注册
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.GetPicVerifyCode(MealTicket_Handler.Model.GetPicVerifyCodeRequest)">
+            <summary>
+            获取图片验证码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.CheckPicVerifyCode(MealTicket_Handler.Model.CheckPicVerifyCodeRequest)">
+            <summary>
+            检查图片验证码是否正确
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.SendVerifyCode(MealTicket_Handler.Model.SendVerifyCodeRequest)">
+            <summary>
+            发送短信验证码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.AccountRegister(MealTicket_Handler.Model.AccountRegisterRequest)">
+            <summary>
+            用户注册
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.AccountForgetPassword(MealTicket_Handler.Model.AccountForgetPasswordRequest)">
+            <summary>
+            忘记密码重置
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.AccountModifyMobile(MealTicket_Handler.Model.AccountModifyMobileRequest)">
+            <summary>
+            修改手机号
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.AccountModifyPassword(MealTicket_Handler.Model.AccountModifyPasswordRequest)">
+            <summary>
+            修改登录密码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.AccountModifyTransactionPassword(MealTicket_Handler.Model.AccountModifyTransactionPasswordRequest)">
+            <summary>
+            修改交易密码
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.AccountModifyBaseInfo(MealTicket_Handler.Model.AccountModifyBaseInfoRequest)">
+            <summary>
+            修改个人信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.AccountGetBaseInfo">
+            <summary>
+            获取用户基本信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.QueryAccountBaseInfo(MealTicket_Handler.Model.QueryAccountBaseInfoRequest)">
+            <summary>
+            搜索用户信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.AccountGetReferBaseInfo">
+            <summary>
+            获取推荐人基本信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.AccountSetRefer(MealTicket_Handler.Model.AccountSetReferRequest)">
+            <summary>
+            设置推荐人
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.AccountGetInviteesList(MealTicket_Handler.Model.PageRequest)">
+            <summary>
+            查询被邀请人列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.AccountGetWalletInfo">
+            <summary>
+            获取保证金余额
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.AccountGetWalletChangeRecord(MealTicket_Handler.Model.AccountGetWalletChangeRecordRequest)">
+            <summary>
+            获取保证金余额变更记录
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.CheckBankCard(MealTicket_Handler.Model.CheckBankCardRequest)">
+            <summary>
+            检验银行卡是否有效支持
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.BindBankCard(MealTicket_Handler.Model.BindBankCardRequest)">
+            <summary>
+            绑定银行卡
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.UnBindBankCard(MealTicket_Handler.Model.DetailsRequest)">
+            <summary>
+            解绑银行卡
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.GetMyBankCardList">
+            <summary>
+            获取我的银行卡列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.GetSupportBankList">
+            <summary>
+            获取支持的银行列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.CashApply(MealTicket_Handler.Model.CashApplyRequest)">
+            <summary>
+            申请提现
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.CancelCashApply(MealTicket_Handler.Model.DetailsRequest)">
+            <summary>
+            撤销提现申请
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.GetMyCashRecordList(MealTicket_Handler.Model.GetMyCashRecordListRequest)">
+            <summary>
+            查询我的提现记录
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.GetMyCashRefundInfo">
+            <summary>
+            查询我的提现可退款金额
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.AccountCreatePosters">
+            <summary>
+            生成我的专属海报
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.GetMyRealNameInfo">
+            <summary>
+            获取我的实名认证信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.AccountApplyRealName(MealTicket_Handler.Model.ApplyRealNameRequest)">
+            <summary>
+            提交实名认证信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AccountController.GetServiceInfo(MealTicket_Handler.Model.GetServiceInfoRequest)">
+            <summary>
+            获取客服信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.AppVersionController.GetAppVersionInfo">
+            <summary>
+            获取app版本信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.BannerController.GetBannerList(MealTicket_Handler.Model.GetBannerListRequest)">
+            <summary>
+            获取广告位列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:MealTicket_APIService.controller.HelpCenterController">
+            <summary>
+            帮助中心接口
+            </summary>
+        </member>
+        <member name="M:MealTicket_APIService.controller.HelpCenterController.GetQuestionType">
+            <summary>
+            帮助中心-获取问题分类列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.HelpCenterController.GetQuestionList(MealTicket_Handler.Model.GetQuestionListRequest)">
+            <summary>
+            帮助中心-获取问题列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.HelpCenterController.GetQuestionDetails(MealTicket_Handler.Model.DetailsRequest)">
+            <summary>
+            帮助中心-获取问题详情
+            </summary>
+            <param name="id">问题id</param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.InformationController.GetInformationList(MealTicket_Handler.Model.PageRequest)">
+            <summary>
+            获取资讯列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.InformationController.GetInformationDetails(MealTicket_Handler.Model.DetailsRequest)">
+            <summary>
+            获取资讯详情
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.JiguangSmsCallbackController.SignExamineCallback(System.String,MealTicket_Handler.Model.JG_CallbackInfo,System.String)">
+            <summary>
+            短信签名审核结果回调
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.JiguangSmsCallbackController.TemplateExamineCallback(System.String,MealTicket_Handler.Model.JG_CallbackInfo,System.String)">
+            <summary>
+            短信模板审核结果回调
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.JiguangSmsCallbackController.SmsSendDownCallback(System.String,MealTicket_Handler.Model.JG_CallbackInfo,System.String)">
+            <summary>
+            短信下行结果回调
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.MessageController.GetMessageUnreadCount">
+            <summary>
+            获取未读消息数量
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.MessageController.AccountGetMessageGroupList">
+            <summary>
+            获取消息分组列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.MessageController.AccountGetMessageList(MealTicket_Handler.Model.GetMessageListRequest)">
+            <summary>
+            获取某一分组消息列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.NoticeSendController.OverCordon">
+            <summary>
+            到达警戒线通知
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.NoticeSendController.ClosingForceSoon">
+            <summary>
+            即将强制平仓通知
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.NoticeSendController.ClosingForce">
+            <summary>
+            发生强制平仓通知
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.NoticeSendController.ClosingAuto">
+            <summary>
+            发生自动平仓通知
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.NoticeSendController.BuySharesFinish">
+            <summary>
+            股票买入委托结束通知
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.NoticeSendController.SellSharesFinish">
+            <summary>
+            股票卖出委托结束通知
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.NoticeSendController.CashSuccess">
+            <summary>
+            提现成功通知
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.NoticeSendController.CashFail">
+            <summary>
+            提现失败通知
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.NoticeSendController.CashReject">
+            <summary>
+            拒绝提现通知
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.PageSettingController.GetPageSettingInfo(MealTicket_Handler.Model.GetPageSettingInfoRequest)">
+            <summary>
+            查询页面配置信息
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.PayCallBackController.ZFBPayResultCallback(MealTicket_Handler.Model.PayCallBack.ZFBPayCallbackInfo)">
+            <summary>
+            支付宝支付结果回调
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.PayCallBackController.WXPayResultCallback">
+            <summary>
+            微信支付结果回调
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.RechargeController.GetRechargePaychannelGroup">
+            <summary>
+            获取充值支付渠道分组
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.RechargeController.GetRechargePaychannelOnline">
+            <summary>
+            获取充值在线支付渠道列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.RechargeController.GetRechargePayOfflineInfo">
+            <summary>
+            获取充值线下卡卡支付信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.RechargeController.StartRechargePay(MealTicket_Handler.Model.StartRechargePayRequest)">
+            <summary>
+            开始充值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.RechargeController.RechargePayIsSuccess(MealTicket_Handler.Model.RechargePayIsSuccessRequest)">
+            <summary>
+            查询充值支付是否成功
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.RechargeController.GetRechargeRecord(MealTicket_Handler.Model.GetRechargeRecordRequest)">
+            <summary>
+            查询充值记录列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.GetTradeSharesList(MealTicket_Handler.Model.GetTradeSharesListRequest)">
+            <summary>
+            根据股票代码获取股票列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.AddTradeSharesHotSearch(MealTicket_Handler.Model.AddTradeSharesHotSearchRequest)">
+            <summary>
+            添加热门搜索结果
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.QueryTradeSharesHotSearch">
+            <summary>
+            查询热门搜索结果
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.GetTradeSharesQuotesInfo(MealTicket_Handler.Model.GetTradeSharesQuotesInfoRequest)">
+            <summary>
+            获取某只股票五档数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.GetTradeSharesTransactionDataList(MealTicket_Handler.Model.GetTradeSharesTransactionDataListRequest)">
+            <summary>
+            获取某只股票分笔成交数据
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.GetTradeAccountInfo">
+            <summary>
+            获取交易账户信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.GetTradeHoldList(MealTicket_Handler.Model.PageRequest)">
+            <summary>
+            获取持仓列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.GetTradeEntrustList(MealTicket_Handler.Model.GetTradeEntrustListRequest)">
+            <summary>
+            获取交易委托列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.GetTradeEntrustDealDetailsList(MealTicket_Handler.Model.DetailsPageRequest)">
+            <summary>
+            获取交易成交记录列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.SetTradeClosingTime(MealTicket_Handler.Model.SetTradeClosingTimeRequest)">
+            <summary>
+            设置自动平仓时间
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.MakeupDeposit(MealTicket_Handler.Model.MakeupDepositRequest)">
+            <summary>
+            补交保证金
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.ApplyTradeBuy(MealTicket_Handler.Model.ApplyTradeBuyRequest)">
+            <summary>
+            股票申请买入
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.ApplyTradeSell(MealTicket_Handler.Model.ApplyTradeSellRequest)">
+            <summary>
+            股票申请卖出
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.ApplyTradeCancel(MealTicket_Handler.Model.ApplyTradeCancelRequest)">
+            <summary>
+            股票申请撤单
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.ExtensionHelper.GetAllWebApi(System.Web.Http.HttpConfiguration)">
+            <summary>
+            获取当前配置内的所有web api
+            </summary>
+        </member>
+        <member name="T:MealTicket_APIService.Filter.AuthorizationFilter">
+            <summary>
+            授权认证
+            </summary>
+        </member>
+        <member name="T:MealTicket_APIService.Filter.CheckUserLoginFilter">
+            <summary>
+            检查用户是否登入
+            </summary>
+        </member>
+        <member name="T:MealTicket_APIService.Filter.LogActionFilter">
+            <summary>
+            访问日志筛选器，用于记录访问日志.通过注入IVisitLogger实现访问日志的记录
+            </summary>
+        </member>
+        <member name="M:MealTicket_APIService.Filter.LogActionFilter.#ctor">
+            <summary>
+            访问日志筛选器，用于记录访问日志.通过注入IVisitLogger实现访问日志的记录
+            </summary>
+            <param name="commonHandler">日志记录接口</param>
+        </member>
+        <member name="M:MealTicket_APIService.HttpRequestMessageExtensions.GetClientIpAddress(System.Net.Http.HttpRequestMessage)">
+            <summary>
+            获取用户的ip地址
+            </summary>
+        </member>
+        <member name="M:MealTicket_APIService.HttpRequestMessageExtensions.GetRequest(System.Net.Http.HttpRequestMessage)">
+            <summary>
+            获取用户请求信息
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.Program.Main">
+            <summary>
+            应用程序的主入口点。
+            </summary>
+        </member>
+        <member name="T:MealTicket_APIService.runner.ClosingAutoRunner">
+            <summary>
+            自动平仓
+            </summary>
+        </member>
+        <member name="T:MealTicket_APIService.runner.ClosingForceRunner">
+            <summary>
+            强制平仓
+            </summary>
+        </member>
+        <member name="T:MealTicket_APIService.runner.HoldServiceCalcuRunner">
+            <summary>
+            服务费计算
+            </summary>
+        </member>
+        <member name="T:MealTicket_APIService.runner.SmsSendRunner">
+            <summary>
+            通知短信发送
+            </summary>
+        </member>
+        <member name="T:MealTicket_APIService.runner.TradeCleanRunner">
+            <summary>
+            每日清除当天购买委托数据
+            </summary>
+        </member>
+        <member name="T:MealTicket_APIService.runner.UpdateTransactiondataRunner">
+            <summary>
+            每天更新股票分笔数据
+            </summary>
+        </member>
+        <member name="M:WebAPI.HelpPage.ApiDescriptionExtensions.GetFriendlyId(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Generates an URI-friendly ID for the <see cref="T:System.Web.Http.Description.ApiDescription"/>. E.g. "Get-Values-id_name" instead of "GetValues/{id}?name={name}"
+            </summary>
+            <param name="description">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The ID as a string.</returns>
+        </member>
+        <member name="T:WebAPI.HelpPage.HelpPageConfig">
+            <summary>
+            Use this class to customize the Help Page.
+            For example you can set a custom <see cref="T:System.Web.Http.Description.IDocumentationProvider"/> to supply the documentation
+            or you can provide the samples for the requests/responses.
+            </summary>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageConfigurationExtensions.SetDocumentationProvider(System.Web.Http.HttpConfiguration,System.Web.Http.Description.IDocumentationProvider)">
+            <summary>
+            Sets the documentation provider for help page.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="documentationProvider">The documentation provider.</param>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageConfigurationExtensions.SetSampleObjects(System.Web.Http.HttpConfiguration,System.Collections.Generic.IDictionary{System.Type,System.Object})">
+            <summary>
+            Sets the objects that will be used by the formatters to produce sample requests/responses.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sampleObjects">The sample objects.</param>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageConfigurationExtensions.SetSampleRequest(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String)">
+            <summary>
+            Sets the sample request directly for the specified media type and action.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample request.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageConfigurationExtensions.SetSampleRequest(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String,System.String[])">
+            <summary>
+            Sets the sample request directly for the specified media type and action with parameters.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample request.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageConfigurationExtensions.SetSampleResponse(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String)">
+            <summary>
+            Sets the sample request directly for the specified media type of the action.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample response.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageConfigurationExtensions.SetSampleResponse(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.String,System.String,System.String[])">
+            <summary>
+            Sets the sample response directly for the specified media type of the action with specific parameters.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample response.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageConfigurationExtensions.SetSampleForMediaType(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>
+            Sets the sample directly for all actions with the specified media type.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample.</param>
+            <param name="mediaType">The media type.</param>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageConfigurationExtensions.SetSampleForType(System.Web.Http.HttpConfiguration,System.Object,System.Net.Http.Headers.MediaTypeHeaderValue,System.Type)">
+            <summary>
+            Sets the sample directly for all actions with the specified type and media type.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sample">The sample.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="type">The parameter type or return type of an action.</param>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageConfigurationExtensions.SetActualRequestType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String)">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> passed to the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate request samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageConfigurationExtensions.SetActualRequestType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String,System.String[])">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> passed to the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate request samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageConfigurationExtensions.SetActualResponseType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String)">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> returned as part of the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate response samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageConfigurationExtensions.SetActualResponseType(System.Web.Http.HttpConfiguration,System.Type,System.String,System.String,System.String[])">
+            <summary>
+            Specifies the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> returned as part of the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            The help page will use this information to produce more accurate response samples.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="type">The type.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageConfigurationExtensions.GetHelpPageSampleGenerator(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Gets the help page sample generator.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <returns>The help page sample generator.</returns>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageConfigurationExtensions.SetHelpPageSampleGenerator(System.Web.Http.HttpConfiguration,WebAPI.HelpPage.HelpPageSampleGenerator)">
+            <summary>
+            Sets the help page sample generator.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="sampleGenerator">The help page sample generator.</param>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageConfigurationExtensions.GetModelDescriptionGenerator(System.Web.Http.HttpConfiguration)">
+            <summary>
+            Gets the model description generator.
+            </summary>
+            <param name="config">The configuration.</param>
+            <returns>The <see cref="T:WebAPI.HelpPage.ModelDescriptions.ModelDescriptionGenerator"/></returns>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageConfigurationExtensions.GetHelpPageApiModel(System.Web.Http.HttpConfiguration,System.String)">
+            <summary>
+            Gets the model that represents an API displayed on the help page. The model is initialized on the first call and cached for subsequent calls.
+            </summary>
+            <param name="config">The <see cref="T:System.Web.Http.HttpConfiguration"/>.</param>
+            <param name="apiDescriptionId">The <see cref="T:System.Web.Http.Description.ApiDescription"/> ID.</param>
+            <returns>
+            An <see cref="T:WebAPI.HelpPage.Models.HelpPageApiModel"/>
+            </returns>
+        </member>
+        <member name="T:WebAPI.HelpPage.ModelDescriptions.ModelDescription">
+            <summary>
+            Describes a type model.
+            </summary>
+        </member>
+        <member name="T:WebAPI.HelpPage.ModelDescriptions.ModelDescriptionGenerator">
+            <summary>
+            Generates model descriptions for given types.
+            </summary>
+        </member>
+        <member name="T:WebAPI.HelpPage.ModelDescriptions.ModelNameAttribute">
+            <summary>
+            Use this attribute to change the name of the <see cref="T:WebAPI.HelpPage.ModelDescriptions.ModelDescription"/> generated for a type.
+            </summary>
+        </member>
+        <member name="T:WebAPI.HelpPage.Models.HelpPageApiModel">
+            <summary>
+            The model that represents an API displayed on the help page.
+            </summary>
+        </member>
+        <member name="M:WebAPI.HelpPage.Models.HelpPageApiModel.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WebAPI.HelpPage.Models.HelpPageApiModel"/> class.
+            </summary>
+        </member>
+        <member name="P:WebAPI.HelpPage.Models.HelpPageApiModel.ApiDescription">
+            <summary>
+            Gets or sets the <see cref="P:WebAPI.HelpPage.Models.HelpPageApiModel.ApiDescription"/> that describes the API.
+            </summary>
+        </member>
+        <member name="P:WebAPI.HelpPage.Models.HelpPageApiModel.UriParameters">
+            <summary>
+            Gets or sets the <see cref="T:WebAPI.HelpPage.ModelDescriptions.ParameterDescription"/> collection that describes the URI parameters for the API.
+            </summary>
+        </member>
+        <member name="P:WebAPI.HelpPage.Models.HelpPageApiModel.RequestDocumentation">
+            <summary>
+            Gets or sets the documentation for the request.
+            </summary>
+        </member>
+        <member name="P:WebAPI.HelpPage.Models.HelpPageApiModel.RequestModelDescription">
+            <summary>
+            Gets or sets the <see cref="T:WebAPI.HelpPage.ModelDescriptions.ModelDescription"/> that describes the request body.
+            </summary>
+        </member>
+        <member name="P:WebAPI.HelpPage.Models.HelpPageApiModel.RequestBodyParameters">
+            <summary>
+            Gets the request body parameter descriptions.
+            </summary>
+        </member>
+        <member name="P:WebAPI.HelpPage.Models.HelpPageApiModel.ResourceDescription">
+            <summary>
+            Gets or sets the <see cref="T:WebAPI.HelpPage.ModelDescriptions.ModelDescription"/> that describes the resource.
+            </summary>
+        </member>
+        <member name="P:WebAPI.HelpPage.Models.HelpPageApiModel.ResourceProperties">
+            <summary>
+            Gets the resource property descriptions.
+            </summary>
+        </member>
+        <member name="P:WebAPI.HelpPage.Models.HelpPageApiModel.SampleRequests">
+            <summary>
+            Gets the sample requests associated with the API.
+            </summary>
+        </member>
+        <member name="P:WebAPI.HelpPage.Models.HelpPageApiModel.SampleResponses">
+            <summary>
+            Gets the sample responses associated with the API.
+            </summary>
+        </member>
+        <member name="P:WebAPI.HelpPage.Models.HelpPageApiModel.ErrorMessages">
+            <summary>
+            Gets the error messages associated with this model.
+            </summary>
+        </member>
+        <member name="T:WebAPI.HelpPage.MultiXmlDocumentationProvider">
+            <summary>A custom <see cref="T:System.Web.Http.Description.IDocumentationProvider"/> that reads the API documentation from a collection of XML documentation files.</summary>  
+        </member>
+        <member name="F:WebAPI.HelpPage.MultiXmlDocumentationProvider.Providers">
+            <summary>The internal documentation providers for specific files.</summary>  
+        </member>
+        <member name="M:WebAPI.HelpPage.MultiXmlDocumentationProvider.#ctor(System.String[])">
+            <summary>Construct an instance.</summary>  
+            <param name="paths">The physical paths to the XML documents.</param>  
+        </member>
+        <member name="M:WebAPI.HelpPage.MultiXmlDocumentationProvider.GetDocumentation(System.Reflection.MemberInfo)">
+            <summary>Gets the documentation for a subject.</summary>  
+            <param name="subject">The subject to document.</param>  
+        </member>
+        <member name="M:WebAPI.HelpPage.MultiXmlDocumentationProvider.GetDocumentation(System.Type)">
+            <summary>Gets the documentation for a subject.</summary>  
+            <param name="subject">The subject to document.</param>  
+        </member>
+        <member name="M:WebAPI.HelpPage.MultiXmlDocumentationProvider.GetDocumentation(System.Web.Http.Controllers.HttpControllerDescriptor)">
+            <summary>Gets the documentation for a subject.</summary>  
+            <param name="subject">The subject to document.</param>  
+        </member>
+        <member name="M:WebAPI.HelpPage.MultiXmlDocumentationProvider.GetDocumentation(System.Web.Http.Controllers.HttpActionDescriptor)">
+            <summary>Gets the documentation for a subject.</summary>  
+            <param name="subject">The subject to document.</param>  
+        </member>
+        <member name="M:WebAPI.HelpPage.MultiXmlDocumentationProvider.GetDocumentation(System.Web.Http.Controllers.HttpParameterDescriptor)">
+            <summary>Gets the documentation for a subject.</summary>  
+            <param name="subject">The subject to document.</param>  
+        </member>
+        <member name="M:WebAPI.HelpPage.MultiXmlDocumentationProvider.GetResponseDocumentation(System.Web.Http.Controllers.HttpActionDescriptor)">
+            <summary>Gets the documentation for a subject.</summary>  
+            <param name="subject">The subject to document.</param>  
+        </member>
+        <member name="M:WebAPI.HelpPage.MultiXmlDocumentationProvider.GetFirstMatch(System.Func{WebAPI.HelpPage.XmlDocumentationProvider,System.String})">
+            <summary>Get the first valid result from the collection of XML documentation providers.</summary>  
+            <param name="expr">The method to invoke.</param>  
+        </member>
+        <member name="T:WebAPI.HelpPage.HelpPageSampleGenerator">
+            <summary>
+            This class will generate the samples for the help page.
+            </summary>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageSampleGenerator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:WebAPI.HelpPage.HelpPageSampleGenerator"/> class.
+            </summary>
+        </member>
+        <member name="P:WebAPI.HelpPage.HelpPageSampleGenerator.ActualHttpMessageTypes">
+            <summary>
+            Gets CLR types that are used as the content of <see cref="T:System.Net.Http.HttpRequestMessage"/> or <see cref="T:System.Net.Http.HttpResponseMessage"/>.
+            </summary>
+        </member>
+        <member name="P:WebAPI.HelpPage.HelpPageSampleGenerator.ActionSamples">
+            <summary>
+            Gets the objects that are used directly as samples for certain actions.
+            </summary>
+        </member>
+        <member name="P:WebAPI.HelpPage.HelpPageSampleGenerator.SampleObjects">
+            <summary>
+            Gets the objects that are serialized as samples by the supported formatters.
+            </summary>
+        </member>
+        <member name="P:WebAPI.HelpPage.HelpPageSampleGenerator.SampleObjectFactories">
+            <summary>
+            Gets factories for the objects that the supported formatters will serialize as samples. Processed in order,
+            stopping when the factory successfully returns a non-<see langref="null"/> object.
+            </summary>
+            <remarks>
+            Collection includes just <see cref="M:WebAPI.HelpPage.ObjectGenerator.GenerateObject(System.Type)"/> initially. Use
+            <code>SampleObjectFactories.Insert(0, func)</code> to provide an override and
+            <code>SampleObjectFactories.Add(func)</code> to provide a fallback.</remarks>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageSampleGenerator.GetSampleRequests(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Gets the request body samples for a given <see cref="T:System.Web.Http.Description.ApiDescription"/>.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The samples keyed by media type.</returns>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageSampleGenerator.GetSampleResponses(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Gets the response body samples for a given <see cref="T:System.Web.Http.Description.ApiDescription"/>.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The samples keyed by media type.</returns>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageSampleGenerator.GetSample(System.Web.Http.Description.ApiDescription,WebAPI.HelpPage.SampleDirection)">
+            <summary>
+            Gets the request or response body samples.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <param name="sampleDirection">The value indicating whether the sample is for a request or for a response.</param>
+            <returns>The samples keyed by media type.</returns>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageSampleGenerator.GetActionSample(System.String,System.String,System.Collections.Generic.IEnumerable{System.String},System.Type,System.Net.Http.Formatting.MediaTypeFormatter,System.Net.Http.Headers.MediaTypeHeaderValue,WebAPI.HelpPage.SampleDirection)">
+            <summary>
+            Search for samples that are provided directly through <see cref="P:WebAPI.HelpPage.HelpPageSampleGenerator.ActionSamples"/>.
+            </summary>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+            <param name="type">The CLR type.</param>
+            <param name="formatter">The formatter.</param>
+            <param name="mediaType">The media type.</param>
+            <param name="sampleDirection">The value indicating whether the sample is for a request or for a response.</param>
+            <returns>The sample that matches the parameters.</returns>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageSampleGenerator.GetSampleObject(System.Type)">
+            <summary>
+            Gets the sample object that will be serialized by the formatters. 
+            First, it will look at the <see cref="P:WebAPI.HelpPage.HelpPageSampleGenerator.SampleObjects"/>. If no sample object is found, it will try to create
+            one using <see cref="M:WebAPI.HelpPage.HelpPageSampleGenerator.DefaultSampleObjectFactory(WebAPI.HelpPage.HelpPageSampleGenerator,System.Type)"/> (which wraps an <see cref="T:WebAPI.HelpPage.ObjectGenerator"/>) and other
+            factories in <see cref="P:WebAPI.HelpPage.HelpPageSampleGenerator.SampleObjectFactories"/>.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>The sample object.</returns>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageSampleGenerator.ResolveHttpRequestMessageType(System.Web.Http.Description.ApiDescription)">
+            <summary>
+            Resolves the actual type of <see cref="T:System.Net.Http.ObjectContent`1"/> passed to the <see cref="T:System.Net.Http.HttpRequestMessage"/> in an action.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <returns>The type.</returns>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageSampleGenerator.ResolveType(System.Web.Http.Description.ApiDescription,System.String,System.String,System.Collections.Generic.IEnumerable{System.String},WebAPI.HelpPage.SampleDirection,System.Collections.ObjectModel.Collection{System.Net.Http.Formatting.MediaTypeFormatter}@)">
+            <summary>
+            Resolves the type of the action parameter or return value when <see cref="T:System.Net.Http.HttpRequestMessage"/> or <see cref="T:System.Net.Http.HttpResponseMessage"/> is used.
+            </summary>
+            <param name="api">The <see cref="T:System.Web.Http.Description.ApiDescription"/>.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+            <param name="sampleDirection">The value indicating whether the sample is for a request or a response.</param>
+            <param name="formatters">The formatters.</param>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageSampleGenerator.WriteSampleObjectUsingFormatter(System.Net.Http.Formatting.MediaTypeFormatter,System.Object,System.Type,System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>
+            Writes the sample object using formatter.
+            </summary>
+            <param name="formatter">The formatter.</param>
+            <param name="value">The value.</param>
+            <param name="type">The type.</param>
+            <param name="mediaType">Type of the media.</param>
+            <returns></returns>
+        </member>
+        <member name="T:WebAPI.HelpPage.HelpPageSampleKey">
+            <summary>
+            This is used to identify the place where the sample should be applied.
+            </summary>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageSampleKey.#ctor(System.Net.Http.Headers.MediaTypeHeaderValue)">
+            <summary>
+            Creates a new <see cref="T:WebAPI.HelpPage.HelpPageSampleKey"/> based on media type.
+            </summary>
+            <param name="mediaType">The media type.</param>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageSampleKey.#ctor(System.Net.Http.Headers.MediaTypeHeaderValue,System.Type)">
+            <summary>
+            Creates a new <see cref="T:WebAPI.HelpPage.HelpPageSampleKey"/> based on media type and CLR type.
+            </summary>
+            <param name="mediaType">The media type.</param>
+            <param name="type">The CLR type.</param>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageSampleKey.#ctor(WebAPI.HelpPage.SampleDirection,System.String,System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Creates a new <see cref="T:WebAPI.HelpPage.HelpPageSampleKey"/> based on <see cref="P:WebAPI.HelpPage.HelpPageSampleKey.SampleDirection"/>, controller name, action name and parameter names.
+            </summary>
+            <param name="sampleDirection">The <see cref="P:WebAPI.HelpPage.HelpPageSampleKey.SampleDirection"/>.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="M:WebAPI.HelpPage.HelpPageSampleKey.#ctor(System.Net.Http.Headers.MediaTypeHeaderValue,WebAPI.HelpPage.SampleDirection,System.String,System.String,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Creates a new <see cref="T:WebAPI.HelpPage.HelpPageSampleKey"/> based on media type, <see cref="P:WebAPI.HelpPage.HelpPageSampleKey.SampleDirection"/>, controller name, action name and parameter names.
+            </summary>
+            <param name="mediaType">The media type.</param>
+            <param name="sampleDirection">The <see cref="P:WebAPI.HelpPage.HelpPageSampleKey.SampleDirection"/>.</param>
+            <param name="controllerName">Name of the controller.</param>
+            <param name="actionName">Name of the action.</param>
+            <param name="parameterNames">The parameter names.</param>
+        </member>
+        <member name="P:WebAPI.HelpPage.HelpPageSampleKey.ControllerName">
+            <summary>
+            Gets the name of the controller.
+            </summary>
+            <value>
+            The name of the controller.
+            </value>
+        </member>
+        <member name="P:WebAPI.HelpPage.HelpPageSampleKey.ActionName">
+            <summary>
+            Gets the name of the action.
+            </summary>
+            <value>
+            The name of the action.
+            </value>
+        </member>
+        <member name="P:WebAPI.HelpPage.HelpPageSampleKey.MediaType">
+            <summary>
+            Gets the media type.
+            </summary>
+            <value>
+            The media type.
+            </value>
+        </member>
+        <member name="P:WebAPI.HelpPage.HelpPageSampleKey.ParameterNames">
+            <summary>
+            Gets the parameter names.
+            </summary>
+        </member>
+        <member name="P:WebAPI.HelpPage.HelpPageSampleKey.SampleDirection">
+            <summary>
+            Gets the <see cref="P:WebAPI.HelpPage.HelpPageSampleKey.SampleDirection"/>.
+            </summary>
+        </member>
+        <member name="T:WebAPI.HelpPage.ImageSample">
+            <summary>
+            This represents an image sample on the help page. There's a display template named ImageSample associated with this class.
+            </summary>
+        </member>
+        <member name="M:WebAPI.HelpPage.ImageSample.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WebAPI.HelpPage.ImageSample"/> class.
+            </summary>
+            <param name="src">The URL of an image.</param>
+        </member>
+        <member name="T:WebAPI.HelpPage.InvalidSample">
+            <summary>
+            This represents an invalid sample on the help page. There's a display template named InvalidSample associated with this class.
+            </summary>
+        </member>
+        <member name="T:WebAPI.HelpPage.ObjectGenerator">
+            <summary>
+            This class will create an object of a given type and populate it with sample data.
+            </summary>
+        </member>
+        <member name="M:WebAPI.HelpPage.ObjectGenerator.GenerateObject(System.Type)">
+            <summary>
+            Generates an object for a given type. The type needs to be public, have a public default constructor and settable public properties/fields. Currently it supports the following types:
+            Simple types: <see cref="T:System.Int32"/>, <see cref="T:System.String"/>, <see cref="T:System.Enum"/>, <see cref="T:System.DateTime"/>, <see cref="T:System.Uri"/>, etc.
+            Complex types: POCO types.
+            Nullables: <see cref="T:System.Nullable`1"/>.
+            Arrays: arrays of simple types or complex types.
+            Key value pairs: <see cref="T:System.Collections.Generic.KeyValuePair`2"/>
+            Tuples: <see cref="T:System.Tuple`1"/>, <see cref="T:System.Tuple`2"/>, etc
+            Dictionaries: <see cref="T:System.Collections.Generic.IDictionary`2"/> or anything deriving from <see cref="T:System.Collections.Generic.IDictionary`2"/>.
+            Collections: <see cref="T:System.Collections.Generic.IList`1"/>, <see cref="T:System.Collections.Generic.IEnumerable`1"/>, <see cref="T:System.Collections.Generic.ICollection`1"/>, <see cref="T:System.Collections.IList"/>, <see cref="T:System.Collections.IEnumerable"/>, <see cref="T:System.Collections.ICollection"/> or anything deriving from <see cref="T:System.Collections.Generic.ICollection`1"/> or <see cref="T:System.Collections.IList"/>.
+            Queryables: <see cref="T:System.Linq.IQueryable"/>, <see cref="T:System.Linq.IQueryable`1"/>.
+            </summary>
+            <param name="type">The type.</param>
+            <returns>An object of the given type.</returns>
+        </member>
+        <member name="T:WebAPI.HelpPage.SampleDirection">
+            <summary>
+            Indicates whether the sample is used for request or response
+            </summary>
+        </member>
+        <member name="T:WebAPI.HelpPage.TextSample">
+            <summary>
+            This represents a preformatted text sample on the help page. There's a display template named TextSample associated with this class.
+            </summary>
+        </member>
+        <member name="T:WebAPI.HelpPage.XmlDocumentationProvider">
+            <summary>
+            A custom <see cref="T:System.Web.Http.Description.IDocumentationProvider"/> that reads the API documentation from an XML documentation file.
+            </summary>
+        </member>
+        <member name="M:WebAPI.HelpPage.XmlDocumentationProvider.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:WebAPI.HelpPage.XmlDocumentationProvider"/> class.
+            </summary>
+            <param name="documentPath">The physical path to XML document.</param>
+        </member>
+        <member name="M:Rocket_Client_API.controller.ImageController.UploadImage">
+            <summary>
+            图片上传接口
+            </summary>
+            <returns></returns>
+        </member>
+    </members>
+</doc>

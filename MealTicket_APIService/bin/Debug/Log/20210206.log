@@ -1,0 +1,44 @@
+2021/2/6 12:26:25
+RechargeRefundQuery出错
+System.ComponentModel.Win32Exception (0x80004005): 不能访问网络位置。有关网络排除故障的信息，请参阅 Windows 帮助。
+
+2021/2/6 12:26:25
+短信发送出错
+System.ComponentModel.Win32Exception (0x80004005): 不能访问网络位置。有关网络排除故障的信息，请参阅 Windows 帮助。
+
+2021/2/6 12:26:26
+充值订单关闭退款出错
+System.ComponentModel.Win32Exception (0x80004005): 不能访问网络位置。有关网络排除故障的信息，请参阅 Windows 帮助。
+
+2021/2/6 12:26:46
+短信发送出错
+System.ComponentModel.Win32Exception (0x80004005): 不能访问网络位置。有关网络排除故障的信息，请参阅 Windows 帮助。
+
+2021/2/6 12:26:55
+RechargeRefundQuery出错
+System.ComponentModel.Win32Exception (0x80004005): 不能访问网络位置。有关网络排除故障的信息，请参阅 Windows 帮助。
+
+2021/2/6 12:32:11
+发送推送异常,Id=17
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Text.StringBuilder.AppendFormatHelper(IFormatProvider provider, String format, ParamsArray args)
+   在 System.String.FormatHelper(IFormatProvider provider, String format, ParamsArray args)
+   在 System.String.Format(String format, Object arg0)
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.SmsSend() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 1769
+
+2021/2/6 12:34:06
+发送推送异常,Id=17
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Text.StringBuilder.AppendFormatHelper(IFormatProvider provider, String format, ParamsArray args)
+   在 System.String.FormatHelper(IFormatProvider provider, String format, ParamsArray args)
+   在 System.String.Format(String format, Object arg0)
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.SmsSend() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 1769
+
+2021/2/6 12:37:49
+发送推送异常,Id=17
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Text.StringBuilder.AppendFormatHelper(IFormatProvider provider, String format, ParamsArray args)
+   在 System.String.FormatHelper(IFormatProvider provider, String format, ParamsArray args)
+   在 System.String.Format(String format, Object arg0)
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.SmsSend() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 1769
+

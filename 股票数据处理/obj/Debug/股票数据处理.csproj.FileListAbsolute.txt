@@ -1,0 +1,11 @@
+F:\项目\股票数据处理\股票数据处理\bin\Debug\股票数据处理.exe.config
+F:\项目\股票数据处理\股票数据处理\bin\Debug\股票数据处理.exe
+F:\项目\股票数据处理\股票数据处理\bin\Debug\股票数据处理.pdb
+F:\项目\股票数据处理\股票数据处理\obj\Debug\股票数据处理.csproj.CoreCompileInputs.cache
+F:\项目\股票数据处理\股票数据处理\obj\Debug\股票数据处理.exe
+F:\项目\股票数据处理\股票数据处理\obj\Debug\股票数据处理.pdb
+F:\项目\股票数据处理\股票数据处理\bin\Debug\Ninject.dll
+F:\项目\股票数据处理\股票数据处理\bin\Debug\Ninject.xml
+F:\项目\股票数据处理\股票数据处理\obj\Debug\股票数据处理.csproj.CopyComplete
+F:\项目\股票数据处理\股票数据处理\bin\Debug\Gudi.Common.dll
+F:\项目\股票数据处理\股票数据处理\obj\Debug\股票数据处理.csprojAssemblyReference.cache

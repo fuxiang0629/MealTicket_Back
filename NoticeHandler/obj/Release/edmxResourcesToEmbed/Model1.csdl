@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="noticeModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="t_notice_send_record">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SettingId" Type="Int64" Nullable="false" />
+    <Property Name="SendType" Type="Int32" Nullable="false" />
+    <Property Name="SmsChannelCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="SmsAppKey" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
+    <Property Name="SmsAppSecret" Type="String" MaxLength="256" FixedLength="false" Unicode="false" />
+    <Property Name="SmsThirdSignId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="SmsThirdTempId" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="SmsTempPara" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SmsMobile" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SendContent" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="IsSend" Type="Boolean" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="SendTime" Type="DateTime" Precision="3" />
+    <Property Name="MaxSendTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_notice_setting">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Decription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="SendType" Type="Int32" Nullable="false" />
+    <Property Name="SmsChannelCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="SmsAppKey" Type="String" MaxLength="256" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="SmsTemplateId" Type="Int64" Nullable="false" />
+    <Property Name="SmsSignId" Type="Int64" Nullable="false" />
+    <Property Name="SmsTarget" Type="Int32" Nullable="false" />
+    <Property Name="SmsOtherMobile" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PushTemplateId" Type="Int64" Nullable="false" />
+    <Property Name="TimeType" Type="Int32" Nullable="false" />
+    <Property Name="ApiUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="SendTimeRules" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="SendOverSecond" Type="Int64" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityContainer Name="noticeEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="t_notice_send_record" EntityType="Self.t_notice_send_record" />
+    <EntitySet Name="t_notice_setting" EntityType="Self.t_notice_setting" />
+    <FunctionImport Name="P_Notice_Execute">
+      <Parameter Name="apiurl" Mode="In" Type="String" />
+      <Parameter Name="accountId" Mode="In" Type="Int64" />
+      <Parameter Name="tempPar" Mode="In" Type="String" />
+    </FunctionImport>
+  </EntityContainer>
+</Schema>

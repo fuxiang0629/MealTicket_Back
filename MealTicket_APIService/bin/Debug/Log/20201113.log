@@ -1,0 +1,7 @@
+2020/11/13 15:43:44
+发送短信异常,Id=15
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: “object”未包含“ToArray”的定义
+   在 CallSite.Target(Closure , CallSite , Object )
+   在 System.Dynamic.UpdateDelegates.UpdateAndExecute1[T0,TRet](CallSite site, T0 arg0)
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.SmsSend() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 1288
+

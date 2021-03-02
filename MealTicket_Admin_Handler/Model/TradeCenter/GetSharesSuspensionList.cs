@@ -1,0 +1,63 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace MealTicket_Admin_Handler.Model
+{
+    class GetSharesSuspensionList
+    {
+    }
+
+    public class GetSharesSuspensionListRequest:PageRequest
+    {
+        /// <summary>
+        /// 股票代码
+        /// </summary>
+        public string SharesCode { get; set; }
+    }
+
+    public class SharesSuspensionInfo
+    {
+        /// <summary>
+        /// Id
+        /// </summary>
+        public long Id { get; set; }
+
+        /// <summary>
+        /// 市场代码0深圳 1上海
+        /// </summary>
+        public int Market { get; set; }
+
+        /// <summary>
+        /// 股票代码
+        /// </summary>
+        public string SharesCode { get; set; }
+
+        /// <summary>
+        /// 股票名称
+        /// </summary>
+        public string SharesName { get; set; }
+
+        /// <summary>
+        /// 停牌起始时间
+        /// </summary>
+        public DateTime SuspensionStartTime { get; set; }
+
+        /// <summary>
+        /// 停牌终止时间
+        /// </summary>
+        public DateTime SuspensionEndTime { get; set; }
+
+        /// <summary>
+        /// 状态1有效 2无效
+        /// </summary>
+        public int Status { get; set; }
+
+        /// <summary>
+        /// 数据创建时间
+        /// </summary>
+        public DateTime CreateTime { get; set; }
+    }
+}

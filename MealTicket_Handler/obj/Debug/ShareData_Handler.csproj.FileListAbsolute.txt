@@ -1,0 +1,13 @@
+F:\项目\股票数据处理\ShareData_Handler\bin\Debug\ShareData_Handler.dll
+F:\项目\股票数据处理\ShareData_Handler\bin\Debug\ShareData_Handler.pdb
+F:\项目\股票数据处理\ShareData_Handler\obj\Debug\ShareData_Handler.csproj.CoreCompileInputs.cache
+F:\项目\股票数据处理\ShareData_Handler\obj\Debug\ShareData_Handler.dll
+F:\项目\股票数据处理\ShareData_Handler\obj\Debug\ShareData_Handler.pdb
+F:\项目\股票数据处理\ShareData_Handler\bin\Debug\ShareData_Handler.dll.config
+F:\项目\股票数据处理\ShareData_Handler\bin\Debug\EntityFramework.dll
+F:\项目\股票数据处理\ShareData_Handler\bin\Debug\EntityFramework.SqlServer.dll
+F:\项目\股票数据处理\ShareData_Handler\bin\Debug\Gudi.Common.dll
+F:\项目\股票数据处理\ShareData_Handler\bin\Debug\EntityFramework.xml
+F:\项目\股票数据处理\ShareData_Handler\bin\Debug\EntityFramework.SqlServer.xml
+F:\项目\股票数据处理\ShareData_Handler\bin\Debug\zh-Hans\EntityFramework.resources.dll
+F:\项目\股票数据处理\ShareData_Handler\obj\Debug\ShareData_Handler.csproj.CopyComplete
