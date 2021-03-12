@@ -952,6 +952,7 @@ namespace MealTicket_Handler.RunnerHandler
                             }
                             catch (Exception ex)
                             {
+                                Logger.WriteFileLog("强制平仓提交报错了", ex);
                                 tran.Rollback();
                             }
                         }

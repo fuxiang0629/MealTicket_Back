@@ -2257,6 +2257,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 long mainEntrustId = 0;
 
                 List<dynamic> sendDataList = new List<dynamic>();
+                string error = "";
                 foreach (var buy in buyList)
                 {
                     if (buy.BuyAmount <= 0)
@@ -2314,13 +2315,15 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                         }
                         catch (Exception ex)
                         {
+                            error = ex.Message;
+                            Logger.WriteFileLog("购买失败",ex);
                             tran.Rollback();
                         }
                     }
                 }
                 if (sendDataList.Count() <= 0)
                 {
-                    throw new WebApiException(400, "买入失败");
+                    throw new WebApiException(400, error);
                 }
                 bool isSendSuccess = MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new { type = 1, data = sendDataList })), "SharesBuy", "s1");
                 if (!isSendSuccess)
