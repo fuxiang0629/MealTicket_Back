@@ -309,6 +309,19 @@
     <EntitySet Name="t_shares_monitor" EntityType="meal_ticketModel.t_shares_monitor" />
     <EntitySet Name="t_payment_channel_group" EntityType="meal_ticketModel.t_payment_channel_group" />
     <EntitySet Name="t_app_version" EntityType="meal_ticketModel.t_app_version" />
+    <EntitySet Name="t_shares_limit_fundmultiple_account" EntityType="meal_ticketModel.t_shares_limit_fundmultiple_account" />
+    <EntitySet Name="t_account_follow_apply_record" EntityType="meal_ticketModel.t_account_follow_apply_record" />
+    <EntitySet Name="t_account_follow_rel" EntityType="meal_ticketModel.t_account_follow_rel" />
+    <FunctionImport Name="P_FollowApply">
+      <Parameter Name="accountId" Mode="In" Type="Int64" />
+      <Parameter Name="errorCode" Mode="InOut" Type="Int32" />
+      <Parameter Name="errorMessage" Mode="InOut" Type="String" />
+    </FunctionImport>
+    <FunctionImport Name="P_FollowCancel">
+      <Parameter Name="accountId" Mode="In" Type="Int64" />
+      <Parameter Name="errorCode" Mode="InOut" Type="Int32" />
+      <Parameter Name="errorMessage" Mode="InOut" Type="String" />
+    </FunctionImport>
   </EntityContainer>
   <EntityType Name="t_authority_account_visitlog">
     <Key>
@@ -1323,5 +1336,39 @@
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="WaitTime" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_limit_fundmultiple_account">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FundmultipleId" Type="Int64" Nullable="false" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="FundMultiple" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_follow_apply_record">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" />
+    <Property Name="FollowAccountId" Type="Int64" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="StatusDes" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="HandlerTime" Type="DateTime" Precision="3" />
+    <Property Name="FinishTime" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_follow_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="FollowAccountId" Type="Int64" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
 </Schema>

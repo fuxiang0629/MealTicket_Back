@@ -370,6 +370,7 @@
     <EntitySetMapping Name="t_account_baseinfo">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_baseinfo">
         <MappingFragment StoreEntitySet="t_account_baseinfo">
+          <ScalarProperty Name="CashStatus" ColumnName="CashStatus" />
           <ScalarProperty Name="MonitorStatus" ColumnName="MonitorStatus" />
           <ScalarProperty Name="RegisterPageUrl" ColumnName="RegisterPageUrl" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
@@ -1326,6 +1327,7 @@
     <EntitySetMapping Name="t_notice_send_record">
       <EntityTypeMapping TypeName="meal_ticketModel.t_notice_send_record">
         <MappingFragment StoreEntitySet="t_notice_send_record">
+          <ScalarProperty Name="JumpUrl" ColumnName="JumpUrl" />
           <ScalarProperty Name="ErrorMessage" ColumnName="ErrorMessage" />
           <ScalarProperty Name="MaxSendTime" ColumnName="MaxSendTime" />
           <ScalarProperty Name="SendTime" ColumnName="SendTime" />
@@ -1437,6 +1439,7 @@
     <EntitySetMapping Name="t_push_template">
       <EntityTypeMapping TypeName="meal_ticketModel.t_push_template">
         <MappingFragment StoreEntitySet="t_push_template">
+          <ScalarProperty Name="JumpUrl" ColumnName="JumpUrl" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="AppKey" ColumnName="AppKey" />
@@ -1763,6 +1766,98 @@
           <ScalarProperty Name="LastPushRiseRate" ColumnName="LastPushRiseRate" />
           <ScalarProperty Name="LastPushTime" ColumnName="LastPushTime" />
           <ScalarProperty Name="RelId" ColumnName="RelId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_optional_trend_rel_tri_record_statistic">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_optional_trend_rel_tri_record_statistic">
+        <MappingFragment StoreEntitySet="t_account_shares_optional_trend_rel_tri_record_statistic">
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="TriPushCount" ColumnName="TriPushCount" />
+          <ScalarProperty Name="TriTotalCount" ColumnName="TriTotalCount" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="SharesName" ColumnName="SharesName" />
+          <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+          <ScalarProperty Name="Market" ColumnName="Market" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_follow_rel">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_follow_rel">
+        <MappingFragment StoreEntitySet="t_account_follow_rel">
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="FollowAccountId" ColumnName="FollowAccountId" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_app_version">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_app_version">
+        <MappingFragment StoreEntitySet="t_app_version">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="WaitTime" ColumnName="WaitTime" />
+          <ScalarProperty Name="WebViewUrl" ColumnName="WebViewUrl" />
+          <ScalarProperty Name="ExamineStatus" ColumnName="ExamineStatus" />
+          <ScalarProperty Name="AppVersionOrder" ColumnName="AppVersionOrder" />
+          <ScalarProperty Name="AppVersion" ColumnName="AppVersion" />
+          <ScalarProperty Name="MarketCode" ColumnName="MarketCode" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_follow_apply_record">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_follow_apply_record">
+        <MappingFragment StoreEntitySet="t_account_follow_apply_record">
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="FinishTime" ColumnName="FinishTime" />
+          <ScalarProperty Name="HandlerTime" ColumnName="HandlerTime" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="StatusDes" ColumnName="StatusDes" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="FollowAccountId" ColumnName="FollowAccountId" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_optional_group">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_optional_group">
+        <MappingFragment StoreEntitySet="t_account_shares_optional_group">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_optional_group_rel">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_optional_group_rel">
+        <MappingFragment StoreEntitySet="t_account_shares_optional_group_rel">
+          <ScalarProperty Name="ValidEndTime" ColumnName="ValidEndTime" />
+          <ScalarProperty Name="ValidStartTime" ColumnName="ValidStartTime" />
+          <ScalarProperty Name="GroupIsContinue" ColumnName="GroupIsContinue" />
+          <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+          <ScalarProperty Name="OptionalId" ColumnName="OptionalId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_shares_limit_fundmultiple_account">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_shares_limit_fundmultiple_account">
+        <MappingFragment StoreEntitySet="t_shares_limit_fundmultiple_account">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="FundMultiple" ColumnName="FundMultiple" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="FundmultipleId" ColumnName="FundmultipleId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

@@ -50,3 +50,4 @@ C:\Users\37863\Desktop\项目\饭票后端\FXCommon\obj\Debug\FXCommon.csproj.Co
 C:\Users\37863\Desktop\项目\饭票后端\FXCommon\obj\Debug\FXCommon.csproj.CopyComplete
 C:\Users\37863\Desktop\项目\饭票后端\FXCommon\obj\Debug\FXCommon.dll
 C:\Users\37863\Desktop\项目\饭票后端\FXCommon\obj\Debug\FXCommon.pdb
+F:\项目\饭票后端\FXCommon\obj\Debug\FXCommon.csprojAssemblyReference.cache

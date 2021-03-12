@@ -34,4 +34,3 @@ F:\项目\饭票后端\TransactionDataTri\bin\Release\EntityFramework.xml
 F:\项目\饭票后端\TransactionDataTri\bin\Release\EntityFramework.SqlServer.xml
 F:\项目\饭票后端\TransactionDataTri\bin\Release\zh-Hans\EntityFramework.resources.dll
 F:\项目\饭票后端\TransactionDataTri\bin\Release\zh-Hans\EntityFramework.SqlServer.resources.dll
-F:\项目\饭票后端\TransactionDataTri\obj\Release\TransactionDataTri.csprojAssemblyReference.cache

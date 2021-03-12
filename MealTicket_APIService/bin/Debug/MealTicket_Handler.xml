@@ -1522,6 +1522,106 @@
             充值金额
             </summary>
         </member>
+        <member name="P:MealTicket_Handler.Model.AccountFollowInfo.FollowStatus">
+            <summary>
+            跟投状态0未跟投 1申请中 2处理中 3已完成 4拒绝
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountFollowInfo.StatusDesc">
+            <summary>
+            状态描述
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.GetAccountHoldHistoryListRequest.StartTime">
+            <summary>
+            起始时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.GetAccountHoldHistoryListRequest.EndTime">
+            <summary>
+            截止时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.GetAccountHoldHistoryListRes.SharesCount">
+            <summary>
+            股票数量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.GetAccountHoldHistoryListRes.TotalProfitAmount">
+            <summary>
+            总盈亏金额（元*10000）
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.GetAccountHoldHistoryListRes.TotalBuyAmount">
+            <summary>
+            买入总额
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldHistoryInfo.HoldId">
+            <summary>
+            持仓Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldHistoryInfo.Market">
+            <summary>
+            市场
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldHistoryInfo.SharesCode">
+            <summary>
+            股票代码
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldHistoryInfo.SharesName">
+            <summary>
+            股票名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldHistoryInfo.SellCount">
+            <summary>
+            卖出数量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldHistoryInfo.SellAmount">
+            <summary>
+            卖出金额
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldHistoryInfo.BuyTotalAmount">
+            <summary>
+            买入总金额
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldHistoryInfo.StartTime">
+            <summary>
+            首次持仓时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldHistoryInfo.EndTime">
+            <summary>
+            最终卖出时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldHistoryInfo.ProfitAmount">
+            <summary>
+            盈利金额(市值-剩余成本)
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldHistoryInfo.RiseRate">
+            <summary>
+            涨幅(总盈利金额/初始总成本价)
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.ModifyFundmultipleRequest.FundmultipleId">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.ModifyFundmultipleRequest.FundMultiple">
+            <summary>
+            倍数
+            </summary>
+        </member>
         <member name="P:MealTicket_Handler.Model.AddTradeSharesHotSearchRequest.SharesCode">
             <summary>
             股票代码
@@ -1587,6 +1687,26 @@
             卖出价格（仅SellType=2时有效）
             </summary>
         </member>
+        <member name="P:MealTicket_Handler.Model.FundmultipleInfo.FundmultipleId">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.FundmultipleInfo.MarketName">
+            <summary>
+            市场名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.FundmultipleInfo.FundMultiple">
+            <summary>
+            倍数
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.FundmultipleInfo.MaxFundMultiple">
+            <summary>
+            最大倍数
+            </summary>
+        </member>
         <member name="P:MealTicket_Handler.Model.TradeAccountInfo.TotalAssets">
             <summary>
             总资产
@@ -1600,6 +1720,11 @@
         <member name="P:MealTicket_Handler.Model.TradeAccountInfo.RemainDeposit">
             <summary>
             可用保证金
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.TradeAccountInfo.UseRemainDeposit">
+            <summary>
+            已用保证金
             </summary>
         </member>
         <member name="P:MealTicket_Handler.Model.TradeAccountInfo.TotalProfit">
@@ -1650,6 +1775,11 @@
         <member name="P:MealTicket_Handler.Model.TradeEntrustDealDetailsInfo.DealTime">
             <summary>
             成交时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.GetTradeEntrustDealDetailsListRequest.Type">
+            <summary>
+            1.委托 2.持仓
             </summary>
         </member>
         <member name="P:MealTicket_Handler.Model.GetTradeEntrustListRequest.HoldId">
@@ -2606,7 +2736,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MealTicket_Handler.TradeHandler.GetTradeEntrustDealDetailsList(MealTicket_Handler.Model.DetailsPageRequest,MealTicket_Handler.Model.HeadBase)">
+        <member name="M:MealTicket_Handler.TradeHandler.GetTradeEntrustDealDetailsList(MealTicket_Handler.Model.GetTradeEntrustDealDetailsListRequest,MealTicket_Handler.Model.HeadBase)">
             <summary>
             获取交易成交记录列表
             </summary>
@@ -2639,6 +2769,43 @@
             </summary>
             <param name="request"></param>
             <param name="basedata"></param>
+        </member>
+        <member name="M:MealTicket_Handler.TradeHandler.GetFundmultipleList(MealTicket_Handler.Model.HeadBase)">
+            <summary>
+            获取用户交易杠杆倍数
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Handler.TradeHandler.ModifyFundmultiple(MealTicket_Handler.Model.ModifyFundmultipleRequest,MealTicket_Handler.Model.HeadBase)">
+            <summary>
+            修改用户交易杠杆倍数
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+        </member>
+        <member name="M:MealTicket_Handler.TradeHandler.GetAccountFollowInfo(MealTicket_Handler.Model.HeadBase)">
+            <summary>
+            获取用户跟投信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Handler.TradeHandler.ApplyFollow(MealTicket_Handler.Model.HeadBase)">
+            <summary>
+            用户申请跟投
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.TradeHandler.CancelFollow(MealTicket_Handler.Model.HeadBase)">
+            <summary>
+            用户取消跟投
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.TradeHandler.GetAccountHoldHistoryList(MealTicket_Handler.Model.GetAccountHoldHistoryListRequest,MealTicket_Handler.Model.HeadBase)">
+            <summary>
+            获取用户历史持仓
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+            <returns></returns>
         </member>
         <member name="F:MealTicket_Handler.MQHandler._factory">
             <summary>

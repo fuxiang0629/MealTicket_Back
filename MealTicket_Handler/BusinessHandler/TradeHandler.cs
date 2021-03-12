@@ -1311,6 +1311,7 @@ namespace MealTicket_Handler
                 catch (Exception ex)
                 {
                     tran.Rollback();
+                    throw ex;
                 }
             }
         }
@@ -1339,6 +1340,7 @@ namespace MealTicket_Handler
                 catch (Exception ex)
                 {
                     tran.Rollback();
+                    throw ex;
                 }
             }
         }

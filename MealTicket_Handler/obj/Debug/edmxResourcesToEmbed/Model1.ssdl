@@ -75,6 +75,29 @@
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
+  <EntityType Name="t_account_follow_apply_record">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" />
+    <Property Name="FollowAccountId" Type="bigint" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="StatusDes" Type="nvarchar" MaxLength="200" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="HandlerTime" Type="datetime" />
+    <Property Name="FinishTime" Type="datetime" />
+  </EntityType>
+  <EntityType Name="t_account_follow_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="FollowAccountId" Type="bigint" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_account_login_token">
     <Key>
       <PropertyRef Name="AccountId" />
@@ -783,6 +806,17 @@
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
+  <EntityType Name="t_shares_limit_fundmultiple_account">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FundmultipleId" Type="bigint" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="FundMultiple" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_shares_limit_time">
     <Key>
       <PropertyRef Name="Id" />
@@ -1225,6 +1259,16 @@
     <Parameter Name="errorCode" Type="int" Mode="InOut" />
     <Parameter Name="errorMessage" Type="nvarchar" Mode="InOut" />
   </Function>
+  <Function Name="P_FollowApply" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="accountId" Type="bigint" Mode="In" />
+    <Parameter Name="errorCode" Type="int" Mode="InOut" />
+    <Parameter Name="errorMessage" Type="nvarchar" Mode="InOut" />
+  </Function>
+  <Function Name="P_FollowCancel" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="accountId" Type="bigint" Mode="In" />
+    <Parameter Name="errorCode" Type="int" Mode="InOut" />
+    <Parameter Name="errorMessage" Type="nvarchar" Mode="InOut" />
+  </Function>
   <Function Name="P_MakeupDeposit" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="accountId" Type="bigint" Mode="In" />
     <Parameter Name="holdId" Type="bigint" Mode="In" />
@@ -1259,6 +1303,8 @@
     <EntitySet Name="t_account_bank_card" EntityType="Self.t_account_bank_card" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_baseinfo" EntityType="Self.t_account_baseinfo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_cash_record" EntityType="Self.t_account_cash_record" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_follow_apply_record" EntityType="Self.t_account_follow_apply_record" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_follow_rel" EntityType="Self.t_account_follow_rel" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_login_token" EntityType="Self.t_account_login_token" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_loginlog" EntityType="Self.t_account_loginlog" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_par_setting" EntityType="Self.t_account_par_setting" Schema="dbo" store:Type="Tables" />
@@ -1307,6 +1353,7 @@
     <EntitySet Name="t_shares_limit_date" EntityType="Self.t_shares_limit_date" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_limit_date_group" EntityType="Self.t_shares_limit_date_group" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_limit_fundmultiple" EntityType="Self.t_shares_limit_fundmultiple" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_limit_fundmultiple_account" EntityType="Self.t_shares_limit_fundmultiple_account" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_limit_time" EntityType="Self.t_shares_limit_time" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_limit_traderules" EntityType="Self.t_shares_limit_traderules" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_limit_traderules_other" EntityType="Self.t_shares_limit_traderules_other" Schema="dbo" store:Type="Tables" />

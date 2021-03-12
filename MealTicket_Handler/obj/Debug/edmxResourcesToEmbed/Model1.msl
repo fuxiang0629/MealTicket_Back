@@ -1121,5 +1121,44 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="t_shares_limit_fundmultiple_account">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_shares_limit_fundmultiple_account">
+        <MappingFragment StoreEntitySet="t_shares_limit_fundmultiple_account">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="FundMultiple" ColumnName="FundMultiple" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="FundmultipleId" ColumnName="FundmultipleId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_follow_apply_record">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_follow_apply_record">
+        <MappingFragment StoreEntitySet="t_account_follow_apply_record">
+          <ScalarProperty Name="FinishTime" ColumnName="FinishTime" />
+          <ScalarProperty Name="HandlerTime" ColumnName="HandlerTime" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="StatusDes" ColumnName="StatusDes" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="FollowAccountId" ColumnName="FollowAccountId" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_follow_rel">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_follow_rel">
+        <MappingFragment StoreEntitySet="t_account_follow_rel">
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="FollowAccountId" ColumnName="FollowAccountId" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="P_FollowApply" FunctionName="meal_ticketModel.Store.P_FollowApply" />
+    <FunctionImportMapping FunctionImportName="P_FollowCancel" FunctionName="meal_ticketModel.Store.P_FollowCancel" />
   </EntityContainerMapping>
 </Mapping>
