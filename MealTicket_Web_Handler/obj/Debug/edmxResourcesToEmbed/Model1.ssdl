@@ -167,6 +167,25 @@
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
+  <EntityType Name="t_account_shares_hold_conditiontrade">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="HoldId" Type="bigint" Nullable="false" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="ConditionTime" Type="datetime" />
+    <Property Name="ConditionPrice" Type="bigint" />
+    <Property Name="TradeType" Type="int" Nullable="false" />
+    <Property Name="EntrustCount" Type="int" Nullable="false" />
+    <Property Name="EntrustType" Type="int" Nullable="false" />
+    <Property Name="EntrustPriceGear" Type="int" Nullable="false" />
+    <Property Name="TriggerTime" Type="datetime" />
+    <Property Name="SourceFrom" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_account_shares_optional">
     <Key>
       <PropertyRef Name="Id" />
@@ -661,6 +680,7 @@
     <EntitySet Name="t_account_shares_entrust_manager" EntityType="Self.t_account_shares_entrust_manager" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_entrust_manager_dealdetails" EntityType="Self.t_account_shares_entrust_manager_dealdetails" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_hold" EntityType="Self.t_account_shares_hold" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_hold_conditiontrade" EntityType="Self.t_account_shares_hold_conditiontrade" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_optional" EntityType="Self.t_account_shares_optional" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_optional_group" EntityType="Self.t_account_shares_optional_group" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_optional_group_rel" EntityType="Self.t_account_shares_optional_group_rel" Schema="dbo" store:Type="Tables" />

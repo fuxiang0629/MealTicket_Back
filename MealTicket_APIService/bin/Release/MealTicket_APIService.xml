@@ -591,6 +591,24 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.GetAccountHoldConditionTradeList(MealTicket_Handler.Model.GetAccountHoldConditionTradeListRequest)">
+            <summary>
+            获取条件单列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.AddAccountHoldConditionTrade(MealTicket_Handler.Model.AddAccountHoldConditionTradeRequest)">
+            <summary>
+            添加条件单
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.DeleteAccountHoldConditionTrade(MealTicket_Handler.Model.DeleteRequest)">
+            <summary>
+            删除条件单
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_APIService.ExtensionHelper.GetAllWebApi(System.Web.Http.HttpConfiguration)">
             <summary>
             获取当前配置内的所有web api

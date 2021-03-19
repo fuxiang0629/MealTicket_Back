@@ -322,6 +322,7 @@
       <Parameter Name="errorCode" Mode="InOut" Type="Int32" />
       <Parameter Name="errorMessage" Mode="InOut" Type="String" />
     </FunctionImport>
+    <EntitySet Name="t_account_shares_hold_conditiontrade" EntityType="meal_ticketModel.t_account_shares_hold_conditiontrade" />
   </EntityContainer>
   <EntityType Name="t_authority_account_visitlog">
     <Key>
@@ -1370,5 +1371,23 @@
     <Property Name="AccountId" Type="Int64" Nullable="false" />
     <Property Name="FollowAccountId" Type="Int64" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_hold_conditiontrade">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="HoldId" Type="Int64" Nullable="false" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
+    <Property Name="ConditionTime" Type="DateTime" Precision="3" />
+    <Property Name="ConditionPrice" Type="Int64" />
+    <Property Name="TradeType" Type="Int32" Nullable="false" />
+    <Property Name="EntrustCount" Type="Int32" Nullable="false" />
+    <Property Name="EntrustType" Type="Int32" Nullable="false" />
+    <Property Name="EntrustPriceGear" Type="Int32" Nullable="false" />
+    <Property Name="TriggerTime" Type="DateTime" Precision="3" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
 </Schema>

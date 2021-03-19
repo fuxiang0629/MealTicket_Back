@@ -30,6 +30,7 @@ namespace MealTicket_APIService
             Bind<Runner>().To<SmsSendRunner>();
             Bind<Runner>().To<TransactiondataRealTimeRunner>();
             Bind<Runner>().To<TransactiondataDateRunner>();
+            Bind<Runner>().To<TradeAutoRunner>();
         }
     }
 }

@@ -130,6 +130,7 @@
     <Compile Include="Model\Account\GetSupportBankList.cs" />
     <Compile Include="Model\Account\SetAccountTransactionPassword.cs" />
     <Compile Include="Model\AppVersion\GetAppVersionInfo.cs" />
+    <Compile Include="Model\DeleteRequest.cs" />
     <Compile Include="Model\DetailsRequest.cs" />
     <Compile Include="Model\HelpCenter\GetQuestionDetails.cs" />
     <Compile Include="Model\HelpCenter\GetQuestionList.cs" />
@@ -165,7 +166,9 @@
     <Compile Include="Model\Recharge\GetRechargeRecord.cs" />
     <Compile Include="Model\Recharge\RechargePayIsSuccess.cs" />
     <Compile Include="Model\Recharge\StartRechargePay.cs" />
+    <Compile Include="Model\Trade\AddAccountHoldConditionTrade.cs" />
     <Compile Include="Model\Trade\GetAccountFollowInfo.cs" />
+    <Compile Include="Model\Trade\GetAccountHoldConditionTradeList.cs" />
     <Compile Include="Model\Trade\GetAccountHoldHistoryList.cs" />
     <Compile Include="Model\Trade\ModifyFundmultiple.cs" />
     <Compile Include="Model\Trade\AddTradeSharesHotSearch.cs" />
@@ -228,6 +231,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_account_shares_hold.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_hold_conditiontrade.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_account_shares_hold_manager.cs">

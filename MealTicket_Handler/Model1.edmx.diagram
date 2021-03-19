@@ -76,6 +76,7 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_fundmultiple_account" Width="1.5" PointX="25.375" PointY="21.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_follow_apply_record" Width="1.5" PointX="25.375" PointY="24.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_follow_rel" Width="1.5" PointX="26.375" PointY="0.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_hold_conditiontrade" Width="1.5" PointX="26.375" PointY="3.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

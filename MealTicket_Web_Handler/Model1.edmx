@@ -172,6 +172,25 @@
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="t_account_shares_hold_conditiontrade">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountId" Type="bigint" Nullable="false" />
+          <Property Name="HoldId" Type="bigint" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="ConditionTime" Type="datetime" />
+          <Property Name="ConditionPrice" Type="bigint" />
+          <Property Name="TradeType" Type="int" Nullable="false" />
+          <Property Name="EntrustCount" Type="int" Nullable="false" />
+          <Property Name="EntrustType" Type="int" Nullable="false" />
+          <Property Name="EntrustPriceGear" Type="int" Nullable="false" />
+          <Property Name="TriggerTime" Type="datetime" />
+          <Property Name="SourceFrom" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="t_account_shares_optional">
           <Key>
             <PropertyRef Name="Id" />
@@ -666,6 +685,7 @@
           <EntitySet Name="t_account_shares_entrust_manager" EntityType="Self.t_account_shares_entrust_manager" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_entrust_manager_dealdetails" EntityType="Self.t_account_shares_entrust_manager_dealdetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_hold" EntityType="Self.t_account_shares_hold" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_hold_conditiontrade" EntityType="Self.t_account_shares_hold_conditiontrade" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_optional" EntityType="Self.t_account_shares_optional" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_optional_group" EntityType="Self.t_account_shares_optional_group" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_optional_group_rel" EntityType="Self.t_account_shares_optional_group_rel" Schema="dbo" store:Type="Tables" />
@@ -794,6 +814,7 @@
           </FunctionImport>
           <EntitySet Name="t_shares_limit_traderules" EntityType="meal_ticketModel.t_shares_limit_traderules" />
           <EntitySet Name="t_shares_limit_traderules_other" EntityType="meal_ticketModel.t_shares_limit_traderules_other" />
+          <EntitySet Name="t_account_shares_hold_conditiontrade" EntityType="meal_ticketModel.t_account_shares_hold_conditiontrade" />
         </EntityContainer>
         <EntityType Name="t_account_shares_optional">
           <Key>
@@ -1392,6 +1413,25 @@
           <Property Name="Cordon" Type="Int32" Nullable="false" />
           <Property Name="ClosingLine" Type="Int32" Nullable="false" />
           <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_hold_conditiontrade">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="HoldId" Type="Int64" Nullable="false" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="ConditionTime" Type="DateTime" Precision="3" />
+          <Property Name="ConditionPrice" Type="Int64" />
+          <Property Name="TradeType" Type="Int32" Nullable="false" />
+          <Property Name="EntrustCount" Type="Int32" Nullable="false" />
+          <Property Name="EntrustType" Type="Int32" Nullable="false" />
+          <Property Name="EntrustPriceGear" Type="Int32" Nullable="false" />
+          <Property Name="TriggerTime" Type="DateTime" Precision="3" />
+          <Property Name="SourceFrom" Type="Int32" Nullable="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
@@ -2041,6 +2081,26 @@
                 <ScalarProperty Name="Cordon" ColumnName="Cordon" />
                 <ScalarProperty Name="Times" ColumnName="Times" />
                 <ScalarProperty Name="RulesId" ColumnName="RulesId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_hold_conditiontrade">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_hold_conditiontrade">
+              <MappingFragment StoreEntitySet="t_account_shares_hold_conditiontrade">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="SourceFrom" ColumnName="SourceFrom" />
+                <ScalarProperty Name="TriggerTime" ColumnName="TriggerTime" />
+                <ScalarProperty Name="EntrustPriceGear" ColumnName="EntrustPriceGear" />
+                <ScalarProperty Name="EntrustType" ColumnName="EntrustType" />
+                <ScalarProperty Name="EntrustCount" ColumnName="EntrustCount" />
+                <ScalarProperty Name="TradeType" ColumnName="TradeType" />
+                <ScalarProperty Name="ConditionPrice" ColumnName="ConditionPrice" />
+                <ScalarProperty Name="ConditionTime" ColumnName="ConditionTime" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="HoldId" ColumnName="HoldId" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

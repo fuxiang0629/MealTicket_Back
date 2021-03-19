@@ -44,6 +44,7 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_server_broker_account_rel" Width="1.5" PointX="17.375" PointY="9.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_traderules" Width="1.5" PointX="17.375" PointY="12.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_traderules_other" Width="1.5" PointX="17.375" PointY="16.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_hold_conditiontrade" Width="1.5" PointX="0.75" PointY="18.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

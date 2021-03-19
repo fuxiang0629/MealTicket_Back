@@ -20,6 +20,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Transactions;
 using WxPayAPI;
 
 namespace MealTicket_Handler.RunnerHandler
@@ -129,8 +130,8 @@ namespace MealTicket_Handler.RunnerHandler
                                       select x).FirstOrDefault();
                     if (accountPar != null)
                     {
-                        var temp=JsonConvert.DeserializeObject<dynamic>(accountPar.ParamValue);
-                        if (temp != null && temp.Day!=null)
+                        var temp = JsonConvert.DeserializeObject<dynamic>(accountPar.ParamValue);
+                        if (temp != null && temp.Day != null)
                         {
                             settingTradeDay = temp.Day;
                         }
@@ -249,7 +250,7 @@ namespace MealTicket_Handler.RunnerHandler
         /// 检查当前是否交易真实时间（time2,time3,time4）
         /// </summary>
         /// <returns></returns>
-        public static bool CheckTradeTime2(DateTime? time = null,bool time2=true,bool time3=true,bool time4=true)
+        public static bool CheckTradeTime2(DateTime? time = null, bool time2 = true, bool time3 = true, bool time4 = true)
         {
             if (!CheckTradeDate(time))
             {
@@ -512,7 +513,7 @@ namespace MealTicket_Handler.RunnerHandler
                             ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                             ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
                             ObjectParameter sellIdDb = new ObjectParameter("sellId", 0);
-                            db.P_ApplyTradeSell(item.AccountId, item.Id, item.CanSoldCount, 1, 0, 1,false, errorCodeDb, errorMessageDb, sellIdDb);
+                            db.P_ApplyTradeSell(item.AccountId, item.Id, item.CanSoldCount, 1, 0, 1, false, errorCodeDb, errorMessageDb, sellIdDb);
                             int errorCode = (int)errorCodeDb.Value;
                             string errorMessage = errorMessageDb.Value.ToString();
                             if (errorCode != 0)
@@ -598,7 +599,7 @@ namespace MealTicket_Handler.RunnerHandler
                     TimeSpan? currEndTime = null;//当前终止时段
                     try
                     {
-                        GetCurrTimeClosingLine(item.Market, item.SharesCode, shares.SharesName, out traderulesId, out closingLine, out cordon, out currStartTime, out currEndTime, out allDayClosingLine,out allDayCordon);
+                        GetCurrTimeClosingLine(item.Market, item.SharesCode, shares.SharesName, out traderulesId, out closingLine, out cordon, out currStartTime, out currEndTime, out allDayClosingLine, out allDayCordon);
                     }
                     catch (Exception) { }
 
@@ -608,16 +609,16 @@ namespace MealTicket_Handler.RunnerHandler
                     TimeSpan? nextStartTime = null;//下一时段额外起始时段
                     try
                     {
-                        GetNextTimeClosingLine(item.Market, item.SharesCode, shares.SharesName,out nextTraderulesId, out nextClosingLine, out nextCordon, out nextStartTime);
+                        GetNextTimeClosingLine(item.Market, item.SharesCode, shares.SharesName, out nextTraderulesId, out nextClosingLine, out nextCordon, out nextStartTime);
                     }
                     catch (Exception) { }
 
 
 
-                    if (traderulesId >0)//当前属于额外时段
+                    if (traderulesId > 0)//当前属于额外时段
                     {
                         //判断下一时段是否存在额外时段
-                        if (nextStartTime==null || nextStartTime> currEndTime)
+                        if (nextStartTime == null || nextStartTime > currEndTime)
                         {
                             nextTraderulesId = 0;
                             nextClosingLine = allDayClosingLine;
@@ -658,7 +659,7 @@ namespace MealTicket_Handler.RunnerHandler
                         {
                             //判断当前时段是否已经发送过通知
                             var noticeHold = (from x in db.t_notice_hold
-                                              where x.HoldId == item.Id && x.Type==1
+                                              where x.HoldId == item.Id && x.Type == 1
                                               select x).FirstOrDefault();
                             if (noticeHold == null)
                             {
@@ -754,8 +755,8 @@ namespace MealTicket_Handler.RunnerHandler
                                     time = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"),
                                     sharescode = item.SharesCode,
                                     sharesname = shares.SharesName,
-                                    times= nextStartTime.Value,
-                                    closingprice= closingPrice,
+                                    times = nextStartTime.Value,
+                                    closingprice = closingPrice,
                                     adddeposit = needDepositAmount - item.RemainDeposit <= 0 ? 0 : needDepositAmount - item.RemainDeposit
                                 });
                                 NoticeSender.SendExecute("NoticeSend.ClosingForceSoon", item.AccountId, tempPara);
@@ -909,7 +910,7 @@ namespace MealTicket_Handler.RunnerHandler
                                 ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                                 ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
                                 ObjectParameter sellIdDb = new ObjectParameter("sellId", 0);
-                                db.P_ApplyTradeSell(item.AccountId, item.Id, sellz, quotes.BuyCount1 <= 0 ? 2 : 1, quotes.BuyCount1 <= 0 ? quotes.PresentPrice : 0, 2,false, errorCodeDb, errorMessageDb, sellIdDb);
+                                db.P_ApplyTradeSell(item.AccountId, item.Id, sellz, quotes.BuyCount1 <= 0 ? 2 : 1, quotes.BuyCount1 <= 0 ? quotes.PresentPrice : 0, 2, false, errorCodeDb, errorMessageDb, sellIdDb);
                                 int errorCode = (int)errorCodeDb.Value;
                                 string errorMessage = errorMessageDb.Value.ToString();
                                 if (errorCode != 0)
@@ -920,7 +921,7 @@ namespace MealTicket_Handler.RunnerHandler
 
                                 var entrustManager = (from x in db.t_account_shares_entrust_manager
                                                       join x2 in db.t_broker_account_info on x.TradeAccountCode equals x2.AccountCode
-                                                      where x.BuyId == sellId && x.TradeType == 2 && item.Status == 1
+                                                      where x.BuyId == sellId && x.TradeType == 2 && x.Status == 1
                                                       select new { x, x2 }).ToList();
                                 if (entrustManager.Count() <= 0)
                                 {
@@ -964,7 +965,7 @@ namespace MealTicket_Handler.RunnerHandler
         /// <summary>
         /// 获取当前时段平仓线信息
         /// </summary>
-        private static void GetCurrTimeClosingLine(int market, string sharesCode, string sharesName, out long currId, out int currClosingLine, out int currCordon, out TimeSpan? currStartTime, out TimeSpan? currEndTime,out int allDayClosingLine,out int allDayCordon)
+        private static void GetCurrTimeClosingLine(int market, string sharesCode, string sharesName, out long currId, out int currClosingLine, out int currCordon, out TimeSpan? currStartTime, out TimeSpan? currEndTime, out int allDayClosingLine, out int allDayCordon)
         {
             TimeSpan timeSpan = TimeSpan.Parse(DateTime.Now.ToString("HH:mm:ss"));
 
@@ -1040,7 +1041,7 @@ namespace MealTicket_Handler.RunnerHandler
         /// <summary>
         /// 获取下个时段额外平仓线信息
         /// </summary>
-        private static void GetNextTimeClosingLine(int market,string sharesCode,string sharesName,out long nextId,out int nextClosingLine,out int nextCordon, out TimeSpan? nextStartTime)
+        private static void GetNextTimeClosingLine(int market, string sharesCode, string sharesName, out long nextId, out int nextClosingLine, out int nextCordon, out TimeSpan? nextStartTime)
         {
             TimeSpan timeSpan = TimeSpan.Parse(DateTime.Now.ToString("HH:mm:ss"));
 
@@ -1081,7 +1082,7 @@ namespace MealTicket_Handler.RunnerHandler
                                 tempNextClosingLine = other.ClosingLine;
                                 tempNextCordon = other.Cordon;
                             }
-                            else if (tempStartTime == startTime && tempNextClosingLine< other.ClosingLine)
+                            else if (tempStartTime == startTime && tempNextClosingLine < other.ClosingLine)
                             {
                                 tempStartTime = startTime;
                                 tempNextId = other.Id;
@@ -1661,14 +1662,14 @@ namespace MealTicket_Handler.RunnerHandler
                                     var details = (from d in db.t_notice_send_record_details
                                                    where d.Mobile == mobile && d.RecordId == item.Id
                                                    select d).FirstOrDefault();
-                                    if (details == null) 
+                                    if (details == null)
                                     {
                                         continue;
                                     }
                                     if (error_code != null)
                                     {
                                         details.Status = 5000;
-                                        details.StatusDes = "提交时出错，原因："+ error_code;
+                                        details.StatusDes = "提交时出错，原因：" + error_code;
                                     }
                                     details.ThirdMsgId = msg_id;
                                 }
@@ -1753,7 +1754,7 @@ namespace MealTicket_Handler.RunnerHandler
                                 {
                                     continue;
                                 }
-                              
+
                                 db.t_notice_send_record_details.Add(new t_notice_send_record_details
                                 {
                                     SmsAppKey = item.SmsAppKey,
@@ -1767,7 +1768,7 @@ namespace MealTicket_Handler.RunnerHandler
                                     StatusDes = "发送中"
                                 });
 
-                                string audi = "{\"alias\":[\""+ accountToken.Replace("-","") + "\"]}";
+                                string audi = "{\"alias\":[\"" + accountToken.Replace("-", "") + "\"]}";
 
                                 Dictionary<string, string> dic = new Dictionary<string, string>();
                                 string actionPath = item.JumpUrl;
@@ -1779,28 +1780,28 @@ namespace MealTicket_Handler.RunnerHandler
                                 dic.Add("actionType", actionType);
                                 dic.Add("actionPath", actionPath);
 
-                                var rrr=pushObj.SendPush(new Jiguang.JPush.Model.PushPayload
+                                var rrr = pushObj.SendPush(new Jiguang.JPush.Model.PushPayload
                                 {
                                     Platform = "all",
-                                    Audience =JsonConvert.DeserializeObject(audi),
-                                    Notification=new Jiguang.JPush.Model.Notification 
+                                    Audience = JsonConvert.DeserializeObject(audi),
+                                    Notification = new Jiguang.JPush.Model.Notification
                                     {
-                                        Alert=item.SendContent
+                                        Alert = item.SendContent
                                     },
-                                    Message=new Jiguang.JPush.Model.Message 
+                                    Message = new Jiguang.JPush.Model.Message
                                     {
-                                        Content= item.SendContent,
-                                        Extras= dic
+                                        Content = item.SendContent,
+                                        Extras = dic
                                     },
-                                    Options=new Jiguang.JPush.Model.Options 
+                                    Options = new Jiguang.JPush.Model.Options
                                     {
-                                        IsApnsProduction=true
+                                        IsApnsProduction = true
                                     }
                                 });
-                                Logger.WriteFileLog(rrr.Content,null);
+                                Logger.WriteFileLog(rrr.Content, null);
                             }
                             db.SaveChanges();
-                        
+
                             tran.Commit();
                         }
                         catch (Exception ex)
@@ -1819,7 +1820,7 @@ namespace MealTicket_Handler.RunnerHandler
         /// <summary>
         /// 派股派息
         /// </summary>
-        public static void SharesAllot() 
+        public static void SharesAllot()
         {
             DateTime timeNow = DateTime.Now;
             using (var db = new meal_ticketEntities())
@@ -1839,7 +1840,7 @@ namespace MealTicket_Handler.RunnerHandler
                         catch (Exception ex)
                         {
                             tran.Rollback();
-                            Logger.WriteFileLog("派股派息出错，Id="+ item.Id, ex);
+                            Logger.WriteFileLog("派股派息出错，Id=" + item.Id, ex);
                         }
                     }
                 }
@@ -1849,7 +1850,7 @@ namespace MealTicket_Handler.RunnerHandler
         /// <summary>
         /// 更新股票分笔数据
         /// </summary>
-        public static void UpdateTransactiondata() 
+        public static void UpdateTransactiondata()
         {
             DateTime timeDate = DateTime.Now.Date;
             using (var db = new meal_ticketEntities())
@@ -1865,8 +1866,8 @@ namespace MealTicket_Handler.RunnerHandler
                         {
                             Market = item.Market,
                             SharesCode = item.SharesCode,
-                            Date= timeDate.ToString("yyyy-MM-dd"),
-                            Type=1
+                            Date = timeDate.ToString("yyyy-MM-dd"),
+                            Type = 1
                         };
                         MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "TransactionData", "Update");
                     }
@@ -1886,10 +1887,10 @@ namespace MealTicket_Handler.RunnerHandler
             {
                 DateTime timeDate = DateTime.Now.Date;
                 string sql = string.Format("select t.Market,t.SharesCode,t1.SharesName from t_shares_quotes t with(xlock) inner join t_shares_all t1 with(nolock) on t.Market=t1.Market and t.SharesCode=t1.SharesCode inner join t_shares_monitor t2 with(nolock) on t.Market=t2.Market and t.SharesCode=t2.SharesCode where t.LastModified>'{0}' and t2.[Status]=1", timeDate.ToString("yyyy-MM-dd"));
-                var shares=db.Database.SqlQuery<TradeSharesInfo>(sql);
+                var shares = db.Database.SqlQuery<TradeSharesInfo>(sql);
 
                 DateTime tempTime = DateTime.Now.AddMinutes(-10);
-                var monitorDetails = db.t_shares_monitor_details.Where(e=>e.SendTime> tempTime).ToList();
+                var monitorDetails = db.t_shares_monitor_details.Where(e => e.SendTime > tempTime).ToList();
                 List<t_shares_monitor_details> list = new List<t_shares_monitor_details>();
 
                 List<dynamic> pushList = new List<dynamic>();
@@ -1968,6 +1969,123 @@ namespace MealTicket_Handler.RunnerHandler
                     catch (Exception ex)
                     {
 
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 自动交易
+        /// </summary>
+        public static void TradeAuto()
+        {
+            DateTime timeNow = DateTime.Now;
+            using (var db = new meal_ticketEntities())
+            {
+                var holdList = (from item in db.t_account_shares_hold_conditiontrade
+                                join item2 in db.t_account_shares_hold on item.HoldId equals item2.Id
+                                join item3 in db.t_shares_quotes on new { item2.Market, item2.SharesCode } equals new { item3.Market, item3.SharesCode }
+                                where ((item.Type == 1 && item.ConditionTime != null && item.ConditionTime <= timeNow) || (item.Type == 2 && item3.PresentCount > 0 && item3.PresentCount >= item.ConditionPrice) || (item.Type == 3 && item3.PresentCount > 0 && item3.PresentCount <= item.ConditionPrice)) && item.TradeType == 2 && item.TriggerTime == null && item2.Status == 1 && SqlFunctions.DateAdd("MI", 1, item3.LastModified) > timeNow && item3.PresentPrice > 0
+                                select new { item, item2, item3 }).ToList();
+                foreach (var item in holdList)
+                {
+                    item.item.TriggerTime = timeNow;
+                    db.SaveChanges();
+
+                    int EntrustCount = item.item.EntrustCount;
+                    if (item.item2.CanSoldCount < EntrustCount)
+                    {
+                        EntrustCount = item.item2.CanSoldCount;
+                    }
+                    long EntrustPrice = 0;
+                    if (item.item.EntrustType == 2)
+                    {
+                        switch (item.item.EntrustPriceGear)
+                        {
+                            case 1:
+                                EntrustPrice = item.item3.BuyPrice1 == 0 ? item.item3.PresentPrice : item.item3.BuyPrice1;
+                                break;
+                            case 2:
+                                EntrustPrice = item.item3.BuyPrice2 == 0 ? item.item3.PresentPrice : item.item3.BuyPrice2;
+                                break;
+                            case 3:
+                                EntrustPrice = item.item3.BuyPrice3 == 0 ? item.item3.PresentPrice : item.item3.BuyPrice3;
+                                break;
+                            case 4:
+                                EntrustPrice = item.item3.BuyPrice4 == 0 ? item.item3.PresentPrice : item.item3.BuyPrice4;
+                                break;
+                            case 5:
+                                EntrustPrice = item.item3.BuyPrice5 == 0 ? item.item3.PresentPrice : item.item3.BuyPrice5;
+                                break;
+                            case 6:
+                                EntrustPrice = item.item3.SellPrice1 == 0 ? item.item3.PresentPrice : item.item3.SellPrice1;
+                                break;
+                            case 7:
+                                EntrustPrice = item.item3.SellPrice2 == 0 ? item.item3.PresentPrice : item.item3.SellPrice2;
+                                break;
+                            case 8:
+                                EntrustPrice = item.item3.SellPrice3 == 0 ? item.item3.PresentPrice : item.item3.SellPrice3;
+                                break;
+                            case 9:
+                                EntrustPrice = item.item3.SellPrice4 == 0 ? item.item3.PresentPrice : item.item3.SellPrice4;
+                                break;
+                            case 10:
+                                EntrustPrice = item.item3.SellPrice5 == 0 ? item.item3.PresentPrice : item.item3.SellPrice5;
+                                break;
+                        }
+                    }
+                    using (var tran = db.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
+                            ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
+                            ObjectParameter sellIdDb = new ObjectParameter("sellId", 0);
+                            db.P_ApplyTradeSell(item.item.AccountId, item.item.HoldId, EntrustCount, item.item.EntrustType, EntrustPrice, 0, false, errorCodeDb, errorMessageDb, sellIdDb);
+                            int errorCode = (int)errorCodeDb.Value;
+                            string errorMessage = errorMessageDb.Value.ToString();
+                            if (errorCode != 0)
+                            {
+                                throw new Exception(errorMessage);
+                            }
+                            long sellId = (long)sellIdDb.Value;
+
+                            var entrustManager = (from x in db.t_account_shares_entrust_manager
+                                                  join x2 in db.t_broker_account_info on x.TradeAccountCode equals x2.AccountCode
+                                                  where x.BuyId == sellId && x.TradeType == 2 && x.Status == 1
+                                                  select new { x, x2 }).ToList();
+                            if (entrustManager.Count() <= 0)
+                            {
+                                throw new Exception("内部错误");
+                            }
+                            foreach (var x in entrustManager)
+                            {
+                                var sendData = new
+                                {
+                                    SellManagerId = x.x.Id,
+                                    SellTime = DateTime.Now.ToString("yyyy-MM-dd")
+                                };
+                                var server = (from y in db.t_server_broker_account_rel
+                                              join y2 in db.t_server on y.ServerId equals y2.ServerId
+                                              where y.BrokerAccountId == x.x2.Id
+                                              select y).FirstOrDefault();
+                                if (server == null)
+                                {
+                                    throw new WebApiException(400, "服务器配置有误");
+                                }
+                                bool isSendSuccess = MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesSell", server.ServerId);
+                                if (!isSendSuccess)
+                                {
+                                    throw new Exception("操作超时，请重新操作");
+                                }
+                            }
+
+                            tran.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            tran.Rollback();
+                        }
                     }
                 }
             }

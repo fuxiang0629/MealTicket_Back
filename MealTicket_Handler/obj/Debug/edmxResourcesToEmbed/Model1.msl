@@ -1160,5 +1160,24 @@
     </EntitySetMapping>
     <FunctionImportMapping FunctionImportName="P_FollowApply" FunctionName="meal_ticketModel.Store.P_FollowApply" />
     <FunctionImportMapping FunctionImportName="P_FollowCancel" FunctionName="meal_ticketModel.Store.P_FollowCancel" />
+    <EntitySetMapping Name="t_account_shares_hold_conditiontrade">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_hold_conditiontrade">
+        <MappingFragment StoreEntitySet="t_account_shares_hold_conditiontrade">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="TriggerTime" ColumnName="TriggerTime" />
+          <ScalarProperty Name="EntrustPriceGear" ColumnName="EntrustPriceGear" />
+          <ScalarProperty Name="EntrustType" ColumnName="EntrustType" />
+          <ScalarProperty Name="EntrustCount" ColumnName="EntrustCount" />
+          <ScalarProperty Name="TradeType" ColumnName="TradeType" />
+          <ScalarProperty Name="ConditionPrice" ColumnName="ConditionPrice" />
+          <ScalarProperty Name="ConditionTime" ColumnName="ConditionTime" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="HoldId" ColumnName="HoldId" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

@@ -34,4 +34,3 @@ F:\项目\饭票后端\TransactionDataUpdate_NO3\obj\Release\TransactionDataUpda
 F:\项目\饭票后端\TransactionDataUpdate_NO3\obj\Release\TransactionDataUpdate_NO3.csproj.CopyComplete
 F:\项目\饭票后端\TransactionDataUpdate_NO3\obj\Release\TransactionDataUpdate_NO3.exe
 F:\项目\饭票后端\TransactionDataUpdate_NO3\obj\Release\TransactionDataUpdate_NO3.pdb
-F:\项目\饭票后端\TransactionDataUpdate_NO3\obj\Release\TransactionDataUpdate_NO3.csprojAssemblyReference.cache

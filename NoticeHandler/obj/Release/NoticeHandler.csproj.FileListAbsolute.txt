@@ -63,7 +63,6 @@ F:\项目\饭票后端\NoticeHandler\obj\Release\NoticeHandler.csproj.CoreCompil
 F:\项目\饭票后端\NoticeHandler\obj\Release\NoticeHandler.csproj.CopyComplete
 F:\项目\饭票后端\NoticeHandler\obj\Release\NoticeHandler.dll
 F:\项目\饭票后端\NoticeHandler\obj\Release\NoticeHandler.pdb
-F:\项目\饭票后端\NoticeHandler\obj\Release\NoticeHandler.csprojAssemblyReference.cache
 D:\项目\饭票\后端\NoticeHandler\bin\Release\NoticeHandler.dll.config
 D:\项目\饭票\后端\NoticeHandler\bin\Release\NoticeHandler.dll
 D:\项目\饭票\后端\NoticeHandler\bin\Release\NoticeHandler.pdb

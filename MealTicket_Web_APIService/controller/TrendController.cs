@@ -555,7 +555,7 @@ namespace MealTicket_Web_APIService.controller
                         int fsLen = (int)fileStream.Length;
                         byte[] heByte = new byte[fsLen];
                         int r = fileStream.Read(heByte, 0, heByte.Length);
-                        string myStr = System.Text.Encoding.GetEncoding("gb2312").GetString(heByte);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
                         string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
                         List<SharesInfo> sharesList = new List<SharesInfo>();
                         for (int i = 0; i < temp.Length; i++)
@@ -978,6 +978,75 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.GetAccountFollowRecord(request, basedata);
+        }
+
+        /// <summary>
+        /// 获取条件单列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/hold/conditiontrade/list"), HttpPost]
+        [Description("获取条件单列表")]
+        [CheckUserLoginFilter]
+        public List<AccountHoldConditionTradeInfo> GetAccountHoldConditionTradeList(GetAccountHoldConditionTradeListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountHoldConditionTradeList(request);
+        }
+
+        /// <summary>
+        /// 添加条件单
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/hold/conditiontrade/add"), HttpPost]
+        [Description("添加条件单")]
+        [CheckUserLoginFilter]
+        public object AddAccountHoldConditionTrade(AddAccountHoldConditionTradeRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            if (request.TradeType != 1 && request.TradeType != 2)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            if (request.Type != 1 && request.Type != 2 && request.Type != 3)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            if (request.Type == 1 && request.ConditionTime == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            if (request.Type != 1 && request.ConditionPrice == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountHoldConditionTrade(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除条件单
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/hold/conditiontrade/delete"), HttpPost]
+        [Description("删除条件单")]
+        [CheckUserLoginFilter]
+        public object DeleteAccountHoldConditionTrade(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountHoldConditionTrade(request);
+            return null;
         }
     }
 }

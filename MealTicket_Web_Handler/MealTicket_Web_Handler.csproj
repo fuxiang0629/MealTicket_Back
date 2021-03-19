@@ -108,12 +108,14 @@
     <Compile Include="Model\AccountApplyTradeSell.cs" />
     <Compile Include="Model\AccountLogin.cs" />
     <Compile Include="Model\AccountMakeupDeposit.cs" />
+    <Compile Include="Model\AddAccountHoldConditionTrade.cs" />
     <Compile Include="Model\AddAccountOptional.cs" />
     <Compile Include="Model\AddAccountOptionalGroup.cs" />
     <Compile Include="Model\AddAccountOptionalGroupRel.cs" />
     <Compile Include="Model\AddAccountOptionalTrendPar.cs" />
     <Compile Include="Model\BindAccountOptionalSeat.cs" />
     <Compile Include="Model\GetAccountFollowRecord.cs" />
+    <Compile Include="Model\GetAccountHoldConditionTradeList.cs" />
     <Compile Include="Model\GetAccountOptionalGroup.cs" />
     <Compile Include="Model\GetAccountOptionalGroupRelList.cs" />
     <Compile Include="Model\GetAccountOptionalList.cs" />
@@ -174,6 +176,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_account_shares_hold.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_hold_conditiontrade.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_account_shares_optional.cs">

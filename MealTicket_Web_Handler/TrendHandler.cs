@@ -2822,5 +2822,104 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 };
             }
         }
+
+        /// <summary>
+        /// 获取条件单列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public List<AccountHoldConditionTradeInfo> GetAccountHoldConditionTradeList(GetAccountHoldConditionTradeListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var conditiontrade = (from item in db.t_account_shares_hold_conditiontrade.AsNoTracking()
+                                      where item.HoldId == request.HoldId && item.Type == request.Type && item.SourceFrom==1
+                                      select new AccountHoldConditionTradeInfo
+                                      {
+                                          ConditionPrice = item.ConditionPrice,
+                                          ConditionTime = item.ConditionTime,
+                                          EntrustCount = item.EntrustCount,
+                                          EntrustPriceGear = item.EntrustPriceGear,
+                                          EntrustType = item.EntrustType,
+                                          Id = item.Id,
+                                          TriggerTime = item.TriggerTime
+                                      }).ToList();
+                switch (request.Type)
+                {
+                    case 1:
+                        conditiontrade = conditiontrade.OrderBy(e => e.ConditionTime).ToList();
+                        break;
+                    case 2:
+                        conditiontrade = conditiontrade.OrderBy(e => e.ConditionPrice).ToList();
+                        break;
+                    case 3:
+                        conditiontrade = conditiontrade.OrderByDescending(e => e.ConditionPrice).ToList();
+                        break;
+                }
+
+                scope.Complete();
+                return conditiontrade;
+            }
+        }
+
+        /// <summary>
+        /// 添加条件单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void AddAccountHoldConditionTrade(AddAccountHoldConditionTradeRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //判断持仓是否存在
+                var hold = (from item in db.t_account_shares_hold
+                            where item.Id == request.HoldId
+                            select item).FirstOrDefault();
+                if (hold == null)
+                {
+                    throw new WebApiException(400, "持仓不存在");
+                }
+
+                db.t_account_shares_hold_conditiontrade.Add(new t_account_shares_hold_conditiontrade
+                {
+                    AccountId = hold.AccountId,
+                    ConditionPrice = request.ConditionPrice,
+                    ConditionTime = request.ConditionTime,
+                    CreateTime = DateTime.Now,
+                    EntrustCount = request.EntrustCount,
+                    EntrustPriceGear = request.EntrustPriceGear,
+                    EntrustType = request.EntrustType,
+                    HoldId = request.HoldId,
+                    LastModified = DateTime.Now,
+                    TradeType = request.TradeType,
+                    SourceFrom=1,
+                    TriggerTime = null,
+                    Type = request.Type
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除条件单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void DeleteAccountHoldConditionTrade(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var ConditionTrade = (from item in db.t_account_shares_hold_conditiontrade
+                                      where item.Id == request.Id
+                                      select item).FirstOrDefault();
+                if (ConditionTrade == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_account_shares_hold_conditiontrade.Remove(ConditionTrade);
+                db.SaveChanges();
+            }
+        }
     }
 }

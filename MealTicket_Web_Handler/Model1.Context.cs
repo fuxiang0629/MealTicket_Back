@@ -66,6 +66,7 @@ namespace MealTicket_Web_Handler
         public virtual DbSet<t_server_broker_account_rel> t_server_broker_account_rel { get; set; }
         public virtual DbSet<t_shares_limit_traderules> t_shares_limit_traderules { get; set; }
         public virtual DbSet<t_shares_limit_traderules_other> t_shares_limit_traderules_other { get; set; }
+        public virtual DbSet<t_account_shares_hold_conditiontrade> t_account_shares_hold_conditiontrade { get; set; }
     
         public virtual int P_CheckAccountLogin_Web(string token, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter accountId)
         {

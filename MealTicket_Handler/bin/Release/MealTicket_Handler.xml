@@ -654,6 +654,11 @@
             等待时间（秒）
             </summary>
         </member>
+        <member name="P:MealTicket_Handler.Model.DeleteRequest.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
         <member name="P:MealTicket_Handler.Model.DetailsRequest.Id">
             <summary>
             Id
@@ -1522,6 +1527,46 @@
             充值金额
             </summary>
         </member>
+        <member name="P:MealTicket_Handler.Model.AddAccountHoldConditionTradeRequest.HoldId">
+            <summary>
+            持仓Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AddAccountHoldConditionTradeRequest.Type">
+            <summary>
+            类型1.定时卖出 2.止盈卖出 3.止亏卖出
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AddAccountHoldConditionTradeRequest.ConditionTime">
+            <summary>
+            时间条件
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AddAccountHoldConditionTradeRequest.ConditionPrice">
+            <summary>
+            价格条件
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AddAccountHoldConditionTradeRequest.TradeType">
+            <summary>
+            交易类型1买入 2卖出
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AddAccountHoldConditionTradeRequest.EntrustCount">
+            <summary>
+            委托数量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AddAccountHoldConditionTradeRequest.EntrustType">
+            <summary>
+            委托类型1市价 2限价
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AddAccountHoldConditionTradeRequest.EntrustPriceGear">
+            <summary>
+            委托价格档位0市价 1限价买一 2限价买二 3限价买三 4限价买四  5限价买五 6限价卖一 7限价卖二 8限价卖三 9限价卖四  10限价卖五
+            </summary>
+        </member>
         <member name="P:MealTicket_Handler.Model.AccountFollowInfo.FollowStatus">
             <summary>
             跟投状态0未跟投 1申请中 2处理中 3已完成 4拒绝
@@ -1530,6 +1575,51 @@
         <member name="P:MealTicket_Handler.Model.AccountFollowInfo.StatusDesc">
             <summary>
             状态描述
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.GetAccountHoldConditionTradeListRequest.HoldId">
+            <summary>
+            持仓Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.GetAccountHoldConditionTradeListRequest.Type">
+            <summary>
+            类型1.定时卖出 2.止盈卖出 3.止亏卖出
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldConditionTradeInfo.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldConditionTradeInfo.ConditionTime">
+            <summary>
+            指定时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldConditionTradeInfo.ConditionPrice">
+            <summary>
+            指定价格
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldConditionTradeInfo.EntrustCount">
+            <summary>
+            委托数量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldConditionTradeInfo.EntrustType">
+            <summary>
+            委托类型1市价 2限价
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldConditionTradeInfo.EntrustPriceGear">
+            <summary>
+            委托价格档位0市价 1限价买一 2限价买二 3限价买三 4限价买四  5限价买五 6限价卖一 7限价卖二 8限价卖三 9限价卖四  10限价卖五
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldConditionTradeInfo.TriggerTime">
+            <summary>
+            触发时间
             </summary>
         </member>
         <member name="P:MealTicket_Handler.Model.GetAccountHoldHistoryListRequest.StartTime">
@@ -2807,6 +2897,27 @@
             <param name="basedata"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Handler.TradeHandler.GetAccountHoldConditionTradeList(MealTicket_Handler.Model.GetAccountHoldConditionTradeListRequest,MealTicket_Handler.Model.HeadBase)">
+            <summary>
+            获取条件单列表
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Handler.TradeHandler.AddAccountHoldConditionTrade(MealTicket_Handler.Model.AddAccountHoldConditionTradeRequest,MealTicket_Handler.Model.HeadBase)">
+            <summary>
+            添加条件单
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+        </member>
+        <member name="M:MealTicket_Handler.TradeHandler.DeleteAccountHoldConditionTrade(MealTicket_Handler.Model.DeleteRequest,MealTicket_Handler.Model.HeadBase)">
+            <summary>
+            删除条件单
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+        </member>
         <member name="F:MealTicket_Handler.MQHandler._factory">
             <summary>
             连接工厂
@@ -2942,6 +3053,11 @@
             推送股票分笔数据
             </summary>
             <returns></returns>
+        </member>
+        <member name="M:MealTicket_Handler.RunnerHandler.RunnerHelper.TradeAuto">
+            <summary>
+            自动交易
+            </summary>
         </member>
         <member name="F:MealTicket_Handler.Singleton.instance">
             <summary>
