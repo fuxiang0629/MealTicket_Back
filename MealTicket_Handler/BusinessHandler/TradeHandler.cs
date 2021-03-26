@@ -1417,7 +1417,7 @@ namespace MealTicket_Handler
             using (var db = new meal_ticketEntities())
             {
                 var conditiontrade = (from item in db.t_account_shares_hold_conditiontrade.AsNoTracking()
-                                      where item.HoldId == request.HoldId && item.Type == request.Type && item.AccountId == basedata.AccountId
+                                      where item.HoldId == request.HoldId && item.Type == request.Type && item.AccountId == basedata.AccountId && item.SourceFrom==0 && item.Status==1
                                       select new AccountHoldConditionTradeInfo
                                       {
                                           ConditionPrice = item.ConditionPrice,
@@ -1426,8 +1426,29 @@ namespace MealTicket_Handler
                                           EntrustPriceGear = item.EntrustPriceGear,
                                           EntrustType = item.EntrustType,
                                           Id = item.Id,
-                                          TriggerTime = item.TriggerTime
+                                          ForbidType=item.ForbidType,
+                                          TriggerTime = item.TriggerTime,
+                                          EntrustId=item.EntrustId
                                       }).ToList();
+                foreach (var item in conditiontrade)
+                {
+                    if (item.EntrustId > 0)
+                    {
+                        var entrust = (from x in db.t_account_shares_entrust
+                                       where x.Id == item.EntrustId
+                                       select x).FirstOrDefault();
+                        if (entrust != null)
+                        {
+                            if (item.EntrustType == 2)
+                            {
+                                item.EntrustPrice = entrust.EntrustPrice;
+                            }
+                            item.RelEntrustCount = entrust.EntrustCount;
+                            item.RelDealCount = entrust.DealCount;
+                            item.EntrustStatus = entrust.Status;
+                        }
+                    }
+                }
                 switch (request.Type)
                 {
                     case 1:
@@ -1477,6 +1498,11 @@ namespace MealTicket_Handler
                     LastModified = DateTime.Now,
                     TradeType = request.TradeType,
                     TriggerTime = null,
+                    SourceFrom=0,
+                    Status=1,
+                    FatherId=0,
+                    ForbidType=request.ForbidType,
+                    Name="",
                     Type = request.Type
                 });
                 db.SaveChanges();
@@ -1501,6 +1527,28 @@ namespace MealTicket_Handler
                 }
                 db.t_account_shares_hold_conditiontrade.Remove(ConditionTrade);
                 db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 判断是否交易时间
+        /// </summary>
+        /// <param name="request"></param>
+        public void IsTradeTimeRequest(IsTradeTimeRequest request) 
+        {
+            DateTime? time;
+            DateTime tempTime;
+            if (!DateTime.TryParse(request.Time, out tempTime))
+            {
+                time = null;
+            }
+            else
+            {
+                time = tempTime;
+            }
+            if(!RunnerHelper.CheckTradeTime2(time, false, true, false))
+            {
+                throw new WebApiException(400,"非交易时间");
             }
         }
     }

@@ -170,6 +170,7 @@
     <Compile Include="Model\Trade\GetAccountFollowInfo.cs" />
     <Compile Include="Model\Trade\GetAccountHoldConditionTradeList.cs" />
     <Compile Include="Model\Trade\GetAccountHoldHistoryList.cs" />
+    <Compile Include="Model\Trade\IsTradeTime.cs" />
     <Compile Include="Model\Trade\ModifyFundmultiple.cs" />
     <Compile Include="Model\Trade\AddTradeSharesHotSearch.cs" />
     <Compile Include="Model\Trade\ApplyTradeBuy.cs" />
@@ -234,6 +235,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_account_shares_hold_conditiontrade.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_hold_conditiontrade_child.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_account_shares_hold_manager.cs">

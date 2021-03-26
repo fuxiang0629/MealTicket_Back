@@ -14,7 +14,7 @@ namespace MealTicket_APIService.runner
         public TradeAutoRunner()
         {
             Name = "TradeAutoRunner";
-            SleepTime = Singleton.Instance.ClosingAutoSleepTime_TradeDate;
+            SleepTime = 1000;
         }
 
         public override bool Check
@@ -25,15 +25,12 @@ namespace MealTicket_APIService.runner
                 {
                     if (!RunnerHelper.CheckTradeDate())
                     {
-                        SleepTime = Singleton.Instance.ClosingAutoSleepTime_NoTradeDate;
                         return false;
                     }
-                    if (!RunnerHelper.CheckTradeTime2())
+                    if (!RunnerHelper.CheckTradeTime2(null,false,true,false))
                     {
-                        SleepTime = Singleton.Instance.ClosingAutoSleepTime_TradeDate;
                         return false;
                     }
-                    SleepTime = Singleton.Instance.ClosingAutoSleepTime_TradeDate;
                     return true;
                 }
                 catch (Exception ex)

@@ -28,5 +28,10 @@ namespace MealTicket_Web_Handler
         public int SourceFrom { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
+        public string Name { get; set; }
+        public long FatherId { get; set; }
+        public int ForbidType { get; set; }
+        public int Status { get; set; }
+        public long EntrustId { get; set; }
     }
 }

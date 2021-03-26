@@ -277,6 +277,7 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="AccountId" Type="bigint" Nullable="false" />
           <Property Name="HoldId" Type="bigint" Nullable="false" />
           <Property Name="Type" Type="int" Nullable="false" />
@@ -287,8 +288,22 @@
           <Property Name="EntrustType" Type="int" Nullable="false" />
           <Property Name="EntrustPriceGear" Type="int" Nullable="false" />
           <Property Name="TriggerTime" Type="datetime" />
+          <Property Name="SourceFrom" Type="int" Nullable="false" />
+          <Property Name="FatherId" Type="bigint" Nullable="false" />
+          <Property Name="ForbidType" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="EntrustId" Type="bigint" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_hold_conditiontrade_child">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ConditionId" Type="bigint" Nullable="false" />
+          <Property Name="ChildId" Type="bigint" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="t_account_shares_hold_manager">
           <Key>
@@ -1337,6 +1352,7 @@
           <EntitySet Name="t_account_shares_entrust_manager_dealdetails" EntityType="Self.t_account_shares_entrust_manager_dealdetails" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_hold" EntityType="Self.t_account_shares_hold" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_hold_conditiontrade" EntityType="Self.t_account_shares_hold_conditiontrade" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_hold_conditiontrade_child" EntityType="Self.t_account_shares_hold_conditiontrade_child" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_hold_manager" EntityType="Self.t_account_shares_hold_manager" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_verifyCode" EntityType="Self.t_account_verifyCode" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_wallet" EntityType="Self.t_account_wallet" Schema="dbo" store:Type="Tables" />
@@ -1722,6 +1738,7 @@
             <Parameter Name="errorMessage" Mode="InOut" Type="String" />
           </FunctionImport>
           <EntitySet Name="t_account_shares_hold_conditiontrade" EntityType="meal_ticketModel.t_account_shares_hold_conditiontrade" />
+          <EntitySet Name="t_account_shares_hold_conditiontrade_child" EntityType="meal_ticketModel.t_account_shares_hold_conditiontrade_child" />
         </EntityContainer>
         <EntityType Name="t_authority_account_visitlog">
           <Key>
@@ -2788,6 +2805,21 @@
           <Property Name="TriggerTime" Type="DateTime" Precision="3" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="SourceFrom" Type="Int32" Nullable="false" />
+          <Property Name="FatherId" Type="Int64" Nullable="false" />
+          <Property Name="ForbidType" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="EntrustId" Type="Int64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_hold_conditiontrade_child">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ConditionId" Type="Int64" Nullable="false" />
+          <Property Name="ChildId" Type="Int64" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -3957,6 +3989,12 @@
           <EntitySetMapping Name="t_account_shares_hold_conditiontrade">
             <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_hold_conditiontrade">
               <MappingFragment StoreEntitySet="t_account_shares_hold_conditiontrade">
+                <ScalarProperty Name="EntrustId" ColumnName="EntrustId" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ForbidType" ColumnName="ForbidType" />
+                <ScalarProperty Name="FatherId" ColumnName="FatherId" />
+                <ScalarProperty Name="SourceFrom" ColumnName="SourceFrom" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="TriggerTime" ColumnName="TriggerTime" />
@@ -3969,6 +4007,16 @@
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="HoldId" ColumnName="HoldId" />
                 <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_hold_conditiontrade_child">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_hold_conditiontrade_child">
+              <MappingFragment StoreEntitySet="t_account_shares_hold_conditiontrade_child">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ChildId" ColumnName="ChildId" />
+                <ScalarProperty Name="ConditionId" ColumnName="ConditionId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

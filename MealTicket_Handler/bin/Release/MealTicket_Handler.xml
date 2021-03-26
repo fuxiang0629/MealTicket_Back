@@ -1567,6 +1567,11 @@
             委托价格档位0市价 1限价买一 2限价买二 3限价买三 4限价买四  5限价买五 6限价卖一 7限价卖二 8限价卖三 9限价卖四  10限价卖五
             </summary>
         </member>
+        <member name="P:MealTicket_Handler.Model.AddAccountHoldConditionTradeRequest.ForbidType">
+            <summary>
+            禁止类型0无 1禁止涨停卖出
+            </summary>
+        </member>
         <member name="P:MealTicket_Handler.Model.AccountFollowInfo.FollowStatus">
             <summary>
             跟投状态0未跟投 1申请中 2处理中 3已完成 4拒绝
@@ -1620,6 +1625,36 @@
         <member name="P:MealTicket_Handler.Model.AccountHoldConditionTradeInfo.TriggerTime">
             <summary>
             触发时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldConditionTradeInfo.ForbidType">
+            <summary>
+            禁止类型0无 1禁止涨停卖出
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldConditionTradeInfo.EntrustId">
+            <summary>
+            委托Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldConditionTradeInfo.EntrustPrice">
+            <summary>
+            委托价格
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldConditionTradeInfo.EntrustStatus">
+            <summary>
+            委托状态1申报中 2处理中 3成交已完成 4撤销中 5处理已完成
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldConditionTradeInfo.RelDealCount">
+            <summary>
+            实际成交数量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.AccountHoldConditionTradeInfo.RelEntrustCount">
+            <summary>
+            实际委托数量
             </summary>
         </member>
         <member name="P:MealTicket_Handler.Model.GetAccountHoldHistoryListRequest.StartTime">
@@ -1700,6 +1735,11 @@
         <member name="P:MealTicket_Handler.Model.AccountHoldHistoryInfo.RiseRate">
             <summary>
             涨幅(总盈利金额/初始总成本价)
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.IsTradeTimeRequest.Time">
+            <summary>
+            时间
             </summary>
         </member>
         <member name="P:MealTicket_Handler.Model.ModifyFundmultipleRequest.FundmultipleId">
@@ -2918,6 +2958,12 @@
             <param name="request"></param>
             <param name="basedata"></param>
         </member>
+        <member name="M:MealTicket_Handler.TradeHandler.IsTradeTimeRequest(MealTicket_Handler.Model.IsTradeTimeRequest)">
+            <summary>
+            判断是否交易时间
+            </summary>
+            <param name="request"></param>
+        </member>
         <member name="F:MealTicket_Handler.MQHandler._factory">
             <summary>
             连接工厂
@@ -3057,6 +3103,11 @@
         <member name="M:MealTicket_Handler.RunnerHandler.RunnerHelper.TradeAuto">
             <summary>
             自动交易
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.RunnerHandler.RunnerHelper.TradeAutoBuy">
+            <summary>
+            自动买入交易
             </summary>
         </member>
         <member name="F:MealTicket_Handler.Singleton.instance">

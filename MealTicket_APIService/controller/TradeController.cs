@@ -411,5 +411,22 @@ namespace MealTicket_APIService.controller
             sharesHandler.DeleteAccountHoldConditionTrade(request, basedata);
             return null;
         }
+
+        /// <summary>
+        /// 判断是否交易时间（time3）
+        /// </summary>
+        /// <returns></returns>
+        [Description("判断是否交易时间")]
+        [Route("time/judge"), HttpPost]
+        [CheckUserLoginFilter]
+        public object IsTradeTime(IsTradeTimeRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            sharesHandler.IsTradeTimeRequest(request);
+            return null;
+        }
     }
 }

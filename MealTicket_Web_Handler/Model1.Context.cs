@@ -67,6 +67,15 @@ namespace MealTicket_Web_Handler
         public virtual DbSet<t_shares_limit_traderules> t_shares_limit_traderules { get; set; }
         public virtual DbSet<t_shares_limit_traderules_other> t_shares_limit_traderules_other { get; set; }
         public virtual DbSet<t_account_shares_hold_conditiontrade> t_account_shares_hold_conditiontrade { get; set; }
+        public virtual DbSet<t_account_shares_hold_conditiontrade_child> t_account_shares_hold_conditiontrade_child { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_buy> t_account_shares_conditiontrade_buy { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_buy_details> t_account_shares_conditiontrade_buy_details { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_buy_details_auto> t_account_shares_conditiontrade_buy_details_auto { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_buy_details_auto_trend> t_account_shares_conditiontrade_buy_details_auto_trend { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_buy_details_auto_trend_par> t_account_shares_conditiontrade_buy_details_auto_trend_par { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_buy_details_other> t_account_shares_conditiontrade_buy_details_other { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_buy_details_other_trend> t_account_shares_conditiontrade_buy_details_other_trend { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_buy_details_other_trend_par> t_account_shares_conditiontrade_buy_details_other_trend_par { get; set; }
     
         public virtual int P_CheckAccountLogin_Web(string token, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter accountId)
         {

@@ -34,3 +34,4 @@ F:\项目\饭票后端\NewTransactionDataUpdate\bin\Release\zh-Hans\EntityFramew
 F:\项目\饭票后端\NewTransactionDataUpdate\obj\Release\NewTransactionDataUpdate.csproj.CopyComplete
 F:\项目\饭票后端\NewTransactionDataUpdate\obj\Release\NewTransactionDataUpdate.exe
 F:\项目\饭票后端\NewTransactionDataUpdate\obj\Release\NewTransactionDataUpdate.pdb
+F:\项目\饭票后端\NewTransactionDataUpdate\obj\Release\NewTransactionDataUpdate.csprojAssemblyReference.cache

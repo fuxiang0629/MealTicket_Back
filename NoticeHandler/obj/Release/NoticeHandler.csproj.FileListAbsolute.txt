@@ -85,3 +85,4 @@ D:\项目\饭票\后端\NoticeHandler\obj\Release\NoticeHandler.csproj.CoreCompi
 D:\项目\饭票\后端\NoticeHandler\obj\Release\NoticeHandler.csproj.CopyComplete
 D:\项目\饭票\后端\NoticeHandler\obj\Release\NoticeHandler.dll
 D:\项目\饭票\后端\NoticeHandler\obj\Release\NoticeHandler.pdb
+F:\项目\饭票后端\NoticeHandler\obj\Release\NoticeHandler.csprojAssemblyReference.cache

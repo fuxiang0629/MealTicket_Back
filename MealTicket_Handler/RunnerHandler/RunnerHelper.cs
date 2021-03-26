@@ -1982,113 +1982,205 @@ namespace MealTicket_Handler.RunnerHandler
             DateTime timeNow = DateTime.Now;
             using (var db = new meal_ticketEntities())
             {
-                var holdList = (from item in db.t_account_shares_hold_conditiontrade
-                                join item2 in db.t_account_shares_hold on item.HoldId equals item2.Id
-                                join item3 in db.t_shares_quotes on new { item2.Market, item2.SharesCode } equals new { item3.Market, item3.SharesCode }
-                                where ((item.Type == 1 && item.ConditionTime != null && item.ConditionTime <= timeNow) || (item.Type == 2 && item3.PresentCount > 0 && item3.PresentCount >= item.ConditionPrice) || (item.Type == 3 && item3.PresentCount > 0 && item3.PresentCount <= item.ConditionPrice)) && item.TradeType == 2 && item.TriggerTime == null && item2.Status == 1 && SqlFunctions.DateAdd("MI", 1, item3.LastModified) > timeNow && item3.PresentPrice > 0
-                                select new { item, item2, item3 }).ToList();
-                foreach (var item in holdList)
+                var condition = (from item in db.t_account_shares_hold_conditiontrade
+                                 join item2 in db.t_account_shares_hold on item.HoldId equals item2.Id
+                                 join item3 in db.t_shares_quotes on new { item2.Market, item2.SharesCode } equals new { item3.Market, item3.SharesCode }
+                                 where ((item.Type == 1 && item.ConditionTime != null && item.ConditionTime <= timeNow) || (item.Type == 2 && item3.PresentPrice > 0 && item3.PresentPrice >= item.ConditionPrice) || (item.Type == 3 && item3.PresentPrice > 0 && item3.PresentPrice <= item.ConditionPrice)) && item.TradeType == 2 && item.TriggerTime == null && item2.Status == 1 && SqlFunctions.DateAdd("MI", 1, item3.LastModified) > timeNow && item3.PresentPrice > 0 && item.Status == 1
+                                 group new { item, item2, item3 } by new { item.HoldId, item.Type } into g
+                                 select g).ToList();
+                foreach (var item in condition)
                 {
-                    item.item.TriggerTime = timeNow;
-                    db.SaveChanges();
+                    var holdList = item.Key.Type == 2 ? item.OrderBy(e => e.item.ConditionPrice).ToList() : item.Key.Type == 3 ? item.OrderByDescending(e => e.item.ConditionPrice).ToList() : item.OrderBy(e => e.item.ConditionTime).ToList();
 
-                    int EntrustCount = item.item.EntrustCount;
-                    if (item.item2.CanSoldCount < EntrustCount)
+                    foreach (var hold in holdList)
                     {
-                        EntrustCount = item.item2.CanSoldCount;
-                    }
-                    long EntrustPrice = 0;
-                    if (item.item.EntrustType == 2)
-                    {
-                        switch (item.item.EntrustPriceGear)
+                        //可卖数量为0不执行
+                        if (hold.item2.RemainCount > 0 && hold.item2.CanSoldCount <= 0)
                         {
-                            case 1:
-                                EntrustPrice = item.item3.BuyPrice1 == 0 ? item.item3.PresentPrice : item.item3.BuyPrice1;
-                                break;
-                            case 2:
-                                EntrustPrice = item.item3.BuyPrice2 == 0 ? item.item3.PresentPrice : item.item3.BuyPrice2;
-                                break;
-                            case 3:
-                                EntrustPrice = item.item3.BuyPrice3 == 0 ? item.item3.PresentPrice : item.item3.BuyPrice3;
-                                break;
-                            case 4:
-                                EntrustPrice = item.item3.BuyPrice4 == 0 ? item.item3.PresentPrice : item.item3.BuyPrice4;
-                                break;
-                            case 5:
-                                EntrustPrice = item.item3.BuyPrice5 == 0 ? item.item3.PresentPrice : item.item3.BuyPrice5;
-                                break;
-                            case 6:
-                                EntrustPrice = item.item3.SellPrice1 == 0 ? item.item3.PresentPrice : item.item3.SellPrice1;
-                                break;
-                            case 7:
-                                EntrustPrice = item.item3.SellPrice2 == 0 ? item.item3.PresentPrice : item.item3.SellPrice2;
-                                break;
-                            case 8:
-                                EntrustPrice = item.item3.SellPrice3 == 0 ? item.item3.PresentPrice : item.item3.SellPrice3;
-                                break;
-                            case 9:
-                                EntrustPrice = item.item3.SellPrice4 == 0 ? item.item3.PresentPrice : item.item3.SellPrice4;
-                                break;
-                            case 10:
-                                EntrustPrice = item.item3.SellPrice5 == 0 ? item.item3.PresentPrice : item.item3.SellPrice5;
-                                break;
+                            break;
                         }
-                    }
-                    using (var tran = db.Database.BeginTransaction())
-                    {
-                        try
+                        //计算杠杆倍数
+                        //计算涨停价格
+                        long maxPrice;
+                        //计算跌停价格
+                        long minPrice;
+                        var rules = (from x in db.t_shares_limit_fundmultiple
+                                     where (x.LimitMarket == hold.item2.Market || x.LimitMarket == -1) && (hold.item2.SharesCode.StartsWith(x.LimitKey))
+                                     orderby x.Priority descending, x.FundMultiple
+                                     select x).FirstOrDefault();
+                        if (rules == null)
                         {
-                            ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
-                            ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
-                            ObjectParameter sellIdDb = new ObjectParameter("sellId", 0);
-                            db.P_ApplyTradeSell(item.item.AccountId, item.item.HoldId, EntrustCount, item.item.EntrustType, EntrustPrice, 0, false, errorCodeDb, errorMessageDb, sellIdDb);
-                            int errorCode = (int)errorCodeDb.Value;
-                            string errorMessage = errorMessageDb.Value.ToString();
-                            if (errorCode != 0)
+                            break;
+                        }
+                        else
+                        {
+                            maxPrice = ((long)Math.Round((hold.item3.ClosedPrice + hold.item3.ClosedPrice * (rules.Range * 1.0 / 10000)) / 100)) * 100;
+                            minPrice = ((long)Math.Round((hold.item3.ClosedPrice - hold.item3.ClosedPrice * (rules.Range * 1.0 / 10000)) / 100)) * 100;
+                        }
+                        //涨停不卖出时不执行
+                        if (hold.item.ForbidType == 1)
+                        {
+                            if (maxPrice == hold.item3.PresentPrice)
                             {
-                                throw new Exception(errorMessage);
+                                break;
                             }
-                            long sellId = (long)sellIdDb.Value;
+                        }
 
-                            var entrustManager = (from x in db.t_account_shares_entrust_manager
-                                                  join x2 in db.t_broker_account_info on x.TradeAccountCode equals x2.AccountCode
-                                                  where x.BuyId == sellId && x.TradeType == 2 && x.Status == 1
-                                                  select new { x, x2 }).ToList();
-                            if (entrustManager.Count() <= 0)
+                        using (var tran = db.Database.BeginTransaction())
+                        {
+                            try
                             {
-                                throw new Exception("内部错误");
-                            }
-                            foreach (var x in entrustManager)
-                            {
-                                var sendData = new
+                                hold.item.TriggerTime = timeNow;
+                                db.SaveChanges();
+
+                                //查询需要更改的子条件
+                                var childList = (from x in db.t_account_shares_hold_conditiontrade_child
+                                                 where x.ConditionId == hold.item.Id
+                                                 select x).ToList();
+                                foreach (var child in childList)
                                 {
-                                    SellManagerId = x.x.Id,
-                                    SellTime = DateTime.Now.ToString("yyyy-MM-dd")
-                                };
-                                var server = (from y in db.t_server_broker_account_rel
-                                              join y2 in db.t_server on y.ServerId equals y2.ServerId
-                                              where y.BrokerAccountId == x.x2.Id
-                                              select y).FirstOrDefault();
-                                if (server == null)
-                                {
-                                    throw new WebApiException(400, "服务器配置有误");
+                                    var childcondition = (from x in db.t_account_shares_hold_conditiontrade
+                                                          where x.Id == child.ChildId
+                                                          select x).FirstOrDefault();
+                                    if (childcondition == null)
+                                    {
+                                        continue;
+                                    }
+                                    if (childcondition.TriggerTime != null)
+                                    {
+                                        continue;
+                                    }
+                                    childcondition.Status = child.Status;
                                 }
-                                bool isSendSuccess = MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesSell", server.ServerId);
-                                if (!isSendSuccess)
-                                {
-                                    throw new Exception("操作超时，请重新操作");
-                                }
+                                db.SaveChanges();
+                                tran.Commit();
                             }
+                            catch (Exception ex)
+                            {
+                                tran.Rollback();
+                                break;
+                            }
+                        }
 
-                            tran.Commit();
-                        }
-                        catch (Exception ex)
+                        int EntrustCount = hold.item.EntrustCount;
+                        if (hold.item2.CanSoldCount < EntrustCount)
                         {
-                            tran.Rollback();
+                            EntrustCount = hold.item2.CanSoldCount;
                         }
-                    }
+                        long EntrustPrice = 0;
+                        if (hold.item.EntrustType == 2)
+                        {
+                            switch (hold.item.EntrustPriceGear)
+                            {
+                                case 1:
+                                    EntrustPrice = hold.item3.BuyPrice1 == 0 ? hold.item3.PresentPrice : hold.item3.BuyPrice1;
+                                    break;
+                                case 2:
+                                    EntrustPrice = hold.item3.BuyPrice2 == 0 ? hold.item3.PresentPrice : hold.item3.BuyPrice2;
+                                    break;
+                                case 3:
+                                    EntrustPrice = hold.item3.BuyPrice3 == 0 ? hold.item3.PresentPrice : hold.item3.BuyPrice3;
+                                    break;
+                                case 4:
+                                    EntrustPrice = hold.item3.BuyPrice4 == 0 ? hold.item3.PresentPrice : hold.item3.BuyPrice4;
+                                    break;
+                                case 5:
+                                    EntrustPrice = hold.item3.BuyPrice5 == 0 ? hold.item3.PresentPrice : hold.item3.BuyPrice5;
+                                    break;
+                                case 6:
+                                    EntrustPrice = hold.item3.SellPrice1 == 0 ? hold.item3.PresentPrice : hold.item3.SellPrice1;
+                                    break;
+                                case 7:
+                                    EntrustPrice = hold.item3.SellPrice2 == 0 ? hold.item3.PresentPrice : hold.item3.SellPrice2;
+                                    break;
+                                case 8:
+                                    EntrustPrice = hold.item3.SellPrice3 == 0 ? hold.item3.PresentPrice : hold.item3.SellPrice3;
+                                    break;
+                                case 9:
+                                    EntrustPrice = hold.item3.SellPrice4 == 0 ? hold.item3.PresentPrice : hold.item3.SellPrice4;
+                                    break;
+                                case 10:
+                                    EntrustPrice = hold.item3.SellPrice5 == 0 ? hold.item3.PresentPrice : hold.item3.SellPrice5;
+                                    break;
+                                case 11:
+                                    EntrustPrice = maxPrice;
+                                    break;
+                                case 12:
+                                    EntrustPrice = minPrice;
+                                    break;
+                            }
+                        }
+
+                        long sellId = 0;
+                        using (var tran = db.Database.BeginTransaction())
+                        {
+                            try
+                            {
+                                ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
+                                ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
+                                ObjectParameter sellIdDb = new ObjectParameter("sellId", 0);
+                                db.P_ApplyTradeSell(hold.item.AccountId, hold.item.HoldId, EntrustCount, hold.item.EntrustType, EntrustPrice, 0, hold.item.SourceFrom == 1 ? true : false, errorCodeDb, errorMessageDb, sellIdDb);
+                                int errorCode = (int)errorCodeDb.Value;
+                                string errorMessage = errorMessageDb.Value.ToString();
+                                if (errorCode != 0)
+                                {
+                                    throw new Exception(errorMessage);
+                                }
+                                sellId = (long)sellIdDb.Value;
+
+                                var entrustManager = (from x in db.t_account_shares_entrust_manager
+                                                      join x2 in db.t_broker_account_info on x.TradeAccountCode equals x2.AccountCode
+                                                      where x.BuyId == sellId && x.TradeType == 2 && x.Status == 1
+                                                      select new { x, x2 }).ToList();
+                                if (entrustManager.Count() <= 0)
+                                {
+                                    throw new Exception("内部错误");
+                                }
+                                foreach (var x in entrustManager)
+                                {
+                                    var sendData = new
+                                    {
+                                        SellManagerId = x.x.Id,
+                                        SellTime = DateTime.Now.ToString("yyyy-MM-dd")
+                                    };
+                                    var server = (from y in db.t_server_broker_account_rel
+                                                  join y2 in db.t_server on y.ServerId equals y2.ServerId
+                                                  where y.BrokerAccountId == x.x2.Id
+                                                  select y).FirstOrDefault();
+                                    if (server == null)
+                                    {
+                                        throw new WebApiException(400, "服务器配置有误");
+                                    }
+                                    bool isSendSuccess = MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesSell", server.ServerId);
+                                    if (!isSendSuccess)
+                                    {
+                                        throw new Exception("操作超时，请重新操作");
+                                    }
+                                }
+
+                                tran.Commit();
+                            }
+                            catch (Exception ex)
+                            {
+                                sellId = 0;
+                                tran.Rollback();
+                                Logger.WriteFileLog("自动卖出提交失败",ex);
+                            }
+                        }
+
+                        hold.item.EntrustId = sellId;
+                        db.SaveChanges();
+                    } 
                 }
             }
+        }
+
+        /// <summary>
+        /// 自动买入交易
+        /// </summary>
+        public static void TradeAutoBuy() 
+        {
+
         }
     }
 }

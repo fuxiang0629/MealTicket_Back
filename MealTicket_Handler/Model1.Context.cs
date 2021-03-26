@@ -99,6 +99,7 @@ namespace MealTicket_Handler
         public virtual DbSet<t_account_follow_apply_record> t_account_follow_apply_record { get; set; }
         public virtual DbSet<t_account_follow_rel> t_account_follow_rel { get; set; }
         public virtual DbSet<t_account_shares_hold_conditiontrade> t_account_shares_hold_conditiontrade { get; set; }
+        public virtual DbSet<t_account_shares_hold_conditiontrade_child> t_account_shares_hold_conditiontrade_child { get; set; }
     
         public virtual int P_AccountLogin(string mobile, string loginPassword, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter token, ObjectParameter accountId)
         {

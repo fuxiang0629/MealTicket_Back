@@ -59,5 +59,35 @@ namespace MealTicket_Handler.Model
         /// 触发时间
         /// </summary>
         public DateTime? TriggerTime { get; set; }
+
+        /// <summary>
+        /// 禁止类型0无 1禁止涨停卖出
+        /// </summary>
+        public int ForbidType { get; set; }
+
+        /// <summary>
+        /// 委托Id
+        /// </summary>
+        public long EntrustId { get; set; }
+
+        /// <summary>
+        /// 委托价格
+        /// </summary>
+        public long EntrustPrice { get; set; }
+
+        /// <summary>
+        /// 委托状态1申报中 2处理中 3成交已完成 4撤销中 5处理已完成
+        /// </summary>
+        public int EntrustStatus { get; set; }
+
+        /// <summary>
+        /// 实际成交数量
+        /// </summary>
+        public int RelDealCount { get; set; }
+
+        /// <summary>
+        /// 实际委托数量
+        /// </summary>
+        public int RelEntrustCount { get; set; }
     }
 }

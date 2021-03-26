@@ -323,6 +323,7 @@
       <Parameter Name="errorMessage" Mode="InOut" Type="String" />
     </FunctionImport>
     <EntitySet Name="t_account_shares_hold_conditiontrade" EntityType="meal_ticketModel.t_account_shares_hold_conditiontrade" />
+    <EntitySet Name="t_account_shares_hold_conditiontrade_child" EntityType="meal_ticketModel.t_account_shares_hold_conditiontrade_child" />
   </EntityContainer>
   <EntityType Name="t_authority_account_visitlog">
     <Key>
@@ -1389,5 +1390,20 @@
     <Property Name="TriggerTime" Type="DateTime" Precision="3" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="SourceFrom" Type="Int32" Nullable="false" />
+    <Property Name="FatherId" Type="Int64" Nullable="false" />
+    <Property Name="ForbidType" Type="Int32" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="EntrustId" Type="Int64" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_hold_conditiontrade_child">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ConditionId" Type="Int64" Nullable="false" />
+    <Property Name="ChildId" Type="Int64" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
   </EntityType>
 </Schema>

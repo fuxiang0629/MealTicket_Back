@@ -27,5 +27,11 @@ namespace MealTicket_Handler
         public Nullable<System.DateTime> TriggerTime { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
+        public string Name { get; set; }
+        public int SourceFrom { get; set; }
+        public long FatherId { get; set; }
+        public int ForbidType { get; set; }
+        public int Status { get; set; }
+        public long EntrustId { get; set; }
     }
 }
