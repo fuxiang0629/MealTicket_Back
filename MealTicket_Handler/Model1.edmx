@@ -162,6 +162,111 @@
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="ExamineFinishTime" Type="datetime" />
         </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_buy">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountId" Type="bigint" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_buy_details">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ConditionId" Type="bigint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="ConditionType" Type="int" Nullable="false" />
+          <Property Name="ConditionPrice" Type="bigint" Nullable="false" />
+          <Property Name="IsGreater" Type="bit" Nullable="false" />
+          <Property Name="ConditionRelativeType" Type="int" Nullable="false" />
+          <Property Name="ConditionRelativeRate" Type="int" Nullable="false" />
+          <Property Name="EntrustAmount" Type="bigint" Nullable="false" />
+          <Property Name="EntrustType" Type="int" Nullable="false" />
+          <Property Name="EntrustPriceGear" Type="int" Nullable="false" />
+          <Property Name="TriggerTime" Type="datetime" />
+          <Property Name="ForbidType" Type="int" Nullable="false" />
+          <Property Name="SourceFrom" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="EntrustId" Type="bigint" Nullable="false" />
+          <Property Name="BuyAuto" Type="bit" Nullable="false" />
+          <Property Name="BusinessStatus" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_buy_details_auto">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DetailsId" Type="bigint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_buy_details_auto_trend">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AutoId" Type="bigint" Nullable="false" />
+          <Property Name="TrendId" Type="bigint" Nullable="false" />
+          <Property Name="TrendName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TrendDescription" Type="nvarchar" MaxLength="500" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_buy_details_auto_trend_par">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AutoTrendId" Type="bigint" Nullable="false" />
+          <Property Name="ParamsInfo" Type="nvarchar(max)" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_buy_details_other">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DetailsId" Type="bigint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_buy_details_other_trend">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OtherId" Type="bigint" Nullable="false" />
+          <Property Name="TrendId" Type="bigint" Nullable="false" />
+          <Property Name="TrendName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="TrendDescription" Type="nvarchar" MaxLength="500" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_buy_details_other_trend_par">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="OtherTrendId" Type="bigint" Nullable="false" />
+          <Property Name="ParamsInfo" Type="nvarchar(max)" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="t_account_shares_entrust">
           <Key>
             <PropertyRef Name="Id" />
@@ -1347,6 +1452,14 @@
           <EntitySet Name="t_account_loginlog" EntityType="Self.t_account_loginlog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_par_setting" EntityType="Self.t_account_par_setting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_realname" EntityType="Self.t_account_realname" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_conditiontrade_buy" EntityType="Self.t_account_shares_conditiontrade_buy" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_conditiontrade_buy_details" EntityType="Self.t_account_shares_conditiontrade_buy_details" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_conditiontrade_buy_details_auto" EntityType="Self.t_account_shares_conditiontrade_buy_details_auto" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_conditiontrade_buy_details_auto_trend" EntityType="Self.t_account_shares_conditiontrade_buy_details_auto_trend" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_conditiontrade_buy_details_auto_trend_par" EntityType="Self.t_account_shares_conditiontrade_buy_details_auto_trend_par" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_conditiontrade_buy_details_other" EntityType="Self.t_account_shares_conditiontrade_buy_details_other" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_conditiontrade_buy_details_other_trend" EntityType="Self.t_account_shares_conditiontrade_buy_details_other_trend" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_conditiontrade_buy_details_other_trend_par" EntityType="Self.t_account_shares_conditiontrade_buy_details_other_trend_par" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_entrust" EntityType="Self.t_account_shares_entrust" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_entrust_manager" EntityType="Self.t_account_shares_entrust_manager" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_entrust_manager_dealdetails" EntityType="Self.t_account_shares_entrust_manager_dealdetails" Schema="dbo" store:Type="Tables" />
@@ -1739,6 +1852,14 @@
           </FunctionImport>
           <EntitySet Name="t_account_shares_hold_conditiontrade" EntityType="meal_ticketModel.t_account_shares_hold_conditiontrade" />
           <EntitySet Name="t_account_shares_hold_conditiontrade_child" EntityType="meal_ticketModel.t_account_shares_hold_conditiontrade_child" />
+          <EntitySet Name="t_account_shares_conditiontrade_buy_details" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details" />
+          <EntitySet Name="t_account_shares_conditiontrade_buy_details_auto" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_auto" />
+          <EntitySet Name="t_account_shares_conditiontrade_buy_details_auto_trend" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_auto_trend" />
+          <EntitySet Name="t_account_shares_conditiontrade_buy_details_auto_trend_par" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_auto_trend_par" />
+          <EntitySet Name="t_account_shares_conditiontrade_buy_details_other" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_other" />
+          <EntitySet Name="t_account_shares_conditiontrade_buy_details_other_trend" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_other_trend" />
+          <EntitySet Name="t_account_shares_conditiontrade_buy_details_other_trend_par" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_other_trend_par" />
+          <EntitySet Name="t_account_shares_conditiontrade_buy" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy" />
         </EntityContainer>
         <EntityType Name="t_authority_account_visitlog">
           <Key>
@@ -2820,6 +2941,111 @@
           <Property Name="ConditionId" Type="Int64" Nullable="false" />
           <Property Name="ChildId" Type="Int64" Nullable="false" />
           <Property Name="Status" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_buy_details">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ConditionId" Type="Int64" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="ConditionType" Type="Int32" Nullable="false" />
+          <Property Name="ConditionPrice" Type="Int64" Nullable="false" />
+          <Property Name="IsGreater" Type="Boolean" Nullable="false" />
+          <Property Name="ConditionRelativeType" Type="Int32" Nullable="false" />
+          <Property Name="ConditionRelativeRate" Type="Int32" Nullable="false" />
+          <Property Name="EntrustAmount" Type="Int64" Nullable="false" />
+          <Property Name="EntrustType" Type="Int32" Nullable="false" />
+          <Property Name="EntrustPriceGear" Type="Int32" Nullable="false" />
+          <Property Name="TriggerTime" Type="DateTime" Precision="3" />
+          <Property Name="ForbidType" Type="Int32" Nullable="false" />
+          <Property Name="SourceFrom" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="EntrustId" Type="Int64" Nullable="false" />
+          <Property Name="BuyAuto" Type="Boolean" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="BusinessStatus" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_buy_details_auto">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DetailsId" Type="Int64" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_buy_details_auto_trend">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AutoId" Type="Int64" Nullable="false" />
+          <Property Name="TrendId" Type="Int64" Nullable="false" />
+          <Property Name="TrendName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TrendDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_buy_details_auto_trend_par">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AutoTrendId" Type="Int64" Nullable="false" />
+          <Property Name="ParamsInfo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_buy_details_other">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DetailsId" Type="Int64" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_buy_details_other_trend">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OtherId" Type="Int64" Nullable="false" />
+          <Property Name="TrendId" Type="Int64" Nullable="false" />
+          <Property Name="TrendName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TrendDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_buy_details_other_trend_par">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="OtherTrendId" Type="Int64" Nullable="false" />
+          <Property Name="ParamsInfo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_buy">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -4017,6 +4243,119 @@
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="ChildId" ColumnName="ChildId" />
                 <ScalarProperty Name="ConditionId" ColumnName="ConditionId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details">
+              <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details">
+                <ScalarProperty Name="BusinessStatus" ColumnName="BusinessStatus" />
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="BuyAuto" ColumnName="BuyAuto" />
+                <ScalarProperty Name="EntrustId" ColumnName="EntrustId" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="SourceFrom" ColumnName="SourceFrom" />
+                <ScalarProperty Name="ForbidType" ColumnName="ForbidType" />
+                <ScalarProperty Name="TriggerTime" ColumnName="TriggerTime" />
+                <ScalarProperty Name="EntrustPriceGear" ColumnName="EntrustPriceGear" />
+                <ScalarProperty Name="EntrustType" ColumnName="EntrustType" />
+                <ScalarProperty Name="EntrustAmount" ColumnName="EntrustAmount" />
+                <ScalarProperty Name="ConditionRelativeRate" ColumnName="ConditionRelativeRate" />
+                <ScalarProperty Name="ConditionRelativeType" ColumnName="ConditionRelativeType" />
+                <ScalarProperty Name="IsGreater" ColumnName="IsGreater" />
+                <ScalarProperty Name="ConditionPrice" ColumnName="ConditionPrice" />
+                <ScalarProperty Name="ConditionType" ColumnName="ConditionType" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="ConditionId" ColumnName="ConditionId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details_auto">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details_auto">
+              <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details_auto">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="DetailsId" ColumnName="DetailsId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details_auto_trend">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details_auto_trend">
+              <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details_auto_trend">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="TrendDescription" ColumnName="TrendDescription" />
+                <ScalarProperty Name="TrendName" ColumnName="TrendName" />
+                <ScalarProperty Name="TrendId" ColumnName="TrendId" />
+                <ScalarProperty Name="AutoId" ColumnName="AutoId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details_auto_trend_par">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details_auto_trend_par">
+              <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details_auto_trend_par">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="ParamsInfo" ColumnName="ParamsInfo" />
+                <ScalarProperty Name="AutoTrendId" ColumnName="AutoTrendId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details_other">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details_other">
+              <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details_other">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="DetailsId" ColumnName="DetailsId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details_other_trend">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details_other_trend">
+              <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details_other_trend">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="TrendDescription" ColumnName="TrendDescription" />
+                <ScalarProperty Name="TrendName" ColumnName="TrendName" />
+                <ScalarProperty Name="TrendId" ColumnName="TrendId" />
+                <ScalarProperty Name="OtherId" ColumnName="OtherId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details_other_trend_par">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details_other_trend_par">
+              <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details_other_trend_par">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="ParamsInfo" ColumnName="ParamsInfo" />
+                <ScalarProperty Name="OtherTrendId" ColumnName="OtherTrendId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_conditiontrade_buy">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy">
+              <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

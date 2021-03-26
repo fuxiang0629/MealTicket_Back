@@ -1844,6 +1844,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                         SharesName = item.item2.SharesName,
                         HoldId = item.item.Id,
                         Market = item.item.Market,
+                        FundAmount=item.item.FundAmount/100*100,
                         RemainDeposit = item.item.RemainDeposit / 100 * 100,
                         PresentPrice = PresentPrice,
                         BuyTotalAmount = item.item.BuyTotalAmount,

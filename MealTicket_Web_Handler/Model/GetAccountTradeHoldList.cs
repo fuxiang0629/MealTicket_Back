@@ -122,6 +122,11 @@ namespace MealTicket_Web_Handler
         public DateTime? ClosingTime { get; set; }
 
         /// <summary>
+        /// 剩余借出金额
+        /// </summary>
+        public long FundAmount { get; set; }
+
+        /// <summary>
         /// 平仓线列表
         /// </summary>
         public List<ClosingLineInfo> ClosingLineList { get; set; }

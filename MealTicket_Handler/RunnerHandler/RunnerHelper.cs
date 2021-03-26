@@ -2180,7 +2180,74 @@ namespace MealTicket_Handler.RunnerHandler
         /// </summary>
         public static void TradeAutoBuy() 
         {
+            using (var db = new meal_ticketEntities())
+            {
+                //查询价格条件达标的数据
+                var disResult = (from item in db.t_account_shares_conditiontrade_buy_details
+                                 join item2 in db.t_account_shares_conditiontrade_buy on item.ConditionId equals item2.Id
+                                 join item3 in db.t_shares_quotes on new { item2.Market, item2.SharesCode } equals new { item3.Market, item3.SharesCode }
+                                 where item.Status == 1 && item2.Status == 1 && item.BusinessStatus == 0
+                                 select new { item, item2, item3 }).ToList();
+                foreach (var item in disResult)
+                {
+                    long presentPrice = item.item3.PresentPrice;//当前价格
+                    long closedPrice= item.item3.ClosedPrice;//昨日收盘价
+                    if (closedPrice <= 0 || presentPrice <= 0)
+                    {
+                        continue;
+                    }
+                    long maxPrice = 0;//涨停价
+                    long minPrice = 0;//跌停价
+                    var rules = (from x in db.t_shares_limit_fundmultiple
+                                 where (x.LimitMarket == item.item2.Market || x.LimitMarket == -1) && (item.item2.SharesCode.StartsWith(x.LimitKey))
+                                 orderby x.Priority descending, x.FundMultiple
+                                 select x).FirstOrDefault();
+                    if (rules == null)
+                    {
+                        continue;
+                    }
+                    else
+                    {
+                        maxPrice = ((long)Math.Round((closedPrice + closedPrice * (rules.Range * 1.0 / 10000)) / 100)) * 100;
+                        minPrice = ((long)Math.Round((closedPrice - closedPrice * (rules.Range * 1.0 / 10000)) / 100)) * 100;
+                    }
 
+                    //判断价格条件
+                    if (item.item.ConditionType == 1)//绝对价格
+                    {
+                        if ((presentPrice < item.item.ConditionPrice && item.item.IsGreater == true) || (presentPrice > item.item.ConditionPrice && item.item.IsGreater == false))
+                        {
+                            continue;
+                        }
+                    }
+                    else if (item.item.ConditionType == 2)//相对价格
+                    {
+                        if ((item.item.ConditionRelativeType == 1 && presentPrice != maxPrice) || (item.item.ConditionRelativeType == 2 && presentPrice != minPrice) || (item.item.ConditionRelativeType == 3 && presentPrice < ((long)Math.Round((closedPrice + closedPrice * (item.item.ConditionRelativeRate * 1.0 / 10000)) / 100)) * 100))
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        continue;
+                    }
+
+                    //判断额外条件
+                    var other = (from x in db.t_account_shares_conditiontrade_buy_details_other
+                                 where x.DetailsId == item.item.Id && x.Status == 1
+                                 select x).ToList();
+                    bool isTri = false;
+                    foreach (var th in other)
+                    {
+                        
+                    }
+                    if (!isTri)
+                    {
+                        continue;
+                    }
+                    //判断转自动条件
+                }
+            }
         }
     }
 }
