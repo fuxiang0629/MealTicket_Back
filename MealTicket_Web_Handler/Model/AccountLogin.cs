@@ -34,5 +34,10 @@ namespace MealTicket_Web_Handler.Model
         /// 推荐码
         /// </summary>
         public string RecommandCode { get; set; }
+
+        /// <summary>
+        /// 用户Id
+        /// </summary>
+        public long AccountId { get; set; }
     }
 }

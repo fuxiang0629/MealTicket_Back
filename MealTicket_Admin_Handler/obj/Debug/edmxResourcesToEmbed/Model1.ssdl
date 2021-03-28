@@ -38,6 +38,7 @@
     <Property Name="RecommandCode" Type="varchar" MaxLength="32" Nullable="false" />
     <Property Name="ReferId" Type="bigint" />
     <Property Name="ForbidStatus" Type="int" Nullable="false" />
+    <Property Name="CashStatus" Type="int" Nullable="false" />
     <Property Name="MonitorStatus" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="QrCodeUrl" Type="varchar" MaxLength="200" />
@@ -95,6 +96,29 @@
     <Property Name="AdminAccountName" Type="nvarchar" MaxLength="50" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_follow_apply_record">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" />
+    <Property Name="FollowAccountId" Type="bigint" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="StatusDes" Type="nvarchar" MaxLength="200" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="HandlerTime" Type="datetime" />
+    <Property Name="FinishTime" Type="datetime" />
+  </EntityType>
+  <EntityType Name="t_account_follow_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="FollowAccountId" Type="bigint" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_login_token">
     <Key>
@@ -347,6 +371,29 @@
     <Property Name="TriCountToday" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
   </EntityType>
+  <EntityType Name="t_account_shares_optional_group">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="500" />
+    <Property Name="OrderIndex" Type="bigint" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_optional_group_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OptionalId" Type="bigint" Nullable="false" />
+    <Property Name="GroupId" Type="bigint" Nullable="false" />
+    <Property Name="GroupIsContinue" Type="bit" Nullable="false" />
+    <Property Name="ValidStartTime" Type="date" />
+    <Property Name="ValidEndTime" Type="date" />
+  </EntityType>
   <EntityType Name="t_account_shares_optional_seat_rel">
     <Key>
       <PropertyRef Name="Id" />
@@ -410,6 +457,20 @@
     <Property Name="IsPush" Type="bit" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="TriDesc" Type="nvarchar" MaxLength="200" />
+  </EntityType>
+  <EntityType Name="t_account_shares_optional_trend_rel_tri_record_statistic">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="SharesName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Date" Type="date" Nullable="false" />
+    <Property Name="TriTotalCount" Type="int" Nullable="false" />
+    <Property Name="TriPushCount" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_seat">
     <Key>
@@ -601,6 +662,20 @@
     <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="RoleId" Type="bigint" Nullable="false" />
     <Property Name="RightId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_app_version">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MarketCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="AppVersion" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="AppVersionOrder" Type="int" Nullable="false" />
+    <Property Name="ExamineStatus" Type="int" Nullable="false" />
+    <Property Name="WebViewUrl" Type="nvarchar" MaxLength="500" />
+    <Property Name="WaitTime" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="t_authority_admin_visitlog">
     <Key>
@@ -945,6 +1020,7 @@
     <Property Name="SendTime" Type="datetime" />
     <Property Name="MaxSendTime" Type="datetime" Nullable="false" />
     <Property Name="ErrorMessage" Type="nvarchar" MaxLength="500" />
+    <Property Name="JumpUrl" Type="nvarchar" MaxLength="200" />
   </EntityType>
   <EntityType Name="t_notice_send_record_details">
     <Key>
@@ -1152,6 +1228,7 @@
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="ChannelCode" Type="varchar" MaxLength="50" Nullable="false" />
     <Property Name="AppKey" Type="varchar" MaxLength="256" Nullable="false" />
+    <Property Name="JumpUrl" Type="nvarchar" MaxLength="200" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
@@ -1313,6 +1390,17 @@
     <Property Name="LimitKey" Type="nvarchar" MaxLength="50" Nullable="false" />
     <Property Name="Priority" Type="int" Nullable="false" />
     <Property Name="Range" Type="int" Nullable="false" />
+    <Property Name="FundMultiple" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_limit_fundmultiple_account">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FundmultipleId" Type="bigint" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
     <Property Name="FundMultiple" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
@@ -1772,6 +1860,7 @@
     <Parameter Name="sellType" Type="int" Mode="In" />
     <Parameter Name="sellPrice" Type="bigint" Mode="In" />
     <Parameter Name="type" Type="int" Mode="In" />
+    <Parameter Name="isFollow" Type="bit" Mode="In" />
     <Parameter Name="errorCode" Type="int" Mode="InOut" />
     <Parameter Name="errorMessage" Type="nvarchar" Mode="InOut" />
     <Parameter Name="sellId" Type="bigint" Mode="InOut" />
@@ -1798,6 +1887,8 @@
     <EntitySet Name="t_account_baseinfo" EntityType="Self.t_account_baseinfo" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_cash_record" EntityType="Self.t_account_cash_record" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_cash_record_details" EntityType="Self.t_account_cash_record_details" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_follow_apply_record" EntityType="Self.t_account_follow_apply_record" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_follow_rel" EntityType="Self.t_account_follow_rel" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_login_token" EntityType="Self.t_account_login_token" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_loginlog" EntityType="Self.t_account_loginlog" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_par_setting" EntityType="Self.t_account_par_setting" Schema="dbo" store:Type="Tables" />
@@ -1813,11 +1904,14 @@
     <EntitySet Name="t_account_shares_hold_fundamount_changelog" EntityType="Self.t_account_shares_hold_fundamount_changelog" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_hold_manager" EntityType="Self.t_account_shares_hold_manager" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_optional" EntityType="Self.t_account_shares_optional" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_optional_group" EntityType="Self.t_account_shares_optional_group" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_optional_group_rel" EntityType="Self.t_account_shares_optional_group_rel" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_optional_seat_rel" EntityType="Self.t_account_shares_optional_seat_rel" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_optional_trend_rel" EntityType="Self.t_account_shares_optional_trend_rel" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_optional_trend_rel_par" EntityType="Self.t_account_shares_optional_trend_rel_par" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_optional_trend_rel_tri" EntityType="Self.t_account_shares_optional_trend_rel_tri" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_optional_trend_rel_tri_record" EntityType="Self.t_account_shares_optional_trend_rel_tri_record" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_optional_trend_rel_tri_record_statistic" EntityType="Self.t_account_shares_optional_trend_rel_tri_record_statistic" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_seat" EntityType="Self.t_account_shares_seat" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_wallet" EntityType="Self.t_account_wallet" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_wallet_change_record" EntityType="Self.t_account_wallet_change_record" Schema="dbo" store:Type="Tables" />
@@ -1834,6 +1928,7 @@
     <EntitySet Name="t_admin_role" EntityType="Self.t_admin_role" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_admin_role_rel" EntityType="Self.t_admin_role_rel" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_admin_role_right_rel" EntityType="Self.t_admin_role_right_rel" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_app_version" EntityType="Self.t_app_version" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_authority_admin_visitlog" EntityType="Self.t_authority_admin_visitlog" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_bank" EntityType="Self.t_bank" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_banner" EntityType="Self.t_banner" Schema="dbo" store:Type="Tables" />
@@ -1886,6 +1981,7 @@
     <EntitySet Name="t_shares_limit_date" EntityType="Self.t_shares_limit_date" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_limit_date_group" EntityType="Self.t_shares_limit_date_group" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_limit_fundmultiple" EntityType="Self.t_shares_limit_fundmultiple" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_limit_fundmultiple_account" EntityType="Self.t_shares_limit_fundmultiple_account" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_limit_risk" EntityType="Self.t_shares_limit_risk" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_limit_time" EntityType="Self.t_shares_limit_time" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_limit_tradequota" EntityType="Self.t_shares_limit_tradequota" Schema="dbo" store:Type="Tables" />

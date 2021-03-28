@@ -53,6 +53,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransactionDataUpdate_NO3",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrendAnalyse", "TrendAnalyse\TrendAnalyse.csproj", "{13601AB8-AEDC-4A63-B37C-E88026B19C56}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Test", "Test\Test.csproj", "{97AEF29A-FDFC-4F86-A111-0BA26011B0F3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -127,6 +129,10 @@ Global
 		{13601AB8-AEDC-4A63-B37C-E88026B19C56}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13601AB8-AEDC-4A63-B37C-E88026B19C56}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{13601AB8-AEDC-4A63-B37C-E88026B19C56}.Release|Any CPU.Build.0 = Release|Any CPU
+		{97AEF29A-FDFC-4F86-A111-0BA26011B0F3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{97AEF29A-FDFC-4F86-A111-0BA26011B0F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{97AEF29A-FDFC-4F86-A111-0BA26011B0F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{97AEF29A-FDFC-4F86-A111-0BA26011B0F3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

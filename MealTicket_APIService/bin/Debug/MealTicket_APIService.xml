@@ -519,7 +519,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MealTicket_APIService.controller.TradeController.GetTradeEntrustDealDetailsList(MealTicket_Handler.Model.DetailsPageRequest)">
+        <member name="M:MealTicket_APIService.controller.TradeController.GetTradeEntrustDealDetailsList(MealTicket_Handler.Model.GetTradeEntrustDealDetailsListRequest)">
             <summary>
             获取交易成交记录列表
             </summary>
@@ -552,6 +552,66 @@
         <member name="M:MealTicket_APIService.controller.TradeController.ApplyTradeCancel(MealTicket_Handler.Model.ApplyTradeCancelRequest)">
             <summary>
             股票申请撤单
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.GetFundmultipleList">
+            <summary>
+            获取用户交易杠杆倍数
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.ModifyFundmultiple(MealTicket_Handler.Model.ModifyFundmultipleRequest)">
+            <summary>
+            修改用户交易杠杆倍数
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.GetAccountFollowInfo">
+            <summary>
+            获取用户跟投信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.ApplyFollow">
+            <summary>
+            用户申请跟投
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.CancelFollow">
+            <summary>
+            用户取消跟投
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.GetAccountHoldHistoryList(MealTicket_Handler.Model.GetAccountHoldHistoryListRequest)">
+            <summary>
+            获取用户历史持仓
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.GetAccountHoldConditionTradeList(MealTicket_Handler.Model.GetAccountHoldConditionTradeListRequest)">
+            <summary>
+            获取条件单列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.AddAccountHoldConditionTrade(MealTicket_Handler.Model.AddAccountHoldConditionTradeRequest)">
+            <summary>
+            添加条件单
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.DeleteAccountHoldConditionTrade(MealTicket_Handler.Model.DeleteRequest)">
+            <summary>
+            删除条件单
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_APIService.controller.TradeController.IsTradeTime(MealTicket_Handler.Model.IsTradeTimeRequest)">
+            <summary>
+            判断是否交易时间（time3）
             </summary>
             <returns></returns>
         </member>

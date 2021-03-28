@@ -56,8 +56,6 @@ namespace MealTicket_Web_Handler
         /// </summary>
         public SqlHelper sqlHelper;
 
-        public StockMonitorCore m_stockMonitor;
-
         /// <summary>
         /// 系统参数更新线程
         /// </summary>
@@ -68,10 +66,37 @@ namespace MealTicket_Web_Handler
         /// </summary>
         private ThreadMsgTemplate<int> UpdateWait = new ThreadMsgTemplate<int>();
 
+        #region====走势分析====
         /// <summary>
-        /// 用户股票走势监听队列
+        /// 处理线程数量
         /// </summary>
-        public ThreadMsgTemplate<long> AccountTrendListen = new ThreadMsgTemplate<long>();
+        public int handlerThreadCount;
+
+        /// <summary>
+        /// 数据库链接字符串1
+        /// </summary>
+        public string connString_meal_ticket;
+
+        /// <summary>
+        /// 数据库链接字符串2
+        /// </summary>
+        public string connString_transactiondata;
+
+        /// <summary>
+        /// 心跳时间（秒）
+        /// </summary>
+        public int HeartSecond;
+
+        /// <summary>
+        /// 走势分析对象
+        /// </summary>
+        public StockMonitorCore m_stockMonitor;
+
+        /// <summary>
+        /// 队列对象
+        /// </summary>
+        public MQHandler mqHandler;
+        #endregion
 
         // 显式静态构造函数告诉C＃编译器
         // 不要将类型标记为BeforeFieldInit
@@ -82,13 +107,10 @@ namespace MealTicket_Web_Handler
 
         private Singleton()
         {
-            SysparUpdate();
-            UpdateWait.Init();
-            AccountTrendListen.Init();
             ConnectionString_meal_ticket = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             ConnectionString_meal_ticket_shares_transactiondata = ConfigurationManager.ConnectionStrings["ConnectionString_data"].ConnectionString;
             sqlHelper = new SqlHelper(ConnectionString_meal_ticket);
-            StartSysparUpdateThread();
+            SysparUpdate();
 
             m_stockMonitor = new StockMonitorCore();
             int error=m_stockMonitor.InitCore(ConnectionString_meal_ticket + "|" + ConnectionString_meal_ticket_shares_transactiondata, 0,"");
@@ -96,6 +118,10 @@ namespace MealTicket_Web_Handler
             {
                 Logger.WriteFileLog("链接字符串错误",null);
             }
+            mqHandler = new MQHandler();
+
+            UpdateWait.Init();
+            StartSysparUpdateThread();
         }
 
         public static Singleton Instance
@@ -117,10 +143,13 @@ namespace MealTicket_Web_Handler
                 SysparUpdateThread.Join();
                 UpdateWait.Release();
             }
-            AccountTrendListen.Release();
             if (m_stockMonitor != null)
             {
                 m_stockMonitor.ReleaseCore();
+            }
+            if (mqHandler != null)
+            {
+                mqHandler.Dispose();
             }
         }
 
@@ -190,6 +219,14 @@ namespace MealTicket_Web_Handler
                         if (sysValue.MinPushRateInterval > 0 || sysValue.MinPushRateInterval == -1)
                         {
                             this.MinPushRateInterval = sysValue.MinPushRateInterval;
+                        }
+                        if (sysValue.HandlerThreadCount > 0 && sysValue.HandlerThreadCount <= 100)
+                        {
+                            this.handlerThreadCount = sysValue.HandlerThreadCount;
+                        }
+                        if (sysValue.HeartOverSecond > 3)
+                        {
+                            this.HeartSecond = sysValue.HeartOverSecond;
                         }
                     }
                 }

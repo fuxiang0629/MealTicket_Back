@@ -743,7 +743,7 @@ namespace MealTicket_Admin_APIService.controller
                         int fsLen = (int)fileStream.Length;
                         byte[] heByte = new byte[fsLen];
                         int r = fileStream.Read(heByte, 0, heByte.Length);
-                        string myStr = System.Text.Encoding.GetEncoding("gb2312").GetString(heByte);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
                         string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
                         List<MarketTimeInfo> marketTimeList = new List<MarketTimeInfo>();
                         for (int i = 0; i < temp.Length; i++)
@@ -1255,7 +1255,7 @@ namespace MealTicket_Admin_APIService.controller
                         int fsLen = (int)fileStream.Length;
                         byte[] heByte = new byte[fsLen];
                         int r = fileStream.Read(heByte, 0, heByte.Length);
-                        string myStr = System.Text.Encoding.GetEncoding("gb2312").GetString(heByte);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
                         string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
                         List<SharesInfo> sharesList = new List<SharesInfo>();
                         for (int i = 0; i < temp.Length; i++)

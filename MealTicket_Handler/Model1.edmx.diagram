@@ -76,6 +76,16 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_fundmultiple_account" Width="1.5" PointX="25.375" PointY="21.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_follow_apply_record" Width="1.5" PointX="25.375" PointY="24.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_follow_rel" Width="1.5" PointX="26.375" PointY="0.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_hold_conditiontrade" Width="1.5" PointX="26.375" PointY="3.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_hold_conditiontrade_child" Width="1.5" PointX="7.375" PointY="26.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details" Width="1.5" PointX="26.375" PointY="9.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_auto" Width="1.5" PointX="26.375" PointY="15.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_auto_trend" Width="1.5" PointX="27.375" PointY="18.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_auto_trend_par" Width="1.5" PointX="27.375" PointY="22.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_other" Width="1.5" PointX="27.375" PointY="25.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_other_trend" Width="1.5" PointX="28.375" PointY="0.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_other_trend_par" Width="1.5" PointX="28.375" PointY="4.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy" Width="1.5" PointX="28.375" PointY="7.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

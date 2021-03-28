@@ -342,5 +342,91 @@ namespace MealTicket_APIService.controller
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return sharesHandler.GetAccountHoldHistoryList(request,basedata);
         }
+
+        /// <summary>
+        /// 获取条件单列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取条件单列表")]
+        [Route("account/hold/conditiontrade/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<AccountHoldConditionTradeInfo> GetAccountHoldConditionTradeList(GetAccountHoldConditionTradeListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return sharesHandler.GetAccountHoldConditionTradeList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加条件单
+        /// </summary>
+        /// <returns></returns>
+        [Description("添加条件单")]
+        [Route("account/hold/conditiontrade/add"), HttpPost]
+        [CheckUserLoginFilter]
+        public object AddAccountHoldConditionTrade(AddAccountHoldConditionTradeRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            if (request.TradeType != 1 && request.TradeType != 2)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            if (request.Type != 1 && request.Type != 2 && request.Type != 3)
+            {
+                throw new WebApiException(400,"参数错误");
+            }
+            if (request.Type == 1 && request.ConditionTime == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            if (request.Type !=1 && request.ConditionPrice == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            sharesHandler.AddAccountHoldConditionTrade(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除条件单
+        /// </summary>
+        /// <returns></returns>
+        [Description("删除条件单")]
+        [Route("account/hold/conditiontrade/delete"), HttpPost]
+        [CheckUserLoginFilter]
+        public object DeleteAccountHoldConditionTrade(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            sharesHandler.DeleteAccountHoldConditionTrade(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 判断是否交易时间（time3）
+        /// </summary>
+        /// <returns></returns>
+        [Description("判断是否交易时间")]
+        [Route("time/judge"), HttpPost]
+        [CheckUserLoginFilter]
+        public object IsTradeTime(IsTradeTimeRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            sharesHandler.IsTradeTimeRequest(request);
+            return null;
+        }
     }
 }

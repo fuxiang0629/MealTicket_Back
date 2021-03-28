@@ -7,6 +7,7 @@ using System.Data.Entity.Core.Objects;
 using System.Linq;
 using System.Text;
 using System.Threading;
+using System.Transactions;
 using TradeAPI;
 
 namespace SharesTradeService.Handler
@@ -348,99 +349,108 @@ namespace SharesTradeService.Handler
             Dictionary<string, SellInfo> sellDic = new Dictionary<string, SellInfo>();
             using (var db = new meal_ticketEntities())
             {
+                //委托账户分组
                 foreach (var entrustManagerId in entrustManagerIdList)
                 {
-                    try
+                    var entrustManager = (from item in db.t_account_shares_entrust_manager
+                                          where item.Id == entrustManagerId && item.TradeType == 2 && item.Status == 1
+                                          select item).FirstOrDefault();
+                    if (entrustManager == null)
+                    {
+                        continue;
+                    }
+                    if (!sellDic.ContainsKey(entrustManager.TradeAccountCode))
+                    {
+                        sellDic.Add(entrustManager.TradeAccountCode, new SellInfo
+                        {
+                            SellCount = 0,
+                            EntrustManagerList = new List<SellDetails>
+                            {
+                                new SellDetails
+                                {
+                                     EntrustManagerId = entrustManagerId
+                                }
+                            }
+                        });
+                    }
+                    else
+                    {
+                        sellDic[entrustManager.TradeAccountCode].EntrustManagerList.Add(new SellDetails
+                        {
+                            EntrustManagerId = entrustManagerId
+                        });
+                    }
+                }
+                //计算每组可卖，提交卖出
+                foreach (var tradeInfo in sellDic)
+                {
+                    string tradeEntrustId = "";//委托编号
+                    bool success = false;
+                    using (var tran = db.Database.BeginTransaction())
                     {
                         bool error = false;
-                        using (var tran = db.Database.BeginTransaction())
+                        try
                         {
-                            try
+                            //判断卖出账户，生成sellDic
+                            foreach (var manager in tradeInfo.Value.EntrustManagerList)
                             {
-                                //查询委托数据
-                                var entrustManager = (from item in db.t_account_shares_entrust_manager
-                                                      where item.Id == entrustManagerId && item.TradeType == 2 && item.Status == 1
-                                                      select item).FirstOrDefault();
+                                string sql = @"select top 1 EntrustCount,BuyId from t_account_shares_entrust_manager with(xlock) where Id={0} and TradeType=2 and [Status]=1";
+                                var entrustManager = db.Database.SqlQuery<SellEntrustManagerSelect>(string.Format(sql, manager.EntrustManagerId)).FirstOrDefault();
                                 if (entrustManager == null)
                                 {
-                                    throw new Exception();
+                                    throw new Exception("委托manager不存在");
                                 }
+                                long BuyId = entrustManager.BuyId;//委托Id
+                                int EntrustCount = entrustManager.EntrustCount;//当前需要委托数量
                                 var entrust = (from item in db.t_account_shares_entrust
-                                               where item.Id == entrustManager.BuyId
+                                               where item.Id == BuyId
                                                select item).FirstOrDefault();
                                 if (entrust == null)
                                 {
-                                    SellTradeFinish(new List<SellDetails> 
+                                    SellTradeFinish(new List<SellDetails>
                                     {
                                         new SellDetails
                                         {
-                                            EntrustManagerId=entrustManagerId
+                                            EntrustManagerId=manager.EntrustManagerId
                                         }
                                     }, db);
                                     continue;
                                 }
-                                int EntrustCount = entrustManager.EntrustCount;//当前需要委托数量
                                 if (EntrustCount <= 0)
                                 {
                                     SellTradeFinish(new List<SellDetails>
                                     {
                                         new SellDetails
                                         {
-                                            EntrustManagerId=entrustManagerId
+                                            EntrustManagerId=manager.EntrustManagerId
                                         }
                                     }, db);
                                     continue;
                                 }
-                                entrustManager.Status = 2;
-                                db.SaveChanges();
-
-                                //持仓
-                                var hold = (from item in db.t_account_shares_hold
-                                            where item.Id == entrust.HoldId
-                                            select item).FirstOrDefault();
-                                if (hold == null)
-                                {
-                                    SellTradeFinish(new List<SellDetails>
-                                    {
-                                        new SellDetails
-                                        {
-                                            EntrustManagerId=entrustManagerId
-                                        }
-                                    }, db);
-                                    continue;
-                                }
-                                var holdManager = (from item in db.t_account_shares_hold_manager
-                                                   where item.HoldId == entrust.HoldId && item.TradeAccountCode == entrustManager.TradeAccountCode
-                                                   select item).FirstOrDefault();
-                                if (holdManager == null)
-                                {
-                                    SellTradeFinish(new List<SellDetails>
-                                    {
-                                        new SellDetails
-                                        {
-                                            EntrustManagerId=entrustManagerId
-                                        }
-                                    }, db);
-                                    continue;
-                                }
+                                tradeInfo.Value.Market = entrust.Market;
+                                tradeInfo.Value.SharesCode = entrust.SharesCode;
+                                tradeInfo.Value.EntrustType = entrust.EntrustType;
+                                tradeInfo.Value.EntrustPrice = entrust.EntrustPrice;
 
                                 //查询账户持仓情况
-                                var accountShares = (from item in db.t_broker_account_shares_rel
-                                                     where item.TradeAccountCode == entrustManager.TradeAccountCode && item.Market == entrust.Market && item.SharesCode == entrust.SharesCode
-                                                     select item).FirstOrDefault();
+                                sql = @"select top 1 AccountCanSoldCount,TotalSharesCount from t_broker_account_shares_rel with(xlock) where TradeAccountCode='{0}' and Market={1} and SharesCode='{2}'";
+                                var accountShares = db.Database.SqlQuery<AccountSharesRelSelect>(string.Format(sql, tradeInfo.Key, tradeInfo.Value.Market, tradeInfo.Value.SharesCode)).FirstOrDefault();
                                 if (accountShares == null)
                                 {
                                     SellTradeFinish(new List<SellDetails>
                                     {
                                         new SellDetails
                                         {
-                                            EntrustManagerId=entrustManagerId
+                                            EntrustManagerId=manager.EntrustManagerId
                                         }
                                     }, db);
                                     continue;
                                 }
-                                int realSoldCount = accountShares.AccountCanSoldCount;//可提交到证券市场数量
-                                if (accountShares.TotalSharesCount == EntrustCount && realSoldCount == EntrustCount)//清仓
+
+                                int AccountCanSoldCount = accountShares.AccountCanSoldCount;
+                                int TotalSharesCount = accountShares.TotalSharesCount;
+                                int realSoldCount = AccountCanSoldCount;//可提交到证券市场数量
+                                if (TotalSharesCount == EntrustCount && realSoldCount == EntrustCount)//清仓
                                 {
                                     realSoldCount = EntrustCount;
                                 }
@@ -458,12 +468,12 @@ namespace SharesTradeService.Handler
                                     else//减掉一手不可卖
                                     {
                                         SellTradeFinish(new List<SellDetails>
-                                    {
-                                        new SellDetails
                                         {
-                                            EntrustManagerId=entrustManagerId
-                                        }
-                                    }, db);
+                                            new SellDetails
+                                            {
+                                                EntrustManagerId=manager.EntrustManagerId
+                                            }
+                                        }, db);
                                         continue;
                                     }
                                 }
@@ -473,7 +483,7 @@ namespace SharesTradeService.Handler
                                     {
                                         new SellDetails
                                         {
-                                            EntrustManagerId=entrustManagerId
+                                            EntrustManagerId=manager.EntrustManagerId
                                         }
                                     }, db);
                                     continue;
@@ -484,85 +494,26 @@ namespace SharesTradeService.Handler
                                     {
                                         new SellDetails
                                         {
-                                            EntrustManagerId=entrustManagerId
+                                            EntrustManagerId=manager.EntrustManagerId
                                         }
                                     }, db);
                                     continue;
                                 }
-                                if (sellDic.ContainsKey(entrustManager.TradeAccountCode))
-                                {
-                                    sellDic[entrustManager.TradeAccountCode].SellCount = sellDic[entrustManager.TradeAccountCode].SellCount + realSoldCount;
-                                    sellDic[entrustManager.TradeAccountCode].EntrustManagerList.Add(new SellDetails 
-                                    {
-                                        EntrustCount= realSoldCount,
-                                        EntrustManagerId=entrustManagerId
-                                    });
-                                }
-                                else
-                                {
-                                    sellDic.Add(entrustManager.TradeAccountCode, new SellInfo
-                                    {
-                                        SellCount = realSoldCount,
-                                        SharesCode = entrust.SharesCode,
-                                        Market = entrust.Market,
-                                        EntrustPrice = entrust.EntrustPrice,
-                                        EntrustType = entrust.EntrustType,
-                                        EntrustManagerList = new List<SellDetails>{
-                                            new SellDetails
-                                            {
-                                                EntrustCount = realSoldCount,
-                                                EntrustManagerId = entrustManagerId
-                                            }
-                                        }
-                                    });
-                                }
+                                manager.EntrustCount = realSoldCount;
+                                tradeInfo.Value.SellCount = tradeInfo.Value.SellCount + realSoldCount;
+                                //更新账户状态为交易中
+                                sql = @"update t_account_shares_entrust_manager set [Status]=2 where Id={0}";
+                                db.Database.ExecuteSqlCommand(string.Format(sql, manager.EntrustManagerId));
                             }
-                            catch (Exception ex)
-                            {
-                                error = true;
-                                Logger.WriteFileLog("卖出判断出错", ex);
-                                tran.Rollback();
-                            }
-                            finally
-                            {
-                                if (!error)
-                                {
-                                    tran.Commit();
-                                }
-                            }
-                        }
-                    }
-                    catch(Exception ex)
-                    {
-                        Logger.WriteFileLog("数据库事务创建出错-判断",ex);
-                    }
-                }
-                foreach (var tradeInfo in sellDic)
-                {
-                    StringBuilder sErrInfo = new StringBuilder(256);
-                    StringBuilder sResult = new StringBuilder(1024 * 1024);
-                    bool error = false;
-                    var client = Singleton.instance.sellTradeClient.GetTradeClient(tradeInfo.Key);
-                    if (client == null)
-                    {
-                        using (var tran = db.Database.BeginTransaction())
-                        {
-                            try
+
+                            StringBuilder sErrInfo = new StringBuilder(256);
+                            StringBuilder sResult = new StringBuilder(1024 * 1024);
+                            var client = Singleton.instance.sellTradeClient.GetTradeClient(tradeInfo.Key);
+                            if (client == null)
                             {
                                 SellTradeFinish(tradeInfo.Value.EntrustManagerList, db);
+                                continue;
                             }
-                            catch (Exception ex)
-                            {
-                                Logger.WriteFileLog("获取链接失败结束异常",ex);
-                                tran.Rollback();
-                            }
-                        }
-                        continue;
-                    }
-                    try
-                    {
-                        using (var tran = db.Database.BeginTransaction())
-                        {
                             try
                             {
                                 if (!Singleton.instance.IsTest)
@@ -575,66 +526,65 @@ namespace SharesTradeService.Handler
                                     //dealCount = dealCount-99;//系统回收
                                     TestHelper.SendSellOrder(tradeInfo.Value.SharesCode, Math.Round(tradeInfo.Value.EntrustPrice * 1.0 / Singleton.instance.PriceFormat, 2).ToString(), dealCount.ToString(), sResult, sErrInfo);
                                 }
-                                if (!string.IsNullOrEmpty(sResult.ToString()))
-                                {
-                                    //解析返回数据
-                                    string result = sResult.ToString();
-
-                                    string tradeEntrustId = "";//委托编号
-                                    string[] rows = result.Split('\n');
-                                    for (int i = 0; i < rows.Length; i++)
-                                    {
-                                        if (i == 1)
-                                        {
-                                            string[] column = rows[i].Split('\t');
-                                            if (!string.IsNullOrEmpty(column[0]))
-                                            {
-                                                tradeEntrustId = column[0];//委托编号
-                                            }
-                                        }
-                                    }
-                                    SellSuccess(tradeInfo.Key,tradeInfo.Value, tradeEntrustId, db);
-                                }
-                                else
-                                {
-                                    SellTradeFinish(tradeInfo.Value.EntrustManagerList, db);
-                                }
                             }
                             catch (Exception ex)
                             {
-                                error = true;
-                                Logger.WriteFileLog("卖出操作出错", ex);
-                                tran.Rollback();
+                                Logger.WriteFileLog("卖出提交出错", ex);
                             }
                             finally
                             {
-                                if (!error)
+                                //归还链接
+                                Singleton.instance.sellTradeClient.AddTradeClient(client);
+                            }
+                            if (!string.IsNullOrEmpty(sResult.ToString()))
+                            {
+                                //解析返回数据
+                                string result = sResult.ToString();
+
+                                string[] rows = result.Split('\n');
+                                for (int i = 0; i < rows.Length; i++)
                                 {
-                                    tran.Commit();
+                                    if (i == 1)
+                                    {
+                                        string[] column = rows[i].Split('\t');
+                                        if (!string.IsNullOrEmpty(column[0]))
+                                        {
+                                            tradeEntrustId = column[0];//委托编号
+                                        }
+                                    }
                                 }
+                                success = true;
+                            }
+                            else
+                            {
+                                SellTradeFinish(tradeInfo.Value.EntrustManagerList, db);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            error = true;
+                            Logger.WriteFileLog("卖出提交出错", ex);
+                            tran.Rollback();
+                        }
+                        finally
+                        {
+                            if (!error)
+                            {
+                                tran.Commit();
                             }
                         }
                     }
-                    catch (Exception ex)
+                    if (success)
                     {
-                        Logger.WriteFileLog("数据库事务创建出错-操作", ex);
+                        SellSuccess(tradeInfo.Key, tradeInfo.Value, tradeEntrustId);
                     }
-                    finally 
-                    {
-                        //归还链接
-                        Singleton.instance.sellTradeClient.AddTradeClient(client);
-                    }
-
                     //触发判断回购股票是否需要卖出
-                    if (!string.IsNullOrEmpty(tradeInfo.Key))
+                    try
                     {
-                        try
-                        {
-                            SimulateSellTradeDelegate d1 = SimulateSellTrade;
-                            d1(tradeInfo.Key, tradeInfo.Value.Market, tradeInfo.Value.SharesCode);
-                        }
-                        catch { }
+                        SimulateSellTradeDelegate d1 = SimulateSellTrade;
+                        d1(tradeInfo.Key, tradeInfo.Value.Market, tradeInfo.Value.SharesCode);
                     }
+                    catch { }
                 }
             }
         }
@@ -655,37 +605,38 @@ namespace SharesTradeService.Handler
         /// <summary>
         /// 卖出提交成功
         /// </summary>
-        private static void SellSuccess(string tradeAccountCode, SellInfo sellInfo,string tradeEntrustId, meal_ticketEntities db)
+        private static void SellSuccess(string tradeAccountCode, SellInfo sellInfo, string tradeEntrustId)
         {
-            //查询账户持仓情况
-            var accountShares = (from item in db.t_broker_account_shares_rel
-                                 where item.TradeAccountCode == tradeAccountCode && item.Market == sellInfo.Market && item.SharesCode == sellInfo.SharesCode
-                                 select item).FirstOrDefault();
-            if (accountShares == null)
+            using (var db = new meal_ticketEntities())
             {
-                throw new Exception("持仓账户不存在");
-            }
-            accountShares.AccountCanSoldCount = accountShares.AccountCanSoldCount - sellInfo.SellCount;
-            accountShares.AccountSellingCount = accountShares.AccountSellingCount + sellInfo.SellCount;
-            db.SaveChanges();
-
-
-            foreach (var manager in sellInfo.EntrustManagerList)
-            {
-                var entrustManager = (from item in db.t_account_shares_entrust_manager
-                                      where item.Id == manager.EntrustManagerId && item.TradeType == 2 && item.Status == 2
-                                      select item).FirstOrDefault();
-                if (entrustManager == null)
+                //查询账户持仓情况
+                var accountShares = (from item in db.t_broker_account_shares_rel
+                                     where item.TradeAccountCode == tradeAccountCode && item.Market == sellInfo.Market && item.SharesCode == sellInfo.SharesCode
+                                     select item).FirstOrDefault();
+                if (accountShares == null)
                 {
-                    throw new Exception("委托账户不存在");
+                    throw new Exception("持仓账户不存在");
                 }
-                //更新账户委托实际提交委托数量
-                entrustManager.RealEntrustCount = manager.EntrustCount;
-                entrustManager.EntrustId = tradeEntrustId;
-                entrustManager.EntrustTime = DateTime.Now;
-                entrustManager.LastModified = DateTime.Now;
+                accountShares.AccountCanSoldCount = accountShares.AccountCanSoldCount - sellInfo.SellCount;
+                accountShares.AccountSellingCount = accountShares.AccountSellingCount + sellInfo.SellCount;
+
+                foreach (var manager in sellInfo.EntrustManagerList)
+                {
+                    var entrustManager = (from item in db.t_account_shares_entrust_manager
+                                          where item.Id == manager.EntrustManagerId && item.TradeType == 2 && item.Status == 2
+                                          select item).FirstOrDefault();
+                    if (entrustManager == null)
+                    {
+                        throw new Exception("委托账户不存在");
+                    }
+                    //更新账户委托实际提交委托数量
+                    entrustManager.RealEntrustCount = manager.EntrustCount;
+                    entrustManager.EntrustId = tradeEntrustId;
+                    entrustManager.EntrustTime = DateTime.Now;
+                    entrustManager.LastModified = DateTime.Now;
+                }
+                db.SaveChanges();
             }
-            db.SaveChanges();
         }
 
         /// <summary>

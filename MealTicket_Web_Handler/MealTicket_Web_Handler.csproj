@@ -83,6 +83,7 @@
     <Compile Include="AuthorityHandler.cs" />
     <Compile Include="AuthorizationException.cs" />
     <Compile Include="BaseResponse.cs" />
+    <Compile Include="DataHelper.cs" />
     <Compile Include="DeleteRequest.cs" />
     <Compile Include="DetailsRequest.cs" />
     <Compile Include="HeadBase.cs" />
@@ -106,14 +107,33 @@
     <Compile Include="Model\AccountApplyTradeBuy.cs" />
     <Compile Include="Model\AccountApplyTradeCancel.cs" />
     <Compile Include="Model\AccountApplyTradeSell.cs" />
+    <Compile Include="Model\AccountGetWalletInfo.cs" />
     <Compile Include="Model\AccountLogin.cs" />
     <Compile Include="Model\AccountMakeupDeposit.cs" />
+    <Compile Include="Model\AddAccountBuyCondition.cs" />
+    <Compile Include="Model\AddAccountBuyConditionAuto.cs" />
+    <Compile Include="Model\AddAccountBuyConditionAutoGroup.cs" />
+    <Compile Include="Model\AddAccountBuyConditionAutoPar.cs" />
+    <Compile Include="Model\AddAccountBuyConditionOther.cs" />
+    <Compile Include="Model\AddAccountBuyConditionOtherGroup.cs" />
+    <Compile Include="Model\AddAccountBuyConditionOtherPar.cs" />
+    <Compile Include="Model\AddAccountBuyConditionTradeShares.cs" />
+    <Compile Include="Model\AddAccountHoldConditionTrade.cs" />
     <Compile Include="Model\AddAccountOptional.cs" />
     <Compile Include="Model\AddAccountOptionalGroup.cs" />
     <Compile Include="Model\AddAccountOptionalGroupRel.cs" />
     <Compile Include="Model\AddAccountOptionalTrendPar.cs" />
     <Compile Include="Model\BindAccountOptionalSeat.cs" />
+    <Compile Include="Model\GetAccountBuyConditionAutoGroupList.cs" />
+    <Compile Include="Model\GetAccountBuyConditionAutoList.cs" />
+    <Compile Include="Model\GetAccountBuyConditionAutoPar.cs" />
+    <Compile Include="Model\GetAccountBuyConditionList.cs" />
+    <Compile Include="Model\GetAccountBuyConditionOtherGroupList.cs" />
+    <Compile Include="Model\GetAccountBuyConditionOtherList.cs" />
+    <Compile Include="Model\GetAccountBuyConditionOtherPar.cs" />
+    <Compile Include="Model\GetAccountBuyConditionTradeSharesList.cs" />
     <Compile Include="Model\GetAccountFollowRecord.cs" />
+    <Compile Include="Model\GetAccountHoldConditionTradeList.cs" />
     <Compile Include="Model\GetAccountOptionalGroup.cs" />
     <Compile Include="Model\GetAccountOptionalGroupRelList.cs" />
     <Compile Include="Model\GetAccountOptionalList.cs" />
@@ -129,6 +149,7 @@
     <Compile Include="Model\GetAccountTradeInfo.cs" />
     <Compile Include="Model\GetAccountTrendTriDetails.cs" />
     <Compile Include="Model\GetAccountTrendTriList.cs" />
+    <Compile Include="Model\GetBuyTipList.cs" />
     <Compile Include="Model\GetFollowAccountList.cs" />
     <Compile Include="Model\GetGoodsList.cs" />
     <Compile Include="Model\GetPaymentList.cs" />
@@ -136,6 +157,12 @@
     <Compile Include="Model\GetSharesQuotesToday.cs" />
     <Compile Include="Model\GetTradeSharesList.cs" />
     <Compile Include="Model\GetTradeSharesQuotesInfo.cs" />
+    <Compile Include="Model\ModifyAccountBuyCondition.cs" />
+    <Compile Include="Model\ModifyAccountBuyConditionAutoGroup.cs" />
+    <Compile Include="Model\ModifyAccountBuyConditionAutoPar.cs" />
+    <Compile Include="Model\ModifyAccountBuyConditionOtherGroup.cs" />
+    <Compile Include="Model\ModifyAccountBuyConditionOtherPar.cs" />
+    <Compile Include="Model\ModifyAccountHoldConditionTrade.cs" />
     <Compile Include="Model\ModifyAccountOptionalGroup.cs" />
     <Compile Include="Model\ModifyAccountOptionalGroupRelGroupIsContinue.cs" />
     <Compile Include="Model\ModifyAccountOptionalTrendPar.cs" />
@@ -145,11 +172,11 @@
     <Compile Include="Model\ModifyAccountSeat.cs" />
     <Compile Include="ModifyStatusRequest.cs" />
     <Compile Include="MQHandler.cs" />
+    <Compile Include="OptionalTrend.cs" />
     <Compile Include="PageRequest.cs" />
     <Compile Include="PageRes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runner\RunnerHelper.cs" />
-    <Compile Include="Runner\TrendListenHelper.cs" />
     <Compile Include="Singleton.cs" />
     <Compile Include="TrendHandler.cs" />
     <Compile Include="t_account_baseinfo.cs">
@@ -159,6 +186,30 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_account_login_token_web.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_conditiontrade_buy.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_conditiontrade_buy_details.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_conditiontrade_buy_details_auto.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_conditiontrade_buy_details_auto_trend.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_conditiontrade_buy_details_auto_trend_par.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_conditiontrade_buy_details_other.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_conditiontrade_buy_details_other_trend.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_conditiontrade_buy_details_other_trend_par.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_account_shares_entrust.cs">
@@ -174,6 +225,12 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_account_shares_hold.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_hold_conditiontrade.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_hold_conditiontrade_child.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_account_shares_optional.cs">

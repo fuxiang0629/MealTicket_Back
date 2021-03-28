@@ -1,0 +1,5 @@
+2021/3/24 14:05:49
+强制平仓提交报错了
+System.Exception: 可卖数量不足
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.ClosingForce() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 918
+

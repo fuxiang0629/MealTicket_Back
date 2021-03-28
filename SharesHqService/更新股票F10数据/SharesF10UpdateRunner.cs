@@ -28,27 +28,34 @@ namespace SharesHqService
         {
             try
             {
-                int hqClient = Singleton.Instance.GetHqClient(); 
-                StringBuilder sErrInfo = new StringBuilder(256);
-                StringBuilder sResult = new StringBuilder(1024 * 1024*100);
-                TradeX_M.TdxHq_GetCompanyInfoCategory(hqClient,(byte)0,"000002", sResult, sErrInfo);
+                StringBuilder sErrInfo;
+                StringBuilder sResult;
+                int hqClient = Singleton.Instance.GetHqClient();
 
-                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 0, 12201, sResult, sErrInfo);
-                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 12201, 8690, sResult, sErrInfo);
-                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 20891, 33479, sResult, sErrInfo);
-                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 54370, 98371, sResult, sErrInfo);
-                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 152741, 9261, sResult, sErrInfo);
-                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 162002, 8540, sResult, sErrInfo);
-                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 170542, 33182, sResult, sErrInfo);
-                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 203724, 45407, sResult, sErrInfo);
-                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 249131, 1481744, sResult, sErrInfo);
-                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 1730875, 33016, sResult, sErrInfo);
-                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 1763891, 12305, sResult, sErrInfo);
-                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 1776196, 14351, sResult, sErrInfo);
-                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 1790547, 36956, sResult, sErrInfo);
-                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 1827503, 32947, sResult, sErrInfo);
-                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 1860450, 45562, sResult, sErrInfo);
-                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 1906012, 12392, sResult, sErrInfo);
+                //获取解析公司概况
+                //1.公司名称 2.英文名称 3.曾用简称 4.证券简称 5.证券代码 6.成立日期 7.上市日期 8.证券类别 9.经济性质 10.法人代表 11.总经理 12.公司董秘 13.证券代表 14.公司电话 15.公司传真 16.注册资本
+                //17.公司规模 18.
+                sErrInfo = new StringBuilder(256);
+                sResult = new StringBuilder(1024 * 1024*100);
+
+                TradeX_M.TdxHq_GetCompanyInfoCategory(hqClient, (byte)0, "000002", sResult, sErrInfo);
+
+                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 0, 11707, sResult, sErrInfo);
+                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 11707, 8840, sResult, sErrInfo);
+                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 20547, 33479, sResult, sErrInfo);
+                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 54026, 86596, sResult, sErrInfo);
+                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 140622, 9261, sResult, sErrInfo);
+                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 149883, 8540, sResult, sErrInfo);
+                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 158423, 26302, sResult, sErrInfo);
+                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 184725, 47100, sResult, sErrInfo);
+                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 231825, 148267, sResult, sErrInfo);
+                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 380092, 33069, sResult, sErrInfo);
+                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 413161, 12305, sResult, sErrInfo);
+                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 425466, 14473, sResult, sErrInfo);
+                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 439939, 36956, sResult, sErrInfo);
+                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 476895, 32497, sResult, sErrInfo);
+                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 509392, 38327, sResult, sErrInfo);
+                TradeX_M.TdxHq_GetCompanyInfoContent(hqClient, (byte)0, "000002", "000002.txt", 547719, 12392, sResult, sErrInfo);
             }
             catch (Exception ex)
             {

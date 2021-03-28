@@ -54,7 +54,7 @@ namespace MealTicket_Handler
                     if (quotes != null)
                     {
                         item.PresentPrice = quotes.PresentPrice <= 0 ? quotes.ClosedPrice : quotes.PresentPrice;
-                        item.Rise = quotes.ClosedPrice <= 0 ? "0" : string.Format(" {0:N2} ", Math.Round((item.PresentPrice - quotes.ClosedPrice) * 100.0 / quotes.ClosedPrice,2));
+                        item.Rise = quotes.ClosedPrice <= 0 ? "0" : string.Format(" {0:N2} ", Math.Round((item.PresentPrice - quotes.ClosedPrice) * 100.0 / quotes.ClosedPrice, 2));
                     }
                 }
                 return new GetTradeSharesListRes
@@ -120,7 +120,7 @@ namespace MealTicket_Handler
                                  select g;
                 int totalCount = searchTemp.Count();
                 var search = (from item in searchTemp
-                              let SearchCount=item.Count()
+                              let SearchCount = item.Count()
                               orderby SearchCount descending
                               select new TradeSharesInfo
                               {
@@ -426,7 +426,7 @@ namespace MealTicket_Handler
                     TotalMarketValue = (sharesHold_ing.Sum(e => e.item.item.RemainCount * (e.item2.PresentPrice <= 0 ? e.item2.ClosedPrice : e.item2.PresentPrice))) / 100 * 100;
                     remainAmount = (sharesHold_ing.Sum(e => e.item.item.BuyTotalAmount - e.item.item.SoldAmount)) / 100 * 100;
                     otherCost = DBUtils.CalculateOtherCost(sharesHold_ing.Select(e => e.item.item.Id).ToList(), 1);
-                    useRemainDeposit= (sharesHold_ing.Sum(e => e.item.item.RemainDeposit)) / 100 * 100;
+                    useRemainDeposit = (sharesHold_ing.Sum(e => e.item.item.RemainDeposit)) / 100 * 100;
                 }
                 //总盈亏(当前市值-（总成本-卖出金额）)
                 long TotalProfit = 0;
@@ -478,7 +478,7 @@ namespace MealTicket_Handler
                                                         where x.ai != null
                                                         select x.ai).ToList()
                                 }).ToList();
-                    otherHoldProfit= temp.Sum(e=>(e.PresentPrice-e.ClosedPrice)*(e.CanSoldCount+e.SellingCount-(e.TodayCanSoldList.Count()>0? e.TodayCanSoldList.Sum(y=>y.item.DealCount): 0))) / 100 * 100;
+                    otherHoldProfit = temp.Sum(e => (e.PresentPrice - e.ClosedPrice) * (e.CanSoldCount + e.SellingCount - (e.TodayCanSoldList.Count() > 0 ? e.TodayCanSoldList.Sum(y => y.item.DealCount) : 0))) / 100 * 100;
                     totalDeposit = (sharesHold_ing.Sum(e => e.item.item.RemainDeposit)) / 100 * 100;
                 }
                 TodayProfit = todayBuyProfit + todaySoldProfit + otherHoldProfit - otherCost;
@@ -497,7 +497,7 @@ namespace MealTicket_Handler
                     RemainDeposit = RemainDeposit,
                     TotalMarketValue = TotalMarketValue,
                     TotalProfit = TotalProfit,
-                    UseRemainDeposit= useRemainDeposit,
+                    UseRemainDeposit = useRemainDeposit,
                     TodayProfit = RunnerHelper.CheckTodayProfitTime(DateTime.Now) ? TodayProfit : 0,
                     TotalAssets = TotalMarketValue + RemainDeposit + totalDeposit + EntrustDeposit
                 };
@@ -530,7 +530,7 @@ namespace MealTicket_Handler
                 long maxId = 0;
                 if (totalCount > 0)
                 {
-                    maxId = sharesHold.Max(e=>e.item.Id);
+                    maxId = sharesHold.Max(e => e.item.Id);
                 }
 
                 var tempList = (from item in sharesHold
@@ -541,7 +541,7 @@ namespace MealTicket_Handler
                 {
                     long PresentPrice = item.item3.PresentPrice <= 0 ? item.item3.ClosedPrice : item.item3.PresentPrice;
                     long MarketValue = item.item.RemainCount * PresentPrice;
-                    long ProfitAmount = MarketValue - (item.item.BuyTotalAmount - item.item.SoldAmount)-DBUtils.CalculateOtherCost(new List<long> { item.item.Id},1);
+                    long ProfitAmount = MarketValue - (item.item.BuyTotalAmount - item.item.SoldAmount) - DBUtils.CalculateOtherCost(new List<long> { item.item.Id }, 1);
 
                     List<ClosingLineInfo> closingList = new List<ClosingLineInfo>();
                     var traderules = (from x in db.t_shares_limit_traderules
@@ -581,7 +581,7 @@ namespace MealTicket_Handler
                                     closingList.Add(new ClosingLineInfo
                                     {
                                         Type = 2,
-                                        Time = startTime.ToString(@"hh\:mm")+"-"+ endTime.ToString(@"hh\:mm"),
+                                        Time = startTime.ToString(@"hh\:mm") + "-" + endTime.ToString(@"hh\:mm"),
                                         ClosingPrice = closingPrice,
                                         AddDepositAmount = addDepositAmount,
                                         ColorType = PresentPrice < closingPrice ? 2 : PresentPrice < cordonPrice ? 3 : 1
@@ -590,7 +590,7 @@ namespace MealTicket_Handler
                             }
                             catch (Exception ex)
                             {
-                                Logger.WriteFileLog("出错了",ex);
+                                Logger.WriteFileLog("出错了", ex);
                                 continue;
                             }
                         }
@@ -604,14 +604,14 @@ namespace MealTicket_Handler
                         Market = item.item.Market,
                         RemainDeposit = item.item.RemainDeposit / 100 * 100,
                         PresentPrice = PresentPrice,
-                        BuyTotalAmount=item.item.BuyTotalAmount,
-                        CostPrice = item.item.RemainCount > 0 ? (long)(Math.Round((item.item.BuyTotalAmount - item.item.SoldAmount+DBUtils.CalculateOtherCost(new List<long> { item.item.Id},1)) * 1.0 / item.item.RemainCount, 0)) : (long)(Math.Round((item.item.BuyTotalAmount+DBUtils.CalculateOtherCost(new List<long> { item.item.Id },1)) * 1.0 / item.item.BuyTotalCount, 0)),
+                        BuyTotalAmount = item.item.BuyTotalAmount,
+                        CostPrice = item.item.RemainCount > 0 ? (long)(Math.Round((item.item.BuyTotalAmount - item.item.SoldAmount + DBUtils.CalculateOtherCost(new List<long> { item.item.Id }, 1)) * 1.0 / item.item.RemainCount, 0)) : (long)(Math.Round((item.item.BuyTotalAmount + DBUtils.CalculateOtherCost(new List<long> { item.item.Id }, 1)) * 1.0 / item.item.BuyTotalCount, 0)),
                         RemainCount = item.item.RemainCount,
                         MarketValue = MarketValue / 100 * 100,
                         CanSellCount = item.item.CanSoldCount,
                         ProfitAmount = ProfitAmount / 100 * 100,
                         ClosingTime = item.item.ClosingTime,
-                        ClosingLineList= closingList
+                        ClosingLineList = closingList
                     });
                 }
 
@@ -627,11 +627,11 @@ namespace MealTicket_Handler
         /// <summary>
         /// 计算平仓信息
         /// </summary>
-        private void CalculateClosingInfo(long CurrPrice,int RemainCount,long RemainDeposit,long RemainFundAmount, int Cordon,int ClosingLine,out long ClosingPrice,out long AddDepositAmount,out long CordonPrice) 
+        private void CalculateClosingInfo(long CurrPrice, int RemainCount, long RemainDeposit, long RemainFundAmount, int Cordon, int ClosingLine, out long ClosingPrice, out long AddDepositAmount, out long CordonPrice)
         {
             //计算平仓信息
             //（市值+保证金-借钱）/借钱=价格线
-            ClosingPrice = RemainCount<=0? 0 : (long)(ClosingLine * 1.0 / 10000 * RemainFundAmount + RemainFundAmount - RemainDeposit) / RemainCount;
+            ClosingPrice = RemainCount <= 0 ? 0 : (long)(ClosingLine * 1.0 / 10000 * RemainFundAmount + RemainFundAmount - RemainDeposit) / RemainCount;
             CordonPrice = RemainCount <= 0 ? 0 : (long)(Cordon * 1.0 / 10000 * RemainFundAmount + RemainFundAmount - RemainDeposit) / RemainCount;
             long needDepositAmount = (long)(Cordon * 1.0 / 10000 * RemainFundAmount + RemainFundAmount - CurrPrice * RemainCount);
             AddDepositAmount = needDepositAmount - RemainDeposit < 0 ? 0 : needDepositAmount - RemainDeposit;
@@ -641,7 +641,7 @@ namespace MealTicket_Handler
         /// 获取交易委托列表
         /// </summary>
         /// <returns></returns>
-        public PageRes<TradeEntrustInfo> GetTradeEntrustList(GetTradeEntrustListRequest request, HeadBase basedata) 
+        public PageRes<TradeEntrustInfo> GetTradeEntrustList(GetTradeEntrustListRequest request, HeadBase basedata)
         {
             using (var db = new meal_ticketEntities())
             {
@@ -687,21 +687,21 @@ namespace MealTicket_Handler
                                   Status = item.Status,
                                   SharesCode = item.SharesCode,
                                   ClosingTime = item.ClosingTime,
-                                  TradeType=item.TradeType,
+                                  TradeType = item.TradeType,
                                   CreateTime = item.CreateTime,
                                   EntrustCount = item.EntrustCount,
                                   EntrustPrice = item.EntrustPrice,
                                   EntrustType = item.EntrustType,
                                   Id = item.Id,
-                                  SoldProfitAmount=item.SoldProfitAmount / 100 * 100,
+                                  SoldProfitAmount = item.SoldProfitAmount / 100 * 100,
                                   IsExecuteClosing = item.IsExecuteClosing,
                                   Market = item.Market,
-                                  SoldType=item.Type
+                                  SoldType = item.Type
                               }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
 
                 foreach (var item in result)
                 {
-                    item.SoldProfitAmount = item.SoldProfitAmount - DBUtils.CalculateOtherCost(new List<long> { item.Id },2);
+                    item.SoldProfitAmount = item.SoldProfitAmount - DBUtils.CalculateOtherCost(new List<long> { item.Id }, 2);
                     item.PresentPrice = 0;
                     var shares = (from x in db.t_shares_all
                                   where x.Market == item.Market && x.SharesCode == item.SharesCode
@@ -714,7 +714,7 @@ namespace MealTicket_Handler
                                       select x).FirstOrDefault();
                         if (quotes != null)
                         {
-                            item.PresentPrice = quotes.PresentPrice<=0 ? quotes.ClosedPrice : quotes.PresentPrice;
+                            item.PresentPrice = quotes.PresentPrice <= 0 ? quotes.ClosedPrice : quotes.PresentPrice;
                         }
                     }
 
@@ -726,13 +726,13 @@ namespace MealTicket_Handler
                         int dealCount = manager.Sum(e => e.DealCount);
                         long dealAmount = (manager.Sum(e => e.DealAmount)) / 100 * 100;
                         item.DealCount = dealCount;
-                        item.DealPrice = (dealCount<=0?0: dealAmount / dealCount) / 100 * 100;
+                        item.DealPrice = (dealCount <= 0 ? 0 : dealAmount / dealCount) / 100 * 100;
                     }
                 }
                 return new PageRes<TradeEntrustInfo>
                 {
                     TotalCount = totalCount,
-                    MaxId= MaxId,
+                    MaxId = MaxId,
                     List = result
                 };
             }
@@ -751,7 +751,7 @@ namespace MealTicket_Handler
                                join item2 in db.t_account_shares_entrust_manager on item.Id equals item2.BuyId
                                join item3 in db.t_account_shares_entrust_manager_dealdetails on item2.Id equals item3.EntrustManagerId
                                join item4 in db.t_shares_all on new { item.Market, item.SharesCode } equals new { item4.Market, item4.SharesCode }
-                               where ((request.Type!=2 && item.Id == request.Id) || (request.Type==2 && item.HoldId==request.Id)) && item2.DealCount>0 && ((item2.DealCount>=item4.SharesHandCount && item.TradeType==1) || item.TradeType == 2)
+                               where ((request.Type != 2 && item.Id == request.Id) || (request.Type == 2 && item.HoldId == request.Id)) && item2.DealCount > 0 && ((item2.DealCount >= item4.SharesHandCount && item.TradeType == 1) || item.TradeType == 2)
                                select new { item, item2, item3, item4 };
                 if (request.MaxId > 0)
                 {
@@ -763,7 +763,7 @@ namespace MealTicket_Handler
                 long maxId = 0;
                 if (totalCount > 0)
                 {
-                    maxId = dealList.Max(e=>e.item3.Id);
+                    maxId = dealList.Max(e => e.item3.Id);
                 }
 
                 return new PageRes<TradeEntrustDealDetailsInfo>
@@ -774,14 +774,14 @@ namespace MealTicket_Handler
                             orderby item.item3.DealTime descending
                             select new TradeEntrustDealDetailsInfo
                             {
-                                Id=item.item3.Id,
-                                SharesCode=item.item.SharesCode,
-                                SharesName=item.item4.SharesName,
-                                DealAmount=item.item3.DealAmount / 100 * 100,
-                                DealCount=item.item3.DealCount,
-                                DealTime=item.item3.DealTime,
-                                TradeType=item.item.TradeType,
-                                DealPrice=item.item3.DealPrice / 100 * 100
+                                Id = item.item3.Id,
+                                SharesCode = item.item.SharesCode,
+                                SharesName = item.item4.SharesName,
+                                DealAmount = item.item3.DealAmount / 100 * 100,
+                                DealCount = item.item3.DealCount,
+                                DealTime = item.item3.DealTime,
+                                TradeType = item.item.TradeType,
+                                DealPrice = item.item3.DealPrice / 100 * 100
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
                 };
             }
@@ -790,7 +790,7 @@ namespace MealTicket_Handler
         /// <summary>
         /// 设置自动平仓时间
         /// </summary>
-        public void SetTradeClosingTime(SetTradeClosingTimeRequest request, HeadBase basedata) 
+        public void SetTradeClosingTime(SetTradeClosingTimeRequest request, HeadBase basedata)
         {
             using (var db = new meal_ticketEntities())
             using (var tran = db.Database.BeginTransaction())
@@ -799,7 +799,7 @@ namespace MealTicket_Handler
                 {
                     ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                     ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
-                    db.P_SetTradeClosingTime(basedata.AccountId,request.HoldId,request.ClosingTime, errorCodeDb, errorMessageDb);
+                    db.P_SetTradeClosingTime(basedata.AccountId, request.HoldId, request.ClosingTime, errorCodeDb, errorMessageDb);
                     int errorCode = (int)errorCodeDb.Value;
                     string errorMessage = errorMessageDb.Value.ToString();
                     if (errorCode != 0)
@@ -939,7 +939,7 @@ namespace MealTicket_Handler
         /// <summary>
         /// 股票申请买入
         /// </summary>
-        public void ApplyTradeBuy(ApplyTradeBuyRequest request, HeadBase basedata) 
+        public void ApplyTradeBuy(ApplyTradeBuyRequest request, HeadBase basedata)
         {
             using (var db = new meal_ticketEntities())
             using (var tran = db.Database.BeginTransaction())
@@ -949,7 +949,7 @@ namespace MealTicket_Handler
                     ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                     ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
                     ObjectParameter buyIdDb = new ObjectParameter("buyId", 0);
-                    db.P_ApplyTradeBuy(basedata.AccountId, request.Market,request.SharesCode,request.BuyAmount,request.FundMultiple,request.BuyPrice,request.ClosingTime,false,errorCodeDb, errorMessageDb,buyIdDb);
+                    db.P_ApplyTradeBuy(basedata.AccountId, request.Market, request.SharesCode, request.BuyAmount, request.FundMultiple, request.BuyPrice, request.ClosingTime, false, errorCodeDb, errorMessageDb, buyIdDb);
                     int errorCode = (int)errorCodeDb.Value;
                     string errorMessage = errorMessageDb.Value.ToString();
                     if (errorCode != 0)
@@ -963,16 +963,16 @@ namespace MealTicket_Handler
                                    select item).FirstOrDefault();
                     if (entrust == null)
                     {
-                        throw new WebApiException(400,"未知错误");
+                        throw new WebApiException(400, "未知错误");
                     }
 
-                    var sendData = new 
+                    var sendData = new
                     {
-                        BuyId=buyId,
-                        BuyCount= entrust.EntrustCount,
-                        BuyTime =DateTime.Now.ToString("yyyy-MM-dd")
+                        BuyId = buyId,
+                        BuyCount = entrust.EntrustCount,
+                        BuyTime = DateTime.Now.ToString("yyyy-MM-dd")
                     };
-                    bool isSendSuccess=MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesBuy", "s1");
+                    bool isSendSuccess = MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesBuy", "s1");
                     if (!isSendSuccess)
                     {
                         throw new WebApiException(400, "买入失败,请重试");
@@ -1000,7 +1000,7 @@ namespace MealTicket_Handler
                     ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                     ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
                     ObjectParameter sellIdDb = new ObjectParameter("sellId", 0);
-                    db.P_ApplyTradeSell(basedata.AccountId, request.HoldId, request.SellCount, request.SellType, request.SellPrice,0,false, errorCodeDb, errorMessageDb, sellIdDb);
+                    db.P_ApplyTradeSell(basedata.AccountId, request.HoldId, request.SellCount, request.SellType, request.SellPrice, 0, false, errorCodeDb, errorMessageDb, sellIdDb);
                     int errorCode = (int)errorCodeDb.Value;
                     string errorMessage = errorMessageDb.Value.ToString();
                     if (errorCode != 0)
@@ -1012,8 +1012,8 @@ namespace MealTicket_Handler
                     var entrustManager = (from item in db.t_account_shares_entrust_manager
                                           join item2 in db.t_broker_account_info on item.TradeAccountCode equals item2.AccountCode
                                           where item.BuyId == sellId && item.TradeType == 2 && item.Status == 1
-                                          select new { item,item2}).ToList();
-                    if (entrustManager.Count()<=0)
+                                          select new { item, item2 }).ToList();
+                    if (entrustManager.Count() <= 0)
                     {
                         throw new WebApiException(400, "内部错误");
                     }
@@ -1031,7 +1031,7 @@ namespace MealTicket_Handler
                                       select x).FirstOrDefault();
                         if (server == null)
                         {
-                            throw new WebApiException(400,"服务器配置有误");
+                            throw new WebApiException(400, "服务器配置有误");
                         }
 
                         bool isSendSuccess = MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesSell", server.ServerId);
@@ -1095,12 +1095,12 @@ namespace MealTicket_Handler
                                 TradeManagerId = item.item.Id,
                                 EntrustId = request.Id,
                                 CancelTime = DateTime.Now.ToString("yyyy-MM-dd")
-                            }; 
+                            };
 
                             var server = (from x in db.t_server_broker_account_rel
-                                             join x2 in db.t_server on x.ServerId equals x2.ServerId
-                                             where x.BrokerAccountId == item.item2.Id
-                                             select x).FirstOrDefault();
+                                          join x2 in db.t_server on x.ServerId equals x2.ServerId
+                                          where x.BrokerAccountId == item.item2.Id
+                                          select x).FirstOrDefault();
                             if (server == null)
                             {
                                 throw new WebApiException(400, "服务器配置有误");
@@ -1127,7 +1127,7 @@ namespace MealTicket_Handler
         /// 获取用户交易杠杆倍数
         /// </summary>
         /// <returns></returns>
-        public List<FundmultipleInfo> GetFundmultipleList(HeadBase basedata) 
+        public List<FundmultipleInfo> GetFundmultipleList(HeadBase basedata)
         {
             using (var db = new meal_ticketEntities())
             {
@@ -1142,7 +1142,7 @@ namespace MealTicket_Handler
                                         FundmultipleId = item.Id,
                                         MarketName = item.MarketName,
                                         FundMultiple = ai == null ? item.FundMultiple : ai.FundMultiple,
-                                        MaxFundMultiple=item.FundMultiple
+                                        MaxFundMultiple = item.FundMultiple
                                     }).ToList();
                 return fundmultiple;
             }
@@ -1156,7 +1156,7 @@ namespace MealTicket_Handler
         public void ModifyFundmultiple(ModifyFundmultipleRequest request, HeadBase basedata)
         {
             using (var db = new meal_ticketEntities())
-            using (var tran=db.Database.BeginTransaction())
+            using (var tran = db.Database.BeginTransaction())
             {
                 try
                 {
@@ -1166,11 +1166,11 @@ namespace MealTicket_Handler
                                         select item).FirstOrDefault();
                     if (fundmultiple == null)
                     {
-                        throw new WebApiException(400,"配置不存在");
+                        throw new WebApiException(400, "配置不存在");
                     }
 
                     //查询是否存在
-                    string sql = string.Format("select top 1 Id from t_shares_limit_fundmultiple_account with(xlock) where FundmultipleId={0} and AccountId={1}", request.FundmultipleId,basedata.AccountId);
+                    string sql = string.Format("select top 1 Id from t_shares_limit_fundmultiple_account with(xlock) where FundmultipleId={0} and AccountId={1}", request.FundmultipleId, basedata.AccountId);
                     object sqlResult = null;
                     using (var cmd = db.Database.Connection.CreateCommand())
                     {
@@ -1210,7 +1210,7 @@ namespace MealTicket_Handler
         /// 获取用户跟投信息
         /// </summary>
         /// <returns></returns>
-        public AccountFollowInfo GetAccountFollowInfo(HeadBase basedata) 
+        public AccountFollowInfo GetAccountFollowInfo(HeadBase basedata)
         {
             using (var db = new meal_ticketEntities())
             {
@@ -1220,10 +1220,10 @@ namespace MealTicket_Handler
                                  select item).FirstOrDefault();
                 if (followRel != null)
                 {
-                    return new AccountFollowInfo 
+                    return new AccountFollowInfo
                     {
-                        StatusDesc="",
-                        FollowStatus=3
+                        StatusDesc = "",
+                        FollowStatus = 3
                     };
                 }
                 //查询最后一次请求
@@ -1233,13 +1233,13 @@ namespace MealTicket_Handler
                               select item).FirstOrDefault();
                 if (record == null)
                 {
-                    return new AccountFollowInfo 
+                    return new AccountFollowInfo
                     {
-                        FollowStatus=0,
-                        StatusDesc=""
+                        FollowStatus = 0,
+                        StatusDesc = ""
                     };
                 }
-                if (record.Status==1)
+                if (record.Status == 1)
                 {
                     return new AccountFollowInfo
                     {
@@ -1311,6 +1311,7 @@ namespace MealTicket_Handler
                 catch (Exception ex)
                 {
                     tran.Rollback();
+                    throw ex;
                 }
             }
         }
@@ -1339,6 +1340,7 @@ namespace MealTicket_Handler
                 catch (Exception ex)
                 {
                     tran.Rollback();
+                    throw ex;
                 }
             }
         }
@@ -1365,7 +1367,7 @@ namespace MealTicket_Handler
             using (var db = new meal_ticketEntities())
             {
                 var holdHistory = from item in db.t_account_shares_hold
-                                  where item.RemainCount <= 0 && item.LastModified < dateNow && item.Status != 0 && item.AccountId == basedata.AccountId && item.LastModified>= startTime && item.LastModified< endTime
+                                  where item.RemainCount <= 0 && item.LastModified < dateNow && item.Status != 0 && item.AccountId == basedata.AccountId && item.LastModified >= startTime && item.LastModified < endTime
                                   select item;
 
                 int totalCount = holdHistory.Count();
@@ -1375,8 +1377,8 @@ namespace MealTicket_Handler
                 long totalBuyAmount = totalCount > 0 ? holdHistory.Sum(e => e.BuyTotalAmount) : 0;
 
                 List<long> holdList = holdHistory.Select(e => e.Id).ToList();
-                long otherCost=DBUtils.CalculateOtherCost(holdList, 1);
-                long totalProfitAmount= totalCount > 0 ? holdHistory.Sum(e => e.SoldAmount-e.BuyTotalAmount)- otherCost : 0;
+                long otherCost = DBUtils.CalculateOtherCost(holdList, 1);
+                long totalProfitAmount = totalCount > 0 ? holdHistory.Sum(e => e.SoldAmount - e.BuyTotalAmount) - otherCost : 0;
 
                 return new GetAccountHoldHistoryListRes
                 {
@@ -1398,9 +1400,155 @@ namespace MealTicket_Handler
                                 Market = item.Market,
                                 StartTime = item.CreateTime,
                                 SharesName = item2.SharesName,
-                                BuyTotalAmount=item.BuyTotalAmount
+                                BuyTotalAmount = item.BuyTotalAmount
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
                 };
+            }
+        }
+
+        /// <summary>
+        /// 获取条件单列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public List<AccountHoldConditionTradeInfo> GetAccountHoldConditionTradeList(GetAccountHoldConditionTradeListRequest request, HeadBase basedata)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var conditiontrade = (from item in db.t_account_shares_hold_conditiontrade.AsNoTracking()
+                                      where item.HoldId == request.HoldId && item.Type == request.Type && item.AccountId == basedata.AccountId && item.SourceFrom==0 && item.Status==1
+                                      select new AccountHoldConditionTradeInfo
+                                      {
+                                          ConditionPrice = item.ConditionPrice,
+                                          ConditionTime = item.ConditionTime,
+                                          EntrustCount = item.EntrustCount,
+                                          EntrustPriceGear = item.EntrustPriceGear,
+                                          EntrustType = item.EntrustType,
+                                          Id = item.Id,
+                                          ForbidType=item.ForbidType,
+                                          TriggerTime = item.TriggerTime,
+                                          EntrustId=item.EntrustId
+                                      }).ToList();
+                foreach (var item in conditiontrade)
+                {
+                    if (item.EntrustId > 0)
+                    {
+                        var entrust = (from x in db.t_account_shares_entrust
+                                       where x.Id == item.EntrustId
+                                       select x).FirstOrDefault();
+                        if (entrust != null)
+                        {
+                            if (item.EntrustType == 2)
+                            {
+                                item.EntrustPrice = entrust.EntrustPrice;
+                            }
+                            item.RelEntrustCount = entrust.EntrustCount;
+                            item.RelDealCount = entrust.DealCount;
+                            item.EntrustStatus = entrust.Status;
+                        }
+                    }
+                }
+                switch (request.Type)
+                {
+                    case 1:
+                        conditiontrade = conditiontrade.OrderBy(e => e.ConditionTime).ToList();
+                        break;
+                    case 2:
+                        conditiontrade = conditiontrade.OrderBy(e => e.ConditionPrice).ToList();
+                        break;
+                    case 3:
+                        conditiontrade = conditiontrade.OrderByDescending(e => e.ConditionPrice).ToList();
+                        break;
+                }
+
+                scope.Complete();
+                return conditiontrade;
+            }
+        }
+
+        /// <summary>
+        /// 添加条件单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void AddAccountHoldConditionTrade(AddAccountHoldConditionTradeRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //判断持仓是否存在
+                var hold = (from item in db.t_account_shares_hold
+                            where item.Id == request.HoldId && item.AccountId == basedata.AccountId
+                            select item).FirstOrDefault();
+                if (hold == null)
+                {
+                    throw new WebApiException(400, "持仓不存在");
+                }
+
+                db.t_account_shares_hold_conditiontrade.Add(new t_account_shares_hold_conditiontrade
+                {
+                    AccountId = basedata.AccountId,
+                    ConditionPrice = request.ConditionPrice,
+                    ConditionTime = request.ConditionTime,
+                    CreateTime = DateTime.Now,
+                    EntrustCount = request.EntrustCount,
+                    EntrustPriceGear = request.EntrustPriceGear,
+                    EntrustType = request.EntrustType,
+                    HoldId = request.HoldId,
+                    LastModified = DateTime.Now,
+                    TradeType = request.TradeType,
+                    TriggerTime = null,
+                    SourceFrom=0,
+                    Status=1,
+                    FatherId=0,
+                    ForbidType=request.ForbidType,
+                    Name="",
+                    Type = request.Type
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除条件单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void DeleteAccountHoldConditionTrade(DeleteRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var ConditionTrade = (from item in db.t_account_shares_hold_conditiontrade
+                                      where item.Id == request.Id && item.AccountId == basedata.AccountId
+                                      select item).FirstOrDefault();
+                if (ConditionTrade == null)
+                {
+                    throw new WebApiException(400,"数据不存在");
+                }
+                db.t_account_shares_hold_conditiontrade.Remove(ConditionTrade);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 判断是否交易时间
+        /// </summary>
+        /// <param name="request"></param>
+        public void IsTradeTimeRequest(IsTradeTimeRequest request) 
+        {
+            DateTime? time;
+            DateTime tempTime;
+            if (!DateTime.TryParse(request.Time, out tempTime))
+            {
+                time = null;
+            }
+            else
+            {
+                time = tempTime;
+            }
+            if(!RunnerHelper.CheckTradeTime2(time, false, true, false))
+            {
+                throw new WebApiException(400,"非交易时间");
             }
         }
     }

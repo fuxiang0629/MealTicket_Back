@@ -25,6 +25,23 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 获取用户保证金余额
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取用户保证金余额")]
+        [Route("account/wallet/info"), HttpPost]
+        [CheckUserLoginFilter]
+        public AccountWalletInfo AccountGetWalletInfo(DetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400,"参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.AccountGetWalletInfo(request,basedata);
+        }
+
+        /// <summary>
         /// 根据股票代码/名称/简拼获取股票列表
         /// </summary>
         /// <returns></returns>
@@ -555,7 +572,7 @@ namespace MealTicket_Web_APIService.controller
                         int fsLen = (int)fileStream.Length;
                         byte[] heByte = new byte[fsLen];
                         int r = fileStream.Read(heByte, 0, heByte.Length);
-                        string myStr = System.Text.Encoding.GetEncoding("gb2312").GetString(heByte);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
                         string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
                         List<SharesInfo> sharesList = new List<SharesInfo>();
                         for (int i = 0; i < temp.Length; i++)
@@ -978,6 +995,834 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.GetAccountFollowRecord(request, basedata);
+        }
+
+        /// <summary>
+        /// 获取条件单列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/hold/conditiontrade/list"), HttpPost]
+        [Description("获取条件单列表")]
+        [CheckUserLoginFilter]
+        public List<AccountHoldConditionTradeInfo> GetAccountHoldConditionTradeList(GetAccountHoldConditionTradeListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountHoldConditionTradeList(request);
+        }
+
+        /// <summary>
+        /// 添加条件单
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/hold/conditiontrade/add"), HttpPost]
+        [Description("添加条件单")]
+        [CheckUserLoginFilter]
+        public object AddAccountHoldConditionTrade(AddAccountHoldConditionTradeRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            if (request.TradeType != 1 && request.TradeType != 2)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            if (request.Type != 1 && request.Type != 2 && request.Type != 3)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            if (request.Type == 1 && request.ConditionTime == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            if (request.Type != 1 && request.ConditionPrice == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountHoldConditionTrade(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑条件单
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/hold/conditiontrade/modify"), HttpPost]
+        [Description("编辑条件单")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountHoldConditionTrade(ModifyAccountHoldConditionTradeRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountHoldConditionTrade(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改触发条件
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/hold/conditiontrade/status/modify"), HttpPost]
+        [Description("修改触发条件")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountHoldConditionTradeStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountHoldConditionTradeStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除条件单
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/hold/conditiontrade/delete"), HttpPost]
+        [Description("删除条件单")]
+        [CheckUserLoginFilter]
+        public object DeleteAccountHoldConditionTrade(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountHoldConditionTrade(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取买入条件单股票列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/shares/list"), HttpPost]
+        [Description("获取买入条件单股票列表")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionTradeSharesInfo> GetAccountBuyConditionTradeSharesList(GetAccountBuyConditionTradeSharesListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountBuyConditionTradeSharesList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加买入条件单股票
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/shares/add"), HttpPost]
+        [Description("添加买入条件单股票")]
+        [CheckUserLoginFilter]
+        public object AddAccountBuyConditionTradeShares(AddAccountBuyConditionTradeSharesRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountBuyConditionTradeShares(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量导入条件买入股票数据
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("account/conditiontrade/buy/shares/batch/add"), HttpPost]
+        [Description("批量导入条件买入股票数据")]
+        public async Task<object> BatchAddAccountBuyConditionTradeShares()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var accountId = long.Parse(provider.FormData["accountId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<SharesInfo> marketTimeList = new List<SharesInfo>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+                            if (datas.Length < 2)
+                            {
+                                continue;
+                            }
+                            var stock = datas[0].Split('.');
+                            if (stock.Count() != 2)
+                            {
+                                continue;
+                            }
+
+                            marketTimeList.Add(new SharesInfo
+                            {
+                                Market = stock[1] == "SZ" ? 0 : 1,
+                                SharesCode = int.Parse(stock[0]).ToString("000000"),
+                                SharesName = datas[1]
+                            });
+                        }
+                        HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+                        if (accountId == 0)
+                        {
+                            accountId = basedata.AccountId;
+                        }
+                        return trendHandler.BatchAddAccountBuyConditionTradeShares(marketTimeList,accountId);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 删除买入条件单股票
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/shares/delete"), HttpPost]
+        [Description("删除买入条件单股票")]
+        [CheckUserLoginFilter]
+        public object DeleteAccountBuyConditionTradeShares(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            trendHandler.DeleteAccountBuyConditionTradeShares(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取股票买入条件列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/list"), HttpPost]
+        [Description("获取股票买入条件列表")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionInfo> GetAccountBuyConditionList(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountBuyConditionList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加股票买入条件
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/add"), HttpPost]
+        [Description("添加股票买入条件")]
+        [CheckUserLoginFilter]
+        public object AddAccountBuyCondition(AddAccountBuyConditionRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountBuyCondition(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑股票买入条件
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/modify"), HttpPost]
+        [Description("编辑股票买入条件")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountBuyCondition(ModifyAccountBuyConditionRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountBuyCondition(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改股票买入条件状态
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/status/modify"), HttpPost]
+        [Description("修改股票买入条件状态")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountBuyConditionStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountBuyConditionStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除股票买入条件
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/delete"), HttpPost]
+        [Description("删除股票买入条件")]
+        [CheckUserLoginFilter]
+        public object DeleteAccountBuyCondition(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountBuyCondition(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取股票买入额外条件分组列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/group/list"), HttpPost]
+        [Description("获取股票买入额外条件分组列表")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionOtherGroupInfo> GetAccountBuyConditionOtherGroupList(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountBuyConditionOtherGroupList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加股票买入额外条件分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/group/add"), HttpPost]
+        [Description("添加股票买入额外条件分组")]
+        [CheckUserLoginFilter]
+        public object AddAccountBuyConditionOtherGroup(AddAccountBuyConditionOtherGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountBuyConditionOtherGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑股票买入额外条件分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/group/modify"), HttpPost]
+        [Description("编辑股票买入额外条件分组")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountBuyConditionOtherGroup(ModifyAccountBuyConditionOtherGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountBuyConditionOtherGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改股票买入额外条件分组状态
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/group/status/modify"), HttpPost]
+        [Description("修改股票买入额外条件分组状态")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountBuyConditionOtherGroupStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountBuyConditionOtherGroupStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除股票买入额外条件分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/group/delete"), HttpPost]
+        [Description("删除股票买入额外条件分组")]
+        [CheckUserLoginFilter]
+        public object DeleteAccountBuyConditionOtherGroup(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountBuyConditionOtherGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取股票买入转自动条件分组列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/group/list"), HttpPost]
+        [Description("获取股票买入转自动条件分组列表")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionAutoGroupInfo> GetAccountBuyConditionAutoGroupList(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountBuyConditionAutoGroupList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加股票买入转自动条件分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/group/add"), HttpPost]
+        [Description("添加股票买入转自动条件分组")]
+        [CheckUserLoginFilter]
+        public object AddAccountBuyConditionAutoGroup(AddAccountBuyConditionAutoGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountBuyConditionAutoGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑股票买入转自动条件分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/group/modify"), HttpPost]
+        [Description("编辑股票买入转自动条件分组")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountBuyConditionAutoGroup(ModifyAccountBuyConditionAutoGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountBuyConditionAutoGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改股票买入转自动条件分组状态
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/group/status/modify"), HttpPost]
+        [Description("修改股票买入转自动条件分组状态")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountBuyConditionAutoGroupStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountBuyConditionAutoGroupStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除股票买入转自动条件分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/group/delete"), HttpPost]
+        [Description("删除股票买入转自动条件分组")]
+        [CheckUserLoginFilter]
+        public object DeleteAccountBuyConditionAutoGroup(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountBuyConditionAutoGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取股票买入额外条件列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/list"), HttpPost]
+        [Description("获取股票买入额外条件列表")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionOtherInfo> GetAccountBuyConditionOtherList(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountBuyConditionOtherList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加股票买入额外条件
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/add"), HttpPost]
+        [Description("添加股票买入额外条件")]
+        [CheckUserLoginFilter]
+        public object AddAccountBuyConditionOther(AddAccountBuyConditionOtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountBuyConditionOther(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改股票买入额外条件状态
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/status/modify"), HttpPost]
+        [Description("修改股票买入额外条件状态")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountBuyConditionOtherStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountBuyConditionOtherStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除股票买入额外条件
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/delete"), HttpPost]
+        [Description("删除股票买入额外条件")]
+        [CheckUserLoginFilter]
+        public object DeleteAccountBuyConditionOther(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountBuyConditionOther(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取股票买入转自动条件列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/list"), HttpPost]
+        [Description("获取股票买入转自动条件列表")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionAutoInfo> GetAccountBuyConditionAutoList(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountBuyConditionAutoList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加股票买入转自动条件
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/add"), HttpPost]
+        [Description("添加股票买入转自动条件")]
+        [CheckUserLoginFilter]
+        public object AddAccountBuyConditionAuto(AddAccountBuyConditionAutoRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountBuyConditionAuto(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改股票买入转自动条件状态
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/status/modify"), HttpPost]
+        [Description("修改股票买入转自动条件状态")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountBuyConditionAutoStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountBuyConditionAutoStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除股票买入转自动条件
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/delete"), HttpPost]
+        [Description("删除股票买入转自动条件")]
+        [CheckUserLoginFilter]
+        public object DeleteAccountBuyConditionAuto(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountBuyConditionAuto(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询股票买入额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/par"), HttpPost]
+        [Description("查询股票买入额外条件类型参数")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionOtherParInfo> GetAccountBuyConditionOtherPar(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountBuyConditionOtherPar(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加股票买入额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/par/add"), HttpPost]
+        [Description("添加股票买入额外条件类型参数")]
+        [CheckUserLoginFilter]
+        public object AddAccountBuyConditionOtherPar(AddAccountBuyConditionOtherParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountBuyConditionOtherPar(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑股票买入额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/par/modify"), HttpPost]
+        [Description("编辑股票买入额外条件类型参数")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountBuyConditionOtherPar(ModifyAccountBuyConditionOtherParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountBuyConditionOtherPar(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除股票买入额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/par/delete"), HttpPost]
+        [Description("删除股票买入额外条件类型参数")]
+        [CheckUserLoginFilter]
+        public object DeleteAccountBuyConditionOtherPar(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountBuyConditionOtherPar(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询股票买入转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/par"), HttpPost]
+        [Description("查询股票买入转自动条件类型参数")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionAutoParInfo> GetAccountBuyConditionAutoPar(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountBuyConditionAutoPar(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加股票买入转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/par/add"), HttpPost]
+        [Description("添加股票买入转自动条件类型参数")]
+        [CheckUserLoginFilter]
+        public object AddAccountBuyConditionAutoPar(AddAccountBuyConditionAutoParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountBuyConditionAutoPar(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑股票买入转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/par/modify"), HttpPost]
+        [Description("编辑股票买入转自动条件类型参数")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountBuyConditionAutoPar(ModifyAccountBuyConditionAutoParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountBuyConditionAutoPar(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除股票买入转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/par/delete"), HttpPost]
+        [Description("删除股票买入转自动条件类型参数")]
+        [CheckUserLoginFilter]
+        public object DeleteAccountBuyConditionAutoPar(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountBuyConditionAutoPar(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询买入提示列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("buy/tip/list"), HttpPost]
+        [Description("查询买入提示列表")]
+        [CheckUserLoginFilter]
+        public List<BuyTipInfo> GetBuyTipList()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetBuyTipList(basedata);
+        }
+
+        /// <summary>
+        /// 确认买入提示
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("buy/tip/confirm"), HttpPost]
+        [Description("确认买入提示")]
+        [CheckUserLoginFilter]
+        public object ConfirmBuyTip(DetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400,"参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ConfirmBuyTip(request,basedata);
+            return null;
         }
     }
 }

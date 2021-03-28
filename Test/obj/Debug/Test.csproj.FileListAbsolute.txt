@@ -1,0 +1,7 @@
+F:\项目\饭票后端\Test\bin\Debug\Test.exe.config
+F:\项目\饭票后端\Test\bin\Debug\Test.exe
+F:\项目\饭票后端\Test\bin\Debug\Test.pdb
+F:\项目\饭票后端\Test\obj\Debug\Test.csproj.CoreCompileInputs.cache
+F:\项目\饭票后端\Test\obj\Debug\Test.exe
+F:\项目\饭票后端\Test\obj\Debug\Test.pdb
+F:\项目\饭票后端\Test\obj\Debug\Test.csprojAssemblyReference.cache

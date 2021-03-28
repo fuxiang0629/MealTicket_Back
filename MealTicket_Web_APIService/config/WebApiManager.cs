@@ -3,6 +3,7 @@ using MealTicket_Web_Handler;
 using Microsoft.Owin.Hosting;
 using Ninject;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace MealTicket_Web_APIService
@@ -16,6 +17,8 @@ namespace MealTicket_Web_APIService
         /// 依赖注入
         /// </summary>
         public static IKernel Kernel { get; set; }
+
+        public static List<Runner> runners;
 
         public Singleton session;
 
@@ -43,6 +46,13 @@ namespace MealTicket_Web_APIService
             {
                 session.Dispose();
             }
+            if (runners != null)
+            {
+                foreach (var item in runners)
+                {
+                    item.Dispose();
+                }
+            }
         }
 
         /// <summary>
@@ -69,10 +79,14 @@ namespace MealTicket_Web_APIService
         {
             //框架内部缓存信息
             session = Singleton.Instance;
+            if (session.mqHandler != null)
+            {
+                session.mqHandler.Reconnect();
+            }
             //加载依赖注入
             Kernel = LoadKernel();   
             //加载循环任务
-            var runners = Kernel.GetAll<Runner>().ToList();
+            runners = Kernel.GetAll<Runner>().ToList();
             runners.ForEach(e => e.Run());
             StartOptions options = new StartOptions();
             options.Urls.Add(url);

@@ -18,6 +18,36 @@ namespace MealTicket_Web_Handler
     public class TrendHandler
     {
         /// <summary>
+        /// 获取用户保证金余额
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public AccountWalletInfo AccountGetWalletInfo(DetailsRequest request, HeadBase basedata) 
+        {
+            if (request.Id == 0)
+            {
+                request.Id = basedata.AccountId;
+            }
+            using (var db = new meal_ticketEntities())
+            {
+                var wallet = (from item in db.t_account_wallet
+                              where item.AccountId == request.Id
+                              select item).FirstOrDefault();
+                if (wallet == null)
+                {
+                    return new AccountWalletInfo
+                    {
+                        DepositAmount = 0
+                    };
+                }
+                return new AccountWalletInfo
+                {
+                    DepositAmount = wallet.Deposit / 100 * 100
+                };
+            }
+        }
+
+        /// <summary>
         /// 根据股票代码/名称/简拼获取股票列表
         /// </summary>
         /// <param name="request"></param>
@@ -85,14 +115,15 @@ namespace MealTicket_Web_Handler
                                    select item).FirstOrDefault();
                     if (account == null)
                     {
-                        throw new WebApiException(400,"登入失败");
+                        throw new WebApiException(400, "登入失败");
                     }
                     tran.Commit();
 
                     return new AccountLoginInfo
                     {
                         Token = token,
-                        RecommandCode= account.RecommandCode
+                        AccountId=accountId,
+                        RecommandCode = account.RecommandCode
                     };
                 }
                 catch (WebApiException ex)
@@ -1814,6 +1845,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                         SharesName = item.item2.SharesName,
                         HoldId = item.item.Id,
                         Market = item.item.Market,
+                        FundAmount=item.item.FundAmount/100*100,
                         RemainDeposit = item.item.RemainDeposit / 100 * 100,
                         PresentPrice = PresentPrice,
                         BuyTotalAmount = item.item.BuyTotalAmount,
@@ -1822,8 +1854,8 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                         MarketValue = MarketValue / 100 * 100,
                         CanSellCount = item.item.CanSoldCount,
                         ProfitAmount = ProfitAmount / 100 * 100,
-                        TodayRiseAmount= PresentPrice - ClosedPrice,
-                        ClosedPrice= ClosedPrice,
+                        TodayRiseAmount = PresentPrice - ClosedPrice,
+                        ClosedPrice = ClosedPrice,
                         ClosingTime = item.item.ClosingTime,
                         ClosingLineList = closingList
                     });
@@ -1924,7 +1956,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                   IsExecuteClosing = item.IsExecuteClosing,
                                   Market = item.Market,
                                   SoldType = item.Type,
-                                  Deposit=item.FreezeDeposit
+                                  Deposit = item.FreezeDeposit
                               }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
 
                 foreach (var item in result)
@@ -2316,7 +2348,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                         catch (Exception ex)
                         {
                             error = ex.Message;
-                            Logger.WriteFileLog("购买失败",ex);
+                            Logger.WriteFileLog("购买失败", ex);
                             tran.Rollback();
                         }
                     }
@@ -2325,7 +2357,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 {
                     throw new WebApiException(400, error);
                 }
-                bool isSendSuccess = MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new { type = 1, data = sendDataList })), "SharesBuy", "s1");
+                bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new { type = 1, data = sendDataList })), "SharesBuy", "s1");
                 if (!isSendSuccess)
                 {
                     throw new WebApiException(400, "买入失败,请撤销重试");
@@ -2353,7 +2385,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                             select item).FirstOrDefault();
                 if (hold == null)
                 {
-                    throw new WebApiException(400,"持仓不存在");
+                    throw new WebApiException(400, "持仓不存在");
                 }
                 List<dynamic> sellList = new List<dynamic>();
                 if (hold.AccountId == basedata.AccountId)//自己卖
@@ -2410,7 +2442,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 {
                     try
                     {
-                        Dictionary<string,List<dynamic>> sendDataDic = new Dictionary<string, List<dynamic>>();
+                        Dictionary<string, List<dynamic>> sendDataDic = new Dictionary<string, List<dynamic>>();
                         foreach (var sell in sellList)
                         {
                             if (sell.SellCount <= 0)
@@ -2489,7 +2521,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
 
                         foreach (var item in sendDataDic)
                         {
-                            MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new { type = 1, data = item.Value })), "SharesSell", item.Key);
+                            Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new { type = 1, data = item.Value })), "SharesSell", item.Key);
                         }
                         tran.Commit();
                     }
@@ -2598,7 +2630,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                     EntrustId = entrustId,
                                     CancelTime = DateTime.Now.ToString("yyyy-MM-dd")
                                 };
-                                bool isSendSuccess = MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesCancel", "s1");
+                                bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesCancel", "s1");
                             }
                             else
                             {
@@ -2620,7 +2652,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                         throw new WebApiException(400, "服务器配置有误");
                                     }
 
-                                    bool isSendSuccess = MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesCancel", server.ServerId);
+                                    bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesCancel", server.ServerId);
                                     if (!isSendSuccess)
                                     {
                                         throw new WebApiException(400, "撤销失败,请重试");
@@ -2743,13 +2775,13 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public PageRes<AccountFollowRecordInfo> GetAccountFollowRecord(GetAccountFollowRecordRequest request, HeadBase basedata) 
+        public PageRes<AccountFollowRecordInfo> GetAccountFollowRecord(GetAccountFollowRecordRequest request, HeadBase basedata)
         {
             using (var db = new meal_ticketEntities())
             {
                 var entrstList = from item in db.t_account_shares_entrust
                                  join item2 in db.t_account_baseinfo on item.AccountId equals item2.Id
-                                 where item.AccountId==basedata.AccountId
+                                 where item.AccountId == basedata.AccountId
                                  select new { item, item2 };
                 if (request.Type == 1)
                 {
@@ -2765,14 +2797,14 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 }
                 else
                 {
-                    throw new WebApiException(400,"参数错误");
+                    throw new WebApiException(400, "参数错误");
                 }
 
                 var followList = from item in db.t_account_shares_entrust_follow
                                  join item2 in db.t_account_shares_entrust on item.FollowEntrustId equals item2.Id
                                  join item3 in db.t_account_baseinfo on item.FollowAccountId equals item3.Id
                                  where item.MainAccountId == basedata.AccountId
-                                 select new { item, item2,item3 };
+                                 select new { item, item2, item3 };
 
                 var result = from item in entrstList
                              join item2 in followList on item.item.Id equals item2.item.MainEntrustId into a
@@ -2793,33 +2825,1361 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                             orderby item.Key.item.CreateTime descending
                             select new AccountFollowRecordInfo
                             {
-                                CreateTime=item.Key.item.CreateTime,
-                                Status=item.Key.item.Status,
-                                EntrustId=item.Key.item.Id,
-                                AccountInfo=item.Key.item2.Mobile+(string.IsNullOrEmpty(item.Key.item2.NickName) ?"":"("+item.Key.item2.NickName+")"),
+                                CreateTime = item.Key.item.CreateTime,
+                                Status = item.Key.item.Status,
+                                EntrustId = item.Key.item.Id,
+                                AccountInfo = item.Key.item2.Mobile + (string.IsNullOrEmpty(item.Key.item2.NickName) ? "" : "(" + item.Key.item2.NickName + ")"),
                                 DealCount = item.Key.item.DealCount,
                                 EntrustCount = item.Key.item.EntrustCount,
                                 EntrustPrice = item.Key.item.EntrustPrice,
                                 EntrustType = item.Key.item.EntrustType,
                                 TradeType = item.Key.item.TradeType,
-                                IsFollow=false,
+                                IsFollow = false,
                                 FollowList = (from x in item
                                               where x.ai != null
                                               orderby x.ai.item2.CreateTime descending
                                               select new AccountFollowRecordInfo
                                               {
-                                                  EntrustId=x.ai.item2.Id,
+                                                  EntrustId = x.ai.item2.Id,
                                                   AccountInfo = x.ai.item3.Mobile + (string.IsNullOrEmpty(x.ai.item3.NickName) ? "" : "(" + x.ai.item3.NickName + ")"),
                                                   DealCount = x.ai.item2.DealCount,
                                                   EntrustCount = x.ai.item2.EntrustCount,
                                                   EntrustPrice = x.ai.item2.EntrustPrice,
                                                   EntrustType = x.ai.item2.EntrustType,
                                                   TradeType = x.ai.item2.TradeType,
-                                                  IsFollow=true,
-                                                  CreateTime= x.ai.item2.CreateTime,
+                                                  IsFollow = true,
+                                                  CreateTime = x.ai.item2.CreateTime,
                                               }).ToList()
                             }).ToList()
                 };
+            }
+        }
+
+        /// <summary>
+        /// 获取条件单列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public List<AccountHoldConditionTradeInfo> GetAccountHoldConditionTradeList(GetAccountHoldConditionTradeListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var conditiontrade = (from item in db.t_account_shares_hold_conditiontrade.AsNoTracking()
+                                      where item.HoldId == request.HoldId && item.Type == request.Type && item.SourceFrom == 1
+                                      select new AccountHoldConditionTradeInfo
+                                      {
+                                          ConditionPrice = item.ConditionPrice,
+                                          ConditionTime = item.ConditionTime,
+                                          EntrustCount = item.EntrustCount,
+                                          EntrustPriceGear = item.EntrustPriceGear,
+                                          EntrustType = item.EntrustType,
+                                          Id = item.Id,
+                                          TriggerTime = item.TriggerTime,
+                                          Status = item.Status,
+                                          ForbidType = item.ForbidType,
+                                          Name = item.Name,
+                                          EntrustId = item.EntrustId,
+                                          ChildList = (from x in db.t_account_shares_hold_conditiontrade_child
+                                                       where x.ConditionId == item.Id
+                                                       select new ConditionChild
+                                                       {
+                                                           Status = x.Status,
+                                                           ChildId = x.ChildId
+                                                       }).ToList()
+                                      }).ToList();
+                foreach (var item in conditiontrade)
+                {
+                    if (item.EntrustId > 0)
+                    {
+                        var entrust = (from x in db.t_account_shares_entrust
+                                       where x.Id == item.EntrustId
+                                       select x).FirstOrDefault();
+                        if (entrust != null)
+                        {
+                            if (item.EntrustType == 2)
+                            {
+                                item.EntrustPrice = entrust.EntrustPrice;
+                            }
+                            item.RelEntrustCount = entrust.EntrustCount;
+                            item.RelDealCount = entrust.DealCount;
+                            item.EntrustStatus = entrust.Status;
+                        }
+                    }
+                }
+                switch (request.Type)
+                {
+                    case 1:
+                        conditiontrade = conditiontrade.OrderBy(e => e.ConditionTime).ToList();
+                        break;
+                    case 2:
+                        conditiontrade = conditiontrade.OrderBy(e => e.ConditionPrice).ToList();
+                        break;
+                    case 3:
+                        conditiontrade = conditiontrade.OrderByDescending(e => e.ConditionPrice).ToList();
+                        break;
+                }
+
+                scope.Complete();
+                return conditiontrade;
+            }
+        }
+
+        /// <summary>
+        /// 添加条件单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void AddAccountHoldConditionTrade(AddAccountHoldConditionTradeRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //判断持仓是否存在
+                    var hold = (from item in db.t_account_shares_hold
+                                where item.Id == request.HoldId
+                                select item).FirstOrDefault();
+                    if (hold == null)
+                    {
+                        throw new WebApiException(400, "持仓不存在");
+                    }
+                    var temp = new t_account_shares_hold_conditiontrade
+                    {
+                        AccountId = hold.AccountId,
+                        ConditionPrice = request.ConditionPrice,
+                        ConditionTime = request.ConditionTime,
+                        CreateTime = DateTime.Now,
+                        EntrustCount = request.EntrustCount,
+                        EntrustPriceGear = request.EntrustPriceGear,
+                        EntrustType = request.EntrustType,
+                        HoldId = request.HoldId,
+                        LastModified = DateTime.Now,
+                        TradeType = request.TradeType,
+                        SourceFrom = 1,
+                        Status = 2,
+                        FatherId = 0,
+                        EntrustId = 0,
+                        ForbidType = request.ForbidType,
+                        Name = string.IsNullOrEmpty(request.Name) ? Guid.NewGuid().ToString("N") : request.Name,
+                        TriggerTime = null,
+                        Type = request.Type
+                    };
+                    db.t_account_shares_hold_conditiontrade.Add(temp);
+                    db.SaveChanges();
+
+                    int i = 0;
+                    foreach (var item in request.ChildList)
+                    {
+                        if (item.ChildId > 0)
+                        {
+                            db.t_account_shares_hold_conditiontrade_child.Add(new t_account_shares_hold_conditiontrade_child
+                            {
+                                Status = item.Status,
+                                ChildId = item.ChildId,
+                                ConditionId = temp.Id,
+                            });
+                            i++;
+                        }
+                    }
+                    if (i > 0)
+                    {
+                        db.SaveChanges();
+                    }
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 编辑条件单
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountHoldConditionTrade(ModifyAccountHoldConditionTradeRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var conditiontrade = (from item in db.t_account_shares_hold_conditiontrade
+                                          where item.Id == request.Id
+                                          select item).FirstOrDefault();
+                    if (conditiontrade == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    if (conditiontrade.TriggerTime != null)
+                    {
+                        throw new WebApiException(400, "已执行无法修改");
+                    }
+                    conditiontrade.EntrustCount = request.EntrustCount;
+                    conditiontrade.EntrustPriceGear = request.EntrustPriceGear;
+                    conditiontrade.EntrustType = request.EntrustType;
+                    conditiontrade.ForbidType = request.ForbidType;
+                    conditiontrade.LastModified = DateTime.Now;
+                    conditiontrade.Name = request.Name;
+                    conditiontrade.ConditionTime = request.ConditionTime;
+                    conditiontrade.ConditionPrice = request.ConditionPrice;
+                    db.SaveChanges();
+
+                    var child = (from item in db.t_account_shares_hold_conditiontrade_child
+                                 where item.ConditionId == request.Id
+                                 select item).ToList();
+                    if (child.Count() > 0)
+                    {
+                        db.t_account_shares_hold_conditiontrade_child.RemoveRange(child);
+                        db.SaveChanges();
+                    }
+
+                    int i = 0;
+                    foreach (var item in request.ChildList)
+                    {
+                        if (item.ChildId > 0)
+                        {
+                            db.t_account_shares_hold_conditiontrade_child.Add(new t_account_shares_hold_conditiontrade_child
+                            {
+                                Status = item.Status,
+                                ChildId = item.ChildId,
+                                ConditionId = request.Id,
+                            });
+                            i++;
+                        }
+                    }
+                    if (i > 0)
+                    {
+                        db.SaveChanges();
+                    }
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 修改触发条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountHoldConditionTradeStatus(ModifyStatusRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var ConditionTrade = (from item in db.t_account_shares_hold_conditiontrade
+                                      where item.Id == request.Id
+                                      select item).FirstOrDefault();
+                if (ConditionTrade == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                if (ConditionTrade.TriggerTime != null)
+                {
+                    throw new WebApiException(400, "已执行无法编辑");
+                }
+                ConditionTrade.Status = request.Status;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除条件单
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void DeleteAccountHoldConditionTrade(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var ConditionTrade = (from item in db.t_account_shares_hold_conditiontrade
+                                      where item.Id == request.Id
+                                      select item).FirstOrDefault();
+                if (ConditionTrade == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                if (ConditionTrade.TriggerTime != null)
+                {
+                    throw new WebApiException(400, "已执行无法删除");
+                }
+                db.t_account_shares_hold_conditiontrade.Remove(ConditionTrade);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取买入条件单股票列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionTradeSharesInfo> GetAccountBuyConditionTradeSharesList(GetAccountBuyConditionTradeSharesListRequest request, HeadBase basedata)
+        {
+            if (request.Id == 0)
+            {
+                request.Id = basedata.AccountId;
+            }
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_account_shares_conditiontrade_buy
+                             join item2 in db.t_shares_all on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
+                             from ai in a.DefaultIfEmpty()
+                             join item3 in db.t_shares_quotes on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into b
+                             from bi in b.DefaultIfEmpty()
+                             where item.AccountId == request.Id
+                             select new { item, ai, bi };
+                if (!string.IsNullOrEmpty(request.SharesInfo))
+                {
+                    result = from item in result
+                             where item.ai != null && (item.ai.SharesCode.Contains(request.SharesInfo) || item.ai.SharesName.Contains(request.SharesInfo) || item.ai.SharesPyjc.StartsWith(request.SharesInfo))
+                             select item;
+                }
+                int totalCount = result.Count();
+
+                return new PageRes<AccountBuyConditionTradeSharesInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in result
+                            orderby item.item.SharesCode
+                            let currPrice = item.bi == null ? 0 : item.bi.PresentPrice
+                            select new AccountBuyConditionTradeSharesInfo
+                            {
+                                SharesCode = item.item.SharesCode,
+                                SharesName = item.ai == null ? "" : item.ai.SharesName,
+                                Status = item.item.Status,
+                                CreateTime = item.item.CreateTime,
+                                CurrPrice = currPrice,
+                                ClosedPrice=item.bi==null?0:item.bi.ClosedPrice,
+                                Id = item.item.Id,
+                                Market = item.item.Market,
+                                RisePrice = item.bi == null ? 0 : (currPrice - item.bi.ClosedPrice),
+                                RiseRate = (item.bi == null || item.bi.ClosedPrice <= 0) ? 0 : (int)((currPrice - item.bi.ClosedPrice) * 1.0 / item.bi.ClosedPrice * 10000)
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加买入条件单股票
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddAccountBuyConditionTradeShares(AddAccountBuyConditionTradeSharesRequest request, HeadBase basedata)
+        {
+            if (request.AccountId == 0)
+            {
+                request.AccountId = basedata.AccountId;
+            }
+            using (var db = new meal_ticketEntities())
+            {
+                //判断股票是否已添加
+                var conditiontrade_buy = (from item in db.t_account_shares_conditiontrade_buy
+                                          where item.AccountId == request.AccountId && item.Market == request.Market && item.SharesCode == request.SharesCode
+                                          select item).FirstOrDefault();
+                if (conditiontrade_buy != null)
+                {
+                    throw new WebApiException(400, "股票已添加");
+                }
+                db.t_account_shares_conditiontrade_buy.Add(new t_account_shares_conditiontrade_buy
+                {
+                    SharesCode = request.SharesCode,
+                    Status = 1,
+                    AccountId = request.AccountId,
+                    CreateTime = DateTime.Now,
+                    LastModified = DateTime.Now,
+                    Market = request.Market
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 批量导入行情监控数据
+        /// </summary>
+        /// <param name="list"></param>
+        public int BatchAddAccountBuyConditionTradeShares(List<SharesInfo> list, long accountId)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //判断是否存在
+                var conditiontrade_buy = (from x in db.t_account_shares_conditiontrade_buy
+                                          where x.AccountId == accountId
+                                          select x).ToList();
+                int resultCount = 0;
+                foreach (var item in list)
+                {
+                    if (conditiontrade_buy.Where(e => e.Market == item.Market && e.SharesCode == item.SharesCode).FirstOrDefault() != null)
+                    {
+                        continue;
+                    }
+                    using (var tran = db.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            db.t_account_shares_conditiontrade_buy.Add(new t_account_shares_conditiontrade_buy 
+                            { 
+                                SharesCode=item.SharesCode,
+                                AccountId=accountId,
+                                CreateTime=DateTime.Now,
+                                LastModified=DateTime.Now,
+                                Market=item.Market,
+                                Status=1
+                            });
+                            db.SaveChanges();
+                            resultCount++;
+                            tran.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            tran.Rollback();
+                            throw ex;
+                        }
+                    }
+                }
+                return resultCount;
+            }
+        }
+
+        /// <summary>
+        /// 删除买入条件单股票
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteAccountBuyConditionTradeShares(DeleteRequest request) 
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran=db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var result = (from item in db.t_account_shares_conditiontrade_buy
+                                  where item.Id == request.Id
+                                  select item).FirstOrDefault();
+                    if (result == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    db.t_account_shares_conditiontrade_buy.Remove(result);
+                    db.SaveChanges();
+
+                    //删除条件
+                    string sql = @"delete t_account_shares_conditiontrade_buy_details where ConditionId={0}";
+                    db.Database.ExecuteSqlCommand(string.Format(sql, request.Id));
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取股票买入条件列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionInfo> GetAccountBuyConditionList(DetailsPageRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var BuyConditionList = from item in db.t_account_shares_conditiontrade_buy_details
+                                       where item.ConditionId == request.Id
+                                       select item;
+                int totalCount = BuyConditionList.Count();
+
+                return new PageRes<AccountBuyConditionInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in BuyConditionList
+                            join item2 in db.t_account_shares_entrust on item.EntrustId equals item2.Id into a from ai in a.DefaultIfEmpty()
+                            orderby item.CreateTime
+                            select new AccountBuyConditionInfo
+                            {
+                                BuyAuto = item.BuyAuto,
+                                Status = item.Status,
+                                ConditionRelativeRate = item.ConditionRelativeRate,
+                                ConditionRelativeType = item.ConditionRelativeType,
+                                ConditionType = item.ConditionType,
+                                EntrustId = item.EntrustId,
+                                EntrustPrice = item.ConditionPrice,
+                                Id = item.Id,
+                                IsGreater = item.IsGreater,
+                                EntrustType = item.EntrustType,
+                                ForbidType = item.ForbidType,
+                                ConditionPrice = item.ConditionPrice,
+                                TriggerTime = item.TriggerTime,
+                                EntrustPriceGear = item.EntrustPriceGear,
+                                EntrustAmount = item.EntrustAmount,
+                                Name = item.Name,
+                                BusinessStatus=item.BusinessStatus,
+                                EntrustStatus = ai == null ? 0 : ai.Status,
+                                RelDealCount = ai == null ? 0 : ai.DealCount,
+                                RelEntrustCount = ai == null ? 0 : ai.EntrustCount,
+                                OtherConditionCount = (from x in db.t_account_shares_conditiontrade_buy_details_other
+                                                       where x.DetailsId == item.Id
+                                                       select x).Count(),
+                                AutoConditionCount = (from x in db.t_account_shares_conditiontrade_buy_details_auto
+                                                      where x.DetailsId == item.Id
+                                                      select x).Count()
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加股票买入条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddAccountBuyCondition(AddAccountBuyConditionRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //判断股票是否存在
+                var conditiontrade_buy = (from item in db.t_account_shares_conditiontrade_buy
+                                          where item.Id == request.ConditionId
+                                          select item).FirstOrDefault();
+                if (conditiontrade_buy == null)
+                {
+                    throw new WebApiException(400,"设定的股票不存在");
+                }
+
+                db.t_account_shares_conditiontrade_buy_details.Add(new t_account_shares_conditiontrade_buy_details 
+                {
+                    SourceFrom=1,
+                    Status=2,
+                    ConditionId = request.ConditionId,
+                    BuyAuto=request.BuyAuto,
+                    ConditionPrice=request.ConditionPrice,
+                    CreateTime=DateTime.Now,
+                    EntrustAmount=request.EntrustAmount,
+                    EntrustId=0,
+                    EntrustPriceGear=request.EntrustPriceGear,
+                    EntrustType=request.EntrustType,
+                    ForbidType=request.ForbidType,
+                    IsGreater=request.IsGreater,
+                    LastModified=DateTime.Now,
+                    TriggerTime=null,
+                    Name = string.IsNullOrEmpty(request.Name) ? Guid.NewGuid().ToString("N") : request.Name,
+                    ConditionRelativeRate=request.ConditionRelativeRate,
+                    ConditionRelativeType=request.ConditionRelativeType,
+                    ConditionType=request.ConditionType
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 编辑股票买入条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountBuyCondition(ModifyAccountBuyConditionRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var buy_details = (from item in db.t_account_shares_conditiontrade_buy_details
+                                   where item.Id == request.Id
+                                   select item).FirstOrDefault();
+                if (buy_details == null)
+                {
+                    throw new WebApiException(400,"数据不存在");
+                }
+                if (buy_details.TriggerTime != null)
+                {
+                    throw new WebApiException(400, "已执行无法编辑");
+                }
+                buy_details.BuyAuto = request.BuyAuto;
+                buy_details.ConditionPrice = request.ConditionPrice;
+                buy_details.EntrustAmount = request.EntrustAmount;
+                buy_details.EntrustPriceGear = request.EntrustPriceGear;
+                buy_details.EntrustType = request.EntrustType;
+                buy_details.ForbidType = request.ForbidType;
+                buy_details.IsGreater = request.IsGreater;
+                buy_details.LastModified = DateTime.Now;
+                buy_details.Name = string.IsNullOrEmpty(request.Name) ? Guid.NewGuid().ToString("N") : request.Name;
+                buy_details.ConditionRelativeRate = request.ConditionRelativeRate;
+                buy_details.ConditionRelativeType = request.ConditionRelativeType;
+                buy_details.ConditionType = request.ConditionType;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改股票买入条件状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifyAccountBuyConditionStatus(ModifyStatusRequest request, HeadBase basedata) {
+            using (var db = new meal_ticketEntities())
+            {
+                var buy_details = (from item in db.t_account_shares_conditiontrade_buy_details
+                                   where item.Id == request.Id
+                                   select item).FirstOrDefault();
+                if (buy_details == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                if (buy_details.TriggerTime != null)
+                {
+                    throw new WebApiException(400, "已执行无法修改状态");
+                }
+                
+                buy_details.Status = request.Status;
+                buy_details.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除股票买入条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteAccountBuyCondition(DeleteRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var buy_details = (from item in db.t_account_shares_conditiontrade_buy_details
+                                   where item.Id == request.Id
+                                   select item).FirstOrDefault();
+                if (buy_details == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                if (buy_details.TriggerTime != null)
+                {
+                    throw new WebApiException(400, "已执行无法删除");
+                }
+                db.t_account_shares_conditiontrade_buy_details.Remove(buy_details);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取股票买入额外条件分组列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionOtherGroupInfo> GetAccountBuyConditionOtherGroupList(DetailsPageRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var other = from item in db.t_account_shares_conditiontrade_buy_details_other
+                            where item.DetailsId == request.Id
+                            select item;
+                int totalCount = other.Count();
+                return new PageRes<AccountBuyConditionOtherGroupInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in other
+                            orderby item.CreateTime
+                            select new AccountBuyConditionOtherGroupInfo
+                            {
+                                Id=item.Id,
+                                Status = item.Status,
+                                CreateTime = item.CreateTime,
+                                Name = item.Name
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加股票买入额外条件分组
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void AddAccountBuyConditionOtherGroup(AddAccountBuyConditionOtherGroupRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                db.t_account_shares_conditiontrade_buy_details_other.Add(new t_account_shares_conditiontrade_buy_details_other 
+                {
+                    Status=1,
+                    CreateTime=DateTime.Now,
+                    DetailsId=request.DetailsId,
+                    LastModified=DateTime.Now,
+                    Name=request.Name
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 编辑股票买入额外条件分组
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountBuyConditionOtherGroup(ModifyAccountBuyConditionOtherGroupRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var other = (from item in db.t_account_shares_conditiontrade_buy_details_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (other == null)
+                {
+                    throw new WebApiException(400,"数据不存在");
+                }
+                other.Name = request.Name;
+                other.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改股票买入额外条件分组状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountBuyConditionOtherGroupStatus(ModifyStatusRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var other = (from item in db.t_account_shares_conditiontrade_buy_details_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (other == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                other.Status = request.Status;
+                other.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除股票买入额外条件分组
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void DeleteAccountBuyConditionOtherGroup(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var other = (from item in db.t_account_shares_conditiontrade_buy_details_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (other == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_account_shares_conditiontrade_buy_details_other.Remove(other);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取股票买入转自动条件分组列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionAutoGroupInfo> GetAccountBuyConditionAutoGroupList(DetailsPageRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var auto = from item in db.t_account_shares_conditiontrade_buy_details_auto
+                            where item.DetailsId == request.Id
+                            select item;
+                int totalCount = auto.Count();
+                return new PageRes<AccountBuyConditionAutoGroupInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in auto
+                            orderby item.CreateTime
+                            select new AccountBuyConditionAutoGroupInfo
+                            {
+                                Id = item.Id,
+                                Status = item.Status,
+                                CreateTime = item.CreateTime,
+                                Name = item.Name
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加股票买入转自动条件分组
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void AddAccountBuyConditionAutoGroup(AddAccountBuyConditionAutoGroupRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                db.t_account_shares_conditiontrade_buy_details_auto.Add(new t_account_shares_conditiontrade_buy_details_auto
+                {
+                    Status = 1,
+                    CreateTime = DateTime.Now,
+                    DetailsId = request.DetailsId,
+                    LastModified = DateTime.Now,
+                    Name = request.Name
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 编辑股票买入转自动条件分组
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountBuyConditionAutoGroup(ModifyAccountBuyConditionAutoGroupRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var auto = (from item in db.t_account_shares_conditiontrade_buy_details_auto
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (auto == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                auto.Name = request.Name;
+                auto.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改股票买入转自动条件分组状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountBuyConditionAutoGroupStatus(ModifyStatusRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var auto = (from item in db.t_account_shares_conditiontrade_buy_details_auto
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (auto == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                auto.Status = request.Status;
+                auto.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除股票买入转自动条件分组
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void DeleteAccountBuyConditionAutoGroup(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var auto = (from item in db.t_account_shares_conditiontrade_buy_details_auto
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (auto == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_account_shares_conditiontrade_buy_details_auto.Remove(auto);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取股票买入额外条件列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionOtherInfo> GetAccountBuyConditionOtherList(DetailsPageRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = from item in db.t_account_shares_conditiontrade_buy_details_other_trend
+                            where item.OtherId == request.Id
+                            select item;
+                int totalCount = trend.Count();
+
+                return new PageRes<AccountBuyConditionOtherInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trend
+                            orderby item.CreateTime descending
+                            select new AccountBuyConditionOtherInfo
+                            {
+                                Status = item.Status,
+                                TrendId=item.TrendId,
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                TrendDescription = item.TrendDescription,
+                                TrendName = item.TrendName
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加股票买入额外条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddAccountBuyConditionOther(AddAccountBuyConditionOtherRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                db.t_account_shares_conditiontrade_buy_details_other_trend.Add(new t_account_shares_conditiontrade_buy_details_other_trend 
+                {
+                    Status=1,
+                    CreateTime=DateTime.Now,
+                    LastModified=DateTime.Now,
+                    OtherId=request.RelId,
+                    TrendDescription=request.TrendDescription,
+                    TrendId=request.TrendId,
+                    TrendName=request.TrendName
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改股票买入额外条件状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountBuyConditionOtherStatus(ModifyStatusRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_account_shares_conditiontrade_buy_details_other_trend
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400,"数据不存在");
+                }
+                trend.Status = request.Status;
+                trend.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除股票买入额外条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteAccountBuyConditionOther(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_account_shares_conditiontrade_buy_details_other_trend
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_account_shares_conditiontrade_buy_details_other_trend.Remove(trend);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取股票买入转自动条件列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionAutoInfo> GetAccountBuyConditionAutoList(DetailsPageRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = from item in db.t_account_shares_conditiontrade_buy_details_auto_trend
+                            where item.AutoId == request.Id
+                            select item;
+                int totalCount = trend.Count();
+
+                return new PageRes<AccountBuyConditionAutoInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trend
+                            orderby item.CreateTime descending
+                            select new AccountBuyConditionAutoInfo
+                            {
+                                Status = item.Status,
+                                TrendId = item.TrendId,
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                TrendDescription = item.TrendDescription,
+                                TrendName = item.TrendName
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加股票买入转自动条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddAccountBuyConditionAuto(AddAccountBuyConditionAutoRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                db.t_account_shares_conditiontrade_buy_details_auto_trend.Add(new t_account_shares_conditiontrade_buy_details_auto_trend
+                {
+                    Status = 1,
+                    CreateTime = DateTime.Now,
+                    LastModified = DateTime.Now,
+                    AutoId = request.RelId,
+                    TrendDescription = request.TrendDescription,
+                    TrendId = request.TrendId,
+                    TrendName = request.TrendName
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改股票买入转自动条件状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountBuyConditionAutoStatus(ModifyStatusRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_account_shares_conditiontrade_buy_details_auto_trend
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trend.Status = request.Status;
+                trend.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除股票买入转自动条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteAccountBuyConditionAuto(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_account_shares_conditiontrade_buy_details_auto_trend
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_account_shares_conditiontrade_buy_details_auto_trend.Remove(trend);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 查询股票买入额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionOtherParInfo> GetAccountBuyConditionOtherPar(DetailsPageRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = from item in db.t_account_shares_conditiontrade_buy_details_other_trend_par
+                               where item.OtherTrendId==request.Id
+                               select item;
+                int totalCount = trendPar.Count();
+
+                return new PageRes<AccountBuyConditionOtherParInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trendPar
+                            orderby item.CreateTime descending
+                            select new AccountBuyConditionOtherParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                ParamsInfo = item.ParamsInfo
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加股票买入额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddAccountBuyConditionOtherPar(AddAccountBuyConditionOtherParRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                if (request.TrendId != 1)
+                {
+                    var par = (from item in db.t_account_shares_conditiontrade_buy_details_other_trend_par
+                               where item.OtherTrendId == request.RelId
+                               select item).FirstOrDefault();
+                    if (par != null)
+                    {
+                        par.ParamsInfo = request.ParamsInfo;
+                        par.LastModified = DateTime.Now;
+                    }
+                    else
+                    {
+                        db.t_account_shares_conditiontrade_buy_details_other_trend_par.Add(new t_account_shares_conditiontrade_buy_details_other_trend_par
+                        {
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = request.ParamsInfo,
+                            OtherTrendId = request.RelId
+                        });
+                    }
+                }
+                else
+                {
+                    db.t_account_shares_conditiontrade_buy_details_other_trend_par.Add(new t_account_shares_conditiontrade_buy_details_other_trend_par
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        ParamsInfo = request.ParamsInfo,
+                        OtherTrendId = request.RelId
+                    });
+                }
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 编辑股票买入额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountBuyConditionOtherPar(ModifyAccountBuyConditionOtherParRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_conditiontrade_buy_details_other_trend_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trendPar.ParamsInfo = request.ParamsInfo;
+                trendPar.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除股票买入额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteAccountBuyConditionOtherPar(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_conditiontrade_buy_details_other_trend_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_account_shares_conditiontrade_buy_details_other_trend_par.Remove(trendPar);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 查询股票买入转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionAutoParInfo> GetAccountBuyConditionAutoPar(DetailsPageRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = from item in db.t_account_shares_conditiontrade_buy_details_auto_trend_par
+                               where item.AutoTrendId == request.Id
+                               select item;
+                int totalCount = trendPar.Count();
+
+                return new PageRes<AccountBuyConditionAutoParInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trendPar
+                            orderby item.CreateTime descending
+                            select new AccountBuyConditionAutoParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                ParamsInfo = item.ParamsInfo
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加股票买入转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddAccountBuyConditionAutoPar(AddAccountBuyConditionAutoParRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                if (request.TrendId != 1)
+                {
+                    var par = (from item in db.t_account_shares_conditiontrade_buy_details_auto_trend_par
+                               where item.AutoTrendId == request.RelId
+                               select item).FirstOrDefault();
+                    if (par != null)
+                    {
+                        par.ParamsInfo = request.ParamsInfo;
+                        par.LastModified = DateTime.Now;
+                    }
+                    else
+                    {
+                        db.t_account_shares_conditiontrade_buy_details_auto_trend_par.Add(new t_account_shares_conditiontrade_buy_details_auto_trend_par
+                        {
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = request.ParamsInfo,
+                            AutoTrendId = request.RelId
+                        });
+                    }
+                }
+                else
+                {
+                    db.t_account_shares_conditiontrade_buy_details_auto_trend_par.Add(new t_account_shares_conditiontrade_buy_details_auto_trend_par
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        ParamsInfo = request.ParamsInfo,
+                        AutoTrendId = request.RelId
+                    });
+                }
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 编辑股票买入转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountBuyConditionAutoPar(ModifyAccountBuyConditionAutoParRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_conditiontrade_buy_details_auto_trend_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trendPar.ParamsInfo = request.ParamsInfo;
+                trendPar.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除股票买入转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteAccountBuyConditionAutoPar(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_conditiontrade_buy_details_auto_trend_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_account_shares_conditiontrade_buy_details_auto_trend_par.Remove(trendPar);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 查询买入提示列表
+        /// </summary>
+        /// <returns></returns>
+        public List<BuyTipInfo> GetBuyTipList(HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //查询跟投人员
+                var follow = (from item in db.t_account_follow_rel
+                              where item.AccountId == basedata.AccountId
+                              select item.FollowAccountId).ToList();
+                List<long> accountIdList = new List<long>();
+                accountIdList.Add(basedata.AccountId);
+                accountIdList.AddRange(follow);
+
+                var result = (from item in db.t_account_shares_conditiontrade_buy_details
+                              join item2 in db.t_account_shares_conditiontrade_buy on item.ConditionId equals item2.Id
+                              join item3 in db.t_shares_quotes on new { item2.Market, item2.SharesCode } equals new { item3.Market, item3.SharesCode }
+                              join item4 in db.t_account_baseinfo on item2.AccountId equals item4.Id
+                              join item5 in db.t_shares_all on new { item2.Market, item2.SharesCode } equals new { item5.Market, item5.SharesCode }
+                              join item6 in db.t_account_shares_entrust on item.EntrustId equals item6.Id into a
+                              from ai in a.DefaultIfEmpty()
+                              where item.Status == 1 && (item.BusinessStatus == 1 || item.BusinessStatus == 3 || item.BusinessStatus == 4) && item2.Status == 1 && item3.PresentPrice > 0 && item3.ClosedPrice > 0
+                              orderby item.TriggerTime
+                              select new BuyTipInfo
+                              {
+                                  SharesCode = item2.SharesCode,
+                                  SharesName = item5.SharesName,
+                                  AccountMobile = item4.Mobile,
+                                  AccountName = item4.NickName,
+                                  CurrPrice = item3.PresentPrice,
+                                  TriggerTime = item.TriggerTime,
+                                  EntrustPriceGear=item.EntrustPriceGear,
+                                  EntrustAmount=item.EntrustAmount,
+                                  Id = item.Id,
+                                  AccountId=item2.AccountId,
+                                  BuyAuto = item.BusinessStatus == 3 ? true : item.BusinessStatus == 4 ? false : item.BuyAuto,
+                                  RisePrice = item3.PresentPrice - item3.ClosedPrice,
+                                  RiseRate = (int)((item3.PresentPrice - item3.ClosedPrice) * 1.0 / item3.ClosedPrice * 10000),
+                                  Status = item.BusinessStatus == 1 ? 1 : ai == null ? 2 : ai.Status != 3 ? 3 : ai.DealCount <= 0 ? 5 : ai.DealCount >= ai.EntrustCount ? 6 : 4
+                              }).ToList();
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// 确认买入提示
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ConfirmBuyTip(DetailsRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = (from item in db.t_account_shares_conditiontrade_buy_details
+                              where item.Id == request.Id
+                              select item).FirstOrDefault();
+                if (result == null)
+                {
+                    throw new WebApiException(400,"数据不存在");
+                }
+                result.BusinessStatus = 2;
+                db.SaveChanges();
             }
         }
     }

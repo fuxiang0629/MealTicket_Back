@@ -297,6 +297,10 @@ namespace SharesTradeService
                         if (tempInfo.TotalDealCount > item.EntrustCount)
                         {
                             dealCount = item.EntrustCount;
+                            if (tempInfo.DealCount < item.EntrustCount)
+                            {
+                                dealCount = tempInfo.DealCount;
+                            }
                             dealList.Add(new SharesEntrustDealInfo
                             {
                                 DealAmount = dealCount * tempInfo.DealPrice,

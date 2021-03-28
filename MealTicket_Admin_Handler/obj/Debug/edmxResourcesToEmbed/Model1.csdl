@@ -183,6 +183,7 @@
       <Parameter Name="sellType" Mode="In" Type="Int32" />
       <Parameter Name="sellPrice" Mode="In" Type="Int64" />
       <Parameter Name="type" Mode="In" Type="Int32" />
+      <Parameter Name="isFollow" Mode="In" Type="Boolean" />
       <Parameter Name="errorCode" Mode="InOut" Type="Int32" />
       <Parameter Name="errorMessage" Mode="InOut" Type="String" />
       <Parameter Name="sellId" Mode="InOut" Type="Int64" />
@@ -277,6 +278,13 @@
     <EntitySet Name="t_account_shares_optional_trend_rel_tri_record" EntityType="meal_ticketModel.t_account_shares_optional_trend_rel_tri_record" />
     <EntitySet Name="t_goods" EntityType="meal_ticketModel.t_goods" />
     <EntitySet Name="t_account_shares_optional_trend_rel_tri" EntityType="meal_ticketModel.t_account_shares_optional_trend_rel_tri" />
+    <EntitySet Name="t_account_shares_optional_trend_rel_tri_record_statistic" EntityType="meal_ticketModel.t_account_shares_optional_trend_rel_tri_record_statistic" />
+    <EntitySet Name="t_account_follow_rel" EntityType="meal_ticketModel.t_account_follow_rel" />
+    <EntitySet Name="t_app_version" EntityType="meal_ticketModel.t_app_version" />
+    <EntitySet Name="t_account_follow_apply_record" EntityType="meal_ticketModel.t_account_follow_apply_record" />
+    <EntitySet Name="t_account_shares_optional_group" EntityType="meal_ticketModel.t_account_shares_optional_group" />
+    <EntitySet Name="t_account_shares_optional_group_rel" EntityType="meal_ticketModel.t_account_shares_optional_group_rel" />
+    <EntitySet Name="t_shares_limit_fundmultiple_account" EntityType="meal_ticketModel.t_shares_limit_fundmultiple_account" />
   </EntityContainer>
   <EntityType Name="t_admin_department">
     <Key>
@@ -631,6 +639,7 @@
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="RegisterPageUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
     <Property Name="MonitorStatus" Type="Int32" Nullable="false" />
+    <Property Name="CashStatus" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_wallet">
     <Key>
@@ -1517,6 +1526,7 @@
     <Property Name="SendTime" Type="DateTime" Precision="3" />
     <Property Name="MaxSendTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="ErrorMessage" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="JumpUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
   </EntityType>
   <EntityType Name="t_notice_send_record_details">
     <Key>
@@ -1613,6 +1623,7 @@
     <Property Name="AppKey" Type="String" Nullable="false" MaxLength="256" FixedLength="false" Unicode="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="JumpUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
   </EntityType>
   <EntityType Name="t_shares_allot">
     <Key>
@@ -1908,5 +1919,90 @@
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastPushDesc" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="t_account_shares_optional_trend_rel_tri_record_statistic">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="SharesName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="TriTotalCount" Type="Int32" Nullable="false" />
+    <Property Name="TriPushCount" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_follow_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="FollowAccountId" Type="Int64" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_app_version">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="MarketCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="AppVersion" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="AppVersionOrder" Type="Int32" Nullable="false" />
+    <Property Name="ExamineStatus" Type="Int32" Nullable="false" />
+    <Property Name="WebViewUrl" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="WaitTime" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_follow_apply_record">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" />
+    <Property Name="FollowAccountId" Type="Int64" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="StatusDes" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="HandlerTime" Type="DateTime" Precision="3" />
+    <Property Name="FinishTime" Type="DateTime" Precision="3" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_optional_group">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="OrderIndex" Type="Int64" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_optional_group_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OptionalId" Type="Int64" Nullable="false" />
+    <Property Name="GroupId" Type="Int64" Nullable="false" />
+    <Property Name="GroupIsContinue" Type="Boolean" Nullable="false" />
+    <Property Name="ValidStartTime" Type="DateTime" Precision="0" />
+    <Property Name="ValidEndTime" Type="DateTime" Precision="0" />
+  </EntityType>
+  <EntityType Name="t_shares_limit_fundmultiple_account">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FundmultipleId" Type="Int64" Nullable="false" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="FundMultiple" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
 </Schema>
