@@ -122,5 +122,10 @@ namespace MealTicket_Web_Handler.Model
         /// 业务状态0未触发 1触发等待 2已手动确认 3已自动购买 4.已手动购买
         /// </summary>
         public int BusinessStatus { get; set; }
+
+        /// <summary>
+        /// 跟投用户Id列表
+        /// </summary>
+        public List<long> FollowAccountList { get; set; }
     }
 }

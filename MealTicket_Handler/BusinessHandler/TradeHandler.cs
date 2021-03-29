@@ -418,6 +418,7 @@ namespace MealTicket_Handler
                 //总成本-卖出金额
                 long remainAmount = 0;
                 long useRemainDeposit = 0;
+                long totalFundAmount = 0;
                 long otherCost = 0;//其他成本
 
 
@@ -427,6 +428,7 @@ namespace MealTicket_Handler
                     remainAmount = (sharesHold_ing.Sum(e => e.item.item.BuyTotalAmount - e.item.item.SoldAmount)) / 100 * 100;
                     otherCost = DBUtils.CalculateOtherCost(sharesHold_ing.Select(e => e.item.item.Id).ToList(), 1);
                     useRemainDeposit = (sharesHold_ing.Sum(e => e.item.item.RemainDeposit)) / 100 * 100;
+                    totalFundAmount= (sharesHold_ing.Sum(e => e.item.item.FundAmount)) / 100 * 100;
                 }
                 //总盈亏(当前市值-（总成本-卖出金额）)
                 long TotalProfit = 0;
@@ -499,7 +501,8 @@ namespace MealTicket_Handler
                     TotalProfit = TotalProfit,
                     UseRemainDeposit = useRemainDeposit,
                     TodayProfit = RunnerHelper.CheckTodayProfitTime(DateTime.Now) ? TodayProfit : 0,
-                    TotalAssets = TotalMarketValue + RemainDeposit + totalDeposit + EntrustDeposit
+                    TotalAssets = TotalMarketValue + RemainDeposit + totalDeposit + EntrustDeposit,
+                    TotalFundAmount= totalFundAmount
                 };
             }
         }
@@ -603,6 +606,7 @@ namespace MealTicket_Handler
                         HoldId = item.item.Id,
                         Market = item.item.Market,
                         RemainDeposit = item.item.RemainDeposit / 100 * 100,
+                        FundAmount = item.item.FundAmount / 100 * 100,
                         PresentPrice = PresentPrice,
                         BuyTotalAmount = item.item.BuyTotalAmount,
                         CostPrice = item.item.RemainCount > 0 ? (long)(Math.Round((item.item.BuyTotalAmount - item.item.SoldAmount + DBUtils.CalculateOtherCost(new List<long> { item.item.Id }, 1)) * 1.0 / item.item.RemainCount, 0)) : (long)(Math.Round((item.item.BuyTotalAmount + DBUtils.CalculateOtherCost(new List<long> { item.item.Id }, 1)) * 1.0 / item.item.BuyTotalCount, 0)),

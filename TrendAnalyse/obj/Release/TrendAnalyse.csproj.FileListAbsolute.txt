@@ -31,7 +31,6 @@ F:\项目\饭票后端\TrendAnalyse\bin\Release\System.Runtime.CompilerServices.
 F:\项目\饭票后端\TrendAnalyse\bin\Release\System.Threading.Channels.xml
 F:\项目\饭票后端\TrendAnalyse\bin\Release\System.Threading.Tasks.Extensions.xml
 F:\项目\饭票后端\TrendAnalyse\obj\Release\TrendAnalyse.csproj.CopyComplete
-F:\项目\饭票后端\TrendAnalyse\obj\Release\TrendAnalyse.csprojAssemblyReference.cache
 D:\项目\饭票\后端\TrendAnalyse\bin\Release\TrendAnalyse.exe.config
 D:\项目\饭票\后端\TrendAnalyse\bin\Release\TrendAnalyse.exe
 D:\项目\饭票\后端\TrendAnalyse\bin\Release\TrendAnalyse.pdb

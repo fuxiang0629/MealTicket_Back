@@ -320,7 +320,7 @@ namespace SharesTradeService
                                 dealList = relDealList;
                             }
                         }
-                        bool isSuccess = TradeFinish(item.Id, tempInfo.DealPrice, dealCount, tempInfo.Status, dealList, relDealList);
+                        bool isSuccess = TradeFinish(item.Id, tempInfo.DealPrice, dealCount, tempInfo.Status, dealList, relDealList,db);
                         tempInfo.DealCount = tempInfo.DealCount - dealCount;
 
                         if (isSuccess)
@@ -483,13 +483,30 @@ namespace SharesTradeService
             }
         }
 
-        private bool TradeFinish(long Id,long DealPrice,int DealCount,int Status,List<SharesEntrustDealInfo> dealList, List<SharesEntrustDealInfo> realDealList) 
+        private bool TradeFinish(long Id, long DealPrice, int DealCount, int Status, List<SharesEntrustDealInfo> dealList, List<SharesEntrustDealInfo> realDealList, meal_ticketEntities db)
         {
-            using (var db = new meal_ticketEntities())
             using (var tran = db.Database.BeginTransaction())
             {
                 try
                 {
+                    if (Status == 2)//终结态
+                    {
+                        db.P_TradeFinish(Id, DealPrice, DealCount);
+                    }
+                    else
+                    {
+                        var entrustManager = (from item in db.t_account_shares_entrust_manager
+                                              where item.Id == Id
+                                              select item).FirstOrDefault();
+                        if (entrustManager != null)
+                        {
+                            entrustManager.DealCount = DealCount;
+                            entrustManager.DealPrice = DealPrice;
+                            entrustManager.DealAmount = DealCount * DealPrice;
+
+                            db.SaveChanges();
+                        }
+                    }
                     if (dealList != null)
                     {
                         var details = (from item in db.t_account_shares_entrust_manager_dealdetails
@@ -540,24 +557,6 @@ namespace SharesTradeService
                         }
                         db.SaveChanges();
                     }
-                    if (Status == 2)//终结态
-                    {
-                        db.P_TradeFinish(Id, DealPrice, DealCount);
-                    }
-                    else
-                    {
-                        var entrustManager = (from item in db.t_account_shares_entrust_manager
-                                              where item.Id == Id
-                                              select item).FirstOrDefault();
-                        if (entrustManager != null)
-                        {
-                            entrustManager.DealCount = DealCount;
-                            entrustManager.DealPrice = DealPrice;
-                            entrustManager.DealAmount = DealCount * DealPrice;
-
-                            db.SaveChanges();
-                        }
-                    }
 
                     tran.Commit();
                     return true;
@@ -565,12 +564,10 @@ namespace SharesTradeService
                 catch (Exception ex)
                 {
                     tran.Rollback();
-                    Logger.WriteFileLog("查询结果数据库出错",ex);
+                    Logger.WriteFileLog("查询结果数据库出错", ex);
                     return false;
                 }
             }
         }
-   
-         
     }
 }

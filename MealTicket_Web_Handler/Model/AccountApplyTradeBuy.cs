@@ -46,5 +46,10 @@ namespace MealTicket_Web_Handler
         /// 跟投人员列表
         /// </summary>
         public List<long> FollowList { get; set; }
+
+        /// <summary>
+        /// 自动买入Id
+        /// </summary>
+        public long AutoDetailsId { get; set; }
     }
 }

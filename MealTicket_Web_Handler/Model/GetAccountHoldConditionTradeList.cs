@@ -41,6 +41,21 @@ namespace MealTicket_Web_Handler.Model
         public DateTime? ConditionTime { get; set; }
 
         /// <summary>
+        /// 价格类型1绝对价格 2相对价格
+        /// </summary>
+        public int ConditionType { get; set; }
+
+        /// <summary>
+        /// 相对条件1.涨停 2跌停 3百分比
+        /// </summary>
+        public int ConditionRelativeType { get; set; }
+
+        /// <summary>
+        /// 价格相对百分比 1/万
+        /// </summary>
+        public int ConditionRelativeRate { get; set; }
+
+        /// <summary>
         /// 指定价格
         /// </summary>
         public long? ConditionPrice { get; set; }

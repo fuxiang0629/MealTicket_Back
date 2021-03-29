@@ -72,5 +72,10 @@ namespace MealTicket_Web_Handler.Model
         /// 是否自动买入
         /// </summary>
         public bool BuyAuto { get; set; }
+
+        /// <summary>
+        /// 跟投用户Id列表
+        /// </summary>
+        public List<long> FollowAccountList { get; set; }
     }
 }

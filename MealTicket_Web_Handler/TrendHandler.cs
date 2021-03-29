@@ -2290,12 +2290,14 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
 
                 List<dynamic> sendDataList = new List<dynamic>();
                 string error = "";
+                int i = 0;
                 foreach (var buy in buyList)
                 {
                     if (buy.BuyAmount <= 0)
                     {
                         continue;
                     }
+                    long buyId = 0;
                     using (var tran = db.Database.BeginTransaction())
                     {
                         try
@@ -2310,7 +2312,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                             {
                                 throw new WebApiException(errorCode, errorMessage);
                             }
-                            long buyId = (long)buyIdDb.Value;
+                            buyId = (long)buyIdDb.Value;
 
                             var entrust = (from item in db.t_account_shares_entrust
                                            where item.Id == buyId
@@ -2344,12 +2346,26 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                             });
 
                             tran.Commit();
+                            i++;
                         }
                         catch (Exception ex)
                         {
                             error = ex.Message;
                             Logger.WriteFileLog("购买失败", ex);
                             tran.Rollback();
+                        }
+                    }
+
+                    if (request.AutoDetailsId>0 && i==1 && buyId>0)
+                    {
+                        var details = (from x in db.t_account_shares_conditiontrade_buy_details
+                                       where x.Id == request.AutoDetailsId
+                                       select x).FirstOrDefault();
+                        if (details != null)
+                        {
+                            details.BusinessStatus = 4;
+                            details.EntrustId = buyId;
+                            db.SaveChanges();
                         }
                     }
                 }
@@ -2879,6 +2895,9 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                           Status = item.Status,
                                           ForbidType = item.ForbidType,
                                           Name = item.Name,
+                                          ConditionRelativeRate=item.ConditionRelativeRate,
+                                          ConditionRelativeType=item.ConditionRelativeType,
+                                          ConditionType=item.ConditionType,
                                           EntrustId = item.EntrustId,
                                           ChildList = (from x in db.t_account_shares_hold_conditiontrade_child
                                                        where x.ConditionId == item.Id
@@ -2957,6 +2976,9 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                         HoldId = request.HoldId,
                         LastModified = DateTime.Now,
                         TradeType = request.TradeType,
+                        ConditionRelativeRate=request.ConditionRelativeRate,
+                        ConditionRelativeType=request.ConditionRelativeType,
+                        ConditionType=request.ConditionType,
                         SourceFrom = 1,
                         Status = 2,
                         FatherId = 0,
@@ -3025,6 +3047,9 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                     conditiontrade.ForbidType = request.ForbidType;
                     conditiontrade.LastModified = DateTime.Now;
                     conditiontrade.Name = request.Name;
+                    conditiontrade.ConditionType = request.ConditionType;
+                    conditiontrade.ConditionRelativeRate = request.ConditionRelativeRate;
+                    conditiontrade.ConditionRelativeType = request.ConditionRelativeType;
                     conditiontrade.ConditionTime = request.ConditionTime;
                     conditiontrade.ConditionPrice = request.ConditionPrice;
                     db.SaveChanges();
@@ -3322,7 +3347,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                 EntrustPriceGear = item.EntrustPriceGear,
                                 EntrustAmount = item.EntrustAmount,
                                 Name = item.Name,
-                                BusinessStatus=item.BusinessStatus,
+                                BusinessStatus = item.BusinessStatus,
                                 EntrustStatus = ai == null ? 0 : ai.Status,
                                 RelDealCount = ai == null ? 0 : ai.DealCount,
                                 RelEntrustCount = ai == null ? 0 : ai.EntrustCount,
@@ -3331,7 +3356,10 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                                        select x).Count(),
                                 AutoConditionCount = (from x in db.t_account_shares_conditiontrade_buy_details_auto
                                                       where x.DetailsId == item.Id
-                                                      select x).Count()
+                                                      select x).Count(),
+                                FollowAccountList = (from x in db.t_account_shares_conditiontrade_buy_details_follow
+                                                     where x.DetailsId == item.Id
+                                                     select x.FollowAccountId).ToList()
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
                 };
             }
@@ -3344,38 +3372,60 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
         public void AddAccountBuyCondition(AddAccountBuyConditionRequest request, HeadBase basedata) 
         {
             using (var db = new meal_ticketEntities())
+            using (var tran=db.Database.BeginTransaction())
             {
-                //判断股票是否存在
-                var conditiontrade_buy = (from item in db.t_account_shares_conditiontrade_buy
-                                          where item.Id == request.ConditionId
-                                          select item).FirstOrDefault();
-                if (conditiontrade_buy == null)
+                try
                 {
-                    throw new WebApiException(400,"设定的股票不存在");
-                }
+                    //判断股票是否存在
+                    var conditiontrade_buy = (from item in db.t_account_shares_conditiontrade_buy
+                                              where item.Id == request.ConditionId
+                                              select item).FirstOrDefault();
+                    if (conditiontrade_buy == null)
+                    {
+                        throw new WebApiException(400, "设定的股票不存在");
+                    }
+                    t_account_shares_conditiontrade_buy_details temp = new t_account_shares_conditiontrade_buy_details
+                    {
+                        SourceFrom = 1,
+                        Status = 2,
+                        ConditionId = request.ConditionId,
+                        BuyAuto = request.BuyAuto,
+                        ConditionPrice = request.ConditionPrice,
+                        CreateTime = DateTime.Now,
+                        EntrustAmount = request.EntrustAmount,
+                        EntrustId = 0,
+                        EntrustPriceGear = request.EntrustPriceGear,
+                        EntrustType = request.EntrustType,
+                        ForbidType = request.ForbidType,
+                        IsGreater = request.IsGreater,
+                        LastModified = DateTime.Now,
+                        TriggerTime = null,
+                        Name = string.IsNullOrEmpty(request.Name) ? Guid.NewGuid().ToString("N") : request.Name,
+                        ConditionRelativeRate = request.ConditionRelativeRate,
+                        ConditionRelativeType = request.ConditionRelativeType,
+                        ConditionType = request.ConditionType
+                    };
+                    db.t_account_shares_conditiontrade_buy_details.Add(temp);
+                    db.SaveChanges();
 
-                db.t_account_shares_conditiontrade_buy_details.Add(new t_account_shares_conditiontrade_buy_details 
+                    foreach (var followId in request.FollowAccountList)
+                    {
+                        db.t_account_shares_conditiontrade_buy_details_follow.Add(new t_account_shares_conditiontrade_buy_details_follow 
+                        {
+                            CreateTime=DateTime.Now,
+                            FollowAccountId=followId,
+                            DetailsId= temp.Id
+                        });
+                    }
+                    db.SaveChanges();
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
                 {
-                    SourceFrom=1,
-                    Status=2,
-                    ConditionId = request.ConditionId,
-                    BuyAuto=request.BuyAuto,
-                    ConditionPrice=request.ConditionPrice,
-                    CreateTime=DateTime.Now,
-                    EntrustAmount=request.EntrustAmount,
-                    EntrustId=0,
-                    EntrustPriceGear=request.EntrustPriceGear,
-                    EntrustType=request.EntrustType,
-                    ForbidType=request.ForbidType,
-                    IsGreater=request.IsGreater,
-                    LastModified=DateTime.Now,
-                    TriggerTime=null,
-                    Name = string.IsNullOrEmpty(request.Name) ? Guid.NewGuid().ToString("N") : request.Name,
-                    ConditionRelativeRate=request.ConditionRelativeRate,
-                    ConditionRelativeType=request.ConditionRelativeType,
-                    ConditionType=request.ConditionType
-                });
-                db.SaveChanges();
+                    tran.Rollback();
+                    throw ex;
+                }
             }
         }
 
@@ -3386,31 +3436,62 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
         public void ModifyAccountBuyCondition(ModifyAccountBuyConditionRequest request, HeadBase basedata) 
         {
             using (var db = new meal_ticketEntities())
+            using (var tran=db.Database.BeginTransaction())
             {
-                var buy_details = (from item in db.t_account_shares_conditiontrade_buy_details
-                                   where item.Id == request.Id
-                                   select item).FirstOrDefault();
-                if (buy_details == null)
+                try
                 {
-                    throw new WebApiException(400,"数据不存在");
+                    var buy_details = (from item in db.t_account_shares_conditiontrade_buy_details
+                                       where item.Id == request.Id
+                                       select item).FirstOrDefault();
+                    if (buy_details == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    if (buy_details.TriggerTime != null)
+                    {
+                        throw new WebApiException(400, "已执行无法编辑");
+                    }
+                    buy_details.BuyAuto = request.BuyAuto;
+                    buy_details.ConditionPrice = request.ConditionPrice;
+                    buy_details.EntrustAmount = request.EntrustAmount;
+                    buy_details.EntrustPriceGear = request.EntrustPriceGear;
+                    buy_details.EntrustType = request.EntrustType;
+                    buy_details.ForbidType = request.ForbidType;
+                    buy_details.IsGreater = request.IsGreater;
+                    buy_details.LastModified = DateTime.Now;
+                    buy_details.Name = string.IsNullOrEmpty(request.Name) ? Guid.NewGuid().ToString("N") : request.Name;
+                    buy_details.ConditionRelativeRate = request.ConditionRelativeRate;
+                    buy_details.ConditionRelativeType = request.ConditionRelativeType;
+                    buy_details.ConditionType = request.ConditionType;
+                    db.SaveChanges();
+
+                    var follow = (from item in db.t_account_shares_conditiontrade_buy_details_follow
+                                  where item.DetailsId == request.Id
+                                  select item).ToList();
+                    if (follow.Count() > 0)
+                    {
+                        db.t_account_shares_conditiontrade_buy_details_follow.RemoveRange(follow);
+                        db.SaveChanges();
+                    }
+
+                    foreach (var followId in request.FollowAccountList)
+                    {
+                        db.t_account_shares_conditiontrade_buy_details_follow.Add(new t_account_shares_conditiontrade_buy_details_follow
+                        {
+                            CreateTime = DateTime.Now,
+                            FollowAccountId = followId,
+                            DetailsId = request.Id
+                        });
+                    }
+                    db.SaveChanges();
+
+                    tran.Commit();
                 }
-                if (buy_details.TriggerTime != null)
+                catch (Exception ex)
                 {
-                    throw new WebApiException(400, "已执行无法编辑");
+                    tran.Rollback();
+                    throw ex;
                 }
-                buy_details.BuyAuto = request.BuyAuto;
-                buy_details.ConditionPrice = request.ConditionPrice;
-                buy_details.EntrustAmount = request.EntrustAmount;
-                buy_details.EntrustPriceGear = request.EntrustPriceGear;
-                buy_details.EntrustType = request.EntrustType;
-                buy_details.ForbidType = request.ForbidType;
-                buy_details.IsGreater = request.IsGreater;
-                buy_details.LastModified = DateTime.Now;
-                buy_details.Name = string.IsNullOrEmpty(request.Name) ? Guid.NewGuid().ToString("N") : request.Name;
-                buy_details.ConditionRelativeRate = request.ConditionRelativeRate;
-                buy_details.ConditionRelativeType = request.ConditionRelativeType;
-                buy_details.ConditionType = request.ConditionType;
-                db.SaveChanges();
             }
         }
 
@@ -4149,14 +4230,17 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                   AccountName = item4.NickName,
                                   CurrPrice = item3.PresentPrice,
                                   TriggerTime = item.TriggerTime,
-                                  EntrustPriceGear=item.EntrustPriceGear,
-                                  EntrustAmount=item.EntrustAmount,
+                                  EntrustPriceGear = item.EntrustPriceGear,
+                                  EntrustAmount = item.EntrustAmount,
                                   Id = item.Id,
-                                  AccountId=item2.AccountId,
+                                  AccountId = item2.AccountId,
                                   BuyAuto = item.BusinessStatus == 3 ? true : item.BusinessStatus == 4 ? false : item.BuyAuto,
                                   RisePrice = item3.PresentPrice - item3.ClosedPrice,
                                   RiseRate = (int)((item3.PresentPrice - item3.ClosedPrice) * 1.0 / item3.ClosedPrice * 10000),
-                                  Status = item.BusinessStatus == 1 ? 1 : ai == null ? 2 : ai.Status != 3 ? 3 : ai.DealCount <= 0 ? 5 : ai.DealCount >= ai.EntrustCount ? 6 : 4
+                                  Status = item.BusinessStatus == 1 ? 1 : ai == null ? 2 : ai.Status != 3 ? 3 : ai.DealCount <= 0 ? 5 : ai.DealCount >= ai.EntrustCount ? 6 : 4,
+                                  FollowAccountList = (from x in db.t_account_shares_conditiontrade_buy_details_follow
+                                                       where x.DetailsId == item.Id
+                                                       select x.FollowAccountId).ToList()
                               }).ToList();
                 return result;
             }

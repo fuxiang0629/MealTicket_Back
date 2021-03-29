@@ -102,6 +102,7 @@
     <EntitySet Name="t_account_shares_conditiontrade_buy_details_other" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_other" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_details_other_trend" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_other_trend" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_details_other_trend_par" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_other_trend_par" />
+    <EntitySet Name="t_account_shares_conditiontrade_buy_details_follow" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_follow" />
   </EntityContainer>
   <EntityType Name="t_account_shares_optional">
     <Key>
@@ -726,6 +727,9 @@
     <Property Name="ForbidType" Type="Int32" Nullable="false" />
     <Property Name="Status" Type="Int32" Nullable="false" />
     <Property Name="EntrustId" Type="Int64" Nullable="false" />
+    <Property Name="ConditionType" Type="Int32" Nullable="false" />
+    <Property Name="ConditionRelativeType" Type="Int32" Nullable="false" />
+    <Property Name="ConditionRelativeRate" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_hold_conditiontrade_child">
     <Key>
@@ -840,5 +844,14 @@
     <Property Name="ParamsInfo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_conditiontrade_buy_details_follow">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DetailsId" Type="Int64" Nullable="false" />
+    <Property Name="FollowAccountId" Type="Int64" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
 </Schema>

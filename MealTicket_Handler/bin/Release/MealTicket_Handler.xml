@@ -1857,6 +1857,11 @@
             已用保证金
             </summary>
         </member>
+        <member name="P:MealTicket_Handler.Model.TradeAccountInfo.TotalFundAmount">
+            <summary>
+            总借款
+            </summary>
+        </member>
         <member name="P:MealTicket_Handler.Model.TradeAccountInfo.TotalProfit">
             <summary>
             总盈亏
@@ -2085,6 +2090,11 @@
         <member name="P:MealTicket_Handler.Model.TradeHoldInfo.ClosingTime">
             <summary>
             自动平仓时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.TradeHoldInfo.FundAmount">
+            <summary>
+            剩余借出金额
             </summary>
         </member>
         <member name="P:MealTicket_Handler.Model.TradeHoldInfo.ClosingLineList">

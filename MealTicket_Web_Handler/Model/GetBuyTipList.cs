@@ -81,5 +81,10 @@ namespace MealTicket_Web_Handler.Model
         /// 委托价格档位0市价 1限价买一 2限价买二 3限价买三 4限价买四  5限价买五 6限价卖一 7限价卖二 8限价卖三 9限价卖四  10限价卖五 11涨停卖出 12跌停卖出
         /// </summary>
         public int EntrustPriceGear { get; set; }
+
+        /// <summary>
+        /// 跟投人员
+        /// </summary>
+        public List<long> FollowAccountList { get; set; }
     }
 }

@@ -203,6 +203,9 @@
     <Compile Include="t_account_shares_conditiontrade_buy_details_auto_trend_par.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="t_account_shares_conditiontrade_buy_details_follow.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="t_account_shares_conditiontrade_buy_details_other.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

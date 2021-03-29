@@ -394,7 +394,7 @@ namespace SharesTradeService.Handler
                             //判断卖出账户，生成sellDic
                             foreach (var manager in tradeInfo.Value.EntrustManagerList)
                             {
-                                string sql = @"select top 1 EntrustCount,BuyId from t_account_shares_entrust_manager with(xlock) where Id={0} and TradeType=2 and [Status]=1";
+                                string sql = @"select top 1 EntrustCount,BuyId from t_account_shares_entrust_manager with(TABLOCKX) where Id={0} and TradeType=2 and [Status]=1";
                                 var entrustManager = db.Database.SqlQuery<SellEntrustManagerSelect>(string.Format(sql, manager.EntrustManagerId)).FirstOrDefault();
                                 if (entrustManager == null)
                                 {
@@ -523,8 +523,9 @@ namespace SharesTradeService.Handler
                                 else
                                 {
                                     int dealCount = tradeInfo.Value.SellCount;
-                                    //dealCount = dealCount-99;//系统回收
+                                    //dealCount = dealCount - 99;//系统回收
                                     TestHelper.SendSellOrder(tradeInfo.Value.SharesCode, Math.Round(tradeInfo.Value.EntrustPrice * 1.0 / Singleton.instance.PriceFormat, 2).ToString(), dealCount.ToString(), sResult, sErrInfo);
+                                    //sResult = new StringBuilder();
                                 }
                             }
                             catch (Exception ex)

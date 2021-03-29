@@ -50,7 +50,6 @@ C:\Users\37863\Desktop\项目\饭票后端\FXCommon\obj\Debug\FXCommon.csproj.Co
 C:\Users\37863\Desktop\项目\饭票后端\FXCommon\obj\Debug\FXCommon.csproj.CopyComplete
 C:\Users\37863\Desktop\项目\饭票后端\FXCommon\obj\Debug\FXCommon.dll
 C:\Users\37863\Desktop\项目\饭票后端\FXCommon\obj\Debug\FXCommon.pdb
-F:\项目\饭票后端\FXCommon\obj\Debug\FXCommon.csprojAssemblyReference.cache
 D:\项目\饭票\后端\FXCommon\bin\Debug\FXCommon.dll.config
 D:\项目\饭票\后端\FXCommon\bin\Debug\FXCommon.dll
 D:\项目\饭票\后端\FXCommon\bin\Debug\FXCommon.pdb
@@ -78,3 +77,4 @@ D:\项目\饭票\后端\FXCommon\obj\Debug\FXCommon.csproj.CoreCompileInputs.cac
 D:\项目\饭票\后端\FXCommon\obj\Debug\FXCommon.csproj.CopyComplete
 D:\项目\饭票\后端\FXCommon\obj\Debug\FXCommon.dll
 D:\项目\饭票\后端\FXCommon\obj\Debug\FXCommon.pdb
+F:\项目\饭票后端\FXCommon\obj\Debug\FXCommon.csprojAssemblyReference.cache

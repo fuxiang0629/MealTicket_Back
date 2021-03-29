@@ -33,6 +33,11 @@ namespace MealTicket_Handler.Model
         public long UseRemainDeposit { get; set; }
 
         /// <summary>
+        /// 总借款
+        /// </summary>
+        public long TotalFundAmount { get; set; }
+
+        /// <summary>
         /// 总盈亏
         /// </summary>
         public long TotalProfit { get; set; }

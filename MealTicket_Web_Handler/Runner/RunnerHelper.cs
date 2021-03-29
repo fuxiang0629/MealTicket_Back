@@ -1,7 +1,9 @@
 ﻿using FXCommon.Common;
 using MealTicket_Web_Handler.Model;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity.Core.Objects;
@@ -172,38 +174,62 @@ namespace MealTicket_Web_Handler.Runner
                 var condition = (from item in db.t_account_shares_hold_conditiontrade
                                  join item2 in db.t_account_shares_hold on item.HoldId equals item2.Id
                                  join item3 in db.t_shares_quotes on new { item2.Market, item2.SharesCode } equals new { item3.Market, item3.SharesCode }
-                                 where ((item.Type == 1 && item.ConditionTime != null && item.ConditionTime <= timeNow) || (item.Type == 2 && item3.PresentPrice > 0 && item3.PresentPrice >= item.ConditionPrice) || (item.Type == 3 && item3.PresentPrice > 0 && item3.PresentPrice <= item.ConditionPrice)) && item.TradeType == 2 && item.TriggerTime == null && item2.Status == 1 && SqlFunctions.DateAdd("MI", 1, item3.LastModified) > timeNow && item3.PresentPrice > 0 && item.Status == 1
-                                 group new { item, item2, item3 } by new { item.HoldId, item.Type } into g
+                                 where item.TradeType == 2 && item.TriggerTime == null && item2.Status == 1 && SqlFunctions.DateAdd("MI", 1, item3.LastModified) > timeNow && item3.PresentPrice > 0 && item3.ClosedPrice>0 && item.Status == 1
+                                 group new { item, item2, item3 } by new { item.HoldId, item.Type,item2,item3 } into g
                                  select g).ToList();
                 foreach (var item in condition)
                 {
-                    var holdList = item.Key.Type == 2 ? item.OrderBy(e => e.item.ConditionPrice).ToList() : item.Key.Type == 3 ? item.OrderByDescending(e => e.item.ConditionPrice).ToList() : item.OrderBy(e => e.item.ConditionTime).ToList();
+                    //可卖数量为0不执行
+                    if (item.Key.item2.RemainCount > 0 && item.Key.item2.CanSoldCount <= 0)
+                    {
+                        break;
+                    }
+                    //计算杠杆倍数
+                     //计算涨停价格
+                    long maxPrice;
+                    //计算跌停价格
+                    long minPrice;
+                    var rules = (from x in db.t_shares_limit_fundmultiple
+                                 where (x.LimitMarket == item.Key.item2.Market || x.LimitMarket == -1) && (item.Key.item2.SharesCode.StartsWith(x.LimitKey))
+                                 orderby x.Priority descending, x.FundMultiple
+                                 select x).FirstOrDefault();
+                    if (rules == null)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        maxPrice = ((long)Math.Round((item.Key.item3.ClosedPrice + item.Key.item3.ClosedPrice * (rules.Range * 1.0 / 10000)) / 100)) * 100;
+                        minPrice = ((long)Math.Round((item.Key.item3.ClosedPrice - item.Key.item3.ClosedPrice * (rules.Range * 1.0 / 10000)) / 100)) * 100;
+                    }
+                    var holdList = item.ToList();
+                    if (item.Key.Type == 1)
+                    {
+                        holdList = holdList.Where(e => e.item.ConditionTime != null && e.item.ConditionTime < timeNow).OrderBy(e => e.item.ConditionTime).ToList();
+                    }
+                    else if (item.Key.Type == 2)
+                    {
+                        holdList = (from hold in holdList
+                                    let disPrice = hold.item.ConditionType == 1 ? hold.item.ConditionPrice : (hold.item.ConditionRelativeType == 1 ? maxPrice : hold.item.ConditionRelativeType == 2 ? minPrice : (long)(Math.Round((hold.item.ConditionRelativeRate * 1.0 / 10000 * hold.item3.ClosedPrice + hold.item3.ClosedPrice) / 100) * 100))
+                                    where hold.item3.PresentPrice >= disPrice
+                                    orderby disPrice
+                                    select hold).ToList();
+                    }
+                    else if (item.Key.Type == 3)
+                    {
+                        holdList = (from hold in holdList
+                                    let disPrice = hold.item.ConditionType == 1 ? hold.item.ConditionPrice : (hold.item.ConditionRelativeType == 1 ? maxPrice : hold.item.ConditionRelativeType == 2 ? minPrice : (long)(Math.Round((hold.item.ConditionRelativeRate * 1.0 / 10000 * hold.item3.ClosedPrice + hold.item3.ClosedPrice) / 100) * 100))
+                                    where hold.item3.PresentPrice <= disPrice
+                                    orderby disPrice descending
+                                    select hold).ToList();
+                    }
+                    else 
+                    {
+                        continue;
+                    }
 
                     foreach (var hold in holdList)
                     {
-                        //可卖数量为0不执行
-                        if (hold.item2.RemainCount > 0 && hold.item2.CanSoldCount <= 0)
-                        {
-                            break;
-                        }
-                        //计算杠杆倍数
-                        //计算涨停价格
-                        long maxPrice;
-                        //计算跌停价格
-                        long minPrice;
-                        var rules = (from x in db.t_shares_limit_fundmultiple
-                                     where (x.LimitMarket == hold.item2.Market || x.LimitMarket == -1) && (hold.item2.SharesCode.StartsWith(x.LimitKey))
-                                     orderby x.Priority descending, x.FundMultiple
-                                     select x).FirstOrDefault();
-                        if (rules == null)
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            maxPrice = ((long)Math.Round((hold.item3.ClosedPrice + hold.item3.ClosedPrice * (rules.Range * 1.0 / 10000)) / 100)) * 100;
-                            minPrice = ((long)Math.Round((hold.item3.ClosedPrice - hold.item3.ClosedPrice * (rules.Range * 1.0 / 10000)) / 100)) * 100;
-                        }
                         //涨停不卖出时不执行
                         if (hold.item.ForbidType == 1)
                         {
@@ -531,8 +557,8 @@ namespace MealTicket_Web_Handler.Runner
                             if (tr.TrendId == 4)//指定时间段 
                             {
                                 var temp=JsonConvert.DeserializeObject<dynamic>(par[0]);
-                                List<string> timeList = temp.Times;
-                                if (timeNow >= DateTime.Parse(timeList[0]) && timeNow < DateTime.Parse(timeList[1]))
+                                JArray timeList = temp.Times; 
+                                if (timeNow >= DateTime.Parse(timeList[0].ToString()) && timeNow < DateTime.Parse(timeList[1].ToString()))
                                 {
                                     tempTri = true;
                                     break;
@@ -651,8 +677,8 @@ namespace MealTicket_Web_Handler.Runner
                             if (tr.TrendId == 4)//指定时间段 
                             {
                                 var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
-                                List<string> timeList = temp.Times;
-                                if (timeNow >= DateTime.Parse(timeList[0]) && timeNow < DateTime.Parse(timeList[1]))
+                                JArray timeList = temp.Times;
+                                if (timeNow >= DateTime.Parse(timeList[0].ToString()) && timeNow < DateTime.Parse(timeList[1].ToString()))
                                 {
                                     tempTri = true;
                                     break;
@@ -728,56 +754,136 @@ namespace MealTicket_Web_Handler.Runner
                         }
 
                         item.item.BusinessStatus = 3;
+                        item.item.TriggerTime = DateTime.Now;
                         db.SaveChanges();
 
-                        long buyId = 0;
-                        using (var tran = db.Database.BeginTransaction())
+                        //查询跟投设置
+                        var FollowList = (from x in db.t_account_shares_conditiontrade_buy_details_follow
+                                          where x.DetailsId == item.item.Id
+                                          select x.FollowAccountId).ToList();
+
+
+                        //查询跟投人员
+                        var followList = (from x in db.t_account_follow_rel
+                                          join x2 in db.t_account_baseinfo on x.FollowAccountId equals x2.Id
+                                          join x3 in db.t_account_wallet on x.FollowAccountId equals x3.AccountId
+                                          where x.AccountId == item.item2.AccountId && x2.Status == 1
+                                          select x3).ToList();
+
+                        List<dynamic> buyList = new List<dynamic>();
+                        buyList.Add(new
                         {
-                            try
+                            AccountId = item.item2.AccountId,
+                            BuyAmount = item.item.EntrustAmount
+                        });
+                        //计算本人购买仓位比
+                        var buyRateTemp = (from x in db.t_account_wallet
+                                           where x.AccountId == item.item2.AccountId
+                                           select x).FirstOrDefault();
+                        if (buyRateTemp == null)
+                        {
+                            throw new WebApiException(400, "账户有误");
+                        }
+                        var buyRate = item.item.EntrustAmount * 1.0 / buyRateTemp.Deposit;//仓位占比
+                        foreach (var account in FollowList)
+                        {
+                            var temp = followList.Where(e => e.AccountId == account).FirstOrDefault();
+                            if (temp == null)
                             {
-                                ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
-                                ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
-                                ObjectParameter buyIdDb = new ObjectParameter("buyId", 0);
-                                db.P_ApplyTradeBuy(item.item2.AccountId, item.item2.Market, item.item2.SharesCode, item.item.EntrustAmount,0, EntrustPrice, null, false, errorCodeDb, errorMessageDb, buyIdDb);
-                                int errorCode = (int)errorCodeDb.Value;
-                                string errorMessage = errorMessageDb.Value.ToString();
-                                if (errorCode != 0)
-                                {
-                                    throw new WebApiException(errorCode, errorMessage);
-                                }
-                                buyId = (long)buyIdDb.Value;
-
-                                var entrust = (from x in db.t_account_shares_entrust
-                                               where x.Id == buyId
-                                               select x).FirstOrDefault();
-                                if (entrust == null)
-                                {
-                                    throw new WebApiException(400, "未知错误");
-                                }
-
-                                var sendData = new
-                                {
-                                    BuyId = buyId,
-                                    BuyCount = entrust.EntrustCount,
-                                    BuyTime = DateTime.Now.ToString("yyyy-MM-dd")
-                                };
-                                bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesBuy", "s1");
-                                if (!isSendSuccess)
-                                {
-                                    throw new WebApiException(400, "买入失败,请重试");
-                                }
-                                tran.Commit();
+                                continue;
                             }
-                            catch (Exception ex)
+                            buyList.Add(new
                             {
-                                buyId = 0;
-                                Logger.WriteFileLog("自动买入提交失败", ex);
-                                tran.Rollback();
-                            }
+                                AccountId = account,
+                                BuyAmount = (long)(temp.Deposit * buyRate)
+                            });
                         }
 
-                        item.item.EntrustId = buyId;
-                        db.SaveChanges();
+                        long mainEntrustId = 0;
+
+                        List<dynamic> sendDataList = new List<dynamic>();
+                        string error = "";
+                        int i = 0;
+                        foreach (var buy in buyList)
+                        {
+                            if (buy.BuyAmount <= 0)
+                            {
+                                continue;
+                            }
+                            long buyId = 0;
+                            using (var tran = db.Database.BeginTransaction())
+                            {
+                                try
+                                {
+                                    ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
+                                    ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
+                                    ObjectParameter buyIdDb = new ObjectParameter("buyId", 0);
+                                    db.P_ApplyTradeBuy(buy.AccountId, item.item2.Market, item.item2.SharesCode, buy.BuyAmount, 0, EntrustPrice, null, true, errorCodeDb, errorMessageDb, buyIdDb);
+                                    int errorCode = (int)errorCodeDb.Value;
+                                    string errorMessage = errorMessageDb.Value.ToString();
+                                    if (errorCode != 0)
+                                    {
+                                        throw new WebApiException(errorCode, errorMessage);
+                                    }
+                                    buyId = (long)buyIdDb.Value;
+
+                                    var entrust = (from x in db.t_account_shares_entrust
+                                                   where x.Id == buyId
+                                                   select x).FirstOrDefault();
+                                    if (entrust == null)
+                                    {
+                                        throw new WebApiException(400, "未知错误");
+                                    }
+                                    if (buy.AccountId != item.item2.AccountId)//不是自己买，绑定跟买关系
+                                    {
+                                        db.t_account_shares_entrust_follow.Add(new t_account_shares_entrust_follow
+                                        {
+                                            CreateTime = DateTime.Now,
+                                            MainAccountId = item.item2.AccountId,
+                                            MainEntrustId = mainEntrustId,
+                                            FollowAccountId = buy.AccountId,
+                                            FollowEntrustId = entrust.Id,
+                                        });
+                                        db.SaveChanges();
+                                    }
+                                    else
+                                    {
+                                        mainEntrustId = entrust.Id;
+                                    }
+
+                                    sendDataList.Add(new
+                                    {
+                                        BuyId = buyId,
+                                        BuyCount = entrust.EntrustCount,
+                                        BuyTime = DateTime.Now.ToString("yyyy-MM-dd")
+                                    });
+
+                                    tran.Commit();
+                                    i++;
+                                }
+                                catch (Exception ex)
+                                {
+                                    error = ex.Message;
+                                    Logger.WriteFileLog("购买失败", ex);
+                                    tran.Rollback();
+                                }
+                            }
+
+                            if (buy.AccountId == item.item2.AccountId)
+                            {
+                                item.item.EntrustId = buyId;
+                                db.SaveChanges();
+                            }
+                        }
+                        if (sendDataList.Count() <= 0)
+                        {
+                            throw new WebApiException(400, error);
+                        }
+                        bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new { type = 1, data = sendDataList })), "SharesBuy", "s1");
+                        if (!isSendSuccess)
+                        {
+                            throw new WebApiException(400, "买入失败,请撤销重试");
+                        }
                     }
                 }
             }
