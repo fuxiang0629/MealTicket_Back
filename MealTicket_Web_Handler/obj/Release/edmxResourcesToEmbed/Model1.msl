@@ -806,5 +806,16 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_conditiontrade_buy_trend_par_template">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_trend_par_template">
+        <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_trend_par_template">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="ParamsInfo" ColumnName="ParamsInfo" />
+          <ScalarProperty Name="TrendId" ColumnName="TrendId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

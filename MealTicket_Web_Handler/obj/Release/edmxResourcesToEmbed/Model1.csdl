@@ -103,6 +103,7 @@
     <EntitySet Name="t_account_shares_conditiontrade_buy_details_other_trend" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_other_trend" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_details_other_trend_par" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_other_trend_par" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_details_follow" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_follow" />
+    <EntitySet Name="t_account_shares_conditiontrade_buy_trend_par_template" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_trend_par_template" />
   </EntityContainer>
   <EntityType Name="t_account_shares_optional">
     <Key>
@@ -853,5 +854,15 @@
     <Property Name="DetailsId" Type="Int64" Nullable="false" />
     <Property Name="FollowAccountId" Type="Int64" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_conditiontrade_buy_trend_par_template">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TrendId" Type="Int64" Nullable="false" />
+    <Property Name="ParamsInfo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
 </Schema>
