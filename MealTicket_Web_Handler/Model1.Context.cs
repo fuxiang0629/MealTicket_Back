@@ -77,6 +77,8 @@ namespace MealTicket_Web_Handler
         public virtual DbSet<t_account_shares_conditiontrade_buy_details_other_trend> t_account_shares_conditiontrade_buy_details_other_trend { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_details_other_trend_par> t_account_shares_conditiontrade_buy_details_other_trend_par { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_details_follow> t_account_shares_conditiontrade_buy_details_follow { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_buy_group_rel> t_account_shares_conditiontrade_buy_group_rel { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_buy_group> t_account_shares_conditiontrade_buy_group { get; set; }
     
         public virtual int P_CheckAccountLogin_Web(string token, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter accountId)
         {

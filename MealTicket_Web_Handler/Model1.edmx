@@ -165,6 +165,25 @@
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_buy_group">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountId" Type="bigint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_buy_group_rel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BuyId" Type="bigint" Nullable="false" />
+          <Property Name="GroupId" Type="bigint" Nullable="false" />
+        </EntityType>
         <EntityType Name="t_account_shares_entrust">
           <Key>
             <PropertyRef Name="Id" />
@@ -820,6 +839,8 @@
           <EntitySet Name="t_account_shares_conditiontrade_buy_details_other" EntityType="Self.t_account_shares_conditiontrade_buy_details_other" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_conditiontrade_buy_details_other_trend" EntityType="Self.t_account_shares_conditiontrade_buy_details_other_trend" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_conditiontrade_buy_details_other_trend_par" EntityType="Self.t_account_shares_conditiontrade_buy_details_other_trend_par" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_conditiontrade_buy_group" EntityType="Self.t_account_shares_conditiontrade_buy_group" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_conditiontrade_buy_group_rel" EntityType="Self.t_account_shares_conditiontrade_buy_group_rel" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_entrust" EntityType="Self.t_account_shares_entrust" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_entrust_follow" EntityType="Self.t_account_shares_entrust_follow" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_entrust_manager" EntityType="Self.t_account_shares_entrust_manager" Schema="dbo" store:Type="Tables" />
@@ -966,6 +987,8 @@
           <EntitySet Name="t_account_shares_conditiontrade_buy_details_other_trend" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_other_trend" />
           <EntitySet Name="t_account_shares_conditiontrade_buy_details_other_trend_par" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_other_trend_par" />
           <EntitySet Name="t_account_shares_conditiontrade_buy_details_follow" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_follow" />
+          <EntitySet Name="t_account_shares_conditiontrade_buy_group_rel" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_group_rel" />
+          <EntitySet Name="t_account_shares_conditiontrade_buy_group" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_group" />
         </EntityContainer>
         <EntityType Name="t_account_shares_optional">
           <Key>
@@ -1716,6 +1739,25 @@
           <Property Name="DetailsId" Type="Int64" Nullable="false" />
           <Property Name="FollowAccountId" Type="Int64" Nullable="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_buy_group_rel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BuyId" Type="Int64" Nullable="false" />
+          <Property Name="GroupId" Type="Int64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_buy_group">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -2524,6 +2566,27 @@
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="FollowAccountId" ColumnName="FollowAccountId" />
                 <ScalarProperty Name="DetailsId" ColumnName="DetailsId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_conditiontrade_buy_group_rel">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_group_rel">
+              <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_group_rel">
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="BuyId" ColumnName="BuyId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_conditiontrade_buy_group">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_group">
+              <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_group">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

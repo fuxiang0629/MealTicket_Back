@@ -444,7 +444,7 @@ namespace MealTicket_Web_Handler.Runner
                     }
                     else if (item.item.ConditionType == 2)//相对价格
                     {
-                        if ((item.item.ConditionRelativeType == 1 && presentPrice != maxPrice) || (item.item.ConditionRelativeType == 2 && presentPrice != minPrice) || (item.item.ConditionRelativeType == 3 && presentPrice < ((long)Math.Round((closedPrice + closedPrice * (item.item.ConditionRelativeRate * 1.0 / 10000)) / 100)) * 100))
+                        if ((item.item.ConditionRelativeType == 1 && presentPrice < maxPrice+item.item.ConditionRelativeRate*100) || (item.item.ConditionRelativeType == 2 && presentPrice < minPrice + item.item.ConditionRelativeRate * 100) || (item.item.ConditionRelativeType == 3 && presentPrice < ((long)Math.Round((closedPrice + closedPrice * (item.item.ConditionRelativeRate * 1.0 / 10000)) / 100))* 100))
                         {
                             continue;
                         }
