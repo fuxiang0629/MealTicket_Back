@@ -1328,6 +1328,63 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 获取买入条件分组股票列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/shares/group/shares/list"), HttpPost]
+        [Description("获取买入条件分组股票列表")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionTradeSharesGroupSharesInfo> GetAccountBuyConditionTradeSharesGroupSharesList(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountBuyConditionTradeSharesGroupSharesList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加买入条件分组股票
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/shares/group/shares/add"), HttpPost]
+        [Description("添加买入条件分组股票")]
+        [CheckUserLoginFilter]
+        public object AddAccountBuyConditionTradeSharesGroupShares(AddAccountBuyConditionTradeSharesGroupSharesRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountBuyConditionTradeSharesGroupShares(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除买入条件分组股票
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/shares/group/shares/delete"), HttpPost]
+        [Description("删除买入条件分组股票")]
+        [CheckUserLoginFilter]
+        public object DeleteAccountBuyConditionTradeSharesGroupShares(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountBuyConditionTradeSharesGroupShares(request, basedata);
+            return null;
+        }
+
+
+        /// <summary>
         /// 获取股票买入条件列表
         /// </summary>
         /// <returns></returns>
