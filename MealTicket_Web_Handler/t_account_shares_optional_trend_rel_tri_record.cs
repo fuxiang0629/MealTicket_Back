@@ -15,6 +15,7 @@ namespace MealTicket_Web_Handler
     public partial class t_account_shares_optional_trend_rel_tri_record
     {
         public long Id { get; set; }
+        public long OptionalId { get; set; }
         public long RelId { get; set; }
         public long AccountId { get; set; }
         public int Market { get; set; }
@@ -26,7 +27,6 @@ namespace MealTicket_Web_Handler
         public long TriPrice { get; set; }
         public bool IsPush { get; set; }
         public System.DateTime CreateTime { get; set; }
-        public long OptionalId { get; set; }
         public string TriDesc { get; set; }
     }
 }

@@ -18,8 +18,8 @@ namespace MealTicket_Web_Handler
         public long AccountId { get; set; }
         public int Market { get; set; }
         public string SharesCode { get; set; }
-        public System.DateTime CreateTime { get; set; }
         public bool IsTrendClose { get; set; }
         public int TriCountToday { get; set; }
+        public System.DateTime CreateTime { get; set; }
     }
 }

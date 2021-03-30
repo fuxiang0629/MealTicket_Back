@@ -23,6 +23,7 @@ namespace MealTicket_Web_Handler
         public string RecommandCode { get; set; }
         public Nullable<long> ReferId { get; set; }
         public int ForbidStatus { get; set; }
+        public int CashStatus { get; set; }
         public int MonitorStatus { get; set; }
         public int Status { get; set; }
         public string QrCodeUrl { get; set; }
@@ -33,6 +34,5 @@ namespace MealTicket_Web_Handler
         public string TransactionPassword { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
-        public int CashStatus { get; set; }
     }
 }
