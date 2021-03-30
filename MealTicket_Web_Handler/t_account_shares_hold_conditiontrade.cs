@@ -15,26 +15,26 @@ namespace MealTicket_Web_Handler
     public partial class t_account_shares_hold_conditiontrade
     {
         public long Id { get; set; }
+        public string Name { get; set; }
         public long AccountId { get; set; }
         public long HoldId { get; set; }
         public int Type { get; set; }
         public Nullable<System.DateTime> ConditionTime { get; set; }
+        public int ConditionType { get; set; }
         public Nullable<long> ConditionPrice { get; set; }
+        public int ConditionRelativeType { get; set; }
+        public int ConditionRelativeRate { get; set; }
         public int TradeType { get; set; }
         public int EntrustCount { get; set; }
         public int EntrustType { get; set; }
         public int EntrustPriceGear { get; set; }
         public Nullable<System.DateTime> TriggerTime { get; set; }
         public int SourceFrom { get; set; }
-        public System.DateTime CreateTime { get; set; }
-        public System.DateTime LastModified { get; set; }
-        public string Name { get; set; }
         public long FatherId { get; set; }
         public int ForbidType { get; set; }
         public int Status { get; set; }
         public long EntrustId { get; set; }
-        public int ConditionType { get; set; }
-        public int ConditionRelativeType { get; set; }
-        public int ConditionRelativeRate { get; set; }
+        public System.DateTime CreateTime { get; set; }
+        public System.DateTime LastModified { get; set; }
     }
 }

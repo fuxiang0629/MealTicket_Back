@@ -16,8 +16,12 @@ namespace MealTicket_Web_Handler
     {
         public long Id { get; set; }
         public long ConditionId { get; set; }
+        public string Name { get; set; }
+        public int ConditionType { get; set; }
         public long ConditionPrice { get; set; }
         public bool IsGreater { get; set; }
+        public int ConditionRelativeType { get; set; }
+        public int ConditionRelativeRate { get; set; }
         public long EntrustAmount { get; set; }
         public int EntrustType { get; set; }
         public int EntrustPriceGear { get; set; }
@@ -27,12 +31,8 @@ namespace MealTicket_Web_Handler
         public int Status { get; set; }
         public long EntrustId { get; set; }
         public bool BuyAuto { get; set; }
+        public int BusinessStatus { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
-        public int ConditionType { get; set; }
-        public int ConditionRelativeType { get; set; }
-        public int ConditionRelativeRate { get; set; }
-        public string Name { get; set; }
-        public int BusinessStatus { get; set; }
     }
 }

@@ -107,10 +107,17 @@ namespace MealTicket_Web_Handler
 
         private Singleton()
         {
+            handlerThreadCount = 10;
+            connString_meal_ticket = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
+            connString_transactiondata = ConfigurationManager.ConnectionStrings["ConnectionString_data"].ConnectionString;
+            HeartSecond = 60;
+
             ConnectionString_meal_ticket = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             ConnectionString_meal_ticket_shares_transactiondata = ConfigurationManager.ConnectionStrings["ConnectionString_data"].ConnectionString;
             sqlHelper = new SqlHelper(ConnectionString_meal_ticket);
             SysparUpdate();
+
+
 
             m_stockMonitor = new StockMonitorCore();
             int error=m_stockMonitor.InitCore(ConnectionString_meal_ticket + "|" + ConnectionString_meal_ticket_shares_transactiondata, 0,"");

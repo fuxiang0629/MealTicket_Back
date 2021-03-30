@@ -16,11 +16,11 @@ namespace MealTicket_Web_Handler
     {
         public long Id { get; set; }
         public long OtherId { get; set; }
+        public long TrendId { get; set; }
         public string TrendName { get; set; }
         public string TrendDescription { get; set; }
         public int Status { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
-        public long TrendId { get; set; }
     }
 }

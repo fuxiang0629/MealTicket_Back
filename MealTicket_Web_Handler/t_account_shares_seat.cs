@@ -20,8 +20,8 @@ namespace MealTicket_Web_Handler
         public string Description { get; set; }
         public System.DateTime ValidEndTime { get; set; }
         public int Status { get; set; }
+        public int SourceForm { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
-        public int SourceForm { get; set; }
     }
 }

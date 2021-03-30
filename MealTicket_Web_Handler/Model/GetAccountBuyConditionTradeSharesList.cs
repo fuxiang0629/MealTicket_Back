@@ -69,5 +69,20 @@ namespace MealTicket_Web_Handler.Model
         /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }
+
+        /// <summary>
+        /// 总参数数量
+        /// </summary>
+        public int ParTotalCount { get; set; }
+
+        /// <summary>
+        /// 有效参数数量
+        /// </summary>
+        public int ParValidCount { get; set; }
+
+        /// <summary>
+        /// 已执行参数数量
+        /// </summary>
+        public int ParExecuteCount { get; set; }
     }
 }

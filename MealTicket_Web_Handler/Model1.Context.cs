@@ -27,65 +27,265 @@ namespace MealTicket_Web_Handler
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<t_account_shares_optional> t_account_shares_optional { get; set; }
-        public virtual DbSet<t_shares_quotes> t_shares_quotes { get; set; }
-        public virtual DbSet<t_shares_all> t_shares_all { get; set; }
-        public virtual DbSet<t_shares_monitor_trend_rel> t_shares_monitor_trend_rel { get; set; }
-        public virtual DbSet<t_account_login_token_web> t_account_login_token_web { get; set; }
-        public virtual DbSet<t_system_param> t_system_param { get; set; }
-        public virtual DbSet<t_account_shares_optional_trend_rel> t_account_shares_optional_trend_rel { get; set; }
-        public virtual DbSet<t_account_shares_optional_trend_rel_par> t_account_shares_optional_trend_rel_par { get; set; }
-        public virtual DbSet<t_shares_monitor_trend> t_shares_monitor_trend { get; set; }
-        public virtual DbSet<t_account_shares_seat> t_account_shares_seat { get; set; }
-        public virtual DbSet<t_account_shares_optional_seat_rel> t_account_shares_optional_seat_rel { get; set; }
-        public virtual DbSet<t_shares_today> t_shares_today { get; set; }
-        public virtual DbSet<t_dim_time> t_dim_time { get; set; }
-        public virtual DbSet<t_account_shares_optional_trend_rel_tri_record> t_account_shares_optional_trend_rel_tri_record { get; set; }
-        public virtual DbSet<t_shares_limit_date> t_shares_limit_date { get; set; }
-        public virtual DbSet<t_shares_limit_date_group> t_shares_limit_date_group { get; set; }
-        public virtual DbSet<t_shares_limit_time> t_shares_limit_time { get; set; }
-        public virtual DbSet<t_shares_monitor> t_shares_monitor { get; set; }
-        public virtual DbSet<t_goods> t_goods { get; set; }
-        public virtual DbSet<t_payment_channel> t_payment_channel { get; set; }
-        public virtual DbSet<t_account_shares_optional_group> t_account_shares_optional_group { get; set; }
-        public virtual DbSet<t_shares_markettime> t_shares_markettime { get; set; }
-        public virtual DbSet<t_account_shares_optional_trend_rel_tri> t_account_shares_optional_trend_rel_tri { get; set; }
-        public virtual DbSet<t_account_shares_optional_group_rel> t_account_shares_optional_group_rel { get; set; }
-        public virtual DbSet<t_account_shares_optional_trend_rel_tri_record_statistic> t_account_shares_optional_trend_rel_tri_record_statistic { get; set; }
-        public virtual DbSet<t_account_follow_rel> t_account_follow_rel { get; set; }
+        public virtual DbSet<t_account_api> t_account_api { get; set; }
+        public virtual DbSet<t_account_bank_card> t_account_bank_card { get; set; }
         public virtual DbSet<t_account_baseinfo> t_account_baseinfo { get; set; }
-        public virtual DbSet<t_account_shares_hold> t_account_shares_hold { get; set; }
-        public virtual DbSet<t_account_wallet> t_account_wallet { get; set; }
-        public virtual DbSet<t_account_shares_entrust> t_account_shares_entrust { get; set; }
-        public virtual DbSet<t_account_shares_entrust_follow> t_account_shares_entrust_follow { get; set; }
-        public virtual DbSet<t_account_shares_entrust_manager> t_account_shares_entrust_manager { get; set; }
-        public virtual DbSet<t_account_shares_entrust_manager_dealdetails> t_account_shares_entrust_manager_dealdetails { get; set; }
-        public virtual DbSet<t_shares_limit_fundmultiple> t_shares_limit_fundmultiple { get; set; }
-        public virtual DbSet<t_broker_account_info> t_broker_account_info { get; set; }
-        public virtual DbSet<t_server> t_server { get; set; }
-        public virtual DbSet<t_server_broker_account_rel> t_server_broker_account_rel { get; set; }
-        public virtual DbSet<t_shares_limit_traderules> t_shares_limit_traderules { get; set; }
-        public virtual DbSet<t_shares_limit_traderules_other> t_shares_limit_traderules_other { get; set; }
-        public virtual DbSet<t_account_shares_hold_conditiontrade> t_account_shares_hold_conditiontrade { get; set; }
-        public virtual DbSet<t_account_shares_hold_conditiontrade_child> t_account_shares_hold_conditiontrade_child { get; set; }
+        public virtual DbSet<t_account_cash_record> t_account_cash_record { get; set; }
+        public virtual DbSet<t_account_cash_record_details> t_account_cash_record_details { get; set; }
+        public virtual DbSet<t_account_follow_apply_record> t_account_follow_apply_record { get; set; }
+        public virtual DbSet<t_account_follow_rel> t_account_follow_rel { get; set; }
+        public virtual DbSet<t_account_login_token> t_account_login_token { get; set; }
+        public virtual DbSet<t_account_login_token_web> t_account_login_token_web { get; set; }
+        public virtual DbSet<t_account_loginlog> t_account_loginlog { get; set; }
+        public virtual DbSet<t_account_par_setting> t_account_par_setting { get; set; }
+        public virtual DbSet<t_account_realname> t_account_realname { get; set; }
+        public virtual DbSet<t_account_recommend_prize_type> t_account_recommend_prize_type { get; set; }
+        public virtual DbSet<t_account_recommend_prize_type_level> t_account_recommend_prize_type_level { get; set; }
+        public virtual DbSet<t_account_registerLog> t_account_registerLog { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy> t_account_shares_conditiontrade_buy { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_details> t_account_shares_conditiontrade_buy_details { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_details_auto> t_account_shares_conditiontrade_buy_details_auto { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_details_auto_trend> t_account_shares_conditiontrade_buy_details_auto_trend { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_details_auto_trend_par> t_account_shares_conditiontrade_buy_details_auto_trend_par { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_buy_details_follow> t_account_shares_conditiontrade_buy_details_follow { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_details_other> t_account_shares_conditiontrade_buy_details_other { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_details_other_trend> t_account_shares_conditiontrade_buy_details_other_trend { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_details_other_trend_par> t_account_shares_conditiontrade_buy_details_other_trend_par { get; set; }
-        public virtual DbSet<t_account_shares_conditiontrade_buy_details_follow> t_account_shares_conditiontrade_buy_details_follow { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_buy_group> t_account_shares_conditiontrade_buy_group { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_buy_group_rel> t_account_shares_conditiontrade_buy_group_rel { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_trend_par_template> t_account_shares_conditiontrade_buy_trend_par_template { get; set; }
+        public virtual DbSet<t_account_shares_entrust> t_account_shares_entrust { get; set; }
+        public virtual DbSet<t_account_shares_entrust_follow> t_account_shares_entrust_follow { get; set; }
+        public virtual DbSet<t_account_shares_entrust_manager> t_account_shares_entrust_manager { get; set; }
+        public virtual DbSet<t_account_shares_entrust_manager_dealdetails> t_account_shares_entrust_manager_dealdetails { get; set; }
+        public virtual DbSet<t_account_shares_entrust_manager_dealdetails_real> t_account_shares_entrust_manager_dealdetails_real { get; set; }
+        public virtual DbSet<t_account_shares_hold> t_account_shares_hold { get; set; }
+        public virtual DbSet<t_account_shares_hold_conditiontrade> t_account_shares_hold_conditiontrade { get; set; }
+        public virtual DbSet<t_account_shares_hold_conditiontrade_child> t_account_shares_hold_conditiontrade_child { get; set; }
+        public virtual DbSet<t_account_shares_hold_deposit_changelog> t_account_shares_hold_deposit_changelog { get; set; }
+        public virtual DbSet<t_account_shares_hold_fundamount_changelog> t_account_shares_hold_fundamount_changelog { get; set; }
+        public virtual DbSet<t_account_shares_hold_manager> t_account_shares_hold_manager { get; set; }
+        public virtual DbSet<t_account_shares_optional> t_account_shares_optional { get; set; }
+        public virtual DbSet<t_account_shares_optional_group> t_account_shares_optional_group { get; set; }
+        public virtual DbSet<t_account_shares_optional_group_rel> t_account_shares_optional_group_rel { get; set; }
+        public virtual DbSet<t_account_shares_optional_seat_rel> t_account_shares_optional_seat_rel { get; set; }
+        public virtual DbSet<t_account_shares_optional_trend_rel> t_account_shares_optional_trend_rel { get; set; }
+        public virtual DbSet<t_account_shares_optional_trend_rel_par> t_account_shares_optional_trend_rel_par { get; set; }
+        public virtual DbSet<t_account_shares_optional_trend_rel_tri> t_account_shares_optional_trend_rel_tri { get; set; }
+        public virtual DbSet<t_account_shares_optional_trend_rel_tri_record> t_account_shares_optional_trend_rel_tri_record { get; set; }
+        public virtual DbSet<t_account_shares_optional_trend_rel_tri_record_statistic> t_account_shares_optional_trend_rel_tri_record_statistic { get; set; }
+        public virtual DbSet<t_account_shares_seat> t_account_shares_seat { get; set; }
+        public virtual DbSet<t_account_shares_seat_order> t_account_shares_seat_order { get; set; }
+        public virtual DbSet<t_account_shares_seat_order_details> t_account_shares_seat_order_details { get; set; }
+        public virtual DbSet<t_account_verifyCode> t_account_verifyCode { get; set; }
+        public virtual DbSet<t_account_wallet> t_account_wallet { get; set; }
+        public virtual DbSet<t_account_wallet_change_record> t_account_wallet_change_record { get; set; }
+        public virtual DbSet<t_admin_api> t_admin_api { get; set; }
+        public virtual DbSet<t_admin_baseinfo> t_admin_baseinfo { get; set; }
+        public virtual DbSet<t_admin_department> t_admin_department { get; set; }
+        public virtual DbSet<t_admin_login_token> t_admin_login_token { get; set; }
+        public virtual DbSet<t_admin_loginLog> t_admin_loginLog { get; set; }
+        public virtual DbSet<t_admin_menu> t_admin_menu { get; set; }
+        public virtual DbSet<t_admin_operationLog> t_admin_operationLog { get; set; }
+        public virtual DbSet<t_admin_position> t_admin_position { get; set; }
+        public virtual DbSet<t_admin_right> t_admin_right { get; set; }
+        public virtual DbSet<t_admin_right_api_rel> t_admin_right_api_rel { get; set; }
+        public virtual DbSet<t_admin_role> t_admin_role { get; set; }
+        public virtual DbSet<t_admin_role_rel> t_admin_role_rel { get; set; }
+        public virtual DbSet<t_admin_role_right_rel> t_admin_role_right_rel { get; set; }
+        public virtual DbSet<t_app_version> t_app_version { get; set; }
+        public virtual DbSet<t_authority_account_visitlog> t_authority_account_visitlog { get; set; }
+        public virtual DbSet<t_authority_admin_visitlog> t_authority_admin_visitlog { get; set; }
+        public virtual DbSet<t_bank> t_bank { get; set; }
+        public virtual DbSet<t_banner> t_banner { get; set; }
+        public virtual DbSet<t_banner_group> t_banner_group { get; set; }
+        public virtual DbSet<t_broker> t_broker { get; set; }
+        public virtual DbSet<t_broker_account_info> t_broker_account_info { get; set; }
+        public virtual DbSet<t_broker_account_info_capital> t_broker_account_info_capital { get; set; }
+        public virtual DbSet<t_broker_account_info_position> t_broker_account_info_position { get; set; }
+        public virtual DbSet<t_broker_account_shares_rel> t_broker_account_shares_rel { get; set; }
+        public virtual DbSet<t_broker_account_shares_rel_entrust> t_broker_account_shares_rel_entrust { get; set; }
+        public virtual DbSet<t_broker_department> t_broker_department { get; set; }
+        public virtual DbSet<t_broker_host> t_broker_host { get; set; }
+        public virtual DbSet<t_customerservice_setting> t_customerservice_setting { get; set; }
+        public virtual DbSet<t_dim_time> t_dim_time { get; set; }
+        public virtual DbSet<t_goods> t_goods { get; set; }
+        public virtual DbSet<t_helpcenter_question_content> t_helpcenter_question_content { get; set; }
+        public virtual DbSet<t_helpcenter_question_type> t_helpcenter_question_type { get; set; }
+        public virtual DbSet<t_helpcenter_question_type_content_rel> t_helpcenter_question_type_content_rel { get; set; }
+        public virtual DbSet<t_information> t_information { get; set; }
+        public virtual DbSet<t_message> t_message { get; set; }
+        public virtual DbSet<t_message_group> t_message_group { get; set; }
+        public virtual DbSet<t_message_group_rel> t_message_group_rel { get; set; }
+        public virtual DbSet<t_message_template> t_message_template { get; set; }
+        public virtual DbSet<t_notice_hold> t_notice_hold { get; set; }
+        public virtual DbSet<t_notice_send_record> t_notice_send_record { get; set; }
+        public virtual DbSet<t_notice_send_record_details> t_notice_send_record_details { get; set; }
+        public virtual DbSet<t_notice_setting> t_notice_setting { get; set; }
+        public virtual DbSet<t_page_setting> t_page_setting { get; set; }
+        public virtual DbSet<t_pay_callback> t_pay_callback { get; set; }
+        public virtual DbSet<t_payment_account> t_payment_account { get; set; }
+        public virtual DbSet<t_payment_account_settings> t_payment_account_settings { get; set; }
+        public virtual DbSet<t_payment_cash_channel> t_payment_cash_channel { get; set; }
+        public virtual DbSet<t_payment_cash_channel_refund_account_rel> t_payment_cash_channel_refund_account_rel { get; set; }
+        public virtual DbSet<t_payment_cash_channel_transfer_account_rel> t_payment_cash_channel_transfer_account_rel { get; set; }
+        public virtual DbSet<t_payment_channel> t_payment_channel { get; set; }
+        public virtual DbSet<t_payment_channel_account_rel> t_payment_channel_account_rel { get; set; }
+        public virtual DbSet<t_payment_channel_group> t_payment_channel_group { get; set; }
+        public virtual DbSet<t_platform_wallet> t_platform_wallet { get; set; }
+        public virtual DbSet<t_platform_wallet_change_record> t_platform_wallet_change_record { get; set; }
+        public virtual DbSet<t_push_channel> t_push_channel { get; set; }
+        public virtual DbSet<t_push_channel_app> t_push_channel_app { get; set; }
+        public virtual DbSet<t_push_tag> t_push_tag { get; set; }
+        public virtual DbSet<t_push_template> t_push_template { get; set; }
+        public virtual DbSet<t_recharge_abnormal_refund_record> t_recharge_abnormal_refund_record { get; set; }
+        public virtual DbSet<t_recharge_record> t_recharge_record { get; set; }
+        public virtual DbSet<t_server> t_server { get; set; }
+        public virtual DbSet<t_server_broker_account_rel> t_server_broker_account_rel { get; set; }
+        public virtual DbSet<t_shares_all> t_shares_all { get; set; }
+        public virtual DbSet<t_shares_all_corrigendum> t_shares_all_corrigendum { get; set; }
+        public virtual DbSet<t_shares_all_temp> t_shares_all_temp { get; set; }
+        public virtual DbSet<t_shares_allot> t_shares_allot { get; set; }
+        public virtual DbSet<t_shares_allot_account> t_shares_allot_account { get; set; }
+        public virtual DbSet<t_shares_bars> t_shares_bars { get; set; }
+        public virtual DbSet<t_shares_bars_index> t_shares_bars_index { get; set; }
+        public virtual DbSet<t_shares_bars_index_temp> t_shares_bars_index_temp { get; set; }
+        public virtual DbSet<t_shares_bars_temp> t_shares_bars_temp { get; set; }
+        public virtual DbSet<t_shares_hq_host> t_shares_hq_host { get; set; }
+        public virtual DbSet<t_shares_info_fund_group> t_shares_info_fund_group { get; set; }
+        public virtual DbSet<t_shares_info_fund_group_details> t_shares_info_fund_group_details { get; set; }
+        public virtual DbSet<t_shares_limit> t_shares_limit { get; set; }
+        public virtual DbSet<t_shares_limit_date> t_shares_limit_date { get; set; }
+        public virtual DbSet<t_shares_limit_date_group> t_shares_limit_date_group { get; set; }
+        public virtual DbSet<t_shares_limit_fundmultiple> t_shares_limit_fundmultiple { get; set; }
+        public virtual DbSet<t_shares_limit_fundmultiple_account> t_shares_limit_fundmultiple_account { get; set; }
+        public virtual DbSet<t_shares_limit_risk> t_shares_limit_risk { get; set; }
+        public virtual DbSet<t_shares_limit_time> t_shares_limit_time { get; set; }
+        public virtual DbSet<t_shares_limit_tradequota> t_shares_limit_tradequota { get; set; }
+        public virtual DbSet<t_shares_limit_tradequota_other> t_shares_limit_tradequota_other { get; set; }
+        public virtual DbSet<t_shares_limit_traderules> t_shares_limit_traderules { get; set; }
+        public virtual DbSet<t_shares_limit_traderules_other> t_shares_limit_traderules_other { get; set; }
+        public virtual DbSet<t_shares_markettime> t_shares_markettime { get; set; }
+        public virtual DbSet<t_shares_minutetimedata> t_shares_minutetimedata { get; set; }
+        public virtual DbSet<t_shares_minutetimedata_temp> t_shares_minutetimedata_temp { get; set; }
+        public virtual DbSet<t_shares_monitor> t_shares_monitor { get; set; }
+        public virtual DbSet<t_shares_monitor_details> t_shares_monitor_details { get; set; }
+        public virtual DbSet<t_shares_monitor_trend> t_shares_monitor_trend { get; set; }
+        public virtual DbSet<t_shares_monitor_trend_par> t_shares_monitor_trend_par { get; set; }
+        public virtual DbSet<t_shares_monitor_trend_rel> t_shares_monitor_trend_rel { get; set; }
+        public virtual DbSet<t_shares_monitor_trend_rel_par> t_shares_monitor_trend_rel_par { get; set; }
+        public virtual DbSet<t_shares_quotes> t_shares_quotes { get; set; }
+        public virtual DbSet<t_shares_quotes_date> t_shares_quotes_date { get; set; }
+        public virtual DbSet<t_shares_quotes_temp> t_shares_quotes_temp { get; set; }
+        public virtual DbSet<t_shares_search> t_shares_search { get; set; }
+        public virtual DbSet<t_shares_suspension> t_shares_suspension { get; set; }
+        public virtual DbSet<t_shares_today> t_shares_today { get; set; }
+        public virtual DbSet<t_shares_transactiondata> t_shares_transactiondata { get; set; }
+        public virtual DbSet<t_sms_callback> t_sms_callback { get; set; }
+        public virtual DbSet<t_sms_channel> t_sms_channel { get; set; }
+        public virtual DbSet<t_sms_channel_app> t_sms_channel_app { get; set; }
+        public virtual DbSet<t_sms_sign> t_sms_sign { get; set; }
+        public virtual DbSet<t_sms_template> t_sms_template { get; set; }
+        public virtual DbSet<t_system_param> t_system_param { get; set; }
+        public virtual DbSet<t_test_deal> t_test_deal { get; set; }
+        public virtual DbSet<t_test_entrust> t_test_entrust { get; set; }
+        public virtual DbSet<test> test { get; set; }
     
-        public virtual int P_CheckAccountLogin_Web(string token, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter accountId)
+        [DbFunction("meal_ticketEntities", "fn_split")]
+        public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)
         {
-            var tokenParameter = token != null ?
-                new ObjectParameter("token", token) :
-                new ObjectParameter("token", typeof(string));
+            var p_strParameter = p_str != null ?
+                new ObjectParameter("p_str", p_str) :
+                new ObjectParameter("p_str", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_CheckAccountLogin_Web", tokenParameter, errorCode, errorMessage, accountId);
+            var p_splitParameter = p_split != null ?
+                new ObjectParameter("p_split", p_split) :
+                new ObjectParameter("p_split", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<fn_split_Result>("[meal_ticketEntities].[fn_split](@p_str, @p_split)", p_strParameter, p_splitParameter);
+        }
+    
+        public virtual int P_AccountApplyRealName(Nullable<long> accountId, string imgUrlFront, string imgUrlBack, string realName, Nullable<int> sex, string birthDay, string cardNo, string address, string checkOrg, string validDateFrom, string validDateTo, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var imgUrlFrontParameter = imgUrlFront != null ?
+                new ObjectParameter("imgUrlFront", imgUrlFront) :
+                new ObjectParameter("imgUrlFront", typeof(string));
+    
+            var imgUrlBackParameter = imgUrlBack != null ?
+                new ObjectParameter("imgUrlBack", imgUrlBack) :
+                new ObjectParameter("imgUrlBack", typeof(string));
+    
+            var realNameParameter = realName != null ?
+                new ObjectParameter("realName", realName) :
+                new ObjectParameter("realName", typeof(string));
+    
+            var sexParameter = sex.HasValue ?
+                new ObjectParameter("sex", sex) :
+                new ObjectParameter("sex", typeof(int));
+    
+            var birthDayParameter = birthDay != null ?
+                new ObjectParameter("birthDay", birthDay) :
+                new ObjectParameter("birthDay", typeof(string));
+    
+            var cardNoParameter = cardNo != null ?
+                new ObjectParameter("cardNo", cardNo) :
+                new ObjectParameter("cardNo", typeof(string));
+    
+            var addressParameter = address != null ?
+                new ObjectParameter("address", address) :
+                new ObjectParameter("address", typeof(string));
+    
+            var checkOrgParameter = checkOrg != null ?
+                new ObjectParameter("checkOrg", checkOrg) :
+                new ObjectParameter("checkOrg", typeof(string));
+    
+            var validDateFromParameter = validDateFrom != null ?
+                new ObjectParameter("validDateFrom", validDateFrom) :
+                new ObjectParameter("validDateFrom", typeof(string));
+    
+            var validDateToParameter = validDateTo != null ?
+                new ObjectParameter("validDateTo", validDateTo) :
+                new ObjectParameter("validDateTo", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_AccountApplyRealName", accountIdParameter, imgUrlFrontParameter, imgUrlBackParameter, realNameParameter, sexParameter, birthDayParameter, cardNoParameter, addressParameter, checkOrgParameter, validDateFromParameter, validDateToParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_AccountForgetPassword(string mobile, Nullable<int> actionCode, string verifycode, string newLoginPassword, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var mobileParameter = mobile != null ?
+                new ObjectParameter("mobile", mobile) :
+                new ObjectParameter("mobile", typeof(string));
+    
+            var actionCodeParameter = actionCode.HasValue ?
+                new ObjectParameter("actionCode", actionCode) :
+                new ObjectParameter("actionCode", typeof(int));
+    
+            var verifycodeParameter = verifycode != null ?
+                new ObjectParameter("verifycode", verifycode) :
+                new ObjectParameter("verifycode", typeof(string));
+    
+            var newLoginPasswordParameter = newLoginPassword != null ?
+                new ObjectParameter("newLoginPassword", newLoginPassword) :
+                new ObjectParameter("newLoginPassword", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_AccountForgetPassword", mobileParameter, actionCodeParameter, verifycodeParameter, newLoginPasswordParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_AccountLogin(string mobile, string loginPassword, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter token, ObjectParameter accountId)
+        {
+            var mobileParameter = mobile != null ?
+                new ObjectParameter("mobile", mobile) :
+                new ObjectParameter("mobile", typeof(string));
+    
+            var loginPasswordParameter = loginPassword != null ?
+                new ObjectParameter("loginPassword", loginPassword) :
+                new ObjectParameter("loginPassword", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_AccountLogin", mobileParameter, loginPasswordParameter, errorCode, errorMessage, token, accountId);
         }
     
         public virtual int P_AccountLogin_Web(string mobile, string loginPassword, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter token, ObjectParameter accountId)
@@ -99,6 +299,417 @@ namespace MealTicket_Web_Handler
                 new ObjectParameter("loginPassword", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_AccountLogin_Web", mobileParameter, loginPasswordParameter, errorCode, errorMessage, token, accountId);
+        }
+    
+        public virtual int P_AccountModifyMobile(Nullable<long> accountId, string newMobile, Nullable<int> actionCode, string verifycode, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter token)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var newMobileParameter = newMobile != null ?
+                new ObjectParameter("newMobile", newMobile) :
+                new ObjectParameter("newMobile", typeof(string));
+    
+            var actionCodeParameter = actionCode.HasValue ?
+                new ObjectParameter("actionCode", actionCode) :
+                new ObjectParameter("actionCode", typeof(int));
+    
+            var verifycodeParameter = verifycode != null ?
+                new ObjectParameter("verifycode", verifycode) :
+                new ObjectParameter("verifycode", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_AccountModifyMobile", accountIdParameter, newMobileParameter, actionCodeParameter, verifycodeParameter, errorCode, errorMessage, token);
+        }
+    
+        public virtual int P_AccountModifyPassword(Nullable<long> accountId, string oldLoginPassword, string newLoginPassword, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter token)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var oldLoginPasswordParameter = oldLoginPassword != null ?
+                new ObjectParameter("oldLoginPassword", oldLoginPassword) :
+                new ObjectParameter("oldLoginPassword", typeof(string));
+    
+            var newLoginPasswordParameter = newLoginPassword != null ?
+                new ObjectParameter("newLoginPassword", newLoginPassword) :
+                new ObjectParameter("newLoginPassword", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_AccountModifyPassword", accountIdParameter, oldLoginPasswordParameter, newLoginPasswordParameter, errorCode, errorMessage, token);
+        }
+    
+        public virtual int P_AccountModifyTransactionPassword(Nullable<long> accountId, string oldTransactionPassword, string newTransactionPassword, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var oldTransactionPasswordParameter = oldTransactionPassword != null ?
+                new ObjectParameter("oldTransactionPassword", oldTransactionPassword) :
+                new ObjectParameter("oldTransactionPassword", typeof(string));
+    
+            var newTransactionPasswordParameter = newTransactionPassword != null ?
+                new ObjectParameter("newTransactionPassword", newTransactionPassword) :
+                new ObjectParameter("newTransactionPassword", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_AccountModifyTransactionPassword", accountIdParameter, oldTransactionPasswordParameter, newTransactionPasswordParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_AccountRegister(string mobile, string loginPassword, Nullable<int> actionCode, string verifycode, string referRecommandCode, string regIp, string deviceUA, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter accountId)
+        {
+            var mobileParameter = mobile != null ?
+                new ObjectParameter("mobile", mobile) :
+                new ObjectParameter("mobile", typeof(string));
+    
+            var loginPasswordParameter = loginPassword != null ?
+                new ObjectParameter("loginPassword", loginPassword) :
+                new ObjectParameter("loginPassword", typeof(string));
+    
+            var actionCodeParameter = actionCode.HasValue ?
+                new ObjectParameter("actionCode", actionCode) :
+                new ObjectParameter("actionCode", typeof(int));
+    
+            var verifycodeParameter = verifycode != null ?
+                new ObjectParameter("verifycode", verifycode) :
+                new ObjectParameter("verifycode", typeof(string));
+    
+            var referRecommandCodeParameter = referRecommandCode != null ?
+                new ObjectParameter("referRecommandCode", referRecommandCode) :
+                new ObjectParameter("referRecommandCode", typeof(string));
+    
+            var regIpParameter = regIp != null ?
+                new ObjectParameter("regIp", regIp) :
+                new ObjectParameter("regIp", typeof(string));
+    
+            var deviceUAParameter = deviceUA != null ?
+                new ObjectParameter("deviceUA", deviceUA) :
+                new ObjectParameter("deviceUA", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_AccountRegister", mobileParameter, loginPasswordParameter, actionCodeParameter, verifycodeParameter, referRecommandCodeParameter, regIpParameter, deviceUAParameter, errorCode, errorMessage, accountId);
+        }
+    
+        public virtual int P_AccountSetRefer(Nullable<long> accountId, string recommandCode, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var recommandCodeParameter = recommandCode != null ?
+                new ObjectParameter("recommandCode", recommandCode) :
+                new ObjectParameter("recommandCode", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_AccountSetRefer", accountIdParameter, recommandCodeParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_AccountSetTransactionPassword(string transactionPassword, string userToken, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter token)
+        {
+            var transactionPasswordParameter = transactionPassword != null ?
+                new ObjectParameter("transactionPassword", transactionPassword) :
+                new ObjectParameter("transactionPassword", typeof(string));
+    
+            var userTokenParameter = userToken != null ?
+                new ObjectParameter("userToken", userToken) :
+                new ObjectParameter("userToken", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_AccountSetTransactionPassword", transactionPasswordParameter, userTokenParameter, errorCode, errorMessage, token);
+        }
+    
+        public virtual int P_AccountSharesAllot(Nullable<long> allotId)
+        {
+            var allotIdParameter = allotId.HasValue ?
+                new ObjectParameter("allotId", allotId) :
+                new ObjectParameter("allotId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_AccountSharesAllot", allotIdParameter);
+        }
+    
+        public virtual int P_Admin_AddBackAccount(string userName, string password, string realName, string mobile, Nullable<int> sex, string email, Nullable<long> departmentId, Nullable<long> positionId, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var userNameParameter = userName != null ?
+                new ObjectParameter("userName", userName) :
+                new ObjectParameter("userName", typeof(string));
+    
+            var passwordParameter = password != null ?
+                new ObjectParameter("password", password) :
+                new ObjectParameter("password", typeof(string));
+    
+            var realNameParameter = realName != null ?
+                new ObjectParameter("realName", realName) :
+                new ObjectParameter("realName", typeof(string));
+    
+            var mobileParameter = mobile != null ?
+                new ObjectParameter("mobile", mobile) :
+                new ObjectParameter("mobile", typeof(string));
+    
+            var sexParameter = sex.HasValue ?
+                new ObjectParameter("sex", sex) :
+                new ObjectParameter("sex", typeof(int));
+    
+            var emailParameter = email != null ?
+                new ObjectParameter("email", email) :
+                new ObjectParameter("email", typeof(string));
+    
+            var departmentIdParameter = departmentId.HasValue ?
+                new ObjectParameter("departmentId", departmentId) :
+                new ObjectParameter("departmentId", typeof(long));
+    
+            var positionIdParameter = positionId.HasValue ?
+                new ObjectParameter("positionId", positionId) :
+                new ObjectParameter("positionId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Admin_AddBackAccount", userNameParameter, passwordParameter, realNameParameter, mobileParameter, sexParameter, emailParameter, departmentIdParameter, positionIdParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_Admin_AddBackAccountRole(string roleName, string roleDescription, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var roleNameParameter = roleName != null ?
+                new ObjectParameter("roleName", roleName) :
+                new ObjectParameter("roleName", typeof(string));
+    
+            var roleDescriptionParameter = roleDescription != null ?
+                new ObjectParameter("roleDescription", roleDescription) :
+                new ObjectParameter("roleDescription", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Admin_AddBackAccountRole", roleNameParameter, roleDescriptionParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_Admin_Cash_CancelHandle(Nullable<long> cashRecordId, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var cashRecordIdParameter = cashRecordId.HasValue ?
+                new ObjectParameter("cashRecordId", cashRecordId) :
+                new ObjectParameter("cashRecordId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Admin_Cash_CancelHandle", cashRecordIdParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_Admin_Cash_Finish(Nullable<long> cashRecordId, string remark, Nullable<long> accountId, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var cashRecordIdParameter = cashRecordId.HasValue ?
+                new ObjectParameter("cashRecordId", cashRecordId) :
+                new ObjectParameter("cashRecordId", typeof(long));
+    
+            var remarkParameter = remark != null ?
+                new ObjectParameter("remark", remark) :
+                new ObjectParameter("remark", typeof(string));
+    
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Admin_Cash_Finish", cashRecordIdParameter, remarkParameter, accountIdParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_Admin_Cash_Start(Nullable<long> cashRecordId, string paymentChannel, Nullable<int> type, Nullable<long> paymentAccountId, Nullable<long> applyAmount, string voucherImg, Nullable<long> accountId, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var cashRecordIdParameter = cashRecordId.HasValue ?
+                new ObjectParameter("cashRecordId", cashRecordId) :
+                new ObjectParameter("cashRecordId", typeof(long));
+    
+            var paymentChannelParameter = paymentChannel != null ?
+                new ObjectParameter("paymentChannel", paymentChannel) :
+                new ObjectParameter("paymentChannel", typeof(string));
+    
+            var typeParameter = type.HasValue ?
+                new ObjectParameter("type", type) :
+                new ObjectParameter("type", typeof(int));
+    
+            var paymentAccountIdParameter = paymentAccountId.HasValue ?
+                new ObjectParameter("paymentAccountId", paymentAccountId) :
+                new ObjectParameter("paymentAccountId", typeof(long));
+    
+            var applyAmountParameter = applyAmount.HasValue ?
+                new ObjectParameter("applyAmount", applyAmount) :
+                new ObjectParameter("applyAmount", typeof(long));
+    
+            var voucherImgParameter = voucherImg != null ?
+                new ObjectParameter("voucherImg", voucherImg) :
+                new ObjectParameter("voucherImg", typeof(string));
+    
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Admin_Cash_Start", cashRecordIdParameter, paymentChannelParameter, typeParameter, paymentAccountIdParameter, applyAmountParameter, voucherImgParameter, accountIdParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_Admin_Cash_StartHandle(Nullable<long> cashRecordId, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var cashRecordIdParameter = cashRecordId.HasValue ?
+                new ObjectParameter("cashRecordId", cashRecordId) :
+                new ObjectParameter("cashRecordId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Admin_Cash_StartHandle", cashRecordIdParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_Admin_CheckLogin(string token, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter accountId, ObjectParameter loginLogId)
+        {
+            var tokenParameter = token != null ?
+                new ObjectParameter("token", token) :
+                new ObjectParameter("token", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Admin_CheckLogin", tokenParameter, errorCode, errorMessage, accountId, loginLogId);
+        }
+    
+        public virtual int P_Admin_DeleteBackAccount(Nullable<long> accountId, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Admin_DeleteBackAccount", accountIdParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_Admin_DeleteBackAccountRole(Nullable<long> roleId, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var roleIdParameter = roleId.HasValue ?
+                new ObjectParameter("roleId", roleId) :
+                new ObjectParameter("roleId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Admin_DeleteBackAccountRole", roleIdParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_Admin_Login(string userName, string password, string ipAddress, string deviceUA, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter token, ObjectParameter accountId, ObjectParameter isAdministrator)
+        {
+            var userNameParameter = userName != null ?
+                new ObjectParameter("userName", userName) :
+                new ObjectParameter("userName", typeof(string));
+    
+            var passwordParameter = password != null ?
+                new ObjectParameter("password", password) :
+                new ObjectParameter("password", typeof(string));
+    
+            var ipAddressParameter = ipAddress != null ?
+                new ObjectParameter("ipAddress", ipAddress) :
+                new ObjectParameter("ipAddress", typeof(string));
+    
+            var deviceUAParameter = deviceUA != null ?
+                new ObjectParameter("deviceUA", deviceUA) :
+                new ObjectParameter("deviceUA", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Admin_Login", userNameParameter, passwordParameter, ipAddressParameter, deviceUAParameter, errorCode, errorMessage, token, accountId, isAdministrator);
+        }
+    
+        public virtual int P_Admin_Logout(Nullable<long> accountId, Nullable<long> loginLogId, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var loginLogIdParameter = loginLogId.HasValue ?
+                new ObjectParameter("loginLogId", loginLogId) :
+                new ObjectParameter("loginLogId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Admin_Logout", accountIdParameter, loginLogIdParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_Admin_ModifyBackAccount(Nullable<long> accountId, Nullable<long> loginLogId, string userName, string realName, string mobile, Nullable<int> sex, string email, Nullable<long> departmentId, Nullable<long> positionId, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var loginLogIdParameter = loginLogId.HasValue ?
+                new ObjectParameter("loginLogId", loginLogId) :
+                new ObjectParameter("loginLogId", typeof(long));
+    
+            var userNameParameter = userName != null ?
+                new ObjectParameter("userName", userName) :
+                new ObjectParameter("userName", typeof(string));
+    
+            var realNameParameter = realName != null ?
+                new ObjectParameter("realName", realName) :
+                new ObjectParameter("realName", typeof(string));
+    
+            var mobileParameter = mobile != null ?
+                new ObjectParameter("mobile", mobile) :
+                new ObjectParameter("mobile", typeof(string));
+    
+            var sexParameter = sex.HasValue ?
+                new ObjectParameter("sex", sex) :
+                new ObjectParameter("sex", typeof(int));
+    
+            var emailParameter = email != null ?
+                new ObjectParameter("email", email) :
+                new ObjectParameter("email", typeof(string));
+    
+            var departmentIdParameter = departmentId.HasValue ?
+                new ObjectParameter("departmentId", departmentId) :
+                new ObjectParameter("departmentId", typeof(long));
+    
+            var positionIdParameter = positionId.HasValue ?
+                new ObjectParameter("positionId", positionId) :
+                new ObjectParameter("positionId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Admin_ModifyBackAccount", accountIdParameter, loginLogIdParameter, userNameParameter, realNameParameter, mobileParameter, sexParameter, emailParameter, departmentIdParameter, positionIdParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_Admin_ModifyBackAccountPassword(Nullable<long> accountId, string newPassword, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var newPasswordParameter = newPassword != null ?
+                new ObjectParameter("newPassword", newPassword) :
+                new ObjectParameter("newPassword", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Admin_ModifyBackAccountPassword", accountIdParameter, newPasswordParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_Admin_ModifyBackAccountRole(Nullable<long> roleId, string roleName, string roleDescription, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var roleIdParameter = roleId.HasValue ?
+                new ObjectParameter("roleId", roleId) :
+                new ObjectParameter("roleId", typeof(long));
+    
+            var roleNameParameter = roleName != null ?
+                new ObjectParameter("roleName", roleName) :
+                new ObjectParameter("roleName", typeof(string));
+    
+            var roleDescriptionParameter = roleDescription != null ?
+                new ObjectParameter("roleDescription", roleDescription) :
+                new ObjectParameter("roleDescription", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Admin_ModifyBackAccountRole", roleIdParameter, roleNameParameter, roleDescriptionParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_Admin_ModifyFrontAccountWallet(Nullable<long> accountId, Nullable<long> addDeposit, string remark, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var addDepositParameter = addDeposit.HasValue ?
+                new ObjectParameter("addDeposit", addDeposit) :
+                new ObjectParameter("addDeposit", typeof(long));
+    
+            var remarkParameter = remark != null ?
+                new ObjectParameter("remark", remark) :
+                new ObjectParameter("remark", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Admin_ModifyFrontAccountWallet", accountIdParameter, addDepositParameter, remarkParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_Admin_ModifyPassword(Nullable<long> accountId, string oldPassword, string newPassword, Nullable<long> loginLogId, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter token)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var oldPasswordParameter = oldPassword != null ?
+                new ObjectParameter("oldPassword", oldPassword) :
+                new ObjectParameter("oldPassword", typeof(string));
+    
+            var newPasswordParameter = newPassword != null ?
+                new ObjectParameter("newPassword", newPassword) :
+                new ObjectParameter("newPassword", typeof(string));
+    
+            var loginLogIdParameter = loginLogId.HasValue ?
+                new ObjectParameter("loginLogId", loginLogId) :
+                new ObjectParameter("loginLogId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Admin_ModifyPassword", accountIdParameter, oldPasswordParameter, newPasswordParameter, loginLogIdParameter, errorCode, errorMessage, token);
         }
     
         public virtual int P_ApplyTradeBuy(Nullable<long> accountId, Nullable<int> market, string sharesCode, Nullable<long> buyAmount, Nullable<int> fundMultiple, Nullable<long> entrustPrice, Nullable<System.DateTime> closingTime, Nullable<bool> isFollow, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter buyId)
@@ -184,6 +795,370 @@ namespace MealTicket_Web_Handler
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_ApplyTradeSell", accountIdParameter, holdIdParameter, sellCountParameter, sellTypeParameter, sellPriceParameter, typeParameter, isFollowParameter, errorCode, errorMessage, sellId);
         }
     
+        public virtual int P_BindBankCard(Nullable<long> accountId, string mobile, string verifyCode, Nullable<int> actionCode, string realName, string cardNumber, string bankCode, string cardBreed, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var mobileParameter = mobile != null ?
+                new ObjectParameter("mobile", mobile) :
+                new ObjectParameter("mobile", typeof(string));
+    
+            var verifyCodeParameter = verifyCode != null ?
+                new ObjectParameter("verifyCode", verifyCode) :
+                new ObjectParameter("verifyCode", typeof(string));
+    
+            var actionCodeParameter = actionCode.HasValue ?
+                new ObjectParameter("actionCode", actionCode) :
+                new ObjectParameter("actionCode", typeof(int));
+    
+            var realNameParameter = realName != null ?
+                new ObjectParameter("realName", realName) :
+                new ObjectParameter("realName", typeof(string));
+    
+            var cardNumberParameter = cardNumber != null ?
+                new ObjectParameter("cardNumber", cardNumber) :
+                new ObjectParameter("cardNumber", typeof(string));
+    
+            var bankCodeParameter = bankCode != null ?
+                new ObjectParameter("bankCode", bankCode) :
+                new ObjectParameter("bankCode", typeof(string));
+    
+            var cardBreedParameter = cardBreed != null ?
+                new ObjectParameter("cardBreed", cardBreed) :
+                new ObjectParameter("cardBreed", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_BindBankCard", accountIdParameter, mobileParameter, verifyCodeParameter, actionCodeParameter, realNameParameter, cardNumberParameter, bankCodeParameter, cardBreedParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_Calculate_DepositChange_Hold(Nullable<long> holdId, Nullable<long> changeAmount, string description)
+        {
+            var holdIdParameter = holdId.HasValue ?
+                new ObjectParameter("holdId", holdId) :
+                new ObjectParameter("holdId", typeof(long));
+    
+            var changeAmountParameter = changeAmount.HasValue ?
+                new ObjectParameter("changeAmount", changeAmount) :
+                new ObjectParameter("changeAmount", typeof(long));
+    
+            var descriptionParameter = description != null ?
+                new ObjectParameter("description", description) :
+                new ObjectParameter("description", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Calculate_DepositChange_Hold", holdIdParameter, changeAmountParameter, descriptionParameter);
+        }
+    
+        public virtual int P_Calculate_FundAmountChange_Hold(Nullable<long> holdId, Nullable<long> changeAmount, string description)
+        {
+            var holdIdParameter = holdId.HasValue ?
+                new ObjectParameter("holdId", holdId) :
+                new ObjectParameter("holdId", typeof(long));
+    
+            var changeAmountParameter = changeAmount.HasValue ?
+                new ObjectParameter("changeAmount", changeAmount) :
+                new ObjectParameter("changeAmount", typeof(long));
+    
+            var descriptionParameter = description != null ?
+                new ObjectParameter("description", description) :
+                new ObjectParameter("description", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Calculate_FundAmountChange_Hold", holdIdParameter, changeAmountParameter, descriptionParameter);
+        }
+    
+        public virtual int P_Calculate_Recommend_Prize(Nullable<long> accountId, Nullable<int> prizeType, Nullable<long> prizeAmount, Nullable<long> contextId, Nullable<int> contextType, ObjectParameter remainAmount)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var prizeTypeParameter = prizeType.HasValue ?
+                new ObjectParameter("prizeType", prizeType) :
+                new ObjectParameter("prizeType", typeof(int));
+    
+            var prizeAmountParameter = prizeAmount.HasValue ?
+                new ObjectParameter("prizeAmount", prizeAmount) :
+                new ObjectParameter("prizeAmount", typeof(long));
+    
+            var contextIdParameter = contextId.HasValue ?
+                new ObjectParameter("contextId", contextId) :
+                new ObjectParameter("contextId", typeof(long));
+    
+            var contextTypeParameter = contextType.HasValue ?
+                new ObjectParameter("contextType", contextType) :
+                new ObjectParameter("contextType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Calculate_Recommend_Prize", accountIdParameter, prizeTypeParameter, prizeAmountParameter, contextIdParameter, contextTypeParameter, remainAmount);
+        }
+    
+        public virtual int P_Calculate_TradeRisk(Nullable<int> tradeType, Nullable<int> market, string sharesCode, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var tradeTypeParameter = tradeType.HasValue ?
+                new ObjectParameter("tradeType", tradeType) :
+                new ObjectParameter("tradeType", typeof(int));
+    
+            var marketParameter = market.HasValue ?
+                new ObjectParameter("market", market) :
+                new ObjectParameter("market", typeof(int));
+    
+            var sharesCodeParameter = sharesCode != null ?
+                new ObjectParameter("sharesCode", sharesCode) :
+                new ObjectParameter("sharesCode", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Calculate_TradeRisk", tradeTypeParameter, marketParameter, sharesCodeParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_Calculate_WalletChange_Account(Nullable<long> accountId, Nullable<long> changeAmount, string description, Nullable<long> contextId, Nullable<int> contextType)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var changeAmountParameter = changeAmount.HasValue ?
+                new ObjectParameter("changeAmount", changeAmount) :
+                new ObjectParameter("changeAmount", typeof(long));
+    
+            var descriptionParameter = description != null ?
+                new ObjectParameter("description", description) :
+                new ObjectParameter("description", typeof(string));
+    
+            var contextIdParameter = contextId.HasValue ?
+                new ObjectParameter("contextId", contextId) :
+                new ObjectParameter("contextId", typeof(long));
+    
+            var contextTypeParameter = contextType.HasValue ?
+                new ObjectParameter("contextType", contextType) :
+                new ObjectParameter("contextType", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Calculate_WalletChange_Account", accountIdParameter, changeAmountParameter, descriptionParameter, contextIdParameter, contextTypeParameter);
+        }
+    
+        public virtual int P_Calculate_WalletChange_Platform(string typeCode, Nullable<long> inComeAmount, Nullable<long> confirmDeposit, Nullable<long> context)
+        {
+            var typeCodeParameter = typeCode != null ?
+                new ObjectParameter("typeCode", typeCode) :
+                new ObjectParameter("typeCode", typeof(string));
+    
+            var inComeAmountParameter = inComeAmount.HasValue ?
+                new ObjectParameter("inComeAmount", inComeAmount) :
+                new ObjectParameter("inComeAmount", typeof(long));
+    
+            var confirmDepositParameter = confirmDeposit.HasValue ?
+                new ObjectParameter("confirmDeposit", confirmDeposit) :
+                new ObjectParameter("confirmDeposit", typeof(long));
+    
+            var contextParameter = context.HasValue ?
+                new ObjectParameter("context", context) :
+                new ObjectParameter("context", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Calculate_WalletChange_Platform", typeCodeParameter, inComeAmountParameter, confirmDepositParameter, contextParameter);
+        }
+    
+        public virtual int P_CashApply(Nullable<long> accountId, Nullable<long> bankCardId, Nullable<long> amount, Nullable<int> cashType, string transactionPassword, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var bankCardIdParameter = bankCardId.HasValue ?
+                new ObjectParameter("bankCardId", bankCardId) :
+                new ObjectParameter("bankCardId", typeof(long));
+    
+            var amountParameter = amount.HasValue ?
+                new ObjectParameter("amount", amount) :
+                new ObjectParameter("amount", typeof(long));
+    
+            var cashTypeParameter = cashType.HasValue ?
+                new ObjectParameter("cashType", cashType) :
+                new ObjectParameter("cashType", typeof(int));
+    
+            var transactionPasswordParameter = transactionPassword != null ?
+                new ObjectParameter("transactionPassword", transactionPassword) :
+                new ObjectParameter("transactionPassword", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_CashApply", accountIdParameter, bankCardIdParameter, amountParameter, cashTypeParameter, transactionPasswordParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_CashCancel(Nullable<long> accountId, Nullable<long> cashRecordId, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var cashRecordIdParameter = cashRecordId.HasValue ?
+                new ObjectParameter("cashRecordId", cashRecordId) :
+                new ObjectParameter("cashRecordId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_CashCancel", accountIdParameter, cashRecordIdParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_Check_TradeDate(Nullable<System.DateTime> currTime, ObjectParameter errorCode)
+        {
+            var currTimeParameter = currTime.HasValue ?
+                new ObjectParameter("currTime", currTime) :
+                new ObjectParameter("currTime", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Check_TradeDate", currTimeParameter, errorCode);
+        }
+    
+        public virtual int P_Check_TradeTime(Nullable<int> market, string sharesCode, Nullable<System.DateTime> currTime, ObjectParameter errorCode)
+        {
+            var marketParameter = market.HasValue ?
+                new ObjectParameter("market", market) :
+                new ObjectParameter("market", typeof(int));
+    
+            var sharesCodeParameter = sharesCode != null ?
+                new ObjectParameter("sharesCode", sharesCode) :
+                new ObjectParameter("sharesCode", typeof(string));
+    
+            var currTimeParameter = currTime.HasValue ?
+                new ObjectParameter("currTime", currTime) :
+                new ObjectParameter("currTime", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Check_TradeTime", marketParameter, sharesCodeParameter, currTimeParameter, errorCode);
+        }
+    
+        public virtual int P_CheckAccountLogin(string token, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter accountId)
+        {
+            var tokenParameter = token != null ?
+                new ObjectParameter("token", token) :
+                new ObjectParameter("token", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_CheckAccountLogin", tokenParameter, errorCode, errorMessage, accountId);
+        }
+    
+        public virtual int P_CheckAccountLogin_Web(string token, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter accountId)
+        {
+            var tokenParameter = token != null ?
+                new ObjectParameter("token", token) :
+                new ObjectParameter("token", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_CheckAccountLogin_Web", tokenParameter, errorCode, errorMessage, accountId);
+        }
+    
+        public virtual int P_CreatePicVerifyCode(string mobile, Nullable<int> businessType, string picCode, string picCodeImgUrl, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var mobileParameter = mobile != null ?
+                new ObjectParameter("mobile", mobile) :
+                new ObjectParameter("mobile", typeof(string));
+    
+            var businessTypeParameter = businessType.HasValue ?
+                new ObjectParameter("businessType", businessType) :
+                new ObjectParameter("businessType", typeof(int));
+    
+            var picCodeParameter = picCode != null ?
+                new ObjectParameter("picCode", picCode) :
+                new ObjectParameter("picCode", typeof(string));
+    
+            var picCodeImgUrlParameter = picCodeImgUrl != null ?
+                new ObjectParameter("picCodeImgUrl", picCodeImgUrl) :
+                new ObjectParameter("picCodeImgUrl", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_CreatePicVerifyCode", mobileParameter, businessTypeParameter, picCodeParameter, picCodeImgUrlParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_CreateRechargeOrder(Nullable<long> accountId, string channelCode, Nullable<long> rechargeAmount, Nullable<long> payAmount, Nullable<long> paymentAccountId, Nullable<bool> isSuccess, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter orderId)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var channelCodeParameter = channelCode != null ?
+                new ObjectParameter("channelCode", channelCode) :
+                new ObjectParameter("channelCode", typeof(string));
+    
+            var rechargeAmountParameter = rechargeAmount.HasValue ?
+                new ObjectParameter("rechargeAmount", rechargeAmount) :
+                new ObjectParameter("rechargeAmount", typeof(long));
+    
+            var payAmountParameter = payAmount.HasValue ?
+                new ObjectParameter("payAmount", payAmount) :
+                new ObjectParameter("payAmount", typeof(long));
+    
+            var paymentAccountIdParameter = paymentAccountId.HasValue ?
+                new ObjectParameter("paymentAccountId", paymentAccountId) :
+                new ObjectParameter("paymentAccountId", typeof(long));
+    
+            var isSuccessParameter = isSuccess.HasValue ?
+                new ObjectParameter("isSuccess", isSuccess) :
+                new ObjectParameter("isSuccess", typeof(bool));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_CreateRechargeOrder", accountIdParameter, channelCodeParameter, rechargeAmountParameter, payAmountParameter, paymentAccountIdParameter, isSuccessParameter, errorCode, errorMessage, orderId);
+        }
+    
+        public virtual int P_CreateSharesSeatBuyOrder(Nullable<long> accountId, Nullable<int> monthCount, Nullable<int> seatCount, Nullable<long> seatId, string channelCode, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter orderId)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var monthCountParameter = monthCount.HasValue ?
+                new ObjectParameter("monthCount", monthCount) :
+                new ObjectParameter("monthCount", typeof(int));
+    
+            var seatCountParameter = seatCount.HasValue ?
+                new ObjectParameter("seatCount", seatCount) :
+                new ObjectParameter("seatCount", typeof(int));
+    
+            var seatIdParameter = seatId.HasValue ?
+                new ObjectParameter("seatId", seatId) :
+                new ObjectParameter("seatId", typeof(long));
+    
+            var channelCodeParameter = channelCode != null ?
+                new ObjectParameter("channelCode", channelCode) :
+                new ObjectParameter("channelCode", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_CreateSharesSeatBuyOrder", accountIdParameter, monthCountParameter, seatCountParameter, seatIdParameter, channelCodeParameter, errorCode, errorMessage, orderId);
+        }
+    
+        public virtual int P_CreateSmsVerifyCode(string mobile, Nullable<int> businessType, string smsVerifyCode, string picCode, ObjectParameter operationCode, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var mobileParameter = mobile != null ?
+                new ObjectParameter("mobile", mobile) :
+                new ObjectParameter("mobile", typeof(string));
+    
+            var businessTypeParameter = businessType.HasValue ?
+                new ObjectParameter("businessType", businessType) :
+                new ObjectParameter("businessType", typeof(int));
+    
+            var smsVerifyCodeParameter = smsVerifyCode != null ?
+                new ObjectParameter("smsVerifyCode", smsVerifyCode) :
+                new ObjectParameter("smsVerifyCode", typeof(string));
+    
+            var picCodeParameter = picCode != null ?
+                new ObjectParameter("picCode", picCode) :
+                new ObjectParameter("picCode", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_CreateSmsVerifyCode", mobileParameter, businessTypeParameter, smsVerifyCodeParameter, picCodeParameter, operationCode, errorCode, errorMessage);
+        }
+    
+        public virtual int P_FinishSharesSeatBuyOrder(Nullable<long> orderId)
+        {
+            var orderIdParameter = orderId.HasValue ?
+                new ObjectParameter("orderId", orderId) :
+                new ObjectParameter("orderId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_FinishSharesSeatBuyOrder", orderIdParameter);
+        }
+    
+        public virtual int P_FollowApply(Nullable<long> accountId, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_FollowApply", accountIdParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_FollowCancel(Nullable<long> accountId, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_FollowCancel", accountIdParameter, errorCode, errorMessage);
+        }
+    
         public virtual int P_MakeupDeposit(Nullable<long> accountId, Nullable<long> holdId, Nullable<long> deposit, ObjectParameter errorCode, ObjectParameter errorMessage)
         {
             var accountIdParameter = accountId.HasValue ?
@@ -199,6 +1174,127 @@ namespace MealTicket_Web_Handler
                 new ObjectParameter("deposit", typeof(long));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_MakeupDeposit", accountIdParameter, holdIdParameter, depositParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_Notice_Execute(string apiurl, Nullable<long> accountId, string tempPar)
+        {
+            var apiurlParameter = apiurl != null ?
+                new ObjectParameter("apiurl", apiurl) :
+                new ObjectParameter("apiurl", typeof(string));
+    
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var tempParParameter = tempPar != null ?
+                new ObjectParameter("tempPar", tempPar) :
+                new ObjectParameter("tempPar", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Notice_Execute", apiurlParameter, accountIdParameter, tempParParameter);
+        }
+    
+        public virtual int P_Recharge_Close()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Recharge_Close");
+        }
+    
+        public virtual int P_Recharge_PayResultCallback(string orderSN, Nullable<long> totalAmount)
+        {
+            var orderSNParameter = orderSN != null ?
+                new ObjectParameter("orderSN", orderSN) :
+                new ObjectParameter("orderSN", typeof(string));
+    
+            var totalAmountParameter = totalAmount.HasValue ?
+                new ObjectParameter("totalAmount", totalAmount) :
+                new ObjectParameter("totalAmount", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Recharge_PayResultCallback", orderSNParameter, totalAmountParameter);
+        }
+    
+        public virtual int P_Recharge_Success(Nullable<long> orderId)
+        {
+            var orderIdParameter = orderId.HasValue ?
+                new ObjectParameter("orderId", orderId) :
+                new ObjectParameter("orderId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Recharge_Success", orderIdParameter);
+        }
+    
+        public virtual int P_SetTradeClosingTime(Nullable<long> accountId, Nullable<long> holdId, Nullable<System.DateTime> closingTime, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var holdIdParameter = holdId.HasValue ?
+                new ObjectParameter("holdId", holdId) :
+                new ObjectParameter("holdId", typeof(long));
+    
+            var closingTimeParameter = closingTime.HasValue ?
+                new ObjectParameter("closingTime", closingTime) :
+                new ObjectParameter("closingTime", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_SetTradeClosingTime", accountIdParameter, holdIdParameter, closingTimeParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_SharesSeatBuy_PayResultCallback(string orderSN, Nullable<long> totalAmount)
+        {
+            var orderSNParameter = orderSN != null ?
+                new ObjectParameter("orderSN", orderSN) :
+                new ObjectParameter("orderSN", typeof(string));
+    
+            var totalAmountParameter = totalAmount.HasValue ?
+                new ObjectParameter("totalAmount", totalAmount) :
+                new ObjectParameter("totalAmount", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_SharesSeatBuy_PayResultCallback", orderSNParameter, totalAmountParameter);
+        }
+    
+        public virtual int P_TradeFinish(Nullable<long> entrustManagerId, Nullable<long> dealPrice, Nullable<int> dealCount)
+        {
+            var entrustManagerIdParameter = entrustManagerId.HasValue ?
+                new ObjectParameter("entrustManagerId", entrustManagerId) :
+                new ObjectParameter("entrustManagerId", typeof(long));
+    
+            var dealPriceParameter = dealPrice.HasValue ?
+                new ObjectParameter("dealPrice", dealPrice) :
+                new ObjectParameter("dealPrice", typeof(long));
+    
+            var dealCountParameter = dealCount.HasValue ?
+                new ObjectParameter("dealCount", dealCount) :
+                new ObjectParameter("dealCount", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_TradeFinish", entrustManagerIdParameter, dealPriceParameter, dealCountParameter);
+        }
+    
+        public virtual int P_TradeRecovery(Nullable<long> holdId, string code, Nullable<int> count, Nullable<long> price, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var holdIdParameter = holdId.HasValue ?
+                new ObjectParameter("holdId", holdId) :
+                new ObjectParameter("holdId", typeof(long));
+    
+            var codeParameter = code != null ?
+                new ObjectParameter("code", code) :
+                new ObjectParameter("code", typeof(string));
+    
+            var countParameter = count.HasValue ?
+                new ObjectParameter("count", count) :
+                new ObjectParameter("count", typeof(int));
+    
+            var priceParameter = price.HasValue ?
+                new ObjectParameter("price", price) :
+                new ObjectParameter("price", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_TradeRecovery", holdIdParameter, codeParameter, countParameter, priceParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_TryToCancelEntrust(Nullable<long> entrustId)
+        {
+            var entrustIdParameter = entrustId.HasValue ?
+                new ObjectParameter("entrustId", entrustId) :
+                new ObjectParameter("entrustId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_TryToCancelEntrust", entrustIdParameter);
         }
     }
 }
