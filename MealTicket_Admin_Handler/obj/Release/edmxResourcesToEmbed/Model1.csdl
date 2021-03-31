@@ -285,6 +285,7 @@
     <EntitySet Name="t_account_shares_optional_group" EntityType="meal_ticketModel.t_account_shares_optional_group" />
     <EntitySet Name="t_account_shares_optional_group_rel" EntityType="meal_ticketModel.t_account_shares_optional_group_rel" />
     <EntitySet Name="t_shares_limit_fundmultiple_account" EntityType="meal_ticketModel.t_shares_limit_fundmultiple_account" />
+    <EntitySet Name="t_shares_plate" EntityType="meal_ticketModel.t_shares_plate" />
   </EntityContainer>
   <EntityType Name="t_admin_department">
     <Key>
@@ -2002,6 +2003,17 @@
     <Property Name="FundmultipleId" Type="Int64" Nullable="false" />
     <Property Name="AccountId" Type="Int64" Nullable="false" />
     <Property Name="FundMultiple" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_plate">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>

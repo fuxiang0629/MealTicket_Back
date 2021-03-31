@@ -8354,6 +8354,16 @@
             参数
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesPlateRequest.Type">
+            <summary>
+            1.行业管理 2区域管理 3概念管理
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesPlateRequest.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.AddSharesPositionRulesRequest.LimitMarket">
             <summary>
             市场0深圳 1上海
@@ -8539,6 +8549,36 @@
             创建时间
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetSharesPlateListRequest.Name">
+            <summary>
+            名称搜索
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetSharesPlateListRequest.Type">
+            <summary>
+            1.行业管理 2.地区管理 3.概念管理
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.Status">
+            <summary>
+            状态
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.CreateTime">
+            <summary>
+            数据创建时间
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.GetSharesTransactionDataListRequest.Market">
             <summary>
             市场0深圳 1上海
@@ -8642,6 +8682,16 @@
         <member name="P:MealTicket_Admin_Handler.Model.ModifySharesMonitorTrendRelParRequest.ParamsInfo">
             <summary>
             参数
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesPlateRequest.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesPlateRequest.Name">
+            <summary>
+            名称
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.ModifySharesRiskRulesRequest.Id">
@@ -10612,6 +10662,37 @@
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteSharesCorrigendum(MealTicket_Admin_Handler.Model.DeleteRequest)">
             <summary>
             删除股票勘误
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetSharesPlateList(MealTicket_Admin_Handler.Model.GetSharesPlateListRequest)">
+            <summary>
+            获取板块管理列表
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.AddSharesPlate(MealTicket_Admin_Handler.Model.AddSharesPlateRequest)">
+            <summary>
+            添加板块管理
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesPlate(MealTicket_Admin_Handler.Model.ModifySharesPlateRequest)">
+            <summary>
+            编辑板块管理
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesPlateStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改板块管理状态
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteSharesPlate(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除板块管理
             </summary>
             <param name="request"></param>
         </member>

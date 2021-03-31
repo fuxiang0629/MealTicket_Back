@@ -2073,6 +2073,41 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetSharesPlateList(MealTicket_Admin_Handler.Model.GetSharesPlateListRequest)">
+            <summary>
+            获取板块管理列表
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.AddSharesPlate(MealTicket_Admin_Handler.Model.AddSharesPlateRequest)">
+            <summary>
+            添加板块管理
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifySharesPlate(MealTicket_Admin_Handler.Model.ModifySharesPlateRequest)">
+            <summary>
+            编辑板块管理
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifySharesPlateStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改板块管理状态
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeleteSharesPlate(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除板块管理
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetSharesForbidList(MealTicket_Admin_Handler.Model.GetSharesForbidListRequest)">
             <summary>
             查询禁止股票名单列表

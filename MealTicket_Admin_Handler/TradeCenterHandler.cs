@@ -718,6 +718,145 @@ namespace MealTicket_Admin_Handler
                 db.SaveChanges();
             }
         }
+
+        /// <summary>
+        /// 获取板块管理列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<SharesPlateInfo> GetSharesPlateList(GetSharesPlateListRequest request) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var plateList = from item in db.t_shares_plate
+                                where item.Type == request.Type
+                                select item;
+                if (!string.IsNullOrEmpty(request.Name))
+                {
+                    plateList = from item in plateList
+                                where item.Name.Contains(item.Name)
+                                select item;
+                }
+                int totalCount = plateList.Count();
+
+                return new PageRes<SharesPlateInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in plateList
+                            orderby item.CreateTime descending
+                            select new SharesPlateInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                Name = item.Name,
+                                Status = item.Status
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加板块管理
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddSharesPlate(AddSharesPlateRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //判断名称是否存在
+                var plate = (from item in db.t_shares_plate
+                             where item.Type == request.Type && item.Name == request.Name
+                             select item).FirstOrDefault();
+                if (plate != null)
+                {
+                    throw new WebApiException(400,"已添加");
+                }
+
+                db.t_shares_plate.Add(new t_shares_plate 
+                { 
+                    Status=1,
+                    CreateTime=DateTime.Now,
+                    LastModified=DateTime.Now,
+                    Name=request.Name,
+                    Type=request.Type
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 编辑板块管理
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifySharesPlate(ModifySharesPlateRequest request) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var plate = (from item in db.t_shares_plate
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (plate == null)
+                {
+                    throw new WebApiException(400,"数据不存在");
+                }
+                //判断名称是否存在
+                var temp = (from item in db.t_shares_plate
+                             where item.Type == plate.Type && item.Name == request.Name && item.Id!=request.Id
+                             select item).FirstOrDefault();
+                if (temp != null)
+                {
+                    throw new WebApiException(400, "已添加");
+                }
+
+                plate.Name = request.Name;
+                plate.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改板块管理状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifySharesPlateStatus(ModifyStatusRequest request) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var plate = (from item in db.t_shares_plate
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (plate == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+
+                plate.Status = request.Status;
+                plate.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除板块管理
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteSharesPlate(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var plate = (from item in db.t_shares_plate
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (plate == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+
+                db.t_shares_plate.Remove(plate);
+                db.SaveChanges();
+            }
+        }
         #endregion
 
         #region====交易管理====

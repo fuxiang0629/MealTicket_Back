@@ -504,6 +504,95 @@ namespace MealTicket_Admin_APIService.controller
             tradeCenterHandler.DeleteSharesCorrigendum(request);
             return null;
         }
+
+        /// <summary>
+        /// 获取板块管理列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/plate/list"), HttpPost]
+        [Description("获取板块管理列表")]
+        public PageRes<SharesPlateInfo> GetSharesPlateList(GetSharesPlateListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesPlateList(request);
+        }
+
+        /// <summary>
+        /// 添加板块管理
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/plate/add"), HttpPost]
+        [Description("添加板块管理")]
+        public object AddSharesPlate(AddSharesPlateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesPlate(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑板块管理
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/plate/modify"), HttpPost]
+        [Description("编辑板块管理")]
+        public object ModifySharesPlate(ModifySharesPlateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesPlate(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改板块管理状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/plate/status/modify"), HttpPost]
+        [Description("修改板块管理状态")]
+        public object ModifySharesPlateStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesPlateStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除板块管理
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/plate/delete"), HttpPost]
+        [Description("删除板块管理")]
+        public object DeleteSharesPlate(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesPlate(request);
+            return null;
+        }
         #endregion
 
         #region====交易管理====
