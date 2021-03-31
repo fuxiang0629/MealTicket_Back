@@ -128,6 +128,7 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_optional_group_rel" Width="1.5" PointX="31.375" PointY="33.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_fundmultiple_account" Width="1.5" PointX="33.375" PointY="33.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate" Width="1.5" PointX="34.375" PointY="7.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel" Width="1.5" PointX="34.375" PointY="10.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

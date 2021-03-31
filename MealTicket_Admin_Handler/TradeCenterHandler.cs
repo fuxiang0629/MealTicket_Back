@@ -750,7 +750,11 @@ namespace MealTicket_Admin_Handler
                                 CreateTime = item.CreateTime,
                                 Id = item.Id,
                                 Name = item.Name,
-                                Status = item.Status
+                                Status = item.Status,
+                                SharesCount = (from x in db.t_shares_plate_rel
+                                               join x2 in db.t_shares_all on new { x.Market, x.SharesCode } equals new { x2.Market, x2.SharesCode }
+                                               where x.PlateId == item.Id
+                                               select x).Count()
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
                 };
             }

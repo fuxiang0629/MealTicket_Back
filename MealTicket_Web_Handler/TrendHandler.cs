@@ -3593,7 +3593,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                     TotalCount = totalCount,
                     List = (from item in BuyConditionList
                             join item2 in db.t_account_shares_entrust on item.EntrustId equals item2.Id into a from ai in a.DefaultIfEmpty()
-                            orderby item.CreateTime
+                            orderby item.CreateTime descending
                             select new AccountBuyConditionInfo
                             {
                                 BuyAuto = item.BuyAuto,

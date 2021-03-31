@@ -150,6 +150,7 @@ namespace MealTicket_Admin_Handler
         public virtual DbSet<t_account_shares_optional_group_rel> t_account_shares_optional_group_rel { get; set; }
         public virtual DbSet<t_shares_limit_fundmultiple_account> t_shares_limit_fundmultiple_account { get; set; }
         public virtual DbSet<t_shares_plate> t_shares_plate { get; set; }
+        public virtual DbSet<t_shares_plate_rel> t_shares_plate_rel { get; set; }
     
         public virtual int P_Admin_CheckLogin(string token, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter accountId, ObjectParameter loginLogId)
         {

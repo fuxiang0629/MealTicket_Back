@@ -8574,6 +8574,11 @@
             状态
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.SharesCount">
+            <summary>
+            股票数量
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.CreateTime">
             <summary>
             数据创建时间

@@ -593,6 +593,23 @@ namespace MealTicket_Admin_APIService.controller
             tradeCenterHandler.DeleteSharesPlate(request);
             return null;
         }
+
+        /// <summary>
+        /// 获取板块股票列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/plate/shares/list"), HttpPost]
+        [Description("获取板块股票列表")]
+        public PageRes<SharesPlateSharesInfo> GetSharesPlateSharesList(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesPlateList(request);
+        }
         #endregion
 
         #region====交易管理====
