@@ -3353,7 +3353,11 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                 Status = item.Status,
                                 CreateTime = item.CreateTime,
                                 Id = item.Id,
-                                Name = item.Name
+                                Name = item.Name,
+                                SharesCount = (from x in db.t_account_shares_conditiontrade_buy_group_rel
+                                               join x2 in db.t_account_shares_conditiontrade_buy on x.BuyId equals x2.Id
+                                               where x.GroupId==item.Id
+                                               select x).Count()
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
                 };
             }
@@ -3449,6 +3453,89 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 }
 
                 db.t_account_shares_conditiontrade_buy_group.Remove(groupInfo);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取买入条件分组股票列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionTradeSharesGroupSharesInfo> GetAccountBuyConditionTradeSharesGroupSharesList(DetailsPageRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_account_shares_conditiontrade_buy
+                             join item4 in db.t_account_shares_conditiontrade_buy_group_rel on item.Id equals item4.BuyId
+                             join item2 in db.t_shares_all on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
+                             from ai in a.DefaultIfEmpty()
+                             join item3 in db.t_shares_quotes on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into b
+                             from bi in b.DefaultIfEmpty()
+                             where item4.GroupId == request.Id
+                             select new { item, ai, bi,item4 };
+                int totalCount = result.Count();
+
+                return new PageRes<AccountBuyConditionTradeSharesGroupSharesInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from x in result
+                            let currPrice = x.bi == null ? 0 : x.bi.PresentPrice
+                            orderby x.item.SharesCode
+                            select new AccountBuyConditionTradeSharesGroupSharesInfo
+                            {
+                                SharesCode = x.item.SharesCode,
+                                SharesName = x.ai == null ? "" : x.ai.SharesName,
+                                CurrPrice = x.bi == null ? 0 : x.bi.PresentPrice,
+                                Id = x.item4.Id,
+                                Market = x.item.Market,
+                                RisePrice = x.bi == null ? 0 : (currPrice - x.bi.ClosedPrice),
+                                RiseRate = (x.bi == null || x.bi.ClosedPrice <= 0) ? 0 : (int)((currPrice - x.bi.ClosedPrice) * 1.0 / x.bi.ClosedPrice * 10000)
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加买入条件分组股票
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddAccountBuyConditionTradeSharesGroupShares(AddAccountBuyConditionTradeSharesGroupSharesRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities()) 
+            {
+                //判断股票是否添加
+                var result = (from item in db.t_account_shares_conditiontrade_buy_group_rel
+                              where item.BuyId == request.BuyId && item.GroupId == request.GroupId
+                              select item).FirstOrDefault();
+                if (result != null)
+                {
+                    throw new WebApiException(400,"已添加");
+                }
+                db.t_account_shares_conditiontrade_buy_group_rel.Add(new t_account_shares_conditiontrade_buy_group_rel 
+                {
+                    BuyId=request.BuyId,
+                    GroupId=request.GroupId
+                });
+                db.SaveChanges();
+            }
+        }
+
+        public void DeleteAccountBuyConditionTradeSharesGroupShares(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //判断股票是否添加
+                var result = (from item in db.t_account_shares_conditiontrade_buy_group_rel
+                              where item.Id==request.Id
+                              select item).FirstOrDefault();
+                if (result == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_account_shares_conditiontrade_buy_group_rel.Remove(result);
                 db.SaveChanges();
             }
         }

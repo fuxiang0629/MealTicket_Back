@@ -122,6 +122,7 @@
     <Compile Include="Model\AddAccountBuyConditionOtherPar.cs" />
     <Compile Include="Model\AddAccountBuyConditionTradeShares.cs" />
     <Compile Include="Model\AddAccountBuyConditionTradeSharesGroup.cs" />
+    <Compile Include="Model\AddAccountBuyConditionTradeSharesGroupShares.cs" />
     <Compile Include="Model\AddAccountHoldConditionTrade.cs" />
     <Compile Include="Model\AddAccountOptional.cs" />
     <Compile Include="Model\AddAccountOptionalGroup.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="Model\GetAccountBuyConditionOtherList.cs" />
     <Compile Include="Model\GetAccountBuyConditionOtherPar.cs" />
     <Compile Include="Model\GetAccountBuyConditionTradeSharesGroupList.cs" />
+    <Compile Include="Model\GetAccountBuyConditionTradeSharesGroupSharesList.cs" />
     <Compile Include="Model\GetAccountBuyConditionTradeSharesList.cs" />
     <Compile Include="Model\GetAccountFollowRecord.cs" />
     <Compile Include="Model\GetAccountHoldConditionTradeList.cs" />

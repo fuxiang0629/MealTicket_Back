@@ -31,6 +31,11 @@ namespace MealTicket_Web_Handler.Model
         /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }
+
+        /// <summary>
+        /// 股票数量
+        /// </summary>
+        public int SharesCount { get; set; }
     }
 
     public class GetAccountBuyConditionTradeSharesGroupListRequest:DetailsPageRequest 
