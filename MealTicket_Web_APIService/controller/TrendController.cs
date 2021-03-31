@@ -1217,6 +1217,25 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 修改条件买入股票状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/shares/status/modify"), HttpPost]
+        [Description("修改条件买入股票状态")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountBuyConditionTradeSharesStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountBuyConditionTradeSharesStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
         /// 删除买入条件单股票
         /// </summary>
         /// <returns></returns>
@@ -1304,8 +1323,7 @@ namespace MealTicket_Web_APIService.controller
                 throw new WebApiException(400, "参数错误");
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
-            trendHandler.ModifyAccountBuyConditionTradeSharesGroupStatus(request, basedata);
-            return null;
+            return trendHandler.ModifyAccountBuyConditionTradeSharesGroupStatus(request, basedata);
         }
 
         /// <summary>

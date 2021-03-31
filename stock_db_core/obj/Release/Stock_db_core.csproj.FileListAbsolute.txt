@@ -1,25 +1,5 @@
-F:\项目\饭票后端\StockMonitor\bin\Release\StockMonitor.dll
-F:\项目\饭票后端\StockMonitor\bin\Release\StockMonitor.pdb
-F:\项目\饭票后端\StockMonitor\obj\Release\Stock_db_core.csproj.CoreCompileInputs.cache
-F:\项目\饭票后端\StockMonitor\obj\Release\StockMonitor.dll
-F:\项目\饭票后端\StockMonitor\obj\Release\StockMonitor.pdb
-C:\Users\37863\Desktop\饭票后端\Stock_db_core\bin\Release\stock_db_core.dll
-C:\Users\37863\Desktop\饭票后端\Stock_db_core\bin\Release\stock_db_core.pdb
-C:\Users\37863\Desktop\饭票后端\Stock_db_core\obj\Release\stock_db_core.csproj.CoreCompileInputs.cache
-C:\Users\37863\Desktop\饭票后端\Stock_db_core\obj\Release\stock_db_core.dll
-C:\Users\37863\Desktop\饭票后端\Stock_db_core\obj\Release\stock_db_core.pdb
-D:\项目\饭票\后端\Stock_db_core\bin\Release\stock_db_core.dll
-D:\项目\饭票\后端\Stock_db_core\bin\Release\stock_db_core.pdb
-D:\项目\饭票\后端\Stock_db_core\obj\Release\stock_db_core.csproj.CoreCompileInputs.cache
-D:\项目\饭票\后端\Stock_db_core\obj\Release\stock_db_core.dll
-D:\项目\饭票\后端\Stock_db_core\obj\Release\stock_db_core.pdb
 F:\项目\饭票后端\Stock_db_core\bin\Release\stock_db_core.dll
 F:\项目\饭票后端\Stock_db_core\bin\Release\stock_db_core.pdb
 F:\项目\饭票后端\Stock_db_core\obj\Release\stock_db_core.csproj.CoreCompileInputs.cache
 F:\项目\饭票后端\Stock_db_core\obj\Release\stock_db_core.dll
 F:\项目\饭票后端\Stock_db_core\obj\Release\stock_db_core.pdb
-<<<<<<< HEAD
-=======
-F:\项目\饭票后端\Stock_db_core\obj\Release\stock_db_core.csprojAssemblyReference.cache
-D:\项目\饭票\后端\Stock_db_core\obj\Release\stock_db_core.csprojAssemblyReference.cache
->>>>>>> cdff223a2785ae3c68e041002a5b9817104f6345

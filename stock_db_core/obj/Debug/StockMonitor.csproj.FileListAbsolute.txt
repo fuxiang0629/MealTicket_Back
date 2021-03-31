@@ -1,5 +1,0 @@
-F:\项目\饭票后端\StockMonitor\bin\Debug\StockMonitor.dll
-F:\项目\饭票后端\StockMonitor\bin\Debug\StockMonitor.pdb
-F:\项目\饭票后端\StockMonitor\obj\Debug\StockMonitor.csproj.CoreCompileInputs.cache
-F:\项目\饭票后端\StockMonitor\obj\Debug\StockMonitor.dll
-F:\项目\饭票后端\StockMonitor\obj\Debug\StockMonitor.pdb

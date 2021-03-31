@@ -143,3 +143,4 @@ D:\项目\饭票\后端\股票数据处理\obj\Release\ShareData_Service.csproj.
 D:\项目\饭票\后端\股票数据处理\obj\Release\ShareData_Service.csproj.CopyComplete
 D:\项目\饭票\后端\股票数据处理\obj\Release\股票数据处理.exe
 D:\项目\饭票\后端\股票数据处理\obj\Release\股票数据处理.pdb
+F:\项目\饭票后端\股票数据处理\obj\Release\ShareData_Service.csprojAssemblyReference.cache

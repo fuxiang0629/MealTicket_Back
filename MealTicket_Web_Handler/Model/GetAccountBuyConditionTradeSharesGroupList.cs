@@ -36,6 +36,16 @@ namespace MealTicket_Web_Handler.Model
         /// 股票数量
         /// </summary>
         public int SharesCount { get; set; }
+
+        /// <summary>
+        /// 有效股票数量
+        /// </summary>
+        public int ValidCount { get; set; }
+
+        /// <summary>
+        /// 无效股票数量
+        /// </summary>
+        public int InValidCount { get; set; }
     }
 
     public class GetAccountBuyConditionTradeSharesGroupListRequest:DetailsPageRequest 

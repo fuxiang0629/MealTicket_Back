@@ -3283,6 +3283,27 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
         }
 
         /// <summary>
+        /// 修改条件买入股票状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountBuyConditionTradeSharesStatus(ModifyStatusRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = (from item in db.t_account_shares_conditiontrade_buy
+                              where item.Id == request.Id
+                              select item).FirstOrDefault();
+                if (result == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                result.Status = request.Status;
+                db.SaveChanges();
+
+            }
+        }
+
+        /// <summary>
         /// 删除买入条件单股票
         /// </summary>
         /// <param name="request"></param>
@@ -3342,23 +3363,30 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 }
                 int totalCount = groupList.Count();
 
-                return new PageRes<AccountBuyConditionTradeSharesGroupInfo>
-                {
-                    MaxId = 0,
-                    TotalCount = totalCount,
-                    List = (from item in groupList
+                var list = (from item in groupList
                             orderby item.CreateTime descending
                             select new AccountBuyConditionTradeSharesGroupInfo
                             {
                                 Status = item.Status,
                                 CreateTime = item.CreateTime,
                                 Id = item.Id,
-                                Name = item.Name,
-                                SharesCount = (from x in db.t_account_shares_conditiontrade_buy_group_rel
-                                               join x2 in db.t_account_shares_conditiontrade_buy on x.BuyId equals x2.Id
-                                               where x.GroupId==item.Id
-                                               select x).Count()
-                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                                Name = item.Name
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+                foreach (var item in list)
+                {
+                    var temp = (from x in db.t_account_shares_conditiontrade_buy_group_rel
+                                join x2 in db.t_account_shares_conditiontrade_buy on x.BuyId equals x2.Id
+                                where x.GroupId == item.Id
+                                select x2).ToList();
+                    item.SharesCount = temp.Count();
+                    item.ValidCount = temp.Where(e => e.Status == 1).Count();
+                    item.InValidCount = temp.Where(e => e.Status != 1).Count();
+                }
+                return new PageRes<AccountBuyConditionTradeSharesGroupInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = list
                 };
             }
         }
@@ -3416,21 +3444,26 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
         /// </summary>
         /// <param name="request"></param>
         /// <param name="basedata"></param>
-        public void ModifyAccountBuyConditionTradeSharesGroupStatus(ModifyStatusRequest request, HeadBase basedata)
+        public object ModifyAccountBuyConditionTradeSharesGroupStatus(ModifyStatusRequest request, HeadBase basedata)
         {
             using (var db = new meal_ticketEntities())
             {
-                var groupInfo = (from item in db.t_account_shares_conditiontrade_buy_group
-                                 where item.Id == request.Id
-                                 select item).FirstOrDefault();
-                if (groupInfo == null)
+                var groupInfo = (from item in db.t_account_shares_conditiontrade_buy_group_rel
+                                 join item2 in db.t_account_shares_conditiontrade_buy on item.BuyId equals item2.Id
+                                 where item.GroupId == request.Id
+                                 select item2).ToList();
+                int i = 0;
+                foreach (var item in groupInfo)
                 {
-                    throw new WebApiException(400, "数据不存在");
+                    if (item.Status != request.Status)
+                    {
+                        i++;
+                    }
+                    item.Status = request.Status;
                 }
 
-                groupInfo.Status = request.Status;
-                groupInfo.LastModified = DateTime.Now;
                 db.SaveChanges();
+                return i;
             }
         }
 
