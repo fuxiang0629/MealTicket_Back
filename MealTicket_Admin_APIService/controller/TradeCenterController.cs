@@ -602,13 +602,13 @@ namespace MealTicket_Admin_APIService.controller
         [CheckUserPowerFilter]
         [Route("shares/plate/shares/list"), HttpPost]
         [Description("获取板块股票列表")]
-        public PageRes<SharesPlateSharesInfo> GetSharesPlateSharesList(DetailsPageRequest request)
+        public PageRes<SharesInfo> GetSharesPlateSharesList(DetailsPageRequest request)
         {
             if (request == null)
             {
                 throw new WebApiException(400, "参数错误");
             }
-            return tradeCenterHandler.GetSharesPlateList(request);
+            return tradeCenterHandler.GetSharesPlateSharesList(request);
         }
         #endregion
 
