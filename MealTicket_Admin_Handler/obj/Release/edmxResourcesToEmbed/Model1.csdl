@@ -286,6 +286,7 @@
     <EntitySet Name="t_account_shares_optional_group_rel" EntityType="meal_ticketModel.t_account_shares_optional_group_rel" />
     <EntitySet Name="t_shares_limit_fundmultiple_account" EntityType="meal_ticketModel.t_shares_limit_fundmultiple_account" />
     <EntitySet Name="t_shares_plate" EntityType="meal_ticketModel.t_shares_plate" />
+    <EntitySet Name="t_shares_plate_rel" EntityType="meal_ticketModel.t_shares_plate_rel" />
   </EntityContainer>
   <EntityType Name="t_admin_department">
     <Key>
@@ -2016,5 +2017,15 @@
     <Property Name="Status" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
 </Schema>

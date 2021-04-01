@@ -41,6 +41,11 @@ namespace MealTicket_Admin_Handler.Model
         public int Status { get; set; }
 
         /// <summary>
+        /// 股票数量
+        /// </summary>
+        public int SharesCount { get; set; }
+
+        /// <summary>
         /// 数据创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }

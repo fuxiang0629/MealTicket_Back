@@ -1556,12 +1556,22 @@
     <Key>
       <PropertyRef Name="Id" />
     </Key>
-    <Property Name="Id" Type="bigint" Nullable="false" />
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Name" Type="nvarchar" MaxLength="200" Nullable="false" />
     <Property Name="Type" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PlateId" Type="bigint" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_quotes">
     <Key>
@@ -2006,6 +2016,7 @@
     <EntitySet Name="t_shares_monitor_trend_rel" EntityType="Self.t_shares_monitor_trend_rel" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_monitor_trend_rel_par" EntityType="Self.t_shares_monitor_trend_rel_par" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_plate" EntityType="Self.t_shares_plate" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_plate_rel" EntityType="Self.t_shares_plate_rel" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_quotes" EntityType="Self.t_shares_quotes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_search" EntityType="Self.t_shares_search" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_suspension" EntityType="Self.t_shares_suspension" Schema="dbo" store:Type="Tables" />

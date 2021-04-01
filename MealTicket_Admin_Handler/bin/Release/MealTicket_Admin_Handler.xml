@@ -8364,6 +8364,21 @@
             名称
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesPlateSharesRequest.PlateId">
+            <summary>
+            板块Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesPlateSharesRequest.Market">
+            <summary>
+            市场
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesPlateSharesRequest.SharesCode">
+            <summary>
+            股票代码
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.AddSharesPositionRulesRequest.LimitMarket">
             <summary>
             市场0深圳 1上海
@@ -8572,6 +8587,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.Status">
             <summary>
             状态
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.SharesCount">
+            <summary>
+            股票数量
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.CreateTime">
@@ -9027,6 +9047,16 @@
         <member name="P:MealTicket_Admin_Handler.Model.SharesInfo.Industry">
             <summary>
             所属行业
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesInfo.Area">
+            <summary>
+            所属地区
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesInfo.Idea">
+            <summary>
+            所属概念
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.SharesInfo.Business">
@@ -9537,6 +9567,16 @@
         <member name="P:MealTicket_Admin_Handler.Model.MarketTimeInfo.Industry">
             <summary>
             所属行业
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.MarketTimeInfo.Area">
+            <summary>
+            所属地区
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.MarketTimeInfo.Idea">
+            <summary>
+            所属概念
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.MarketTimeInfo.Business">
@@ -10678,6 +10718,12 @@
             </summary>
             <param name="request"></param>
         </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesPlate(System.Collections.Generic.List{System.String},System.Int32)">
+            <summary>
+            批量导入板块数据
+            </summary>
+            <param name="list"></param>
+        </member>
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesPlate(MealTicket_Admin_Handler.Model.ModifySharesPlateRequest)">
             <summary>
             编辑板块管理
@@ -10693,6 +10739,25 @@
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteSharesPlate(MealTicket_Admin_Handler.Model.DeleteRequest)">
             <summary>
             删除板块管理
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetSharesPlateSharesList(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
+            <summary>
+            获取板块股票列表
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.AddSharesPlateShares(MealTicket_Admin_Handler.Model.AddSharesPlateSharesRequest)">
+            <summary>
+            添加板块股票
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteSharesPlateShares(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除板块股票
             </summary>
             <param name="request"></param>
         </member>

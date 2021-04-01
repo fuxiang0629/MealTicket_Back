@@ -1,6 +1,7 @@
 t_account_shares_conditiontrade_buy_group
 t_account_shares_conditiontrade_buy_group_rel
 t_shares_plate
+t_shares_plate_rel
 
 t_shares_info_fund_group
 t_shares_info_fund_group_details

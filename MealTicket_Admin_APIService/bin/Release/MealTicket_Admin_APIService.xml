@@ -2087,6 +2087,12 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.BatchAddSharesPlate">
+            <summary>
+            批量导入板块数据
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifySharesPlate(MealTicket_Admin_Handler.Model.ModifySharesPlateRequest)">
             <summary>
             编辑板块管理
@@ -2104,6 +2110,27 @@
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeleteSharesPlate(MealTicket_Admin_Handler.Model.DeleteRequest)">
             <summary>
             删除板块管理
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetSharesPlateSharesList(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
+            <summary>
+            获取板块股票列表
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.AddSharesPlateShares(MealTicket_Admin_Handler.Model.AddSharesPlateSharesRequest)">
+            <summary>
+            添加板块股票
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeleteSharesPlateShares(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除板块股票
             </summary>
             <param name="request"></param>
             <returns></returns>
