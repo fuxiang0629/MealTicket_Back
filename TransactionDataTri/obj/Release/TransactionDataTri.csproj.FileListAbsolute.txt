@@ -66,7 +66,6 @@ D:\项目\饭票\后端\TransactionDataTri\bin\Release\System.Threading.Channels
 D:\项目\饭票\后端\TransactionDataTri\bin\Release\System.Threading.Tasks.Extensions.xml
 D:\项目\饭票\后端\TransactionDataTri\bin\Release\zh-Hans\EntityFramework.resources.dll
 D:\项目\饭票\后端\TransactionDataTri\bin\Release\zh-Hans\EntityFramework.SqlServer.resources.dll
-D:\项目\饭票\后端\TransactionDataTri\obj\Release\TransactionDataTri.csprojAssemblyReference.cache
 D:\项目\饭票\后端\TransactionDataTri\obj\Release\TransactionDataTri.csproj.CoreCompileInputs.cache
 D:\项目\饭票\后端\TransactionDataTri\obj\Release\TransactionDataTri.csproj.CopyComplete
 D:\项目\饭票\后端\TransactionDataTri\obj\Release\TransactionDataTri.exe

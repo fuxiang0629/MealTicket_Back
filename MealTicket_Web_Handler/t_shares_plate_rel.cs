@@ -12,13 +12,12 @@ namespace MealTicket_Web_Handler
     using System;
     using System.Collections.Generic;
     
-    public partial class t_account_shares_conditiontrade_buy_group
+    public partial class t_shares_plate_rel
     {
         public long Id { get; set; }
-        public long AccountId { get; set; }
-        public string Name { get; set; }
-        public int Status { get; set; }
+        public long PlateId { get; set; }
+        public int Market { get; set; }
+        public string SharesCode { get; set; }
         public System.DateTime CreateTime { get; set; }
-        public System.DateTime LastModified { get; set; }
     }
 }

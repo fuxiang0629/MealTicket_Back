@@ -18,6 +18,16 @@ namespace MealTicket_Web_Handler
         public long TotalAssets { get; set; }
 
         /// <summary>
+        /// 总权益
+        /// </summary>
+        public long TotalFundAmount { get; set; }
+
+        /// <summary>
+        /// 已用保证经
+        /// </summary>
+        public long UsedDepositAmount { get; set; }
+
+        /// <summary>
         /// 总市值
         /// </summary>
         public long TotalMarketValue { get; set; }

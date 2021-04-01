@@ -10,7 +10,7 @@ namespace MealTicket_Web_Handler.Model
     {
     }
 
-    public class AccountBuyConditionTradeSharesGroupSharesInfo
+    public class AccountSharesPlateSharesInfo
     {
 
         /// <summary>

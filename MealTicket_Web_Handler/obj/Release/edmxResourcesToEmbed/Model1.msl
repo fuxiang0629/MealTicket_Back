@@ -364,27 +364,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="t_account_shares_conditiontrade_buy_group">
-      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_group">
-        <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_group">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="Status" ColumnName="Status" />
-          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="t_account_shares_conditiontrade_buy_group_rel">
-      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_group_rel">
-        <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_group_rel">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="BuyId" ColumnName="BuyId" />
-          <ScalarProperty Name="GroupId" ColumnName="GroupId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="t_account_shares_conditiontrade_buy_trend_par_template">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_trend_par_template">
         <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_trend_par_template">
@@ -2525,5 +2504,28 @@
     <FunctionImportMapping FunctionImportName="P_TradeFinish" FunctionName="meal_ticketModel.Store.P_TradeFinish" />
     <FunctionImportMapping FunctionImportName="P_TradeRecovery" FunctionName="meal_ticketModel.Store.P_TradeRecovery" />
     <FunctionImportMapping FunctionImportName="P_TryToCancelEntrust" FunctionName="meal_ticketModel.Store.P_TryToCancelEntrust" />
+    <EntitySetMapping Name="t_shares_plate">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_shares_plate">
+        <MappingFragment StoreEntitySet="t_shares_plate">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_shares_plate_rel">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_shares_plate_rel">
+        <MappingFragment StoreEntitySet="t_shares_plate_rel">
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+          <ScalarProperty Name="Market" ColumnName="Market" />
+          <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

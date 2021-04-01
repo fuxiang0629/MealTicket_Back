@@ -121,13 +121,12 @@
     <Compile Include="Model\AddAccountBuyConditionOtherGroup.cs" />
     <Compile Include="Model\AddAccountBuyConditionOtherPar.cs" />
     <Compile Include="Model\AddAccountBuyConditionTradeShares.cs" />
-    <Compile Include="Model\AddAccountBuyConditionTradeSharesGroup.cs" />
-    <Compile Include="Model\AddAccountBuyConditionTradeSharesGroupShares.cs" />
     <Compile Include="Model\AddAccountHoldConditionTrade.cs" />
     <Compile Include="Model\AddAccountOptional.cs" />
     <Compile Include="Model\AddAccountOptionalGroup.cs" />
     <Compile Include="Model\AddAccountOptionalGroupRel.cs" />
     <Compile Include="Model\AddAccountOptionalTrendPar.cs" />
+    <Compile Include="Model\BatchModifyAccountSharesPlateStatus.cs" />
     <Compile Include="Model\BindAccountOptionalSeat.cs" />
     <Compile Include="Model\GetAccountBuyConditionAutoGroupList.cs" />
     <Compile Include="Model\GetAccountBuyConditionAutoList.cs" />
@@ -136,7 +135,8 @@
     <Compile Include="Model\GetAccountBuyConditionOtherGroupList.cs" />
     <Compile Include="Model\GetAccountBuyConditionOtherList.cs" />
     <Compile Include="Model\GetAccountBuyConditionOtherPar.cs" />
-    <Compile Include="Model\GetAccountBuyConditionTradeSharesGroupList.cs" />
+    <Compile Include="Model\GetAccountSharesPlateSharesList.cs" />
+    <Compile Include="Model\GetSharesPlateList.cs" />
     <Compile Include="Model\GetAccountBuyConditionTradeSharesGroupSharesList.cs" />
     <Compile Include="Model\GetAccountBuyConditionTradeSharesList.cs" />
     <Compile Include="Model\GetAccountFollowRecord.cs" />
@@ -169,7 +169,6 @@
     <Compile Include="Model\ModifyAccountBuyConditionAutoPar.cs" />
     <Compile Include="Model\ModifyAccountBuyConditionOtherGroup.cs" />
     <Compile Include="Model\ModifyAccountBuyConditionOtherPar.cs" />
-    <Compile Include="Model\ModifyAccountBuyConditionTradeSharesGroup.cs" />
     <Compile Include="Model\ModifyAccountHoldConditionTrade.cs" />
     <Compile Include="Model\ModifyAccountOptionalGroup.cs" />
     <Compile Include="Model\ModifyAccountOptionalGroupRelGroupIsContinue.cs" />
@@ -260,12 +259,6 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_account_shares_conditiontrade_buy_details_other_trend_par.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="t_account_shares_conditiontrade_buy_group.cs">
-      <DependentUpon>Model1.tt</DependentUpon>
-    </Compile>
-    <Compile Include="t_account_shares_conditiontrade_buy_group_rel.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_account_shares_conditiontrade_buy_trend_par_template.cs">
@@ -629,6 +622,12 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_shares_monitor_trend_rel_par.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_plate.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_plate_rel.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_shares_quotes.cs">

@@ -34,6 +34,16 @@ namespace MealTicket_Admin_Handler.Model
         public string Industry { get; set; }
 
         /// <summary>
+        /// 所属地区
+        /// </summary>
+        public string Area { get; set; }
+
+        /// <summary>
+        /// 所属概念
+        /// </summary>
+        public string Idea { get; set; }
+
+        /// <summary>
         /// 主营业务
         /// </summary>
         public string Business { get; set; }

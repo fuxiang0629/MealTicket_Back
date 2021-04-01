@@ -18,5 +18,6 @@ namespace MealTicket_Admin_Handler
         public long PlateId { get; set; }
         public int Market { get; set; }
         public string SharesCode { get; set; }
+        public System.DateTime CreateTime { get; set; }
     }
 }

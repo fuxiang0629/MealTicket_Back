@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace MealTicket_Web_Handler.Model
 {
-    class GetAccountBuyConditionTradeSharesGroupList
+    class GetSharesPlateList
     {
     }
 
-    public class AccountBuyConditionTradeSharesGroupInfo
+    public class SharesPlateInfo
     {
         /// <summary>
         /// Id
@@ -21,11 +21,6 @@ namespace MealTicket_Web_Handler.Model
         /// 名称
         /// </summary>
         public string Name { get; set; }
-
-        /// <summary>
-        /// 状态
-        /// </summary>
-        public int Status { get; set; }
 
         /// <summary>
         /// 创建时间
@@ -48,11 +43,16 @@ namespace MealTicket_Web_Handler.Model
         public int InValidCount { get; set; }
     }
 
-    public class GetAccountBuyConditionTradeSharesGroupListRequest:DetailsPageRequest 
+    public class GetSharesPlateListRequest:DetailsPageRequest 
     {
         /// <summary>
         /// 名称
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// 1所属行业 2所属地区 3所属概念
+        /// </summary>
+        public int Type { get; set; }
     }
 }

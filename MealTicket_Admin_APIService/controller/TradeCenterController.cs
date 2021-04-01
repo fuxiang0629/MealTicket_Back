@@ -360,7 +360,7 @@ namespace MealTicket_Admin_APIService.controller
                                 continue;
                             }
                             string[] datas = temp[i].Split(',');
-                            if (datas.Length < 5)
+                            if (datas.Length < 7)
                             {
                                 continue;
                             }
@@ -377,7 +377,9 @@ namespace MealTicket_Admin_APIService.controller
                                 SharesName = datas[1],
                                 MarketTime = string.IsNullOrEmpty(datas[2])?DateTime.Parse("1970-01-01 00:00:00"):DateTime.Parse(datas[2]),
                                 Industry = datas[3],
-                                Business = datas[4],
+                                Area = datas[4],
+                                Idea = datas[5],
+                                Business = datas[6],
                             });
                         }
                         tradeCenterHandler.BatchModifySharesMarketTime(marketTimeList);
@@ -541,6 +543,70 @@ namespace MealTicket_Admin_APIService.controller
         }
 
         /// <summary>
+        /// 批量导入板块数据
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("shares/plate/batch/add"), HttpPost]
+        [Description("批量导入板块数据")]
+        public async Task<object> BatchAddSharesPlate()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var type = int.Parse(provider.FormData["Type"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<string> list = new List<string>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string datas = temp[i];
+                            if (datas.Length < 1)
+                            {
+                                continue;
+                            }
+
+                            list.Add(datas);
+                        }
+                        return tradeCenterHandler.BatchAddSharesPlate(list, type);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
         /// 编辑板块管理
         /// </summary>
         /// <param name="request"></param>
@@ -609,6 +675,42 @@ namespace MealTicket_Admin_APIService.controller
                 throw new WebApiException(400, "参数错误");
             }
             return tradeCenterHandler.GetSharesPlateSharesList(request);
+        }
+
+        /// <summary>
+        /// 添加板块股票
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/plate/shares/add"), HttpPost]
+        [Description("添加板块股票")]
+        public object AddSharesPlateShares(AddSharesPlateSharesRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesPlateShares(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除板块股票
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/plate/shares/delete"), HttpPost]
+        [Description("删除板块股票")]
+        public object DeleteSharesPlateShares(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesPlateShares(request);
+            return null;
         }
         #endregion
 

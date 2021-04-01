@@ -16,6 +16,11 @@ namespace MealTicket_Web_Handler.Model
         /// 股票信息
         /// </summary>
         public string SharesInfo { get; set; }
+
+        /// <summary>
+        /// 是否所有股票
+        /// </summary>
+        public bool IsAll { get; set; }
     }
 
     public class SharesInfo

@@ -1876,6 +1876,7 @@
     <EntitySetMapping Name="t_shares_plate_rel">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_plate_rel">
         <MappingFragment StoreEntitySet="t_shares_plate_rel">
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
           <ScalarProperty Name="Market" ColumnName="Market" />
           <ScalarProperty Name="PlateId" ColumnName="PlateId" />

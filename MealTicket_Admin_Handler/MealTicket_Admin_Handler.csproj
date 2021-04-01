@@ -340,6 +340,7 @@
     <Compile Include="Model\TradeCenter\AddSharesMonitorTrendRel.cs" />
     <Compile Include="Model\TradeCenter\AddSharesMonitorTrendRelPar.cs" />
     <Compile Include="Model\TradeCenter\AddSharesPlate.cs" />
+    <Compile Include="Model\TradeCenter\AddSharesPlateShares.cs" />
     <Compile Include="Model\TradeCenter\AddSharesPositionRules.cs" />
     <Compile Include="Model\TradeCenter\AddSharesPositionRulesOther.cs" />
     <Compile Include="Model\TradeCenter\BatchUpdateMonitorTrendPar.cs" />

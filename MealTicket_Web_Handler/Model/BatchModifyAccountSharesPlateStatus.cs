@@ -6,20 +6,15 @@ using System.Threading.Tasks;
 
 namespace MealTicket_Web_Handler.Model
 {
-    class AddAccountBuyConditionTradeSharesGroup
+    class BatchModifyAccountSharesPlateStatus
     {
     }
 
-    public class AddAccountBuyConditionTradeSharesGroupRequest
+    public class BatchModifyAccountSharesPlateStatusRequest:ModifyStatusRequest
     {
         /// <summary>
         /// 用户Id
         /// </summary>
         public long AccountId { get; set; }
-
-        /// <summary>
-        /// 名称
-        /// </summary>
-        public string Name { get; set; }
     }
 }

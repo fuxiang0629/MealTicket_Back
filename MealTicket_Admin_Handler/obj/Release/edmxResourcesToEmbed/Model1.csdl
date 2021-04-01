@@ -2011,7 +2011,7 @@
     <Key>
       <PropertyRef Name="Id" />
     </Key>
-    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Id" Type="Int64" Nullable="false" />
     <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
     <Property Name="Type" Type="Int32" Nullable="false" />
     <Property Name="Status" Type="Int32" Nullable="false" />
@@ -2026,5 +2026,6 @@
     <Property Name="PlateId" Type="Int64" Nullable="false" />
     <Property Name="Market" Type="Int32" Nullable="false" />
     <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
 </Schema>

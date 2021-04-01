@@ -1886,7 +1886,43 @@ namespace MealTicket_Handler.RunnerHandler
             using (var db = new meal_ticketEntities())
             {
                 DateTime timeDate = DateTime.Now.Date;
-                string sql = string.Format("select t.Market,t.SharesCode,t1.SharesName from t_shares_quotes t with(xlock) inner join t_shares_all t1 with(nolock) on t.Market=t1.Market and t.SharesCode=t1.SharesCode inner join t_shares_monitor t2 with(nolock) on t.Market=t2.Market and t.SharesCode=t2.SharesCode where t.LastModified>'{0}' and t2.[Status]=1", timeDate.ToString("yyyy-MM-dd"));
+                string sql = string.Format(@"select Market,SharesCode
+  from
+  (
+  select t.Market, t.SharesCode
+  from t_shares_quotes t
+  inner
+  join t_shares_all t1 on t.Market = t1.Market and t.SharesCode = t1.SharesCode
+  inner join t_shares_monitor t2 on t.Market = t2.Market and t.SharesCode = t2.SharesCode
+  where t.LastModified > '{0}' and t2.[Status] = 1
+  union all
+  select t3.Market, t3.SharesCode
+  from t_account_shares_conditiontrade_buy_details_other_trend t
+  inner
+  join t_account_shares_conditiontrade_buy_details_other t1 on t.OtherId = t1.Id
+
+inner
+  join t_account_shares_conditiontrade_buy_details t2 on t1.DetailsId = t2.Id
+
+inner
+  join t_account_shares_conditiontrade_buy t3 on t2.ConditionId = t3.Id
+  where t.[Status] = 1 and t1.[Status] = 1 and t2.[Status] = 1 and t3.[Status] = 1 and(t.TrendId = 1 or t.TrendId = 2 or t.TrendId = 3)
+  group by t3.Market, t3.SharesCode
+  union all
+  select t3.Market, t3.SharesCode
+  from t_account_shares_conditiontrade_buy_details_auto_trend t
+  inner
+  join t_account_shares_conditiontrade_buy_details_auto t1 on t.AutoId = t1.Id
+
+inner
+  join t_account_shares_conditiontrade_buy_details t2 on t1.DetailsId = t2.Id
+
+inner
+  join t_account_shares_conditiontrade_buy t3 on t2.ConditionId = t3.Id
+  where t.[Status] = 1 and t1.[Status] = 1 and t2.[Status] = 1 and t3.[Status] = 1 and(t.TrendId = 1 or t.TrendId = 2 or t.TrendId = 3)
+  group by t3.Market, t3.SharesCode
+  )t
+  group by Market, SharesCode", timeDate.ToString("yyyy-MM-dd"));
                 var shares = db.Database.SqlQuery<TradeSharesInfo>(sql);
 
                 DateTime tempTime = DateTime.Now.AddMinutes(-10);
