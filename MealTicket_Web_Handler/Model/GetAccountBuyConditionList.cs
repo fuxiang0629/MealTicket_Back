@@ -124,6 +124,11 @@ namespace MealTicket_Web_Handler.Model
         public int BusinessStatus { get; set; }
 
         /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreateTime { get; set; }
+
+        /// <summary>
         /// 跟投用户Id列表
         /// </summary>
         public List<long> FollowAccountList { get; set; }

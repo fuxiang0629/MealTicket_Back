@@ -126,6 +126,8 @@
     <Compile Include="Model\AddAccountOptionalGroup.cs" />
     <Compile Include="Model\AddAccountOptionalGroupRel.cs" />
     <Compile Include="Model\AddAccountOptionalTrendPar.cs" />
+    <Compile Include="Model\AddConditiontradeTemplate.cs" />
+    <Compile Include="Model\AddConditiontradeTemplateSellDetails.cs" />
     <Compile Include="Model\BatchModifyAccountSharesPlateStatus.cs" />
     <Compile Include="Model\BindAccountOptionalSeat.cs" />
     <Compile Include="Model\GetAccountBuyConditionAutoGroupList.cs" />
@@ -136,6 +138,8 @@
     <Compile Include="Model\GetAccountBuyConditionOtherList.cs" />
     <Compile Include="Model\GetAccountBuyConditionOtherPar.cs" />
     <Compile Include="Model\GetAccountSharesPlateSharesList.cs" />
+    <Compile Include="Model\GetConditiontradeTemplateList.cs" />
+    <Compile Include="Model\GetConditiontradeTemplateSellDetailsList.cs" />
     <Compile Include="Model\GetSharesPlateList.cs" />
     <Compile Include="Model\GetAccountBuyConditionTradeSharesGroupSharesList.cs" />
     <Compile Include="Model\GetAccountBuyConditionTradeSharesList.cs" />
@@ -177,6 +181,8 @@
     <Compile Include="Model\ModifyAccountRealTimeTrendTri.cs" />
     <Compile Include="Model\ModifyAccountRealTimeTrendTriGroup.cs" />
     <Compile Include="Model\ModifyAccountSeat.cs" />
+    <Compile Include="Model\ModifyConditiontradeTemplate.cs" />
+    <Compile Include="Model\ModifyConditiontradeTemplateSellDetails.cs" />
     <Compile Include="ModifyStatusRequest.cs" />
     <Compile Include="MQHandler.cs" />
     <Compile Include="OptionalTrend.cs" />
@@ -262,6 +268,15 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_account_shares_conditiontrade_buy_trend_par_template.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_conditiontrade_template.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_conditiontrade_template_sell.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_conditiontrade_template_sell_child.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_account_shares_entrust.cs">
