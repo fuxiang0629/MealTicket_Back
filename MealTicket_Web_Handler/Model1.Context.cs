@@ -190,6 +190,9 @@ namespace MealTicket_Web_Handler
         public virtual DbSet<test> test { get; set; }
         public virtual DbSet<t_shares_plate> t_shares_plate { get; set; }
         public virtual DbSet<t_shares_plate_rel> t_shares_plate_rel { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_template> t_account_shares_conditiontrade_template { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_template_sell_child> t_account_shares_conditiontrade_template_sell_child { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_template_sell> t_account_shares_conditiontrade_template_sell { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)

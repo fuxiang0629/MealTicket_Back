@@ -1,5 +1,7 @@
-t_shares_plate
-t_shares_plate_rel
+t_account_shares_conditiontrade_template
+t_account_shares_conditiontrade_template_sell
+t_account_shares_conditiontrade_template_sell_child
+
 
 t_shares_info_fund_group
 t_shares_info_fund_group_details

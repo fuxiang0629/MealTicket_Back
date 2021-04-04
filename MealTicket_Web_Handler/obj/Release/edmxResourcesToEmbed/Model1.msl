@@ -2527,5 +2527,52 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_conditiontrade_template">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_template">
+        <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_template">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_conditiontrade_template_sell_child">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_template_sell_child">
+        <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_template_sell_child">
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="ChildId" ColumnName="ChildId" />
+          <ScalarProperty Name="FatherId" ColumnName="FatherId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_conditiontrade_template_sell">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_template_sell">
+        <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_template_sell">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="SourceFrom" ColumnName="SourceFrom" />
+          <ScalarProperty Name="ForbidType" ColumnName="ForbidType" />
+          <ScalarProperty Name="EntrustPriceGear" ColumnName="EntrustPriceGear" />
+          <ScalarProperty Name="EntrustType" ColumnName="EntrustType" />
+          <ScalarProperty Name="EntrustCount" ColumnName="EntrustCount" />
+          <ScalarProperty Name="ConditionPriceRate" ColumnName="ConditionPriceRate" />
+          <ScalarProperty Name="ConditionPriceType" ColumnName="ConditionPriceType" />
+          <ScalarProperty Name="ConditionPriceBase" ColumnName="ConditionPriceBase" />
+          <ScalarProperty Name="ConditionType" ColumnName="ConditionType" />
+          <ScalarProperty Name="ConditionTime" ColumnName="ConditionTime" />
+          <ScalarProperty Name="ConditionDay" ColumnName="ConditionDay" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="TemplateId" ColumnName="TemplateId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

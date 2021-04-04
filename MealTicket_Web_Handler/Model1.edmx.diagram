@@ -168,6 +168,9 @@
         <EntityTypeShape EntityType="meal_ticketModel.test" Width="1.5" PointX="20.75" PointY="36.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate" Width="1.5" PointX="11.75" PointY="13.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel" Width="1.5" PointX="0.75" PointY="37.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_template" Width="1.5" PointX="3.375" PointY="37.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_template_sell_child" Width="1.5" PointX="7.375" PointY="37.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_template_sell" Width="1.5" PointX="9.375" PointY="37.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -349,6 +349,50 @@
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
+  <EntityType Name="t_account_shares_conditiontrade_template">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_conditiontrade_template_sell">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TemplateId" Type="bigint" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="ConditionDay" Type="int" />
+    <Property Name="ConditionTime" Type="varchar" MaxLength="20" />
+    <Property Name="ConditionType" Type="int" />
+    <Property Name="ConditionPriceBase" Type="int" />
+    <Property Name="ConditionPriceType" Type="int" />
+    <Property Name="ConditionPriceRate" Type="int" />
+    <Property Name="EntrustCount" Type="int" Nullable="false" />
+    <Property Name="EntrustType" Type="int" Nullable="false" />
+    <Property Name="EntrustPriceGear" Type="int" Nullable="false" />
+    <Property Name="ForbidType" Type="int" Nullable="false" />
+    <Property Name="SourceFrom" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_conditiontrade_template_sell_child">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FatherId" Type="bigint" Nullable="false" />
+    <Property Name="ChildId" Type="bigint" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_account_shares_entrust">
     <Key>
       <PropertyRef Name="Id" />
@@ -2780,6 +2824,9 @@
     <EntitySet Name="t_account_shares_conditiontrade_buy_details_other_trend" EntityType="Self.t_account_shares_conditiontrade_buy_details_other_trend" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_details_other_trend_par" EntityType="Self.t_account_shares_conditiontrade_buy_details_other_trend_par" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_trend_par_template" EntityType="Self.t_account_shares_conditiontrade_buy_trend_par_template" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_conditiontrade_template" EntityType="Self.t_account_shares_conditiontrade_template" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_conditiontrade_template_sell" EntityType="Self.t_account_shares_conditiontrade_template_sell" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_conditiontrade_template_sell_child" EntityType="Self.t_account_shares_conditiontrade_template_sell_child" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_entrust" EntityType="Self.t_account_shares_entrust" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_entrust_follow" EntityType="Self.t_account_shares_entrust_follow" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_entrust_manager" EntityType="Self.t_account_shares_entrust_manager" Schema="dbo" store:Type="Tables" />
