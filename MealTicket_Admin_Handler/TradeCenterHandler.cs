@@ -3277,6 +3277,385 @@ namespace MealTicket_Admin_Handler
                 }
             }
         }
+
+        /// <summary>
+        /// 获取条件模板列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<ConditiontradeTemplateInfo> GetConditiontradeTemplateList(GetConditiontradeTemplateListRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var template = from item in db.t_sys_conditiontrade_template
+                               where item.Type == request.Type
+                               select item;
+                int totalCount = template.Count();
+
+                return new PageRes<ConditiontradeTemplateInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in template
+                            orderby item.CreateTime descending
+                            select new ConditiontradeTemplateInfo
+                            {
+                                Status = item.Status,
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                Name = item.Name
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加条件模板
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddConditiontradeTemplate(AddConditiontradeTemplateRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //判断模板名称是否存在
+                var template = (from item in db.t_sys_conditiontrade_template
+                                where item.Type == request.Type  && item.Name == request.Name
+                                select item).FirstOrDefault();
+                if (template != null)
+                {
+                    throw new WebApiException(400, "模板名称已存在");
+                }
+                db.t_sys_conditiontrade_template.Add(new t_sys_conditiontrade_template
+                {
+                    Status = 1,
+                    CreateTime = DateTime.Now,
+                    LastModified = DateTime.Now,
+                    Name = request.Name,
+                    Type = request.Type
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 编辑条件模板
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifyConditiontradeTemplate(ModifyConditiontradeTemplateRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var template = (from item in db.t_sys_conditiontrade_template
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (template == null)
+                {
+                    throw new WebApiException(400, "模板不存在");
+                }
+                //判断模板名称是否存在
+                var temp = (from item in db.t_sys_conditiontrade_template
+                            where item.Type == template.Type && item.Name == request.Name && item.Id != request.Id
+                            select item).FirstOrDefault();
+                if (temp != null)
+                {
+                    throw new WebApiException(400, "模板名称已存在");
+                }
+
+                template.Name = request.Name;
+                template.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改条件模板状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifyConditiontradeTemplateStatus(ModifyStatusRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var template = (from item in db.t_sys_conditiontrade_template
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (template == null)
+                {
+                    throw new WebApiException(400, "模板不存在");
+                }
+
+                template.Status = request.Status;
+                template.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除条件模板
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void DeleteConditiontradeTemplate(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var template = (from item in db.t_sys_conditiontrade_template
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (template == null)
+                {
+                    throw new WebApiException(400, "模板不存在");
+                }
+                db.t_sys_conditiontrade_template.Remove(template);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取条件卖出模板详情列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public List<ConditiontradeTemplateSellDetailsInfo> GetConditiontradeTemplateSellDetailsList(GetConditiontradeTemplateSellDetailsListRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var sell_details = (from item in db.t_sys_conditiontrade_template_sell
+                                    where item.TemplateId == request.TemplateId && item.Type == request.Type
+                                    select new ConditiontradeTemplateSellDetailsInfo
+                                    {
+                                        Status = item.Status,
+                                        ConditionDay = item.ConditionDay,
+                                        ConditionPriceBase = item.ConditionPriceBase,
+                                        ConditionPriceType = item.ConditionType,
+                                        ConditionRelativeRate = item.ConditionPriceRate,
+                                        ConditionRelativeType = item.ConditionPriceType,
+                                        ConditionTime = item.ConditionTime,
+                                        CreateTime = item.CreateTime,
+                                        EntrustCount = item.EntrustCount,
+                                        EntrustPriceGear = item.EntrustPriceGear,
+                                        ForbidType = item.ForbidType,
+                                        EntrustType = item.EntrustType,
+                                        Id = item.Id,
+                                        Name = item.Name,
+                                        ChildList = (from x in db.t_sys_conditiontrade_template_sell_child
+                                                     where x.FatherId == item.Id
+                                                     select new ConditionChild
+                                                     {
+                                                         Status = x.Status,
+                                                         ChildId = x.ChildId
+                                                     }).ToList()
+                                    }).ToList();
+                return sell_details;
+            }
+        }
+
+        /// <summary>
+        /// 添加条件卖出模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void AddConditiontradeTemplateSellDetails(AddConditiontradeTemplateSellDetailsRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //判断模板是否存在
+                    var template = (from item in db.t_sys_conditiontrade_template
+                                    where item.Id == request.TemplateId && item.Type == 2
+                                    select item).FirstOrDefault();
+                    if (template == null)
+                    {
+                        throw new WebApiException(400, "模板不存在");
+                    }
+                    var temp = new t_sys_conditiontrade_template_sell
+                    {
+                        ConditionTime = request.ConditionTime,
+                        CreateTime = DateTime.Now,
+                        EntrustCount = request.EntrustCount,
+                        EntrustPriceGear = request.EntrustPriceGear,
+                        EntrustType = request.EntrustType,
+                        LastModified = DateTime.Now,
+                        Status = 1,
+                        ForbidType = request.ForbidType,
+                        Name = string.IsNullOrEmpty(request.Name) ? Guid.NewGuid().ToString("N") : request.Name,
+                        Type = request.Type,
+                        ConditionDay = request.ConditionDay,
+                        ConditionPriceBase = request.ConditionPriceBase,
+                        ConditionPriceRate = request.ConditionRelativeRate,
+                        ConditionPriceType = request.ConditionRelativeType,
+                        ConditionType = request.ConditionPriceType,
+                        TemplateId = request.TemplateId
+                    };
+                    db.t_sys_conditiontrade_template_sell.Add(temp);
+                    db.SaveChanges();
+
+                    int i = 0;
+                    foreach (var item in request.ChildList)
+                    {
+                        if (item.ChildId > 0)
+                        {
+                            db.t_sys_conditiontrade_template_sell_child.Add(new t_sys_conditiontrade_template_sell_child
+                            {
+                                Status = item.Status,
+                                ChildId = item.ChildId,
+                                FatherId = temp.Id,
+                            });
+                            i++;
+                        }
+                    }
+                    if (i > 0)
+                    {
+                        db.SaveChanges();
+                    }
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex.InnerException;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 编辑条件卖出模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifyConditiontradeTemplateSellDetails(ModifyConditiontradeTemplateSellDetailsRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var conditiontrade = (from item in db.t_sys_conditiontrade_template_sell
+                                          where item.Id == request.Id
+                                          select item).FirstOrDefault();
+                    if (conditiontrade == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    conditiontrade.EntrustCount = request.EntrustCount;
+                    conditiontrade.EntrustPriceGear = request.EntrustPriceGear;
+                    conditiontrade.EntrustType = request.EntrustType;
+                    conditiontrade.ForbidType = request.ForbidType;
+                    conditiontrade.LastModified = DateTime.Now;
+                    conditiontrade.Name = request.Name;
+                    conditiontrade.ConditionType = request.ConditionPriceType;
+                    conditiontrade.ConditionPriceBase = request.ConditionPriceBase;
+                    conditiontrade.ConditionPriceRate = request.ConditionRelativeRate;
+                    conditiontrade.ConditionTime = request.ConditionTime;
+                    conditiontrade.ConditionDay = request.ConditionDay;
+                    conditiontrade.ConditionPriceType = request.ConditionRelativeType;
+                    db.SaveChanges();
+
+                    var child = (from item in db.t_sys_conditiontrade_template_sell_child
+                                 where item.FatherId == request.Id
+                                 select item).ToList();
+                    if (child.Count() > 0)
+                    {
+                        db.t_sys_conditiontrade_template_sell_child.RemoveRange(child);
+                        db.SaveChanges();
+                    }
+
+                    int i = 0;
+                    foreach (var item in request.ChildList)
+                    {
+                        if (item.ChildId > 0)
+                        {
+                            db.t_sys_conditiontrade_template_sell_child.Add(new t_sys_conditiontrade_template_sell_child
+                            {
+                                Status = item.Status,
+                                ChildId = item.ChildId,
+                                FatherId = request.Id,
+                            });
+                            i++;
+                        }
+                    }
+                    if (i > 0)
+                    {
+                        db.SaveChanges();
+                    }
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 修改条件卖出模板状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifyConditiontradeTemplateSellDetailsStatus(ModifyStatusRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var template_sell = (from item in db.t_sys_conditiontrade_template_sell
+                                     where item.Id == request.Id
+                                     select item).FirstOrDefault();
+                if (template_sell == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                template_sell.Status = request.Status;
+                template_sell.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除条件卖出模板
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void DeleteConditiontradeTemplateSellDetails(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var template_sell = (from item in db.t_sys_conditiontrade_template_sell
+                                         where item.Id == request.Id
+                                         select item).FirstOrDefault();
+                    if (template_sell == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    db.t_sys_conditiontrade_template_sell.Remove(template_sell);
+                    db.SaveChanges();
+
+                    var child = (from item in db.t_sys_conditiontrade_template_sell_child
+                                 where item.FatherId == request.Id
+                                 select item).ToList();
+                    if (child.Count() > 0)
+                    {
+                        db.t_sys_conditiontrade_template_sell_child.RemoveRange(child);
+                        db.SaveChanges();
+                    }
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
         #endregion
     }
 }

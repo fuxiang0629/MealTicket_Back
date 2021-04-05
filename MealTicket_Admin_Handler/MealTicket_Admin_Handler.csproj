@@ -330,6 +330,8 @@
     <Compile Include="Model\Sys\ModifySysPaymentPar.cs" />
     <Compile Include="Model\Sys\RecoveryBrokerAccountSysPosition.cs" />
     <Compile Include="Model\Sys\GetSysAppversionList.cs" />
+    <Compile Include="Model\TradeCenter\AddConditiontradeTemplate.cs" />
+    <Compile Include="Model\TradeCenter\AddConditiontradeTemplateSellDetails.cs" />
     <Compile Include="Model\TradeCenter\AddSharesCorrigendum.cs" />
     <Compile Include="Model\TradeCenter\AddSharesDateForbid.cs" />
     <Compile Include="Model\TradeCenter\AddSharesDateGroupForbid.cs" />
@@ -344,6 +346,8 @@
     <Compile Include="Model\TradeCenter\AddSharesPositionRules.cs" />
     <Compile Include="Model\TradeCenter\AddSharesPositionRulesOther.cs" />
     <Compile Include="Model\TradeCenter\BatchUpdateMonitorTrendPar.cs" />
+    <Compile Include="Model\TradeCenter\GetConditiontradeTemplateList.cs" />
+    <Compile Include="Model\TradeCenter\GetConditiontradeTemplateSellDetailsList.cs" />
     <Compile Include="Model\TradeCenter\GetSharesCorrigendumList.cs" />
     <Compile Include="Model\TradeCenter\GetSharesMonitorList.cs" />
     <Compile Include="Model\TradeCenter\GetSharesMonitorTrendList.cs" />
@@ -351,6 +355,8 @@
     <Compile Include="Model\TradeCenter\GetSharesMonitorTrendRelList.cs" />
     <Compile Include="Model\TradeCenter\GetSharesPlateList.cs" />
     <Compile Include="Model\TradeCenter\GetSharesTransactionDataList.cs" />
+    <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplate.cs" />
+    <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateSellDetails.cs" />
     <Compile Include="Model\TradeCenter\ModifySharesCorrigendum.cs" />
     <Compile Include="Model\TradeCenter\ModifySharesMonitorTrend.cs" />
     <Compile Include="Model\TradeCenter\ModifySharesMonitorTrendPar.cs" />
@@ -444,6 +450,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_account_registerLog.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_conditiontrade_template_sell_child.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_account_shares_entrust.cs">
@@ -774,6 +783,15 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_system_param.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_sys_conditiontrade_template.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_sys_conditiontrade_template_sell.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_sys_conditiontrade_template_sell_child.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
   </ItemGroup>

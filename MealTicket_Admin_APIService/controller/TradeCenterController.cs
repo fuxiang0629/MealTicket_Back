@@ -2003,6 +2003,192 @@ namespace MealTicket_Admin_APIService.controller
             }
             return tradeCenterHandler.BatchUpdateMonitorTrendPar(request);
         }
+
+        /// <summary>
+        /// 获取条件模板列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("conditiontrade/template/list"), HttpPost]
+        [Description("获取条件模板列表")]
+        public PageRes<ConditiontradeTemplateInfo> GetConditiontradeTemplateList(GetConditiontradeTemplateListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return tradeCenterHandler.GetConditiontradeTemplateList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加条件模板
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("conditiontrade/template/add"), HttpPost]
+        [Description("添加条件模板")]
+        public object AddConditiontradeTemplate(AddConditiontradeTemplateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.AddConditiontradeTemplate(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑条件模板
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("conditiontrade/template/modify"), HttpPost]
+        [Description("编辑条件模板")]
+        public object ModifyConditiontradeTemplate(ModifyConditiontradeTemplateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.ModifyConditiontradeTemplate(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改条件模板状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("conditiontrade/template/status/modify"), HttpPost]
+        [Description("修改条件模板状态")]
+        public object ModifyConditiontradeTemplateStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.ModifyConditiontradeTemplateStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除条件模板
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("conditiontrade/template/delete"), HttpPost]
+        [Description("删除条件模板")]
+        public object DeleteConditiontradeTemplate(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.DeleteConditiontradeTemplate(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取条件卖出模板详情列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("conditiontrade/template/sell/details/list"), HttpPost]
+        [Description("获取条件卖出模板详情列表")]
+        public List<ConditiontradeTemplateSellDetailsInfo> GetConditiontradeTemplateSellDetailsList(GetConditiontradeTemplateSellDetailsListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return tradeCenterHandler.GetConditiontradeTemplateSellDetailsList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加条件卖出模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("conditiontrade/template/sell/details/add"), HttpPost]
+        [Description("添加条件卖出模板详情")]
+        public object AddConditiontradeTemplateSellDetails(AddConditiontradeTemplateSellDetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.AddConditiontradeTemplateSellDetails(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑条件卖出模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("conditiontrade/template/sell/details/modify"), HttpPost]
+        [Description("编辑条件卖出模板详情")]
+        public object ModifyConditiontradeTemplateSellDetails(ModifyConditiontradeTemplateSellDetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.ModifyConditiontradeTemplateSellDetails(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改条件卖出模板状态
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("conditiontrade/template/sell/details/status/modify"), HttpPost]
+        [Description("修改条件卖出模板状态")]
+        public object ModifyConditiontradeTemplateSellDetailsStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.ModifyConditiontradeTemplateSellDetailsStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除条件卖出模板
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("conditiontrade/template/sell/details/delete"), HttpPost]
+        [Description("删除条件卖出模板")]
+        public object DeleteConditiontradeTemplateSellDetails(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.DeleteConditiontradeTemplateSellDetails(request, basedata);
+            return null;
+        }
         #endregion
     }
 }

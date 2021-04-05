@@ -2591,6 +2591,74 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetConditiontradeTemplateList(MealTicket_Admin_Handler.Model.GetConditiontradeTemplateListRequest)">
+            <summary>
+            获取条件模板列表
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.AddConditiontradeTemplate(MealTicket_Admin_Handler.Model.AddConditiontradeTemplateRequest)">
+            <summary>
+            添加条件模板
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyConditiontradeTemplate(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateRequest)">
+            <summary>
+            编辑条件模板
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyConditiontradeTemplateStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改条件模板状态
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeleteConditiontradeTemplate(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除条件模板
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetConditiontradeTemplateSellDetailsList(MealTicket_Admin_Handler.Model.GetConditiontradeTemplateSellDetailsListRequest)">
+            <summary>
+            获取条件卖出模板详情列表
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.AddConditiontradeTemplateSellDetails(MealTicket_Admin_Handler.Model.AddConditiontradeTemplateSellDetailsRequest)">
+            <summary>
+            添加条件卖出模板详情
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyConditiontradeTemplateSellDetails(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSellDetailsRequest)">
+            <summary>
+            编辑条件卖出模板详情
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyConditiontradeTemplateSellDetailsStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改条件卖出模板状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeleteConditiontradeTemplateSellDetails(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除条件卖出模板
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.ExtensionHelper.GetAllWebApi(System.Web.Http.HttpConfiguration)">
             <summary>
             获取当前配置内的所有web api

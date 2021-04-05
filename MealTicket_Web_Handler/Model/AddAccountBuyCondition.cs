@@ -77,5 +77,10 @@ namespace MealTicket_Web_Handler.Model
         /// 跟投用户Id列表
         /// </summary>
         public List<long> FollowAccountList { get; set; }
+
+        /// <summary>
+        /// 子条件列表
+        /// </summary>
+        public List<ConditionChild> ChildList { get; set; }
     }
 }

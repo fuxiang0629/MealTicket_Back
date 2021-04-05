@@ -151,6 +151,10 @@ namespace MealTicket_Admin_Handler
         public virtual DbSet<t_shares_limit_fundmultiple_account> t_shares_limit_fundmultiple_account { get; set; }
         public virtual DbSet<t_shares_plate> t_shares_plate { get; set; }
         public virtual DbSet<t_shares_plate_rel> t_shares_plate_rel { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_template_sell_child> t_account_shares_conditiontrade_template_sell_child { get; set; }
+        public virtual DbSet<t_sys_conditiontrade_template> t_sys_conditiontrade_template { get; set; }
+        public virtual DbSet<t_sys_conditiontrade_template_sell> t_sys_conditiontrade_template_sell { get; set; }
+        public virtual DbSet<t_sys_conditiontrade_template_sell_child> t_sys_conditiontrade_template_sell_child { get; set; }
     
         public virtual int P_Admin_CheckLogin(string token, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter accountId, ObjectParameter loginLogId)
         {
