@@ -8244,6 +8244,86 @@
             数据创建时间
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateRequest.Type">
+            <summary>
+            1买入 2卖出
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateRequest.Name">
+            <summary>
+            模板名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateSellDetailsRequest.TemplateId">
+            <summary>
+            模板Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateSellDetailsRequest.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateSellDetailsRequest.Type">
+            <summary>
+            类型1.定时卖出 2.止盈卖出 3.止亏卖出
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateSellDetailsRequest.ConditionDay">
+            <summary>
+            指定相对时间(天)
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateSellDetailsRequest.ConditionTime">
+            <summary>
+            指定相对时间(时间)
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateSellDetailsRequest.ConditionPriceType">
+            <summary>
+            价格类型1绝对价格 2相对价格
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateSellDetailsRequest.ConditionPriceBase">
+            <summary>
+            基准价 1成本价 2当前价 3昨日收盘价
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateSellDetailsRequest.ConditionRelativeType">
+            <summary>
+            相对条件1.涨停 2跌停 3百分比
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateSellDetailsRequest.ConditionRelativeRate">
+            <summary>
+            价格相对百分比 1/万
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateSellDetailsRequest.EntrustCount">
+            <summary>
+            委托数量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateSellDetailsRequest.EntrustType">
+            <summary>
+            委托类型1市价 2限价
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateSellDetailsRequest.EntrustPriceGear">
+            <summary>
+            委托价格档位0市价 1限价买一 2限价买二 3限价买三 4限价买四  5限价买五 6限价卖一 7限价卖二 8限价卖三 9限价卖四  10限价卖五 11涨停 12跌停
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateSellDetailsRequest.ForbidType">
+            <summary>
+            禁止类型0无 1禁止涨停卖出
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateSellDetailsRequest.ChildList">
+            <summary>
+            子条件列表
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.AddSharesCorrigendumRequest.Market">
             <summary>
             市场代码0深圳 1上海
@@ -8417,6 +8497,126 @@
         <member name="P:MealTicket_Admin_Handler.Model.BatchUpdateMonitorTrendParRequest.TrendIdList">
             <summary>
             走势Id列表
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetConditiontradeTemplateListRequest.Type">
+            <summary>
+            1买入 2卖出
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateInfo.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateInfo.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateInfo.Status">
+            <summary>
+            状态1有效 2无效
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateInfo.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetConditiontradeTemplateSellDetailsListRequest.TemplateId">
+            <summary>
+            模板Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetConditiontradeTemplateSellDetailsListRequest.Type">
+            <summary>
+            1止盈 2止损 3指定时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateSellDetailsInfo.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateSellDetailsInfo.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateSellDetailsInfo.ConditionDay">
+            <summary>
+            指定相对时间(天)
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateSellDetailsInfo.ConditionTime">
+            <summary>
+            指定相对时间(时间)
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateSellDetailsInfo.ConditionPriceType">
+            <summary>
+            价格类型1绝对价格 2相对价格
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateSellDetailsInfo.ConditionPriceBase">
+            <summary>
+            基准价 1成本价 2当前价 3昨日收盘价
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateSellDetailsInfo.ConditionRelativeType">
+            <summary>
+            相对条件1.涨停 2跌停 3百分比
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateSellDetailsInfo.ConditionRelativeRate">
+            <summary>
+            价格相对百分比 1/万
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateSellDetailsInfo.EntrustCount">
+            <summary>
+            委托数量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateSellDetailsInfo.EntrustType">
+            <summary>
+            委托类型1市价 2限价
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateSellDetailsInfo.EntrustPriceGear">
+            <summary>
+            委托价格档位0市价 1限价买一 2限价买二 3限价买三 4限价买四  5限价买五 6限价卖一 7限价卖二 8限价卖三 9限价卖四  10限价卖五 11涨停 12跌停
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateSellDetailsInfo.ForbidType">
+            <summary>
+            禁止类型0无 1禁止涨停卖出
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateSellDetailsInfo.Status">
+            <summary>
+            状态1有效 2无效 3条件触发
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateSellDetailsInfo.CreateTime">
+            <summary>
+            创建时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateSellDetailsInfo.ChildList">
+            <summary>
+            子条件列表
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditionChild.ChildId">
+            <summary>
+            子条件
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditionChild.Status">
+            <summary>
+            状态1有效 2无效
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.GetSharesCorrigendumListRequest.SharesCode">
@@ -8657,6 +8857,86 @@
         <member name="P:MealTicket_Admin_Handler.Model.SharesTransactionDataInfo.LastModified">
             <summary>
             更新时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateRequest.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateRequest.Name">
+            <summary>
+            模板名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSellDetailsRequest.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSellDetailsRequest.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSellDetailsRequest.Type">
+            <summary>
+            类型1.定时卖出 2.止盈卖出 3.止亏卖出
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSellDetailsRequest.ConditionDay">
+            <summary>
+            指定相对时间(天)
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSellDetailsRequest.ConditionTime">
+            <summary>
+            指定相对时间(时间)
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSellDetailsRequest.ConditionPriceType">
+            <summary>
+            价格类型1绝对价格 2相对价格
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSellDetailsRequest.ConditionPriceBase">
+            <summary>
+            基准价 1成本价 2当前价 3昨日收盘价
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSellDetailsRequest.ConditionRelativeType">
+            <summary>
+            相对条件1.涨停 2跌停 3百分比
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSellDetailsRequest.ConditionRelativeRate">
+            <summary>
+            价格相对百分比 1/万
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSellDetailsRequest.EntrustCount">
+            <summary>
+            委托数量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSellDetailsRequest.EntrustType">
+            <summary>
+            委托类型1市价 2限价
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSellDetailsRequest.EntrustPriceGear">
+            <summary>
+            委托价格档位0市价 1限价买一 2限价买二 3限价买三 4限价买四  5限价买五 6限价卖一 7限价卖二 8限价卖三 9限价卖四  10限价卖五 11涨停 12跌停
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSellDetailsRequest.ForbidType">
+            <summary>
+            禁止类型0无 1禁止涨停卖出
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSellDetailsRequest.ChildList">
+            <summary>
+            子条件列表
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.ModifySharesCorrigendumRequest.Id">
@@ -11180,6 +11460,77 @@
             批量更新监控参数
             </summary>
             <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetConditiontradeTemplateList(MealTicket_Admin_Handler.Model.GetConditiontradeTemplateListRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            获取条件模板列表
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.AddConditiontradeTemplate(MealTicket_Admin_Handler.Model.AddConditiontradeTemplateRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            添加条件模板
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifyConditiontradeTemplate(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            编辑条件模板
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifyConditiontradeTemplateStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            修改条件模板状态
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteConditiontradeTemplate(MealTicket_Admin_Handler.Model.DeleteRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            删除条件模板
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetConditiontradeTemplateSellDetailsList(MealTicket_Admin_Handler.Model.GetConditiontradeTemplateSellDetailsListRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            获取条件卖出模板详情列表
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.AddConditiontradeTemplateSellDetails(MealTicket_Admin_Handler.Model.AddConditiontradeTemplateSellDetailsRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            添加条件卖出模板详情
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifyConditiontradeTemplateSellDetails(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSellDetailsRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            编辑条件卖出模板详情
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifyConditiontradeTemplateSellDetailsStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            修改条件卖出模板状态
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteConditiontradeTemplateSellDetails(MealTicket_Admin_Handler.Model.DeleteRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            删除条件卖出模板
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
         </member>
     </members>
 </doc>

@@ -2084,5 +2084,41 @@ namespace MealTicket_Web_APIService.controller
             trendHandler.DeleteConditiontradeTemplateSellDetails(request, basedata);
             return null;
         }
+
+        /// <summary>
+        /// 卖出模板导入
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/sell/import"), HttpPost]
+        [Description("卖出模板导入")]
+        [CheckUserLoginFilter]
+        public object ImportConditiontradeTemplateSell(ImportConditiontradeTemplateSellRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ImportConditiontradeTemplateSell(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量删除条件买入股票
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/buy/shares/delete/batch"), HttpPost]
+        [Description("批量删除条件买入股票")]
+        [CheckUserLoginFilter]
+        public object BatchDeleteConditiontradeBuyShares(BatchDeleteConditiontradeBuySharesRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BatchDeleteConditiontradeBuyShares(request, basedata);
+            return null;
+        }
     }
 }

@@ -218,6 +218,15 @@
           <Property Name="DeviceUA" Type="nvarchar" MaxLength="512" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_template_sell_child">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FatherId" Type="bigint" Nullable="false" />
+          <Property Name="ChildId" Type="bigint" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="t_account_shares_entrust">
           <Key>
             <PropertyRef Name="Id" />
@@ -1734,6 +1743,48 @@
           <Property Name="ApplyTime" Type="datetime" />
           <Property Name="ExamineTime" Type="datetime" />
         </EntityType>
+        <EntityType Name="t_sys_conditiontrade_template">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_sys_conditiontrade_template_sell">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TemplateId" Type="bigint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="ConditionDay" Type="int" />
+          <Property Name="ConditionTime" Type="varchar" MaxLength="20" />
+          <Property Name="ConditionType" Type="int" />
+          <Property Name="ConditionPriceBase" Type="int" />
+          <Property Name="ConditionPriceType" Type="int" />
+          <Property Name="ConditionPriceRate" Type="int" />
+          <Property Name="EntrustCount" Type="int" Nullable="false" />
+          <Property Name="EntrustType" Type="int" Nullable="false" />
+          <Property Name="EntrustPriceGear" Type="int" Nullable="false" />
+          <Property Name="ForbidType" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_sys_conditiontrade_template_sell_child">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FatherId" Type="bigint" Nullable="false" />
+          <Property Name="ChildId" Type="bigint" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="t_system_param">
           <Key>
             <PropertyRef Name="ParamName" />
@@ -1922,6 +1973,7 @@
           <EntitySet Name="t_account_recommend_prize_type" EntityType="Self.t_account_recommend_prize_type" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_recommend_prize_type_level" EntityType="Self.t_account_recommend_prize_type_level" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_registerLog" EntityType="Self.t_account_registerLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_conditiontrade_template_sell_child" EntityType="Self.t_account_shares_conditiontrade_template_sell_child" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_entrust" EntityType="Self.t_account_shares_entrust" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_entrust_manager" EntityType="Self.t_account_shares_entrust_manager" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_entrust_manager_dealdetails" EntityType="Self.t_account_shares_entrust_manager_dealdetails" Schema="dbo" store:Type="Tables" />
@@ -2031,6 +2083,9 @@
           <EntitySet Name="t_sms_channel_app" EntityType="Self.t_sms_channel_app" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_sms_sign" EntityType="Self.t_sms_sign" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_sms_template" EntityType="Self.t_sms_template" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_sys_conditiontrade_template" EntityType="Self.t_sys_conditiontrade_template" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_sys_conditiontrade_template_sell" EntityType="Self.t_sys_conditiontrade_template_sell" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_sys_conditiontrade_template_sell_child" EntityType="Self.t_sys_conditiontrade_template_sell_child" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_system_param" EntityType="Self.t_system_param" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -2324,6 +2379,10 @@
           <EntitySet Name="t_shares_limit_fundmultiple_account" EntityType="meal_ticketModel.t_shares_limit_fundmultiple_account" />
           <EntitySet Name="t_shares_plate" EntityType="meal_ticketModel.t_shares_plate" />
           <EntitySet Name="t_shares_plate_rel" EntityType="meal_ticketModel.t_shares_plate_rel" />
+          <EntitySet Name="t_account_shares_conditiontrade_template_sell_child" EntityType="meal_ticketModel.t_account_shares_conditiontrade_template_sell_child" />
+          <EntitySet Name="t_sys_conditiontrade_template" EntityType="meal_ticketModel.t_sys_conditiontrade_template" />
+          <EntitySet Name="t_sys_conditiontrade_template_sell" EntityType="meal_ticketModel.t_sys_conditiontrade_template_sell" />
+          <EntitySet Name="t_sys_conditiontrade_template_sell_child" EntityType="meal_ticketModel.t_sys_conditiontrade_template_sell_child" />
         </EntityContainer>
         <EntityType Name="t_admin_department">
           <Key>
@@ -4064,6 +4123,57 @@
           <Property Name="Market" Type="Int32" Nullable="false" />
           <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_template_sell_child">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FatherId" Type="Int64" Nullable="false" />
+          <Property Name="ChildId" Type="Int64" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_sys_conditiontrade_template">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_sys_conditiontrade_template_sell">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TemplateId" Type="Int64" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="ConditionDay" Type="Int32" />
+          <Property Name="ConditionTime" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="ConditionType" Type="Int32" />
+          <Property Name="ConditionPriceBase" Type="Int32" />
+          <Property Name="ConditionPriceType" Type="Int32" />
+          <Property Name="ConditionPriceRate" Type="Int32" />
+          <Property Name="EntrustCount" Type="Int32" Nullable="false" />
+          <Property Name="EntrustType" Type="Int32" Nullable="false" />
+          <Property Name="EntrustPriceGear" Type="Int32" Nullable="false" />
+          <Property Name="ForbidType" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_sys_conditiontrade_template_sell_child">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FatherId" Type="Int64" Nullable="false" />
+          <Property Name="ChildId" Type="Int64" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -5950,6 +6060,61 @@
                 <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
                 <ScalarProperty Name="Market" ColumnName="Market" />
                 <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_conditiontrade_template_sell_child">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_template_sell_child">
+              <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_template_sell_child">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ChildId" ColumnName="ChildId" />
+                <ScalarProperty Name="FatherId" ColumnName="FatherId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_sys_conditiontrade_template">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_sys_conditiontrade_template">
+              <MappingFragment StoreEntitySet="t_sys_conditiontrade_template">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_sys_conditiontrade_template_sell">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_sys_conditiontrade_template_sell">
+              <MappingFragment StoreEntitySet="t_sys_conditiontrade_template_sell">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ForbidType" ColumnName="ForbidType" />
+                <ScalarProperty Name="EntrustPriceGear" ColumnName="EntrustPriceGear" />
+                <ScalarProperty Name="EntrustType" ColumnName="EntrustType" />
+                <ScalarProperty Name="EntrustCount" ColumnName="EntrustCount" />
+                <ScalarProperty Name="ConditionPriceRate" ColumnName="ConditionPriceRate" />
+                <ScalarProperty Name="ConditionPriceType" ColumnName="ConditionPriceType" />
+                <ScalarProperty Name="ConditionPriceBase" ColumnName="ConditionPriceBase" />
+                <ScalarProperty Name="ConditionType" ColumnName="ConditionType" />
+                <ScalarProperty Name="ConditionTime" ColumnName="ConditionTime" />
+                <ScalarProperty Name="ConditionDay" ColumnName="ConditionDay" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="TemplateId" ColumnName="TemplateId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_sys_conditiontrade_template_sell_child">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_sys_conditiontrade_template_sell_child">
+              <MappingFragment StoreEntitySet="t_sys_conditiontrade_template_sell_child">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ChildId" ColumnName="ChildId" />
+                <ScalarProperty Name="FatherId" ColumnName="FatherId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

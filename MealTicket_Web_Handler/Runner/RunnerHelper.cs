@@ -717,6 +717,40 @@ namespace MealTicket_Web_Handler.Runner
                         }
                     }
 
+
+                    using (var tran = db.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            //查询需要更改的子条件
+                            var childList = (from x in db.t_account_shares_conditiontrade_buy_details_child
+                                             where x.ConditionId == item.item.Id
+                                             select x).ToList();
+                            foreach (var child in childList)
+                            {
+                                var childcondition = (from x in db.t_account_shares_hold_conditiontrade
+                                                      where x.Id == child.ChildId
+                                                      select x).FirstOrDefault();
+                                if (childcondition == null)
+                                {
+                                    continue;
+                                }
+                                if (childcondition.TriggerTime != null)
+                                {
+                                    continue;
+                                }
+                                childcondition.Status = child.Status;
+                            }
+                            db.SaveChanges();
+                            tran.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            tran.Rollback();
+                            break;
+                        }
+                    }
+
                     if (isAuto && isTri)//自动买入且条件满足
                     {
                         long EntrustPrice = 0;

@@ -16,6 +16,11 @@ namespace MealTicket_Web_Handler.Model
         /// 1买入 2卖出
         /// </summary>
         public int Type { get; set; }
+
+        /// <summary>
+        /// 是否获取所有模板
+        /// </summary>
+        public bool IsGetAll { get; set; }
     }
 
     public class ConditiontradeTemplateInfo
@@ -39,5 +44,21 @@ namespace MealTicket_Web_Handler.Model
         /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }
+
+        /// <summary>
+        /// 1客户模板 2系统模板
+        /// </summary>
+        public int Type { get; set; }
+
+        /// <summary>
+        /// 唯一值
+        /// </summary>
+        public long Key 
+        {
+            get 
+            {
+                return Id * 10 + Type;
+            }
+        }
     }
 }
