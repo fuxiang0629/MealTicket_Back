@@ -155,6 +155,15 @@ namespace MealTicket_Admin_Handler
         public virtual DbSet<t_sys_conditiontrade_template> t_sys_conditiontrade_template { get; set; }
         public virtual DbSet<t_sys_conditiontrade_template_sell> t_sys_conditiontrade_template_sell { get; set; }
         public virtual DbSet<t_sys_conditiontrade_template_sell_child> t_sys_conditiontrade_template_sell_child { get; set; }
+        public virtual DbSet<t_sys_conditiontrade_template_buy_auto> t_sys_conditiontrade_template_buy_auto { get; set; }
+        public virtual DbSet<t_sys_conditiontrade_template_buy_auto_trend> t_sys_conditiontrade_template_buy_auto_trend { get; set; }
+        public virtual DbSet<t_sys_conditiontrade_template_buy_auto_trend_par> t_sys_conditiontrade_template_buy_auto_trend_par { get; set; }
+        public virtual DbSet<t_sys_conditiontrade_template_buy_child> t_sys_conditiontrade_template_buy_child { get; set; }
+        public virtual DbSet<t_sys_conditiontrade_template_buy_other_trend> t_sys_conditiontrade_template_buy_other_trend { get; set; }
+        public virtual DbSet<t_sys_conditiontrade_template_buy_other_trend_par> t_sys_conditiontrade_template_buy_other_trend_par { get; set; }
+        public virtual DbSet<t_sys_conditiontrade_template_buy> t_sys_conditiontrade_template_buy { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_buy_trend_par_template> t_account_shares_conditiontrade_buy_trend_par_template { get; set; }
+        public virtual DbSet<t_sys_conditiontrade_template_buy_other> t_sys_conditiontrade_template_buy_other { get; set; }
     
         public virtual int P_Admin_CheckLogin(string token, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter accountId, ObjectParameter loginLogId)
         {

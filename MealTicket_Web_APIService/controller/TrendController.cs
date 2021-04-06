@@ -2120,5 +2120,587 @@ namespace MealTicket_Web_APIService.controller
             trendHandler.BatchDeleteConditiontradeBuyShares(request, basedata);
             return null;
         }
+
+        /// <summary>
+        /// 获取条件买入模板详情列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("conditiontrade/template/buy/details/list"), HttpPost]
+        [Description("获取条件买入模板详情列表")]
+        public PageRes<ConditiontradeTemplateBuyDetailsInfo> GetConditiontradeTemplateBuyDetailsList(GetConditiontradeTemplateBuyDetailsListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeTemplateBuyDetailsList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加条件买入模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("conditiontrade/template/buy/details/add"), HttpPost]
+        [Description("添加条件买入模板详情")]
+        public object AddConditiontradeTemplateBuyDetails(AddConditiontradeTemplateBuyDetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddConditiontradeTemplateBuyDetails(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑条件买入模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("conditiontrade/template/buy/details/modify"), HttpPost]
+        [Description("编辑条件买入模板详情")]
+        public object ModifyConditiontradeTemplateBuyDetails(ModifyConditiontradeTemplateBuyDetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateBuyDetails(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改条件买入模板详情状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("conditiontrade/template/buy/details/status/modify"), HttpPost]
+        [Description("修改条件买入模板详情状态")]
+        public object ModifyConditiontradeTemplateBuyDetailsStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateBuyDetailsStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除条件买入模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("conditiontrade/template/buy/details/delete"), HttpPost]
+        [Description("删除条件买入模板详情")]
+        public object DeleteConditiontradeTemplateBuyDetails(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteConditiontradeTemplateBuyDetails(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取条件买入模板额外条件分组列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/group/list"), HttpPost]
+        [Description("获取条件买入模板额外条件分组列表")]
+        [CheckUserLoginFilter]
+        public PageRes<ConditiontradeTemplateBuyOtherGroupInfo> GetConditiontradeTemplateBuyOtherGroupList(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeTemplateBuyOtherGroupList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加条件买入模板额外条件分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/group/add"), HttpPost]
+        [Description("添加条件买入模板额外条件分组")]
+        [CheckUserLoginFilter]
+        public object AddConditiontradeTemplateBuyOtherGroup(AddConditiontradeTemplateBuyOtherGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddConditiontradeTemplateBuyOtherGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑条件买入模板额外条件分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/group/modify"), HttpPost]
+        [Description("编辑股票买入额外条件分组")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateBuyOtherGroup(ModifyConditiontradeTemplateBuyOtherGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateBuyOtherGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改条件买入模板额外条件分组状态
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/group/status/modify"), HttpPost]
+        [Description("修改条件买入模板额外条件分组状态")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateBuyOtherGroupStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateBuyOtherGroupStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除条件买入模板额外条件分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/group/delete"), HttpPost]
+        [Description("删除条件买入模板额外条件分组")]
+        [CheckUserLoginFilter]
+        public object DeleteConditiontradeTemplateBuyOtherGroup(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteConditiontradeTemplateBuyOtherGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取条件买入模板转自动条件分组列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/group/list"), HttpPost]
+        [Description("获取条件买入模板转自动条件分组列表")]
+        [CheckUserLoginFilter]
+        public PageRes<ConditiontradeTemplateBuyAutoGroupInfo> GetConditiontradeTemplateBuyAutoGroupList(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeTemplateBuyAutoGroupList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加条件买入模板转自动条件分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/group/add"), HttpPost]
+        [Description("添加条件买入模板转自动条件分组")]
+        [CheckUserLoginFilter]
+        public object AddConditiontradeTemplateBuyAutoGroup(AddConditiontradeTemplateBuyAutoGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddConditiontradeTemplateBuyAutoGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑条件买入模板转自动条件分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/group/modify"), HttpPost]
+        [Description("编辑条件买入模板转自动条件分组")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateBuyAutoGroup(ModifyConditiontradeTemplateBuyAutoGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateBuyAutoGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改条件买入模板转自动条件分组状态
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/group/status/modify"), HttpPost]
+        [Description("修改条件买入模板转自动条件分组状态")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateBuyAutoGroupStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateBuyAutoGroupStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除条件买入模板转自动条件分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/group/delete"), HttpPost]
+        [Description("删除条件买入模板转自动条件分组")]
+        [CheckUserLoginFilter]
+        public object DeleteConditiontradeTemplateBuyAutoGroup(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteConditiontradeTemplateBuyAutoGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取条件买入模板额外条件列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/list"), HttpPost]
+        [Description("获取条件买入模板额外条件列表")]
+        [CheckUserLoginFilter]
+        public PageRes<ConditiontradeTemplateBuyOtherInfo> GetConditiontradeTemplateBuyOtherList(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeTemplateBuyOtherList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加条件买入模板额外条件
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/add"), HttpPost]
+        [Description("添加条件买入模板额外条件")]
+        [CheckUserLoginFilter]
+        public object AddConditiontradeTemplateBuyOther(AddConditiontradeTemplateBuyOtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddConditiontradeTemplateBuyOther(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改条件买入模板额外条件状态
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/status/modify"), HttpPost]
+        [Description("修改条件买入模板额外条件状态")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateBuyOtherStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateBuyOtherStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除条件买入模板额外条件
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/delete"), HttpPost]
+        [Description("删除条件买入模板额外条件")]
+        [CheckUserLoginFilter]
+        public object DeleteConditiontradeTemplateBuyOther(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteConditiontradeTemplateBuyOther(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取条件买入模板转自动条件列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/list"), HttpPost]
+        [Description("获取条件买入模板转自动条件列表")]
+        [CheckUserLoginFilter]
+        public PageRes<ConditiontradeTemplateBuyAutoInfo> GetConditiontradeTemplateBuyAutoList(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeTemplateBuyAutoList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加条件买入模板转自动条件
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/add"), HttpPost]
+        [Description("添加条件买入模板转自动条件")]
+        [CheckUserLoginFilter]
+        public object AddConditiontradeTemplateBuyAuto(AddConditiontradeTemplateBuyAutoRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddConditiontradeTemplateBuyAuto(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改条件买入模板转自动条件状态
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/status/modify"), HttpPost]
+        [Description("修改条件买入模板转自动条件状态")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateBuyAutoStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateBuyAutoStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除条件买入模板转自动条件
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/delete"), HttpPost]
+        [Description("删除条件买入模板转自动条件")]
+        [CheckUserLoginFilter]
+        public object DeleteConditiontradeTemplateBuyAuto(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteConditiontradeTemplateBuyAuto(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询条件买入模板额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/par"), HttpPost]
+        [Description("查询条件买入模板额外条件类型参数")]
+        [CheckUserLoginFilter]
+        public PageRes<ConditiontradeTemplateBuyOtherParInfo> GetConditiontradeTemplateBuyOtherPar(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeTemplateBuyOtherPar(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加条件买入模板额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/par/add"), HttpPost]
+        [Description("添加条件买入模板额外条件类型参数")]
+        [CheckUserLoginFilter]
+        public object AddConditiontradeTemplateBuyOtherPar(AddConditiontradeTemplateBuyOtherParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddConditiontradeTemplateBuyOtherPar(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑条件买入模板额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/par/modify"), HttpPost]
+        [Description("编辑条件买入模板额外条件类型参数")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateBuyOtherPar(ModifyConditiontradeTemplateBuyOtherParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateBuyOtherPar(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除条件买入模板额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/par/delete"), HttpPost]
+        [Description("删除条件买入模板额外条件类型参数")]
+        [CheckUserLoginFilter]
+        public object DeleteConditiontradeTemplateBuyOtherPar(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteConditiontradeTemplateBuyOtherPar(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询条件买入模板转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/par"), HttpPost]
+        [Description("查询条件买入模板转自动条件类型参数")]
+        [CheckUserLoginFilter]
+        public PageRes<ConditiontradeTemplateBuyAutoParInfo> GetConditiontradeTemplateBuyAutoPar(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeTemplateBuyAutoPar(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加条件买入模板转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/par/add"), HttpPost]
+        [Description("添加条件买入模板转自动条件类型参数")]
+        [CheckUserLoginFilter]
+        public object AddConditiontradeTemplateBuyAutoPar(AddConditiontradeTemplateBuyAutoParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddConditiontradeTemplateBuyAutoPar(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑条件买入模板转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/par/modify"), HttpPost]
+        [Description("编辑条件买入模板转自动条件类型参数")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateBuyAutoPar(ModifyConditiontradeTemplateBuyAutoParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateBuyAutoPar(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除条件买入模板转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/par/delete"), HttpPost]
+        [Description("删除条件买入模板转自动条件类型参数")]
+        [CheckUserLoginFilter]
+        public object DeleteConditiontradeTemplateBuyAutoPar(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteConditiontradeTemplateBuyAutoPar(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 买入模板导入
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/import"), HttpPost]
+        [Description("买入模板导入")]
+        [CheckUserLoginFilter]
+        public object ImportConditiontradeTemplateBuy(ImportConditiontradeTemplateBuyRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ImportConditiontradeTemplateBuy(request, basedata);
+            return null;
+        }
     }
 }

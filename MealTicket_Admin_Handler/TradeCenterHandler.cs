@@ -3656,6 +3656,967 @@ namespace MealTicket_Admin_Handler
                 }
             }
         }
+
+        /// <summary>
+        /// 获取条件买入模板详情列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<ConditiontradeTemplateBuyDetailsInfo> GetConditiontradeTemplateBuyDetailsList(GetConditiontradeTemplateBuyDetailsListRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var BuyConditionList = from item in db.t_sys_conditiontrade_template_buy
+                                       where item.TemplateId == request.TemplateId
+                                       select item;
+                int totalCount = BuyConditionList.Count();
+
+                return new PageRes<ConditiontradeTemplateBuyDetailsInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in BuyConditionList
+                            orderby item.CreateTime descending
+                            select new ConditiontradeTemplateBuyDetailsInfo
+                            {
+                                Status = item.Status,
+                                ConditionRelativeRate = item.ConditionPriceRate,
+                                ConditionRelativeType = item.ConditionPriceType,
+                                ConditionPriceBase = item.ConditionPriceBase,
+                                ConditionPriceType = item.ConditionType,
+                                Id = item.Id,
+                                IsGreater = item.IsGreater,
+                                EntrustType = item.EntrustType,
+                                ForbidType = item.ForbidType,
+                                EntrustPriceGear = item.EntrustPriceGear,
+                                EntrustAmount = item.EntrustAmount,
+                                Name = item.Name,
+                                BuyAuto=item.BuyAuto,
+                                CreateTime = item.CreateTime,
+                                OtherConditionCount = (from x in db.t_sys_conditiontrade_template_buy_other
+                                                       where x.TemplateBuyId == item.Id
+                                                       select x).Count(),
+                                AutoConditionCount = (from x in db.t_sys_conditiontrade_template_buy_auto
+                                                      where x.TemplateBuyId == item.Id
+                                                      select x).Count(),
+                                ChildList = (from x in db.t_sys_conditiontrade_template_buy_child
+                                             where x.FatherId == item.Id
+                                             select new ConditionChild
+                                             {
+                                                 Status = x.Status,
+                                                 ChildId = x.ChildId
+                                             }).ToList()
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加条件买入模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddConditiontradeTemplateBuyDetails(AddConditiontradeTemplateBuyDetailsRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //判断模板是否存在
+                    var template = (from item in db.t_sys_conditiontrade_template
+                                    where item.Id == request.TemplateId
+                                    select item).FirstOrDefault();
+                    if (template == null)
+                    {
+                        throw new WebApiException(400, "设定的股票不存在");
+                    }
+                    t_sys_conditiontrade_template_buy temp = new t_sys_conditiontrade_template_buy
+                    {
+                        Status = 1,
+                        BuyAuto = request.BuyAuto,
+                        CreateTime = DateTime.Now,
+                        EntrustAmount = request.EntrustAmount,
+                        EntrustPriceGear = request.EntrustPriceGear,
+                        EntrustType = request.EntrustType,
+                        ForbidType = request.ForbidType,
+                        IsGreater = request.IsGreater,
+                        LastModified = DateTime.Now,
+                        Name = string.IsNullOrEmpty(request.Name) ? Guid.NewGuid().ToString("N") : request.Name,
+                        ConditionType = request.ConditionPriceType,
+                        ConditionPriceBase=request.ConditionPriceBase,
+                        ConditionPriceRate=request.ConditionRelativeRate,
+                        ConditionPriceType=request.ConditionRelativeType,
+                        TemplateId=request.TemplateId
+                    };
+                    db.t_sys_conditiontrade_template_buy.Add(temp);
+                    db.SaveChanges();
+
+                    int i = 0;
+                    foreach (var item in request.ChildList)
+                    {
+                        if (item.ChildId > 0)
+                        {
+                            db.t_sys_conditiontrade_template_buy_child.Add(new t_sys_conditiontrade_template_buy_child
+                            {
+                                Status = item.Status,
+                                ChildId = item.ChildId,
+                                FatherId = temp.Id,
+                            });
+                            i++;
+                        }
+                    }
+                    if (i > 0)
+                    {
+                        db.SaveChanges();
+                    }
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 编辑条件买入模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateBuyDetails(ModifyConditiontradeTemplateBuyDetailsRequest request) 
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var conditiontrade = (from item in db.t_sys_conditiontrade_template_buy
+                                          where item.Id == request.Id
+                                          select item).FirstOrDefault();
+                    if (conditiontrade == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    conditiontrade.BuyAuto = request.BuyAuto;
+                    conditiontrade.EntrustAmount = request.EntrustAmount;
+                    conditiontrade.EntrustPriceGear = request.EntrustPriceGear;
+                    conditiontrade.EntrustType = request.EntrustType;
+                    conditiontrade.ForbidType = request.ForbidType;
+                    conditiontrade.LastModified = DateTime.Now;
+                    conditiontrade.Name = request.Name;
+                    conditiontrade.ConditionType = request.ConditionPriceType;
+                    conditiontrade.ConditionPriceBase = request.ConditionPriceBase;
+                    conditiontrade.ConditionPriceRate = request.ConditionRelativeRate;
+                    conditiontrade.ConditionPriceType = request.ConditionRelativeType;
+                    conditiontrade.IsGreater = request.IsGreater;
+                    db.SaveChanges();
+
+                    var child = (from item in db.t_sys_conditiontrade_template_buy_child
+                                 where item.FatherId == request.Id
+                                 select item).ToList();
+                    if (child.Count() > 0)
+                    {
+                        db.t_sys_conditiontrade_template_buy_child.RemoveRange(child);
+                        db.SaveChanges();
+                    }
+
+                    int i = 0;
+                    foreach (var item in request.ChildList)
+                    {
+                        if (item.ChildId > 0)
+                        {
+                            db.t_sys_conditiontrade_template_buy_child.Add(new t_sys_conditiontrade_template_buy_child
+                            {
+                                Status = item.Status,
+                                ChildId = item.ChildId,
+                                FatherId = request.Id,
+                            });
+                            i++;
+                        }
+                    }
+                    if (i > 0)
+                    {
+                        db.SaveChanges();
+                    }
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 修改条件买入模板详情状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateBuyDetailsStatus(ModifyStatusRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var template_buy = (from item in db.t_sys_conditiontrade_template_buy
+                                    where item.Id == request.Id
+                                    select item).FirstOrDefault();
+                if (template_buy == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                template_buy.Status = request.Status;
+                template_buy.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除条件买入模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteConditiontradeTemplateBuyDetails(DeleteRequest request) 
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var template_buy = (from item in db.t_sys_conditiontrade_template_buy
+                                         where item.Id == request.Id
+                                         select item).FirstOrDefault();
+                    if (template_buy == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    db.t_sys_conditiontrade_template_buy.Remove(template_buy);
+                    db.SaveChanges();
+
+                    var child = (from item in db.t_sys_conditiontrade_template_buy_child
+                                 where item.FatherId == request.Id
+                                 select item).ToList();
+                    if (child.Count() > 0)
+                    {
+                        db.t_sys_conditiontrade_template_buy_child.RemoveRange(child);
+                        db.SaveChanges();
+                    }
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取条件买入模板额外条件分组列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<ConditiontradeTemplateBuyOtherGroupInfo> GetConditiontradeTemplateBuyOtherGroupList(DetailsPageRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var other = from item in db.t_sys_conditiontrade_template_buy_other
+                            where item.TemplateBuyId == request.Id
+                            select item;
+                int totalCount = other.Count();
+                return new PageRes<ConditiontradeTemplateBuyOtherGroupInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in other
+                            orderby item.CreateTime
+                            select new ConditiontradeTemplateBuyOtherGroupInfo
+                            {
+                                Id = item.Id,
+                                Status = item.Status,
+                                CreateTime = item.CreateTime,
+                                Name = item.Name
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加条件买入模板额外条件分组
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddConditiontradeTemplateBuyOtherGroup(AddConditiontradeTemplateBuyOtherGroupRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                db.t_sys_conditiontrade_template_buy_other.Add(new t_sys_conditiontrade_template_buy_other
+                {
+                    Status = 1,
+                    CreateTime = DateTime.Now,
+                    TemplateBuyId = request.DetailsId,
+                    LastModified = DateTime.Now,
+                    Name = request.Name
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 编辑条件买入模板额外条件分组
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateBuyOtherGroup(ModifyConditiontradeTemplateBuyOtherGroupRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var other = (from item in db.t_sys_conditiontrade_template_buy_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (other == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                other.Name = request.Name;
+                other.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改条件买入模板额外条件分组状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateBuyOtherGroupStatus(ModifyStatusRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var other = (from item in db.t_sys_conditiontrade_template_buy_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (other == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                other.Status = request.Status;
+                other.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除条件买入模板额外条件分组
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteConditiontradeTemplateBuyOtherGroup(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var other = (from item in db.t_sys_conditiontrade_template_buy_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (other == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_sys_conditiontrade_template_buy_other.Remove(other);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取条件买入模板转自动条件分组列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<ConditiontradeTemplateBuyAutoGroupInfo> GetConditiontradeTemplateBuyAutoGroupList(DetailsPageRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var auto = from item in db.t_sys_conditiontrade_template_buy_auto
+                           where item.TemplateBuyId == request.Id
+                           select item;
+                int totalCount = auto.Count();
+                return new PageRes<ConditiontradeTemplateBuyAutoGroupInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in auto
+                            orderby item.CreateTime
+                            select new ConditiontradeTemplateBuyAutoGroupInfo
+                            {
+                                Id = item.Id,
+                                Status = item.Status,
+                                CreateTime = item.CreateTime,
+                                Name = item.Name
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加条件买入模板转自动条件分组
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void AddConditiontradeTemplateBuyAutoGroup(AddConditiontradeTemplateBuyAutoGroupRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                db.t_sys_conditiontrade_template_buy_auto.Add(new t_sys_conditiontrade_template_buy_auto
+                {
+                    Status = 1,
+                    CreateTime = DateTime.Now,
+                    TemplateBuyId = request.DetailsId,
+                    LastModified = DateTime.Now,
+                    Name = request.Name
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 编辑条件买入模板转自动条件分组
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateBuyAutoGroup(ModifyConditiontradeTemplateBuyAutoGroupRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var auto = (from item in db.t_sys_conditiontrade_template_buy_auto
+                            where item.Id == request.Id
+                            select item).FirstOrDefault();
+                if (auto == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                auto.Name = request.Name;
+                auto.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改条件买入模板转自动条件分组状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateBuyAutoGroupStatus(ModifyStatusRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var auto = (from item in db.t_sys_conditiontrade_template_buy_auto
+                            where item.Id == request.Id
+                            select item).FirstOrDefault();
+                if (auto == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                auto.Status = request.Status;
+                auto.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除条件买入模板转自动条件分组
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteConditiontradeTemplateBuyAutoGroup(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var auto = (from item in db.t_sys_conditiontrade_template_buy_auto
+                            where item.Id == request.Id
+                            select item).FirstOrDefault();
+                if (auto == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_sys_conditiontrade_template_buy_auto.Remove(auto);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取条件买入模板额外条件列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<ConditiontradeTemplateBuyOtherInfo> GetConditiontradeTemplateBuyOtherList(DetailsPageRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = from item in db.t_sys_conditiontrade_template_buy_other_trend
+                            where item.OtherId == request.Id
+                            select item;
+                int totalCount = trend.Count();
+
+                return new PageRes<ConditiontradeTemplateBuyOtherInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trend
+                            orderby item.CreateTime descending
+                            select new ConditiontradeTemplateBuyOtherInfo
+                            {
+                                Status = item.Status,
+                                TrendId = item.TrendId,
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                TrendDescription = item.TrendDescription,
+                                TrendName = item.TrendName
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加条件买入模板额外条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddConditiontradeTemplateBuyOther(AddConditiontradeTemplateBuyOtherRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    t_sys_conditiontrade_template_buy_other_trend temp = new t_sys_conditiontrade_template_buy_other_trend
+                    {
+                        Status = 1,
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        OtherId = request.RelId,
+                        TrendDescription = request.TrendDescription,
+                        TrendId = request.TrendId,
+                        TrendName = request.TrendName
+                    };
+                    db.t_sys_conditiontrade_template_buy_other_trend.Add(temp);
+                    db.SaveChanges();
+
+                    //查询参数值
+                    var par = (from item in db.t_account_shares_conditiontrade_buy_trend_par_template.AsNoTracking()
+                               where item.TrendId == request.TrendId
+                               select item).ToList();
+                    foreach (var item in par)
+                    {
+                        db.t_sys_conditiontrade_template_buy_other_trend_par.Add(new t_sys_conditiontrade_template_buy_other_trend_par
+                        {
+                            OtherTrendId = temp.Id,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = item.ParamsInfo
+                        });
+                    }
+                    if (par.Count() > 0)
+                    {
+                        db.SaveChanges();
+                    }
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 修改条件买入模板额外条件状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateBuyOtherStatus(ModifyStatusRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_sys_conditiontrade_template_buy_other_trend
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trend.Status = request.Status;
+                trend.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除条件买入模板额外条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteConditiontradeTemplateBuyOther(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_sys_conditiontrade_template_buy_other_trend
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_sys_conditiontrade_template_buy_other_trend.Remove(trend);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取条件买入模板转自动条件列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<ConditiontradeTemplateBuyAutoInfo> GetConditiontradeTemplateBuyAutoList(DetailsPageRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = from item in db.t_sys_conditiontrade_template_buy_auto_trend
+                            where item.AutoId == request.Id
+                            select item;
+                int totalCount = trend.Count();
+
+                return new PageRes<ConditiontradeTemplateBuyAutoInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trend
+                            orderby item.CreateTime descending
+                            select new ConditiontradeTemplateBuyAutoInfo
+                            {
+                                Status = item.Status,
+                                TrendId = item.TrendId,
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                TrendDescription = item.TrendDescription,
+                                TrendName = item.TrendName
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加条件买入模板转自动条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddConditiontradeTemplateBuyAuto(AddConditiontradeTemplateBuyAutoRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    t_sys_conditiontrade_template_buy_auto_trend temp = new t_sys_conditiontrade_template_buy_auto_trend
+                    {
+                        Status = 1,
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        AutoId = request.RelId,
+                        TrendDescription = request.TrendDescription,
+                        TrendId = request.TrendId,
+                        TrendName = request.TrendName
+                    };
+                    db.t_sys_conditiontrade_template_buy_auto_trend.Add(temp);
+                    db.SaveChanges();
+
+                    //查询参数值
+                    var par = (from item in db.t_account_shares_conditiontrade_buy_trend_par_template.AsNoTracking()
+                               where item.TrendId == request.TrendId
+                               select item).ToList();
+                    foreach (var item in par)
+                    {
+                        db.t_sys_conditiontrade_template_buy_auto_trend_par.Add(new t_sys_conditiontrade_template_buy_auto_trend_par
+                        {
+                            AutoTrendId = temp.Id,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = item.ParamsInfo
+                        });
+                    }
+                    if (par.Count() > 0)
+                    {
+                        db.SaveChanges();
+                    }
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 修改条件买入模板转自动条件状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateBuyAutoStatus(ModifyStatusRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_sys_conditiontrade_template_buy_auto_trend
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trend.Status = request.Status;
+                trend.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除条件买入模板转自动条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteConditiontradeTemplateBuyAuto(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_sys_conditiontrade_template_buy_auto_trend
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_sys_conditiontrade_template_buy_auto_trend.Remove(trend);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 查询条件买入模板额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<ConditiontradeTemplateBuyOtherParInfo> GetConditiontradeTemplateBuyOtherPar(DetailsPageRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = from item in db.t_sys_conditiontrade_template_buy_other_trend_par
+                               where item.OtherTrendId == request.Id
+                               select item;
+                int totalCount = trendPar.Count();
+
+                return new PageRes<ConditiontradeTemplateBuyOtherParInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trendPar
+                            orderby item.CreateTime descending
+                            select new ConditiontradeTemplateBuyOtherParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                ParamsInfo = item.ParamsInfo
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加条件买入模板额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddConditiontradeTemplateBuyOtherPar(AddConditiontradeTemplateBuyOtherParRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                if (request.TrendId != 1)
+                {
+                    var par = (from item in db.t_sys_conditiontrade_template_buy_other_trend_par
+                               where item.OtherTrendId == request.RelId
+                               select item).FirstOrDefault();
+                    if (par != null)
+                    {
+                        par.ParamsInfo = request.ParamsInfo;
+                        par.LastModified = DateTime.Now;
+                    }
+                    else
+                    {
+                        db.t_sys_conditiontrade_template_buy_other_trend_par.Add(new t_sys_conditiontrade_template_buy_other_trend_par
+                        {
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = request.ParamsInfo,
+                            OtherTrendId = request.RelId
+                        });
+                    }
+                }
+                else
+                {
+                    db.t_sys_conditiontrade_template_buy_other_trend_par.Add(new t_sys_conditiontrade_template_buy_other_trend_par
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        ParamsInfo = request.ParamsInfo,
+                        OtherTrendId = request.RelId
+                    });
+                }
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 编辑条件买入模板额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateBuyOtherPar(ModifyConditiontradeTemplateBuyOtherParRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_sys_conditiontrade_template_buy_other_trend_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trendPar.ParamsInfo = request.ParamsInfo;
+                trendPar.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除条件买入模板额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteConditiontradeTemplateBuyOtherPar(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_sys_conditiontrade_template_buy_other_trend_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_sys_conditiontrade_template_buy_other_trend_par.Remove(trendPar);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 查询条件买入模板转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<ConditiontradeTemplateBuyAutoParInfo> GetConditiontradeTemplateBuyAutoPar(DetailsPageRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = from item in db.t_sys_conditiontrade_template_buy_auto_trend_par
+                               where item.AutoTrendId == request.Id
+                               select item;
+                int totalCount = trendPar.Count();
+
+                return new PageRes<ConditiontradeTemplateBuyAutoParInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trendPar
+                            orderby item.CreateTime descending
+                            select new ConditiontradeTemplateBuyAutoParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                ParamsInfo = item.ParamsInfo
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加条件买入模板转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddConditiontradeTemplateBuyAutoPar(AddConditiontradeTemplateBuyAutoParRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                if (request.TrendId != 1)
+                {
+                    var par = (from item in db.t_sys_conditiontrade_template_buy_auto_trend_par
+                               where item.AutoTrendId == request.RelId
+                               select item).FirstOrDefault();
+                    if (par != null)
+                    {
+                        par.ParamsInfo = request.ParamsInfo;
+                        par.LastModified = DateTime.Now;
+                    }
+                    else
+                    {
+                        db.t_sys_conditiontrade_template_buy_auto_trend_par.Add(new t_sys_conditiontrade_template_buy_auto_trend_par
+                        {
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = request.ParamsInfo,
+                            AutoTrendId = request.RelId
+                        });
+                    }
+                }
+                else
+                {
+                    db.t_sys_conditiontrade_template_buy_auto_trend_par.Add(new t_sys_conditiontrade_template_buy_auto_trend_par
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        ParamsInfo = request.ParamsInfo,
+                        AutoTrendId = request.RelId
+                    });
+                }
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 编辑条件买入模板转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateBuyAutoPar(ModifyConditiontradeTemplateBuyAutoParRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_sys_conditiontrade_template_buy_auto_trend_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trendPar.ParamsInfo = request.ParamsInfo;
+                trendPar.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除条件买入模板转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteConditiontradeTemplateBuyAutoPar(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_sys_conditiontrade_template_buy_auto_trend_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_sys_conditiontrade_template_buy_auto_trend_par.Remove(trendPar);
+                db.SaveChanges();
+            }
+        }
         #endregion
     }
 }

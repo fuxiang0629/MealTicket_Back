@@ -5,6 +5,7 @@ t_sys_conditiontrade_template
 t_sys_conditiontrade_template_sell
 t_sys_conditiontrade_template_sell_child
 t_account_shares_conditiontrade_buy_details_child
+t_sys_conditiontrade_template_buy
 
 
 t_shares_info_fund_group
