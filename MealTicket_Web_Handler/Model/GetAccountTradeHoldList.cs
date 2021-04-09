@@ -130,6 +130,21 @@ namespace MealTicket_Web_Handler
         /// 平仓线列表
         /// </summary>
         public List<ClosingLineInfo> ClosingLineList { get; set; }
+
+        /// <summary>
+        /// 条件卖出总参数数量
+        /// </summary>
+        public int ParTotalCount { get; set; }
+
+        /// <summary>
+        /// 条件卖出有效参数数量
+        /// </summary>
+        public int ParValidCount { get; set; }
+
+        /// <summary>
+        /// 条件卖出已执行参数数量
+        /// </summary>
+        public int ParExecuteCount { get; set; }
     }
 
     public class ClosingLineInfo

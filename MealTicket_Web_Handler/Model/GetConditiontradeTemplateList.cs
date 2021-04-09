@@ -60,5 +60,7 @@ namespace MealTicket_Web_Handler.Model
                 return Id * 10 + Type;
             }
         }
+
+
     }
 }

@@ -300,6 +300,7 @@
     <EntitySet Name="t_sys_conditiontrade_template_buy" EntityType="meal_ticketModel.t_sys_conditiontrade_template_buy" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_trend_par_template" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_trend_par_template" />
     <EntitySet Name="t_sys_conditiontrade_template_buy_other" EntityType="meal_ticketModel.t_sys_conditiontrade_template_buy_other" />
+    <EntitySet Name="t_account_shares_conditiontrade_buy_trend_template" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_trend_template" />
   </EntityContainer>
   <EntityType Name="t_admin_department">
     <Key>
@@ -2196,6 +2197,17 @@
     <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="TemplateBuyId" Type="Int64" Nullable="false" />
     <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_conditiontrade_buy_trend_template">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
     <Property Name="Status" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />

@@ -5,6 +5,7 @@ using Ninject;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -369,13 +370,33 @@ namespace MealTicket_Admin_APIService.controller
                             {
                                 continue;
                             }
-
+                            DateTime MarketTime = DateTime.Parse("1970-01-01 00:00:00");
+                            if (!string.IsNullOrEmpty(datas[2]))
+                            {
+                                try
+                                {
+                                    int date;
+                                    if (!int.TryParse(datas[2], out date))
+                                    {
+                                        MarketTime = DateTime.Parse(datas[2]);
+                                    }
+                                    else
+                                    {
+                                        IFormatProvider ifp = new CultureInfo("zh-CN", true);
+                                        MarketTime = DateTime.ParseExact(datas[2], "yyyyMMdd", ifp);
+                                    }
+                                }
+                                catch (Exception ex)
+                                {
+                                    
+                                }
+                            }
                             marketTimeList.Add(new MarketTimeInfo
                             {
                                 Market = stock[1] == "SZ" ? 0 : 1,
                                 SharesCode = int.Parse(stock[0]).ToString("000000"),
                                 SharesName = datas[1],
-                                MarketTime = string.IsNullOrEmpty(datas[2])?DateTime.Parse("1970-01-01 00:00:00"):DateTime.Parse(datas[2]),
+                                MarketTime = MarketTime,
                                 Industry = datas[3],
                                 Area = datas[4],
                                 Idea = datas[5],
@@ -2747,6 +2768,166 @@ namespace MealTicket_Admin_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             tradeCenterHandler.DeleteConditiontradeTemplateBuyAutoPar(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取条件单走势模板列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/condition/trend/list"), HttpPost]
+        [Description("获取条件单走势模板列表")]
+        public PageRes<SharesMonitorTrendInfo> GetSharesConditionTrendList(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesConditionTrendList(request);
+        }
+
+        /// <summary>
+        /// 添加条件单走势模板
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/condition/trend/add"), HttpPost]
+        [Description("添加条件单走势模板")]
+        public object AddSharesConditionTrend(AddSharesMonitorTrendRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesConditionTrend(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑条件单走势模板
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/condition/trend/modify"), HttpPost]
+        [Description("编辑条件单走势模板")]
+        public object ModifySharesConditionTrend(ModifySharesMonitorTrendRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesConditionTrend(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改条件单走势模板状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/condition/trend/status/modify"), HttpPost]
+        [Description("修改条件单走势模板状态")]
+        public object ModifySharesConditionTrendStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesConditionTrendStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除条件单走势模板
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/condition/trend/delete"), HttpPost]
+        [Description("删除条件单走势模板")]
+        public object DeleteSharesConditionTrend(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesMonitorTrend(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取条件单走势模板参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/condition/trend/par"), HttpPost]
+        [Description("获取条件单走势模板参数")]
+        public PageRes<SharesMonitorTrendParInfo> GetSharesConditionTrendPar(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesConditionTrendPar(request);
+        }
+
+        /// <summary>
+        /// 添加条件单走势模板参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/condition/trend/par/add"), HttpPost]
+        [Description("添加条件单走势模板参数")]
+        public object AddSharesConditionTrendPar(AddSharesMonitorTrendParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesConditionTrendPar(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑条件单走势模板参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/condition/trend/par/modify"), HttpPost]
+        [Description("编辑条件单走势模板参数")]
+        public object ModifySharesConditionTrendPar(ModifySharesMonitorTrendParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesConditionTrendPar(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除条件单走势模板参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/condition/trend/par/delete"), HttpPost]
+        [Description("删除条件单走势模板参数")]
+        public object DeleteSharesConditionTrendPar(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesConditionTrendPar(request);
             return null;
         }
         #endregion

@@ -12208,5 +12208,61 @@
             </summary>
             <param name="request"></param>
         </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetSharesConditionTrendList(MealTicket_Admin_Handler.Model.PageRequest)">
+            <summary>
+            获取走势模板列表
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.AddSharesConditionTrend(MealTicket_Admin_Handler.Model.AddSharesMonitorTrendRequest)">
+            <summary>
+            添加走势模板
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesConditionTrend(MealTicket_Admin_Handler.Model.ModifySharesMonitorTrendRequest)">
+            <summary>
+            编辑走势模板
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesConditionTrendStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改走势模板状态
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteSharesConditionTrend(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除走势模板
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetSharesConditionTrendPar(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
+            <summary>
+            获取走势模板参数
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.AddSharesConditionTrendPar(MealTicket_Admin_Handler.Model.AddSharesMonitorTrendParRequest)">
+            <summary>
+            添加走势模板参数
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesConditionTrendPar(MealTicket_Admin_Handler.Model.ModifySharesMonitorTrendParRequest)">
+            <summary>
+            编辑走势模板参数
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteSharesConditionTrendPar(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除走势模板参数
+            </summary>
+            <param name="request"></param>
+        </member>
     </members>
 </doc>

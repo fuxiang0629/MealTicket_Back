@@ -16,6 +16,11 @@ namespace MealTicket_Web_Handler.Model
         /// 股票信息
         /// </summary>
         public string SharesInfo { get; set; }
+
+        /// <summary>
+        /// 执行状态0全部 1已执行 2未执行
+        /// </summary>
+        public int ExecStatus { get; set; }
     }
 
     public class AccountBuyConditionTradeSharesInfo
@@ -84,5 +89,10 @@ namespace MealTicket_Web_Handler.Model
         /// 已执行参数数量
         /// </summary>
         public int ParExecuteCount { get; set; }
+
+        /// <summary>
+        /// 最大涨跌幅
+        /// </summary>
+        public int Range { get; set; }
     }
 }

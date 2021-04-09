@@ -474,6 +474,9 @@
     <Compile Include="t_account_shares_conditiontrade_buy_trend_par_template.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="t_account_shares_conditiontrade_buy_trend_template.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="t_account_shares_conditiontrade_template_sell_child.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

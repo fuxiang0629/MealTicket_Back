@@ -198,7 +198,6 @@ C:\Users\37863\Desktop\项目\饭票后端\SharesTradeService\obj\Release\Shares
 C:\Users\37863\Desktop\项目\饭票后端\SharesTradeService\obj\Release\SharesTradeService.csproj.CopyComplete
 C:\Users\37863\Desktop\项目\饭票后端\SharesTradeService\obj\Release\SharesTradeService.exe
 C:\Users\37863\Desktop\项目\饭票后端\SharesTradeService\obj\Release\SharesTradeService.pdb
-F:\项目\饭票后端\SharesTradeService\obj\Release\SharesTradeService.csprojAssemblyReference.cache
 D:\项目\饭票\后端\SharesTradeService\bin\Release\SharesTradeService.exe.config
 D:\项目\饭票\后端\SharesTradeService\bin\Release\SharesTradeService.exe
 D:\项目\饭票\后端\SharesTradeService\bin\Release\SharesTradeService.pdb
@@ -241,3 +240,4 @@ D:\项目\饭票\后端\SharesTradeService\obj\Release\SharesTradeService.csproj
 D:\项目\饭票\后端\SharesTradeService\obj\Release\SharesTradeService.csproj.CopyComplete
 D:\项目\饭票\后端\SharesTradeService\obj\Release\SharesTradeService.exe
 D:\项目\饭票\后端\SharesTradeService\obj\Release\SharesTradeService.pdb
+F:\项目\饭票后端\SharesTradeService\obj\Release\SharesTradeService.csprojAssemblyReference.cache

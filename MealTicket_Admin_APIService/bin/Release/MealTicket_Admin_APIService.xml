@@ -2858,6 +2858,69 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetSharesConditionTrendList(MealTicket_Admin_Handler.Model.PageRequest)">
+            <summary>
+            获取条件单走势模板列表
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.AddSharesConditionTrend(MealTicket_Admin_Handler.Model.AddSharesMonitorTrendRequest)">
+            <summary>
+            添加条件单走势模板
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifySharesConditionTrend(MealTicket_Admin_Handler.Model.ModifySharesMonitorTrendRequest)">
+            <summary>
+            编辑条件单走势模板
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifySharesConditionTrendStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改条件单走势模板状态
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeleteSharesConditionTrend(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除条件单走势模板
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetSharesConditionTrendPar(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
+            <summary>
+            获取条件单走势模板参数
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.AddSharesConditionTrendPar(MealTicket_Admin_Handler.Model.AddSharesMonitorTrendParRequest)">
+            <summary>
+            添加条件单走势模板参数
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifySharesConditionTrendPar(MealTicket_Admin_Handler.Model.ModifySharesMonitorTrendParRequest)">
+            <summary>
+            编辑条件单走势模板参数
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeleteSharesConditionTrendPar(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除条件单走势模板参数
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.ExtensionHelper.GetAllWebApi(System.Web.Http.HttpConfiguration)">
             <summary>
             获取当前配置内的所有web api

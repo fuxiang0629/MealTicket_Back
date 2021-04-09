@@ -329,6 +329,8 @@ namespace MealTicket_Admin_Handler
                                   MarketTime = x.MarketTime,
                                   Market = x.Market,
                                   IsSuspension = x.IsSuspension,
+                                  Area=x.Area,
+                                  Idea=x.Idea,
                                   Industry=x.Industry,
                                   Business=x.Business,
                                   SharesQuotes = bi == null ? new SharesQuotes() : new SharesQuotes
@@ -511,8 +513,11 @@ namespace MealTicket_Admin_Handler
             using (var db = new meal_ticketEntities())
             using (var tran=db.Database.BeginTransaction())
             {
+                var plateList = (from x in db.t_shares_plate
+                                 select x).ToList();
                 try
                 {
+                    List<t_shares_plate_rel> tempList = new List<t_shares_plate_rel>();
                     foreach (var item in list)
                     {
                         //判断是否存在
@@ -552,26 +557,27 @@ namespace MealTicket_Admin_Handler
                         db.SaveChanges();
 
                         //解析行业
-                        string[] IndustryArr = item.Industry.Split('/');
+                        string[] IndustryArr = item.Industry.Replace(" ", "").Split('/');
                         //解析地区
-                        string[] AresArr = item.Area.Split('/');
+                        string[] AresArr = item.Area.Replace(" ", "").Split('/');
                         //解析概念
-                        string[] IdeaArr = item.Idea.Split('/');
-                        var plateList = (from x in db.t_shares_plate
-                                         where (x.Type == 1 && IndustryArr.Contains(x.Name)) || (x.Type == 2 && AresArr.Contains(x.Name)) || (x.Type == 3 && IdeaArr.Contains(x.Name))
-                                         select x).ToList();
-                        foreach (var x in plateList)
+                        string[] IdeaArr = item.Idea.Replace(" ", "").Split('/');
+                        var plateListTemp = (from x in plateList
+                                             where ((x.Type == 1 && IndustryArr.Contains(x.Name.Trim())) || (x.Type == 2 && AresArr.Contains(x.Name.Trim())) || (x.Type == 3 && IdeaArr.Contains(x.Name))) && !string.IsNullOrEmpty(x.Name.Trim())
+                                             select x).ToList();
+                        foreach (var x in plateListTemp)
                         {
-                            db.t_shares_plate_rel.Add(new t_shares_plate_rel 
+                            tempList.Add(new t_shares_plate_rel
                             {
-                                SharesCode=item.SharesCode,
-                                Market=item.Market,
-                                CreateTime=DateTime.Now,
-                                PlateId=x.Id
+                                SharesCode = item.SharesCode,
+                                Market = item.Market,
+                                CreateTime = DateTime.Now,
+                                PlateId = x.Id
                             });
                         }
-                        db.SaveChanges();
                     }
+
+                    db.t_shares_plate_rel.AddRange(tempList);
                     db.SaveChanges();
 
                     tran.Commit();
@@ -4614,6 +4620,238 @@ namespace MealTicket_Admin_Handler
                     throw new WebApiException(400, "数据不存在");
                 }
                 db.t_sys_conditiontrade_template_buy_auto_trend_par.Remove(trendPar);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取走势模板列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<SharesMonitorTrendInfo> GetSharesConditionTrendList(PageRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = from item in db.t_account_shares_conditiontrade_buy_trend_template
+                            select item;
+
+                int totalCount = trend.Count();
+
+                return new PageRes<SharesMonitorTrendInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trend
+                            orderby item.CreateTime descending
+                            select new SharesMonitorTrendInfo
+                            {
+                                Status = item.Status,
+                                CreateTime = item.CreateTime,
+                                Description = item.Description,
+                                Id = item.Id,
+                                Name = item.Name
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加走势模板
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddSharesConditionTrend(AddSharesMonitorTrendRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                db.t_account_shares_conditiontrade_buy_trend_template.Add(new t_account_shares_conditiontrade_buy_trend_template
+                {
+                    Status = 1,
+                    CreateTime = DateTime.Now,
+                    Description = request.Description,
+                    LastModified = DateTime.Now,
+                    Name = request.Name
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 编辑走势模板
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifySharesConditionTrend(ModifySharesMonitorTrendRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_account_shares_conditiontrade_buy_trend_template
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+
+                trend.Name = request.Name;
+                trend.Description = request.Description;
+                trend.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改走势模板状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifySharesConditionTrendStatus(ModifyStatusRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_account_shares_conditiontrade_buy_trend_template
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+
+                trend.Status = request.Status;
+                trend.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除走势模板
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteSharesConditionTrend(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_account_shares_conditiontrade_buy_trend_template
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+
+                db.t_account_shares_conditiontrade_buy_trend_template.Remove(trend);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取走势模板参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<SharesMonitorTrendParInfo> GetSharesConditionTrendPar(DetailsPageRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = from item in db.t_account_shares_conditiontrade_buy_trend_par_template
+                               where item.TrendId == request.Id
+                               select item;
+                int totalCount = trendPar.Count();
+
+                return new PageRes<SharesMonitorTrendParInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trendPar
+                            orderby item.CreateTime descending
+                            select new SharesMonitorTrendParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                ParamsInfo = item.ParamsInfo
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加走势模板参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddSharesConditionTrendPar(AddSharesMonitorTrendParRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                if (request.TrendId != 1)
+                {
+                    var par = (from item in db.t_account_shares_conditiontrade_buy_trend_par_template
+                               where item.TrendId == request.TrendId
+                               select item).FirstOrDefault();
+                    if (par != null)
+                    {
+                        par.ParamsInfo = request.ParamsInfo;
+                        par.LastModified = DateTime.Now;
+                    }
+                    else
+                    {
+                        db.t_account_shares_conditiontrade_buy_trend_par_template.Add(new t_account_shares_conditiontrade_buy_trend_par_template
+                        {
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = request.ParamsInfo,
+                            TrendId = request.TrendId
+                        });
+                    }
+                }
+                else
+                {
+                    db.t_account_shares_conditiontrade_buy_trend_par_template.Add(new t_account_shares_conditiontrade_buy_trend_par_template
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        ParamsInfo = request.ParamsInfo,
+                        TrendId = request.TrendId
+                    });
+                }
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 编辑走势模板参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifySharesConditionTrendPar(ModifySharesMonitorTrendParRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_conditiontrade_buy_trend_par_template
+                                where item.Id == request.Id && item.TrendId == 1
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trendPar.ParamsInfo = request.ParamsInfo;
+                trendPar.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除走势模板参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteSharesConditionTrendPar(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_conditiontrade_buy_trend_par_template
+                                where item.Id == request.Id && item.TrendId == 1
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_account_shares_conditiontrade_buy_trend_par_template.Remove(trendPar);
                 db.SaveChanges();
             }
         }

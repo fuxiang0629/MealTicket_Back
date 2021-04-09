@@ -126,6 +126,8 @@
     <Compile Include="Model\AddAccountOptionalGroup.cs" />
     <Compile Include="Model\AddAccountOptionalGroupRel.cs" />
     <Compile Include="Model\AddAccountOptionalTrendPar.cs" />
+    <Compile Include="Model\AddConditiontradeBuyGroup.cs" />
+    <Compile Include="Model\AddConditiontradeBuyGroupShares.cs" />
     <Compile Include="Model\AddConditiontradeTemplate.cs" />
     <Compile Include="Model\AddConditiontradeTemplateBuyAuto.cs" />
     <Compile Include="Model\AddConditiontradeTemplateBuyAutoGroup.cs" />
@@ -146,6 +148,7 @@
     <Compile Include="Model\GetAccountBuyConditionOtherList.cs" />
     <Compile Include="Model\GetAccountBuyConditionOtherPar.cs" />
     <Compile Include="Model\GetAccountSharesPlateSharesList.cs" />
+    <Compile Include="Model\GetConditiontradeBuyGroupList.cs" />
     <Compile Include="Model\GetConditiontradeTemplateBuyAutoGroupList.cs" />
     <Compile Include="Model\GetConditiontradeTemplateBuyAutoList.cs" />
     <Compile Include="Model\GetConditiontradeTemplateBuyAutoPar.cs" />
@@ -183,6 +186,7 @@
     <Compile Include="Model\GetSharesQuotesToday.cs" />
     <Compile Include="Model\GetTradeSharesList.cs" />
     <Compile Include="Model\GetTradeSharesQuotesInfo.cs" />
+    <Compile Include="Model\ImportConditiontradeTemplateBuy.cs" />
     <Compile Include="Model\ImportConditiontradeTemplateSell.cs" />
     <Compile Include="Model\ModifyAccountBuyCondition.cs" />
     <Compile Include="Model\ModifyAccountBuyConditionAutoGroup.cs" />
@@ -197,6 +201,7 @@
     <Compile Include="Model\ModifyAccountRealTimeTrendTri.cs" />
     <Compile Include="Model\ModifyAccountRealTimeTrendTriGroup.cs" />
     <Compile Include="Model\ModifyAccountSeat.cs" />
+    <Compile Include="Model\ModifyConditiontradeBuyGroup.cs" />
     <Compile Include="Model\ModifyConditiontradeTemplate.cs" />
     <Compile Include="Model\ModifyConditiontradeTemplateBuyAutoGroup.cs" />
     <Compile Include="Model\ModifyConditiontradeTemplateBuyAutoPar.cs" />
@@ -292,7 +297,16 @@
     <Compile Include="t_account_shares_conditiontrade_buy_details_other_trend_par.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="t_account_shares_conditiontrade_buy_group.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_conditiontrade_buy_group_rel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="t_account_shares_conditiontrade_buy_trend_par_template.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_conditiontrade_buy_trend_template.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_account_shares_conditiontrade_template.cs">

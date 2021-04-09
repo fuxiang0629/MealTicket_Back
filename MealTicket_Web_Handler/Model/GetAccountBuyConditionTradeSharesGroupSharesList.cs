@@ -12,11 +12,15 @@ namespace MealTicket_Web_Handler.Model
 
     public class AccountSharesPlateSharesInfo
     {
-
         /// <summary>
-        /// Id
+        /// 股票Id
         /// </summary>
         public long Id { get; set; }
+
+        /// <summary>
+        /// 关系Id
+        /// </summary>
+        public long RelId { get; set; }
 
         /// <summary>
         /// 市场代码0深圳 1上海
@@ -47,5 +51,35 @@ namespace MealTicket_Web_Handler.Model
         /// 当前价
         /// </summary>
         public long CurrPrice { get; set; }
+
+        /// <summary>
+        /// 昨日收盘价
+        /// </summary>
+        public long ClosedPrice { get; set; }
+
+        /// <summary>
+        /// 状态1有效 2无效
+        /// </summary>
+        public int Status { get; set; }
+
+        /// <summary>
+        /// 创建时间
+        /// </summary>
+        public DateTime CreateTime { get; set; }
+
+        /// <summary>
+        /// 总参数数量
+        /// </summary>
+        public int ParTotalCount { get; set; }
+
+        /// <summary>
+        /// 有效参数数量
+        /// </summary>
+        public int ParValidCount { get; set; }
+
+        /// <summary>
+        /// 已执行参数数量
+        /// </summary>
+        public int ParExecuteCount { get; set; }
     }
 }

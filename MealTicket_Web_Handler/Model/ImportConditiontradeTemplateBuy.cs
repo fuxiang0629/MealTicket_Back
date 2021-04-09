@@ -46,5 +46,15 @@ namespace MealTicket_Web_Handler.Model
         /// 跟投用户
         /// </summary>
         public List<long> FollowList { get; set; }
+
+        /// <summary>
+        /// 1单个导入（可修改价格） 2批量导入
+        /// </summary>
+        public int Model { get; set; }
+
+        /// <summary>
+        /// 详细数据
+        /// </summary>
+        public List<ConditiontradeTemplateBuyDetailsInfo> TemplateDetailsList { get; set; }
     }
 }

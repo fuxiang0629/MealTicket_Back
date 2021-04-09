@@ -36,7 +36,7 @@ namespace MealTicket_Web_Handler.Model
         public int? ConditionPriceType { get; set; }
 
         /// <summary>
-        /// 基准价 1成本价 2当前价 3昨日收盘价
+        /// 基准价 1成昨日收盘价 2当前价
         /// </summary>
         public int? ConditionPriceBase { get; set; }
 
@@ -104,5 +104,15 @@ namespace MealTicket_Web_Handler.Model
         /// 是否自动买入
         /// </summary>
         public bool BuyAuto { get; set; }
+
+        /// <summary>
+        /// 前端用
+        /// </summary>
+        public long DisPrice { get; set; }
+
+        /// <summary>
+        /// 前端用
+        /// </summary>
+        public long DisAmount { get; set; }
     }
 }

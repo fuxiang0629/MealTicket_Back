@@ -39,5 +39,20 @@ namespace MealTicket_Web_Handler.Model
         /// 股票名称
         /// </summary>
         public string SharesName { get; set; }
+
+        /// <summary>
+        /// 总参数数量
+        /// </summary>
+        public int ParTotalCount { get; set; }
+
+        /// <summary>
+        /// 有效参数数量
+        /// </summary>
+        public int ParValidCount { get; set; }
+
+        /// <summary>
+        /// 已执行参数数量
+        /// </summary>
+        public int ParExecuteCount { get; set; }
     }
 }
