@@ -10,6 +10,14 @@ namespace MealTicket_Web_Handler.Model
     {
     }
 
+    public class GetConditiontradeBuyGroupListRequest:DetailsPageRequest
+    {
+        /// <summary>
+        /// 分组名称
+        /// </summary>
+        public string Name { get; set; }
+    }
+
     public class ConditiontradeBuyGroupInfo
     {
         /// <summary>

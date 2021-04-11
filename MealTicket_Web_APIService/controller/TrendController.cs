@@ -1289,6 +1289,24 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 从系统导入板块股票
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("sys/plate/shares/import"), HttpPost]
+        [Description("从系统导入板块股票")]
+        [CheckUserLoginFilter]
+        public object ImportysPlateShares(ImportysPlateSharesRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.ImportysPlateShares(request, basedata);
+        }
+
+        /// <summary>
         /// 批量修改股票板块股票状态
         /// </summary>
         /// <param name="request"></param>
@@ -2783,7 +2801,7 @@ namespace MealTicket_Web_APIService.controller
         [Route("conditiontrade/buy/group/list"), HttpPost]
         [Description("查询条件买入自定义分组列表")]
         [CheckUserLoginFilter]
-        public PageRes<ConditiontradeBuyGroupInfo> GetConditiontradeBuyGroupList(DetailsPageRequest request)
+        public PageRes<ConditiontradeBuyGroupInfo> GetConditiontradeBuyGroupList(GetConditiontradeBuyGroupListRequest request)
         {
             if (request == null)
             {

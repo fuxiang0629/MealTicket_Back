@@ -91,6 +91,31 @@ namespace MealTicket_Web_Handler
                                       SharesName = item.SharesName,
                                       Market = item.Market
                                   }).Take(10).ToList();
+                if (request.RealInfo)
+                {
+                    foreach (var item in resultList)
+                    {
+                        var quote = (from x in db.t_shares_quotes
+                                     where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                     select x).FirstOrDefault();
+                        if (quote != null)
+                        {
+                            item.ClosedPrice = quote.ClosedPrice;
+                            item.CurrPrice = quote.PresentPrice;
+                        }
+
+                        //计算杠杆倍数
+                        var rules = (from x in db.t_shares_limit_fundmultiple
+                                     where (x.LimitMarket == item.Market || x.LimitMarket == -1) && (item.SharesCode.StartsWith(x.LimitKey))
+                                     orderby x.Priority descending, x.FundMultiple
+                                     select x).FirstOrDefault();
+                        if (rules != null)
+                        {
+                            item.Range = rules.Range;
+                        }
+                    }
+                }
+
                 return resultList;
             }
         }
@@ -3336,7 +3361,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
         }
 
         /// <summary>
-        /// 批量导入行情监控数据
+        /// 批量导入条件买入股票数据
         /// </summary>
         /// <param name="list"></param>
         public int BatchAddAccountBuyConditionTradeShares(List<SharesInfo> list, long accountId)
@@ -3488,6 +3513,28 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                     List = list
                 };
             }
+        }
+
+        /// <summary>
+        /// 从系统导入板块股票
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public int ImportysPlateShares(ImportysPlateSharesRequest request, HeadBase basedata) 
+        {
+            List<SharesInfo> list = new List<SharesInfo>();
+            using (var db = new meal_ticketEntities())
+            {
+                //查询板块股票
+                list = (from item in db.t_shares_plate_rel
+                        where item.PlateId == request.PlateId
+                        select new SharesInfo
+                        {
+                            SharesCode=item.SharesCode,
+                            Market=item.Market
+                        }).ToList();
+            }
+            return BatchAddAccountBuyConditionTradeShares(list, basedata.AccountId);
         }
 
         /// <summary>
@@ -7228,7 +7275,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
         /// <param name="request"></param>
         /// <param name="basedata"></param>
         /// <returns></returns>
-        public PageRes<ConditiontradeBuyGroupInfo> GetConditiontradeBuyGroupList(DetailsPageRequest request, HeadBase basedata) 
+        public PageRes<ConditiontradeBuyGroupInfo> GetConditiontradeBuyGroupList(GetConditiontradeBuyGroupListRequest request, HeadBase basedata) 
         {
             if (request.Id == 0)
             {
@@ -7239,6 +7286,12 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 var groupList = from item in db.t_account_shares_conditiontrade_buy_group
                                 where item.AccountId == request.Id
                                 select item;
+                if (!string.IsNullOrEmpty(request.Name))
+                {
+                    groupList = from item in groupList
+                                where item.Name.Contains(request.Name)
+                                select item;
+                }
                 int totalCount = groupList.Count();
 
                 var list = (from item in groupList

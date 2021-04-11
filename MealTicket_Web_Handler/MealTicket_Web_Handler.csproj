@@ -188,6 +188,7 @@
     <Compile Include="Model\GetTradeSharesQuotesInfo.cs" />
     <Compile Include="Model\ImportConditiontradeTemplateBuy.cs" />
     <Compile Include="Model\ImportConditiontradeTemplateSell.cs" />
+    <Compile Include="Model\ImportysPlateShares.cs" />
     <Compile Include="Model\ModifyAccountBuyCondition.cs" />
     <Compile Include="Model\ModifyAccountBuyConditionAutoGroup.cs" />
     <Compile Include="Model\ModifyAccountBuyConditionAutoPar.cs" />

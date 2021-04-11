@@ -21,6 +21,11 @@ namespace MealTicket_Web_Handler.Model
         /// 是否所有股票
         /// </summary>
         public bool IsAll { get; set; }
+
+        /// <summary>
+        /// 是否获取实时信息
+        /// </summary>
+        public bool RealInfo { get; set; }
     }
 
     public class SharesInfo
@@ -54,5 +59,20 @@ namespace MealTicket_Web_Handler.Model
         /// 已执行参数数量
         /// </summary>
         public int ParExecuteCount { get; set; }
+
+        /// <summary>
+        /// 当前价格
+        /// </summary>
+        public long CurrPrice { get; set; }
+
+        /// <summary>
+        /// 昨日收盘价格
+        /// </summary>
+        public long ClosedPrice { get; set; }
+
+        /// <summary>
+        /// 最大涨跌幅
+        /// </summary>
+        public long Range { get; set; }
     }
 }
