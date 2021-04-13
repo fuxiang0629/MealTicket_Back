@@ -114,5 +114,10 @@ namespace MealTicket_Web_Handler.Model
         /// 前端用
         /// </summary>
         public long DisAmount { get; set; }
+
+        /// <summary>
+        /// 前端用
+        /// </summary>
+        public double DisAmountRate { get; set; }
     }
 }

@@ -140,6 +140,7 @@
     <Compile Include="Model\BatchDeleteConditiontradeBuyShares.cs" />
     <Compile Include="Model\BatchModifyAccountSharesPlateStatus.cs" />
     <Compile Include="Model\BindAccountOptionalSeat.cs" />
+    <Compile Include="Model\DeleteAccountBuyConditionTradeShares.cs" />
     <Compile Include="Model\GetAccountBuyConditionAutoGroupList.cs" />
     <Compile Include="Model\GetAccountBuyConditionAutoList.cs" />
     <Compile Include="Model\GetAccountBuyConditionAutoPar.cs" />
@@ -186,6 +187,7 @@
     <Compile Include="Model\GetSharesQuotesToday.cs" />
     <Compile Include="Model\GetTradeSharesList.cs" />
     <Compile Include="Model\GetTradeSharesQuotesInfo.cs" />
+    <Compile Include="Model\GetTradeTimeMarketList.cs" />
     <Compile Include="Model\ImportConditiontradeTemplateBuy.cs" />
     <Compile Include="Model\ImportConditiontradeTemplateSell.cs" />
     <Compile Include="Model\ImportysPlateShares.cs" />
@@ -203,6 +205,7 @@
     <Compile Include="Model\ModifyAccountRealTimeTrendTriGroup.cs" />
     <Compile Include="Model\ModifyAccountSeat.cs" />
     <Compile Include="Model\ModifyConditiontradeBuyGroup.cs" />
+    <Compile Include="Model\ModifyConditiontradeBuySharesMyGroup.cs" />
     <Compile Include="Model\ModifyConditiontradeTemplate.cs" />
     <Compile Include="Model\ModifyConditiontradeTemplateBuyAutoGroup.cs" />
     <Compile Include="Model\ModifyConditiontradeTemplateBuyAutoPar.cs" />

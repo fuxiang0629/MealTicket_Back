@@ -130,3 +130,4 @@ F:\项目\饭票后端\FXCommon\obj\Release\FXCommon.csproj.CoreCompileInputs.ca
 F:\项目\饭票后端\FXCommon\obj\Release\FXCommon.csproj.CopyComplete
 F:\项目\饭票后端\FXCommon\obj\Release\FXCommon.dll
 F:\项目\饭票后端\FXCommon\obj\Release\FXCommon.pdb
+F:\项目\饭票后端\FXCommon\obj\Release\FXCommon.csprojAssemblyReference.cache

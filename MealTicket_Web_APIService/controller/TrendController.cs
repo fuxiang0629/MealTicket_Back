@@ -1179,6 +1179,7 @@ namespace MealTicket_Web_APIService.controller
                     {
                         var file = provider.FileData[0];
                         var accountId = long.Parse(provider.FormData["accountId"]);
+                        var groupIdId = long.Parse(provider.FormData["groupId"]);
                         var fileInfo = new FileInfo(file.LocalFileName);
                         var fileStream = fileInfo.OpenRead();
                         int fsLen = (int)fileStream.Length;
@@ -1216,7 +1217,7 @@ namespace MealTicket_Web_APIService.controller
                         {
                             accountId = basedata.AccountId;
                         }
-                        return trendHandler.BatchAddAccountBuyConditionTradeShares(marketTimeList,accountId);
+                        return trendHandler.BatchAddAccountBuyConditionTradeShares(marketTimeList,accountId, groupIdId);
                     }
                     else
                     {
@@ -1260,7 +1261,7 @@ namespace MealTicket_Web_APIService.controller
         [Route("account/conditiontrade/buy/shares/delete"), HttpPost]
         [Description("删除买入条件单股票")]
         [CheckUserLoginFilter]
-        public object DeleteAccountBuyConditionTradeShares(DeleteRequest request)
+        public object DeleteAccountBuyConditionTradeShares(DeleteAccountBuyConditionTradeSharesRequest request)
         {
             if (request == null)
             {
@@ -2887,6 +2888,25 @@ namespace MealTicket_Web_APIService.controller
             return null;
         }
 
+        /// <summary>
+        /// 修改条件买入股票自定义分组
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/buy/shares/mygroup/modify"), HttpPost]
+        [Description("修改条件买入股票自定义分组")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeBuySharesMyGroup(ModifyConditiontradeBuySharesMyGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeBuySharesMyGroup(request, basedata);
+            return null;
+        }
+
 
         /// <summary>
         /// 批量添加条件买入自定义分组股票
@@ -2980,6 +3000,20 @@ namespace MealTicket_Web_APIService.controller
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             trendHandler.DeleteConditiontradeBuyGroupShares(request, basedata);
             return null;
+        }
+
+        /// <summary>
+        /// 查询交易时间板块数据
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("tradetime/market/list"), HttpPost]
+        [Description("查询交易时间板块数据")]
+        [CheckUserLoginFilter]
+        public List<TradeTimeMarketInfo> GetTradeTimeMarketList()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetTradeTimeMarketList(basedata);
         }
     }
 }

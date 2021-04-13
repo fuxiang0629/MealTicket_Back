@@ -784,7 +784,7 @@ namespace MealTicket_Admin_Handler
                 if (!string.IsNullOrEmpty(request.Name))
                 {
                     plateList = from item in plateList
-                                where item.Name.Contains(item.Name)
+                                where item.Name.Contains(request.Name)
                                 select item;
                 }
                 int totalCount = plateList.Count();

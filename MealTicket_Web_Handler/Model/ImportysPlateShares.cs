@@ -16,5 +16,10 @@ namespace MealTicket_Web_Handler.Model
         /// 板块Id
         /// </summary>
         public long PlateId { get; set; }
+
+        /// <summary>
+        /// 关键字
+        /// </summary>
+        public List<string> KeyWord { get; set; }
     }
 }
