@@ -35,5 +35,8 @@ namespace MealTicket_Web_Handler
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
         public long CreateAccountId { get; set; }
+        public int ExecStatus { get; set; }
+        public bool LimitUp { get; set; }
+        public Nullable<System.DateTime> FirstExecTime { get; set; }
     }
 }

@@ -434,6 +434,45 @@ namespace MealTicket_Web_Handler.Runner
                         }
                     }
 
+                    //判断是否当天第一次跑
+                    if (item.item.FirstExecTime == null || item.item.FirstExecTime < timeNow.Date)
+                    {
+                        item.item.FirstExecTime = timeNow;
+                        item.item.ExecStatus = 0;
+                        db.SaveChanges();
+                    }
+
+                    //判断当前是否涨停
+                    if (item.item3.BuyPrice1 == maxPrice)//买一价为涨停价
+                    {
+                        if (item.item.LimitUp)
+                        {
+                            if (item.item.ExecStatus == 1)
+                            {
+                                continue;
+                            }
+                            else if (item.item.ExecStatus == 0)
+                            {
+                                item.item.ExecStatus = 1;
+                                db.SaveChanges();
+                                continue;
+                            }
+                        }
+                        else if(item.item.ExecStatus!=2)
+                        {
+                            item.item.ExecStatus = 2;
+                            db.SaveChanges();
+                        }
+                    }
+                    else
+                    {
+                        if (item.item.ExecStatus != 2)
+                        {
+                            item.item.ExecStatus = 2;
+                            db.SaveChanges();
+                        }
+                    }
+
                     //判断价格条件
                     if (item.item.ConditionType == 1)//绝对价格
                     {
@@ -813,13 +852,6 @@ namespace MealTicket_Web_Handler.Runner
                                           join x3 in db.t_account_wallet on x.FollowAccountId equals x3.AccountId
                                           where x.AccountId == item.item2.AccountId && x2.Status == 1
                                           select x3).ToList();
-
-                        List<dynamic> buyList = new List<dynamic>();
-                        buyList.Add(new
-                        {
-                            AccountId = item.item2.AccountId,
-                            BuyAmount = item.item.EntrustAmount
-                        });
                         //计算本人购买仓位比
                         var buyRateTemp = (from x in db.t_account_wallet
                                            where x.AccountId == item.item2.AccountId
@@ -828,7 +860,21 @@ namespace MealTicket_Web_Handler.Runner
                         {
                             throw new WebApiException(400, "账户有误");
                         }
-                        var buyRate = item.item.EntrustAmount * 1.0 / buyRateTemp.Deposit;//仓位占比
+
+                        long EntrustAmount = item.item.EntrustAmount;
+                        if (EntrustAmount > buyRateTemp.Deposit)
+                        {
+                            EntrustAmount = buyRateTemp.Deposit;
+                        }
+
+                        List<dynamic> buyList = new List<dynamic>();
+                        buyList.Add(new
+                        {
+                            AccountId = item.item2.AccountId,
+                            BuyAmount = EntrustAmount
+                        });
+
+                        var buyRate = EntrustAmount * 1.0 / buyRateTemp.Deposit;//仓位占比
                         foreach (var account in FollowList)
                         {
                             var temp = followList.Where(e => e.AccountId == account).FirstOrDefault();

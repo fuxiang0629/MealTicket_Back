@@ -8364,6 +8364,11 @@
             子条件列表
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateBuyDetailsRequest.LimitUp">
+            <summary>
+            是否判断涨停休眠
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateBuyOtherRequest.RelId">
             <summary>
             关系Id
@@ -8807,6 +8812,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateBuyDetailsInfo.BuyAuto">
             <summary>
             是否自动买入
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateBuyDetailsInfo.LimitUp">
+            <summary>
+            是否判断涨停休眠
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateBuyOtherGroupInfo.Id">
@@ -9327,6 +9337,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyDetailsRequest.ChildList">
             <summary>
             子条件列表
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyDetailsRequest.LimitUp">
+            <summary>
+            是否判断涨停休眠
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyOtherGroupRequest.Id">

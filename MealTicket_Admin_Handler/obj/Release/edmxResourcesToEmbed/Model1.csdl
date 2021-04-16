@@ -2179,6 +2179,7 @@
     <Property Name="Status" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LimitUp" Type="Boolean" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_buy_trend_par_template">
     <Key>

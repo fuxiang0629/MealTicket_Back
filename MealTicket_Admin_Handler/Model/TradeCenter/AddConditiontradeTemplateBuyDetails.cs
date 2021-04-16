@@ -76,5 +76,10 @@ namespace MealTicket_Admin_Handler.Model
         /// 子条件列表
         /// </summary>
         public List<ConditionChild> ChildList { get; set; }
+
+        /// <summary>
+        /// 是否判断涨停休眠
+        /// </summary>
+        public bool LimitUp { get; set; }
     }
 }

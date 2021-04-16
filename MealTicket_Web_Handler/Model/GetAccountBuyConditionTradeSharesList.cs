@@ -23,14 +23,34 @@ namespace MealTicket_Web_Handler.Model
         public int ExecStatus { get; set; }
 
         /// <summary>
-        /// 0系统分组 1自定义分组
+        /// 行业分组名称
         /// </summary>
-        public int Type { get; set; }
+        public long GroupId1 { get; set; }
 
         /// <summary>
-        /// 分组Id
+        /// 地区分组名称
         /// </summary>
-        public long PlateId { get; set; }
+        public long GroupId2 { get; set; }
+
+        /// <summary>
+        /// 概念分组名称
+        /// </summary>
+        public long GroupId3 { get; set; }
+
+        /// <summary>
+        /// 自定义分组名称
+        /// </summary>
+        public long GroupId4 { get; set; }
+
+        /// <summary>
+        /// 排序方式
+        /// </summary>
+        public string OrderMethod { get; set; }
+
+        /// <summary>
+        /// 排序字段1时间 2涨幅
+        /// </summary>
+        public int OrderType { get; set; }
     }
 
     public class AccountBuyConditionTradeSharesInfo

@@ -3699,6 +3699,7 @@ namespace MealTicket_Admin_Handler
                                 EntrustAmount = item.EntrustAmount,
                                 Name = item.Name,
                                 BuyAuto=item.BuyAuto,
+                                LimitUp=item.LimitUp,
                                 CreateTime = item.CreateTime,
                                 OtherConditionCount = (from x in db.t_sys_conditiontrade_template_buy_other
                                                        where x.TemplateBuyId == item.Id
@@ -3745,6 +3746,7 @@ namespace MealTicket_Admin_Handler
                         EntrustAmount = request.EntrustAmount,
                         EntrustPriceGear = request.EntrustPriceGear,
                         EntrustType = request.EntrustType,
+                        LimitUp=request.LimitUp,
                         ForbidType = request.ForbidType,
                         IsGreater = request.IsGreater,
                         LastModified = DateTime.Now,
@@ -3817,6 +3819,7 @@ namespace MealTicket_Admin_Handler
                     conditiontrade.ConditionPriceRate = request.ConditionRelativeRate;
                     conditiontrade.ConditionPriceType = request.ConditionRelativeType;
                     conditiontrade.IsGreater = request.IsGreater;
+                    conditiontrade.LimitUp = request.LimitUp;
                     db.SaveChanges();
 
                     var child = (from item in db.t_sys_conditiontrade_template_buy_child
