@@ -21,6 +21,36 @@ namespace MealTicket_Web_Handler.Model
         /// 执行状态0全部 1已执行 2未执行
         /// </summary>
         public int ExecStatus { get; set; }
+
+        /// <summary>
+        /// 行业分组名称
+        /// </summary>
+        public long GroupId1 { get; set; }
+
+        /// <summary>
+        /// 地区分组名称
+        /// </summary>
+        public long GroupId2 { get; set; }
+
+        /// <summary>
+        /// 概念分组名称
+        /// </summary>
+        public long GroupId3 { get; set; }
+
+        /// <summary>
+        /// 自定义分组名称
+        /// </summary>
+        public long GroupId4 { get; set; }
+
+        /// <summary>
+        /// 排序方式
+        /// </summary>
+        public string OrderMethod { get; set; }
+
+        /// <summary>
+        /// 排序字段1时间 2涨幅
+        /// </summary>
+        public int OrderType { get; set; }
     }
 
     public class AccountBuyConditionTradeSharesInfo
@@ -29,6 +59,16 @@ namespace MealTicket_Web_Handler.Model
         /// Id
         /// </summary>
         public long Id { get; set; }
+
+        /// <summary>
+        /// 关系Id
+        /// </summary>
+        public long RelId { get; set; }
+
+        /// <summary>
+        /// 自定义分组Id
+        /// </summary>
+        public List<long> GroupList { get; set; }
 
         /// <summary>
         /// 市场代码0深圳 1上海

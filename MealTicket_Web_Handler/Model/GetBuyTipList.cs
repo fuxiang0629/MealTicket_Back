@@ -43,6 +43,11 @@ namespace MealTicket_Web_Handler.Model
         public string SharesCode { get; set; }
 
         /// <summary>
+        /// 市场
+        /// </summary>
+        public int Market { get; set; }
+
+        /// <summary>
         /// 是否自动买入
         /// </summary>
         public bool BuyAuto { get; set; }
@@ -86,5 +91,10 @@ namespace MealTicket_Web_Handler.Model
         /// 跟投人员
         /// </summary>
         public List<long> FollowAccountList { get; set; }
+
+        /// <summary>
+        /// 昨日收盘价
+        /// </summary>
+        public long ClosedPrice { get; set; }
     }
 }

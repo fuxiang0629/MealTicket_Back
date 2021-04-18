@@ -257,6 +257,9 @@
     <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details">
         <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details">
+          <ScalarProperty Name="FirstExecTime" ColumnName="FirstExecTime" />
+          <ScalarProperty Name="LimitUp" ColumnName="LimitUp" />
+          <ScalarProperty Name="ExecStatus" ColumnName="ExecStatus" />
           <ScalarProperty Name="CreateAccountId" ColumnName="CreateAccountId" />
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="ConditionId" ColumnName="ConditionId" />
@@ -783,6 +786,7 @@
     <EntitySetMapping Name="t_account_wallet">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_wallet">
         <MappingFragment StoreEntitySet="t_account_wallet">
+          <ScalarProperty Name="RemainDeposit" ColumnName="RemainDeposit" />
           <ScalarProperty Name="AccountId" ColumnName="AccountId" />
           <ScalarProperty Name="Deposit" ColumnName="Deposit" />
           <ScalarProperty Name="Status" ColumnName="Status" />
@@ -2633,6 +2637,7 @@
     <EntitySetMapping Name="t_sys_conditiontrade_template_buy">
       <EntityTypeMapping TypeName="meal_ticketModel.t_sys_conditiontrade_template_buy">
         <MappingFragment StoreEntitySet="t_sys_conditiontrade_template_buy">
+          <ScalarProperty Name="LimitUp" ColumnName="LimitUp" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="Status" ColumnName="Status" />
@@ -2739,6 +2744,7 @@
     <EntitySetMapping Name="t_account_shares_conditiontrade_template_buy">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_template_buy">
         <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_template_buy">
+          <ScalarProperty Name="LimitUp" ColumnName="LimitUp" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="Status" ColumnName="Status" />
@@ -2870,6 +2876,17 @@
         <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_group_rel">
           <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
           <ScalarProperty Name="Market" ColumnName="Market" />
+          <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_conditiontrade_buy_group_share_account">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_group_share_account">
+        <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_group_share_account">
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="ShareAccountId" ColumnName="ShareAccountId" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
           <ScalarProperty Name="GroupId" ColumnName="GroupId" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>

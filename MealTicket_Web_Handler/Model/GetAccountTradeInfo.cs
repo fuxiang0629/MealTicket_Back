@@ -46,5 +46,10 @@ namespace MealTicket_Web_Handler
         /// 今日盈亏
         /// </summary>
         public long TodayProfit { get; set; }
+
+        /// <summary>
+        /// 保留余额
+        /// </summary>
+        public long RetainDeposit { get; set; }
     }
 }

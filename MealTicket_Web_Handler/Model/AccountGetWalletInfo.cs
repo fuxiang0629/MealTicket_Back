@@ -16,5 +16,10 @@ namespace MealTicket_Web_Handler.Model
         /// 保证金余额
         /// </summary>
         public long DepositAmount { get; set; }
+
+        /// <summary>
+        /// 保留余额
+        /// </summary>
+        public long RemainDeposit { get; set; }
     }
 }

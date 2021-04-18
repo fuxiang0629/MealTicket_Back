@@ -267,6 +267,9 @@
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
           <Property Name="CreateAccountId" Type="bigint" Nullable="false" />
+          <Property Name="ExecStatus" Type="int" Nullable="false" />
+          <Property Name="FirstExecTime" Type="datetime" />
+          <Property Name="LimitUp" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="t_account_shares_conditiontrade_buy_details_auto">
           <Key>
@@ -373,6 +376,16 @@
           <Property Name="Market" Type="int" Nullable="false" />
           <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_buy_group_share_account">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GroupId" Type="bigint" Nullable="false" />
+          <Property Name="AccountId" Type="bigint" Nullable="false" />
+          <Property Name="ShareAccountId" Type="bigint" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="t_account_shares_conditiontrade_buy_trend_par_template">
           <Key>
             <PropertyRef Name="Id" />
@@ -426,6 +439,7 @@
           <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
+          <Property Name="LimitUp" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="t_account_shares_conditiontrade_template_buy_auto">
           <Key>
@@ -923,6 +937,7 @@
           </Key>
           <Property Name="AccountId" Type="bigint" Nullable="false" />
           <Property Name="Deposit" Type="bigint" Nullable="false" />
+          <Property Name="RemainDeposit" Type="bigint" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
@@ -2473,6 +2488,7 @@
           <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
+          <Property Name="LimitUp" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="t_sys_conditiontrade_template_buy_auto">
           <Key>
@@ -3109,6 +3125,7 @@
           <EntitySet Name="t_account_shares_conditiontrade_buy_details_other_trend_par" EntityType="Self.t_account_shares_conditiontrade_buy_details_other_trend_par" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_conditiontrade_buy_group" EntityType="Self.t_account_shares_conditiontrade_buy_group" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_conditiontrade_buy_group_rel" EntityType="Self.t_account_shares_conditiontrade_buy_group_rel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_conditiontrade_buy_group_share_account" EntityType="Self.t_account_shares_conditiontrade_buy_group_share_account" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_conditiontrade_buy_trend_par_template" EntityType="Self.t_account_shares_conditiontrade_buy_trend_par_template" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_conditiontrade_buy_trend_template" EntityType="Self.t_account_shares_conditiontrade_buy_trend_template" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_conditiontrade_template" EntityType="Self.t_account_shares_conditiontrade_template" Schema="dbo" store:Type="Tables" />
@@ -3546,6 +3563,9 @@
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="CreateAccountId" Type="Int64" Nullable="false" />
+          <Property Name="ExecStatus" Type="Int32" Nullable="false" />
+          <Property Name="LimitUp" Type="Boolean" Nullable="false" />
+          <Property Name="FirstExecTime" Type="DateTime" Precision="3" />
         </EntityType>
         <EntityType Name="t_account_shares_conditiontrade_buy_details_auto">
           <Key>
@@ -4024,6 +4044,7 @@
           <Property Name="Status" Type="Int32" Nullable="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RemainDeposit" Type="Int64" Nullable="false" />
         </EntityType>
         <EntityType Name="t_account_wallet_change_record">
           <Key>
@@ -6188,6 +6209,7 @@
           <EntitySet Name="t_account_shares_conditiontrade_buy_group" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_group" />
           <EntitySet Name="t_account_shares_conditiontrade_buy_trend_template" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_trend_template" />
           <EntitySet Name="t_account_shares_conditiontrade_buy_group_rel" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_group_rel" />
+          <EntitySet Name="t_account_shares_conditiontrade_buy_group_share_account" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_group_share_account" />
         </EntityContainer>
         <EntityType Name="t_shares_plate">
           <Key>
@@ -6325,6 +6347,7 @@
           <Property Name="Status" Type="Int32" Nullable="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LimitUp" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="t_sys_conditiontrade_template_buy_auto">
           <Key>
@@ -6423,6 +6446,7 @@
           <Property Name="Status" Type="Int32" Nullable="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LimitUp" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="t_account_shares_conditiontrade_template_buy_auto">
           <Key>
@@ -6530,6 +6554,16 @@
           <Property Name="GroupId" Type="Int64" Nullable="false" />
           <Property Name="Market" Type="Int32" Nullable="false" />
           <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_buy_group_share_account">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GroupId" Type="Int64" Nullable="false" />
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="ShareAccountId" Type="Int64" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -6793,6 +6827,9 @@
           <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details">
             <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details">
               <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details">
+                <ScalarProperty Name="FirstExecTime" ColumnName="FirstExecTime" />
+                <ScalarProperty Name="LimitUp" ColumnName="LimitUp" />
+                <ScalarProperty Name="ExecStatus" ColumnName="ExecStatus" />
                 <ScalarProperty Name="CreateAccountId" ColumnName="CreateAccountId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="ConditionId" ColumnName="ConditionId" />
@@ -7319,6 +7356,7 @@
           <EntitySetMapping Name="t_account_wallet">
             <EntityTypeMapping TypeName="meal_ticketModel.t_account_wallet">
               <MappingFragment StoreEntitySet="t_account_wallet">
+                <ScalarProperty Name="RemainDeposit" ColumnName="RemainDeposit" />
                 <ScalarProperty Name="AccountId" ColumnName="AccountId" />
                 <ScalarProperty Name="Deposit" ColumnName="Deposit" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
@@ -9169,6 +9207,7 @@
           <EntitySetMapping Name="t_sys_conditiontrade_template_buy">
             <EntityTypeMapping TypeName="meal_ticketModel.t_sys_conditiontrade_template_buy">
               <MappingFragment StoreEntitySet="t_sys_conditiontrade_template_buy">
+                <ScalarProperty Name="LimitUp" ColumnName="LimitUp" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
@@ -9275,6 +9314,7 @@
           <EntitySetMapping Name="t_account_shares_conditiontrade_template_buy">
             <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_template_buy">
               <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_template_buy">
+                <ScalarProperty Name="LimitUp" ColumnName="LimitUp" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
@@ -9406,6 +9446,17 @@
               <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_group_rel">
                 <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
                 <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_conditiontrade_buy_group_share_account">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_group_share_account">
+              <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_group_share_account">
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="ShareAccountId" ColumnName="ShareAccountId" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
                 <ScalarProperty Name="GroupId" ColumnName="GroupId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>

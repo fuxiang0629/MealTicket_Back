@@ -104,5 +104,10 @@ namespace MealTicket_Admin_Handler.Model
         /// 是否自动买入
         /// </summary>
         public bool BuyAuto { get; set; }
+
+        /// <summary>
+        /// 是否判断涨停休眠
+        /// </summary>
+        public bool LimitUp { get; set; }
     }
 }

@@ -42,6 +42,24 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 设置用户保留余额
+        /// </summary>
+        /// <returns></returns>
+        [Description("设置用户保留余额")]
+        [Route("account/deposit/remain/set"), HttpPost]
+        [CheckUserLoginFilter]
+        public object SetAccountRemainDeposit(SetAccountRemainDepositRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.SetAccountRemainDeposit(request, basedata);
+            return null;
+        }
+
+        /// <summary>
         /// 根据股票代码/名称/简拼获取股票列表
         /// </summary>
         /// <returns></returns>
@@ -1179,6 +1197,7 @@ namespace MealTicket_Web_APIService.controller
                     {
                         var file = provider.FileData[0];
                         var accountId = long.Parse(provider.FormData["accountId"]);
+                        var groupId = long.Parse(provider.FormData["groupId"]);
                         var fileInfo = new FileInfo(file.LocalFileName);
                         var fileStream = fileInfo.OpenRead();
                         int fsLen = (int)fileStream.Length;
@@ -1216,7 +1235,7 @@ namespace MealTicket_Web_APIService.controller
                         {
                             accountId = basedata.AccountId;
                         }
-                        return trendHandler.BatchAddAccountBuyConditionTradeShares(marketTimeList,accountId);
+                        return trendHandler.BatchAddAccountBuyConditionTradeShares(marketTimeList,accountId, new List<long> { groupId });
                     }
                     else
                     {
@@ -2794,6 +2813,24 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 买入共享股票导入
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/buy/share/import"), HttpPost]
+        [Description("买入共享股票导入")]
+        [CheckUserLoginFilter]
+        public object ImportConditiontradeBuyShare(ImportConditiontradeBuyShareRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ImportConditiontradeBuyShare(request, basedata);
+            return null;
+        }
+
+        /// <summary>
         /// 查询条件买入自定义分组列表
         /// </summary>
         /// <param name="request"></param>
@@ -2884,6 +2921,25 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             trendHandler.AddConditiontradeBuyGroupShares(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改条件买入股票自定义分组
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/buy/shares/mygroup/modify"), HttpPost]
+        [Description("修改条件买入股票自定义分组")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeBuySharesMyGroup(ModifyConditiontradeBuySharesMyGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeBuySharesMyGroup(request, basedata);
             return null;
         }
 
@@ -2979,6 +3035,76 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             trendHandler.DeleteConditiontradeBuyGroupShares(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询交易时间板块数据
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("tradetime/market/list"), HttpPost]
+        [Description("查询交易时间板块数据")]
+        [CheckUserLoginFilter]
+        public List<TradeTimeMarketInfo> GetTradeTimeMarketList()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetTradeTimeMarketList(basedata);
+        }
+
+        /// <summary>
+        /// 查询条件买入自定义分组共享用户列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/buy/group/shareaccount/list"), HttpPost]
+        [Description("查询条件买入自定义分组共享用户列表")]
+        [CheckUserLoginFilter]
+        public List<ConditiontradeBuyGroupSharesAccount> GetConditiontradeBuyGroupSharesAccountList(DetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeBuyGroupSharesAccountList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加条件买入自定义分组共享用户
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/buy/group/shareaccount/add"), HttpPost]
+        [Description("添加条件买入自定义分组共享用户")]
+        [CheckUserLoginFilter]
+        public object AddConditiontradeBuyGroupSharesAccount(AddConditiontradeBuyGroupSharesAccountRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddConditiontradeBuyGroupSharesAccount(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除条件买入自定义分组共享用户
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/buy/group/shareaccount/delete"), HttpPost]
+        [Description("删除条件买入自定义分组共享用户")]
+        [CheckUserLoginFilter]
+        public object DeleteConditiontradeBuyGroupSharesAccount(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteConditiontradeBuyGroupSharesAccount(request, basedata);
             return null;
         }
     }

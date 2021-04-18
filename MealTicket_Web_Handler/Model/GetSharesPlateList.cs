@@ -18,6 +18,11 @@ namespace MealTicket_Web_Handler.Model
         public long Id { get; set; }
 
         /// <summary>
+        /// 类型
+        /// </summary>
+        public int Type { get; set; }
+
+        /// <summary>
         /// 名称
         /// </summary>
         public string Name { get; set; }
@@ -51,8 +56,13 @@ namespace MealTicket_Web_Handler.Model
         public string Name { get; set; }
 
         /// <summary>
-        /// 1所属行业 2所属地区 3所属概念
+        /// 0所有 1所属行业 2所属地区 3所属概念
         /// </summary>
         public int Type { get; set; }
+
+        /// <summary>
+        /// 不获取数量信息
+        /// </summary>
+        public bool NoGetCount { get; set; }
     }
 }

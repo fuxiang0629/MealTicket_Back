@@ -33,11 +33,6 @@ namespace MealTicket_Web_Handler.Model
         public bool IsClear { get; set; }
 
         /// <summary>
-        /// 是否自动生效
-        /// </summary>
-        public bool IsAuto { get; set; }
-
-        /// <summary>
         /// 股票列表
         /// </summary>
         public List<string> SharesList { get; set; }

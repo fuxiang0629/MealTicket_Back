@@ -114,5 +114,15 @@ namespace MealTicket_Web_Handler.Model
         /// 前端用
         /// </summary>
         public long DisAmount { get; set; }
+
+        /// <summary>
+        /// 前端用
+        /// </summary>
+        public double DisAmountRate { get; set; }
+
+        /// <summary>
+        /// 是否判断涨停忽略
+        /// </summary>
+        public bool LimitUp { get; set; }
     }
 }

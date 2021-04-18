@@ -194,6 +194,7 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_group" Width="1.5" PointX="39.75" PointY="35.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_trend_template" Width="1.5" PointX="0.75" PointY="40.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_group_rel" Width="1.5" PointX="39.375" PointY="38.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_group_share_account" Width="1.5" PointX="5.375" PointY="40.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

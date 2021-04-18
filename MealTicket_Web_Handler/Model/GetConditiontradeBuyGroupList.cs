@@ -16,6 +16,11 @@ namespace MealTicket_Web_Handler.Model
         /// 分组名称
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// 类型0我的分组 1共享给我的分组
+        /// </summary>
+        public int Type { get; set; }
     }
 
     public class ConditiontradeBuyGroupInfo
@@ -24,6 +29,26 @@ namespace MealTicket_Web_Handler.Model
         /// Id
         /// </summary>
         public long Id { get; set; }
+
+        /// <summary>
+        /// 账户Id
+        /// </summary>
+        public long AccountId { get; set; }
+
+        /// <summary>
+        /// 账户名称
+        /// </summary>
+        public string AccountName { get; set; }
+
+        /// <summary>
+        /// 账户手机号
+        /// </summary>
+        public string AccountMobile { get; set; }
+
+        /// <summary>
+        /// 类型
+        /// </summary>
+        public int Type { get; set; }
 
         /// <summary>
         /// 名称
@@ -44,6 +69,11 @@ namespace MealTicket_Web_Handler.Model
         /// 无效股票数量
         /// </summary>
         public int InValidCount { get; set; }
+
+        /// <summary>
+        /// 分享用户数量
+        /// </summary>
+        public int SharesAccountCount { get; set; }
 
         /// <summary>
         /// 创建时间
