@@ -2329,11 +2329,6 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 if (request.AccountId == 0)
                 {
                     request.AccountId = basedata.AccountId;
-                    buyList.Add(new
-                    {
-                        AccountId = request.AccountId,
-                        BuyAmount = request.BuyAmount
-                    });
                     //计算本人购买仓位比
                     var buyRateTemp = (from item in db.t_account_wallet
                                        where item.AccountId == request.AccountId
@@ -2342,7 +2337,17 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                     {
                         throw new WebApiException(400, "账户有误");
                     }
-                    var buyRate = request.BuyAmount * 1.0 / buyRateTemp.Deposit;//仓位占比
+                    if (request.BuyAmount > (buyRateTemp.Deposit - buyRateTemp.RemainDeposit))
+                    {
+                        request.BuyAmount = buyRateTemp.Deposit - buyRateTemp.RemainDeposit;
+                    }
+                    buyList.Add(new
+                    {
+                        AccountId = request.AccountId,
+                        BuyAmount = request.BuyAmount
+                    });
+
+                    var buyRate = request.BuyAmount * 1.0 / (buyRateTemp.Deposit- buyRateTemp.RemainDeposit);//仓位占比
                     foreach (var account in request.FollowList)
                     {
                         var temp = followList.Where(e => e.AccountId == account).FirstOrDefault();
@@ -2353,7 +2358,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                         buyList.Add(new
                         {
                             AccountId = account,
-                            BuyAmount = (long)(temp.Deposit * buyRate)
+                            BuyAmount = (long)((temp.Deposit-temp.RemainDeposit) * buyRate)
                         });
                     }
                 }
@@ -7038,7 +7043,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                 //获取用户剩余金额
                                 totalAmount = (from item in db.t_account_wallet
                                                where item.AccountId == request.AccountId
-                                               select item.Deposit).FirstOrDefault();
+                                               select (item.Deposit-item.RemainDeposit)).FirstOrDefault();
                             }
                             if (request.TemplateDetailsList == null)
                             {

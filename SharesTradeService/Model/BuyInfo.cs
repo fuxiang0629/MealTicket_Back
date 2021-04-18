@@ -37,6 +37,11 @@ namespace SharesTradeService.Model
         /// 买入数量
         /// </summary>
         public int BuyCount { get; set; }
+
+        /// <summary>
+        /// 0客户买入 1自动买入
+        /// </summary>
+        public int Type { get; set; }
     }
 
     public class BuyDetails 

@@ -116,6 +116,7 @@
     <Property Name="RealEntrustCount" Type="Int32" Nullable="false" />
     <Property Name="SimulateDealCount" Type="Int32" Nullable="false" />
     <Property Name="CanClear" Type="Boolean" Nullable="false" />
+    <Property Name="OverTime" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
   <EntityType Name="t_account_shares_entrust">
     <Key>

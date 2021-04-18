@@ -105,6 +105,7 @@ namespace SharesTradeService.Handler
                                         BuyCount= remainEntrustCount,
                                         EntrustPrice= entrust.EntrustPrice,
                                         SharesHandCount=entrust.SharesHandCount,
+                                        Type=entrust.Type,
                                         BuyList=new List<BuyDetails> 
                                         {
                                             new BuyDetails
@@ -665,6 +666,15 @@ namespace SharesTradeService.Handler
         /// </summary>
         private static void BuySuccess(string tradeAccountCode,int buyCount, BuyInfo buyInfo, string tradeEntrustId, meal_ticketEntities db)
         {
+            DateTime overTime;
+            if (Singleton.instance.CancelOverTimeSecond == -1 || buyInfo.Type!=1)
+            {
+                overTime = DateTime.Parse("9999-01-01 00:00:00");
+            }
+            else
+            {
+                overTime = DateTime.Now.AddSeconds(Singleton.instance.CancelOverTimeSecond);
+            }
             foreach (var buy in buyInfo.BuyList)
             {
                 int currEntrustCount;
@@ -699,7 +709,8 @@ namespace SharesTradeService.Handler
                     EntrustType = 2,
                     TradeType = 1,
                     LastModified = DateTime.Now,
-                    TradeAccountCode = tradeAccountCode
+                    TradeAccountCode = tradeAccountCode,
+                    OverTime=overTime
                 });
             }
             db.SaveChanges();

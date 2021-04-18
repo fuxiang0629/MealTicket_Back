@@ -103,7 +103,6 @@ D:\项目\饭票\后端\FXCommon\obj\Release\FXCommon.csproj.CoreCompileInputs.c
 D:\项目\饭票\后端\FXCommon\obj\Release\FXCommon.csproj.CopyComplete
 D:\项目\饭票\后端\FXCommon\obj\Release\FXCommon.dll
 D:\项目\饭票\后端\FXCommon\obj\Release\FXCommon.pdb
-D:\项目\饭票\后端\FXCommon\obj\Release\FXCommon.csprojAssemblyReference.cache
 F:\项目\饭票后端\FXCommon\bin\Release\FXCommon.dll.config
 F:\项目\饭票后端\FXCommon\bin\Release\FXCommon.dll
 F:\项目\饭票后端\FXCommon\bin\Release\FXCommon.pdb
@@ -131,3 +130,4 @@ F:\项目\饭票后端\FXCommon\obj\Release\FXCommon.csproj.CopyComplete
 F:\项目\饭票后端\FXCommon\obj\Release\FXCommon.dll
 F:\项目\饭票后端\FXCommon\obj\Release\FXCommon.pdb
 F:\项目\饭票后端\FXCommon\obj\Release\FXCommon.csprojAssemblyReference.cache
+D:\项目\饭票\后端\FXCommon\obj\Release\FXCommon.csprojAssemblyReference.cache
