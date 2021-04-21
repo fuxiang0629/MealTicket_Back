@@ -28,6 +28,11 @@ namespace MealTicket_Handler.Model
         public long RemainDeposit { get; set; }
 
         /// <summary>
+        /// 保留余额
+        /// </summary>
+        public long RetainDeposit { get; set; }
+
+        /// <summary>
         /// 已用保证金
         /// </summary>
         public long UseRemainDeposit { get; set; }

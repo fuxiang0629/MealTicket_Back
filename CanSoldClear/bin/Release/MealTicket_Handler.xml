@@ -1852,6 +1852,11 @@
             可用保证金
             </summary>
         </member>
+        <member name="P:MealTicket_Handler.Model.TradeAccountInfo.RetainDeposit">
+            <summary>
+            保留余额
+            </summary>
+        </member>
         <member name="P:MealTicket_Handler.Model.TradeAccountInfo.UseRemainDeposit">
             <summary>
             已用保证金

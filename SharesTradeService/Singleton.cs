@@ -90,6 +90,11 @@ namespace SharesTradeService
         #endregion
 
         /// <summary>
+        /// 买入挂单超时时间
+        /// </summary>
+        public int CancelOverTimeSecond = 300;
+
+        /// <summary>
         /// 交易服务器账号链接列表
         /// </summary>
         public List<string> AllTradeAccountCodeList;
@@ -279,6 +284,10 @@ namespace SharesTradeService
                         if (sysValue.QueryTradeResultEndTime != null)
                         {
                             this.QueryTradeResultEndTime = sysValue.QueryTradeResultEndTime;
+                        }
+                        if (sysValue.CancelOverTimeSecond != null)
+                        {
+                            this.CancelOverTimeSecond = sysValue.CancelOverTimeSecond;
                         }
                         if (sysValue.OverSecond != null)
                         {

@@ -88,6 +88,7 @@
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="StatusDes" Type="nvarchar(max)" />
     <Property Name="CanClear" Type="bit" Nullable="false" />
+    <Property Name="OverTime" Type="datetime" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>

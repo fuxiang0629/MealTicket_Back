@@ -2894,7 +2894,7 @@ namespace MealTicket_Web_APIService.controller
         [Route("conditiontrade/buy/group/delete"), HttpPost]
         [Description("删除条件买入自定义分组")]
         [CheckUserLoginFilter]
-        public object DeleteConditiontradeBuyGroup(DeleteRequest request)
+        public object DeleteConditiontradeBuyGroup(DeleteConditiontradeBuyGroupRequest request)
         {
             if (request == null)
             {

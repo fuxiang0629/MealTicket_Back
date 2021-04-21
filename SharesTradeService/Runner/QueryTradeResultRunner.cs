@@ -416,6 +416,14 @@ namespace SharesTradeService
                                     Logger.WriteFileLog("股票买卖通知异常", ex);
                                 }
                             }
+                            else
+                            {
+                                //判断超时未完成，则撤单
+                                if (item.OverTime < timeNow)
+                                {
+                                    SharesTradeBusiness.CancelTrade(item.Id,0);
+                                }
+                            }
                             //结束交易时间外，结束交易
                             if (Helper.CheckTradeTime(endTime) && !Helper.CheckTradeTime(timeNow))
                             {

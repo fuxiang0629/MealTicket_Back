@@ -116,6 +116,7 @@
     <EntitySetMapping Name="t_account_wallet">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_wallet">
         <MappingFragment StoreEntitySet="t_account_wallet">
+          <ScalarProperty Name="RemainDeposit" ColumnName="RemainDeposit" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="Status" ColumnName="Status" />
@@ -466,6 +467,7 @@
     <EntitySetMapping Name="t_account_shares_entrust_manager">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_entrust_manager">
         <MappingFragment StoreEntitySet="t_account_shares_entrust_manager">
+          <ScalarProperty Name="OverTime" ColumnName="OverTime" />
           <ScalarProperty Name="CanClear" ColumnName="CanClear" />
           <ScalarProperty Name="SimulateDealCount" ColumnName="SimulateDealCount" />
           <ScalarProperty Name="RealEntrustCount" ColumnName="RealEntrustCount" />
@@ -1163,6 +1165,9 @@
     <EntitySetMapping Name="t_account_shares_hold_conditiontrade">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_hold_conditiontrade">
         <MappingFragment StoreEntitySet="t_account_shares_hold_conditiontrade">
+          <ScalarProperty Name="ConditionRelativeRate" ColumnName="ConditionRelativeRate" />
+          <ScalarProperty Name="ConditionRelativeType" ColumnName="ConditionRelativeType" />
+          <ScalarProperty Name="ConditionType" ColumnName="ConditionType" />
           <ScalarProperty Name="EntrustId" ColumnName="EntrustId" />
           <ScalarProperty Name="Status" ColumnName="Status" />
           <ScalarProperty Name="ForbidType" ColumnName="ForbidType" />
@@ -1198,6 +1203,10 @@
     <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details">
         <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details">
+          <ScalarProperty Name="LimitUp" ColumnName="LimitUp" />
+          <ScalarProperty Name="FirstExecTime" ColumnName="FirstExecTime" />
+          <ScalarProperty Name="ExecStatus" ColumnName="ExecStatus" />
+          <ScalarProperty Name="CreateAccountId" ColumnName="CreateAccountId" />
           <ScalarProperty Name="BusinessStatus" ColumnName="BusinessStatus" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />

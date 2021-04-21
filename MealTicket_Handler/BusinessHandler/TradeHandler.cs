@@ -396,12 +396,14 @@ namespace MealTicket_Handler
             {
                 //剩余保证金
                 long RemainDeposit = 0;
+                long RetainDeposit = 0;
                 var accountWallet = (from item in db.t_account_wallet
                                      where item.AccountId == basedata.AccountId
                                      select item).FirstOrDefault();
                 if (accountWallet != null)
                 {
                     RemainDeposit = accountWallet.Deposit / 100 * 100;
+                    RetainDeposit= accountWallet.RemainDeposit / 100 * 100;
 
                 }
                 //股票持有
@@ -499,6 +501,7 @@ namespace MealTicket_Handler
                     RemainDeposit = RemainDeposit,
                     TotalMarketValue = TotalMarketValue,
                     TotalProfit = TotalProfit,
+                    RetainDeposit= RetainDeposit,
                     UseRemainDeposit = useRemainDeposit,
                     TodayProfit = RunnerHelper.CheckTodayProfitTime(DateTime.Now) ? TodayProfit : 0,
                     TotalAssets = TotalMarketValue + RemainDeposit + totalDeposit + EntrustDeposit,
@@ -1399,7 +1402,7 @@ namespace MealTicket_Handler
                                 EndTime = item.LastModified,
                                 SellAmount = item.SoldAmount,
                                 HoldId = item.Id,
-                                SellCount = item.SellingCount,
+                                SellCount = item.SoldCount,
                                 SharesCode = item.SharesCode,
                                 Market = item.Market,
                                 StartTime = item.CreateTime,

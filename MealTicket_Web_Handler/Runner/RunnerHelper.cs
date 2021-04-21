@@ -862,9 +862,9 @@ namespace MealTicket_Web_Handler.Runner
                         }
 
                         long EntrustAmount = item.item.EntrustAmount;
-                        if (EntrustAmount > buyRateTemp.Deposit)
+                        if (EntrustAmount > buyRateTemp.Deposit- buyRateTemp.RemainDeposit)
                         {
-                            EntrustAmount = buyRateTemp.Deposit;
+                            EntrustAmount = buyRateTemp.Deposit - buyRateTemp.RemainDeposit;
                         }
 
                         List<dynamic> buyList = new List<dynamic>();
@@ -874,7 +874,7 @@ namespace MealTicket_Web_Handler.Runner
                             BuyAmount = EntrustAmount
                         });
 
-                        var buyRate = EntrustAmount * 1.0 / buyRateTemp.Deposit;//仓位占比
+                        var buyRate = EntrustAmount * 1.0 / (buyRateTemp.Deposit - buyRateTemp.RemainDeposit);//仓位占比
                         foreach (var account in FollowList)
                         {
                             var temp = followList.Where(e => e.AccountId == account).FirstOrDefault();
@@ -885,7 +885,7 @@ namespace MealTicket_Web_Handler.Runner
                             buyList.Add(new
                             {
                                 AccountId = account,
-                                BuyAmount = (long)(temp.Deposit * buyRate)
+                                BuyAmount = (long)((temp.Deposit-temp.RemainDeposit) * buyRate)
                             });
                         }
 
@@ -908,7 +908,7 @@ namespace MealTicket_Web_Handler.Runner
                                     ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                                     ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
                                     ObjectParameter buyIdDb = new ObjectParameter("buyId", 0);
-                                    db.P_ApplyTradeBuy(buy.AccountId, item.item2.Market, item.item2.SharesCode, buy.BuyAmount, 0, EntrustPrice, null, true, errorCodeDb, errorMessageDb, buyIdDb);
+                                    db.P_ApplyTradeBuy(buy.AccountId, item.item2.Market, item.item2.SharesCode, buy.BuyAmount, -1, EntrustPrice, null, true, errorCodeDb, errorMessageDb, buyIdDb);
                                     int errorCode = (int)errorCodeDb.Value;
                                     string errorMessage = errorMessageDb.Value.ToString();
                                     if (errorCode != 0)

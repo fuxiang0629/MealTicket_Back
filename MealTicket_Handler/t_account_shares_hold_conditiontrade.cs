@@ -33,5 +33,8 @@ namespace MealTicket_Handler
         public int ForbidType { get; set; }
         public int Status { get; set; }
         public long EntrustId { get; set; }
+        public int ConditionType { get; set; }
+        public int ConditionRelativeType { get; set; }
+        public int ConditionRelativeRate { get; set; }
     }
 }

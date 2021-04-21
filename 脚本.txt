@@ -1,9 +1,15 @@
 
+P_ApplyTradeBuy
+P_ApplyTradeSell
+
   use meal_ticket
   alter table t_account_wallet add RemainDeposit bigint not null default 0;
   insert into t_account_shares_conditiontrade_buy_trend_template
   (Id,Name,[Description],[Status],CreateTime,LastModified)
   values(5,'涨跌幅','涨跌幅',1,getdate(),getdate());
+
+
+  alter table t_account_shares_entrust_manager add OverTime datetime not null default '9999-01-01 00:00:00';
 
 t_shares_info_fund_group
 t_shares_info_fund_group_details

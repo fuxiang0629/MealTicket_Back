@@ -141,6 +141,7 @@
     <Compile Include="Model\BatchDeleteConditiontradeBuyShares.cs" />
     <Compile Include="Model\BatchModifyAccountSharesPlateStatus.cs" />
     <Compile Include="Model\BindAccountOptionalSeat.cs" />
+    <Compile Include="Model\DeleteConditiontradeBuyGroup.cs" />
     <Compile Include="Model\GetAccountBuyConditionAutoGroupList.cs" />
     <Compile Include="Model\GetAccountBuyConditionAutoList.cs" />
     <Compile Include="Model\GetAccountBuyConditionAutoPar.cs" />
