@@ -524,6 +524,7 @@ namespace MealTicket_Web_Handler.Runner
                                 tempTri = false;
                                 break;
                             }    
+                            //快速拉升
                             if (tr.TrendId == 1)//快速拉升 
                             {
                                 List<TREND_RESULT_RAPID_UP> resultInfo_Trend1 = new List<TREND_RESULT_RAPID_UP>();
@@ -551,6 +552,7 @@ namespace MealTicket_Web_Handler.Runner
                                     }
                                 }
                             }
+                            //多头向上
                             if (tr.TrendId == 2)//多头向上 
                             {
                                 List<TREND_RESULT_LINE_UP> resultInfo_Trend2 = new List<TREND_RESULT_LINE_UP>();
@@ -577,6 +579,7 @@ namespace MealTicket_Web_Handler.Runner
                                     }
                                 }
                             }
+                            //箱体上涨
                             if (tr.TrendId == 3)//箱体突破 
                             {
                                 List<TREND_RESULT_BOX_BREACH> resultInfo_Trend3 = new List<TREND_RESULT_BOX_BREACH>();
@@ -603,6 +606,7 @@ namespace MealTicket_Web_Handler.Runner
                                     }
                                 }
                             }
+                            //时间段
                             if (tr.TrendId == 4)//指定时间段 
                             {
                                 var temp=JsonConvert.DeserializeObject<dynamic>(par[0]);
@@ -613,6 +617,13 @@ namespace MealTicket_Web_Handler.Runner
                                     break;
                                 }
                             }
+                            //历史涨跌幅
+                            if (tr.TrendId == 5) 
+                            {
+
+                            }
+                            //当前涨跌幅
+                            if (tr.TrendId == 6) { }
                         }
                         if (!tempTri)
                         {
@@ -644,6 +655,7 @@ namespace MealTicket_Web_Handler.Runner
                                 tempTri = false;
                                 break;
                             }
+                            //快速拉升
                             if (tr.TrendId == 1)//快速拉升 
                             {
                                 List<TREND_RESULT_RAPID_UP> resultInfo_Trend1 = new List<TREND_RESULT_RAPID_UP>();
@@ -671,6 +683,7 @@ namespace MealTicket_Web_Handler.Runner
                                     }
                                 }
                             }
+                            //多头向上
                             if (tr.TrendId == 2)//多头向上 
                             {
                                 List<TREND_RESULT_LINE_UP> resultInfo_Trend2 = new List<TREND_RESULT_LINE_UP>();
@@ -697,6 +710,7 @@ namespace MealTicket_Web_Handler.Runner
                                     }
                                 }
                             }
+                            //箱体上涨
                             if (tr.TrendId == 3)//箱体突破 
                             {
                                 List<TREND_RESULT_BOX_BREACH> resultInfo_Trend3 = new List<TREND_RESULT_BOX_BREACH>();
@@ -723,6 +737,7 @@ namespace MealTicket_Web_Handler.Runner
                                     }
                                 }
                             }
+                            //时间段
                             if (tr.TrendId == 4)//指定时间段 
                             {
                                 var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
@@ -733,6 +748,10 @@ namespace MealTicket_Web_Handler.Runner
                                     break;
                                 }
                             }
+                            //历史涨跌幅
+                            if (tr.TrendId == 5) { }
+                            //当前涨跌幅
+                            if (tr.TrendId == 6) { }
                         }
                         if (!tempTri)
                         {
