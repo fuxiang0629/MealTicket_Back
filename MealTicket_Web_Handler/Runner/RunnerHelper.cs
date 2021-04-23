@@ -410,25 +410,10 @@ namespace MealTicket_Web_Handler.Runner
                     {
                         continue;
                     }
-                    long maxPrice = 0;//涨停价
-                    long minPrice = 0;//跌停价
-                    var rules = (from x in db.t_shares_limit_fundmultiple
-                                 where (x.LimitMarket == item.item2.Market || x.LimitMarket == -1) && (item.item2.SharesCode.StartsWith(x.LimitKey))
-                                 orderby x.Priority descending, x.FundMultiple
-                                 select x).FirstOrDefault();
-                    if (rules == null)
-                    {
-                        continue;
-                    }
-                    else
-                    {
-                        maxPrice = ((long)Math.Round((closedPrice + closedPrice * (rules.Range * 1.0 / 10000)) / 100)) * 100;
-                        minPrice = ((long)Math.Round((closedPrice - closedPrice * (rules.Range * 1.0 / 10000)) / 100)) * 100;
-                    }
                     //跌停价不买入
                     if (item.item.ForbidType == 1)
                     {
-                        if (minPrice == item.item3.PresentPrice)
+                        if (item.item3.LimitDownPrice == item.item3.PresentPrice)
                         {
                             continue;
                         }
@@ -443,7 +428,7 @@ namespace MealTicket_Web_Handler.Runner
                     }
 
                     //判断当前是否涨停
-                    if (item.item3.BuyPrice1 == maxPrice)//买一价为涨停价
+                    if (item.item3.BuyPrice1 == item.item3.LimitUpPrice)//买一价为涨停价
                     {
                         if (item.item.LimitUp)
                         {
@@ -485,14 +470,14 @@ namespace MealTicket_Web_Handler.Runner
                     {
                         if (item.item.IsGreater)
                         {
-                            if ((item.item.ConditionRelativeType == 1 && presentPrice < maxPrice + item.item.ConditionRelativeRate * 100) || (item.item.ConditionRelativeType == 2 && presentPrice < minPrice + item.item.ConditionRelativeRate * 100) || (item.item.ConditionRelativeType == 3 && presentPrice < ((long)Math.Round((closedPrice + closedPrice * (item.item.ConditionRelativeRate * 1.0 / 10000)) / 100)) * 100))
+                            if ((item.item.ConditionRelativeType == 1 && presentPrice < item.item3.LimitUpPrice + item.item.ConditionRelativeRate * 100) || (item.item.ConditionRelativeType == 2 && presentPrice < item.item3.LimitDownPrice + item.item.ConditionRelativeRate * 100) || (item.item.ConditionRelativeType == 3 && presentPrice < ((long)Math.Round((closedPrice + closedPrice * (item.item.ConditionRelativeRate * 1.0 / 10000)) / 100)) * 100))
                             {
                                 continue;
                             }
                         }
                         else
                         {
-                            if ((item.item.ConditionRelativeType == 1 && presentPrice > maxPrice + item.item.ConditionRelativeRate * 100) || (item.item.ConditionRelativeType == 2 && presentPrice > minPrice + item.item.ConditionRelativeRate * 100) || (item.item.ConditionRelativeType == 3 && presentPrice > ((long)Math.Round((closedPrice + closedPrice * (item.item.ConditionRelativeRate * 1.0 / 10000)) / 100)) * 100))
+                            if ((item.item.ConditionRelativeType == 1 && presentPrice > item.item3.LimitUpPrice + item.item.ConditionRelativeRate * 100) || (item.item.ConditionRelativeType == 2 && presentPrice > item.item3.LimitDownPrice + item.item.ConditionRelativeRate * 100) || (item.item.ConditionRelativeType == 3 && presentPrice > ((long)Math.Round((closedPrice + closedPrice * (item.item.ConditionRelativeRate * 1.0 / 10000)) / 100)) * 100))
                             {
                                 continue;
                             }
@@ -618,12 +603,25 @@ namespace MealTicket_Web_Handler.Runner
                                 }
                             }
                             //历史涨跌幅
-                            if (tr.TrendId == 5) 
+                            if (tr.TrendId == 5)
                             {
-
+                                int errorCode_Trend5 = DataHelper.Analysis_HisRiseRate(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend5 == 0)
+                                {
+                                    tempTri = true;
+                                    break;
+                                }
                             }
                             //当前涨跌幅
-                            if (tr.TrendId == 6) { }
+                            if (tr.TrendId == 6)
+                            {
+                                int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend6 == 0)
+                                {
+                                    tempTri = true;
+                                    break;
+                                }
+                            }
                         }
                         if (!tempTri)
                         {
@@ -749,9 +747,25 @@ namespace MealTicket_Web_Handler.Runner
                                 }
                             }
                             //历史涨跌幅
-                            if (tr.TrendId == 5) { }
+                            if (tr.TrendId == 5)
+                            {
+                                int errorCode_Trend5 = DataHelper.Analysis_HisRiseRate(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend5 == 0)
+                                {
+                                    tempTri = true;
+                                    break;
+                                }
+                            }
                             //当前涨跌幅
-                            if (tr.TrendId == 6) { }
+                            if (tr.TrendId == 6) 
+                            {
+                                int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend6 == 0)
+                                {
+                                    tempTri = true;
+                                    break;
+                                }
+                            }
                         }
                         if (!tempTri)
                         {
@@ -786,7 +800,7 @@ namespace MealTicket_Web_Handler.Runner
                                              select x).ToList();
                             foreach (var child in childList)
                             {
-                                var childcondition = (from x in db.t_account_shares_hold_conditiontrade
+                                var childcondition = (from x in db.t_account_shares_conditiontrade_buy_details
                                                       where x.Id == child.ChildId
                                                       select x).FirstOrDefault();
                                 if (childcondition == null)
@@ -847,10 +861,10 @@ namespace MealTicket_Web_Handler.Runner
                                     EntrustPrice = item.item3.SellPrice5 == 0 ? item.item3.PresentPrice : item.item3.SellPrice5;
                                     break;
                                 case 11:
-                                    EntrustPrice = maxPrice;
+                                    EntrustPrice = item.item3.LimitUpPrice;
                                     break;
                                 case 12:
-                                    EntrustPrice = minPrice;
+                                    EntrustPrice = item.item3.LimitDownPrice;
                                     break;
                             }
                         }

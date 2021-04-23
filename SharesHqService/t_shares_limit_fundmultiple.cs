@@ -7,23 +7,21 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MealTicket_Web_Handler
+namespace SharesHqService
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class t_shares_all
+    public partial class t_shares_limit_fundmultiple
     {
         public long Id { get; set; }
-        public string SharesCode { get; set; }
-        public string SharesName { get; set; }
-        public string SharesPyjc { get; set; }
-        public int SharesHandCount { get; set; }
-        public long ShareClosedPrice { get; set; }
-        public int Market { get; set; }
-        public int Status { get; set; }
-        public int ForbidStatus { get; set; }
+        public string MarketName { get; set; }
+        public int LimitMarket { get; set; }
+        public string LimitKey { get; set; }
+        public int Priority { get; set; }
+        public int Range { get; set; }
+        public int FundMultiple { get; set; }
+        public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
-        public int MarketStatus { get; set; }
     }
 }

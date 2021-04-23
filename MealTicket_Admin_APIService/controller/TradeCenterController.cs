@@ -198,6 +198,24 @@ namespace MealTicket_Admin_APIService.controller
         }
 
         /// <summary>
+        /// 修改股票退市状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/marketstatus/modify"), HttpPost]
+        [Description("修改股票退市状态")]
+        public object ModifySharesMarketStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesMarketStatus(request);
+            return null;
+        }
+
+        /// <summary>
         /// 获取停牌设置列表
         /// </summary>
         /// <param name="request"></param>

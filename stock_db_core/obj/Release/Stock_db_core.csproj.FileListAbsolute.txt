@@ -9,4 +9,3 @@ D:\项目\饭票\后端\Stock_db_core\obj\Release\stock_db_core.csproj.CoreCompi
 D:\项目\饭票\后端\Stock_db_core\obj\Release\stock_db_core.dll
 D:\项目\饭票\后端\Stock_db_core\obj\Release\stock_db_core.pdb
 D:\项目\饭票\后端\Stock_db_core\obj\Release\stock_db_core.csprojAssemblyReference.cache
-F:\项目\饭票后端\Stock_db_core\obj\Release\stock_db_core.csprojAssemblyReference.cache

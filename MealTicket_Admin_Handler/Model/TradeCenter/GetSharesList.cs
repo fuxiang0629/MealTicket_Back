@@ -91,6 +91,11 @@ namespace MealTicket_Admin_Handler.Model
         public int ForbidStatus { get; set; }
 
         /// <summary>
+        /// 上市状态1正常 2退市
+        /// </summary>
+        public int MarketStatus { get; set; }
+
+        /// <summary>
         /// 是否停牌
         /// </summary>
         public bool IsSuspension { get; set; }

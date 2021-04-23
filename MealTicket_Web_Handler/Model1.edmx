@@ -626,6 +626,7 @@
           <Property Name="CanClear" Type="bit" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
+          <Property Name="OverTime" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="t_account_shares_entrust_manager_dealdetails">
           <Key>
@@ -1791,6 +1792,7 @@
           <Property Name="ShareClosedPrice" Type="bigint" Nullable="false" />
           <Property Name="Market" Type="int" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="MarketStatus" Type="int" Nullable="false" />
           <Property Name="ForbidStatus" Type="int" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
         </EntityType>
@@ -2273,6 +2275,9 @@
           <Property Name="SpeedUp" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="Activity" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
+          <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
+          <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
+          <Property Name="PriceType" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_quotes_date">
           <Key>
@@ -2286,8 +2291,15 @@
           <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
           <Property Name="MaxPrice" Type="bigint" Nullable="false" />
           <Property Name="MinPrice" Type="bigint" Nullable="false" />
+          <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
+          <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
           <Property Name="Date" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="LimitUpCount" Type="int" Nullable="false" />
+          <Property Name="LimitDownCount" Type="int" Nullable="false" />
+          <Property Name="LimitUpBombCount" Type="int" Nullable="false" />
+          <Property Name="LimitDownBombCount" Type="int" Nullable="false" />
+          <Property Name="PriceType" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_quotes_temp">
           <Key>
@@ -2330,6 +2342,9 @@
           <Property Name="SpeedUp" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="Activity" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
+          <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
+          <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
+          <Property Name="PriceType" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_search">
           <Key>
@@ -3730,6 +3745,7 @@
           <Property Name="CanClear" Type="Boolean" Nullable="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="OverTime" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <EntityType Name="t_account_shares_entrust_manager_dealdetails">
           <Key>
@@ -4897,6 +4913,7 @@
           <Property Name="Status" Type="Int32" Nullable="false" />
           <Property Name="ForbidStatus" Type="Int32" Nullable="false" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="MarketStatus" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_all_corrigendum">
           <Key>
@@ -5356,6 +5373,9 @@
           <Property Name="SpeedUp" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Activity" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LimitUpPrice" Type="Int64" Nullable="false" />
+          <Property Name="LimitDownPrice" Type="Int64" Nullable="false" />
+          <Property Name="PriceType" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_quotes_date">
           <Key>
@@ -5371,6 +5391,13 @@
           <Property Name="MinPrice" Type="Int64" Nullable="false" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Date" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="LimitUpCount" Type="Int32" Nullable="false" />
+          <Property Name="LimitDownCount" Type="Int32" Nullable="false" />
+          <Property Name="LimitUpBombCount" Type="Int32" Nullable="false" />
+          <Property Name="LimitDownBombCount" Type="Int32" Nullable="false" />
+          <Property Name="PriceType" Type="Int32" Nullable="false" />
+          <Property Name="LimitUpPrice" Type="Int64" Nullable="false" />
+          <Property Name="LimitDownPrice" Type="Int64" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_quotes_temp">
           <Key>
@@ -5413,6 +5440,9 @@
           <Property Name="SpeedUp" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Activity" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LimitUpPrice" Type="Int64" Nullable="false" />
+          <Property Name="LimitDownPrice" Type="Int64" Nullable="false" />
+          <Property Name="PriceType" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_search">
           <Key>
@@ -7006,6 +7036,7 @@
           <EntitySetMapping Name="t_account_shares_entrust_manager">
             <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_entrust_manager">
               <MappingFragment StoreEntitySet="t_account_shares_entrust_manager">
+                <ScalarProperty Name="OverTime" ColumnName="OverTime" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="BuyId" ColumnName="BuyId" />
                 <ScalarProperty Name="TradeType" ColumnName="TradeType" />
@@ -8265,6 +8296,7 @@
           <EntitySetMapping Name="t_shares_all">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_all">
               <MappingFragment StoreEntitySet="t_shares_all">
+                <ScalarProperty Name="MarketStatus" ColumnName="MarketStatus" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
                 <ScalarProperty Name="SharesName" ColumnName="SharesName" />
@@ -8730,6 +8762,9 @@
           <EntitySetMapping Name="t_shares_quotes">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes">
               <MappingFragment StoreEntitySet="t_shares_quotes">
+                <ScalarProperty Name="PriceType" ColumnName="PriceType" />
+                <ScalarProperty Name="LimitDownPrice" ColumnName="LimitDownPrice" />
+                <ScalarProperty Name="LimitUpPrice" ColumnName="LimitUpPrice" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Market" ColumnName="Market" />
                 <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
@@ -8772,6 +8807,13 @@
           <EntitySetMapping Name="t_shares_quotes_date">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes_date">
               <MappingFragment StoreEntitySet="t_shares_quotes_date">
+                <ScalarProperty Name="LimitDownPrice" ColumnName="LimitDownPrice" />
+                <ScalarProperty Name="LimitUpPrice" ColumnName="LimitUpPrice" />
+                <ScalarProperty Name="PriceType" ColumnName="PriceType" />
+                <ScalarProperty Name="LimitDownBombCount" ColumnName="LimitDownBombCount" />
+                <ScalarProperty Name="LimitUpBombCount" ColumnName="LimitUpBombCount" />
+                <ScalarProperty Name="LimitDownCount" ColumnName="LimitDownCount" />
+                <ScalarProperty Name="LimitUpCount" ColumnName="LimitUpCount" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Market" ColumnName="Market" />
                 <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
@@ -8788,6 +8830,9 @@
           <EntitySetMapping Name="t_shares_quotes_temp">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes_temp">
               <MappingFragment StoreEntitySet="t_shares_quotes_temp">
+                <ScalarProperty Name="PriceType" ColumnName="PriceType" />
+                <ScalarProperty Name="LimitDownPrice" ColumnName="LimitDownPrice" />
+                <ScalarProperty Name="LimitUpPrice" ColumnName="LimitUpPrice" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Market" ColumnName="Market" />
                 <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />

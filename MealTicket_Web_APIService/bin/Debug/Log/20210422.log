@@ -1,0 +1,1049 @@
+2021/4/22 16:45:40
+执行队列失败
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2021/4/22 16:45:40
+执行队列失败
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2021/4/22 16:45:40
+执行队列失败
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2021/4/22 16:45:40
+执行队列失败
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2021/4/22 16:45:40
+执行队列失败
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2021/4/22 16:45:40
+执行队列失败
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2021/4/22 16:46:50
+执行队列失败
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2021/4/22 16:48:54
+自动交易出错
+System.ComponentModel.Win32Exception (0x80004005): 等待的操作过时。
+
+2021/4/22 16:52:12
+MQ链接异常
+System.TimeoutException: 操作已超时。
+   在 RabbitMQ.Util.BlockingCell`1.WaitForValue(TimeSpan timeout)
+   在 RabbitMQ.Client.Impl.SimpleBlockingRpcContinuation.GetReply(TimeSpan timeout)
+   在 RabbitMQ.Client.Impl.ModelBase.ModelRpc(MethodBase method, ContentHeaderBase header, Byte[] body)
+   在 RabbitMQ.Client.Framing.Impl.Model._Private_ChannelOpen(String outOfBand)
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateNonRecoveringModel()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 MealTicket_Web_Handler.MQHandler.Reconnect() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\MQHandler.cs:行号 98
+
+2021/4/22 16:52:12
+MQ链接异常
+RabbitMQ.Client.Exceptions.ConnectFailureException: Connection failed ---> System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。 106.54.124.235:5672
+   在 System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   在 System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+   在 System.Net.Sockets.Socket.Connect(IPAddress address, Int32 port)
+   在 RabbitMQ.Client.Impl.TcpClientAdapter.<>c__DisplayClass2_0.<ConnectAsync>b__0()
+   在 System.Threading.Tasks.Task.InnerInvoke()
+   在 System.Threading.Tasks.Task.Execute()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 RabbitMQ.Client.Impl.TcpClientAdapter.<ConnectAsync>d__2.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 RabbitMQ.Client.Impl.TaskExtensions.<TimeoutAfter>d__0.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ConnectOrFail(ITcpClient socket, AmqpTcpEndpoint endpoint, TimeSpan timeout)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ConnectOrFail(ITcpClient socket, AmqpTcpEndpoint endpoint, TimeSpan timeout)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ConnectUsingAddressFamily(AmqpTcpEndpoint endpoint, Func`2 socketFactory, TimeSpan timeout, AddressFamily family)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler..ctor(AmqpTcpEndpoint endpoint, Func`2 socketFactory, TimeSpan connectionTimeout, TimeSpan readTimeout, TimeSpan writeTimeout)
+   在 RabbitMQ.Client.ConnectionFactory.CreateFrameHandler(AmqpTcpEndpoint endpoint)
+   在 RabbitMQ.Client.EndpointResolverExtensions.SelectOne[T](IEndpointResolver resolver, Func`2 selector)
+
+2021/4/22 16:52:12
+MQ链接异常
+RabbitMQ.Client.Exceptions.ConnectFailureException: Connection failed ---> System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。 106.54.124.235:5672
+   在 System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   在 System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+   在 System.Net.Sockets.Socket.Connect(IPAddress address, Int32 port)
+   在 RabbitMQ.Client.Impl.TcpClientAdapter.<>c__DisplayClass2_0.<ConnectAsync>b__0()
+   在 System.Threading.Tasks.Task.InnerInvoke()
+   在 System.Threading.Tasks.Task.Execute()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 RabbitMQ.Client.Impl.TcpClientAdapter.<ConnectAsync>d__2.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 RabbitMQ.Client.Impl.TaskExtensions.<TimeoutAfter>d__0.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ConnectOrFail(ITcpClient socket, AmqpTcpEndpoint endpoint, TimeSpan timeout)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ConnectOrFail(ITcpClient socket, AmqpTcpEndpoint endpoint, TimeSpan timeout)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ConnectUsingAddressFamily(AmqpTcpEndpoint endpoint, Func`2 socketFactory, TimeSpan timeout, AddressFamily family)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler..ctor(AmqpTcpEndpoint endpoint, Func`2 socketFactory, TimeSpan connectionTimeout, TimeSpan readTimeout, TimeSpan writeTimeout)
+   在 RabbitMQ.Client.ConnectionFactory.CreateFrameHandler(AmqpTcpEndpoint endpoint)
+   在 RabbitMQ.Client.EndpointResolverExtensions.SelectOne[T](IEndpointResolver resolver, Func`2 selector)
+
+2021/4/22 16:52:12
+MQ链接异常
+RabbitMQ.Client.Exceptions.ConnectFailureException: Connection failed ---> System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。 106.54.124.235:5672
+   在 System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   在 System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+   在 System.Net.Sockets.Socket.Connect(IPAddress address, Int32 port)
+   在 RabbitMQ.Client.Impl.TcpClientAdapter.<>c__DisplayClass2_0.<ConnectAsync>b__0()
+   在 System.Threading.Tasks.Task.InnerInvoke()
+   在 System.Threading.Tasks.Task.Execute()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 RabbitMQ.Client.Impl.TcpClientAdapter.<ConnectAsync>d__2.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 RabbitMQ.Client.Impl.TaskExtensions.<TimeoutAfter>d__0.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ConnectOrFail(ITcpClient socket, AmqpTcpEndpoint endpoint, TimeSpan timeout)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ConnectOrFail(ITcpClient socket, AmqpTcpEndpoint endpoint, TimeSpan timeout)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ConnectUsingAddressFamily(AmqpTcpEndpoint endpoint, Func`2 socketFactory, TimeSpan timeout, AddressFamily family)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler..ctor(AmqpTcpEndpoint endpoint, Func`2 socketFactory, TimeSpan connectionTimeout, TimeSpan readTimeout, TimeSpan writeTimeout)
+   在 RabbitMQ.Client.ConnectionFactory.CreateFrameHandler(AmqpTcpEndpoint endpoint)
+   在 RabbitMQ.Client.EndpointResolverExtensions.SelectOne[T](IEndpointResolver resolver, Func`2 selector)
+
+2021/4/22 16:52:12
+MQ链接异常
+RabbitMQ.Client.Exceptions.ConnectFailureException: Connection failed ---> System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。 106.54.124.235:5672
+   在 System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   在 System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+   在 System.Net.Sockets.Socket.Connect(IPAddress address, Int32 port)
+   在 RabbitMQ.Client.Impl.TcpClientAdapter.<>c__DisplayClass2_0.<ConnectAsync>b__0()
+   在 System.Threading.Tasks.Task.InnerInvoke()
+   在 System.Threading.Tasks.Task.Execute()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 RabbitMQ.Client.Impl.TcpClientAdapter.<ConnectAsync>d__2.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 RabbitMQ.Client.Impl.TaskExtensions.<TimeoutAfter>d__0.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ConnectOrFail(ITcpClient socket, AmqpTcpEndpoint endpoint, TimeSpan timeout)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ConnectOrFail(ITcpClient socket, AmqpTcpEndpoint endpoint, TimeSpan timeout)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ConnectUsingAddressFamily(AmqpTcpEndpoint endpoint, Func`2 socketFactory, TimeSpan timeout, AddressFamily family)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler..ctor(AmqpTcpEndpoint endpoint, Func`2 socketFactory, TimeSpan connectionTimeout, TimeSpan readTimeout, TimeSpan writeTimeout)
+   在 RabbitMQ.Client.ConnectionFactory.CreateFrameHandler(AmqpTcpEndpoint endpoint)
+   在 RabbitMQ.Client.EndpointResolverExtensions.SelectOne[T](IEndpointResolver resolver, Func`2 selector)
+
+2021/4/22 16:52:12
+MQ链接异常
+RabbitMQ.Client.Exceptions.ConnectFailureException: Connection failed ---> System.Net.Sockets.SocketException: 由于连接方在一段时间后没有正确答复或连接的主机没有反应，连接尝试失败。 106.54.124.235:5672
+   在 System.Net.Sockets.Socket.DoConnect(EndPoint endPointSnapshot, SocketAddress socketAddress)
+   在 System.Net.Sockets.Socket.Connect(EndPoint remoteEP)
+   在 System.Net.Sockets.Socket.Connect(IPAddress address, Int32 port)
+   在 RabbitMQ.Client.Impl.TcpClientAdapter.<>c__DisplayClass2_0.<ConnectAsync>b__0()
+   在 System.Threading.Tasks.Task.InnerInvoke()
+   在 System.Threading.Tasks.Task.Execute()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 RabbitMQ.Client.Impl.TcpClientAdapter.<ConnectAsync>d__2.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 RabbitMQ.Client.Impl.TaskExtensions.<TimeoutAfter>d__0.MoveNext()
+--- 引发异常的上一位置中堆栈跟踪的末尾 ---
+   在 System.Runtime.CompilerServices.TaskAwaiter.ThrowForNonSuccess(Task task)
+   在 System.Runtime.CompilerServices.TaskAwaiter.HandleNonSuccessAndDebuggerNotification(Task task)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ConnectOrFail(ITcpClient socket, AmqpTcpEndpoint endpoint, TimeSpan timeout)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ConnectOrFail(ITcpClient socket, AmqpTcpEndpoint endpoint, TimeSpan timeout)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ConnectUsingAddressFamily(AmqpTcpEndpoint endpoint, Func`2 socketFactory, TimeSpan timeout, AddressFamily family)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler..ctor(AmqpTcpEndpoint endpoint, Func`2 socketFactory, TimeSpan connectionTimeout, TimeSpan readTimeout, TimeSpan writeTimeout)
+   在 RabbitMQ.Client.ConnectionFactory.CreateFrameHandler(AmqpTcpEndpoint endpoint)
+   在 RabbitMQ.Client.EndpointResolverExtensions.SelectOne[T](IEndpointResolver resolver, Func`2 selector)
+
+2021/4/22 16:52:12
+队列链接断开重连
+
+
+2021/4/22 16:52:12
+队列链接断开重连
+
+
+2021/4/22 16:52:13
+队列链接断开重连
+
+
+2021/4/22 16:52:13
+队列链接断开重连
+
+
+2021/4/22 16:52:14
+队列链接断开重连
+
+
+2021/4/22 16:52:15
+队列链接断开重连
+
+
+2021/4/22 16:52:17
+队列链接断开重连
+
+
+2021/4/22 16:52:18
+队列链接断开重连
+
+
+2021/4/22 16:52:18
+队列链接断开重连
+
+
+2021/4/22 16:52:19
+队列链接断开重连
+
+
+2021/4/22 17:24:50
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:24:52
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:24:53
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:24:54
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:24:55
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:24:57
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:24:58
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:24:59
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:00
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:02
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:03
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:04
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:05
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:07
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:08
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:09
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:10
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:12
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:13
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:14
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:15
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:17
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:18
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:19
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:20
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:22
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:23
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:24
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:26
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:27
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:28
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:29
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:31
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:32
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:34
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:35
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:36
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:37
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:39
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:40
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:42
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:43
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:44
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:46
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:47
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:49
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:50
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:52
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:53
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:54
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:55
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:57
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:58
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:25:59
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:00
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:02
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:03
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:04
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:05
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:07
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:08
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:09
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:10
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:12
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:13
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:14
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:15
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:17
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:18
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:19
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:20
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:22
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:23
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:24
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:25
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:27
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:28
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:29
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:30
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:32
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:33
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:34
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:36
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:37
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:38
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:39
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:41
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:42
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:43
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:26:45
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:27:01
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:27:11
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:27:38
+自动买入交易出错
+Microsoft.CSharp.RuntimeBinder.RuntimeBinderException: 与“StockTrendMonitor.Models.StockMonitorCore.GetUpOrDownInfoInTime(string, int, ref stock_db_core.DB_TRADE_PRICE_INFO, ref StockTrendMonitor.Define.StockMonitorDefine.UP_OR_DOWN_INFO)”最匹配的重载方法具有一些无效参数
+   在 CallSite.Target(Closure , CallSite , StockMonitorCore , String , Object , DB_TRADE_PRICE_INFO& , UP_OR_DOWN_INFO& )
+   在 MealTicket_Web_Handler.DataHelper.Analysis_TodayRiseRate(String sharesCode, Int32 market, List`1 par) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\DataHelper.cs:行号 876
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 633
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 17:32:43
+队列链接断开重连
+
+
+2021/4/22 18:02:46
+购买失败
+MealTicket_Web_Handler.Model.WebApiException: 该股票禁止买入
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 964
+
+2021/4/22 18:02:46
+自动买入交易出错
+MealTicket_Web_Handler.Model.WebApiException: 该股票禁止买入
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 1018
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 18:21:02
+购买失败
+MealTicket_Web_Handler.Model.WebApiException: 该股票禁止买入
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 964
+
+2021/4/22 18:21:02
+自动买入交易出错
+MealTicket_Web_Handler.Model.WebApiException: 该股票禁止买入
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 1018
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 18:25:31
+购买失败
+MealTicket_Web_Handler.Model.WebApiException: 该股票禁止买入
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 964
+
+2021/4/22 18:25:31
+自动买入交易出错
+MealTicket_Web_Handler.Model.WebApiException: 该股票禁止买入
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 1018
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 18:45:07
+购买失败
+MealTicket_Web_Handler.Model.WebApiException: 该股票禁止买入
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 964
+
+2021/4/22 18:45:07
+自动买入交易出错
+MealTicket_Web_Handler.Model.WebApiException: 该股票禁止买入
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 1018
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 18:47:11
+购买失败
+MealTicket_Web_Handler.Model.WebApiException: 该股票禁止买入
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 964
+
+2021/4/22 18:47:12
+自动买入交易出错
+MealTicket_Web_Handler.Model.WebApiException: 该股票禁止买入
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 1018
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 18:49:32
+购买失败
+MealTicket_Web_Handler.Model.WebApiException: 该股票禁止买入
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 964
+
+2021/4/22 18:49:32
+自动买入交易出错
+MealTicket_Web_Handler.Model.WebApiException: 该股票禁止买入
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 1018
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+
+2021/4/22 18:51:45
+购买失败
+MealTicket_Web_Handler.Model.WebApiException: 该股票禁止买入
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 964
+
+2021/4/22 18:51:45
+自动买入交易出错
+MealTicket_Web_Handler.Model.WebApiException: 该股票禁止买入
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.TradeAutoBuy() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 1018
+   在 MealTicket_Web_APIService.runner.TradeAutoBuyRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TradeAutoBuyRunner.cs:行号 46
+

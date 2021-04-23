@@ -87,7 +87,7 @@ ON t.Market = t1.Market and t.SharesCode = t1.SharesCode
 when matched
 then update set t.SharesCode = t1.SharesCode,t.SharesName = t1.SharesName,t.SharesPyjc = t1.SharesPyjc,t.SharesHandCount = t1.SharesHandCount,t.ShareClosedPrice = t1.ShareClosedPrice,t.LastModified = t1.LastModified
 when not matched by target
-then insert values(t1.SharesCode,t1.SharesName,t1.SharesPyjc,t1.SharesHandCount,t1.ShareClosedPrice,t1.Market,1,0,t1.LastModified)
+then insert(SharesCode,SharesName,SharesPyjc,SharesHandCount,ShareClosedPrice,Market,[Status],MarketStatus,ForbidStatus,LastModified) values(t1.SharesCode,t1.SharesName,t1.SharesPyjc,t1.SharesHandCount,t1.ShareClosedPrice,t1.Market,1,1,0,t1.LastModified)
 when not matched by source and t.Market = {0}
 then delete;", market);
                         using (var cmd = conn.CreateCommand())
@@ -191,6 +191,9 @@ then delete;", market);
                                 table.Columns.Add("SpeedUp", typeof(string));
                                 table.Columns.Add("Activity", typeof(string));
                                 table.Columns.Add("LastModified", typeof(DateTime));
+                                table.Columns.Add("LimitUpPrice", typeof(long));
+                                table.Columns.Add("LimitDownPrice", typeof(long));
+                                table.Columns.Add("PriceType", typeof(int));
                             }
                             catch (Exception ex)
                             {
@@ -205,6 +208,17 @@ then delete;", market);
                                     {
                                         continue;
                                     }
+
+                                    long LimitUpPrice = 0;
+                                    long LimitDownPrice = 0;
+                                    int PriceType = 0;
+                                    int range = Singleton.Instance.RangeList.Where(e=>(e.LimitMarket==item.Market || e.LimitMarket==-1) && item.SharesCode.StartsWith(e.LimitKey)).Select(e=>e.Range).FirstOrDefault();
+                                    if (range > 0 && item.ClosedPrice > 0)
+                                    {
+                                        LimitUpPrice = (long)((item.ClosedPrice + item.ClosedPrice * (range * 1.0 / 10000)) / 100 + 0.5)*100;
+                                        LimitDownPrice = (long)((item.ClosedPrice - item.ClosedPrice * (range * 1.0 / 10000)) / 100 + 0.5) * 100;
+                                    }
+
                                     DataRow row = table.NewRow();
                                     row["Id"] = 0;
                                     row["Market"] = item.Market;
@@ -243,6 +257,9 @@ then delete;", market);
                                     row["SpeedUp"] = item.SpeedUp;
                                     row["Activity"] = item.Activity;
                                     row["LastModified"] = DateTime.Now;
+                                    row["LimitUpPrice"] = LimitUpPrice;
+                                    row["LimitDownPrice"] = LimitDownPrice;
+                                    row["PriceType"] = PriceType;
                                     table.Rows.Add(row);
                                 }
                             }
@@ -291,6 +308,9 @@ then delete;", market);
                                 dic.Add("SpeedUp", "SpeedUp");
                                 dic.Add("Activity", "Activity");
                                 dic.Add("LastModified", "LastModified");
+                                dic.Add("LimitUpPrice", "LimitUpPrice");
+                                dic.Add("LimitDownPrice", "LimitDownPrice");
+                                dic.Add("PriceType", "PriceType");
                                 bulk.ColumnMappings = dic;
                                 bulk.BatchSize = 10000;
                             }
@@ -312,9 +332,9 @@ then delete;", market);
 using (select * from (select *,ROW_NUMBER() OVER(partition by Market,SharesCode order by LastModified desc) num from t_shares_quotes_temp)t where t.num=1) as t1
 ON t.Market = t1.Market and t.SharesCode = t1.SharesCode
 when matched
-then update set t.PresentPrice = t1.PresentPrice,t.ClosedPrice = t1.ClosedPrice,t.OpenedPrice = t1.OpenedPrice,t.MaxPrice = t1.MaxPrice,t.MinPrice = t1.MinPrice,t.TotalCount = t1.TotalCount,t.PresentCount = t1.PresentCount,t.TotalAmount = t1.TotalAmount,t.InvolCount = t1.InvolCount,t.OuterCount = t1.OuterCount,t.BuyPrice1 = t1.BuyPrice1,t.BuyCount1 = t1.BuyCount1,t.BuyPrice2 = t1.BuyPrice2,t.BuyCount2 = t1.BuyCount2,t.BuyPrice3 = t1.BuyPrice3,t.BuyCount3 = t1.BuyCount3,t.BuyPrice4 = t1.BuyPrice4,t.BuyCount4 = t1.BuyCount4,t.BuyPrice5 = t1.BuyPrice5,t.BuyCount5 = t1.BuyCount5,t.SellPrice1 = t1.SellPrice1,t.SellCount1 = t1.SellCount1,t.SellPrice2 = t1.SellPrice2,t.SellCount2 = t1.SellCount2,t.SellPrice3 = t1.SellPrice3,t.SellCount3 = t1.SellCount3,t.SellPrice4 = t1.SellPrice4,t.SellCount4 = t1.SellCount4,t.SellPrice5 = t1.SellPrice5,t.SellCount5 = t1.SellCount5,t.SpeedUp = t1.SpeedUp,t.Activity = t1.Activity,t.LastModified = t1.LastModified
+then update set t.PresentPrice = t1.PresentPrice,t.ClosedPrice = t1.ClosedPrice,t.OpenedPrice = t1.OpenedPrice,t.MaxPrice = t1.MaxPrice,t.MinPrice = t1.MinPrice,t.TotalCount = t1.TotalCount,t.PresentCount = t1.PresentCount,t.TotalAmount = t1.TotalAmount,t.InvolCount = t1.InvolCount,t.OuterCount = t1.OuterCount,t.BuyPrice1 = t1.BuyPrice1,t.BuyCount1 = t1.BuyCount1,t.BuyPrice2 = t1.BuyPrice2,t.BuyCount2 = t1.BuyCount2,t.BuyPrice3 = t1.BuyPrice3,t.BuyCount3 = t1.BuyCount3,t.BuyPrice4 = t1.BuyPrice4,t.BuyCount4 = t1.BuyCount4,t.BuyPrice5 = t1.BuyPrice5,t.BuyCount5 = t1.BuyCount5,t.SellPrice1 = t1.SellPrice1,t.SellCount1 = t1.SellCount1,t.SellPrice2 = t1.SellPrice2,t.SellCount2 = t1.SellCount2,t.SellPrice3 = t1.SellPrice3,t.SellCount3 = t1.SellCount3,t.SellPrice4 = t1.SellPrice4,t.SellCount4 = t1.SellCount4,t.SellPrice5 = t1.SellPrice5,t.SellCount5 = t1.SellCount5,t.SpeedUp = t1.SpeedUp,t.Activity = t1.Activity,t.LastModified = t1.LastModified,t.LimitUpPrice=t1.LimitUpPrice,t.LimitDownPrice=t1.LimitDownPrice,t.PriceType=t1.PriceType
 when not matched by target
-then insert values(t1.Market,t1.SharesCode,t1.PresentPrice,t1.ClosedPrice,t1.OpenedPrice,t1.MaxPrice,t1.MinPrice,t1.TotalCount,t1.PresentCount,t1.TotalAmount,t1.InvolCount,t1.OuterCount,t1.BuyPrice1,t1.BuyCount1,t1.BuyPrice2,t1.BuyCount2,t1.BuyPrice3,t1.BuyCount3,t1.BuyPrice4,t1.BuyCount4,t1.BuyPrice5,t1.BuyCount5,t1.SellPrice1,t1.SellCount1,t1.SellPrice2,t1.SellCount2,t1.SellPrice3,t1.SellCount3,t1.SellPrice4,t1.SellCount4,t1.SellPrice5,t1.SellCount5,t1.SpeedUp,t1.Activity,t1.LastModified);");
+then insert(Market,SharesCode,PresentPrice,ClosedPrice,OpenedPrice,MaxPrice,MinPrice,TotalCount,PresentCount,TotalAmount,InvolCount,OuterCount,BuyPrice1,BuyCount1,BuyPrice2,BuyCount2,BuyPrice3,BuyCount3,BuyPrice4,BuyCount4,BuyPrice5,BuyCount5,SellPrice1,SellCount1,SellPrice2,SellCount2,SellPrice3,SellCount3,SellPrice4,SellCount4,SellPrice5,SellCount5,SpeedUp,Activity,LastModified,LimitUpPrice,LimitDownPrice,PriceType) values(t1.Market,t1.SharesCode,t1.PresentPrice,t1.ClosedPrice,t1.OpenedPrice,t1.MaxPrice,t1.MinPrice,t1.TotalCount,t1.PresentCount,t1.TotalAmount,t1.InvolCount,t1.OuterCount,t1.BuyPrice1,t1.BuyCount1,t1.BuyPrice2,t1.BuyCount2,t1.BuyPrice3,t1.BuyCount3,t1.BuyPrice4,t1.BuyCount4,t1.BuyPrice5,t1.BuyCount5,t1.SellPrice1,t1.SellCount1,t1.SellPrice2,t1.SellCount2,t1.SellPrice3,t1.SellCount3,t1.SellPrice4,t1.SellCount4,t1.SellPrice5,t1.SellCount5,t1.SpeedUp,t1.Activity,t1.LastModified,t1.LimitUpPrice,t1.LimitDownPrice,t1.PriceType);");
                         using (var cmd = conn.CreateCommand())
                         {
                             cmd.CommandType = CommandType.Text;

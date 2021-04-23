@@ -308,6 +308,7 @@
     <Property Name="CanClear" Type="bit" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="OverTime" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_entrust_manager_dealdetails">
     <Key>
@@ -522,6 +523,7 @@
     </Key>
     <Property Name="AccountId" Type="bigint" Nullable="false" />
     <Property Name="Deposit" Type="bigint" Nullable="false" />
+    <Property Name="RemainDeposit" Type="bigint" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
@@ -1311,6 +1313,7 @@
     <Property Name="ShareClosedPrice" Type="bigint" Nullable="false" />
     <Property Name="Market" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="MarketStatus" Type="int" Nullable="false" />
     <Property Name="ForbidStatus" Type="int" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>

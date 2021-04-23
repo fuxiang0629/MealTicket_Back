@@ -24,5 +24,12 @@ namespace MealTicket_Web_Handler
         public long MinPrice { get; set; }
         public System.DateTime LastModified { get; set; }
         public string Date { get; set; }
+        public int LimitUpCount { get; set; }
+        public int LimitDownCount { get; set; }
+        public int LimitUpBombCount { get; set; }
+        public int LimitDownBombCount { get; set; }
+        public int PriceType { get; set; }
+        public long LimitUpPrice { get; set; }
+        public long LimitDownPrice { get; set; }
     }
 }

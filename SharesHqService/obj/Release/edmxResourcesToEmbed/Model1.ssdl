@@ -29,6 +29,7 @@
     <Property Name="ShareClosedPrice" Type="bigint" Nullable="false" />
     <Property Name="Market" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="MarketStatus" Type="int" Nullable="false" />
     <Property Name="ForbidStatus" Type="int" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
@@ -156,6 +157,20 @@
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
+  <EntityType Name="t_shares_limit_fundmultiple">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MarketName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="LimitMarket" Type="int" Nullable="false" />
+    <Property Name="LimitKey" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Priority" Type="int" Nullable="false" />
+    <Property Name="Range" Type="int" Nullable="false" />
+    <Property Name="FundMultiple" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_shares_limit_time">
     <Key>
       <PropertyRef Name="Id" />
@@ -238,6 +253,8 @@
     <Property Name="SpeedUp" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="Activity" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
+    <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_quotes_temp">
     <Key>
@@ -280,6 +297,8 @@
     <Property Name="SpeedUp" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="Activity" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
+    <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_transactiondata">
     <Key>
@@ -294,6 +313,7 @@
     <Property Name="Volume" Type="int" Nullable="false" />
     <Property Name="Stock" Type="int" Nullable="false" />
     <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="OrderIndex" Type="int" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="t_system_param">
@@ -318,6 +338,7 @@
     <EntitySet Name="t_shares_hq_host" EntityType="Self.t_shares_hq_host" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_limit_date" EntityType="Self.t_shares_limit_date" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_limit_date_group" EntityType="Self.t_shares_limit_date_group" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_limit_fundmultiple" EntityType="Self.t_shares_limit_fundmultiple" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_limit_time" EntityType="Self.t_shares_limit_time" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_minutetimedata" EntityType="Self.t_shares_minutetimedata" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_minutetimedata_temp" EntityType="Self.t_shares_minutetimedata_temp" Schema="dbo" store:Type="Tables" />

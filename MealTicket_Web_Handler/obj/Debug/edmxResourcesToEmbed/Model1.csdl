@@ -265,6 +265,9 @@
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="CreateAccountId" Type="Int64" Nullable="false" />
+    <Property Name="ExecStatus" Type="Int32" Nullable="false" />
+    <Property Name="LimitUp" Type="Boolean" Nullable="false" />
+    <Property Name="FirstExecTime" Type="DateTime" Precision="3" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_buy_details_auto">
     <Key>
@@ -429,6 +432,7 @@
     <Property Name="CanClear" Type="Boolean" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="OverTime" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
   <EntityType Name="t_account_shares_entrust_manager_dealdetails">
     <Key>
@@ -743,6 +747,7 @@
     <Property Name="Status" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="RemainDeposit" Type="Int64" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_wallet_change_record">
     <Key>
@@ -1595,6 +1600,7 @@
     <Property Name="Status" Type="Int32" Nullable="false" />
     <Property Name="ForbidStatus" Type="Int32" Nullable="false" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="MarketStatus" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_all_corrigendum">
     <Key>
@@ -2054,6 +2060,9 @@
     <Property Name="SpeedUp" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="Activity" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LimitUpPrice" Type="Int64" Nullable="false" />
+    <Property Name="LimitDownPrice" Type="Int64" Nullable="false" />
+    <Property Name="PriceType" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_quotes_date">
     <Key>
@@ -2069,6 +2078,13 @@
     <Property Name="MinPrice" Type="Int64" Nullable="false" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="Date" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="LimitUpCount" Type="Int32" Nullable="false" />
+    <Property Name="LimitDownCount" Type="Int32" Nullable="false" />
+    <Property Name="LimitUpBombCount" Type="Int32" Nullable="false" />
+    <Property Name="LimitDownBombCount" Type="Int32" Nullable="false" />
+    <Property Name="PriceType" Type="Int32" Nullable="false" />
+    <Property Name="LimitUpPrice" Type="Int64" Nullable="false" />
+    <Property Name="LimitDownPrice" Type="Int64" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_quotes_temp">
     <Key>
@@ -2111,6 +2127,9 @@
     <Property Name="SpeedUp" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="Activity" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LimitUpPrice" Type="Int64" Nullable="false" />
+    <Property Name="LimitDownPrice" Type="Int64" Nullable="false" />
+    <Property Name="PriceType" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_search">
     <Key>
@@ -3045,6 +3064,7 @@
     <Property Name="Status" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LimitUp" Type="Boolean" Nullable="false" />
   </EntityType>
   <EntityType Name="t_sys_conditiontrade_template_buy_auto">
     <Key>
@@ -3143,6 +3163,7 @@
     <Property Name="Status" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LimitUp" Type="Boolean" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_template_buy_auto">
     <Key>

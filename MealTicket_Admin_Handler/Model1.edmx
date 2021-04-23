@@ -313,6 +313,7 @@
           <Property Name="CanClear" Type="bit" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
+          <Property Name="OverTime" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="t_account_shares_entrust_manager_dealdetails">
           <Key>
@@ -527,6 +528,7 @@
           </Key>
           <Property Name="AccountId" Type="bigint" Nullable="false" />
           <Property Name="Deposit" Type="bigint" Nullable="false" />
+          <Property Name="RemainDeposit" Type="bigint" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
@@ -1316,6 +1318,7 @@
           <Property Name="ShareClosedPrice" Type="bigint" Nullable="false" />
           <Property Name="Market" Type="int" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="MarketStatus" Type="int" Nullable="false" />
           <Property Name="ForbidStatus" Type="int" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
         </EntityType>
@@ -2888,6 +2891,7 @@
           <Property Name="Status" Type="Int32" Nullable="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RemainDeposit" Type="Int64" Nullable="false" />
         </EntityType>
         <EntityType Name="t_account_login_token">
           <Key>
@@ -3226,6 +3230,7 @@
           <Property Name="RealEntrustCount" Type="Int32" Nullable="false" />
           <Property Name="SimulateDealCount" Type="Int32" Nullable="false" />
           <Property Name="CanClear" Type="Boolean" Nullable="false" />
+          <Property Name="OverTime" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <EntityType Name="t_account_realname">
           <Key>
@@ -3314,6 +3319,7 @@
           <Property Name="ForbidStatus" Type="Int32" Nullable="false" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="SharesPyjc" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="MarketStatus" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_limit_traderules">
           <Key>
@@ -4836,6 +4842,7 @@
           <EntitySetMapping Name="t_account_wallet">
             <EntityTypeMapping TypeName="meal_ticketModel.t_account_wallet">
               <MappingFragment StoreEntitySet="t_account_wallet">
+                <ScalarProperty Name="RemainDeposit" ColumnName="RemainDeposit" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
@@ -5185,6 +5192,7 @@
           <EntitySetMapping Name="t_account_shares_entrust_manager">
             <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_entrust_manager">
               <MappingFragment StoreEntitySet="t_account_shares_entrust_manager">
+                <ScalarProperty Name="OverTime" ColumnName="OverTime" />
                 <ScalarProperty Name="CanClear" ColumnName="CanClear" />
                 <ScalarProperty Name="SimulateDealCount" ColumnName="SimulateDealCount" />
                 <ScalarProperty Name="RealEntrustCount" ColumnName="RealEntrustCount" />
@@ -5289,6 +5297,7 @@
           <EntitySetMapping Name="t_shares_all">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_all">
               <MappingFragment StoreEntitySet="t_shares_all">
+                <ScalarProperty Name="MarketStatus" ColumnName="MarketStatus" />
                 <ScalarProperty Name="SharesPyjc" ColumnName="SharesPyjc" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
                 <ScalarProperty Name="ForbidStatus" ColumnName="ForbidStatus" />

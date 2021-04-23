@@ -1,6 +1,8 @@
 ﻿using FXCommon.Common;
 using MealTicket_Web_Handler.Model;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using stock_db_core;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -399,6 +401,461 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
             }
             int iErrorCode = Singleton.Instance.m_stockMonitor.AnalysisTrend_BoxBreach(lstElement, ref resultInfo);
             return iErrorCode;
+        }
+
+        /// <summary>
+        /// 分析历史涨跌幅数据
+        /// </summary>
+        /// <param name="sharesCode"></param>
+        /// <param name="market"></param>
+        /// <param name="par"></param>
+        /// <returns></returns>
+
+        public static int Analysis_HisRiseRate(string sharesCode, int market, List<string> par)
+        {
+            var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
+            int day = 0;
+            int type = 0;
+            int compare = 0;
+            int count = 0;
+            int rateCompare = 0;
+            int rateCount = 0;
+            int limitDay = 0;
+            try
+            {
+                day = Convert.ToInt32(temp.Day);
+                type = Convert.ToInt32(temp.Type); 
+                compare = Convert.ToInt32(temp.Compare);
+                count= (type==11|| type==12)?(int)(Convert.ToDouble(temp.Count)*100): Convert.ToInt32(temp.Count);
+                rateCompare= Convert.ToInt32(temp.RateCompare);
+                rateCount= (int)(Convert.ToDouble(temp.RateCount) * 100);
+                limitDay= Convert.ToInt32(temp.LimitDay);
+            }
+            catch (Exception) { }
+            if (day <= 0 || compare<=0)
+            {
+                return -1;
+            }
+            DateTime dateNow = DateTime.Now.Date;
+            using (var db = new meal_ticketEntities())
+            {
+                var quotes_date = (from item in db.t_shares_quotes_date
+                                   where item.SharesCode == sharesCode && item.Market == market && item.LastModified < dateNow
+                                   orderby item.Date descending
+                                   select item).Take(day).ToList();
+                //没涨停次数
+                if (type == 1)
+                {
+                    int tempCount = quotes_date.Where(e => e.PriceType != 1).Count();
+                    if (compare == 1 && tempCount >= count)
+                    {
+                        return 0;
+                    }
+                    if (compare == 2 && tempCount <= count)
+                    {
+                        return 0;
+                    }
+                    return -1;
+                }
+                //涨停次数
+                else if (type == 2)
+                {
+                    int tempCount = quotes_date.Where(e => e.PriceType == 1).Count();
+                    if (compare == 1 && tempCount >= count)
+                    {
+                        return 0;
+                    }
+                    if (compare == 2 && tempCount <= count)
+                    {
+                        return 0;
+                    }
+                    return -1;
+                }
+                //跌停次数
+                else if (type == 3)
+                {
+                    int tempCount = quotes_date.Where(e => e.PriceType == 2).Count();
+                    if (compare == 1 && tempCount >= count)
+                    {
+                        return 0;
+                    }
+                    if (compare == 2 && tempCount <= count)
+                    {
+                        return 0;
+                    }
+                    return -1;
+                }
+                //炸板次数
+                else if (type == 4)
+                {
+                    int tempCount = quotes_date.Where(e => e.PriceType != 1 && e.LimitUpCount > 0).Count();
+                    if (compare == 1 && tempCount >= count)
+                    {
+                        return 0;
+                    }
+                    if (compare == 2 && tempCount <= count)
+                    {
+                        return 0;
+                    }
+                    return -1;
+                }
+                //涨幅
+                else if (type == 5)
+                {
+                    int i = 0;
+                    foreach (var quote in quotes_date)
+                    {
+                        if (quote.PresentPrice <= 0 || quote.ClosedPrice <= 0)
+                        {
+                            continue;
+                        }
+                        int rate = (int)((quote.PresentPrice - quote.ClosedPrice) * 1.0 / quote.ClosedPrice * 10000);
+                        if (rate < 0)
+                        {
+                            continue;
+                        }
+                        if (rateCompare == 1 && rate >= rateCount)
+                        {
+                            i++;
+                            continue;
+                        }
+                        if (rateCompare == 2 && rate <= rateCount)
+                        {
+                            i++;
+                            continue;
+                        }
+                    }
+                    if (compare == 1 && i >= count)
+                    {
+                        return 0;
+                    }
+                    if (compare == 2 && i <= count)
+                    {
+                        return 0;
+                    }
+                    return -1;
+                }
+                //跌幅
+                else if (type == 6)
+                {
+                    int i = 0;
+                    foreach (var quote in quotes_date)
+                    {
+                        if (quote.PresentPrice <= 0 || quote.ClosedPrice <= 0)
+                        {
+                            continue;
+                        }
+                        int rate = (int)((quote.PresentPrice - quote.ClosedPrice) * 1.0 / quote.ClosedPrice * 10000);
+                        if (rate > 0)
+                        {
+                            continue;
+                        }
+                        rate = Math.Abs(rate);
+                        if (rateCompare == 1 && rate >= rateCount)
+                        {
+                            i++;
+                            continue;
+                        }
+                        if (rateCompare == 2 && rate <= rateCount)
+                        {
+                            i++;
+                            continue;
+                        }
+                    }
+                    if (compare == 1 && i >= count)
+                    {
+                        return 0;
+                    }
+                    if (compare == 2 && i <= count)
+                    {
+                        return 0;
+                    }
+                    return -1;
+                }
+                //包含连续涨停
+                else if (type == 7)
+                {
+                    int tempi = 0;//连续涨停天数
+                    foreach (var quote in quotes_date)
+                    {
+                        if (quote.PriceType == 1)
+                        {
+                            tempi++;
+                        }
+                        else if (tempi >= limitDay)
+                        {
+                            return 0;
+                        }
+                        else
+                        {
+                            tempi = 0;
+                        }
+                    }
+                    return -1;
+                }
+                //排除连续涨停
+                else if (type == 8)
+                {
+                    int tempi = 0;//连续涨停天数
+                    foreach (var quote in quotes_date)
+                    {
+                        if (quote.PriceType == 1)
+                        {
+                            tempi++;
+                        }
+                        else if (tempi >= limitDay)
+                        {
+                            return -1;
+                        }
+                        else
+                        {
+                            tempi = 0;
+                        }
+                    }
+                    return 0;
+                }
+                //包含连续跌停
+                else if (type == 9)
+                {
+                    int tempi = 0;//连续跌停天数
+                    foreach (var quote in quotes_date)
+                    {
+                        if (quote.PriceType == 2)
+                        {
+                            tempi++;
+                        }
+                        else if (tempi >= limitDay)
+                        {
+                            return 0;
+                        }
+                        else
+                        {
+                            tempi = 0;
+                        }
+                    }
+                    return -1;
+                }
+                //排除连续跌停
+                else if (type == 10)
+                {
+                    int tempi = 0;//连续跌停天数
+                    foreach (var quote in quotes_date)
+                    {
+                        if (quote.PriceType == 2)
+                        {
+                            tempi++;
+                        }
+                        else if (tempi >= limitDay)
+                        {
+                            return -1;
+                        }
+                        else
+                        {
+                            tempi = 0;
+                        }
+                    }
+                    return 0;
+                }
+                //总涨幅
+                else if (type == 11)
+                {
+                    long closePrice = quotes_date.OrderBy(e => e.Date).Select(e => e.ClosedPrice).FirstOrDefault();
+                    long presentPrice = quotes_date.OrderByDescending(e => e.Date).Select(e => e.PresentPrice).FirstOrDefault();
+                    if (closePrice <= 0 || presentPrice <= 0)
+                    {
+                        return -1;
+                    }
+                    int rate = (int)((presentPrice - closePrice) * 1.0 / closePrice * 10000);
+                    if (rate < 0)
+                    {
+                        return -1;
+                    }
+                    if (compare == 1)
+                    {
+                        if (rate >= count)
+                        {
+                            return 0;
+                        }
+                        return -1;
+                    }
+                    else if (compare == 2)
+                    {
+                        if (rate <= count)
+                        {
+                            return 0;
+                        }
+                        return -1;
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+                //总跌幅
+                else if (type == 12)
+                {
+                    long closePrice = quotes_date.OrderBy(e => e.Date).Select(e => e.ClosedPrice).FirstOrDefault();
+                    long presentPrice = quotes_date.OrderByDescending(e => e.Date).Select(e => e.PresentPrice).FirstOrDefault();
+                    if (closePrice <= 0 || presentPrice <= 0)
+                    {
+                        return -1;
+                    }
+                    int rate = (int)((presentPrice - closePrice) * 1.0 / closePrice * 10000);
+                    if (rate > 0)
+                    {
+                        return -1;
+                    }
+                    rate = Math.Abs(rate);
+                    if (compare == 1)
+                    {
+                        if (rate >= count)
+                        {
+                            return 0;
+                        }
+                        return -1;
+                    }
+                    else if (compare == 2)
+                    {
+                        if (rate <= count)
+                        {
+                            return 0;
+                        }
+                        return -1;
+                    }
+                    else
+                    {
+                        return -1;
+                    }
+                }
+                else
+                {
+                    return -1;
+                }
+            }
+        }
+
+        //分析今日涨跌幅
+        public static int Analysis_TodayRiseRate(string sharesCode, int market, List<string> par)
+        {
+            var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
+            int type = 0;
+            int compare = 0;
+            int count = 0;
+            try
+            {
+                type = Convert.ToInt32(temp.Type);
+                compare = Convert.ToInt32(temp.Compare);
+                count = (type == 5) ? (int)(Convert.ToDouble(temp.Count) * 100) : Convert.ToInt32(temp.Count);
+            }
+            catch (Exception) { }
+            DateTime dateNow = DateTime.Now.Date;
+            using (var db = new meal_ticketEntities())
+            {
+                var quotes_date = (from item in db.t_shares_quotes_date
+                                   where item.SharesCode == sharesCode && item.Market == market && item.LastModified > dateNow
+                                   orderby item.Date
+                                   select item).FirstOrDefault();
+                if (quotes_date == null)
+                {
+                    return -1;
+                }
+                //涨停次数
+                if (type == 1)
+                {
+                    if (compare == 1 && quotes_date.LimitUpCount >= count)
+                    {
+                        return 0;
+                    }
+                    if (compare == 2 && quotes_date.LimitUpCount <= count)
+                    {
+                        return 0;
+                    }
+                    return -1;
+                }
+                //跌停次数
+                if (type == 2)
+                {
+                    if (compare == 1 && quotes_date.LimitDownCount >= count)
+                    {
+                        return 0;
+                    }
+                    if (compare == 2 && quotes_date.LimitDownCount <= count)
+                    {
+                        return 0;
+                    }
+                    return -1;
+                }
+                //炸板次数
+                else if (type == 3)
+                {
+                    if (compare == 1 && quotes_date.LimitUpBombCount >= count)
+                    {
+                        return 0;
+                    }
+                    if (compare == 2 && quotes_date.LimitUpBombCount <= count)
+                    {
+                        return 0;
+                    }
+                    return -1;
+                }
+                //盘中涨跌幅
+                else if (type == 4)
+                {
+                    int i = -1;
+                    foreach (var item in temp.riseRateList)
+                    {
+                        UP_OR_DOWN_INFO upOrDownInfo = new UP_OR_DOWN_INFO();
+                        DB_TRADE_PRICE_INFO DB_TRADE_PRICE_INFO = new DB_TRADE_PRICE_INFO();
+                        int Minute = item.Minute;
+                        int Compare = item.Compare;
+                        int Rate = item.Rate;
+                        int iErrorCode = Singleton.Instance.m_stockMonitor.GetUpOrDownInfoInTime(sharesCode + "," + market, Minute, ref DB_TRADE_PRICE_INFO, ref upOrDownInfo);
+                        if (iErrorCode != 0)
+                        {
+                            continue;
+                        }
+                        if (upOrDownInfo.iLastestPercent == -0x0FFFFFFF)
+                        {
+                            continue;
+                        }
+                        if (Compare == 1 && upOrDownInfo.iLastestPercent >= Rate * 100)
+                        {
+                            i++;
+                            break;
+                        }
+                        if (Compare == 2 && upOrDownInfo.iLastestPercent <= Rate * 100)
+                        {
+                            i++;
+                            break;
+                        }
+                    }
+                    return i;
+                }
+                //开盘涨跌幅
+                else if (type == 5)
+                {
+                    long openPrice = quotes_date.OpenedPrice;
+                    long closePrice = quotes_date.ClosedPrice;
+                    if (closePrice <= 0 || openPrice <= 0)
+                    {
+                        return -1;
+                    }
+                    int rate = (int)((openPrice - closePrice) * 1.0 / closePrice * 10000);
+                    if (compare == 1 && rate >= count)
+                    {
+                        return 0;
+                    }
+                    if (compare == 2 && rate <= count)
+                    {
+                        return 0;
+                    }
+                    return -1;
+                }
+                else
+                {
+                    return -1;
+                }
+            }
         }
 
         /// <summary>

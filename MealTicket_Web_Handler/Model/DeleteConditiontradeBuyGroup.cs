@@ -16,5 +16,15 @@ namespace MealTicket_Web_Handler.Model
         /// 是否删除分组
         /// </summary>
         public bool IsDeleteGroup { get; set; }
+
+        /// <summary>
+        /// 是否删除股票
+        /// </summary>
+        public bool IsDeleteShares { get; set; }
+
+        /// <summary>
+        /// 是否保留其他分组股票
+        /// </summary>
+        public bool IsRetainOtherGroupShares { get; set; }
     }
 }

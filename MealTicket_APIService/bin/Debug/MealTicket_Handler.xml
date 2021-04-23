@@ -1852,9 +1852,19 @@
             可用保证金
             </summary>
         </member>
+        <member name="P:MealTicket_Handler.Model.TradeAccountInfo.RetainDeposit">
+            <summary>
+            保留余额
+            </summary>
+        </member>
         <member name="P:MealTicket_Handler.Model.TradeAccountInfo.UseRemainDeposit">
             <summary>
             已用保证金
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.TradeAccountInfo.TotalFundAmount">
+            <summary>
+            总借款
             </summary>
         </member>
         <member name="P:MealTicket_Handler.Model.TradeAccountInfo.TotalProfit">
@@ -2085,6 +2095,11 @@
         <member name="P:MealTicket_Handler.Model.TradeHoldInfo.ClosingTime">
             <summary>
             自动平仓时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.TradeHoldInfo.FundAmount">
+            <summary>
+            剩余借出金额
             </summary>
         </member>
         <member name="P:MealTicket_Handler.Model.TradeHoldInfo.ClosingLineList">
@@ -3099,11 +3114,6 @@
             推送股票分笔数据
             </summary>
             <returns></returns>
-        </member>
-        <member name="M:MealTicket_Handler.RunnerHandler.RunnerHelper.TradeAuto">
-            <summary>
-            自动交易
-            </summary>
         </member>
         <member name="F:MealTicket_Handler.Singleton.instance">
             <summary>

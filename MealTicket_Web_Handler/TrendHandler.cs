@@ -3375,6 +3375,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                 CurrPrice = currPrice,
                                 ClosedPrice = item.bi == null ? 0 : item.bi.ClosedPrice,
                                 Id = item.item.Id,
+                                MarketStatus=item.ai==null?0:item.ai.MarketStatus,
                                 Market = item.item.Market,
                                 RisePrice = item.bi == null ? 0 : (currPrice - item.bi.ClosedPrice),
                                 RiseRate = riseRate
@@ -4193,7 +4194,9 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                         IsGreater= condition.IsGreater,
                         LastModified=DateTime.Now,
                         Name= condition.Name,
-                        TriggerTime= null
+                        FirstExecTime=null,
+                        LimitUp= condition.LimitUp,
+                        TriggerTime = null
                     };
                     db.t_account_shares_conditiontrade_buy_details.Add(details);
                     db.SaveChanges();
@@ -7426,7 +7429,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                         CreateTime = DateTime.Now,
                         DetailsId = temp.Id,
                         LastModified = DateTime.Now,
-                        Name = temp.Name
+                        Name = o.Name
                     };
                     db.t_account_shares_conditiontrade_buy_details_other.Add(otherTemp);
                     db.SaveChanges();
@@ -7479,7 +7482,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                         CreateTime = DateTime.Now,
                         DetailsId = temp.Id,
                         LastModified = DateTime.Now,
-                        Name = temp.Name
+                        Name = o.Name
                     };
                     db.t_account_shares_conditiontrade_buy_details_auto.Add(autoTemp);
                     db.SaveChanges();
@@ -7974,23 +7977,42 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                         db.SaveChanges();
                     }
 
-                    //删除关系
                     var rel = (from item in db.t_account_shares_conditiontrade_buy_group_rel
                                where item.GroupId == groupInfo.Id
                                select item).ToList();
-
-                    foreach (var shares in rel)
+                    if (request.IsDeleteShares)
                     {
-                        var temp = (from item in db.t_account_shares_conditiontrade_buy
-                                    where item.AccountId == groupInfo.AccountId && item.SharesCode == shares.SharesCode && item.Market == shares.Market
-                                    select item).FirstOrDefault();
-                        if (temp == null)
+                        foreach (var shares in rel)
                         {
-                            continue;
+                            bool isDelete = true;
+                            if (request.IsRetainOtherGroupShares)
+                            {
+                                //判断其他分组是否有这个股票
+                                var tempGroupRel = (from x in db.t_account_shares_conditiontrade_buy_group_rel
+                                                    join x2 in db.t_account_shares_conditiontrade_buy_group on x.GroupId equals x2.Id
+                                                    where x2.AccountId == groupInfo.AccountId && x.SharesCode == shares.SharesCode && x.Market == shares.Market && x.GroupId != groupInfo.Id
+                                                    select x).FirstOrDefault();
+                                if (tempGroupRel != null)
+                                {
+                                    isDelete = false;
+                                }
+                            }
+                            if (isDelete)
+                            {
+                                var temp = (from item in db.t_account_shares_conditiontrade_buy
+                                            where item.AccountId == groupInfo.AccountId && item.SharesCode == shares.SharesCode && item.Market == shares.Market
+                                            select item).FirstOrDefault();
+                                if (temp == null)
+                                {
+                                    continue;
+                                }
+                                db.t_account_shares_conditiontrade_buy.Remove(temp);
+                            }
                         }
-                        db.t_account_shares_conditiontrade_buy.Remove(temp);
+                        db.SaveChanges();
                     }
 
+                    //删除关系
                     db.t_account_shares_conditiontrade_buy_group_rel.RemoveRange(rel);
                     db.SaveChanges();
 

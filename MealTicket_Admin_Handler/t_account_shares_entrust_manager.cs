@@ -34,5 +34,6 @@ namespace MealTicket_Admin_Handler
         public int RealEntrustCount { get; set; }
         public int SimulateDealCount { get; set; }
         public bool CanClear { get; set; }
+        public System.DateTime OverTime { get; set; }
     }
 }

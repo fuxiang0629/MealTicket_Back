@@ -54,6 +54,7 @@
     <EntitySetMapping Name="t_account_shares_entrust_manager">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_entrust_manager">
         <MappingFragment StoreEntitySet="t_account_shares_entrust_manager">
+          <ScalarProperty Name="OverTime" ColumnName="OverTime" />
           <ScalarProperty Name="CanClear" ColumnName="CanClear" />
           <ScalarProperty Name="SimulateDealCount" ColumnName="SimulateDealCount" />
           <ScalarProperty Name="RealEntrustCount" ColumnName="RealEntrustCount" />

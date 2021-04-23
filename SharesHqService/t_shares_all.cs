@@ -24,5 +24,6 @@ namespace SharesHqService
         public int ForbidStatus { get; set; }
         public System.DateTime LastModified { get; set; }
         public string SharesPyjc { get; set; }
+        public int MarketStatus { get; set; }
     }
 }

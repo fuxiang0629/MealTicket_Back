@@ -128,6 +128,11 @@ namespace SharesHqService
         /// </summary>
         public int AllSharesEndHour = 4;
 
+        /// <summary>
+        /// 股票涨幅列表
+        /// </summary>
+        public List<t_shares_limit_fundmultiple> RangeList = new List<t_shares_limit_fundmultiple>();
+
         #region====暂未使用====
         /// <summary>
         /// 获取证券k线数据每批次数量
@@ -536,6 +541,12 @@ namespace SharesHqService
                         {
                             this.SharesCodeMatch1 = sysPar3.ParamValue;
                         }
+                    }
+                    catch { }
+                    try
+                    {
+                        RangeList = (from item in db.t_shares_limit_fundmultiple
+                                       select item).ToList();
                     }
                     catch { }
                 }

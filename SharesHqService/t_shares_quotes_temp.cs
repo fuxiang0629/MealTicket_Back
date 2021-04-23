@@ -51,5 +51,7 @@ namespace SharesHqService
         public string SpeedUp { get; set; }
         public string Activity { get; set; }
         public System.DateTime LastModified { get; set; }
+        public long LimitUpPrice { get; set; }
+        public long LimitDownPrice { get; set; }
     }
 }

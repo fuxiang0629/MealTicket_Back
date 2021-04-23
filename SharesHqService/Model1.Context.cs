@@ -42,5 +42,6 @@ namespace SharesHqService
         public virtual DbSet<t_shares_quotes_temp> t_shares_quotes_temp { get; set; }
         public virtual DbSet<t_shares_all> t_shares_all { get; set; }
         public virtual DbSet<t_shares_all_corrigendum> t_shares_all_corrigendum { get; set; }
+        public virtual DbSet<t_shares_limit_fundmultiple> t_shares_limit_fundmultiple { get; set; }
     }
 }

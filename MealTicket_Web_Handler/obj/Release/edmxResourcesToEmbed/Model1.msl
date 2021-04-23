@@ -436,6 +436,7 @@
     <EntitySetMapping Name="t_account_shares_entrust_manager">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_entrust_manager">
         <MappingFragment StoreEntitySet="t_account_shares_entrust_manager">
+          <ScalarProperty Name="OverTime" ColumnName="OverTime" />
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="BuyId" ColumnName="BuyId" />
           <ScalarProperty Name="TradeType" ColumnName="TradeType" />
@@ -1695,6 +1696,7 @@
     <EntitySetMapping Name="t_shares_all">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_all">
         <MappingFragment StoreEntitySet="t_shares_all">
+          <ScalarProperty Name="MarketStatus" ColumnName="MarketStatus" />
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
           <ScalarProperty Name="SharesName" ColumnName="SharesName" />
@@ -2160,6 +2162,9 @@
     <EntitySetMapping Name="t_shares_quotes">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes">
         <MappingFragment StoreEntitySet="t_shares_quotes">
+          <ScalarProperty Name="PriceType" ColumnName="PriceType" />
+          <ScalarProperty Name="LimitDownPrice" ColumnName="LimitDownPrice" />
+          <ScalarProperty Name="LimitUpPrice" ColumnName="LimitUpPrice" />
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Market" ColumnName="Market" />
           <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
@@ -2202,6 +2207,13 @@
     <EntitySetMapping Name="t_shares_quotes_date">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes_date">
         <MappingFragment StoreEntitySet="t_shares_quotes_date">
+          <ScalarProperty Name="LimitDownPrice" ColumnName="LimitDownPrice" />
+          <ScalarProperty Name="LimitUpPrice" ColumnName="LimitUpPrice" />
+          <ScalarProperty Name="PriceType" ColumnName="PriceType" />
+          <ScalarProperty Name="LimitDownBombCount" ColumnName="LimitDownBombCount" />
+          <ScalarProperty Name="LimitUpBombCount" ColumnName="LimitUpBombCount" />
+          <ScalarProperty Name="LimitDownCount" ColumnName="LimitDownCount" />
+          <ScalarProperty Name="LimitUpCount" ColumnName="LimitUpCount" />
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Market" ColumnName="Market" />
           <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
@@ -2218,6 +2230,9 @@
     <EntitySetMapping Name="t_shares_quotes_temp">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes_temp">
         <MappingFragment StoreEntitySet="t_shares_quotes_temp">
+          <ScalarProperty Name="PriceType" ColumnName="PriceType" />
+          <ScalarProperty Name="LimitDownPrice" ColumnName="LimitDownPrice" />
+          <ScalarProperty Name="LimitUpPrice" ColumnName="LimitUpPrice" />
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Market" ColumnName="Market" />
           <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />

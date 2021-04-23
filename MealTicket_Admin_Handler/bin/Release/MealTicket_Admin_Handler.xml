@@ -9849,6 +9849,11 @@
             禁止状态0不禁 1禁止买入 2禁止卖出 3全禁止
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesInfo.MarketStatus">
+            <summary>
+            上市状态1正常 2退市
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.SharesInfo.IsSuspension">
             <summary>
             是否停牌
@@ -11415,6 +11420,12 @@
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesForbidStatus(MealTicket_Admin_Handler.Model.ModifySharesForbidStatusRequest)">
             <summary>
             修改股票限制状态
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesMarketStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改股票退市状态
             </summary>
             <param name="request"></param>
         </member>

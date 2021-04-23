@@ -134,5 +134,10 @@ namespace MealTicket_Web_Handler.Model
         /// 最大涨跌幅
         /// </summary>
         public int Range { get; set; }
+
+        /// <summary>
+        /// 上市状态1正常 2退市
+        /// </summary>
+        public int MarketStatus { get; set; }
     }
 }

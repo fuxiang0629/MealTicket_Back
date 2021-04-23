@@ -34,5 +34,6 @@ namespace MealTicket_Web_Handler
         public bool CanClear { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
+        public System.DateTime OverTime { get; set; }
     }
 }

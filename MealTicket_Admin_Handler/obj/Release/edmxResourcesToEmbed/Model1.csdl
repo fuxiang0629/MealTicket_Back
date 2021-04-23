@@ -666,6 +666,7 @@
     <Property Name="Status" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="RemainDeposit" Type="Int64" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_login_token">
     <Key>
@@ -1004,6 +1005,7 @@
     <Property Name="RealEntrustCount" Type="Int32" Nullable="false" />
     <Property Name="SimulateDealCount" Type="Int32" Nullable="false" />
     <Property Name="CanClear" Type="Boolean" Nullable="false" />
+    <Property Name="OverTime" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
   <EntityType Name="t_account_realname">
     <Key>
@@ -1092,6 +1094,7 @@
     <Property Name="ForbidStatus" Type="Int32" Nullable="false" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="SharesPyjc" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="MarketStatus" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_limit_traderules">
     <Key>

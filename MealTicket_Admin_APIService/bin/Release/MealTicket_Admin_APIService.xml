@@ -2005,6 +2005,13 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifySharesMarketStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改股票退市状态
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetSharesSuspensionList(MealTicket_Admin_Handler.Model.GetSharesSuspensionListRequest)">
             <summary>
             获取停牌设置列表

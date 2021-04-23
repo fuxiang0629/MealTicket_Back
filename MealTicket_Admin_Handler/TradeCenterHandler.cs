@@ -296,6 +296,7 @@ namespace MealTicket_Admin_Handler
                                   SharesNamePY = item.SharesPyjc,
                                   Status = item.Status,
                                   ForbidStatus = item.ForbidStatus,
+                                  MarketStatus=item.MarketStatus,
                                   SharesName = item.SharesName,
                                   Id = item.Id,
                                   MarketTime = ai == null ? MarketTime : ai.MarketTime,
@@ -326,6 +327,7 @@ namespace MealTicket_Admin_Handler
                                   ForbidStatus = x.ForbidStatus,
                                   SharesName = x.SharesName,
                                   Id = x.Id,
+                                  MarketStatus=x.MarketStatus,
                                   MarketTime = x.MarketTime,
                                   Market = x.Market,
                                   IsSuspension = x.IsSuspension,
@@ -391,6 +393,26 @@ namespace MealTicket_Admin_Handler
                     throw new WebApiException(400, "数据不存在");
                 }
                 shares.ForbidStatus = request.ForbidStatus;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改股票退市状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifySharesMarketStatus(ModifyStatusRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var shares = (from item in db.t_shares_all
+                              where item.Id == request.Id
+                              select item).FirstOrDefault();
+                if (shares == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                shares.MarketStatus = request.Status;
                 db.SaveChanges();
             }
         }

@@ -63,7 +63,6 @@ F:\项目\饭票后端\SharesHqService\bin\Debug\zh-Hans\EntityFramework.resourc
 F:\项目\饭票后端\SharesHqService\bin\Debug\zh-Hans\EntityFramework.SqlServer.resources.dll
 F:\项目\饭票后端\SharesHqService\bin\Debug\ChnCharInfo.dll
 F:\项目\饭票后端\SharesHqService\bin\Debug\NPinyin.dll
-F:\项目\饭票后端\SharesHqService\obj\Debug\SharesHqService.csprojAssemblyReference.cache
 C:\Users\37863\Desktop\项目\饭票后端\SharesHqService\bin\Debug\SharesHqService.exe.config
 C:\Users\37863\Desktop\项目\饭票后端\SharesHqService\bin\Debug\SharesHqService.exe
 C:\Users\37863\Desktop\项目\饭票后端\SharesHqService\bin\Debug\SharesHqService.pdb
@@ -90,3 +89,4 @@ C:\Users\37863\Desktop\项目\饭票后端\SharesHqService\obj\Debug\SharesHqSer
 C:\Users\37863\Desktop\项目\饭票后端\SharesHqService\obj\Debug\SharesHqService.csproj.CopyComplete
 C:\Users\37863\Desktop\项目\饭票后端\SharesHqService\obj\Debug\SharesHqService.exe
 C:\Users\37863\Desktop\项目\饭票后端\SharesHqService\obj\Debug\SharesHqService.pdb
+F:\项目\饭票后端\SharesHqService\obj\Debug\SharesHqService.csprojAssemblyReference.cache

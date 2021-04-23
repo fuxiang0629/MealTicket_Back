@@ -24,5 +24,6 @@ namespace SharesHqService
         public int Stock { get; set; }
         public int Type { get; set; }
         public System.DateTime LastModified { get; set; }
+        public int OrderIndex { get; set; }
     }
 }

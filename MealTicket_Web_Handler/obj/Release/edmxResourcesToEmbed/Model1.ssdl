@@ -621,6 +621,7 @@
     <Property Name="CanClear" Type="bit" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="OverTime" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_entrust_manager_dealdetails">
     <Key>
@@ -1786,6 +1787,7 @@
     <Property Name="ShareClosedPrice" Type="bigint" Nullable="false" />
     <Property Name="Market" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="MarketStatus" Type="int" Nullable="false" />
     <Property Name="ForbidStatus" Type="int" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
@@ -2268,6 +2270,9 @@
     <Property Name="SpeedUp" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="Activity" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
+    <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
+    <Property Name="PriceType" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_quotes_date">
     <Key>
@@ -2281,8 +2286,15 @@
     <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
     <Property Name="MaxPrice" Type="bigint" Nullable="false" />
     <Property Name="MinPrice" Type="bigint" Nullable="false" />
+    <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
+    <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="Date" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="LimitUpCount" Type="int" Nullable="false" />
+    <Property Name="LimitDownCount" Type="int" Nullable="false" />
+    <Property Name="LimitUpBombCount" Type="int" Nullable="false" />
+    <Property Name="LimitDownBombCount" Type="int" Nullable="false" />
+    <Property Name="PriceType" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_quotes_temp">
     <Key>
@@ -2325,6 +2337,9 @@
     <Property Name="SpeedUp" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="Activity" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
+    <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
+    <Property Name="PriceType" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_search">
     <Key>

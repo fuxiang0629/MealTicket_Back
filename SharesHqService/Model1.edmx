@@ -34,6 +34,7 @@
           <Property Name="ShareClosedPrice" Type="bigint" Nullable="false" />
           <Property Name="Market" Type="int" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="MarketStatus" Type="int" Nullable="false" />
           <Property Name="ForbidStatus" Type="int" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
         </EntityType>
@@ -161,6 +162,20 @@
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="t_shares_limit_fundmultiple">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MarketName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LimitMarket" Type="int" Nullable="false" />
+          <Property Name="LimitKey" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Priority" Type="int" Nullable="false" />
+          <Property Name="Range" Type="int" Nullable="false" />
+          <Property Name="FundMultiple" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="t_shares_limit_time">
           <Key>
             <PropertyRef Name="Id" />
@@ -243,6 +258,8 @@
           <Property Name="SpeedUp" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="Activity" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
+          <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
+          <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_quotes_temp">
           <Key>
@@ -285,6 +302,8 @@
           <Property Name="SpeedUp" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="Activity" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
+          <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
+          <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_transactiondata">
           <Key>
@@ -299,6 +318,7 @@
           <Property Name="Volume" Type="int" Nullable="false" />
           <Property Name="Stock" Type="int" Nullable="false" />
           <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="OrderIndex" Type="int" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="t_system_param">
@@ -323,6 +343,7 @@
           <EntitySet Name="t_shares_hq_host" EntityType="Self.t_shares_hq_host" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_limit_date" EntityType="Self.t_shares_limit_date" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_limit_date_group" EntityType="Self.t_shares_limit_date_group" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_limit_fundmultiple" EntityType="Self.t_shares_limit_fundmultiple" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_limit_time" EntityType="Self.t_shares_limit_time" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_minutetimedata" EntityType="Self.t_shares_minutetimedata" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_minutetimedata_temp" EntityType="Self.t_shares_minutetimedata_temp" Schema="dbo" store:Type="Tables" />
@@ -353,6 +374,7 @@
           <EntitySet Name="t_shares_quotes_temp" EntityType="meal_ticketModel.t_shares_quotes_temp" />
           <EntitySet Name="t_shares_all" EntityType="meal_ticketModel.t_shares_all" />
           <EntitySet Name="t_shares_all_corrigendum" EntityType="meal_ticketModel.t_shares_all_corrigendum" />
+          <EntitySet Name="t_shares_limit_fundmultiple" EntityType="meal_ticketModel.t_shares_limit_fundmultiple" />
         </EntityContainer>
         <EntityType Name="t_shares_bars">
           <Key>
@@ -497,6 +519,8 @@
           <Property Name="SpeedUp" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="Activity" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LimitUpPrice" Type="Int64" Nullable="false" />
+          <Property Name="LimitDownPrice" Type="Int64" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_transactiondata">
           <Key>
@@ -512,6 +536,7 @@
           <Property Name="Stock" Type="Int32" Nullable="false" />
           <Property Name="Type" Type="Int32" Nullable="false" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="OrderIndex" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_hq_host">
           <Key>
@@ -633,6 +658,8 @@
           <Property Name="SpeedUp" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="Activity" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LimitUpPrice" Type="Int64" Nullable="false" />
+          <Property Name="LimitDownPrice" Type="Int64" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_all">
           <Key>
@@ -648,6 +675,7 @@
           <Property Name="ForbidStatus" Type="Int32" Nullable="false" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="SharesPyjc" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="MarketStatus" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_all_corrigendum">
           <Key>
@@ -658,6 +686,20 @@
           <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="SharesName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="SharesPyjc" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_limit_fundmultiple">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MarketName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LimitMarket" Type="Int32" Nullable="false" />
+          <Property Name="LimitKey" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Priority" Type="Int32" Nullable="false" />
+          <Property Name="Range" Type="Int32" Nullable="false" />
+          <Property Name="FundMultiple" Type="Int32" Nullable="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
@@ -779,6 +821,8 @@
           <EntitySetMapping Name="t_shares_quotes">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes">
               <MappingFragment StoreEntitySet="t_shares_quotes">
+                <ScalarProperty Name="LimitDownPrice" ColumnName="LimitDownPrice" />
+                <ScalarProperty Name="LimitUpPrice" ColumnName="LimitUpPrice" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
                 <ScalarProperty Name="Activity" ColumnName="Activity" />
                 <ScalarProperty Name="SpeedUp" ColumnName="SpeedUp" />
@@ -821,6 +865,7 @@
           <EntitySetMapping Name="t_shares_transactiondata">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_transactiondata">
               <MappingFragment StoreEntitySet="t_shares_transactiondata">
+                <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
                 <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="Stock" ColumnName="Stock" />
@@ -922,6 +967,8 @@
           <EntitySetMapping Name="t_shares_quotes_temp">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes_temp">
               <MappingFragment StoreEntitySet="t_shares_quotes_temp">
+                <ScalarProperty Name="LimitDownPrice" ColumnName="LimitDownPrice" />
+                <ScalarProperty Name="LimitUpPrice" ColumnName="LimitUpPrice" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
                 <ScalarProperty Name="Activity" ColumnName="Activity" />
                 <ScalarProperty Name="SpeedUp" ColumnName="SpeedUp" />
@@ -965,6 +1012,7 @@
           <EntitySetMapping Name="t_shares_all">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_all">
               <MappingFragment StoreEntitySet="t_shares_all">
+                <ScalarProperty Name="MarketStatus" ColumnName="MarketStatus" />
                 <ScalarProperty Name="SharesPyjc" ColumnName="SharesPyjc" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
                 <ScalarProperty Name="ForbidStatus" ColumnName="ForbidStatus" />
@@ -987,6 +1035,21 @@
                 <ScalarProperty Name="SharesName" ColumnName="SharesName" />
                 <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
                 <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_limit_fundmultiple">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_limit_fundmultiple">
+              <MappingFragment StoreEntitySet="t_shares_limit_fundmultiple">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="FundMultiple" ColumnName="FundMultiple" />
+                <ScalarProperty Name="Range" ColumnName="Range" />
+                <ScalarProperty Name="Priority" ColumnName="Priority" />
+                <ScalarProperty Name="LimitKey" ColumnName="LimitKey" />
+                <ScalarProperty Name="LimitMarket" ColumnName="LimitMarket" />
+                <ScalarProperty Name="MarketName" ColumnName="MarketName" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
