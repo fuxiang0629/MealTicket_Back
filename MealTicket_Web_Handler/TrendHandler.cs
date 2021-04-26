@@ -7214,7 +7214,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                         CreateTime = DateTime.Now,
                         DetailsId = temp.Id,
                         LastModified = DateTime.Now,
-                        Name = temp.Name
+                        Name = o.Name
                     };
                     db.t_account_shares_conditiontrade_buy_details_other.Add(otherTemp);
                     db.SaveChanges();
@@ -7267,7 +7267,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                         CreateTime = DateTime.Now,
                         DetailsId = temp.Id,
                         LastModified = DateTime.Now,
-                        Name = temp.Name
+                        Name = o.Name
                     };
                     db.t_account_shares_conditiontrade_buy_details_auto.Add(autoTemp);
                     db.SaveChanges();
