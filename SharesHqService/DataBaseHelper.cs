@@ -217,6 +217,7 @@ then delete;", market);
                                     {
                                         LimitUpPrice = (long)((item.ClosedPrice + item.ClosedPrice * (range * 1.0 / 10000)) / 100 + 0.5)*100;
                                         LimitDownPrice = (long)((item.ClosedPrice - item.ClosedPrice * (range * 1.0 / 10000)) / 100 + 0.5) * 100;
+                                        PriceType = LimitUpPrice == item.BuyPrice1 ? 1 : LimitDownPrice == item.SellPrice1 ? 2 : 0;
                                     }
 
                                     DataRow row = table.NewRow();
