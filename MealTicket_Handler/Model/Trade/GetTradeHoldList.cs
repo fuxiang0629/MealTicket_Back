@@ -67,6 +67,27 @@ namespace MealTicket_Handler.Model
         public long PresentPrice { get; set; }
 
         /// <summary>
+        /// 昨日收盘价
+        /// </summary>
+        public long ClosedPrice { get; set; }
+
+        /// <summary>
+        /// 涨幅
+        /// </summary>
+        public double Rise
+        {
+            get
+            {
+                if (ClosedPrice <= 0 || PresentPrice <= 0)
+                {
+                    return 0;
+                }
+                return Math.Round((PresentPrice - ClosedPrice) * 100.0 / ClosedPrice, 2);
+            }
+        }
+
+
+        /// <summary>
         /// 成本价
         /// </summary>
         public long CostPrice { get; set; }

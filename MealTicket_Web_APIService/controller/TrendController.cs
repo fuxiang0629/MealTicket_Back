@@ -1701,6 +1701,24 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 编辑股票买入额外条件
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/modify"), HttpPost]
+        [Description("编辑股票买入额外条件")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountBuyConditionOther(ModifyAccountBuyConditionOtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountBuyConditionOther(request, basedata);
+            return null;
+        }
+
+        /// <summary>
         /// 修改股票买入额外条件状态
         /// </summary>
         /// <returns></returns>
@@ -1768,6 +1786,24 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             trendHandler.AddAccountBuyConditionAuto(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑股票买入转自动条件
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/modify"), HttpPost]
+        [Description("编辑股票买入转自动条件")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountBuyConditionAuto(ModifyAccountBuyConditionAutoRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountBuyConditionAuto(request, basedata);
             return null;
         }
 
@@ -2503,6 +2539,19 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 获取条件单走势模板列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("shares/condition/trend/list"), HttpPost]
+        [Description("获取条件单走势模板列表")]
+        [CheckUserLoginFilter]
+        public List<SharesMonitorTrendInfo> GetSharesConditionTrendList()
+        {
+            return trendHandler.GetSharesConditionTrendList();
+        }
+
+        /// <summary>
         /// 获取条件买入模板额外条件列表
         /// </summary>
         /// <returns></returns>
@@ -2534,6 +2583,24 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             trendHandler.AddConditiontradeTemplateBuyOther(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑条件买入模板额外条件
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/modify"), HttpPost]
+        [Description("编辑条件买入模板额外条件")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateBuyOther(ModifyConditiontradeTemplateBuyOtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateBuyOther(request, basedata);
             return null;
         }
 
@@ -2605,6 +2672,24 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             trendHandler.AddConditiontradeTemplateBuyAuto(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑条件买入模板转自动条件
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/modify"), HttpPost]
+        [Description("编辑条件买入模板转自动条件")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateBuyAuto(ModifyConditiontradeTemplateBuyAutoRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateBuyAuto(request, basedata);
             return null;
         }
 

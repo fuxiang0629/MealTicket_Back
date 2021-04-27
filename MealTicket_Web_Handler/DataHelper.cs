@@ -432,7 +432,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 limitDay= Convert.ToInt32(temp.LimitDay);
             }
             catch (Exception) { }
-            if (day <= 0 || compare<=0)
+            if (day <= 0)
             {
                 return -1;
             }
@@ -582,13 +582,13 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         {
                             tempi++;
                         }
-                        else if (tempi >= limitDay)
-                        {
-                            return 0;
-                        }
                         else
                         {
                             tempi = 0;
+                        }
+                        if (tempi >= limitDay)
+                        {
+                            return 0;
                         }
                     }
                     return -1;
@@ -603,13 +603,13 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         {
                             tempi++;
                         }
-                        else if (tempi >= limitDay)
-                        {
-                            return -1;
-                        }
                         else
                         {
                             tempi = 0;
+                        }
+                        if (tempi >= limitDay)
+                        {
+                            return -1;
                         }
                     }
                     return 0;
@@ -624,13 +624,13 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         {
                             tempi++;
                         }
-                        else if (tempi >= limitDay)
-                        {
-                            return 0;
-                        }
                         else
                         {
                             tempi = 0;
+                        }
+                        if (tempi >= limitDay)
+                        {
+                            return 0;
                         }
                     }
                     return -1;
@@ -645,13 +645,13 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         {
                             tempi++;
                         }
-                        else if (tempi >= limitDay)
-                        {
-                            return -1;
-                        }
                         else
                         {
                             tempi = 0;
+                        }
+                        if (tempi >= limitDay)
+                        {
+                            return -1;
                         }
                     }
                     return 0;

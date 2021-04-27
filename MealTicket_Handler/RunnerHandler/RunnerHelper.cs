@@ -1906,7 +1906,7 @@ inner
 
 inner
   join t_account_shares_conditiontrade_buy t3 on t2.ConditionId = t3.Id
-  where t.[Status] = 1 and t1.[Status] = 1 and t2.[Status] = 1 and t3.[Status] = 1 and(t.TrendId = 1 or t.TrendId = 2 or t.TrendId = 3)
+  where t.[Status] = 1 and t1.[Status] = 1 and t2.[Status] = 1 and t3.[Status] = 1 and(t.TrendId = 1 or t.TrendId = 2 or t.TrendId = 3 or t.TrendId = 6)
   group by t3.Market, t3.SharesCode
   union all
   select t3.Market, t3.SharesCode
@@ -1919,7 +1919,7 @@ inner
 
 inner
   join t_account_shares_conditiontrade_buy t3 on t2.ConditionId = t3.Id
-  where t.[Status] = 1 and t1.[Status] = 1 and t2.[Status] = 1 and t3.[Status] = 1 and(t.TrendId = 1 or t.TrendId = 2 or t.TrendId = 3)
+  where t.[Status] = 1 and t1.[Status] = 1 and t2.[Status] = 1 and t3.[Status] = 1 and(t.TrendId = 1 or t.TrendId = 2 or t.TrendId = 3 or t.TrendId = 6)
   group by t3.Market, t3.SharesCode
   )t
   group by Market, SharesCode", timeDate.ToString("yyyy-MM-dd"));

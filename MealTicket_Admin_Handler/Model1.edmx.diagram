@@ -143,6 +143,7 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_trend_par_template" Width="1.5" PointX="35.375" PointY="20.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_sys_conditiontrade_template_buy_other" Width="1.5" PointX="20.375" PointY="35.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_trend_template" Width="1.5" PointX="35.375" PointY="23.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.v_plate_shares" Width="1.5" PointX="35.375" PointY="26.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

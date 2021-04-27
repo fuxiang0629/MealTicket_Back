@@ -268,6 +268,7 @@
     <Property Name="ExecStatus" Type="Int32" Nullable="false" />
     <Property Name="LimitUp" Type="Boolean" Nullable="false" />
     <Property Name="FirstExecTime" Type="DateTime" Precision="3" />
+    <Property Name="OtherConditionRelative" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_buy_details_auto">
     <Key>
@@ -3065,6 +3066,7 @@
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LimitUp" Type="Boolean" Nullable="false" />
+    <Property Name="OtherConditionRelative" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_sys_conditiontrade_template_buy_auto">
     <Key>
@@ -3164,6 +3166,7 @@
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LimitUp" Type="Boolean" Nullable="false" />
+    <Property Name="OtherConditionRelative" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_template_buy_auto">
     <Key>

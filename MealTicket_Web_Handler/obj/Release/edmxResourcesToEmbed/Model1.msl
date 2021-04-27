@@ -257,6 +257,7 @@
     <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details">
         <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details">
+          <ScalarProperty Name="OtherConditionRelative" ColumnName="OtherConditionRelative" />
           <ScalarProperty Name="FirstExecTime" ColumnName="FirstExecTime" />
           <ScalarProperty Name="LimitUp" ColumnName="LimitUp" />
           <ScalarProperty Name="ExecStatus" ColumnName="ExecStatus" />
@@ -2652,6 +2653,7 @@
     <EntitySetMapping Name="t_sys_conditiontrade_template_buy">
       <EntityTypeMapping TypeName="meal_ticketModel.t_sys_conditiontrade_template_buy">
         <MappingFragment StoreEntitySet="t_sys_conditiontrade_template_buy">
+          <ScalarProperty Name="OtherConditionRelative" ColumnName="OtherConditionRelative" />
           <ScalarProperty Name="LimitUp" ColumnName="LimitUp" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
@@ -2759,6 +2761,7 @@
     <EntitySetMapping Name="t_account_shares_conditiontrade_template_buy">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_template_buy">
         <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_template_buy">
+          <ScalarProperty Name="OtherConditionRelative" ColumnName="OtherConditionRelative" />
           <ScalarProperty Name="LimitUp" ColumnName="LimitUp" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />

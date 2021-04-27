@@ -50,5 +50,8 @@ namespace MealTicket_Admin_Handler
         public string SpeedUp { get; set; }
         public string Activity { get; set; }
         public System.DateTime LastModified { get; set; }
+        public long LimitUpPrice { get; set; }
+        public long LimitDownPrice { get; set; }
+        public int PriceType { get; set; }
     }
 }

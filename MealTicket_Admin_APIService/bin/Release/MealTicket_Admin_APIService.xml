@@ -2773,6 +2773,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyConditiontradeTemplateBuyOther(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyOtherRequest)">
+            <summary>
+            编辑条件买入模板额外条件
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyConditiontradeTemplateBuyOtherStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
             <summary>
             修改条件买入模板额外条件状态
@@ -2794,6 +2800,12 @@
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.AddConditiontradeTemplateBuyAuto(MealTicket_Admin_Handler.Model.AddConditiontradeTemplateBuyAutoRequest)">
             <summary>
             添加条件买入模板转自动条件
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyConditiontradeTemplateBuyAuto(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyAutoRequest)">
+            <summary>
+            编辑条件买入模板转自动条件
             </summary>
             <returns></returns>
         </member>

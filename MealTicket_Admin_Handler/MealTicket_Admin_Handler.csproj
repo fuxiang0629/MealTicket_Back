@@ -370,9 +370,11 @@
     <Compile Include="Model\TradeCenter\GetSharesPlateList.cs" />
     <Compile Include="Model\TradeCenter\GetSharesTransactionDataList.cs" />
     <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplate.cs" />
+    <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateBuyAuto.cs" />
     <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateBuyAutoGroup.cs" />
     <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateBuyAutoPar.cs" />
     <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateBuyDetails.cs" />
+    <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateBuyOther.cs" />
     <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateBuyOtherGroup.cs" />
     <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateBuyOtherPar.cs" />
     <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateSellDetails.cs" />
@@ -841,6 +843,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_sys_conditiontrade_template_sell_child.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="v_plate_shares.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
   </ItemGroup>

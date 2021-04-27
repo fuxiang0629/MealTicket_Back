@@ -52,5 +52,15 @@ namespace MealTicket_Admin_Handler.Model
         /// 监控Id
         /// </summary>
         public long MonitorId { get; set; }
+
+        /// <summary>
+        /// 总股本
+        /// </summary>
+        public long TotalCapital { get; set; }
+
+        /// <summary>
+        /// 流通股本
+        /// </summary>
+        public long CirculatingCapital { get; set; }
     }
 }

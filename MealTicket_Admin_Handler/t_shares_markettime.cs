@@ -22,5 +22,7 @@ namespace MealTicket_Admin_Handler
         public string SharesName { get; set; }
         public string Industry { get; set; }
         public string Business { get; set; }
+        public long TotalCapital { get; set; }
+        public long CirculatingCapital { get; set; }
     }
 }

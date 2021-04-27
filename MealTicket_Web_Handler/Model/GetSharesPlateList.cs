@@ -28,6 +28,11 @@ namespace MealTicket_Web_Handler.Model
         public string Name { get; set; }
 
         /// <summary>
+        /// 涨幅
+        /// </summary>
+        public int? RiseRate { get; set; }
+
+        /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }

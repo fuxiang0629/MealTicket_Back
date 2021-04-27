@@ -81,6 +81,16 @@ namespace MealTicket_Admin_Handler.Model
         public string Business { get; set; }
 
         /// <summary>
+        /// 总股本
+        /// </summary>
+        public long TotalCapital { get; set; }
+
+        /// <summary>
+        /// 流通股本
+        /// </summary>
+        public long CirculatingCapital { get; set; }
+
+        /// <summary>
         /// 状态1有效 2无效
         /// </summary>
         public int Status { get; set; }

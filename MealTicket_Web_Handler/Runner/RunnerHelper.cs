@@ -487,6 +487,15 @@ namespace MealTicket_Web_Handler.Runner
                     {
                         continue;
                     }
+                    //判断是否封板
+                    if (item.item.OtherConditionRelative == 1 && item.item3.BuyPrice1 != item.item3.LimitUpPrice)
+                    {
+                        continue;
+                    }
+                    else if (item.item.OtherConditionRelative == 2 && item.item3.SellPrice1 != item.item3.LimitDownPrice)
+                    {
+                        continue;
+                    }
 
                     //判断额外条件
                     bool isTri = true;
