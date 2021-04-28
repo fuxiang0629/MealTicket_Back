@@ -271,6 +271,16 @@ namespace SharesHqService
                                 string SpeedUp = column[42];//股票代码
                                 string Activity = column[2];//股票代码
 
+                                if (SharesCode != BackSharesCode)
+                                {
+                                    continue;
+                                }
+                                //var tempClosedPrice = Singleton.Instance.SharesList.Where(e => e.ShareCode == SharesCode && e.Market == Market).Select(e => e.ShareClosedPrice).FirstOrDefault();
+                                //if (ClosedPrice <= 0 || (tempClosedPrice != ClosedPrice && tempClosedPrice>0))
+                                //{
+                                //    continue;
+                                //}
+
                                 eventObj.WaitOne();
                                 try
                                 {

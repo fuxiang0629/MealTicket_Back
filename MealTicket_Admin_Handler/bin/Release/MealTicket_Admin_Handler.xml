@@ -8729,6 +8729,16 @@
             创建时间
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetConditiontradeTemplateBuyAutoParPlateRequest.GroupType">
+            <summary>
+            分组类型1行业 2地区 3概念
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetConditiontradeTemplateBuyAutoParPlateRequest.DataType">
+            <summary>
+            数据类型1翔子 2涨跌幅
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.GetConditiontradeTemplateBuyDetailsListRequest.TemplateId">
             <summary>
             模板Id
@@ -8894,6 +8904,16 @@
             创建时间
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetConditiontradeTemplateBuyOtherParPlateRequest.GroupType">
+            <summary>
+            分组类型1行业 2地区 3概念
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetConditiontradeTemplateBuyOtherParPlateRequest.DataType">
+            <summary>
+            数据类型1翔子 2涨跌幅
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.GetConditiontradeTemplateListRequest.Type">
             <summary>
             1买入 2卖出
@@ -9012,6 +9032,16 @@
         <member name="P:MealTicket_Admin_Handler.Model.ConditionChild.Status">
             <summary>
             状态1有效 2无效
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetSharesConditionTrendParPlatePageRequest.GroupType">
+            <summary>
+            总分组类型（1行业 2地区 3概念）
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetSharesConditionTrendParPlatePageRequest.DataType">
+            <summary>
+            数据类型1限制 2涨跌幅
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.GetSharesCorrigendumListRequest.SharesCode">
@@ -12264,6 +12294,13 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetConditiontradeTemplateBuyOtherParPlate(MealTicket_Admin_Handler.Model.GetConditiontradeTemplateBuyOtherParPlateRequest)">
+            <summary>
+            查询条件买入模板额外条件类型参数(板块涨跌幅)
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.AddConditiontradeTemplateBuyOtherPar(MealTicket_Admin_Handler.Model.AddConditiontradeTemplateBuyOtherParRequest)">
             <summary>
             添加条件买入模板额外条件类型参数
@@ -12285,6 +12322,13 @@
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetConditiontradeTemplateBuyAutoPar(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
             <summary>
             查询条件买入模板转自动条件类型参数
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetConditiontradeTemplateBuyAutoParPlate(MealTicket_Admin_Handler.Model.GetConditiontradeTemplateBuyAutoParPlateRequest)">
+            <summary>
+            查询条件买入模板转自动条件类型参数(板块涨跌幅)
             </summary>
             <param name="request"></param>
             <returns></returns>
@@ -12341,6 +12385,13 @@
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetSharesConditionTrendPar(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
             <summary>
             获取走势模板参数
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetSharesConditionTrendParPlate(MealTicket_Admin_Handler.Model.GetSharesConditionTrendParPlatePageRequest)">
+            <summary>
+            获取条件单走势模板参数(板块涨跌幅)
             </summary>
             <param name="request"></param>
             <returns></returns>

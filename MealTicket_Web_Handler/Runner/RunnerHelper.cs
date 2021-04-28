@@ -404,6 +404,10 @@ namespace MealTicket_Web_Handler.Runner
                                  select new { item, item2, item3 }).ToList();
                 foreach (var item in disResult)
                 {
+                    if (item.item3.LastModified < timeNow.AddSeconds(-30))
+                    {
+                        continue;
+                    }
                     long presentPrice = item.item3.PresentPrice;//当前价格
                     long closedPrice = item.item3.ClosedPrice;//昨日收盘价
                     if (closedPrice <= 0 || presentPrice <= 0)
@@ -631,6 +635,16 @@ namespace MealTicket_Web_Handler.Runner
                                     break;
                                 }
                             }
+                            //板块涨跌幅
+                            if (tr.TrendId == 7)
+                            {
+                                int errorCode_Trend7 = DataHelper.Analysis_PlateRiseRate(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend7 == 0)
+                                {
+                                    tempTri = true;
+                                    break;
+                                }
+                            }
                         }
                         if (!tempTri)
                         {
@@ -770,6 +784,16 @@ namespace MealTicket_Web_Handler.Runner
                             {
                                 int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(item.item2.SharesCode, item.item2.Market, par);
                                 if (errorCode_Trend6 == 0)
+                                {
+                                    tempTri = true;
+                                    break;
+                                }
+                            }
+                            //板块涨跌幅
+                            if (tr.TrendId == 7)
+                            {
+                                int errorCode_Trend7 = DataHelper.Analysis_PlateRiseRate(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend7 == 0)
                                 {
                                     tempTri = true;
                                     break;

@@ -2715,6 +2715,24 @@ namespace MealTicket_Admin_APIService.controller
         }
 
         /// <summary>
+        /// 查询条件买入模板额外条件类型参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/par/plate"), HttpPost]
+        [Description("查询条件买入模板额外条件类型参数(板块涨跌幅)")]
+        [CheckUserPowerFilter]
+        public PageRes<ConditiontradeTemplateBuyOtherParInfo> GetConditiontradeTemplateBuyOtherParPlate(GetConditiontradeTemplateBuyOtherParPlateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return tradeCenterHandler.GetConditiontradeTemplateBuyOtherParPlate(request);
+        }
+
+        /// <summary>
         /// 添加条件买入模板额外条件类型参数
         /// </summary>
         /// <param name="request"></param>
@@ -2787,6 +2805,24 @@ namespace MealTicket_Admin_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return tradeCenterHandler.GetConditiontradeTemplateBuyAutoPar(request);
+        }
+
+        /// <summary>
+        /// 查询条件买入模板转自动条件类型参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/par/plate"), HttpPost]
+        [Description("查询条件买入模板转自动条件类型参数(板块涨跌幅)")]
+        [CheckUserPowerFilter]
+        public PageRes<ConditiontradeTemplateBuyAutoParInfo> GetConditiontradeTemplateBuyAutoParPlate(GetConditiontradeTemplateBuyAutoParPlateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return tradeCenterHandler.GetConditiontradeTemplateBuyAutoParPlate(request);
         }
 
         /// <summary>
@@ -2950,6 +2986,23 @@ namespace MealTicket_Admin_APIService.controller
                 throw new WebApiException(400, "参数错误");
             }
             return tradeCenterHandler.GetSharesConditionTrendPar(request);
+        }
+
+        /// <summary>
+        /// 获取条件单走势模板参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/condition/trend/par/plate"), HttpPost]
+        [Description(" 获取条件单走势模板参数(板块涨跌幅)")]
+        public PageRes<SharesMonitorTrendParInfo> GetSharesConditionTrendParPlate(GetSharesConditionTrendParPlatePageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesConditionTrendParPlate(request);
         }
 
         /// <summary>

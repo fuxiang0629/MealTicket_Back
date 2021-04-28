@@ -636,7 +636,7 @@ namespace MealTicket_Handler.RunnerHandler
 
                     //计算当前市值
                     var quotes = (from x in db.t_shares_quotes
-                                  where x.Market == item.Market && x.SharesCode == item.SharesCode && x.LastModified > SqlFunctions.DateAdd("MI", -1, timeNow)
+                                  where x.Market == item.Market && x.SharesCode == item.SharesCode && x.LastModified > SqlFunctions.DateAdd("SS", -30, timeNow)
                                   select x).FirstOrDefault();
                     if (quotes == null)
                     {

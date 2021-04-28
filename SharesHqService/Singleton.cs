@@ -133,6 +133,9 @@ namespace SharesHqService
         /// </summary>
         public List<t_shares_limit_fundmultiple> RangeList = new List<t_shares_limit_fundmultiple>();
 
+        //股票昨日收盘价缓存
+        public List<SharesBaseInfo> SharesList = new List<SharesBaseInfo>();
+
         #region====暂未使用====
         /// <summary>
         /// 获取证券k线数据每批次数量
@@ -206,7 +209,6 @@ namespace SharesHqService
         private void Init()
         {
             Dispose();
-            SysparUpdate();
 
             retryWait.Init();
             retryData.Init();
@@ -224,6 +226,11 @@ namespace SharesHqService
             }
 
             UpdateWait.Init();
+        }
+
+        public void StartSysPar()
+        {
+            SysparUpdate();
             StartSysparUpdateThread();
         }
 
@@ -549,6 +556,20 @@ namespace SharesHqService
                                        select item).ToList();
                     }
                     catch { }
+                    //try
+                    //{
+                    //    DateTime timeDate = DateTime.Now.Date;
+                    //    SharesList = (from item in db.t_shares_quotes_date
+                    //                  where item.LastModified < timeDate
+                    //                  group item by new { item.Market, item.SharesCode } into g
+                    //                  select new SharesBaseInfo
+                    //                  {
+                    //                      ShareCode=g.Key.SharesCode,
+                    //                      Market=g.Key.Market,
+                    //                      ShareClosedPrice=g.OrderByDescending(e=>e.Date).Select(e=>e.PresentPrice).FirstOrDefault()
+                    //                  }).ToList();
+                    //}
+                    //catch { }
                 }
             }
             catch (Exception ex)

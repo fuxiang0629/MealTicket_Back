@@ -41,6 +41,7 @@ namespace SharesHqService
                 var serviceRun=Console.ReadLine();
                 if (serviceRun.ToUpper() == "Y" || serviceRun.ToUpper() == "YES")
                 {
+                    Instance.StartSysPar();
                     runners.ForEach((e) => e.Run());
                     break;
                 }

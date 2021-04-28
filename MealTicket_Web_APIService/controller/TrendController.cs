@@ -1862,6 +1862,24 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 查询股票买入额外条件类型参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/par/plate"), HttpPost]
+        [Description("查询股票买入额外条件类型参数(板块涨跌幅)")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionOtherParInfo> GetAccountBuyConditionOtherParPlate(GetAccountBuyConditionOtherParPlateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountBuyConditionOtherParPlate(request, basedata);
+        }
+
+        /// <summary>
         /// 添加股票买入额外条件类型参数
         /// </summary>
         /// <param name="request"></param>
@@ -1934,6 +1952,24 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.GetAccountBuyConditionAutoPar(request, basedata);
+        }
+
+        /// <summary>
+        /// 查询股票买入转自动条件类型参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/par/plate"), HttpPost]
+        [Description("查询股票买入转自动条件类型参数(板块涨跌幅)")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionAutoParInfo> GetAccountBuyConditionAutoParPlate(GetAccountBuyConditionAutoParPlateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountBuyConditionAutoParPlate(request, basedata);
         }
 
         /// <summary>
@@ -2748,6 +2784,24 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 查询条件买入模板额外条件类型参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/par/plate"), HttpPost]
+        [Description("查询条件买入模板额外条件类型参数(板块涨跌幅)")]
+        [CheckUserLoginFilter]
+        public PageRes<ConditiontradeTemplateBuyOtherParInfo> GetConditiontradeTemplateBuyOtherParPlate(GetConditiontradeTemplateBuyOtherParPlateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeTemplateBuyOtherParPlate(request, basedata);
+        }
+
+        /// <summary>
         /// 添加条件买入模板额外条件类型参数
         /// </summary>
         /// <param name="request"></param>
@@ -2820,6 +2874,24 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.GetConditiontradeTemplateBuyAutoPar(request, basedata);
+        }
+
+        /// <summary>
+        /// 查询条件买入模板转自动条件类型参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/par/plate"), HttpPost]
+        [Description("查询条件买入模板转自动条件类型参数(板块涨跌幅)")]
+        [CheckUserLoginFilter]
+        public PageRes<ConditiontradeTemplateBuyAutoParInfo> GetConditiontradeTemplateBuyAutoParPlate(GetConditiontradeTemplateBuyAutoParPlateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeTemplateBuyAutoParPlate(request, basedata);
         }
 
         /// <summary>

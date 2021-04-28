@@ -362,6 +362,7 @@
     <Compile Include="Model\TradeCenter\GetConditiontradeTemplateBuyOtherPar.cs" />
     <Compile Include="Model\TradeCenter\GetConditiontradeTemplateList.cs" />
     <Compile Include="Model\TradeCenter\GetConditiontradeTemplateSellDetailsList.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesConditionTrendParPlate.cs" />
     <Compile Include="Model\TradeCenter\GetSharesCorrigendumList.cs" />
     <Compile Include="Model\TradeCenter\GetSharesMonitorList.cs" />
     <Compile Include="Model\TradeCenter\GetSharesMonitorTrendList.cs" />

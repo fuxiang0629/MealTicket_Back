@@ -2828,6 +2828,13 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetConditiontradeTemplateBuyOtherParPlate(MealTicket_Admin_Handler.Model.GetConditiontradeTemplateBuyOtherParPlateRequest)">
+            <summary>
+            查询条件买入模板额外条件类型参数(板块涨跌幅)
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.AddConditiontradeTemplateBuyOtherPar(MealTicket_Admin_Handler.Model.AddConditiontradeTemplateBuyOtherParRequest)">
             <summary>
             添加条件买入模板额外条件类型参数
@@ -2852,6 +2859,13 @@
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetConditiontradeTemplateBuyAutoPar(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
             <summary>
             查询条件买入模板转自动条件类型参数
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetConditiontradeTemplateBuyAutoParPlate(MealTicket_Admin_Handler.Model.GetConditiontradeTemplateBuyAutoParPlateRequest)">
+            <summary>
+            查询条件买入模板转自动条件类型参数(板块涨跌幅)
             </summary>
             <param name="request"></param>
             <returns></returns>
@@ -2915,6 +2929,13 @@
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetSharesConditionTrendPar(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
             <summary>
             获取条件单走势模板参数
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetSharesConditionTrendParPlate(MealTicket_Admin_Handler.Model.GetSharesConditionTrendParPlatePageRequest)">
+            <summary>
+            获取条件单走势模板参数(板块涨跌幅)
             </summary>
             <param name="request"></param>
             <returns></returns>
