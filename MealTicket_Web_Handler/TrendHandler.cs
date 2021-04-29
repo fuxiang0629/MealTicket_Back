@@ -3638,20 +3638,22 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
             }
             using (var db = new meal_ticketEntities())
             {
-                string sql = string.Format("select PlateId Id,PlateName Name,PlateType [Type],[Status],CreateTime,cast(round(sum((PresentPrice-ClosedPrice)*TotalCapital)*1.0/sum(ClosedPrice*TotalCapital)*10000,0) as int) RiseRate from v_plate_shares group by PlateId,PlateName,PlateType,[Status],CreateTime having [Status] = 1");
-                var plateList = db.Database.SqlQuery<SharesPlateInfo>(sql).ToList();
+                var plateList = from item in db.v_plate
+                           where item.Status == 1
+                           select item;
                 if (request.Type != 0)
                 {
-                    plateList = (from item in plateList
-                                 where item.Type == request.Type
-                                 select item).ToList();
+                    plateList = from item in plateList
+                                where item.PlateType == request.Type
+                                select item;
                 }
                 if (!string.IsNullOrEmpty(request.Name))
                 {
-                    plateList = (from item in plateList
-                                 where item.Name.Contains(request.Name)
-                                 select item).ToList();
+                    plateList = from item in plateList
+                              where item.PlateName.Contains(request.Name)
+                              select item;
                 }
+
                 int totalCount = plateList.Count();
 
                 var list = (from item in plateList
@@ -3659,10 +3661,10 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                             select new SharesPlateInfo
                             {
                                 CreateTime = item.CreateTime,
-                                Id = item.Id,
-                                Type= item.Type,
+                                Id = item.PlateId,
+                                Type= item.PlateType,
                                 RiseRate=item.RiseRate,
-                                Name = item.Name
+                                Name = item.PlateName
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                 if (!request.NoGetCount)
                 {

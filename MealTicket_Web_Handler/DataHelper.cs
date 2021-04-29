@@ -812,6 +812,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         int iErrorCode = Singleton.Instance.m_stockMonitor.GetUpOrDownInfoInTime(sharesCode + "," + market, Minute, ref DB_TRADE_PRICE_INFO, ref upOrDownInfo);
                         if (iErrorCode != 0)
                         {
+                            Logger.WriteFileLog(iErrorCode+""+JsonConvert.SerializeObject(upOrDownInfo), null);
                             continue;
                         }
                         if (upOrDownInfo.iLastestPercent == -0x0FFFFFFF)
@@ -861,19 +862,19 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
         //分析板块涨跌幅
         public static int Analysis_PlateRiseRate(string sharesCode, int market, List<string> par)
         {
+            using (var db = new meal_ticketEntities())
+            {
+                //查询股票所属板块及板块涨跌幅
+                var plateList = (from item in db.t_shares_plate_rel
+                                 where item.Market == market && item.SharesCode == sharesCode
+                                 select item.PlateId).ToList();
+                foreach (var p in par)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(p);
+
+                }
+            }
             return -1;
-            //using (var db = new meal_ticketEntities())
-            //{
-            //    //查询股票所属板块及板块涨跌幅
-            //    var plateList = (from item in db.t_shares_plate_rel
-            //                     where item.Market == market && item.SharesCode == sharesCode
-            //                     select item.PlateId).ToList();
-            //    foreach (var p in par)
-            //    {
-            //        var temp=JsonConvert.DeserializeObject<dynamic>(p);
-                    
-            //    }
-            //}
         }
 
         /// <summary>

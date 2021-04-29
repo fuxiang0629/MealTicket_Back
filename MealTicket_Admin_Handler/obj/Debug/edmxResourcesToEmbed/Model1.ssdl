@@ -1530,7 +1530,7 @@
     <Property Name="MarketTime" Type="datetime" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="Industry" Type="nvarchar" MaxLength="200" />
-    <Property Name="Business" Type="nvarchar" MaxLength="1024" />
+    <Property Name="Business" Type="nvarchar(max)" />
     <Property Name="TotalCapital" Type="bigint" Nullable="false" />
     <Property Name="CirculatingCapital" Type="bigint" Nullable="false" />
   </EntityType>

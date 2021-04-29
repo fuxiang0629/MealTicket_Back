@@ -846,6 +846,9 @@
     <Compile Include="t_sys_conditiontrade_template_sell_child.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="v_plate.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="v_plate_shares.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

@@ -10,6 +10,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MealTicket_Admin_Handler
@@ -296,13 +297,13 @@ namespace MealTicket_Admin_Handler
                                   SharesNamePY = item.SharesPyjc,
                                   Status = item.Status,
                                   ForbidStatus = item.ForbidStatus,
-                                  MarketStatus=item.MarketStatus,
+                                  MarketStatus = item.MarketStatus,
                                   SharesName = item.SharesName,
                                   Id = item.Id,
-                                  CirculatingCapital=ai==null?0:ai.CirculatingCapital,
-                                  TotalCapital=ai==null?0:ai.TotalCapital,
+                                  CirculatingCapital = ai == null ? 0 : ai.CirculatingCapital,
+                                  TotalCapital = ai == null ? 0 : ai.TotalCapital,
                                   MarketTime = ai == null ? MarketTime : ai.MarketTime,
-                                  Business = ai == null ?"": ai.Business,
+                                  Business = ai == null ? "" : ai.Business,
                                   Market = item.Market,
                                   IsSuspension = bi == null ? false : true,
                               }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
@@ -312,7 +313,7 @@ namespace MealTicket_Admin_Handler
                                  join x2 in db.t_shares_plate on x.PlateId equals x2.Id
                                  where x.Market == item.Market && x.SharesCode == item.SharesCode
                                  select x2).ToList();
-                    item.Industry = string.Join("/", plate.Where(e => e.Type == 1).Select(e=>e.Name).ToList());
+                    item.Industry = string.Join("/", plate.Where(e => e.Type == 1).Select(e => e.Name).ToList());
                     item.Area = string.Join("/", plate.Where(e => e.Type == 2).Select(e => e.Name).ToList());
                     item.Idea = string.Join("/", plate.Where(e => e.Type == 3).Select(e => e.Name).ToList());
                 }
@@ -329,16 +330,16 @@ namespace MealTicket_Admin_Handler
                                   ForbidStatus = x.ForbidStatus,
                                   SharesName = x.SharesName,
                                   Id = x.Id,
-                                  MarketStatus=x.MarketStatus,
+                                  MarketStatus = x.MarketStatus,
                                   MarketTime = x.MarketTime,
                                   Market = x.Market,
                                   IsSuspension = x.IsSuspension,
-                                  Area=x.Area,
-                                  Idea=x.Idea,
-                                  Industry=x.Industry,
-                                  Business=x.Business,
-                                  CirculatingCapital=x.CirculatingCapital,
-                                  TotalCapital=x.TotalCapital,
+                                  Area = x.Area,
+                                  Idea = x.Idea,
+                                  Industry = x.Industry,
+                                  Business = x.Business,
+                                  CirculatingCapital = x.CirculatingCapital,
+                                  TotalCapital = x.TotalCapital,
                                   SharesQuotes = bi == null ? new SharesQuotes() : new SharesQuotes
                                   {
                                       ClosedPrice = bi.ClosedPrice,
@@ -537,92 +538,93 @@ namespace MealTicket_Admin_Handler
         public void BatchModifySharesMarketTime(List<MarketTimeInfo> list)
         {
             using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
             {
-                var plateList = (from x in db.t_shares_plate
-                                 select x).ToList();
-                foreach (var item in list)
+                try
                 {
-                    List<t_shares_plate_rel> tempList = new List<t_shares_plate_rel>();
-                    using (var tran = db.Database.BeginTransaction())
+                    var plateList = (from x in db.t_shares_plate
+                                     select x).ToList();
+                    Task[] tArr = new Task[list.Count()];
+                    int i = 0;
+                    foreach (var item in list)
                     {
-                        try
-                        {
-                            //判断是否存在
-                            var markettime = (from x in db.t_shares_markettime
-                                              where x.Market == item.Market && x.SharesCode == item.SharesCode
-                                              select x).FirstOrDefault();
-                            if (markettime != null)
-                            {
-                                if (item.MarketTime > DateTime.Parse("1970-01-01"))
-                                {
-                                    markettime.MarketTime = item.MarketTime;
-                                }
-                                if (!string.IsNullOrEmpty(item.Business))
-                                {
-                                    markettime.Business = item.Business;
-                                }
-                                if (item.TotalCapital > 0)
-                                {
-                                    markettime.TotalCapital = item.TotalCapital;
-                                }
-                                if (item.CirculatingCapital > 0)
-                                {
-                                    markettime.CirculatingCapital = item.CirculatingCapital;
-                                }
-                            }
-                            else
-                            {
-                                db.t_shares_markettime.Add(new t_shares_markettime
-                                {
-                                    SharesCode = item.SharesCode,
-                                    CreateTime = DateTime.Now,
-                                    SharesName = item.SharesName,
-                                    Business = item.Business,
-                                    Industry = item.Industry,
-                                    Market = item.Market,
-                                    MarketTime = item.MarketTime,
-                                    CirculatingCapital = item.CirculatingCapital,
-                                    TotalCapital = item.TotalCapital
-                                });
-                            }
+                        tArr[i] = new Task(() =>
+                          {
+                              try
+                              {
+                                  string sql = "update t_shares_markettime set ";
+                                  string sqlApp = "";
+                                  if (item.MarketTime > DateTime.Parse("1970-01-01"))
+                                  {
+                                      sqlApp += string.Format("MarketTime='{0}'", item.MarketTime.ToString("yyyy-MM-dd HH:mm:ss"));
+                                      sqlApp += ",";
+                                  }
+                                  if (!string.IsNullOrEmpty(item.Business))
+                                  {
+                                      sqlApp += string.Format("Business='{0}'", item.Business);
+                                      sqlApp += ",";
+                                  }
+                                  if (item.TotalCapital > 0)
+                                  {
+                                      sqlApp += string.Format("TotalCapital={0}", item.TotalCapital);
+                                      sqlApp += ",";
+                                  }
+                                  if (item.CirculatingCapital > 0)
+                                  {
+                                      sqlApp += string.Format("CirculatingCapital={0}", item.CirculatingCapital);
+                                      sqlApp += ",";
+                                  }
+                                  if (!string.IsNullOrEmpty(sqlApp))
+                                  {
+                                      sqlApp = sqlApp.Substring(0, sqlApp.Length - 1);
+                                      sqlApp += string.Format(" where Market={0} and SharesCode='{1}'", item.Market, item.SharesCode);
+                                      sql += sqlApp;
 
-                            //删除股票板块关系
-                            var plateRel = (from x in db.t_shares_plate_rel
-                                            where x.Market == item.Market && x.SharesCode == item.SharesCode
-                                            select x).ToList();
-                            db.t_shares_plate_rel.RemoveRange(plateRel);
-                            db.SaveChanges();
+                                      if (db.Database.ExecuteSqlCommand(sql) < 1)
+                                      {
+                                          sql = string.Format("insert into t_shares_markettime(SharesCode,CreateTime,SharesName,Business,Industry,Market,MarketTime,CirculatingCapital,TotalCapital) values('{0}','{1}','{2}','{3}',null,{4},'{5}',{6},{7})", item.SharesCode, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), item.SharesName, item.Business, item.Market, item.MarketTime.ToString("yyyy-MM-dd HH:mm:ss"), item.CirculatingCapital, item.TotalCapital);
+                                          db.Database.ExecuteSqlCommand(sql);
+                                      }
+                                  }
 
-                            //解析行业
-                            string[] IndustryArr = item.Industry.Replace(" ", "").Split('/');
-                            //解析地区
-                            string[] AresArr = item.Area.Replace(" ", "").Split('/');
-                            //解析概念
-                            string[] IdeaArr = item.Idea.Replace(" ", "").Split('/');
-                            var plateListTemp = (from x in plateList
-                                                 where ((x.Type == 1 && IndustryArr.Contains(x.Name.Trim())) || (x.Type == 2 && AresArr.Contains(x.Name.Trim())) || (x.Type == 3 && IdeaArr.Contains(x.Name))) && !string.IsNullOrEmpty(x.Name.Trim())
-                                                 select x).ToList();
-                            foreach (var x in plateListTemp)
-                            {
-                                tempList.Add(new t_shares_plate_rel
-                                {
-                                    SharesCode = item.SharesCode,
-                                    Market = item.Market,
-                                    CreateTime = DateTime.Now,
-                                    PlateId = x.Id
-                                });
-                            }
+                                  sql = string.Format("delete t_shares_plate_rel where Market={0} and SharesCode='{1}'", item.Market, item.SharesCode);
+                                  db.Database.ExecuteSqlCommand(sql);
 
-                            db.t_shares_plate_rel.AddRange(tempList);
-                            db.SaveChanges();
-                            tran.Commit();
-                        }
-                        catch (Exception ex)
-                        {
-                            Logger.WriteFileLog("基础信息导入有错",ex);
-                            tran.Rollback();
-                        }
+
+                                  //解析行业
+                                  string[] IndustryArr = item.Industry.Replace(" ", "").Split('/');
+                                  //解析地区
+                                  string[] AresArr = item.Area.Replace(" ", "").Split('/');
+                                  //解析概念
+                                  string[] IdeaArr = item.Idea.Replace(" ", "").Split('/');
+                                  var plateListTemp = (from x in plateList
+                                                       where ((x.Type == 1 && IndustryArr.Contains(x.Name.Trim())) || (x.Type == 2 && AresArr.Contains(x.Name.Trim())) || (x.Type == 3 && IdeaArr.Contains(x.Name))) && !string.IsNullOrEmpty(x.Name.Trim())
+                                                       select x).ToList();
+                                  sql = "";
+                                  foreach (var x in plateListTemp)
+                                  {
+                                      sql += string.Format("insert into t_shares_plate_rel(SharesCode,Market,CreateTime,PlateId) values('{0}',{1},'{2}',{3}); ", item.SharesCode, item.Market, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), x.Id);
+                                  }
+                                  db.Database.ExecuteSqlCommand(sql);
+                              }
+                              catch (Exception ex)
+                              {
+                                  Logger.WriteFileLog("基础信息导入有错,股票："+item.SharesName+"("+item.SharesCode+")", ex);
+                              }
+                          
+                          });
+                        tArr[i].Start();
+                        i++;
                     }
+                    Task.WaitAll(tArr);
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteFileLog("基础信息导入有错", ex);
+                    tran.Rollback();
+                    throw new WebApiException(400, "基础信息导入出错");
                 }
             }
         }
@@ -815,13 +817,15 @@ namespace MealTicket_Admin_Handler
         {
             using (var db = new meal_ticketEntities())
             {
-                string sql = string.Format("select PlateId Id,PlateName Name,[Status],CreateTime,count(Market) SharesCount,cast(round(sum((PresentPrice-ClosedPrice)*TotalCapital)*1.0/sum(ClosedPrice*TotalCapital)*10000,0) as int) RiseRate from v_plate_shares group by PlateId,PlateName,PlateType,[Status],CreateTime having PlateType = {0}",request.Type);
-
-                var list=db.Database.SqlQuery<SharesPlateInfo>(sql).ToList();
+                var list = from item in db.v_plate
+                           where item.PlateType == request.Type
+                           select item;
 
                 if (!string.IsNullOrEmpty(request.Name))
                 {
-                    list = list.Where(e => e.Name.Contains(request.Name)).ToList();
+                    list = from item in list
+                           where item.PlateName.Contains(request.Name)
+                           select item;
                 }
 
                 int totalCount = list.Count();
@@ -830,7 +834,17 @@ namespace MealTicket_Admin_Handler
                 {
                     MaxId = 0,
                     TotalCount = totalCount,
-                    List = list.OrderByDescending(e=>e.RiseRate).Skip((request.PageIndex-1)*request.PageSize).Take(request.PageSize).ToList()
+                    List = (from item in list
+                            orderby item.RiseRate descending
+                            select new SharesPlateInfo 
+                            {
+                                Status=item.Status,
+                                CreateTime=item.CreateTime,
+                                Id=item.PlateId,
+                                SharesCount=item.SharesCount??0,
+                                Name=item.PlateName,
+                                RiseRate=item.RiseRate
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
                 };
             }
         }

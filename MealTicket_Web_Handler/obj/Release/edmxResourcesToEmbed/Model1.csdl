@@ -1932,7 +1932,9 @@
     <Property Name="MarketTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="Industry" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-    <Property Name="Business" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
+    <Property Name="Business" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="TotalCapital" Type="Int64" Nullable="false" />
+    <Property Name="CirculatingCapital" Type="Int64" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_minutetimedata">
     <Key>
@@ -2928,6 +2930,8 @@
     <EntitySet Name="t_account_shares_conditiontrade_buy_trend_template" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_trend_template" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_group_rel" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_group_rel" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_group_share_account" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_group_share_account" />
+    <EntitySet Name="v_plate_shares" EntityType="meal_ticketModel.v_plate_shares" />
+    <EntitySet Name="v_plate" EntityType="meal_ticketModel.v_plate" />
   </EntityContainer>
   <EntityType Name="t_shares_plate">
     <Key>
@@ -3284,5 +3288,41 @@
     <Property Name="AccountId" Type="Int64" Nullable="false" />
     <Property Name="ShareAccountId" Type="Int64" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="v_plate_shares">
+    <Key>
+      <PropertyRef Name="PlateId" />
+      <PropertyRef Name="PlateName" />
+      <PropertyRef Name="PlateType" />
+      <PropertyRef Name="Status" />
+      <PropertyRef Name="CreateTime" />
+    </Key>
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="PlateName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="PlateType" Type="Int32" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Market" Type="Int32" />
+    <Property Name="SharesCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="TotalCapital" Type="Int64" />
+    <Property Name="CirculatingCapital" Type="Int64" />
+    <Property Name="PresentPrice" Type="Int64" />
+    <Property Name="ClosedPrice" Type="Int64" />
+  </EntityType>
+  <EntityType Name="v_plate">
+    <Key>
+      <PropertyRef Name="PlateId" />
+      <PropertyRef Name="PlateName" />
+      <PropertyRef Name="PlateType" />
+      <PropertyRef Name="Status" />
+      <PropertyRef Name="CreateTime" />
+    </Key>
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="PlateName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="PlateType" Type="Int32" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="SharesCount" Type="Int32" />
+    <Property Name="RiseRate" Type="Int64" />
   </EntityType>
 </Schema>

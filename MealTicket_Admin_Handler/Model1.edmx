@@ -1535,7 +1535,7 @@
           <Property Name="MarketTime" Type="datetime" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="Industry" Type="nvarchar" MaxLength="200" />
-          <Property Name="Business" Type="nvarchar" MaxLength="1024" />
+          <Property Name="Business" Type="nvarchar(max)" />
           <Property Name="TotalCapital" Type="bigint" Nullable="false" />
           <Property Name="CirculatingCapital" Type="bigint" Nullable="false" />
         </EntityType>
@@ -1926,6 +1926,24 @@
           <Property Name="LastModified" Type="datetime" Nullable="false" />
         </EntityType>
         <!--生成过程中发现错误:
+警告 6002: 表/视图“meal_ticket.dbo.v_plate”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+        <EntityType Name="v_plate">
+          <Key>
+            <PropertyRef Name="PlateId" />
+            <PropertyRef Name="PlateName" />
+            <PropertyRef Name="PlateType" />
+            <PropertyRef Name="Status" />
+            <PropertyRef Name="CreateTime" />
+          </Key>
+          <Property Name="PlateId" Type="bigint" Nullable="false" />
+          <Property Name="PlateName" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="PlateType" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="SharesCount" Type="int" />
+          <Property Name="RiseRate" Type="bigint" />
+        </EntityType>
+        <!--生成过程中发现错误:
 警告 6002: 表/视图“meal_ticket.dbo.v_plate_shares”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
         <EntityType Name="v_plate_shares">
           <Key>
@@ -2248,6 +2266,17 @@
           <EntitySet Name="t_sys_conditiontrade_template_sell" EntityType="Self.t_sys_conditiontrade_template_sell" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_sys_conditiontrade_template_sell_child" EntityType="Self.t_sys_conditiontrade_template_sell_child" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_system_param" EntityType="Self.t_system_param" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="v_plate" EntityType="Self.v_plate" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [v_plate].[PlateId] AS [PlateId], 
+    [v_plate].[PlateName] AS [PlateName], 
+    [v_plate].[PlateType] AS [PlateType], 
+    [v_plate].[Status] AS [Status], 
+    [v_plate].[CreateTime] AS [CreateTime], 
+    [v_plate].[SharesCount] AS [SharesCount], 
+    [v_plate].[RiseRate] AS [RiseRate]
+    FROM [dbo].[v_plate] AS [v_plate]</DefiningQuery>
+          </EntitySet>
           <EntitySet Name="v_plate_shares" EntityType="Self.v_plate_shares" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [v_plate_shares].[PlateId] AS [PlateId], 
@@ -2469,7 +2498,6 @@
           <EntitySet Name="t_broker_account_info_capital" EntityType="meal_ticketModel.t_broker_account_info_capital" />
           <EntitySet Name="t_broker_account_info_position" EntityType="meal_ticketModel.t_broker_account_info_position" />
           <EntitySet Name="t_shares_hq_host" EntityType="meal_ticketModel.t_shares_hq_host" />
-          <EntitySet Name="t_shares_markettime" EntityType="meal_ticketModel.t_shares_markettime" />
           <EntitySet Name="t_shares_limit_risk" EntityType="meal_ticketModel.t_shares_limit_risk" />
           <EntitySet Name="t_shares_limit_tradequota" EntityType="meal_ticketModel.t_shares_limit_tradequota" />
           <EntitySet Name="t_shares_limit_tradequota_other" EntityType="meal_ticketModel.t_shares_limit_tradequota_other" />
@@ -2570,6 +2598,8 @@
           <EntitySet Name="t_sys_conditiontrade_template_buy_other" EntityType="meal_ticketModel.t_sys_conditiontrade_template_buy_other" />
           <EntitySet Name="t_account_shares_conditiontrade_buy_trend_template" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_trend_template" />
           <EntitySet Name="v_plate_shares" EntityType="meal_ticketModel.v_plate_shares" />
+          <EntitySet Name="t_shares_markettime" EntityType="meal_ticketModel.t_shares_markettime" />
+          <EntitySet Name="v_plate" EntityType="meal_ticketModel.v_plate" />
         </EntityContainer>
         <EntityType Name="t_admin_department">
           <Key>
@@ -3440,21 +3470,6 @@
           <Property Name="Status" Type="Int32" Nullable="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
-        </EntityType>
-        <EntityType Name="t_shares_markettime">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Market" Type="Int32" Nullable="false" />
-          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="MarketTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="SharesName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Industry" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
-          <Property Name="Business" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
-          <Property Name="TotalCapital" Type="Int64" Nullable="false" />
-          <Property Name="CirculatingCapital" Type="Int64" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_limit_risk">
           <Key>
@@ -4511,6 +4526,37 @@
           <Property Name="PresentPrice" Type="Int64" />
           <Property Name="ClosedPrice" Type="Int64" />
         </EntityType>
+        <EntityType Name="t_shares_markettime">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SharesName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="MarketTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Industry" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="Business" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TotalCapital" Type="Int64" Nullable="false" />
+          <Property Name="CirculatingCapital" Type="Int64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="v_plate">
+          <Key>
+            <PropertyRef Name="PlateId" />
+            <PropertyRef Name="PlateName" />
+            <PropertyRef Name="PlateType" />
+            <PropertyRef Name="Status" />
+            <PropertyRef Name="CreateTime" />
+          </Key>
+          <Property Name="PlateId" Type="Int64" Nullable="false" />
+          <Property Name="PlateName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="PlateType" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="SharesCount" Type="Int32" />
+          <Property Name="RiseRate" Type="Int64" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -5458,22 +5504,6 @@
                 <ScalarProperty Name="BrokerName" ColumnName="BrokerName" />
                 <ScalarProperty Name="Port" ColumnName="Port" />
                 <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="t_shares_markettime">
-            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_markettime">
-              <MappingFragment StoreEntitySet="t_shares_markettime">
-                <ScalarProperty Name="CirculatingCapital" ColumnName="CirculatingCapital" />
-                <ScalarProperty Name="TotalCapital" ColumnName="TotalCapital" />
-                <ScalarProperty Name="Business" ColumnName="Business" />
-                <ScalarProperty Name="Industry" ColumnName="Industry" />
-                <ScalarProperty Name="SharesName" ColumnName="SharesName" />
-                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-                <ScalarProperty Name="MarketTime" ColumnName="MarketTime" />
-                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
-                <ScalarProperty Name="Market" ColumnName="Market" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
@@ -6603,6 +6633,35 @@
                 <ScalarProperty Name="TotalCapital" ColumnName="TotalCapital" />
                 <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
                 <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="PlateType" ColumnName="PlateType" />
+                <ScalarProperty Name="PlateName" ColumnName="PlateName" />
+                <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_markettime">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_markettime">
+              <MappingFragment StoreEntitySet="t_shares_markettime">
+                <ScalarProperty Name="CirculatingCapital" ColumnName="CirculatingCapital" />
+                <ScalarProperty Name="TotalCapital" ColumnName="TotalCapital" />
+                <ScalarProperty Name="Business" ColumnName="Business" />
+                <ScalarProperty Name="Industry" ColumnName="Industry" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="MarketTime" ColumnName="MarketTime" />
+                <ScalarProperty Name="SharesName" ColumnName="SharesName" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="v_plate">
+            <EntityTypeMapping TypeName="meal_ticketModel.v_plate">
+              <MappingFragment StoreEntitySet="v_plate">
+                <ScalarProperty Name="RiseRate" ColumnName="RiseRate" />
+                <ScalarProperty Name="SharesCount" ColumnName="SharesCount" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="PlateType" ColumnName="PlateType" />

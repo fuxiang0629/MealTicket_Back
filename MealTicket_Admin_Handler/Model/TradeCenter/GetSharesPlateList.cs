@@ -48,7 +48,7 @@ namespace MealTicket_Admin_Handler.Model
         /// <summary>
         /// 涨幅
         /// </summary>
-        public int? RiseRate { get; set; }
+        public long? RiseRate { get; set; }
 
         /// <summary>
         /// 数据创建时间

@@ -249,6 +249,7 @@
     <Property Name="IsGreater" Type="bit" Nullable="false" />
     <Property Name="ConditionRelativeType" Type="int" Nullable="false" />
     <Property Name="ConditionRelativeRate" Type="int" Nullable="false" />
+    <Property Name="OtherConditionRelative" Type="int" Nullable="false" />
     <Property Name="EntrustAmount" Type="bigint" Nullable="false" />
     <Property Name="EntrustType" Type="int" Nullable="false" />
     <Property Name="EntrustPriceGear" Type="int" Nullable="false" />
@@ -425,6 +426,7 @@
     <Property Name="ConditionPriceBase" Type="int" />
     <Property Name="ConditionPriceType" Type="int" />
     <Property Name="ConditionPriceRate" Type="int" />
+    <Property Name="OtherConditionRelative" Type="int" Nullable="false" />
     <Property Name="IsGreater" Type="bit" Nullable="false" />
     <Property Name="EntrustAmount" Type="int" Nullable="false" />
     <Property Name="EntrustType" Type="int" Nullable="false" />
@@ -2489,6 +2491,7 @@
     <Property Name="ConditionPriceBase" Type="int" />
     <Property Name="ConditionPriceType" Type="int" />
     <Property Name="ConditionPriceRate" Type="int" />
+    <Property Name="OtherConditionRelative" Type="int" Nullable="false" />
     <Property Name="IsGreater" Type="bit" Nullable="false" />
     <Property Name="EntrustAmount" Type="int" Nullable="false" />
     <Property Name="EntrustType" Type="int" Nullable="false" />
