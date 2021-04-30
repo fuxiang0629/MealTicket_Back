@@ -360,6 +360,7 @@
     <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="AccountId" Type="bigint" Nullable="false" />
     <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="MaxBuyCount" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
@@ -2122,7 +2123,9 @@
     <Property Name="MarketTime" Type="datetime" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="Industry" Type="nvarchar" MaxLength="200" />
-    <Property Name="Business" Type="nvarchar" MaxLength="1024" />
+    <Property Name="Business" Type="nvarchar(max)" />
+    <Property Name="TotalCapital" Type="bigint" Nullable="false" />
+    <Property Name="CirculatingCapital" Type="bigint" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_minutetimedata">
     <Key>
@@ -2658,6 +2661,46 @@
     </Key>
     <Property Name="Id" Type="int" Nullable="false" />
     <Property Name="name" Type="varchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <!--生成过程中发现错误:
+警告 6002: 表/视图“meal_ticket.dbo.v_plate”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+  <EntityType Name="v_plate">
+    <Key>
+      <PropertyRef Name="PlateId" />
+      <PropertyRef Name="PlateName" />
+      <PropertyRef Name="PlateType" />
+      <PropertyRef Name="Status" />
+      <PropertyRef Name="CreateTime" />
+    </Key>
+    <Property Name="PlateId" Type="bigint" Nullable="false" />
+    <Property Name="PlateName" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="PlateType" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="SharesCount" Type="int" />
+    <Property Name="RiseRate" Type="bigint" />
+  </EntityType>
+  <!--生成过程中发现错误:
+警告 6002: 表/视图“meal_ticket.dbo.v_plate_shares”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+  <EntityType Name="v_plate_shares">
+    <Key>
+      <PropertyRef Name="PlateId" />
+      <PropertyRef Name="PlateName" />
+      <PropertyRef Name="PlateType" />
+      <PropertyRef Name="Status" />
+      <PropertyRef Name="CreateTime" />
+    </Key>
+    <Property Name="PlateId" Type="bigint" Nullable="false" />
+    <Property Name="PlateName" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="PlateType" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="Market" Type="int" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" />
+    <Property Name="TotalCapital" Type="bigint" />
+    <Property Name="CirculatingCapital" Type="bigint" />
+    <Property Name="PresentPrice" Type="bigint" />
+    <Property Name="ClosedPrice" Type="bigint" />
   </EntityType>
   <Function Name="f_getTradeDate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="datetime">
     <Parameter Name="date" Type="datetime" Mode="In" />
@@ -3305,6 +3348,32 @@
     [test].[Id] AS [Id], 
     [test].[name] AS [name]
     FROM [dbo].[test] AS [test]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="v_plate" EntityType="Self.v_plate" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [v_plate].[PlateId] AS [PlateId], 
+    [v_plate].[PlateName] AS [PlateName], 
+    [v_plate].[PlateType] AS [PlateType], 
+    [v_plate].[Status] AS [Status], 
+    [v_plate].[CreateTime] AS [CreateTime], 
+    [v_plate].[SharesCount] AS [SharesCount], 
+    [v_plate].[RiseRate] AS [RiseRate]
+    FROM [dbo].[v_plate] AS [v_plate]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="v_plate_shares" EntityType="Self.v_plate_shares" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [v_plate_shares].[PlateId] AS [PlateId], 
+    [v_plate_shares].[PlateName] AS [PlateName], 
+    [v_plate_shares].[PlateType] AS [PlateType], 
+    [v_plate_shares].[Status] AS [Status], 
+    [v_plate_shares].[CreateTime] AS [CreateTime], 
+    [v_plate_shares].[Market] AS [Market], 
+    [v_plate_shares].[SharesCode] AS [SharesCode], 
+    [v_plate_shares].[TotalCapital] AS [TotalCapital], 
+    [v_plate_shares].[CirculatingCapital] AS [CirculatingCapital], 
+    [v_plate_shares].[PresentPrice] AS [PresentPrice], 
+    [v_plate_shares].[ClosedPrice] AS [ClosedPrice]
+    FROM [dbo].[v_plate_shares] AS [v_plate_shares]</DefiningQuery>
     </EntitySet>
   </EntityContainer>
 </Schema>

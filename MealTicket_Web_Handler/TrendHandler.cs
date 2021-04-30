@@ -8161,6 +8161,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                 Type = 4,
                                 Name = item.Name,
                                 AccountId = item.AccountId,
+                                MaxBuyCount=item.MaxBuyCount,
                                 AccountMobile = ai == null ? "" : ai.Mobile,
                                 AccountName = ai == null ? "" : ai.NickName
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
@@ -8214,6 +8215,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                     AccountId=request.AccountId,
                     CreateTime=DateTime.Now,
                     LastModified=DateTime.Now,
+                    MaxBuyCount=request.MaxBuyCount,
                     Name=request.Name
                 });
                 db.SaveChanges();
@@ -8247,6 +8249,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 }
 
                 groupInfo.Name = request.Name;
+                groupInfo.MaxBuyCount = request.MaxBuyCount;
                 groupInfo.LastModified = DateTime.Now;
                 db.SaveChanges();
             }

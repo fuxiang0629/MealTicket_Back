@@ -3258,6 +3258,7 @@
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="MaxBuyCount" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_buy_trend_template">
     <Key>

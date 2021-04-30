@@ -404,7 +404,10 @@ namespace MealTicket_Web_Handler.Runner
                                  select new { item, item2, item3 }).ToList();
                 foreach (var item in disResult)
                 {
-                    if (item.item3.LastModified < timeNow.AddSeconds(-30))
+                    //判断股票所属分组是否可以购买
+
+
+                    if (item.item3.LastModified < timeNow.AddSeconds(-30) || item.item3.LimitUpPrice<=0 || item.item3.LimitDownPrice<=0)
                     {
                         continue;
                     }

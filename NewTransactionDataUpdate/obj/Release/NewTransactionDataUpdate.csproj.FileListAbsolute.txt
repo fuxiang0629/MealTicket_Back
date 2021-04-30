@@ -71,3 +71,4 @@ D:\项目\饭票\后端\NewTransactionDataUpdate\obj\Release\NewTransactionDataU
 D:\项目\饭票\后端\NewTransactionDataUpdate\obj\Release\NewTransactionDataUpdate.exe
 D:\项目\饭票\后端\NewTransactionDataUpdate\obj\Release\NewTransactionDataUpdate.pdb
 D:\项目\饭票\后端\NewTransactionDataUpdate\obj\Release\NewTransactionDataUpdate.csprojAssemblyReference.cache
+F:\项目\饭票后端\NewTransactionDataUpdate\obj\Release\NewTransactionDataUpdate.csprojAssemblyReference.cache

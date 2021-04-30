@@ -365,6 +365,7 @@
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="AccountId" Type="bigint" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="MaxBuyCount" Type="int" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
         </EntityType>
@@ -6642,6 +6643,7 @@
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="MaxBuyCount" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_account_shares_conditiontrade_buy_trend_template">
           <Key>
@@ -9585,6 +9587,7 @@
           <EntitySetMapping Name="t_account_shares_conditiontrade_buy_group">
             <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_group">
               <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_group">
+                <ScalarProperty Name="MaxBuyCount" ColumnName="MaxBuyCount" />
                 <ScalarProperty Name="AccountId" ColumnName="AccountId" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />

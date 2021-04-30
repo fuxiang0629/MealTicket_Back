@@ -171,6 +171,7 @@ namespace MealTicket_Handler.RunnerHandler
                         catch (Exception ex)
                         {
                             tran.Rollback();
+                            Logger.WriteFileLog("个人加入服务费失败",ex);
                         }
                     }
                 }
@@ -445,14 +446,14 @@ namespace MealTicket_Handler.RunnerHandler
                 {
                     return;
                 }
-                long minAmount = rulesJson.MinAmount;
-                int rate = rulesJson.Rate;
 
                 var hold = (from item in db.t_account_shares_hold
                             where item.Status == 1 && item.ServiceAmount > 0 && item.LastServiceTime < timeDate
                             select item).ToList();
                 foreach (var item in hold)
                 {
+                    long minAmount = rulesJson.MinAmount;
+                    int rate = rulesJson.Rate;
                     var accountPar = (from x in db.t_account_par_setting
                                       where x.AccountId == item.AccountId && x.ParamName == "HoldServiceRules" && x.Status == 1
                                       select x).FirstOrDefault();
@@ -486,6 +487,7 @@ namespace MealTicket_Handler.RunnerHandler
                         catch (Exception ex)
                         {
                             tran.Rollback();
+                            Logger.WriteFileLog("个人计算服务费失败", ex);
                         }
                     }
                 }

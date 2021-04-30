@@ -868,13 +868,45 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 var plateList = (from item in db.t_shares_plate_rel
                                  where item.Market == market && item.SharesCode == sharesCode
                                  select item.PlateId).ToList();
+                //查询板块涨跌幅
+                var plateRate = (from item in db.v_plate
+                                 where plateList.Contains(item.PlateId)
+                                 select item).ToList();
+                List<long> PlateList1 = new List<long>();
+                List<long> PlateList2 = new List<long>();
                 foreach (var p in par)
                 {
                     var temp = JsonConvert.DeserializeObject<dynamic>(p);
 
+                    var plate = plateRate.Where(e => e.PlateId == temp.GroupId).FirstOrDefault();
+                    if (plate == null)
+                    {
+                        continue;
+                    }
+                    if (temp.DataType == 2)
+                    {
+                        if (temp.Compare == 1 && plate.RiseRate < temp.Rate * 100)
+                        {
+                            continue;
+                        }
+                        if (temp.Compare == 2 && plate.RiseRate > temp.Rate * 100)
+                        {
+                            continue;
+                        }
+                        PlateList2.Add(plate.PlateId);
+                    }
+                    else
+                    {
+                        PlateList1.Add(plate.PlateId);
+                    }
                 }
+                var newList=PlateList1.Intersect(PlateList2);
+                if (newList.Count() > 0)
+                {
+                    return 0;
+                }
+                return -1;
             }
-            return -1;
         }
 
         /// <summary>
