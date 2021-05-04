@@ -28,4 +28,17 @@ namespace MealTicket_Admin_Handler.Model
         /// </summary>
         public DateTime CreateTime { get; set; }
     }
+
+    public class GetConditiontradeTemplateBuyAutoParPlateRequest:DetailsPageRequest
+    {
+        /// <summary>
+        /// 分组类型1行业 2地区 3概念
+        /// </summary>
+        public int GroupType { get; set; }
+
+        /// <summary>
+        /// 数据类型1翔子 2涨跌幅
+        /// </summary>
+        public int DataType { get; set; }
+    }
 }

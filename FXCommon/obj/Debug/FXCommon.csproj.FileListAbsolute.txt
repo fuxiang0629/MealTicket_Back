@@ -77,4 +77,3 @@ D:\项目\饭票\后端\FXCommon\obj\Debug\FXCommon.csproj.CoreCompileInputs.cac
 D:\项目\饭票\后端\FXCommon\obj\Debug\FXCommon.csproj.CopyComplete
 D:\项目\饭票\后端\FXCommon\obj\Debug\FXCommon.dll
 D:\项目\饭票\后端\FXCommon\obj\Debug\FXCommon.pdb
-F:\项目\饭票后端\FXCommon\obj\Debug\FXCommon.csprojAssemblyReference.cache

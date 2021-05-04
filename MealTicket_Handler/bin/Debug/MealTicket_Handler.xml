@@ -2067,6 +2067,16 @@
             现价
             </summary>
         </member>
+        <member name="P:MealTicket_Handler.Model.TradeHoldInfo.ClosedPrice">
+            <summary>
+            昨日收盘价
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.Model.TradeHoldInfo.Rise">
+            <summary>
+            涨幅
+            </summary>
+        </member>
         <member name="P:MealTicket_Handler.Model.TradeHoldInfo.CostPrice">
             <summary>
             成本价

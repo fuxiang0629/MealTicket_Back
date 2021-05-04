@@ -21,5 +21,10 @@ namespace MealTicket_Web_Handler.Model
         /// 名称
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// 今天最大购买次数
+        /// </summary>
+        public int MaxBuyCount { get; set; }
     }
 }

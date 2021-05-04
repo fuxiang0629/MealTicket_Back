@@ -53,5 +53,6 @@ namespace SharesHqService
         public System.DateTime LastModified { get; set; }
         public long LimitUpPrice { get; set; }
         public long LimitDownPrice { get; set; }
+        public int PriceType { get; set; }
     }
 }

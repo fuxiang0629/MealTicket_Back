@@ -161,6 +161,7 @@
     <Compile Include="Model\GetConditiontradeTemplateBuyOtherPar.cs" />
     <Compile Include="Model\GetConditiontradeTemplateList.cs" />
     <Compile Include="Model\GetConditiontradeTemplateSellDetailsList.cs" />
+    <Compile Include="Model\GetSharesConditionTrendList.cs" />
     <Compile Include="Model\GetSharesPlateList.cs" />
     <Compile Include="Model\GetAccountBuyConditionTradeSharesGroupSharesList.cs" />
     <Compile Include="Model\GetAccountBuyConditionTradeSharesList.cs" />
@@ -195,8 +196,10 @@
     <Compile Include="Model\ImportConditiontradeTemplateSell.cs" />
     <Compile Include="Model\ImportysPlateShares.cs" />
     <Compile Include="Model\ModifyAccountBuyCondition.cs" />
+    <Compile Include="Model\ModifyAccountBuyConditionAuto.cs" />
     <Compile Include="Model\ModifyAccountBuyConditionAutoGroup.cs" />
     <Compile Include="Model\ModifyAccountBuyConditionAutoPar.cs" />
+    <Compile Include="Model\ModifyAccountBuyConditionOther.cs" />
     <Compile Include="Model\ModifyAccountBuyConditionOtherGroup.cs" />
     <Compile Include="Model\ModifyAccountBuyConditionOtherPar.cs" />
     <Compile Include="Model\ModifyAccountHoldConditionTrade.cs" />
@@ -210,9 +213,11 @@
     <Compile Include="Model\ModifyConditiontradeBuyGroup.cs" />
     <Compile Include="Model\ModifyConditiontradeBuySharesMyGroup.cs" />
     <Compile Include="Model\ModifyConditiontradeTemplate.cs" />
+    <Compile Include="Model\ModifyConditiontradeTemplateBuyAuto.cs" />
     <Compile Include="Model\ModifyConditiontradeTemplateBuyAutoGroup.cs" />
     <Compile Include="Model\ModifyConditiontradeTemplateBuyAutoPar.cs" />
     <Compile Include="Model\ModifyConditiontradeTemplateBuyDetails.cs" />
+    <Compile Include="Model\ModifyConditiontradeTemplateBuyOther.cs" />
     <Compile Include="Model\ModifyConditiontradeTemplateBuyOtherGroup.cs" />
     <Compile Include="Model\ModifyConditiontradeTemplateBuyOtherPar.cs" />
     <Compile Include="Model\ModifyConditiontradeTemplateSellDetails.cs" />
@@ -798,6 +803,12 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="VisitLog.cs" />
+    <Compile Include="v_plate.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="v_plate_shares.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="WebApiException.cs" />
   </ItemGroup>
   <ItemGroup>

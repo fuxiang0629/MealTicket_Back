@@ -17,10 +17,12 @@ namespace MealTicket_Admin_Handler
         public long Id { get; set; }
         public int Market { get; set; }
         public string SharesCode { get; set; }
+        public string SharesName { get; set; }
         public System.DateTime MarketTime { get; set; }
         public System.DateTime CreateTime { get; set; }
-        public string SharesName { get; set; }
         public string Industry { get; set; }
         public string Business { get; set; }
+        public long TotalCapital { get; set; }
+        public long CirculatingCapital { get; set; }
     }
 }

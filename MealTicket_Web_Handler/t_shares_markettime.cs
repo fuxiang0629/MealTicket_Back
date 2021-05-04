@@ -22,5 +22,7 @@ namespace MealTicket_Web_Handler
         public System.DateTime CreateTime { get; set; }
         public string Industry { get; set; }
         public string Business { get; set; }
+        public long TotalCapital { get; set; }
+        public long CirculatingCapital { get; set; }
     }
 }

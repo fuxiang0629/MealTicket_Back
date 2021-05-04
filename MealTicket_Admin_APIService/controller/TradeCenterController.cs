@@ -379,7 +379,7 @@ namespace MealTicket_Admin_APIService.controller
                                 continue;
                             }
                             string[] datas = temp[i].Split(',');
-                            if (datas.Length < 7)
+                            if (datas.Length < 9)
                             {
                                 continue;
                             }
@@ -409,17 +409,38 @@ namespace MealTicket_Admin_APIService.controller
                                     
                                 }
                             }
-                            marketTimeList.Add(new MarketTimeInfo
+
+                            long TotalCapital;
+                            if (!long.TryParse(datas[7], out TotalCapital))
                             {
-                                Market = stock[1] == "SZ" ? 0 : 1,
-                                SharesCode = int.Parse(stock[0]).ToString("000000"),
-                                SharesName = datas[1],
-                                MarketTime = MarketTime,
-                                Industry = datas[3],
-                                Area = datas[4],
-                                Idea = datas[5],
-                                Business = datas[6],
-                            });
+                                TotalCapital = 0;
+                            }
+
+                            long CirculatingCapital;
+                            if (!long.TryParse(datas[8], out CirculatingCapital))
+                            {
+                                CirculatingCapital = 0;
+                            }
+
+                            try
+                            {
+                                marketTimeList.Add(new MarketTimeInfo
+                                {
+                                    Market = stock[1] == "SZ" ? 0 : 1,
+                                    SharesCode = int.Parse(stock[0]).ToString("000000"),
+                                    SharesName = datas[1],
+                                    MarketTime = MarketTime,
+                                    Industry = datas[3],
+                                    Area = datas[4],
+                                    Idea = datas[5],
+                                    Business = datas[6],
+                                    TotalCapital = long.Parse(datas[7]),
+                                    CirculatingCapital = long.Parse(datas[8]),
+                                });
+                            }
+                            catch (Exception ex)
+                            { 
+                            }
                         }
                         tradeCenterHandler.BatchModifySharesMarketTime(marketTimeList);
                         return marketTimeList.Count();
@@ -2533,6 +2554,24 @@ namespace MealTicket_Admin_APIService.controller
         }
 
         /// <summary>
+        /// 编辑条件买入模板额外条件
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/modify"), HttpPost]
+        [Description("编辑条件买入模板额外条件")]
+        [CheckUserPowerFilter]
+        public object ModifyConditiontradeTemplateBuyOther(ModifyConditiontradeTemplateBuyOtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.ModifyConditiontradeTemplateBuyOther(request);
+            return null;
+        }
+
+        /// <summary>
         /// 修改条件买入模板额外条件状态
         /// </summary>
         /// <returns></returns>
@@ -2604,6 +2643,24 @@ namespace MealTicket_Admin_APIService.controller
         }
 
         /// <summary>
+        /// 编辑条件买入模板转自动条件
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/modify"), HttpPost]
+        [Description("编辑条件买入模板转自动条件")]
+        [CheckUserPowerFilter]
+        public object ModifyConditiontradeTemplateBuyAuto(ModifyConditiontradeTemplateBuyAutoRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.ModifyConditiontradeTemplateBuyAuto(request);
+            return null;
+        }
+
+        /// <summary>
         /// 修改条件买入模板转自动条件状态
         /// </summary>
         /// <returns></returns>
@@ -2655,6 +2712,24 @@ namespace MealTicket_Admin_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return tradeCenterHandler.GetConditiontradeTemplateBuyOtherPar(request);
+        }
+
+        /// <summary>
+        /// 查询条件买入模板额外条件类型参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/par/plate"), HttpPost]
+        [Description("查询条件买入模板额外条件类型参数(板块涨跌幅)")]
+        [CheckUserPowerFilter]
+        public PageRes<ConditiontradeTemplateBuyOtherParInfo> GetConditiontradeTemplateBuyOtherParPlate(GetConditiontradeTemplateBuyOtherParPlateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return tradeCenterHandler.GetConditiontradeTemplateBuyOtherParPlate(request);
         }
 
         /// <summary>
@@ -2730,6 +2805,24 @@ namespace MealTicket_Admin_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return tradeCenterHandler.GetConditiontradeTemplateBuyAutoPar(request);
+        }
+
+        /// <summary>
+        /// 查询条件买入模板转自动条件类型参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/par/plate"), HttpPost]
+        [Description("查询条件买入模板转自动条件类型参数(板块涨跌幅)")]
+        [CheckUserPowerFilter]
+        public PageRes<ConditiontradeTemplateBuyAutoParInfo> GetConditiontradeTemplateBuyAutoParPlate(GetConditiontradeTemplateBuyAutoParPlateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return tradeCenterHandler.GetConditiontradeTemplateBuyAutoParPlate(request);
         }
 
         /// <summary>
@@ -2893,6 +2986,23 @@ namespace MealTicket_Admin_APIService.controller
                 throw new WebApiException(400, "参数错误");
             }
             return tradeCenterHandler.GetSharesConditionTrendPar(request);
+        }
+
+        /// <summary>
+        /// 获取条件单走势模板参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/condition/trend/par/plate"), HttpPost]
+        [Description(" 获取条件单走势模板参数(板块涨跌幅)")]
+        public PageRes<SharesMonitorTrendParInfo> GetSharesConditionTrendParPlate(GetSharesConditionTrendParPlatePageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesConditionTrendParPlate(request);
         }
 
         /// <summary>

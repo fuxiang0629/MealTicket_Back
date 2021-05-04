@@ -87,7 +87,6 @@ namespace MealTicket_Admin_Handler
         public virtual DbSet<t_broker_account_info_capital> t_broker_account_info_capital { get; set; }
         public virtual DbSet<t_broker_account_info_position> t_broker_account_info_position { get; set; }
         public virtual DbSet<t_shares_hq_host> t_shares_hq_host { get; set; }
-        public virtual DbSet<t_shares_markettime> t_shares_markettime { get; set; }
         public virtual DbSet<t_shares_limit_risk> t_shares_limit_risk { get; set; }
         public virtual DbSet<t_shares_limit_tradequota> t_shares_limit_tradequota { get; set; }
         public virtual DbSet<t_shares_limit_tradequota_other> t_shares_limit_tradequota_other { get; set; }
@@ -165,6 +164,9 @@ namespace MealTicket_Admin_Handler
         public virtual DbSet<t_account_shares_conditiontrade_buy_trend_par_template> t_account_shares_conditiontrade_buy_trend_par_template { get; set; }
         public virtual DbSet<t_sys_conditiontrade_template_buy_other> t_sys_conditiontrade_template_buy_other { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_trend_template> t_account_shares_conditiontrade_buy_trend_template { get; set; }
+        public virtual DbSet<v_plate_shares> v_plate_shares { get; set; }
+        public virtual DbSet<t_shares_markettime> t_shares_markettime { get; set; }
+        public virtual DbSet<v_plate> v_plate { get; set; }
     
         public virtual int P_Admin_CheckLogin(string token, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter accountId, ObjectParameter loginLogId)
         {

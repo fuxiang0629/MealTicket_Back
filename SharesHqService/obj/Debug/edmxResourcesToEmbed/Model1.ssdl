@@ -255,6 +255,29 @@
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
     <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
+    <Property Name="PriceType" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_quotes_date">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="PresentPrice" Type="bigint" Nullable="false" />
+    <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
+    <Property Name="MaxPrice" Type="bigint" Nullable="false" />
+    <Property Name="MinPrice" Type="bigint" Nullable="false" />
+    <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
+    <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="Date" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="LimitUpCount" Type="int" Nullable="false" />
+    <Property Name="LimitDownCount" Type="int" Nullable="false" />
+    <Property Name="LimitUpBombCount" Type="int" Nullable="false" />
+    <Property Name="LimitDownBombCount" Type="int" Nullable="false" />
+    <Property Name="PriceType" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_quotes_temp">
     <Key>
@@ -299,6 +322,7 @@
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
     <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
+    <Property Name="PriceType" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_transactiondata">
     <Key>
@@ -343,6 +367,7 @@
     <EntitySet Name="t_shares_minutetimedata" EntityType="Self.t_shares_minutetimedata" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_minutetimedata_temp" EntityType="Self.t_shares_minutetimedata_temp" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_quotes" EntityType="Self.t_shares_quotes" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_quotes_date" EntityType="Self.t_shares_quotes_date" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_quotes_temp" EntityType="Self.t_shares_quotes_temp" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_transactiondata" EntityType="Self.t_shares_transactiondata" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_system_param" EntityType="Self.t_system_param" Schema="dbo" store:Type="Tables" />

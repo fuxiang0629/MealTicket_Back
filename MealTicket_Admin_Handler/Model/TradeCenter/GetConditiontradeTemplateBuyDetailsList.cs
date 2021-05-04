@@ -109,5 +109,10 @@ namespace MealTicket_Admin_Handler.Model
         /// 是否判断涨停休眠
         /// </summary>
         public bool LimitUp { get; set; }
+
+        /// <summary>
+        /// 其他买入条件
+        /// </summary>
+        public int OtherConditionRelative { get; set; }
     }
 }

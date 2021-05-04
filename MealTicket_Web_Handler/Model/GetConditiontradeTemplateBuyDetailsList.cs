@@ -124,5 +124,10 @@ namespace MealTicket_Web_Handler.Model
         /// 是否判断涨停忽略
         /// </summary>
         public bool LimitUp { get; set; }
+
+        /// <summary>
+        /// 额外买入条件
+        /// </summary>
+        public int OtherConditionRelative { get; set; }
     }
 }

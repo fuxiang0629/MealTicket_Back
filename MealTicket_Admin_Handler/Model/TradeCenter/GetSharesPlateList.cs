@@ -46,6 +46,11 @@ namespace MealTicket_Admin_Handler.Model
         public int SharesCount { get; set; }
 
         /// <summary>
+        /// 涨幅
+        /// </summary>
+        public long? RiseRate { get; set; }
+
+        /// <summary>
         /// 数据创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }

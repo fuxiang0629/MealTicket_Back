@@ -26,5 +26,15 @@ namespace MealTicket_Web_Handler.Model
         /// 是否保留其他分组股票
         /// </summary>
         public bool IsRetainOtherGroupShares { get; set; }
+
+        /// <summary>
+        /// 是否删除买入参数
+        /// </summary>
+        public bool IsDeletePar { get; set; }
+
+        /// <summary>
+        /// 是否保留其他分组股票买入参数
+        /// </summary>
+        public bool IsRetainOtherGroupShares_Par { get; set; }
     }
 }

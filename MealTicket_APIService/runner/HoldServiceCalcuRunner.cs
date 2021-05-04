@@ -14,8 +14,6 @@ namespace MealTicket_APIService.runner
     /// </summary>
     public class HoldServiceCalcuRunner : Runner
     {
-        static DateTime LastExecuteDate = DateTime.Now.Date.AddDays(-1);
-
         public HoldServiceCalcuRunner()
         {
             Name = "HoldServiceCalcuRunner";
@@ -28,11 +26,6 @@ namespace MealTicket_APIService.runner
             {
                 try
                 {
-                    //判断当天是否执行过
-                    if (LastExecuteDate >= DateTime.Now.Date)
-                    {
-                        return false;
-                    }
                     //每天1-8点执行
                     if (DateTime.Now.Hour < Singleton.Instance.HoldServiceCalcuStartHour || DateTime.Now.Hour >= Singleton.Instance.HoldServiceCalcuEndHour)
                     {
@@ -55,7 +48,6 @@ namespace MealTicket_APIService.runner
                 RunnerHelper.JoinService();//加入计算服务费金额
                 RunnerHelper.ServiceFeeRecharge();//计算服务费
                 RunnerHelper.SharesAllot();//执行派息
-                LastExecuteDate = DateTime.Now.Date;
             }
             catch (Exception ex)
             {

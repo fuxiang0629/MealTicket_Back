@@ -618,7 +618,8 @@ namespace MealTicket_Handler
                         CanSellCount = item.item.CanSoldCount,
                         ProfitAmount = ProfitAmount / 100 * 100,
                         ClosingTime = item.item.ClosingTime,
-                        ClosingLineList = closingList
+                        ClosingLineList = closingList,
+                        ClosedPrice= item.item3.ClosedPrice
                     });
                 }
 

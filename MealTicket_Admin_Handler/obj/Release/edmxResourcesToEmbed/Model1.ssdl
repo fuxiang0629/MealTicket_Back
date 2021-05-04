@@ -1530,7 +1530,9 @@
     <Property Name="MarketTime" Type="datetime" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="Industry" Type="nvarchar" MaxLength="200" />
-    <Property Name="Business" Type="nvarchar" MaxLength="1024" />
+    <Property Name="Business" Type="nvarchar(max)" />
+    <Property Name="TotalCapital" Type="bigint" Nullable="false" />
+    <Property Name="CirculatingCapital" Type="bigint" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_monitor">
     <Key>
@@ -1646,6 +1648,9 @@
     <Property Name="SpeedUp" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="Activity" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
+    <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
+    <Property Name="PriceType" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_search">
     <Key>
@@ -1784,6 +1789,7 @@
     <Property Name="ConditionPriceBase" Type="int" />
     <Property Name="ConditionPriceType" Type="int" />
     <Property Name="ConditionPriceRate" Type="int" />
+    <Property Name="OtherConditionRelative" Type="int" Nullable="false" />
     <Property Name="IsGreater" Type="bit" Nullable="false" />
     <Property Name="EntrustAmount" Type="int" Nullable="false" />
     <Property Name="EntrustType" Type="int" Nullable="false" />
@@ -1913,6 +1919,46 @@
     <Property Name="IsJson" Type="bit" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <!--生成过程中发现错误:
+警告 6002: 表/视图“meal_ticket.dbo.v_plate”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+  <EntityType Name="v_plate">
+    <Key>
+      <PropertyRef Name="PlateId" />
+      <PropertyRef Name="PlateName" />
+      <PropertyRef Name="PlateType" />
+      <PropertyRef Name="Status" />
+      <PropertyRef Name="CreateTime" />
+    </Key>
+    <Property Name="PlateId" Type="bigint" Nullable="false" />
+    <Property Name="PlateName" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="PlateType" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="SharesCount" Type="int" />
+    <Property Name="RiseRate" Type="bigint" />
+  </EntityType>
+  <!--生成过程中发现错误:
+警告 6002: 表/视图“meal_ticket.dbo.v_plate_shares”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+  <EntityType Name="v_plate_shares">
+    <Key>
+      <PropertyRef Name="PlateId" />
+      <PropertyRef Name="PlateName" />
+      <PropertyRef Name="PlateType" />
+      <PropertyRef Name="Status" />
+      <PropertyRef Name="CreateTime" />
+    </Key>
+    <Property Name="PlateId" Type="bigint" Nullable="false" />
+    <Property Name="PlateName" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="PlateType" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="Market" Type="int" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" />
+    <Property Name="TotalCapital" Type="bigint" />
+    <Property Name="CirculatingCapital" Type="bigint" />
+    <Property Name="PresentPrice" Type="bigint" />
+    <Property Name="ClosedPrice" Type="bigint" />
   </EntityType>
   <Function Name="P_AccountSetRefer" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="accountId" Type="bigint" Mode="In" />
@@ -2215,5 +2261,31 @@
     <EntitySet Name="t_sys_conditiontrade_template_sell" EntityType="Self.t_sys_conditiontrade_template_sell" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_sys_conditiontrade_template_sell_child" EntityType="Self.t_sys_conditiontrade_template_sell_child" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_system_param" EntityType="Self.t_system_param" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="v_plate" EntityType="Self.v_plate" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [v_plate].[PlateId] AS [PlateId], 
+    [v_plate].[PlateName] AS [PlateName], 
+    [v_plate].[PlateType] AS [PlateType], 
+    [v_plate].[Status] AS [Status], 
+    [v_plate].[CreateTime] AS [CreateTime], 
+    [v_plate].[SharesCount] AS [SharesCount], 
+    [v_plate].[RiseRate] AS [RiseRate]
+    FROM [dbo].[v_plate] AS [v_plate]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="v_plate_shares" EntityType="Self.v_plate_shares" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [v_plate_shares].[PlateId] AS [PlateId], 
+    [v_plate_shares].[PlateName] AS [PlateName], 
+    [v_plate_shares].[PlateType] AS [PlateType], 
+    [v_plate_shares].[Status] AS [Status], 
+    [v_plate_shares].[CreateTime] AS [CreateTime], 
+    [v_plate_shares].[Market] AS [Market], 
+    [v_plate_shares].[SharesCode] AS [SharesCode], 
+    [v_plate_shares].[TotalCapital] AS [TotalCapital], 
+    [v_plate_shares].[CirculatingCapital] AS [CirculatingCapital], 
+    [v_plate_shares].[PresentPrice] AS [PresentPrice], 
+    [v_plate_shares].[ClosedPrice] AS [ClosedPrice]
+    FROM [dbo].[v_plate_shares] AS [v_plate_shares]</DefiningQuery>
+    </EntitySet>
   </EntityContainer>
 </Schema>

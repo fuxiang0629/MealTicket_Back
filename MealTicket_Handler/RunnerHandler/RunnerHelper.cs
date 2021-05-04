@@ -171,6 +171,7 @@ namespace MealTicket_Handler.RunnerHandler
                         catch (Exception ex)
                         {
                             tran.Rollback();
+                            Logger.WriteFileLog("个人加入服务费失败",ex);
                         }
                     }
                 }
@@ -445,14 +446,14 @@ namespace MealTicket_Handler.RunnerHandler
                 {
                     return;
                 }
-                long minAmount = rulesJson.MinAmount;
-                int rate = rulesJson.Rate;
 
                 var hold = (from item in db.t_account_shares_hold
                             where item.Status == 1 && item.ServiceAmount > 0 && item.LastServiceTime < timeDate
                             select item).ToList();
                 foreach (var item in hold)
                 {
+                    long minAmount = rulesJson.MinAmount;
+                    int rate = rulesJson.Rate;
                     var accountPar = (from x in db.t_account_par_setting
                                       where x.AccountId == item.AccountId && x.ParamName == "HoldServiceRules" && x.Status == 1
                                       select x).FirstOrDefault();
@@ -486,6 +487,7 @@ namespace MealTicket_Handler.RunnerHandler
                         catch (Exception ex)
                         {
                             tran.Rollback();
+                            Logger.WriteFileLog("个人计算服务费失败", ex);
                         }
                     }
                 }
@@ -636,7 +638,7 @@ namespace MealTicket_Handler.RunnerHandler
 
                     //计算当前市值
                     var quotes = (from x in db.t_shares_quotes
-                                  where x.Market == item.Market && x.SharesCode == item.SharesCode && x.LastModified > SqlFunctions.DateAdd("MI", -1, timeNow)
+                                  where x.Market == item.Market && x.SharesCode == item.SharesCode && x.LastModified > SqlFunctions.DateAdd("SS", -30, timeNow)
                                   select x).FirstOrDefault();
                     if (quotes == null)
                     {
@@ -1906,7 +1908,7 @@ inner
 
 inner
   join t_account_shares_conditiontrade_buy t3 on t2.ConditionId = t3.Id
-  where t.[Status] = 1 and t1.[Status] = 1 and t2.[Status] = 1 and t3.[Status] = 1 and(t.TrendId = 1 or t.TrendId = 2 or t.TrendId = 3)
+  where t.[Status] = 1 and t1.[Status] = 1 and t2.[Status] = 1 and t3.[Status] = 1 and(t.TrendId = 1 or t.TrendId = 2 or t.TrendId = 3 or t.TrendId = 6)
   group by t3.Market, t3.SharesCode
   union all
   select t3.Market, t3.SharesCode
@@ -1919,7 +1921,7 @@ inner
 
 inner
   join t_account_shares_conditiontrade_buy t3 on t2.ConditionId = t3.Id
-  where t.[Status] = 1 and t1.[Status] = 1 and t2.[Status] = 1 and t3.[Status] = 1 and(t.TrendId = 1 or t.TrendId = 2 or t.TrendId = 3)
+  where t.[Status] = 1 and t1.[Status] = 1 and t2.[Status] = 1 and t3.[Status] = 1 and(t.TrendId = 1 or t.TrendId = 2 or t.TrendId = 3 or t.TrendId = 6)
   group by t3.Market, t3.SharesCode
   )t
   group by Market, SharesCode", timeDate.ToString("yyyy-MM-dd"));
