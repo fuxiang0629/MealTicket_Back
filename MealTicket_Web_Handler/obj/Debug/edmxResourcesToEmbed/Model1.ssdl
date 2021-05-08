@@ -937,6 +937,7 @@
     <Property Name="AccountId" Type="bigint" Nullable="false" />
     <Property Name="Deposit" Type="bigint" Nullable="false" />
     <Property Name="RemainDeposit" Type="bigint" Nullable="false" />
+    <Property Name="MaxBuySharesCount" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
@@ -2278,6 +2279,7 @@
     <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
     <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
     <Property Name="PriceType" Type="int" Nullable="false" />
+    <Property Name="TriPriceType" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_quotes_date">
     <Key>
@@ -2300,6 +2302,7 @@
     <Property Name="LimitUpBombCount" Type="int" Nullable="false" />
     <Property Name="LimitDownBombCount" Type="int" Nullable="false" />
     <Property Name="PriceType" Type="int" Nullable="false" />
+    <Property Name="TriPriceType" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_quotes_temp">
     <Key>
@@ -2345,6 +2348,7 @@
     <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
     <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
     <Property Name="PriceType" Type="int" Nullable="false" />
+    <Property Name="TriPriceType" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_search">
     <Key>

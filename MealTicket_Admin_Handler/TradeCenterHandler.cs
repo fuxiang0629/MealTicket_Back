@@ -6,11 +6,9 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace MealTicket_Admin_Handler
@@ -830,21 +828,59 @@ namespace MealTicket_Admin_Handler
 
                 int totalCount = list.Count();
 
+                List<SharesPlateInfo> result = new List<SharesPlateInfo>();
+                if (request.OrderType == 1)
+                {
+                    if (request.OrderMethod == "ascending")
+                    {
+                        result = (from item in list
+                                  orderby item.RiseRate
+                                  select new SharesPlateInfo
+                                  {
+                                      Status = item.Status,
+                                      CreateTime = item.CreateTime,
+                                      Id = item.PlateId,
+                                      SharesCount = item.SharesCount ?? 0,
+                                      Name = item.PlateName,
+                                      RiseRate = item.RiseRate
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+                    }
+                    else
+                    {
+                        result = (from item in list
+                                  orderby item.RiseRate descending
+                                  select new SharesPlateInfo
+                                  {
+                                      Status = item.Status,
+                                      CreateTime = item.CreateTime,
+                                      Id = item.PlateId,
+                                      SharesCount = item.SharesCount ?? 0,
+                                      Name = item.PlateName,
+                                      RiseRate = item.RiseRate
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+                    }
+                }
+                else
+                {
+                    result = (from item in list
+                              orderby item.CreateTime descending,item.PlateId descending
+                              select new SharesPlateInfo
+                              {
+                                  Status = item.Status,
+                                  CreateTime = item.CreateTime,
+                                  Id = item.PlateId,
+                                  SharesCount = item.SharesCount ?? 0,
+                                  Name = item.PlateName,
+                                  RiseRate = item.RiseRate
+                              }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+                }
+
+
                 return new PageRes<SharesPlateInfo>
                 {
                     MaxId = 0,
                     TotalCount = totalCount,
-                    List = (from item in list
-                            orderby item.RiseRate descending
-                            select new SharesPlateInfo 
-                            {
-                                Status=item.Status,
-                                CreateTime=item.CreateTime,
-                                Id=item.PlateId,
-                                SharesCount=item.SharesCount??0,
-                                Name=item.PlateName,
-                                RiseRate=item.RiseRate
-                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                    List = result
                 };
             }
         }
@@ -4216,7 +4252,10 @@ namespace MealTicket_Admin_Handler
                                 CreateTime = item.CreateTime,
                                 Id = item.Id,
                                 TrendDescription = item.TrendDescription,
-                                TrendName = item.TrendName
+                                TrendName = item.TrendName,
+                                OtherParCount = (from x in db.t_sys_conditiontrade_template_buy_other_trend_other
+                                                 where x.OtherTrendId == item.Id
+                                                 select x).Count()
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
                 };
             }
@@ -4363,7 +4402,10 @@ namespace MealTicket_Admin_Handler
                                 CreateTime = item.CreateTime,
                                 Id = item.Id,
                                 TrendDescription = item.TrendDescription,
-                                TrendName = item.TrendName
+                                TrendName = item.TrendName,
+                                OtherParCount = (from x in db.t_sys_conditiontrade_template_buy_auto_trend_other
+                                                 where x.AutoTrendId == item.Id
+                                                 select x).Count()
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
                 };
             }
@@ -4600,6 +4642,88 @@ namespace MealTicket_Admin_Handler
                 db.SaveChanges();
             }
         }
+        
+        /// <summary>
+         /// 批量条件单走势模板参数(板块涨跌幅)
+         /// </summary>
+         /// <param name="TrendId"></param>
+         /// <param name="Type"></param>
+         /// <param name="list"></param>
+         /// <returns></returns>
+        public int BatchAddConditiontradeTemplateBuyOtherPar(int Type,long RelId, List<string> list)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //查询分组
+                var plate = (from item in db.t_shares_plate
+                             where item.Type == Type && list.Contains(item.Name)
+                             select item).ToList();
+                var result = (from item in plate
+                              select new t_sys_conditiontrade_template_buy_other_trend_par
+                              {
+                                  CreateTime = DateTime.Now,
+                                  LastModified = DateTime.Now,
+                                  OtherTrendId= RelId,
+                                  ParamsInfo = JsonConvert.SerializeObject(new
+                                  {
+                                      GroupId = item.Id,
+                                      GroupName = item.Name,
+                                      GroupType = Type,
+                                      DataType = 1,
+                                  })
+                              }).ToList();
+                db.t_sys_conditiontrade_template_buy_other_trend_par.AddRange(result);
+                db.SaveChanges();
+                return result.Count();
+            }
+        }
+
+        /// <summary>
+        /// 批量条件单走势模板参数(板块涨跌幅2)
+        /// </summary>
+        /// <param name="Type"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAddConditiontradeTemplateBuyOtherPar2(int Type, long RelId, List<BatchAddSharesConditionTrendPar2Obj> list)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                int i = 0;
+                foreach (var item in list)
+                {
+                    string groupName = item.GroupName;
+                    int compare = item.Compare;
+                    string rate = item.Rate;
+                    //查询分组
+                    var plate = (from x in db.t_shares_plate
+                                 where x.Type == Type && x.Name == groupName
+                                 select x).FirstOrDefault();
+                    if (plate == null)
+                    {
+                        continue;
+                    }
+                    db.t_sys_conditiontrade_template_buy_other_trend_par.Add(new t_sys_conditiontrade_template_buy_other_trend_par
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        OtherTrendId=RelId,
+                        ParamsInfo = JsonConvert.SerializeObject(new
+                        {
+                            GroupId = plate.Id,
+                            GroupName = plate.Name,
+                            GroupType = plate.Type,
+                            DataType = 2,
+                            Compare = compare,
+                            Rate = rate,
+                        })
+                    });
+
+                    i++;
+                }
+                db.SaveChanges();
+                return i;
+            }
+        }
 
         /// <summary>
         /// 编辑条件买入模板额外条件类型参数
@@ -4760,6 +4884,88 @@ namespace MealTicket_Admin_Handler
         }
 
         /// <summary>
+        /// 批量添加条件买入模板转自动条件类型参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="TrendId"></param>
+        /// <param name="Type"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAddConditiontradeTemplateBuyAutoPar(int Type, long RelId, List<string> list)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //查询分组
+                var plate = (from item in db.t_shares_plate
+                             where item.Type == Type && list.Contains(item.Name)
+                             select item).ToList();
+                var result = (from item in plate
+                              select new t_sys_conditiontrade_template_buy_auto_trend_par
+                              {
+                                  CreateTime = DateTime.Now,
+                                  LastModified = DateTime.Now,
+                                  AutoTrendId = RelId,
+                                  ParamsInfo = JsonConvert.SerializeObject(new
+                                  {
+                                      GroupId = item.Id,
+                                      GroupName = item.Name,
+                                      GroupType = Type,
+                                      DataType = 1,
+                                  })
+                              }).ToList();
+                db.t_sys_conditiontrade_template_buy_auto_trend_par.AddRange(result);
+                db.SaveChanges();
+                return result.Count();
+            }
+        }
+
+        /// <summary>
+        /// 批量添加条件买入模板转自动条件类型参数(板块涨跌幅2)
+        /// </summary>
+        /// <param name="Type"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAddConditiontradeTemplateBuyAutoPar2(int Type, long RelId, List<BatchAddSharesConditionTrendPar2Obj> list)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                int i = 0;
+                foreach (var item in list)
+                {
+                    string groupName = item.GroupName;
+                    int compare = item.Compare;
+                    string rate = item.Rate;
+                    //查询分组
+                    var plate = (from x in db.t_shares_plate
+                                 where x.Type == Type && x.Name == groupName
+                                 select x).FirstOrDefault();
+                    if (plate == null)
+                    {
+                        continue;
+                    }
+                    db.t_sys_conditiontrade_template_buy_auto_trend_par.Add(new t_sys_conditiontrade_template_buy_auto_trend_par
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        AutoTrendId = RelId,
+                        ParamsInfo = JsonConvert.SerializeObject(new
+                        {
+                            GroupId = plate.Id,
+                            GroupName = plate.Name,
+                            GroupType = plate.Type,
+                            DataType = 2,
+                            Compare = compare,
+                            Rate = rate,
+                        })
+                    });
+
+                    i++;
+                }
+                db.SaveChanges();
+                return i;
+            }
+        }
+
+        /// <summary>
         /// 编辑条件买入模板转自动条件类型参数
         /// </summary>
         /// <param name="request"></param>
@@ -4799,6 +5005,783 @@ namespace MealTicket_Admin_Handler
                 db.SaveChanges();
             }
         }
+
+        #region=======额外关系=======
+        /// <summary>
+        /// 获取条件买入模板额外条件-额外关系列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<ConditiontradeTemplateBuyOtherInfo> GetConditiontradeTemplateBuyOtherList_Other(DetailsPageRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = from item in db.t_sys_conditiontrade_template_buy_other_trend_other
+                            where item.OtherTrendId == request.Id
+                            select item;
+                int totalCount = trend.Count();
+
+                return new PageRes<ConditiontradeTemplateBuyOtherInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trend
+                            orderby item.CreateTime descending
+                            select new ConditiontradeTemplateBuyOtherInfo
+                            {
+                                Status = item.Status,
+                                TrendId = item.TrendId,
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                TrendDescription = item.TrendDescription,
+                                TrendName = item.TrendName
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加条件买入模板额外条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddConditiontradeTemplateBuyOther_Other(AddConditiontradeTemplateBuyOtherRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    t_sys_conditiontrade_template_buy_other_trend_other temp = new t_sys_conditiontrade_template_buy_other_trend_other
+                    {
+                        Status = 1,
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        OtherTrendId = request.RelId,
+                        TrendDescription = request.TrendDescription,
+                        TrendId = request.TrendId,
+                        TrendName = request.TrendName
+                    };
+                    db.t_sys_conditiontrade_template_buy_other_trend_other.Add(temp);
+                    db.SaveChanges();
+
+                    //查询参数值
+                    var par = (from item in db.t_account_shares_conditiontrade_buy_trend_par_template.AsNoTracking()
+                               where item.TrendId == request.TrendId
+                               select item).ToList();
+                    foreach (var item in par)
+                    {
+                        db.t_sys_conditiontrade_template_buy_other_trend_other_par.Add(new t_sys_conditiontrade_template_buy_other_trend_other_par
+                        {
+                            OtherTrendOtherId = temp.Id,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = item.ParamsInfo
+                        });
+                    }
+                    if (par.Count() > 0)
+                    {
+                        db.SaveChanges();
+                    }
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 编辑条件买入模板额外条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateBuyOther_Other(ModifyConditiontradeTemplateBuyOtherRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_sys_conditiontrade_template_buy_other_trend_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trend.TrendDescription = request.Description;
+                trend.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改条件买入模板额外条件状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateBuyOtherStatus_Other(ModifyStatusRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_sys_conditiontrade_template_buy_other_trend_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trend.Status = request.Status;
+                trend.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除条件买入模板额外条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteConditiontradeTemplateBuyOther_Other(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_sys_conditiontrade_template_buy_other_trend_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_sys_conditiontrade_template_buy_other_trend_other.Remove(trend);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取条件买入模板转自动条件列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<ConditiontradeTemplateBuyAutoInfo> GetConditiontradeTemplateBuyAutoList_Other(DetailsPageRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = from item in db.t_sys_conditiontrade_template_buy_auto_trend_other
+                            where item.AutoTrendId == request.Id
+                            select item;
+                int totalCount = trend.Count();
+
+                return new PageRes<ConditiontradeTemplateBuyAutoInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trend
+                            orderby item.CreateTime descending
+                            select new ConditiontradeTemplateBuyAutoInfo
+                            {
+                                Status = item.Status,
+                                TrendId = item.TrendId,
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                TrendDescription = item.TrendDescription,
+                                TrendName = item.TrendName
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加条件买入模板转自动条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddConditiontradeTemplateBuyAuto_Other(AddConditiontradeTemplateBuyAutoRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    t_sys_conditiontrade_template_buy_auto_trend_other temp = new t_sys_conditiontrade_template_buy_auto_trend_other
+                    {
+                        Status = 1,
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        AutoTrendId = request.RelId,
+                        TrendDescription = request.TrendDescription,
+                        TrendId = request.TrendId,
+                        TrendName = request.TrendName
+                    };
+                    db.t_sys_conditiontrade_template_buy_auto_trend_other.Add(temp);
+                    db.SaveChanges();
+
+                    //查询参数值
+                    var par = (from item in db.t_account_shares_conditiontrade_buy_trend_par_template.AsNoTracking()
+                               where item.TrendId == request.TrendId
+                               select item).ToList();
+                    foreach (var item in par)
+                    {
+                        db.t_sys_conditiontrade_template_buy_auto_trend_other_par.Add(new t_sys_conditiontrade_template_buy_auto_trend_other_par
+                        {
+                            AutoTrendOtherId = temp.Id,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = item.ParamsInfo
+                        });
+                    }
+                    if (par.Count() > 0)
+                    {
+                        db.SaveChanges();
+                    }
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 编辑条件买入模板转自动条件
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public void ModifyConditiontradeTemplateBuyAuto_Other(ModifyConditiontradeTemplateBuyAutoRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_sys_conditiontrade_template_buy_auto_trend_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trend.TrendDescription = request.Description;
+                trend.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改条件买入模板转自动条件状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateBuyAutoStatus_Other(ModifyStatusRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_sys_conditiontrade_template_buy_auto_trend_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trend.Status = request.Status;
+                trend.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除条件买入模板转自动条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteConditiontradeTemplateBuyAuto_Other(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_sys_conditiontrade_template_buy_auto_trend_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_sys_conditiontrade_template_buy_auto_trend_other.Remove(trend);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 查询条件买入模板额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<ConditiontradeTemplateBuyOtherParInfo> GetConditiontradeTemplateBuyOtherPar_Other(DetailsPageRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = from item in db.t_sys_conditiontrade_template_buy_other_trend_other_par
+                               where item.OtherTrendOtherId == request.Id
+                               select item;
+                int totalCount = trendPar.Count();
+
+                return new PageRes<ConditiontradeTemplateBuyOtherParInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trendPar
+                            orderby item.CreateTime descending
+                            select new ConditiontradeTemplateBuyOtherParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                ParamsInfo = item.ParamsInfo
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 查询条件买入模板额外条件类型参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<ConditiontradeTemplateBuyOtherParInfo> GetConditiontradeTemplateBuyOtherParPlate_Other(GetConditiontradeTemplateBuyOtherParPlateRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_sys_conditiontrade_template_buy_other_trend_other_par
+                                where item.OtherTrendOtherId == request.Id
+                                select item).ToList();
+                List<ConditiontradeTemplateBuyOtherParInfo> list = new List<ConditiontradeTemplateBuyOtherParInfo>();
+                foreach (var item in trendPar)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    if (temp.GroupType == request.GroupType && temp.DataType == request.DataType)
+                    {
+                        list.Add(new ConditiontradeTemplateBuyOtherParInfo
+                        {
+                            CreateTime = item.CreateTime,
+                            Id = item.Id,
+                            ParamsInfo = item.ParamsInfo
+                        });
+                    }
+                }
+                int totalCount = list.Count();
+
+                return new PageRes<ConditiontradeTemplateBuyOtherParInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in list
+                            orderby item.CreateTime descending
+                            select new ConditiontradeTemplateBuyOtherParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                ParamsInfo = item.ParamsInfo
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加条件买入模板额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddConditiontradeTemplateBuyOtherPar_Other(AddConditiontradeTemplateBuyOtherParRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                if (request.TrendId != 1 && request.TrendId != 7)
+                {
+                    var par = (from item in db.t_sys_conditiontrade_template_buy_other_trend_other_par
+                               where item.OtherTrendOtherId == request.RelId
+                               select item).FirstOrDefault();
+                    if (par != null)
+                    {
+                        par.ParamsInfo = request.ParamsInfo;
+                        par.LastModified = DateTime.Now;
+                    }
+                    else
+                    {
+                        db.t_sys_conditiontrade_template_buy_other_trend_other_par.Add(new t_sys_conditiontrade_template_buy_other_trend_other_par
+                        {
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = request.ParamsInfo,
+                            OtherTrendOtherId = request.RelId
+                        });
+                    }
+                }
+                else
+                {
+                    db.t_sys_conditiontrade_template_buy_other_trend_other_par.Add(new t_sys_conditiontrade_template_buy_other_trend_other_par
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        ParamsInfo = request.ParamsInfo,
+                        OtherTrendOtherId = request.RelId
+                    });
+                }
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 批量条件单走势模板参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="TrendId"></param>
+        /// <param name="Type"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAddConditiontradeTemplateBuyOtherPar_Other(int Type, long RelId, List<string> list)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //查询分组
+                var plate = (from item in db.t_shares_plate
+                             where item.Type == Type && list.Contains(item.Name)
+                             select item).ToList();
+                var result = (from item in plate
+                              select new t_sys_conditiontrade_template_buy_other_trend_other_par
+                              {
+                                  CreateTime = DateTime.Now,
+                                  LastModified = DateTime.Now,
+                                  OtherTrendOtherId = RelId,
+                                  ParamsInfo = JsonConvert.SerializeObject(new
+                                  {
+                                      GroupId = item.Id,
+                                      GroupName = item.Name,
+                                      GroupType = Type,
+                                      DataType = 1,
+                                  })
+                              }).ToList();
+                db.t_sys_conditiontrade_template_buy_other_trend_other_par.AddRange(result);
+                db.SaveChanges();
+                return result.Count();
+            }
+        }
+
+        /// <summary>
+        /// 批量条件单走势模板参数(板块涨跌幅2)
+        /// </summary>
+        /// <param name="Type"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAddConditiontradeTemplateBuyOtherPar2_Other(int Type, long RelId, List<BatchAddSharesConditionTrendPar2Obj> list)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                int i = 0;
+                foreach (var item in list)
+                {
+                    string groupName = item.GroupName;
+                    int compare = item.Compare;
+                    string rate = item.Rate;
+                    //查询分组
+                    var plate = (from x in db.t_shares_plate
+                                 where x.Type == Type && x.Name == groupName
+                                 select x).FirstOrDefault();
+                    if (plate == null)
+                    {
+                        continue;
+                    }
+                    db.t_sys_conditiontrade_template_buy_other_trend_other_par.Add(new t_sys_conditiontrade_template_buy_other_trend_other_par
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        OtherTrendOtherId = RelId,
+                        ParamsInfo = JsonConvert.SerializeObject(new
+                        {
+                            GroupId = plate.Id,
+                            GroupName = plate.Name,
+                            GroupType = plate.Type,
+                            DataType = 2,
+                            Compare = compare,
+                            Rate = rate,
+                        })
+                    });
+
+                    i++;
+                }
+                db.SaveChanges();
+                return i;
+            }
+        }
+
+        /// <summary>
+        /// 编辑条件买入模板额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateBuyOtherPar_Other(ModifyConditiontradeTemplateBuyOtherParRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_sys_conditiontrade_template_buy_other_trend_other_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trendPar.ParamsInfo = request.ParamsInfo;
+                trendPar.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除条件买入模板额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteConditiontradeTemplateBuyOtherPar_Other(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_sys_conditiontrade_template_buy_other_trend_other_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_sys_conditiontrade_template_buy_other_trend_other_par.Remove(trendPar);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 查询条件买入模板转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<ConditiontradeTemplateBuyAutoParInfo> GetConditiontradeTemplateBuyAutoPar_Other(DetailsPageRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = from item in db.t_sys_conditiontrade_template_buy_auto_trend_other_par
+                               where item.AutoTrendOtherId == request.Id
+                               select item;
+                int totalCount = trendPar.Count();
+
+                return new PageRes<ConditiontradeTemplateBuyAutoParInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trendPar
+                            orderby item.CreateTime descending
+                            select new ConditiontradeTemplateBuyAutoParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                ParamsInfo = item.ParamsInfo
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 查询条件买入模板转自动条件类型参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<ConditiontradeTemplateBuyAutoParInfo> GetConditiontradeTemplateBuyAutoParPlate_Other(GetConditiontradeTemplateBuyAutoParPlateRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_sys_conditiontrade_template_buy_auto_trend_other_par
+                                where item.AutoTrendOtherId == request.Id
+                                select item).ToList();
+                List<ConditiontradeTemplateBuyAutoParInfo> list = new List<ConditiontradeTemplateBuyAutoParInfo>();
+                foreach (var item in trendPar)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    if (temp.GroupType == request.GroupType && temp.DataType == request.DataType)
+                    {
+                        list.Add(new ConditiontradeTemplateBuyAutoParInfo
+                        {
+                            CreateTime = item.CreateTime,
+                            Id = item.Id,
+                            ParamsInfo = item.ParamsInfo
+                        });
+                    }
+                }
+                int totalCount = list.Count();
+
+                return new PageRes<ConditiontradeTemplateBuyAutoParInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in list
+                            orderby item.CreateTime descending
+                            select new ConditiontradeTemplateBuyAutoParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                ParamsInfo = item.ParamsInfo
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加条件买入模板转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddConditiontradeTemplateBuyAutoPar_Other(AddConditiontradeTemplateBuyAutoParRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                if (request.TrendId != 1 && request.TrendId != 7)
+                {
+                    var par = (from item in db.t_sys_conditiontrade_template_buy_auto_trend_other_par
+                               where item.AutoTrendOtherId == request.RelId
+                               select item).FirstOrDefault();
+                    if (par != null)
+                    {
+                        par.ParamsInfo = request.ParamsInfo;
+                        par.LastModified = DateTime.Now;
+                    }
+                    else
+                    {
+                        db.t_sys_conditiontrade_template_buy_auto_trend_other_par.Add(new t_sys_conditiontrade_template_buy_auto_trend_other_par
+                        {
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = request.ParamsInfo,
+                            AutoTrendOtherId = request.RelId
+                        });
+                    }
+                }
+                else
+                {
+                    db.t_sys_conditiontrade_template_buy_auto_trend_other_par.Add(new t_sys_conditiontrade_template_buy_auto_trend_other_par
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        ParamsInfo = request.ParamsInfo,
+                        AutoTrendOtherId = request.RelId
+                    });
+                }
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 批量添加条件买入模板转自动条件类型参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="TrendId"></param>
+        /// <param name="Type"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAddConditiontradeTemplateBuyAutoPar_Other(int Type, long RelId, List<string> list)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //查询分组
+                var plate = (from item in db.t_shares_plate
+                             where item.Type == Type && list.Contains(item.Name)
+                             select item).ToList();
+                var result = (from item in plate
+                              select new t_sys_conditiontrade_template_buy_auto_trend_other_par
+                              {
+                                  CreateTime = DateTime.Now,
+                                  LastModified = DateTime.Now,
+                                  AutoTrendOtherId = RelId,
+                                  ParamsInfo = JsonConvert.SerializeObject(new
+                                  {
+                                      GroupId = item.Id,
+                                      GroupName = item.Name,
+                                      GroupType = Type,
+                                      DataType = 1,
+                                  })
+                              }).ToList();
+                db.t_sys_conditiontrade_template_buy_auto_trend_other_par.AddRange(result);
+                db.SaveChanges();
+                return result.Count();
+            }
+        }
+
+        /// <summary>
+        /// 批量添加条件买入模板转自动条件类型参数(板块涨跌幅2)
+        /// </summary>
+        /// <param name="Type"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAddConditiontradeTemplateBuyAutoPar2_Other(int Type, long RelId, List<BatchAddSharesConditionTrendPar2Obj> list)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                int i = 0;
+                foreach (var item in list)
+                {
+                    string groupName = item.GroupName;
+                    int compare = item.Compare;
+                    string rate = item.Rate;
+                    //查询分组
+                    var plate = (from x in db.t_shares_plate
+                                 where x.Type == Type && x.Name == groupName
+                                 select x).FirstOrDefault();
+                    if (plate == null)
+                    {
+                        continue;
+                    }
+                    db.t_sys_conditiontrade_template_buy_auto_trend_other_par.Add(new t_sys_conditiontrade_template_buy_auto_trend_other_par
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        AutoTrendOtherId = RelId,
+                        ParamsInfo = JsonConvert.SerializeObject(new
+                        {
+                            GroupId = plate.Id,
+                            GroupName = plate.Name,
+                            GroupType = plate.Type,
+                            DataType = 2,
+                            Compare = compare,
+                            Rate = rate,
+                        })
+                    });
+
+                    i++;
+                }
+                db.SaveChanges();
+                return i;
+            }
+        }
+
+        /// <summary>
+        /// 编辑条件买入模板转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateBuyAutoPar_Other(ModifyConditiontradeTemplateBuyAutoParRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_sys_conditiontrade_template_buy_auto_trend_other_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trendPar.ParamsInfo = request.ParamsInfo;
+                trendPar.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除条件买入模板转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteConditiontradeTemplateBuyAutoPar_Other(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_sys_conditiontrade_template_buy_auto_trend_other_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_sys_conditiontrade_template_buy_auto_trend_other_par.Remove(trendPar);
+                db.SaveChanges();
+            }
+        }
+        #endregion
 
         /// <summary>
         /// 获取走势模板列表
@@ -5032,6 +6015,88 @@ namespace MealTicket_Admin_Handler
                     });
                 }
                 db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 批量条件单走势模板参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="TrendId"></param>
+        /// <param name="Type"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAddSharesConditionTrendPar(int Type, List<string> list)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //查询分组
+                var plate = (from item in db.t_shares_plate
+                             where item.Type == Type && list.Contains(item.Name)
+                             select item).ToList();
+                var result = (from item in plate
+                              select new t_account_shares_conditiontrade_buy_trend_par_template
+                              {
+                                  CreateTime = DateTime.Now,
+                                  LastModified = DateTime.Now,
+                                  TrendId = 7,
+                                  ParamsInfo = JsonConvert.SerializeObject(new
+                                  {
+                                      GroupId = item.Id,
+                                      GroupName = item.Name,
+                                      GroupType = Type,
+                                      DataType = 1,
+                                  })
+                              }).ToList();
+                db.t_account_shares_conditiontrade_buy_trend_par_template.AddRange(result);
+                db.SaveChanges();
+                return result.Count();
+            }
+        }
+
+        /// <summary>
+        /// 批量条件单走势模板参数(板块涨跌幅2)
+        /// </summary>
+        /// <param name="Type"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAddSharesConditionTrendPar2(int Type, List<BatchAddSharesConditionTrendPar2Obj> list)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                int i = 0;
+                foreach (var item in list)
+                {
+                    string groupName = item.GroupName;
+                    int compare = item.Compare;
+                    string rate =item.Rate;
+                    //查询分组
+                    var plate = (from x in db.t_shares_plate
+                                 where x.Type == Type && x.Name == groupName
+                                 select x).FirstOrDefault();
+                    if (plate == null)
+                    {
+                        continue;
+                    }
+                    db.t_account_shares_conditiontrade_buy_trend_par_template.Add(new t_account_shares_conditiontrade_buy_trend_par_template
+                    { 
+                        CreateTime=DateTime.Now,
+                        LastModified=DateTime.Now,
+                        TrendId=7,
+                        ParamsInfo=JsonConvert.SerializeObject(new 
+                        {
+                            GroupId= plate.Id,
+                            GroupName=plate.Name,
+                            GroupType= plate.Type,
+                            DataType= 2,
+                            Compare= compare,
+                            Rate= rate,
+                        })
+                    });
+
+                    i++;
+                }
+                db.SaveChanges();
+                return i;
             }
         }
 

@@ -4249,6 +4249,16 @@
             使用保证金
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.FrontAccountInfo.TotalMarketValue">
+            <summary>
+            总市值
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.FrontAccountInfo.TotalFundAmount">
+            <summary>
+            总借款
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.FrontAccountInfo.WalletStatus">
             <summary>
             钱包状态1有效 2无效
@@ -8654,6 +8664,21 @@
             仓位占比
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.BatchAddSharesConditionTrendPar2Obj.GroupName">
+            <summary>
+            板块名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.BatchAddSharesConditionTrendPar2Obj.Compare">
+            <summary>
+            大于/小于
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.BatchAddSharesConditionTrendPar2Obj.Rate">
+            <summary>
+            百分比
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.BatchUpdateMonitorTrendParRequest.SharesCode">
             <summary>
             股票代码
@@ -8702,6 +8727,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateBuyAutoInfo.TrendDescription">
             <summary>
             走势描述
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateBuyAutoInfo.OtherParCount">
+            <summary>
+            额外关系参数数量
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateBuyAutoInfo.Status">
@@ -8877,6 +8907,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateBuyOtherInfo.TrendDescription">
             <summary>
             走势描述
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateBuyOtherInfo.OtherParCount">
+            <summary>
+            额外关系参数数量
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateBuyOtherInfo.Status">
@@ -9197,6 +9232,16 @@
         <member name="P:MealTicket_Admin_Handler.Model.GetSharesPlateListRequest.Type">
             <summary>
             1.行业管理 2.地区管理 3.概念管理
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetSharesPlateListRequest.OrderType">
+            <summary>
+            排序方式0时间 1.涨跌幅
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetSharesPlateListRequest.OrderMethod">
+            <summary>
+            ascending：升序  descending：降序
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.Id">
@@ -12307,6 +12352,23 @@
             </summary>
             <param name="request"></param>
         </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchAddConditiontradeTemplateBuyOtherPar(System.Int32,System.Int64,System.Collections.Generic.List{System.String})">
+            <summary>
+            批量条件单走势模板参数(板块涨跌幅)
+            </summary>
+            <param name="TrendId"></param>
+            <param name="Type"></param>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchAddConditiontradeTemplateBuyOtherPar2(System.Int32,System.Int64,System.Collections.Generic.List{MealTicket_Admin_Handler.Model.BatchAddSharesConditionTrendPar2Obj})">
+            <summary>
+            批量条件单走势模板参数(板块涨跌幅2)
+            </summary>
+            <param name="Type"></param>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifyConditiontradeTemplateBuyOtherPar(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyOtherParRequest)">
             <summary>
             编辑条件买入模板额外条件类型参数
@@ -12339,6 +12401,23 @@
             </summary>
             <param name="request"></param>
         </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchAddConditiontradeTemplateBuyAutoPar(System.Int32,System.Int64,System.Collections.Generic.List{System.String})">
+            <summary>
+            批量添加条件买入模板转自动条件类型参数(板块涨跌幅)
+            </summary>
+            <param name="TrendId"></param>
+            <param name="Type"></param>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchAddConditiontradeTemplateBuyAutoPar2(System.Int32,System.Int64,System.Collections.Generic.List{MealTicket_Admin_Handler.Model.BatchAddSharesConditionTrendPar2Obj})">
+            <summary>
+            批量添加条件买入模板转自动条件类型参数(板块涨跌幅2)
+            </summary>
+            <param name="Type"></param>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifyConditiontradeTemplateBuyAutoPar(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyAutoParRequest)">
             <summary>
             编辑条件买入模板转自动条件类型参数
@@ -12346,6 +12425,167 @@
             <param name="request"></param>
         </member>
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteConditiontradeTemplateBuyAutoPar(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除条件买入模板转自动条件类型参数
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetConditiontradeTemplateBuyOtherList_Other(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
+            <summary>
+            获取条件买入模板额外条件-额外关系列表
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.AddConditiontradeTemplateBuyOther_Other(MealTicket_Admin_Handler.Model.AddConditiontradeTemplateBuyOtherRequest)">
+            <summary>
+            添加条件买入模板额外条件
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifyConditiontradeTemplateBuyOther_Other(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyOtherRequest)">
+            <summary>
+            编辑条件买入模板额外条件
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifyConditiontradeTemplateBuyOtherStatus_Other(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改条件买入模板额外条件状态
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteConditiontradeTemplateBuyOther_Other(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除条件买入模板额外条件
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetConditiontradeTemplateBuyAutoList_Other(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
+            <summary>
+            获取条件买入模板转自动条件列表
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.AddConditiontradeTemplateBuyAuto_Other(MealTicket_Admin_Handler.Model.AddConditiontradeTemplateBuyAutoRequest)">
+            <summary>
+            添加条件买入模板转自动条件
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifyConditiontradeTemplateBuyAuto_Other(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyAutoRequest)">
+            <summary>
+            编辑条件买入模板转自动条件
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifyConditiontradeTemplateBuyAutoStatus_Other(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改条件买入模板转自动条件状态
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteConditiontradeTemplateBuyAuto_Other(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除条件买入模板转自动条件
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetConditiontradeTemplateBuyOtherPar_Other(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
+            <summary>
+            查询条件买入模板额外条件类型参数
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetConditiontradeTemplateBuyOtherParPlate_Other(MealTicket_Admin_Handler.Model.GetConditiontradeTemplateBuyOtherParPlateRequest)">
+            <summary>
+            查询条件买入模板额外条件类型参数(板块涨跌幅)
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.AddConditiontradeTemplateBuyOtherPar_Other(MealTicket_Admin_Handler.Model.AddConditiontradeTemplateBuyOtherParRequest)">
+            <summary>
+            添加条件买入模板额外条件类型参数
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchAddConditiontradeTemplateBuyOtherPar_Other(System.Int32,System.Int64,System.Collections.Generic.List{System.String})">
+            <summary>
+            批量条件单走势模板参数(板块涨跌幅)
+            </summary>
+            <param name="TrendId"></param>
+            <param name="Type"></param>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchAddConditiontradeTemplateBuyOtherPar2_Other(System.Int32,System.Int64,System.Collections.Generic.List{MealTicket_Admin_Handler.Model.BatchAddSharesConditionTrendPar2Obj})">
+            <summary>
+            批量条件单走势模板参数(板块涨跌幅2)
+            </summary>
+            <param name="Type"></param>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifyConditiontradeTemplateBuyOtherPar_Other(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyOtherParRequest)">
+            <summary>
+            编辑条件买入模板额外条件类型参数
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteConditiontradeTemplateBuyOtherPar_Other(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除条件买入模板额外条件类型参数
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetConditiontradeTemplateBuyAutoPar_Other(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
+            <summary>
+            查询条件买入模板转自动条件类型参数
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetConditiontradeTemplateBuyAutoParPlate_Other(MealTicket_Admin_Handler.Model.GetConditiontradeTemplateBuyAutoParPlateRequest)">
+            <summary>
+            查询条件买入模板转自动条件类型参数(板块涨跌幅)
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.AddConditiontradeTemplateBuyAutoPar_Other(MealTicket_Admin_Handler.Model.AddConditiontradeTemplateBuyAutoParRequest)">
+            <summary>
+            添加条件买入模板转自动条件类型参数
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchAddConditiontradeTemplateBuyAutoPar_Other(System.Int32,System.Int64,System.Collections.Generic.List{System.String})">
+            <summary>
+            批量添加条件买入模板转自动条件类型参数(板块涨跌幅)
+            </summary>
+            <param name="TrendId"></param>
+            <param name="Type"></param>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchAddConditiontradeTemplateBuyAutoPar2_Other(System.Int32,System.Int64,System.Collections.Generic.List{MealTicket_Admin_Handler.Model.BatchAddSharesConditionTrendPar2Obj})">
+            <summary>
+            批量添加条件买入模板转自动条件类型参数(板块涨跌幅2)
+            </summary>
+            <param name="Type"></param>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifyConditiontradeTemplateBuyAutoPar_Other(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyAutoParRequest)">
+            <summary>
+            编辑条件买入模板转自动条件类型参数
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteConditiontradeTemplateBuyAutoPar_Other(MealTicket_Admin_Handler.Model.DeleteRequest)">
             <summary>
             删除条件买入模板转自动条件类型参数
             </summary>
@@ -12401,6 +12641,23 @@
             添加走势模板参数
             </summary>
             <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesConditionTrendPar(System.Int32,System.Collections.Generic.List{System.String})">
+            <summary>
+            批量条件单走势模板参数(板块涨跌幅)
+            </summary>
+            <param name="TrendId"></param>
+            <param name="Type"></param>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesConditionTrendPar2(System.Int32,System.Collections.Generic.List{MealTicket_Admin_Handler.Model.BatchAddSharesConditionTrendPar2Obj})">
+            <summary>
+            批量条件单走势模板参数(板块涨跌幅2)
+            </summary>
+            <param name="Type"></param>
+            <param name="list"></param>
+            <returns></returns>
         </member>
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesConditionTrendPar(MealTicket_Admin_Handler.Model.ModifySharesMonitorTrendParRequest)">
             <summary>

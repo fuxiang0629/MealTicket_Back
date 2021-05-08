@@ -51,6 +51,11 @@ namespace MealTicket_Web_Handler.Model
         /// 排序字段1时间 2涨幅
         /// </summary>
         public int OrderType { get; set; }
+
+        /// <summary>
+        /// 状态0全部 1有效 2无效
+        /// </summary>
+        public int Status { get; set; }
     }
 
     public class AccountBuyConditionTradeSharesInfo

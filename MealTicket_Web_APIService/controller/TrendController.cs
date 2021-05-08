@@ -1899,6 +1899,141 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 批量添加股票买入额外条件类型参数(板块涨跌幅1)
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("account/conditiontrade/buy/other/par/add/batch"), HttpPost]
+        [Description("批量添加股票买入额外条件类型参数(板块涨跌幅1)")]
+        public async Task<object> BatchAddAccountBuyConditionOtherPar()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<string> list = new List<string>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+
+                            list.Add(datas[0].Trim());
+                        }
+                        return trendHandler.BatchAddAccountBuyConditionOtherPar(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 批量添加股票买入额外条件类型参数(板块涨跌幅2)
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("account/conditiontrade/buy/other/par/add/batch2"), HttpPost]
+        [Description("批量添加股票买入额外条件类型参数(板块涨跌幅2)")]
+        public async Task<object> BatchAddAccountBuyConditionOtherPar2()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<BatchAddSharesConditionTrendPar2Obj> list = new List<BatchAddSharesConditionTrendPar2Obj>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+                            if (datas.Length < 3)
+                            {
+                                continue;
+                            }
+                            string groupName = datas[0].Trim();
+                            int compare = datas[1].Trim() == ">=" ? 1 : 2;
+                            string rate = datas[2].Trim();
+
+                            list.Add(new BatchAddSharesConditionTrendPar2Obj
+                            {
+                                GroupName = groupName,
+                                Compare = compare,
+                                Rate = rate
+                            });
+                        }
+                        return trendHandler.BatchAddAccountBuyConditionOtherPar2(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+
+        /// <summary>
         /// 编辑股票买入额外条件类型参数
         /// </summary>
         /// <param name="request"></param>
@@ -1989,6 +2124,140 @@ namespace MealTicket_Web_APIService.controller
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             trendHandler.AddAccountBuyConditionAutoPar(request, basedata);
             return null;
+        }
+
+        /// <summary>
+        /// 批量添加股票买入转自动条件类型参数(板块涨跌幅1)
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("account/conditiontrade/buy/auto/par/add/batch"), HttpPost]
+        [Description("批量添加股票买入转自动条件类型参数(板块涨跌幅1)")]
+        public async Task<object> BatchAddAccountBuyConditionAutoPar()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<string> list = new List<string>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+
+                            list.Add(datas[0].Trim());
+                        }
+                        return trendHandler.BatchAddAccountBuyConditionAutoPar(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 批量添加股票买入转自动条件类型参数(板块涨跌幅2)
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("account/conditiontrade/buy/auto/par/add/batch2"), HttpPost]
+        [Description("批量添加股票买入转自动条件类型参数(板块涨跌幅2)")]
+        public async Task<object> BatchAddAccountBuyConditionAutoPar2()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<BatchAddSharesConditionTrendPar2Obj> list = new List<BatchAddSharesConditionTrendPar2Obj>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+                            if (datas.Length < 3)
+                            {
+                                continue;
+                            }
+                            string groupName = datas[0].Trim();
+                            int compare = datas[1].Trim() == ">=" ? 1 : 2;
+                            string rate = datas[2].Trim();
+
+                            list.Add(new BatchAddSharesConditionTrendPar2Obj
+                            {
+                                GroupName = groupName,
+                                Compare = compare,
+                                Rate = rate
+                            });
+                        }
+                        return trendHandler.BatchAddAccountBuyConditionAutoPar2(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
         }
 
         /// <summary>
@@ -2281,6 +2550,24 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             trendHandler.BatchDeleteConditiontradeBuyShares(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量设置股票跟投
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/buy/shares/follow/batch/set"), HttpPost]
+        [Description("批量设置股票跟投")]
+        [CheckUserLoginFilter]
+        public object BatchSetConditiontradeBuySharesFollow(BatchSetConditiontradeBuySharesFollowRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BatchSetConditiontradeBuySharesFollow(request, basedata);
             return null;
         }
 
@@ -2821,6 +3108,140 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 批量添加条件买入模板额外条件类型参数(板块涨跌幅1)
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("conditiontrade/template/buy/other/par/add/batch"), HttpPost]
+        [Description("批量添加条件买入模板额外条件类型参数(板块涨跌幅1)")]
+        public async Task<object> BatchAddConditiontradeTemplateBuyOtherPar()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<string> list = new List<string>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+
+                            list.Add(datas[0].Trim());
+                        }
+                        return trendHandler.BatchAddConditiontradeTemplateBuyOtherPar(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 批量添加条件买入模板额外条件类型参数(板块涨跌幅2)
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("conditiontrade/template/buy/other/par/add/batch2"), HttpPost]
+        [Description("批量添加条件买入模板额外条件类型参数(板块涨跌幅2)")]
+        public async Task<object> BatchAddConditiontradeTemplateBuyOtherPar2()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<BatchAddSharesConditionTrendPar2Obj> list = new List<BatchAddSharesConditionTrendPar2Obj>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+                            if (datas.Length < 3)
+                            {
+                                continue;
+                            }
+                            string groupName = datas[0].Trim();
+                            int compare = datas[1].Trim() == ">=" ? 1 : 2;
+                            string rate = datas[2].Trim();
+
+                            list.Add(new BatchAddSharesConditionTrendPar2Obj
+                            {
+                                GroupName = groupName,
+                                Compare = compare,
+                                Rate = rate
+                            });
+                        }
+                        return trendHandler.BatchAddConditiontradeTemplateBuyOtherPar2(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
         /// 编辑条件买入模板额外条件类型参数
         /// </summary>
         /// <param name="request"></param>
@@ -2914,6 +3335,140 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 批量添加条件买入模板转自动条件类型参数(板块涨跌幅1)
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("conditiontrade/template/buy/auto/par/add/batch"), HttpPost]
+        [Description("批量添加条件买入模板转自动条件类型参数(板块涨跌幅1)")]
+        public async Task<object> BatchAddConditiontradeTemplateBuyAutoPar()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<string> list = new List<string>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+
+                            list.Add(datas[0].Trim());
+                        }
+                        return trendHandler.BatchAddConditiontradeTemplateBuyAutoPar(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 批量添加条件买入模板转自动条件类型参数(板块涨跌幅2)
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("conditiontrade/template/buy/auto/par/add/batch2"), HttpPost]
+        [Description("批量添加条件买入模板转自动条件类型参数(板块涨跌幅2)")]
+        public async Task<object> BatchAddConditiontradeTemplateBuyAutoPar2()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<BatchAddSharesConditionTrendPar2Obj> list = new List<BatchAddSharesConditionTrendPar2Obj>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+                            if (datas.Length < 3)
+                            {
+                                continue;
+                            }
+                            string groupName = datas[0].Trim();
+                            int compare = datas[1].Trim() == ">=" ? 1 : 2;
+                            string rate = datas[2].Trim();
+
+                            list.Add(new BatchAddSharesConditionTrendPar2Obj
+                            {
+                                GroupName = groupName,
+                                Compare = compare,
+                                Rate = rate
+                            });
+                        }
+                        return trendHandler.BatchAddConditiontradeTemplateBuyAutoPar2(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
         /// 编辑条件买入模板转自动条件类型参数
         /// </summary>
         /// <param name="request"></param>
@@ -2950,6 +3505,642 @@ namespace MealTicket_Web_APIService.controller
             trendHandler.DeleteConditiontradeTemplateBuyAutoPar(request, basedata);
             return null;
         }
+
+
+        #region=======================额外关系=====================================
+        /// <summary>
+        /// 获取条件买入模板额外条件列表-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/list/other"), HttpPost]
+        [Description("获取条件买入模板额外条件列表-额外关系")]
+        [CheckUserLoginFilter]
+        public PageRes<ConditiontradeTemplateBuyOtherInfo> GetConditiontradeTemplateBuyOtherList_Other(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeTemplateBuyOtherList_Other(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加条件买入模板额外条件-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/add/other"), HttpPost]
+        [Description("添加条件买入模板额外条件-额外关系")]
+        [CheckUserLoginFilter]
+        public object AddConditiontradeTemplateBuyOther_Other(AddConditiontradeTemplateBuyOtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddConditiontradeTemplateBuyOther_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑条件买入模板额外条件-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/modify/other"), HttpPost]
+        [Description("编辑条件买入模板额外条件-额外关系")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateBuyOther_Other(ModifyConditiontradeTemplateBuyOtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateBuyOther_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改条件买入模板额外条件状态-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/status/modify/other"), HttpPost]
+        [Description("修改条件买入模板额外条件状态-额外关系")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateBuyOtherStatus_Other(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateBuyOtherStatus_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除条件买入模板额外条件-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/delete/other"), HttpPost]
+        [Description("删除条件买入模板额外条件-额外关系")]
+        [CheckUserLoginFilter]
+        public object DeleteConditiontradeTemplateBuyOther_Other(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteConditiontradeTemplateBuyOther_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取条件买入模板转自动条件列表-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/list/other"), HttpPost]
+        [Description("获取条件买入模板转自动条件列表-额外关系")]
+        [CheckUserLoginFilter]
+        public PageRes<ConditiontradeTemplateBuyAutoInfo> GetConditiontradeTemplateBuyAutoList_Other(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeTemplateBuyAutoList_Other(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加条件买入模板转自动条件-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/add/other"), HttpPost]
+        [Description("添加条件买入模板转自动条件-额外关系")]
+        [CheckUserLoginFilter]
+        public object AddConditiontradeTemplateBuyAuto_Other(AddConditiontradeTemplateBuyAutoRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddConditiontradeTemplateBuyAuto_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑条件买入模板转自动条件-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/modify/other"), HttpPost]
+        [Description("编辑条件买入模板转自动条件-额外关系")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateBuyAuto_Other(ModifyConditiontradeTemplateBuyAutoRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateBuyAuto_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改条件买入模板转自动条件状态-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/status/modify/other"), HttpPost]
+        [Description("修改条件买入模板转自动条件状态-额外关系")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateBuyAutoStatus_Other(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateBuyAutoStatus_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除条件买入模板转自动条件-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/delete/other"), HttpPost]
+        [Description("删除条件买入模板转自动条件-额外关系")]
+        [CheckUserLoginFilter]
+        public object DeleteConditiontradeTemplateBuyAuto_Other(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteConditiontradeTemplateBuyAuto_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询条件买入模板额外条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/par/other"), HttpPost]
+        [Description("查询条件买入模板额外条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public PageRes<ConditiontradeTemplateBuyOtherParInfo> GetConditiontradeTemplateBuyOtherPar_Other(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeTemplateBuyOtherPar_Other(request, basedata);
+        }
+
+        /// <summary>
+        /// 查询条件买入模板额外条件类型参数(板块涨跌幅)-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/par/plate/other"), HttpPost]
+        [Description("查询条件买入模板额外条件类型参数(板块涨跌幅)-额外关系")]
+        [CheckUserLoginFilter]
+        public PageRes<ConditiontradeTemplateBuyOtherParInfo> GetConditiontradeTemplateBuyOtherParPlate_Other(GetConditiontradeTemplateBuyOtherParPlateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeTemplateBuyOtherParPlate_Other(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加条件买入模板额外条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/par/add/other"), HttpPost]
+        [Description("添加条件买入模板额外条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public object AddConditiontradeTemplateBuyOtherPar_Other(AddConditiontradeTemplateBuyOtherParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddConditiontradeTemplateBuyOtherPar_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量添加条件买入模板额外条件类型参数(板块涨跌幅1)-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("conditiontrade/template/buy/other/par/add/batch/other"), HttpPost]
+        [Description("批量添加条件买入模板额外条件类型参数(板块涨跌幅1)-额外关系")]
+        public async Task<object> BatchAddConditiontradeTemplateBuyOtherPar_Other()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<string> list = new List<string>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+
+                            list.Add(datas[0].Trim());
+                        }
+                        return trendHandler.BatchAddConditiontradeTemplateBuyOtherPar_Other(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 批量添加条件买入模板额外条件类型参数(板块涨跌幅2)-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("conditiontrade/template/buy/other/par/add/batch2/other"), HttpPost]
+        [Description("批量添加条件买入模板额外条件类型参数(板块涨跌幅2)-额外关系")]
+        public async Task<object> BatchAddConditiontradeTemplateBuyOtherPar2_Other()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<BatchAddSharesConditionTrendPar2Obj> list = new List<BatchAddSharesConditionTrendPar2Obj>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+                            if (datas.Length < 3)
+                            {
+                                continue;
+                            }
+                            string groupName = datas[0].Trim();
+                            int compare = datas[1].Trim() == ">=" ? 1 : 2;
+                            string rate = datas[2].Trim();
+
+                            list.Add(new BatchAddSharesConditionTrendPar2Obj
+                            {
+                                GroupName = groupName,
+                                Compare = compare,
+                                Rate = rate
+                            });
+                        }
+                        return trendHandler.BatchAddConditiontradeTemplateBuyOtherPar2_Other(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 编辑条件买入模板额外条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/par/modify/other"), HttpPost]
+        [Description("编辑条件买入模板额外条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateBuyOtherPar_Other(ModifyConditiontradeTemplateBuyOtherParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateBuyOtherPar_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除条件买入模板额外条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/par/delete/other"), HttpPost]
+        [Description("删除条件买入模板额外条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public object DeleteConditiontradeTemplateBuyOtherPar_Other(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteConditiontradeTemplateBuyOtherPar_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询条件买入模板转自动条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/par/other"), HttpPost]
+        [Description("查询条件买入模板转自动条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public PageRes<ConditiontradeTemplateBuyAutoParInfo> GetConditiontradeTemplateBuyAutoPar_Other(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeTemplateBuyAutoPar_Other(request, basedata);
+        }
+
+        /// <summary>
+        /// 查询条件买入模板转自动条件类型参数(板块涨跌幅)-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/par/plate/other"), HttpPost]
+        [Description("查询条件买入模板转自动条件类型参数(板块涨跌幅)-额外关系")]
+        [CheckUserLoginFilter]
+        public PageRes<ConditiontradeTemplateBuyAutoParInfo> GetConditiontradeTemplateBuyAutoParPlate_Other(GetConditiontradeTemplateBuyAutoParPlateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeTemplateBuyAutoParPlate_Other(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加条件买入模板转自动条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/par/add/other"), HttpPost]
+        [Description("添加条件买入模板转自动条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public object AddConditiontradeTemplateBuyAutoPar_Other(AddConditiontradeTemplateBuyAutoParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddConditiontradeTemplateBuyAutoPar_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量添加条件买入模板转自动条件类型参数(板块涨跌幅1)-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("conditiontrade/template/buy/auto/par/add/batch/other"), HttpPost]
+        [Description("批量添加条件买入模板转自动条件类型参数(板块涨跌幅1)-额外关系")]
+        public async Task<object> BatchAddConditiontradeTemplateBuyAutoPar_Other()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<string> list = new List<string>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+
+                            list.Add(datas[0].Trim());
+                        }
+                        return trendHandler.BatchAddConditiontradeTemplateBuyAutoPar_Other(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 批量添加条件买入模板转自动条件类型参数(板块涨跌幅2)-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("conditiontrade/template/buy/auto/par/add/batch2/other"), HttpPost]
+        [Description("批量添加条件买入模板转自动条件类型参数(板块涨跌幅2)-额外关系")]
+        public async Task<object> BatchAddConditiontradeTemplateBuyAutoPar2_Other()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<BatchAddSharesConditionTrendPar2Obj> list = new List<BatchAddSharesConditionTrendPar2Obj>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+                            if (datas.Length < 3)
+                            {
+                                continue;
+                            }
+                            string groupName = datas[0].Trim();
+                            int compare = datas[1].Trim() == ">=" ? 1 : 2;
+                            string rate = datas[2].Trim();
+
+                            list.Add(new BatchAddSharesConditionTrendPar2Obj
+                            {
+                                GroupName = groupName,
+                                Compare = compare,
+                                Rate = rate
+                            });
+                        }
+                        return trendHandler.BatchAddConditiontradeTemplateBuyAutoPar2_Other(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 编辑条件买入模板转自动条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/par/modify/other"), HttpPost]
+        [Description("编辑条件买入模板转自动条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateBuyAutoPar_Other(ModifyConditiontradeTemplateBuyAutoParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateBuyAutoPar_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除条件买入模板转自动条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/par/delete/other"), HttpPost]
+        [Description("删除条件买入模板转自动条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public object DeleteConditiontradeTemplateBuyAutoPar_Other(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteConditiontradeTemplateBuyAutoPar_Other(request, basedata);
+            return null;
+        }
+        #endregion
+
 
         /// <summary>
         /// 买入模板导入

@@ -219,6 +219,15 @@ namespace MealTicket_Web_Handler
         public virtual DbSet<t_account_shares_conditiontrade_buy_group_share_account> t_account_shares_conditiontrade_buy_group_share_account { get; set; }
         public virtual DbSet<v_plate_shares> v_plate_shares { get; set; }
         public virtual DbSet<v_plate> v_plate { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_template_buy_auto_trend_other> t_account_shares_conditiontrade_template_buy_auto_trend_other { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_template_buy_auto_trend_other_par> t_account_shares_conditiontrade_template_buy_auto_trend_other_par { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_template_buy_other_trend_other> t_account_shares_conditiontrade_template_buy_other_trend_other { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_template_buy_other_trend_other_par> t_account_shares_conditiontrade_template_buy_other_trend_other_par { get; set; }
+        public virtual DbSet<t_shares_quotes_history> t_shares_quotes_history { get; set; }
+        public virtual DbSet<t_sys_conditiontrade_template_buy_auto_trend_other> t_sys_conditiontrade_template_buy_auto_trend_other { get; set; }
+        public virtual DbSet<t_sys_conditiontrade_template_buy_auto_trend_other_par> t_sys_conditiontrade_template_buy_auto_trend_other_par { get; set; }
+        public virtual DbSet<t_sys_conditiontrade_template_buy_other_trend_other> t_sys_conditiontrade_template_buy_other_trend_other { get; set; }
+        public virtual DbSet<t_sys_conditiontrade_template_buy_other_trend_other_par> t_sys_conditiontrade_template_buy_other_trend_other_par { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)

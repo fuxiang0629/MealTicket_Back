@@ -808,7 +808,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         DB_TRADE_PRICE_INFO DB_TRADE_PRICE_INFO = new DB_TRADE_PRICE_INFO();
                         int Minute = item.Minute;
                         int Compare = item.Compare;
-                        int Rate = item.Rate;
+                        double Rate = item.Rate;
                         int iErrorCode = Singleton.Instance.m_stockMonitor.GetUpOrDownInfoInTime(sharesCode + "," + market, Minute, ref DB_TRADE_PRICE_INFO, ref upOrDownInfo);
                         if (iErrorCode != 0)
                         {
@@ -874,9 +874,15 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                                  select item).ToList();
                 List<long> PlateList1 = new List<long>();
                 List<long> PlateList2 = new List<long>();
+                List<long> AllSetPlateList2 = new List<long>();
+                List<string> AllSetPar = new List<string>();
                 foreach (var p in par)
                 {
                     var temp = JsonConvert.DeserializeObject<dynamic>(p);
+                    if (temp.GroupId == 0)
+                    {
+                        AllSetPar.Add(p);
+                    }
 
                     var plate = plateRate.Where(e => e.PlateId == temp.GroupId).FirstOrDefault();
                     if (plate == null)
@@ -885,6 +891,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                     }
                     if (temp.DataType == 2)
                     {
+                        AllSetPlateList2.Add(plate.PlateId);
                         if (temp.Compare == 1 && plate.RiseRate < temp.Rate * 100)
                         {
                             continue;
@@ -900,6 +907,21 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         PlateList1.Add(plate.PlateId);
                     }
                 }
+
+                var otherPlate = (from item in plateRate
+                                  where !AllSetPlateList2.Contains(item.PlateId)
+                                  select item).ToList();
+                foreach (var p in AllSetPar)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(p);
+                    var plate = plateRate.Where(e => e.PlateType == temp.GroupType && ((temp.Compare == 1 && e.RiseRate >= temp.Rate * 100) || (temp.Compare == 2 && e.RiseRate <= temp.Rate * 100))).Select(e=>e.PlateId).ToList();
+                    if (plate.Count()<=0)
+                    {
+                        continue;
+                    }
+                    PlateList2.AddRange(plate);
+                }
+
                 var newList=PlateList1.Intersect(PlateList2);
                 if (newList.Count() > 0)
                 {

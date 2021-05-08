@@ -99,10 +99,10 @@ D:\项目\饭票\后端\MealTicket_Web_APIService\obj\Release\MealTicket_Web_API
 D:\项目\饭票\后端\MealTicket_Web_APIService\obj\Release\MealTicket_Web_APIService.csproj.CopyComplete
 D:\项目\饭票\后端\MealTicket_Web_APIService\obj\Release\MealTicket_Web_APIService.exe
 D:\项目\饭票\后端\MealTicket_Web_APIService\obj\Release\MealTicket_Web_APIService.pdb
+F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\EntityFramework.dll
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\MealTicket_Web_APIService.exe.config
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\MealTicket_Web_APIService.exe
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\MealTicket_Web_APIService.pdb
-F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\EntityFramework.dll
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\EntityFramework.SqlServer.dll
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\FXCommon.dll
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\MealTicket_Web_Handler.dll
@@ -121,9 +121,9 @@ F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\Qiniu.dll
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\Oracle.DataAccess.dll
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\ThoughtWorks.QRCode.dll
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\StockTrendMonitor.dll
+F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\stock_db_core.dll
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\RabbitMQ.Client.dll
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\System.Memory.dll
-F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\stock_db_core.dll
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\System.Threading.Channels.dll
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\System.Threading.Tasks.Extensions.dll
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\System.Runtime.CompilerServices.Unsafe.dll
@@ -144,10 +144,10 @@ F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\System.Net.Http.For
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\System.Web.Http.xml
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\System.Web.Http.Cors.xml
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\System.Web.Http.Owin.xml
+F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\stock_db_core.pdb
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\RabbitMQ.Client.pdb
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\RabbitMQ.Client.xml
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\System.Memory.xml
-F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\stock_db_core.pdb
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\System.Threading.Channels.xml
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\System.Threading.Tasks.Extensions.xml
 F:\项目\饭票后端\MealTicket_Web_APIService\bin\Release\System.Runtime.CompilerServices.Unsafe.xml

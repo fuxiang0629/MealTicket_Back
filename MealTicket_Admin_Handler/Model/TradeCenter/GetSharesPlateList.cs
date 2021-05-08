@@ -21,6 +21,16 @@ namespace MealTicket_Admin_Handler.Model
         /// 1.行业管理 2.地区管理 3.概念管理
         /// </summary>
         public int Type { get; set; }
+
+        /// <summary>
+        /// 排序方式0时间 1.涨跌幅
+        /// </summary>
+        public int OrderType { get; set; }
+
+        /// <summary>
+        /// ascending：升序  descending：降序
+        /// </summary>
+        public string OrderMethod { get; set; }
     }
 
     public class SharesPlateInfo

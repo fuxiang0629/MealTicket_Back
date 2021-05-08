@@ -1921,6 +1921,24 @@
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
   <!--生成过程中发现错误:
+警告 6002: 表/视图“meal_ticket.dbo.v_plate”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+  <EntityType Name="v_plate">
+    <Key>
+      <PropertyRef Name="PlateId" />
+      <PropertyRef Name="PlateName" />
+      <PropertyRef Name="PlateType" />
+      <PropertyRef Name="Status" />
+      <PropertyRef Name="CreateTime" />
+    </Key>
+    <Property Name="PlateId" Type="bigint" Nullable="false" />
+    <Property Name="PlateName" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="PlateType" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="SharesCount" Type="int" />
+    <Property Name="RiseRate" Type="bigint" />
+  </EntityType>
+  <!--生成过程中发现错误:
 警告 6002: 表/视图“meal_ticket.dbo.v_plate_shares”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
   <EntityType Name="v_plate_shares">
     <Key>
@@ -2243,6 +2261,17 @@
     <EntitySet Name="t_sys_conditiontrade_template_sell" EntityType="Self.t_sys_conditiontrade_template_sell" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_sys_conditiontrade_template_sell_child" EntityType="Self.t_sys_conditiontrade_template_sell_child" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_system_param" EntityType="Self.t_system_param" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="v_plate" EntityType="Self.v_plate" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [v_plate].[PlateId] AS [PlateId], 
+    [v_plate].[PlateName] AS [PlateName], 
+    [v_plate].[PlateType] AS [PlateType], 
+    [v_plate].[Status] AS [Status], 
+    [v_plate].[CreateTime] AS [CreateTime], 
+    [v_plate].[SharesCount] AS [SharesCount], 
+    [v_plate].[RiseRate] AS [RiseRate]
+    FROM [dbo].[v_plate] AS [v_plate]</DefiningQuery>
+    </EntitySet>
     <EntitySet Name="v_plate_shares" EntityType="Self.v_plate_shares" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 
     [v_plate_shares].[PlateId] AS [PlateId], 
