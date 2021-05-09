@@ -4742,7 +4742,10 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                 CreateTime = item.CreateTime,
                                 Id = item.Id,
                                 TrendDescription = item.TrendDescription,
-                                TrendName = item.TrendName
+                                TrendName = item.TrendName,
+                                OtherParCount = (from x in db.t_account_shares_conditiontrade_buy_details_other_trend_other
+                                                 where x.OtherTrendId == item.Id
+                                                 select x).Count()
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
                 };
             }
@@ -4891,7 +4894,10 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                 CreateTime = item.CreateTime,
                                 Id = item.Id,
                                 TrendDescription = item.TrendDescription,
-                                TrendName = item.TrendName
+                                TrendName = item.TrendName,
+                                OtherParCount = (from x in db.t_account_shares_conditiontrade_buy_details_auto_trend_other
+                                                 where x.AutoTrendId == item.Id
+                                                 select x).Count()
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
                 };
             }
@@ -5494,6 +5500,789 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 db.SaveChanges();
             }
         }
+
+        #region==============额外关系======================
+        /// <summary>
+        /// 获取股票买入额外条件列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionOtherInfo> GetAccountBuyConditionOtherList_Other(DetailsPageRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = from item in db.t_account_shares_conditiontrade_buy_details_other_trend_other
+                            where item.OtherTrendId == request.Id
+                            select item;
+                int totalCount = trend.Count();
+
+                return new PageRes<AccountBuyConditionOtherInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trend
+                            orderby item.CreateTime descending
+                            select new AccountBuyConditionOtherInfo
+                            {
+                                Status = item.Status,
+                                TrendId = item.TrendId,
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                TrendDescription = item.TrendDescription,
+                                TrendName = item.TrendName
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加股票买入额外条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddAccountBuyConditionOther_Other(AddAccountBuyConditionOtherRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    t_account_shares_conditiontrade_buy_details_other_trend_other temp = new t_account_shares_conditiontrade_buy_details_other_trend_other
+                    {
+                        Status = 1,
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        OtherTrendId = request.RelId,
+                        TrendDescription = request.TrendDescription,
+                        TrendId = request.TrendId,
+                        TrendName = request.TrendName
+                    };
+                    db.t_account_shares_conditiontrade_buy_details_other_trend_other.Add(temp);
+                    db.SaveChanges();
+
+                    //查询参数值
+                    var par = (from item in db.t_account_shares_conditiontrade_buy_trend_par_template.AsNoTracking()
+                               where item.TrendId == request.TrendId
+                               select item).ToList();
+                    foreach (var item in par)
+                    {
+                        db.t_account_shares_conditiontrade_buy_details_other_trend_other_par.Add(new t_account_shares_conditiontrade_buy_details_other_trend_other_par
+                        {
+                            OtherTrendOtherId = temp.Id,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = item.ParamsInfo
+                        });
+                    }
+                    if (par.Count() > 0)
+                    {
+                        db.SaveChanges();
+                    }
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 编辑股票买入额外条件
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public void ModifyAccountBuyConditionOther_Other(ModifyAccountBuyConditionOtherRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_account_shares_conditiontrade_buy_details_other_trend_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trend.TrendDescription = request.Description;
+                trend.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改股票买入额外条件状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountBuyConditionOtherStatus_Other(ModifyStatusRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_account_shares_conditiontrade_buy_details_other_trend_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trend.Status = request.Status;
+                trend.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除股票买入额外条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteAccountBuyConditionOther_Other(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_account_shares_conditiontrade_buy_details_other_trend_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_account_shares_conditiontrade_buy_details_other_trend_other.Remove(trend);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取股票买入转自动条件列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionAutoInfo> GetAccountBuyConditionAutoList_Other(DetailsPageRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = from item in db.t_account_shares_conditiontrade_buy_details_auto_trend_other
+                            where item.AutoTrendId == request.Id
+                            select item;
+                int totalCount = trend.Count();
+
+                return new PageRes<AccountBuyConditionAutoInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trend
+                            orderby item.CreateTime descending
+                            select new AccountBuyConditionAutoInfo
+                            {
+                                Status = item.Status,
+                                TrendId = item.TrendId,
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                TrendDescription = item.TrendDescription,
+                                TrendName = item.TrendName
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加股票买入转自动条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddAccountBuyConditionAuto_Other(AddAccountBuyConditionAutoRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    t_account_shares_conditiontrade_buy_details_auto_trend_other temp = new t_account_shares_conditiontrade_buy_details_auto_trend_other
+                    {
+                        Status = 1,
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        AutoTrendId = request.RelId,
+                        TrendDescription = request.TrendDescription,
+                        TrendId = request.TrendId,
+                        TrendName = request.TrendName
+                    };
+                    db.t_account_shares_conditiontrade_buy_details_auto_trend_other.Add(temp);
+                    db.SaveChanges();
+
+                    //查询参数值
+                    var par = (from item in db.t_account_shares_conditiontrade_buy_trend_par_template.AsNoTracking()
+                               where item.TrendId == request.TrendId
+                               select item).ToList();
+                    foreach (var item in par)
+                    {
+                        db.t_account_shares_conditiontrade_buy_details_auto_trend_other_par.Add(new t_account_shares_conditiontrade_buy_details_auto_trend_other_par
+                        {
+                            AutoTrendOtherId = temp.Id,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = item.ParamsInfo
+                        });
+                    }
+                    if (par.Count() > 0)
+                    {
+                        db.SaveChanges();
+                    }
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 编辑股票买入转自动条件
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public void ModifyAccountBuyConditionAuto_Other(ModifyAccountBuyConditionAutoRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_account_shares_conditiontrade_buy_details_auto_trend_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trend.TrendDescription = request.Description;
+                trend.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改股票买入转自动条件状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountBuyConditionAutoStatus_Other(ModifyStatusRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_account_shares_conditiontrade_buy_details_auto_trend_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trend.Status = request.Status;
+                trend.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除股票买入转自动条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteAccountBuyConditionAuto_Other(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_account_shares_conditiontrade_buy_details_auto_trend_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_account_shares_conditiontrade_buy_details_auto_trend_other.Remove(trend);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 查询股票买入额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionOtherParInfo> GetAccountBuyConditionOtherPar_Other(DetailsPageRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = from item in db.t_account_shares_conditiontrade_buy_details_other_trend_other_par
+                               where item.OtherTrendOtherId == request.Id
+                               select item;
+                int totalCount = trendPar.Count();
+
+                return new PageRes<AccountBuyConditionOtherParInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trendPar
+                            orderby item.CreateTime descending
+                            select new AccountBuyConditionOtherParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                ParamsInfo = item.ParamsInfo
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 查询股票买入额外条件类型参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionOtherParInfo> GetAccountBuyConditionOtherParPlate_Other(GetAccountBuyConditionOtherParPlateRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_conditiontrade_buy_details_other_trend_other_par
+                                where item.OtherTrendOtherId == request.Id
+                                select item).ToList();
+                List<AccountBuyConditionOtherParInfo> list = new List<AccountBuyConditionOtherParInfo>();
+                foreach (var item in trendPar)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    if (temp.GroupType == request.GroupType && temp.DataType == request.DataType)
+                    {
+                        list.Add(new AccountBuyConditionOtherParInfo
+                        {
+                            CreateTime = item.CreateTime,
+                            Id = item.Id,
+                            ParamsInfo = item.ParamsInfo
+                        });
+                    }
+                }
+                int totalCount = list.Count();
+
+                return new PageRes<AccountBuyConditionOtherParInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in list
+                            orderby item.CreateTime descending
+                            select new AccountBuyConditionOtherParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                ParamsInfo = item.ParamsInfo
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加股票买入额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddAccountBuyConditionOtherPar_Other(AddAccountBuyConditionOtherParRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                if (request.TrendId != 1 && request.TrendId != 7)
+                {
+                    var par = (from item in db.t_account_shares_conditiontrade_buy_details_other_trend_other_par
+                               where item.OtherTrendOtherId == request.RelId
+                               select item).FirstOrDefault();
+                    if (par != null)
+                    {
+                        par.ParamsInfo = request.ParamsInfo;
+                        par.LastModified = DateTime.Now;
+                    }
+                    else
+                    {
+                        db.t_account_shares_conditiontrade_buy_details_other_trend_other_par.Add(new t_account_shares_conditiontrade_buy_details_other_trend_other_par
+                        {
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = request.ParamsInfo,
+                            OtherTrendOtherId = request.RelId
+                        });
+                    }
+                }
+                else
+                {
+                    db.t_account_shares_conditiontrade_buy_details_other_trend_other_par.Add(new t_account_shares_conditiontrade_buy_details_other_trend_other_par
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        ParamsInfo = request.ParamsInfo,
+                        OtherTrendOtherId = request.RelId
+                    });
+                }
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 批量添加股票买入额外条件类型参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="TrendId"></param>
+        /// <param name="Type"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAddAccountBuyConditionOtherPar_Other(int Type, long RelId, List<string> list)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //查询分组
+                var plate = (from item in db.t_shares_plate
+                             where item.Type == Type && list.Contains(item.Name)
+                             select item).ToList();
+                var result = (from item in plate
+                              select new t_account_shares_conditiontrade_buy_details_other_trend_other_par
+                              {
+                                  CreateTime = DateTime.Now,
+                                  LastModified = DateTime.Now,
+                                  OtherTrendOtherId = RelId,
+                                  ParamsInfo = JsonConvert.SerializeObject(new
+                                  {
+                                      GroupId = item.Id,
+                                      GroupName = item.Name,
+                                      GroupType = Type,
+                                      DataType = 1,
+                                  })
+                              }).ToList();
+                db.t_account_shares_conditiontrade_buy_details_other_trend_other_par.AddRange(result);
+                db.SaveChanges();
+                return result.Count();
+            }
+        }
+
+        /// <summary>
+        /// 批量添加股票买入额外条件类型参数(板块涨跌幅2)
+        /// </summary>
+        /// <param name="Type"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAddAccountBuyConditionOtherPar2_Other(int Type, long RelId, List<BatchAddSharesConditionTrendPar2Obj> list)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                int i = 0;
+                foreach (var item in list)
+                {
+                    string groupName = item.GroupName;
+                    int compare = item.Compare;
+                    string rate = item.Rate;
+                    //查询分组
+                    var plate = (from x in db.t_shares_plate
+                                 where x.Type == Type && x.Name == groupName
+                                 select x).FirstOrDefault();
+                    if (plate == null)
+                    {
+                        continue;
+                    }
+                    db.t_account_shares_conditiontrade_buy_details_other_trend_other_par.Add(new t_account_shares_conditiontrade_buy_details_other_trend_other_par
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        OtherTrendOtherId = RelId,
+                        ParamsInfo = JsonConvert.SerializeObject(new
+                        {
+                            GroupId = plate.Id,
+                            GroupName = plate.Name,
+                            GroupType = plate.Type,
+                            DataType = 2,
+                            Compare = compare,
+                            Rate = rate,
+                        })
+                    });
+
+                    i++;
+                }
+                db.SaveChanges();
+                return i;
+            }
+        }
+
+        /// <summary>
+        /// 编辑股票买入额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountBuyConditionOtherPar_Other(ModifyAccountBuyConditionOtherParRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_conditiontrade_buy_details_other_trend_other_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trendPar.ParamsInfo = request.ParamsInfo;
+                trendPar.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除股票买入额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteAccountBuyConditionOtherPar_Other(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_conditiontrade_buy_details_other_trend_other_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_account_shares_conditiontrade_buy_details_other_trend_other_par.Remove(trendPar);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 查询股票买入转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionAutoParInfo> GetAccountBuyConditionAutoPar_Other(DetailsPageRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = from item in db.t_account_shares_conditiontrade_buy_details_auto_trend_other_par
+                               where item.AutoTrendOtherId == request.Id
+                               select item;
+                int totalCount = trendPar.Count();
+
+                return new PageRes<AccountBuyConditionAutoParInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trendPar
+                            orderby item.CreateTime descending
+                            select new AccountBuyConditionAutoParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                ParamsInfo = item.ParamsInfo
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 查询股票买入转自动条件类型参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionAutoParInfo> GetAccountBuyConditionAutoParPlate_Other(GetAccountBuyConditionAutoParPlateRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_conditiontrade_buy_details_auto_trend_other_par
+                                where item.AutoTrendOtherId == request.Id
+                                select item).ToList();
+                List<AccountBuyConditionAutoParInfo> list = new List<AccountBuyConditionAutoParInfo>();
+                foreach (var item in trendPar)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    if (temp.GroupType == request.GroupType && temp.DataType == request.DataType)
+                    {
+                        list.Add(new AccountBuyConditionAutoParInfo
+                        {
+                            CreateTime = item.CreateTime,
+                            Id = item.Id,
+                            ParamsInfo = item.ParamsInfo
+                        });
+                    }
+                }
+                int totalCount = list.Count();
+
+                return new PageRes<AccountBuyConditionAutoParInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in list
+                            orderby item.CreateTime descending
+                            select new AccountBuyConditionAutoParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                ParamsInfo = item.ParamsInfo
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加股票买入转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddAccountBuyConditionAutoPar_Other(AddAccountBuyConditionAutoParRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                if (request.TrendId != 1 && request.TrendId != 7)
+                {
+                    var par = (from item in db.t_account_shares_conditiontrade_buy_details_auto_trend_other_par
+                               where item.AutoTrendOtherId == request.RelId
+                               select item).FirstOrDefault();
+                    if (par != null)
+                    {
+                        par.ParamsInfo = request.ParamsInfo;
+                        par.LastModified = DateTime.Now;
+                    }
+                    else
+                    {
+                        db.t_account_shares_conditiontrade_buy_details_auto_trend_other_par.Add(new t_account_shares_conditiontrade_buy_details_auto_trend_other_par
+                        {
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = request.ParamsInfo,
+                            AutoTrendOtherId = request.RelId
+                        });
+                    }
+                }
+                else
+                {
+                    db.t_account_shares_conditiontrade_buy_details_auto_trend_other_par.Add(new t_account_shares_conditiontrade_buy_details_auto_trend_other_par
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        ParamsInfo = request.ParamsInfo,
+                        AutoTrendOtherId = request.RelId
+                    });
+                }
+                db.SaveChanges();
+            }
+        }
+
+
+        /// <summary>
+        /// 批量添加股票买入转自动条件类型参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="TrendId"></param>
+        /// <param name="Type"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAddAccountBuyConditionAutoPar_Other(int Type, long RelId, List<string> list)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //查询分组
+                var plate = (from item in db.t_shares_plate
+                             where item.Type == Type && list.Contains(item.Name)
+                             select item).ToList();
+                var result = (from item in plate
+                              select new t_account_shares_conditiontrade_buy_details_auto_trend_other_par
+                              {
+                                  CreateTime = DateTime.Now,
+                                  LastModified = DateTime.Now,
+                                  AutoTrendOtherId = RelId,
+                                  ParamsInfo = JsonConvert.SerializeObject(new
+                                  {
+                                      GroupId = item.Id,
+                                      GroupName = item.Name,
+                                      GroupType = Type,
+                                      DataType = 1,
+                                  })
+                              }).ToList();
+                db.t_account_shares_conditiontrade_buy_details_auto_trend_other_par.AddRange(result);
+                db.SaveChanges();
+                return result.Count();
+            }
+        }
+
+        /// <summary>
+        /// 批量添加股票买入转自动条件类型参数(板块涨跌幅2)
+        /// </summary>
+        /// <param name="Type"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAddAccountBuyConditionAutoPar2_Other(int Type, long RelId, List<BatchAddSharesConditionTrendPar2Obj> list)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                int i = 0;
+                foreach (var item in list)
+                {
+                    string groupName = item.GroupName;
+                    int compare = item.Compare;
+                    string rate = item.Rate;
+                    //查询分组
+                    var plate = (from x in db.t_shares_plate
+                                 where x.Type == Type && x.Name == groupName
+                                 select x).FirstOrDefault();
+                    if (plate == null)
+                    {
+                        continue;
+                    }
+                    db.t_account_shares_conditiontrade_buy_details_auto_trend_other_par.Add(new t_account_shares_conditiontrade_buy_details_auto_trend_other_par
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        AutoTrendOtherId = RelId,
+                        ParamsInfo = JsonConvert.SerializeObject(new
+                        {
+                            GroupId = plate.Id,
+                            GroupName = plate.Name,
+                            GroupType = plate.Type,
+                            DataType = 2,
+                            Compare = compare,
+                            Rate = rate,
+                        })
+                    });
+
+                    i++;
+                }
+                db.SaveChanges();
+                return i;
+            }
+        }
+
+        /// <summary>
+        /// 编辑股票买入转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountBuyConditionAutoPar_Other(ModifyAccountBuyConditionAutoParRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_conditiontrade_buy_details_auto_trend_other_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trendPar.ParamsInfo = request.ParamsInfo;
+                trendPar.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除股票买入转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteAccountBuyConditionAutoPar_Other(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_conditiontrade_buy_details_auto_trend_other_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_account_shares_conditiontrade_buy_details_auto_trend_other_par.Remove(trendPar);
+                db.SaveChanges();
+            }
+        }
+        #endregion
 
         /// <summary>
         /// 查询买入提示列表
@@ -8759,6 +9548,13 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 var par = (from x in db.t_sys_conditiontrade_template_buy_other_trend_par
                            where trendIdList.Contains(x.OtherTrendId)
                            select x).ToList();
+                var trend_other = (from x in db.t_sys_conditiontrade_template_buy_other_trend_other
+                                   where trendIdList.Contains(x.OtherTrendId)
+                                   select x).ToList();
+                var trend_otherIdList = trend_other.Select(e => e.Id).ToList();
+                var trend_other_par = (from x in db.t_sys_conditiontrade_template_buy_other_trend_other_par
+                                       where trend_otherIdList.Contains(x.OtherTrendOtherId)
+                                       select x).ToList();
                 foreach (var o in other)
                 {
                     t_account_shares_conditiontrade_buy_details_other otherTemp = new t_account_shares_conditiontrade_buy_details_other
@@ -8797,6 +9593,33 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                        }).ToList();
                         db.t_account_shares_conditiontrade_buy_details_other_trend_par.AddRange(parList);
                         db.SaveChanges();
+                        var temp_trend_otherList = trend_other.Where(e => e.OtherTrendId == t.Id).ToList();
+                        foreach (var t2 in temp_trend_otherList)
+                        {
+                            t_account_shares_conditiontrade_buy_details_other_trend_other othertrendTemp = new t_account_shares_conditiontrade_buy_details_other_trend_other
+                            {
+                                Status = t2.Status,
+                                CreateTime = DateTime.Now,
+                                LastModified = DateTime.Now,
+                                OtherTrendId = trendTemp.Id,
+                                TrendDescription = t2.TrendDescription,
+                                TrendId = t2.TrendId,
+                                TrendName = t2.TrendName
+                            };
+                            db.t_account_shares_conditiontrade_buy_details_other_trend_other.Add(othertrendTemp);
+                            db.SaveChanges();
+                            var other_parList = (from x in trend_other_par
+                                                 where x.OtherTrendOtherId == t2.Id
+                                                 select new t_account_shares_conditiontrade_buy_details_other_trend_other_par
+                                                 {
+                                                     CreateTime = DateTime.Now,
+                                                     OtherTrendOtherId = othertrendTemp.Id,
+                                                     LastModified = DateTime.Now,
+                                                     ParamsInfo = x.ParamsInfo
+                                                 }).ToList();
+                            db.t_account_shares_conditiontrade_buy_details_other_trend_other_par.AddRange(other_parList);
+                            db.SaveChanges();
+                        }
                     }
                 }
 
@@ -8812,6 +9635,13 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 var autopar = (from x in db.t_sys_conditiontrade_template_buy_auto_trend_par
                                where autotrendIdList.Contains(x.AutoTrendId)
                                select x).ToList();
+                var autotrend_other = (from x in db.t_sys_conditiontrade_template_buy_auto_trend_other
+                                       where autotrendIdList.Contains(x.AutoTrendId)
+                                       select x).ToList();
+                var autotrend_otherIdList = autotrend_other.Select(e => e.Id).ToList();
+                var autotrend_other_par = (from x in db.t_sys_conditiontrade_template_buy_auto_trend_other_par
+                                           where autotrend_otherIdList.Contains(x.AutoTrendOtherId)
+                                           select x).ToList();
                 foreach (var o in auto)
                 {
                     t_account_shares_conditiontrade_buy_details_auto autoTemp = new t_account_shares_conditiontrade_buy_details_auto
@@ -8850,6 +9680,33 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                        }).ToList();
                         db.t_account_shares_conditiontrade_buy_details_auto_trend_par.AddRange(autoparList);
                         db.SaveChanges();
+                        var temp_autotrend_otherList = autotrend_other.Where(e => e.AutoTrendId == t.Id).ToList();
+                        foreach (var t2 in temp_autotrend_otherList)
+                        {
+                            t_account_shares_conditiontrade_buy_details_auto_trend_other othertrendTemp = new t_account_shares_conditiontrade_buy_details_auto_trend_other
+                            {
+                                Status = t2.Status,
+                                CreateTime = DateTime.Now,
+                                LastModified = DateTime.Now,
+                                AutoTrendId = autotrendTemp.Id,
+                                TrendDescription = t2.TrendDescription,
+                                TrendId = t2.TrendId,
+                                TrendName = t2.TrendName
+                            };
+                            db.t_account_shares_conditiontrade_buy_details_auto_trend_other.Add(othertrendTemp);
+                            db.SaveChanges();
+                            var other_parList = (from x in autotrend_other_par
+                                                 where x.AutoTrendOtherId == t2.Id
+                                                 select new t_account_shares_conditiontrade_buy_details_auto_trend_other_par
+                                                 {
+                                                     CreateTime = DateTime.Now,
+                                                     AutoTrendOtherId = othertrendTemp.Id,
+                                                     LastModified = DateTime.Now,
+                                                     ParamsInfo = x.ParamsInfo
+                                                 }).ToList();
+                            db.t_account_shares_conditiontrade_buy_details_auto_trend_other_par.AddRange(other_parList);
+                            db.SaveChanges();
+                        }
                     }
                 }
             }
@@ -8976,6 +9833,13 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 var par = (from x in db.t_account_shares_conditiontrade_template_buy_other_trend_par
                            where trendIdList.Contains(x.OtherTrendId)
                            select x).ToList();
+                var trend_other = (from x in db.t_account_shares_conditiontrade_template_buy_other_trend_other
+                                   where trendIdList.Contains(x.OtherTrendId)
+                                   select x).ToList();
+                var trend_otherIdList= trend_other.Select(e => e.Id).ToList();
+                var trend_other_par= (from x in db.t_account_shares_conditiontrade_template_buy_other_trend_other_par
+                                      where trend_otherIdList.Contains(x.OtherTrendOtherId)
+                                      select x).ToList();
                 foreach (var o in other)
                 {
                     t_account_shares_conditiontrade_buy_details_other otherTemp = new t_account_shares_conditiontrade_buy_details_other
@@ -9014,6 +9878,33 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                        }).ToList();
                         db.t_account_shares_conditiontrade_buy_details_other_trend_par.AddRange(parList);
                         db.SaveChanges();
+                        var temp_trend_otherList = trend_other.Where(e => e.OtherTrendId == t.Id).ToList();
+                        foreach (var t2 in temp_trend_otherList)
+                        {
+                            t_account_shares_conditiontrade_buy_details_other_trend_other othertrendTemp = new t_account_shares_conditiontrade_buy_details_other_trend_other 
+                            {
+                                Status = t2.Status,
+                                CreateTime = DateTime.Now,
+                                LastModified = DateTime.Now,
+                                OtherTrendId = trendTemp.Id,
+                                TrendDescription = t2.TrendDescription,
+                                TrendId = t2.TrendId,
+                                TrendName = t2.TrendName
+                            };
+                            db.t_account_shares_conditiontrade_buy_details_other_trend_other.Add(othertrendTemp);
+                            db.SaveChanges();
+                            var other_parList = (from x in trend_other_par
+                                                 where x.OtherTrendOtherId==t2.Id
+                                                 select new t_account_shares_conditiontrade_buy_details_other_trend_other_par
+                                                 {
+                                                     CreateTime = DateTime.Now,
+                                                     OtherTrendOtherId = othertrendTemp.Id,
+                                                     LastModified = DateTime.Now,
+                                                     ParamsInfo = x.ParamsInfo
+                                                 }).ToList();
+                            db.t_account_shares_conditiontrade_buy_details_other_trend_other_par.AddRange(other_parList);
+                            db.SaveChanges();
+                        }
                     }
                 }
 
@@ -9029,6 +9920,13 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 var autopar = (from x in db.t_account_shares_conditiontrade_template_buy_auto_trend_par
                                where autotrendIdList.Contains(x.AutoTrendId)
                                select x).ToList();
+                var autotrend_other = (from x in db.t_account_shares_conditiontrade_template_buy_auto_trend_other
+                                       where autotrendIdList.Contains(x.AutoTrendId)
+                                       select x).ToList();
+                var autotrend_otherIdList = autotrend_other.Select(e => e.Id).ToList();
+                var autotrend_other_par = (from x in db.t_account_shares_conditiontrade_template_buy_auto_trend_other_par
+                                           where autotrend_otherIdList.Contains(x.AutoTrendOtherId)
+                                       select x).ToList();
                 foreach (var o in auto)
                 {
                     t_account_shares_conditiontrade_buy_details_auto autoTemp = new t_account_shares_conditiontrade_buy_details_auto
@@ -9067,6 +9965,33 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                            }).ToList();
                         db.t_account_shares_conditiontrade_buy_details_auto_trend_par.AddRange(autoparList);
                         db.SaveChanges();
+                        var temp_autotrend_otherList = autotrend_other.Where(e => e.AutoTrendId == t.Id).ToList();
+                        foreach (var t2 in temp_autotrend_otherList)
+                        {
+                            t_account_shares_conditiontrade_buy_details_auto_trend_other othertrendTemp = new t_account_shares_conditiontrade_buy_details_auto_trend_other
+                            {
+                                Status = t2.Status,
+                                CreateTime = DateTime.Now,
+                                LastModified = DateTime.Now,
+                                AutoTrendId = autotrendTemp.Id,
+                                TrendDescription = t2.TrendDescription,
+                                TrendId = t2.TrendId,
+                                TrendName = t2.TrendName
+                            };
+                            db.t_account_shares_conditiontrade_buy_details_auto_trend_other.Add(othertrendTemp);
+                            db.SaveChanges();
+                            var other_parList = (from x in autotrend_other_par
+                                                 where x.AutoTrendOtherId == t2.Id
+                                                 select new t_account_shares_conditiontrade_buy_details_auto_trend_other_par
+                                                 {
+                                                     CreateTime = DateTime.Now,
+                                                     AutoTrendOtherId = othertrendTemp.Id,
+                                                     LastModified = DateTime.Now,
+                                                     ParamsInfo = x.ParamsInfo
+                                                 }).ToList();
+                            db.t_account_shares_conditiontrade_buy_details_auto_trend_other_par.AddRange(other_parList);
+                            db.SaveChanges();
+                        }
                     }
                 }
             }

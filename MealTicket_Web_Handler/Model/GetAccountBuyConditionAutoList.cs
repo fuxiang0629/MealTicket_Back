@@ -33,6 +33,11 @@ namespace MealTicket_Web_Handler.Model
         public string TrendDescription { get; set; }
 
         /// <summary>
+        /// 额外关系参数数量
+        /// </summary>
+        public int OtherParCount { get; set; }
+
+        /// <summary>
         /// 状态1有效 2无效
         /// </summary>
         public int Status { get; set; }

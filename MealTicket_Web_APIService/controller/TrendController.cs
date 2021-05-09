@@ -2298,6 +2298,641 @@ namespace MealTicket_Web_APIService.controller
             return null;
         }
 
+        #region==================额外关系====================
+        /// <summary>
+        /// 获取股票买入额外条件列表-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/list/other"), HttpPost]
+        [Description("获取股票买入额外条件列表-额外关系")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionOtherInfo> GetAccountBuyConditionOtherList_Other(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountBuyConditionOtherList_Other(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加股票买入额外条件-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/add/other"), HttpPost]
+        [Description("添加股票买入额外条件-额外关系")]
+        [CheckUserLoginFilter]
+        public object AddAccountBuyConditionOther_Other(AddAccountBuyConditionOtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountBuyConditionOther_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑股票买入额外条件-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/modify/other"), HttpPost]
+        [Description("编辑股票买入额外条件-额外关系")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountBuyConditionOther_Other(ModifyAccountBuyConditionOtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountBuyConditionOther_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改股票买入额外条件状态-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/status/modify/other"), HttpPost]
+        [Description("修改股票买入额外条件状态-额外关系")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountBuyConditionOtherStatus_Other(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountBuyConditionOtherStatus_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除股票买入额外条件-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/delete/other"), HttpPost]
+        [Description("删除股票买入额外条件-额外关系")]
+        [CheckUserLoginFilter]
+        public object DeleteAccountBuyConditionOther_Other(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountBuyConditionOther_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取股票买入转自动条件列表-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/list/other"), HttpPost]
+        [Description("获取股票买入转自动条件列表-额外关系")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionAutoInfo> GetAccountBuyConditionAutoList_Other(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountBuyConditionAutoList_Other(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加股票买入转自动条件-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/add/other"), HttpPost]
+        [Description("添加股票买入转自动条件-额外关系")]
+        [CheckUserLoginFilter]
+        public object AddAccountBuyConditionAuto_Other(AddAccountBuyConditionAutoRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountBuyConditionAuto_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑股票买入转自动条件-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/modify/other"), HttpPost]
+        [Description("编辑股票买入转自动条件-额外关系")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountBuyConditionAuto_Other(ModifyAccountBuyConditionAutoRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountBuyConditionAuto_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改股票买入转自动条件状态-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/status/modify/other"), HttpPost]
+        [Description("修改股票买入转自动条件状态-额外关系")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountBuyConditionAutoStatus_Other(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountBuyConditionAutoStatus_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除股票买入转自动条件-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/delete/other"), HttpPost]
+        [Description("删除股票买入转自动条件-额外关系")]
+        [CheckUserLoginFilter]
+        public object DeleteAccountBuyConditionAuto_Other(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountBuyConditionAuto_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询股票买入额外条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/par/other"), HttpPost]
+        [Description("查询股票买入额外条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionOtherParInfo> GetAccountBuyConditionOtherPar_Other(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountBuyConditionOtherPar_Other(request, basedata);
+        }
+
+        /// <summary>
+        /// 查询股票买入额外条件类型参数(板块涨跌幅)-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/par/plate/other"), HttpPost]
+        [Description("查询股票买入额外条件类型参数(板块涨跌幅)-额外关系")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionOtherParInfo> GetAccountBuyConditionOtherParPlate_Other(GetAccountBuyConditionOtherParPlateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountBuyConditionOtherParPlate_Other(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加股票买入额外条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/par/add/other"), HttpPost]
+        [Description("添加股票买入额外条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public object AddAccountBuyConditionOtherPar_Other(AddAccountBuyConditionOtherParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountBuyConditionOtherPar_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量添加股票买入额外条件类型参数(板块涨跌幅1)-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("account/conditiontrade/buy/other/par/add/batch/other"), HttpPost]
+        [Description("批量添加股票买入额外条件类型参数(板块涨跌幅1)-额外关系")]
+        public async Task<object> BatchAddAccountBuyConditionOtherPar_Other()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<string> list = new List<string>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+
+                            list.Add(datas[0].Trim());
+                        }
+                        return trendHandler.BatchAddAccountBuyConditionOtherPar_Other(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 批量添加股票买入额外条件类型参数(板块涨跌幅2)-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("account/conditiontrade/buy/other/par/add/batch2/other"), HttpPost]
+        [Description("批量添加股票买入额外条件类型参数(板块涨跌幅2)-额外关系")]
+        public async Task<object> BatchAddAccountBuyConditionOtherPar2_Other()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<BatchAddSharesConditionTrendPar2Obj> list = new List<BatchAddSharesConditionTrendPar2Obj>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+                            if (datas.Length < 3)
+                            {
+                                continue;
+                            }
+                            string groupName = datas[0].Trim();
+                            int compare = datas[1].Trim() == ">=" ? 1 : 2;
+                            string rate = datas[2].Trim();
+
+                            list.Add(new BatchAddSharesConditionTrendPar2Obj
+                            {
+                                GroupName = groupName,
+                                Compare = compare,
+                                Rate = rate
+                            });
+                        }
+                        return trendHandler.BatchAddAccountBuyConditionOtherPar2_Other(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+
+        /// <summary>
+        /// 编辑股票买入额外条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/par/modify/other"), HttpPost]
+        [Description("编辑股票买入额外条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountBuyConditionOtherPar_Other(ModifyAccountBuyConditionOtherParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountBuyConditionOtherPar_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除股票买入额外条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/par/delete/other"), HttpPost]
+        [Description("删除股票买入额外条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public object DeleteAccountBuyConditionOtherPar_Other(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountBuyConditionOtherPar_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询股票买入转自动条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/par/other"), HttpPost]
+        [Description("查询股票买入转自动条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionAutoParInfo> GetAccountBuyConditionAutoPar_Other(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountBuyConditionAutoPar_Other(request, basedata);
+        }
+
+        /// <summary>
+        /// 查询股票买入转自动条件类型参数(板块涨跌幅)-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/par/plate/other"), HttpPost]
+        [Description("查询股票买入转自动条件类型参数(板块涨跌幅)-额外关系")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionAutoParInfo> GetAccountBuyConditionAutoParPlate_Other(GetAccountBuyConditionAutoParPlateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountBuyConditionAutoParPlate_Other(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加股票买入转自动条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/par/add/other"), HttpPost]
+        [Description("添加股票买入转自动条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public object AddAccountBuyConditionAutoPar_Other(AddAccountBuyConditionAutoParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountBuyConditionAutoPar_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量添加股票买入转自动条件类型参数(板块涨跌幅1)-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("account/conditiontrade/buy/auto/par/add/batch/other"), HttpPost]
+        [Description("批量添加股票买入转自动条件类型参数(板块涨跌幅1)-额外关系")]
+        public async Task<object> BatchAddAccountBuyConditionAutoPar_Other()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<string> list = new List<string>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+
+                            list.Add(datas[0].Trim());
+                        }
+                        return trendHandler.BatchAddAccountBuyConditionAutoPar_Other(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 批量添加股票买入转自动条件类型参数(板块涨跌幅2)-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("account/conditiontrade/buy/auto/par/add/batch2/other"), HttpPost]
+        [Description("批量添加股票买入转自动条件类型参数(板块涨跌幅2)-额外关系")]
+        public async Task<object> BatchAddAccountBuyConditionAutoPar2_Other()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<BatchAddSharesConditionTrendPar2Obj> list = new List<BatchAddSharesConditionTrendPar2Obj>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+                            if (datas.Length < 3)
+                            {
+                                continue;
+                            }
+                            string groupName = datas[0].Trim();
+                            int compare = datas[1].Trim() == ">=" ? 1 : 2;
+                            string rate = datas[2].Trim();
+
+                            list.Add(new BatchAddSharesConditionTrendPar2Obj
+                            {
+                                GroupName = groupName,
+                                Compare = compare,
+                                Rate = rate
+                            });
+                        }
+                        return trendHandler.BatchAddAccountBuyConditionAutoPar2_Other(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 编辑股票买入转自动条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/par/modify/other"), HttpPost]
+        [Description("编辑股票买入转自动条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountBuyConditionAutoPar_Other(ModifyAccountBuyConditionAutoParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountBuyConditionAutoPar_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除股票买入转自动条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/par/delete/other"), HttpPost]
+        [Description("删除股票买入转自动条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public object DeleteAccountBuyConditionAutoPar_Other(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountBuyConditionAutoPar_Other(request, basedata);
+            return null;
+        }
+        #endregion
+
         /// <summary>
         /// 查询买入提示列表
         /// </summary>

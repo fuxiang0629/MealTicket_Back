@@ -3060,5 +3060,55 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details_auto_trend_other">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details_auto_trend_other">
+        <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details_auto_trend_other">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="TrendDescription" ColumnName="TrendDescription" />
+          <ScalarProperty Name="TrendName" ColumnName="TrendName" />
+          <ScalarProperty Name="TrendId" ColumnName="TrendId" />
+          <ScalarProperty Name="AutoTrendId" ColumnName="AutoTrendId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details_auto_trend_other_par">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details_auto_trend_other_par">
+        <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details_auto_trend_other_par">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="ParamsInfo" ColumnName="ParamsInfo" />
+          <ScalarProperty Name="AutoTrendOtherId" ColumnName="AutoTrendOtherId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details_other_trend_other">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details_other_trend_other">
+        <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details_other_trend_other">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="TrendDescription" ColumnName="TrendDescription" />
+          <ScalarProperty Name="TrendName" ColumnName="TrendName" />
+          <ScalarProperty Name="TrendId" ColumnName="TrendId" />
+          <ScalarProperty Name="OtherTrendId" ColumnName="OtherTrendId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details_other_trend_other_par">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details_other_trend_other_par">
+        <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details_other_trend_other_par">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="ParamsInfo" ColumnName="ParamsInfo" />
+          <ScalarProperty Name="OtherTrendOtherId" ColumnName="OtherTrendOtherId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

@@ -303,6 +303,10 @@
     <EntitySet Name="v_plate_shares" EntityType="meal_ticketModel.v_plate_shares" />
     <EntitySet Name="t_shares_markettime" EntityType="meal_ticketModel.t_shares_markettime" />
     <EntitySet Name="v_plate" EntityType="meal_ticketModel.v_plate" />
+    <EntitySet Name="t_sys_conditiontrade_template_buy_auto_trend_other" EntityType="meal_ticketModel.t_sys_conditiontrade_template_buy_auto_trend_other" />
+    <EntitySet Name="t_sys_conditiontrade_template_buy_auto_trend_other_par" EntityType="meal_ticketModel.t_sys_conditiontrade_template_buy_auto_trend_other_par" />
+    <EntitySet Name="t_sys_conditiontrade_template_buy_other_trend_other" EntityType="meal_ticketModel.t_sys_conditiontrade_template_buy_other_trend_other" />
+    <EntitySet Name="t_sys_conditiontrade_template_buy_other_trend_other_par" EntityType="meal_ticketModel.t_sys_conditiontrade_template_buy_other_trend_other_par" />
   </EntityContainer>
   <EntityType Name="t_admin_department">
     <Key>
@@ -611,6 +615,7 @@
     <Property Name="LimitUpPrice" Type="Int64" Nullable="false" />
     <Property Name="LimitDownPrice" Type="Int64" Nullable="false" />
     <Property Name="PriceType" Type="Int32" Nullable="false" />
+    <Property Name="TriPriceType" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_search">
     <Key>
@@ -672,6 +677,7 @@
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="RemainDeposit" Type="Int64" Nullable="false" />
+    <Property Name="MaxBuySharesCount" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_login_token">
     <Key>
@@ -2259,5 +2265,51 @@
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="SharesCount" Type="Int32" />
     <Property Name="RiseRate" Type="Int64" />
+  </EntityType>
+  <EntityType Name="t_sys_conditiontrade_template_buy_auto_trend_other">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AutoTrendId" Type="Int64" Nullable="false" />
+    <Property Name="TrendId" Type="Int64" Nullable="false" />
+    <Property Name="TrendName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="TrendDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_sys_conditiontrade_template_buy_auto_trend_other_par">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AutoTrendOtherId" Type="Int64" Nullable="false" />
+    <Property Name="ParamsInfo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_sys_conditiontrade_template_buy_other_trend_other">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OtherTrendId" Type="Int64" Nullable="false" />
+    <Property Name="TrendId" Type="Int64" Nullable="false" />
+    <Property Name="TrendName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="TrendDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_sys_conditiontrade_template_buy_other_trend_other_par">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OtherTrendOtherId" Type="Int64" Nullable="false" />
+    <Property Name="ParamsInfo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
 </Schema>
