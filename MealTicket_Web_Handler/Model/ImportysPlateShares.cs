@@ -31,5 +31,10 @@ namespace MealTicket_Web_Handler.Model
         /// 自定义分组
         /// </summary>
         public List<long> GroupList { get; set; }
+
+        /// <summary>
+        /// 排除其他分组存在的股票
+        /// </summary>
+        public bool RemoveOtherGroup { get; set; }
     }
 }

@@ -127,6 +127,16 @@ namespace MealTicket_Admin_Handler.Model
         public long UseDeposit { get; set; }
 
         /// <summary>
+        /// 总市值
+        /// </summary>
+        public long TotalMarketValue { get; set; }
+
+        /// <summary>
+        /// 总借款
+        /// </summary>
+        public long TotalFundAmount { get; set; }
+
+        /// <summary>
         /// 钱包状态1有效 2无效
         /// </summary>
         public int WalletStatus { get; set; }

@@ -280,8 +280,6 @@ namespace SharesTradeService.Handler
                         //卖出条件判断
                         if (timeDate != DateTime.Parse(sellTime))//委托过期
                         {
-                            //确认队列
-                            (sender as EventingBasicConsumer).Model.BasicAck(e.DeliveryTag, false);
                             return;
                         }
                         sellManagerIdList.Add(sellManagerId);
@@ -296,8 +294,6 @@ namespace SharesTradeService.Handler
                     //卖出条件判断
                     if (timeDate != DateTime.Parse(sellTime))//委托过期
                     {
-                        //确认队列
-                        (sender as EventingBasicConsumer).Model.BasicAck(e.DeliveryTag, false);
                         return;
                     }
                     sellManagerIdList.Add(sellManagerId);

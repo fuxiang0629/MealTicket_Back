@@ -51,5 +51,10 @@ namespace MealTicket_Web_Handler
         /// 保留余额
         /// </summary>
         public long RetainDeposit { get; set; }
+
+        /// <summary>
+        /// 最大购买股票数量
+        /// </summary>
+        public int MaxBuySharesCount { get; set; }
     }
 }

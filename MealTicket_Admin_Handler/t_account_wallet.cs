@@ -20,5 +20,6 @@ namespace MealTicket_Admin_Handler
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
         public long RemainDeposit { get; set; }
+        public int MaxBuySharesCount { get; set; }
     }
 }

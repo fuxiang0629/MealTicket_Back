@@ -76,11 +76,6 @@ namespace MealTicket_Web_Handler.Model
         public int SharesAccountCount { get; set; }
 
         /// <summary>
-        /// 今天最大购买次数
-        /// </summary>
-        public int MaxBuyCount { get; set; }
-
-        /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }

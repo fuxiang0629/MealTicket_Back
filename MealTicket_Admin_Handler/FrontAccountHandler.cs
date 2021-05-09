@@ -87,11 +87,14 @@ namespace MealTicket_Admin_Handler
                 foreach (var item in list)
                 {
                     var temp = (from x in db.t_account_shares_hold
-                                where x.AccountId == item.AccountId && x.RemainDeposit > 0
-                                select x).ToList();
+                                join x2 in db.t_shares_quotes on new { x.Market, x.SharesCode } equals new { x2.Market, x2.SharesCode }
+                                where x.AccountId == item.AccountId && x.RemainCount > 0 && x2.ClosedPrice>0
+                                select new { x, x2 }).ToList();
                     if (temp.Count() > 0)
                     {
-                        item.UseDeposit = temp.Sum(e => e.RemainDeposit);
+                        item.UseDeposit = temp.Sum(e => e.x.RemainDeposit);
+                        item.TotalFundAmount = temp.Sum(e => e.x.FundAmount);
+                        item.TotalMarketValue = (temp.Sum(e => e.x.RemainCount * (e.x2.PresentPrice <= 0 ? e.x2.ClosedPrice : e.x2.PresentPrice))) / 100 * 100;
                     }
                     var realName = (from x in db.t_account_realname
                                     where x.AccountId == item.AccountId && x.ExamineStatus == 2

@@ -53,5 +53,6 @@ namespace MealTicket_Admin_Handler
         public long LimitUpPrice { get; set; }
         public long LimitDownPrice { get; set; }
         public int PriceType { get; set; }
+        public int TriPriceType { get; set; }
     }
 }

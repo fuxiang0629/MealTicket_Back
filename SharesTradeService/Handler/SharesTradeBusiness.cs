@@ -369,7 +369,8 @@ namespace SharesTradeService.Handler
                             {
                                 new SellDetails
                                 {
-                                     EntrustManagerId = entrustManagerId
+                                     EntrustManagerId = entrustManagerId,
+                                     EntrustCount=0
                                 }
                             }
                         });
@@ -378,7 +379,8 @@ namespace SharesTradeService.Handler
                     {
                         sellDic[entrustManager.TradeAccountCode].EntrustManagerList.Add(new SellDetails
                         {
-                            EntrustManagerId = entrustManagerId
+                            EntrustManagerId = entrustManagerId,
+                            EntrustCount = 0
                         });
                     }
                 }
@@ -489,6 +491,7 @@ namespace SharesTradeService.Handler
                                     }, db);
                                     continue;
                                 }
+
                                 if (realSoldCount <= 0)
                                 {
                                     SellTradeFinish(new List<SellDetails>
@@ -500,6 +503,7 @@ namespace SharesTradeService.Handler
                                     }, db);
                                     continue;
                                 }
+
                                 manager.EntrustCount = realSoldCount;
                                 tradeInfo.Value.SellCount = tradeInfo.Value.SellCount + realSoldCount;
                                 //更新账户状态为交易中
@@ -578,7 +582,7 @@ namespace SharesTradeService.Handler
                     }
                     if (success)
                     {
-                        SellSuccess(tradeInfo.Key, tradeInfo.Value, tradeEntrustId);
+                        SellSuccess(tradeInfo.Key, tradeInfo.Value, tradeEntrustId, db);
                     }
                     //触发判断回购股票是否需要卖出
                     try
@@ -607,37 +611,57 @@ namespace SharesTradeService.Handler
         /// <summary>
         /// 卖出提交成功
         /// </summary>
-        private static void SellSuccess(string tradeAccountCode, SellInfo sellInfo, string tradeEntrustId)
+        private static void SellSuccess(string tradeAccountCode, SellInfo sellInfo, string tradeEntrustId,meal_ticketEntities db)
         {
-            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
             {
-                //查询账户持仓情况
-                var accountShares = (from item in db.t_broker_account_shares_rel
-                                     where item.TradeAccountCode == tradeAccountCode && item.Market == sellInfo.Market && item.SharesCode == sellInfo.SharesCode
-                                     select item).FirstOrDefault();
-                if (accountShares == null)
+                try
                 {
-                    throw new Exception("持仓账户不存在");
-                }
-                accountShares.AccountCanSoldCount = accountShares.AccountCanSoldCount - sellInfo.SellCount;
-                accountShares.AccountSellingCount = accountShares.AccountSellingCount + sellInfo.SellCount;
+                    StringBuilder strApp = new StringBuilder();
 
-                foreach (var manager in sellInfo.EntrustManagerList)
-                {
-                    var entrustManager = (from item in db.t_account_shares_entrust_manager
-                                          where item.Id == manager.EntrustManagerId && item.TradeType == 2 && item.Status == 2
-                                          select item).FirstOrDefault();
-                    if (entrustManager == null)
+                    string sql = string.Format("select top 1 AccountCanSoldCount from t_broker_account_shares_rel with(xlock) where TradeAccountCode='{0}' and Market={1} and SharesCode='{2}'", tradeAccountCode, sellInfo.Market, sellInfo.SharesCode);
+                    int accountCanSoldCount=db.Database.SqlQuery<int>(sql).FirstOrDefault();
+                    strApp.AppendLine("更新前可卖数量："+ accountCanSoldCount);
+                    strApp.AppendLine("当前卖出数量：" + sellInfo.SellCount);
+
+                    //查询账户持仓情况
+                    sql = string.Format("update t_broker_account_shares_rel set AccountCanSoldCount=AccountCanSoldCount-{0},AccountSellingCount=AccountSellingCount+{0} where TradeAccountCode='{1}' and Market={2} and SharesCode='{3}'", sellInfo.SellCount, tradeAccountCode, sellInfo.Market, sellInfo.SharesCode);
+                    int error=db.Database.ExecuteSqlCommand(sql);
+                    if (error <= 0)
                     {
-                        throw new Exception("委托账户不存在");
+                        throw new Exception("更新数据库出错");
                     }
-                    //更新账户委托实际提交委托数量
-                    entrustManager.RealEntrustCount = manager.EntrustCount;
-                    entrustManager.EntrustId = tradeEntrustId;
-                    entrustManager.EntrustTime = DateTime.Now;
-                    entrustManager.LastModified = DateTime.Now;
+
+                    sql = string.Format("select top 1 AccountCanSoldCount from t_broker_account_shares_rel with(xlock) where TradeAccountCode='{0}' and Market={1} and SharesCode='{2}'", tradeAccountCode, sellInfo.Market, sellInfo.SharesCode);
+                    accountCanSoldCount = db.Database.SqlQuery<int>(sql).FirstOrDefault();
+                    strApp.AppendLine("更新后卖出数量：" + accountCanSoldCount);
+
+                    Logger.WriteFileLog(strApp.ToString(),DateTime.Now.ToString("yyyy-MM-dd")+"/"+ sellInfo.SharesCode, null);
+
+                    foreach (var manager in sellInfo.EntrustManagerList)
+                    {
+                        var entrustManager = (from item in db.t_account_shares_entrust_manager
+                                              where item.Id == manager.EntrustManagerId && item.TradeType == 2 && item.Status == 2
+                                              select item).FirstOrDefault();
+                        if (entrustManager == null)
+                        {
+                            throw new Exception("委托账户不存在");
+                        }
+                        //更新账户委托实际提交委托数量
+                        entrustManager.RealEntrustCount = manager.EntrustCount;
+                        entrustManager.EntrustId = tradeEntrustId;
+                        entrustManager.EntrustTime = DateTime.Now;
+                        entrustManager.LastModified = DateTime.Now;
+                    }
+                    db.SaveChanges();
+
+                    tran.Commit();
                 }
-                db.SaveChanges();
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
             }
         }
 

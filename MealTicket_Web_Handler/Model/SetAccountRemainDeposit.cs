@@ -16,5 +16,10 @@ namespace MealTicket_Web_Handler.Model
         /// 剩余金额
         /// </summary>
         public long RemainDeposit { get; set; }
+
+        /// <summary>
+        /// 最大购买股票数量
+        /// </summary>
+        public int MaxBuySharesCount { get; set; }
     }
 }
