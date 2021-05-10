@@ -18,6 +18,11 @@ namespace MealTicket_Web_Handler.Model
         public long Id { get; set; }
 
         /// <summary>
+        /// 板块Id
+        /// </summary>
+        public long PlateId { get; set; }
+
+        /// <summary>
         /// 最大购买数量
         /// </summary>
         public long MaxBuyCount { get; set; }

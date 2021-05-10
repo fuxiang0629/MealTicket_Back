@@ -10850,14 +10850,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 Type = 2,
                 Name = "最大持仓数量",
                 Description = "最大持仓数量",
-                ParValue = 0
-            });
-            tempList.Add(new AccountBuySettingInfo
-            {
-                Type = 3,
-                Name = "板块最大持仓数量",
-                Description = "板块最大持仓数量",
-                ParValue = 0
+                ParValue = -1
             });
             if (request.AccountId == 0)
             {
@@ -10984,14 +10977,23 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 {
                     throw new WebApiException(400,"板块不存在");
                 }
-                db.t_account_shares_buy_setting_par.Add(new t_account_shares_buy_setting_par 
+                //判断板块是否已经添加
+                var settingPar = (from item in db.t_account_shares_buy_setting_par
+                                  where item.SettingId == request.SettingId && item.PlateId == request.PlateId
+                                  select item).FirstOrDefault();
+                if (settingPar != null)
                 {
-                    SettingId=request.SettingId,
-                    CreateTime=DateTime.Now,
-                    LastModified=DateTime.Now,
-                    MaxBuyCount=request.MaxBuyCount,
-                    PlateType= plate.Type,
-                    PlateId =request.PlateId
+                    throw new WebApiException(400, "板块已存在");
+                }
+
+                db.t_account_shares_buy_setting_par.Add(new t_account_shares_buy_setting_par
+                {
+                    SettingId = request.SettingId,
+                    CreateTime = DateTime.Now,
+                    LastModified = DateTime.Now,
+                    MaxBuyCount = request.MaxBuyCount,
+                    PlateType = plate.Type,
+                    PlateId = request.PlateId
                 });
                 db.SaveChanges();
             }
@@ -11012,6 +11014,23 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 {
                     throw new WebApiException(400,"参数不存在");
                 }
+                //判断板块是否存在
+                var plate = (from item in db.t_shares_plate
+                             where item.Id == request.PlateId
+                             select item).FirstOrDefault();
+                if (plate == null)
+                {
+                    throw new WebApiException(400, "板块不存在");
+                }
+                //判断板块是否已经添加
+                var settingPar = (from item in db.t_account_shares_buy_setting_par
+                                  where item.SettingId == par.SettingId && item.PlateId == request.PlateId && item.Id!= request.Id
+                                  select item).FirstOrDefault();
+                if (settingPar != null)
+                {
+                    throw new WebApiException(400, "板块已存在");
+                }
+                par.PlateId = request.PlateId;
                 par.MaxBuyCount = request.MaxBuyCount;
                 par.LastModified = DateTime.Now;
                 db.SaveChanges();
