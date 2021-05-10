@@ -403,8 +403,14 @@ namespace MealTicket_Handler
                 if (accountWallet != null)
                 {
                     RemainDeposit = accountWallet.Deposit / 100 * 100;
-                    RetainDeposit= accountWallet.RemainDeposit / 100 * 100;
 
+                }
+                var buysetting = (from item in db.t_account_shares_buy_setting
+                                  where item.AccountId == basedata.AccountId && item.Type == 1
+                                  select item).FirstOrDefault();
+                if (buysetting != null)
+                {
+                    RetainDeposit = buysetting.ParValue / 100 * 100;
                 }
                 //股票持有
                 var sharesHold = from item in db.t_account_shares_hold

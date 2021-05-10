@@ -6,20 +6,20 @@ using System.Threading.Tasks;
 
 namespace MealTicket_Web_Handler.Model
 {
-    class SetAccountRemainDeposit
+    class ModifyAccountBuySettingPar
     {
     }
 
-    public class SetAccountRemainDepositRequest:DetailsRequest
+    public class ModifyAccountBuySettingParRequest
     {
         /// <summary>
-        /// 剩余金额
+        /// Id
         /// </summary>
-        public long RemainDeposit { get; set; }
+        public long Id { get; set; }
 
         /// <summary>
-        /// 最大购买股票数量
+        /// 最大购买数量
         /// </summary>
-        public int MaxBuySharesCount { get; set; }
+        public long MaxBuyCount { get; set; }
     }
 }

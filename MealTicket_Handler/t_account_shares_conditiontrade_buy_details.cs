@@ -38,5 +38,6 @@ namespace MealTicket_Handler
         public int ExecStatus { get; set; }
         public Nullable<System.DateTime> FirstExecTime { get; set; }
         public bool LimitUp { get; set; }
+        public int OtherConditionRelative { get; set; }
     }
 }

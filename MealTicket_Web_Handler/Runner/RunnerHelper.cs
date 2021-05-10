@@ -404,9 +404,6 @@ namespace MealTicket_Web_Handler.Runner
                                  select new { item, item2, item3 }).ToList();
                 foreach (var item in disResult)
                 {
-                    //判断股票所属分组是否可以购买
-
-
                     if (item.item3.LastModified < timeNow.AddSeconds(-30) || item.item3.LimitUpPrice<=0 || item.item3.LimitDownPrice<=0)
                     {
                         continue;
@@ -553,9 +550,12 @@ namespace MealTicket_Web_Handler.Runner
                                         resultPushTime = pushTime;
                                         if (pushTime >= DateTime.Parse(timeNow.ToString("yyyy-MM-dd HH:mm:00")))
                                         {
-                                            tempTri = true;
-                                            logRecord.AppendLine("\t结果：达到要求");
-                                            break;
+                                            tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market);
+                                            if (tempTri)
+                                            {
+                                                logRecord.AppendLine("\t结果：达到要求");
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -587,9 +587,12 @@ namespace MealTicket_Web_Handler.Runner
                                         resultPushTime = pushTime;
                                         if (pushTime >= DateTime.Parse(timeNow.ToString("yyyy-MM-dd HH:mm:00")))
                                         {
-                                            tempTri = true;
-                                            logRecord.AppendLine("\t结果：达到要求");
-                                            break;
+                                            tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market);
+                                            if (tempTri)
+                                            {
+                                                logRecord.AppendLine("\t结果：达到要求");
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -621,9 +624,12 @@ namespace MealTicket_Web_Handler.Runner
                                         resultPushTime = pushTime;
                                         if (pushTime >= DateTime.Parse(timeNow.ToString("yyyy-MM-dd HH:mm:00")))
                                         {
-                                            tempTri = true;
-                                            logRecord.AppendLine("\t结果：达到要求");
-                                            break;
+                                            tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market);
+                                            if (tempTri)
+                                            {
+                                                logRecord.AppendLine("\t结果：达到要求");
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -639,9 +645,12 @@ namespace MealTicket_Web_Handler.Runner
                                 JArray timeList = temp.Times; 
                                 if (timeNow >= DateTime.Parse(timeList[0].ToString()) && timeNow < DateTime.Parse(timeList[1].ToString()))
                                 {
-                                    tempTri = true;
-                                    logRecord.AppendLine("\t达到要求");
-                                    break;
+                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        break;
+                                    }
                                 }
                                 logRecord.AppendLine("\t结果：未满足");
                             }
@@ -654,9 +663,12 @@ namespace MealTicket_Web_Handler.Runner
                                 int errorCode_Trend5 = DataHelper.Analysis_HisRiseRate(item.item2.SharesCode, item.item2.Market, par);
                                 if (errorCode_Trend5 == 0)
                                 {
-                                    tempTri = true;
-                                    logRecord.AppendLine("\t结果：达到要求");
-                                    break;
+                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        break;
+                                    }
                                 }
                                 logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend5);
                             }
@@ -669,9 +681,12 @@ namespace MealTicket_Web_Handler.Runner
                                 int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(item.item2.SharesCode, item.item2.Market, par);
                                 if (errorCode_Trend6 == 0)
                                 {
-                                    tempTri = true;
-                                    logRecord.AppendLine("\t结果：达到要求");
-                                    break;
+                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        break;
+                                    }
                                 }
                                 logRecord.AppendLine("\t结果：未满足");
                             }
@@ -684,9 +699,12 @@ namespace MealTicket_Web_Handler.Runner
                                 int errorCode_Trend7 = DataHelper.Analysis_PlateRiseRate(item.item2.SharesCode, item.item2.Market, par);
                                 if (errorCode_Trend7 == 0)
                                 {
-                                    tempTri = true;
-                                    logRecord.AppendLine("\t结果：达到要求");
-                                    break;
+                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        break;
+                                    }
                                 }
                                 logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend7);
                             }
@@ -753,9 +771,12 @@ namespace MealTicket_Web_Handler.Runner
                                         resultPushTime = pushTime;
                                         if (pushTime >= DateTime.Parse(timeNow.ToString("yyyy-MM-dd HH:mm:00")))
                                         {
-                                            tempTri = true;
-                                            logRecord.AppendLine("\t结果：达到要求");
-                                            break;
+                                            tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market);
+                                            if (tempTri)
+                                            {
+                                                logRecord.AppendLine("\t结果：达到要求");
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -787,9 +808,12 @@ namespace MealTicket_Web_Handler.Runner
                                         resultPushTime = pushTime;
                                         if (pushTime >= DateTime.Parse(timeNow.ToString("yyyy-MM-dd HH:mm:00")))
                                         {
-                                            tempTri = true;
-                                            logRecord.AppendLine("\t结果：达到要求");
-                                            break;
+                                            tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market);
+                                            if (tempTri)
+                                            {
+                                                logRecord.AppendLine("\t结果：达到要求");
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -821,9 +845,12 @@ namespace MealTicket_Web_Handler.Runner
                                         resultPushTime = pushTime;
                                         if (pushTime >= DateTime.Parse(timeNow.ToString("yyyy-MM-dd HH:mm:00")))
                                         {
-                                            tempTri = true;
-                                            logRecord.AppendLine("\t结果：达到要求");
-                                            break;
+                                            tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market);
+                                            if (tempTri)
+                                            {
+                                                logRecord.AppendLine("\t结果：达到要求");
+                                                break;
+                                            }
                                         }
                                     }
                                 }
@@ -839,9 +866,12 @@ namespace MealTicket_Web_Handler.Runner
                                 JArray timeList = temp.Times;
                                 if (timeNow >= DateTime.Parse(timeList[0].ToString()) && timeNow < DateTime.Parse(timeList[1].ToString()))
                                 {
-                                    tempTri = true;
-                                    logRecord.AppendLine("\t达到要求");
-                                    break;
+                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        break;
+                                    }
                                 }
                                 logRecord.AppendLine("\t结果：未满足");
                             }
@@ -854,9 +884,12 @@ namespace MealTicket_Web_Handler.Runner
                                 int errorCode_Trend5 = DataHelper.Analysis_HisRiseRate(item.item2.SharesCode, item.item2.Market, par);
                                 if (errorCode_Trend5 == 0)
                                 {
-                                    tempTri = true;
-                                    logRecord.AppendLine("\t结果：达到要求");
-                                    break;
+                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        break;
+                                    }
                                 }
                                 logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend5);
                             }
@@ -869,9 +902,12 @@ namespace MealTicket_Web_Handler.Runner
                                 int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(item.item2.SharesCode, item.item2.Market, par);
                                 if (errorCode_Trend6 == 0)
                                 {
-                                    tempTri = true;
-                                    logRecord.AppendLine("\t结果：达到要求");
-                                    break;
+                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        break;
+                                    }
                                 }
                                 logRecord.AppendLine("\t结果：未满足");
                             }
@@ -884,9 +920,12 @@ namespace MealTicket_Web_Handler.Runner
                                 int errorCode_Trend7 = DataHelper.Analysis_PlateRiseRate(item.item2.SharesCode, item.item2.Market, par);
                                 if (errorCode_Trend7 == 0)
                                 {
-                                    tempTri = true;
-                                    logRecord.AppendLine("\t结果：达到要求");
-                                    break;
+                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        break;
+                                    }
                                 }
                                 logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend7);
                             }
@@ -1011,19 +1050,31 @@ namespace MealTicket_Web_Handler.Runner
                                           join x3 in db.t_account_wallet on x.FollowAccountId equals x3.AccountId
                                           where x.AccountId == item.item2.AccountId && x2.Status == 1
                                           select x3).ToList();
+
+                        long Deposit = 0;
+                        long RemainDeposit = 0;
                         //计算本人购买仓位比
-                        var buyRateTemp = (from x in db.t_account_wallet
-                                           where x.AccountId == item.item2.AccountId
-                                           select x).FirstOrDefault();
-                        if (buyRateTemp == null)
+                        var wallet = (from x in db.t_account_wallet
+                                      where x.AccountId == item.item2.AccountId
+                                      select x).FirstOrDefault();
+                        if (wallet == null)
                         {
                             throw new WebApiException(400, "账户有误");
                         }
+                        Deposit = wallet.Deposit;
+
+                        var buySetting = (from x in db.t_account_shares_buy_setting
+                                          where x.AccountId == item.item2.AccountId && x.Type == 1
+                                          select x).FirstOrDefault();
+                        if (buySetting != null)
+                        {
+                            RemainDeposit = buySetting.ParValue / 100 * 100;
+                        }
 
                         long EntrustAmount = item.item.EntrustAmount;
-                        if (EntrustAmount > buyRateTemp.Deposit- buyRateTemp.RemainDeposit)
+                        if (EntrustAmount > Deposit - RemainDeposit)
                         {
-                            EntrustAmount = buyRateTemp.Deposit - buyRateTemp.RemainDeposit;
+                            EntrustAmount = Deposit - RemainDeposit;
                         }
 
                         List<dynamic> buyList = new List<dynamic>();
@@ -1033,7 +1084,7 @@ namespace MealTicket_Web_Handler.Runner
                             BuyAmount = EntrustAmount
                         });
 
-                        var buyRate = EntrustAmount * 1.0 / (buyRateTemp.Deposit - buyRateTemp.RemainDeposit);//仓位占比
+                        var buyRate = EntrustAmount * 1.0 / (Deposit - RemainDeposit);//仓位占比
                         foreach (var account in FollowList)
                         {
                             var temp = followList.Where(e => e.AccountId == account).FirstOrDefault();
@@ -1041,10 +1092,18 @@ namespace MealTicket_Web_Handler.Runner
                             {
                                 continue;
                             }
+                            long followRemainDeposit = 0;
+                            var followBuySetting = (from x in db.t_account_shares_buy_setting
+                                                    where x.AccountId == account && x.Type == 1
+                                                    select x).FirstOrDefault();
+                            if (followBuySetting != null)
+                            {
+                                followRemainDeposit = followBuySetting.ParValue / 100 * 100;
+                            }
                             buyList.Add(new
                             {
                                 AccountId = account,
-                                BuyAmount = (long)((temp.Deposit-temp.RemainDeposit) * buyRate)
+                                BuyAmount = (long)((temp.Deposit - followRemainDeposit) * buyRate)
                             });
                         }
 
@@ -1136,6 +1195,308 @@ namespace MealTicket_Web_Handler.Runner
                     }
                 }
             }
+        }
+
+        private static bool IsGetOther(meal_ticketEntities db,long otherTrendId,string sharesCode,int market)
+        {
+            var timeNow = DateTime.Now;
+            var trend = (from x in db.t_account_shares_conditiontrade_buy_details_other_trend_other
+                         where x.OtherTrendId == otherTrendId && x.Status == 1
+                         select x).ToList();
+            bool tempTri = true;
+            foreach (var tr in trend)
+            {
+                tempTri = false;
+                var par = (from x in db.t_account_shares_conditiontrade_buy_details_other_trend_other_par
+                           where x.OtherTrendOtherId == tr.Id
+                           select x.ParamsInfo).ToList();
+                if (par.Count() <= 0)
+                {
+                    tempTri = false;
+                    break;
+                }
+                //快速拉升
+                if (tr.TrendId == 1)//快速拉升 
+                {
+                    List<TREND_RESULT_RAPID_UP> resultInfo_Trend1 = new List<TREND_RESULT_RAPID_UP>();
+                    int errorCode_Trend1 = DataHelper.Analysis_Trend1(new List<OptionalTrend>
+                                {
+                                    new OptionalTrend
+                                    {
+                                        SharesCode=sharesCode,
+                                        Market=market,
+                                        ParList=par
+                                    }
+                                }, ref resultInfo_Trend1);
+                    DateTime? resultPushTime = null;
+                    if (errorCode_Trend1 == 0)
+                    {
+                        var temp = resultInfo_Trend1.Where(e => e.strStockCode == (sharesCode + "," +market)).FirstOrDefault();
+                        if (!string.IsNullOrEmpty(temp.strStockCode) && temp.dicUpOrDownInfo.Count() > 0)
+                        {
+                            var tempModel = temp.dicUpOrDownInfo.FirstOrDefault();
+                            var pushTime = tempModel.Value.lastestInfo.dtTradeTime;
+                            resultPushTime = pushTime;
+                            if (pushTime >= DateTime.Parse(timeNow.ToString("yyyy-MM-dd HH:mm:00")))
+                            {
+                                tempTri = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                //多头向上
+                if (tr.TrendId == 2)//多头向上 
+                {
+                    List<TREND_RESULT_LINE_UP> resultInfo_Trend2 = new List<TREND_RESULT_LINE_UP>();
+                    int errorCode_Trend2 = DataHelper.Analysis_Trend2(new List<OptionalTrend>
+                                {
+                                    new OptionalTrend
+                                    {
+                                        SharesCode=sharesCode,
+                                        Market=market,
+                                        ParList=par
+                                    }
+                                }, ref resultInfo_Trend2);
+                    DateTime? resultPushTime = null;
+                    if (errorCode_Trend2 == 0)
+                    {
+                        var temp = resultInfo_Trend2.Where(e => e.strStockCode == (sharesCode + "," + market)).FirstOrDefault();
+                        if (!string.IsNullOrEmpty(temp.strStockCode))
+                        {
+                            var pushTime = temp.upOrDownInfo.lastestInfo.dtTradeTime;
+                            resultPushTime = pushTime;
+                            if (pushTime >= DateTime.Parse(timeNow.ToString("yyyy-MM-dd HH:mm:00")))
+                            {
+                                tempTri = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                //箱体上涨
+                if (tr.TrendId == 3)//箱体突破 
+                {
+                    List<TREND_RESULT_BOX_BREACH> resultInfo_Trend3 = new List<TREND_RESULT_BOX_BREACH>();
+                    int errorCode_Trend3 = DataHelper.Analysis_Trend3(new List<OptionalTrend>
+                                {
+                                    new OptionalTrend
+                                    {
+                                        SharesCode=sharesCode,
+                                        Market=market,
+                                        ParList=par
+                                    }
+                                }, ref resultInfo_Trend3);
+                    DateTime? resultPushTime = null;
+                    if (errorCode_Trend3 == 0)
+                    {
+                        var temp = resultInfo_Trend3.Where(e => e.strStockCode == (sharesCode + "," + market)).FirstOrDefault();
+                        if (!string.IsNullOrEmpty(temp.strStockCode))
+                        {
+                            var pushTime = temp.upOrDownInfo.lastestInfo.dtTradeTime;
+                            resultPushTime = pushTime;
+                            if (pushTime >= DateTime.Parse(timeNow.ToString("yyyy-MM-dd HH:mm:00")))
+                            {
+                                tempTri = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                //时间段
+                if (tr.TrendId == 4)//指定时间段 
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
+                    JArray timeList = temp.Times;
+                    if (timeNow >= DateTime.Parse(timeList[0].ToString()) && timeNow < DateTime.Parse(timeList[1].ToString()))
+                    {
+                        tempTri = true;
+                        break;
+                    }
+                }
+                //历史涨跌幅
+                if (tr.TrendId == 5)
+                {
+                    int errorCode_Trend5 = DataHelper.Analysis_HisRiseRate(sharesCode, market, par);
+                    if (errorCode_Trend5 == 0)
+                    {
+                        tempTri = true;
+                        break;
+                    }
+                }
+                //当前涨跌幅
+                if (tr.TrendId == 6)
+                {
+                    int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(sharesCode, market, par);
+                    if (errorCode_Trend6 == 0)
+                    {
+                        tempTri = true;
+                        break;
+                    }
+                }
+                //板块涨跌幅
+                if (tr.TrendId == 7)
+                {
+                    int errorCode_Trend7 = DataHelper.Analysis_PlateRiseRate(sharesCode, market, par);
+                    if (errorCode_Trend7 == 0)
+                    {
+                        tempTri = true;
+                        break;
+                    }
+                }
+            }
+            return tempTri;
+        }
+
+        private static bool IsGetAuto(meal_ticketEntities db, long autoTrendId, string sharesCode, int market)
+        {
+            var timeNow = DateTime.Now;
+            var trend = (from x in db.t_account_shares_conditiontrade_buy_details_auto_trend_other
+                         where x.AutoTrendId == autoTrendId && x.Status == 1
+                         select x).ToList();
+            bool tempTri = true;
+            foreach (var tr in trend)
+            {
+                tempTri = false;
+                var par = (from x in db.t_account_shares_conditiontrade_buy_details_auto_trend_other_par
+                           where x.AutoTrendOtherId == tr.Id
+                           select x.ParamsInfo).ToList();
+                if (par.Count() <= 0)
+                {
+                    tempTri = false;
+                    break;
+                }
+                //快速拉升
+                if (tr.TrendId == 1)//快速拉升 
+                {
+                    List<TREND_RESULT_RAPID_UP> resultInfo_Trend1 = new List<TREND_RESULT_RAPID_UP>();
+                    int errorCode_Trend1 = DataHelper.Analysis_Trend1(new List<OptionalTrend>
+                                {
+                                    new OptionalTrend
+                                    {
+                                        SharesCode=sharesCode,
+                                        Market=market,
+                                        ParList=par
+                                    }
+                                }, ref resultInfo_Trend1);
+                    DateTime? resultPushTime = null;
+                    if (errorCode_Trend1 == 0)
+                    {
+                        var temp = resultInfo_Trend1.Where(e => e.strStockCode == (sharesCode + "," + market)).FirstOrDefault();
+                        if (!string.IsNullOrEmpty(temp.strStockCode) && temp.dicUpOrDownInfo.Count() > 0)
+                        {
+                            var tempModel = temp.dicUpOrDownInfo.FirstOrDefault();
+                            var pushTime = tempModel.Value.lastestInfo.dtTradeTime;
+                            resultPushTime = pushTime;
+                            if (pushTime >= DateTime.Parse(timeNow.ToString("yyyy-MM-dd HH:mm:00")))
+                            {
+                                tempTri = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                //多头向上
+                if (tr.TrendId == 2)//多头向上 
+                {
+                    List<TREND_RESULT_LINE_UP> resultInfo_Trend2 = new List<TREND_RESULT_LINE_UP>();
+                    int errorCode_Trend2 = DataHelper.Analysis_Trend2(new List<OptionalTrend>
+                                {
+                                    new OptionalTrend
+                                    {
+                                        SharesCode=sharesCode,
+                                        Market=market,
+                                        ParList=par
+                                    }
+                                }, ref resultInfo_Trend2);
+                    DateTime? resultPushTime = null;
+                    if (errorCode_Trend2 == 0)
+                    {
+                        var temp = resultInfo_Trend2.Where(e => e.strStockCode == (sharesCode + "," + market)).FirstOrDefault();
+                        if (!string.IsNullOrEmpty(temp.strStockCode))
+                        {
+                            var pushTime = temp.upOrDownInfo.lastestInfo.dtTradeTime;
+                            resultPushTime = pushTime;
+                            if (pushTime >= DateTime.Parse(timeNow.ToString("yyyy-MM-dd HH:mm:00")))
+                            {
+                                tempTri = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                //箱体上涨
+                if (tr.TrendId == 3)//箱体突破 
+                {
+                    List<TREND_RESULT_BOX_BREACH> resultInfo_Trend3 = new List<TREND_RESULT_BOX_BREACH>();
+                    int errorCode_Trend3 = DataHelper.Analysis_Trend3(new List<OptionalTrend>
+                                {
+                                    new OptionalTrend
+                                    {
+                                        SharesCode=sharesCode,
+                                        Market=market,
+                                        ParList=par
+                                    }
+                                }, ref resultInfo_Trend3);
+                    DateTime? resultPushTime = null;
+                    if (errorCode_Trend3 == 0)
+                    {
+                        var temp = resultInfo_Trend3.Where(e => e.strStockCode == (sharesCode + "," + market)).FirstOrDefault();
+                        if (!string.IsNullOrEmpty(temp.strStockCode))
+                        {
+                            var pushTime = temp.upOrDownInfo.lastestInfo.dtTradeTime;
+                            resultPushTime = pushTime;
+                            if (pushTime >= DateTime.Parse(timeNow.ToString("yyyy-MM-dd HH:mm:00")))
+                            {
+                                tempTri = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+                //时间段
+                if (tr.TrendId == 4)//指定时间段 
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
+                    JArray timeList = temp.Times;
+                    if (timeNow >= DateTime.Parse(timeList[0].ToString()) && timeNow < DateTime.Parse(timeList[1].ToString()))
+                    {
+                        tempTri = true;
+                        break;
+                    }
+                }
+                //历史涨跌幅
+                if (tr.TrendId == 5)
+                {
+                    int errorCode_Trend5 = DataHelper.Analysis_HisRiseRate(sharesCode, market, par);
+                    if (errorCode_Trend5 == 0)
+                    {
+                        tempTri = true;
+                        break;
+                    }
+                }
+                //当前涨跌幅
+                if (tr.TrendId == 6)
+                {
+                    int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(sharesCode, market, par);
+                    if (errorCode_Trend6 == 0)
+                    {
+                        tempTri = true;
+                        break;
+                    }
+                }
+                //板块涨跌幅
+                if (tr.TrendId == 7)
+                {
+                    int errorCode_Trend7 = DataHelper.Analysis_PlateRiseRate(sharesCode, market, par);
+                    if (errorCode_Trend7 == 0)
+                    {
+                        tempTri = true;
+                        break;
+                    }
+                }
+            }
+            return tempTri;
         }
     }
 }

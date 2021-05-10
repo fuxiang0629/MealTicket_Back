@@ -76,7 +76,6 @@ namespace MealTicket_Web_Handler
         public virtual DbSet<t_account_shares_seat_order> t_account_shares_seat_order { get; set; }
         public virtual DbSet<t_account_shares_seat_order_details> t_account_shares_seat_order_details { get; set; }
         public virtual DbSet<t_account_verifyCode> t_account_verifyCode { get; set; }
-        public virtual DbSet<t_account_wallet> t_account_wallet { get; set; }
         public virtual DbSet<t_account_wallet_change_record> t_account_wallet_change_record { get; set; }
         public virtual DbSet<t_admin_api> t_admin_api { get; set; }
         public virtual DbSet<t_admin_baseinfo> t_admin_baseinfo { get; set; }
@@ -232,6 +231,9 @@ namespace MealTicket_Web_Handler
         public virtual DbSet<t_account_shares_conditiontrade_buy_details_auto_trend_other_par> t_account_shares_conditiontrade_buy_details_auto_trend_other_par { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_details_other_trend_other> t_account_shares_conditiontrade_buy_details_other_trend_other { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_details_other_trend_other_par> t_account_shares_conditiontrade_buy_details_other_trend_other_par { get; set; }
+        public virtual DbSet<t_account_shares_buy_setting> t_account_shares_buy_setting { get; set; }
+        public virtual DbSet<t_account_shares_buy_setting_par> t_account_shares_buy_setting_par { get; set; }
+        public virtual DbSet<t_account_wallet> t_account_wallet { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)

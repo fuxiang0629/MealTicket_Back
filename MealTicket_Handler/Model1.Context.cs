@@ -32,7 +32,6 @@ namespace MealTicket_Handler
         public virtual DbSet<t_account_api> t_account_api { get; set; }
         public virtual DbSet<t_account_verifyCode> t_account_verifyCode { get; set; }
         public virtual DbSet<t_shares_quotes> t_shares_quotes { get; set; }
-        public virtual DbSet<t_account_wallet> t_account_wallet { get; set; }
         public virtual DbSet<t_account_baseinfo> t_account_baseinfo { get; set; }
         public virtual DbSet<t_message> t_message { get; set; }
         public virtual DbSet<t_message_group> t_message_group { get; set; }
@@ -108,6 +107,8 @@ namespace MealTicket_Handler
         public virtual DbSet<t_account_shares_conditiontrade_buy_details_other_trend> t_account_shares_conditiontrade_buy_details_other_trend { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_details_other_trend_par> t_account_shares_conditiontrade_buy_details_other_trend_par { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy> t_account_shares_conditiontrade_buy { get; set; }
+        public virtual DbSet<t_account_wallet> t_account_wallet { get; set; }
+        public virtual DbSet<t_account_shares_buy_setting> t_account_shares_buy_setting { get; set; }
     
         public virtual int P_AccountLogin(string mobile, string loginPassword, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter token, ObjectParameter accountId)
         {

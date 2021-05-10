@@ -121,6 +121,7 @@
     <Compile Include="Model\AddAccountBuyConditionOtherGroup.cs" />
     <Compile Include="Model\AddAccountBuyConditionOtherPar.cs" />
     <Compile Include="Model\AddAccountBuyConditionTradeShares.cs" />
+    <Compile Include="Model\AddAccountBuySettingPar.cs" />
     <Compile Include="Model\AddAccountHoldConditionTrade.cs" />
     <Compile Include="Model\AddAccountOptional.cs" />
     <Compile Include="Model\AddAccountOptionalGroup.cs" />
@@ -151,6 +152,8 @@
     <Compile Include="Model\GetAccountBuyConditionOtherGroupList.cs" />
     <Compile Include="Model\GetAccountBuyConditionOtherList.cs" />
     <Compile Include="Model\GetAccountBuyConditionOtherPar.cs" />
+    <Compile Include="Model\GetAccountBuySetting.cs" />
+    <Compile Include="Model\GetAccountBuySettingParList.cs" />
     <Compile Include="Model\GetAccountSharesPlateSharesList.cs" />
     <Compile Include="Model\GetConditiontradeBuyGroupList.cs" />
     <Compile Include="Model\GetConditiontradeBuyGroupSharesAccountList.cs" />
@@ -204,6 +207,8 @@
     <Compile Include="Model\ModifyAccountBuyConditionOther.cs" />
     <Compile Include="Model\ModifyAccountBuyConditionOtherGroup.cs" />
     <Compile Include="Model\ModifyAccountBuyConditionOtherPar.cs" />
+    <Compile Include="Model\ModifyAccountBuySetting.cs" />
+    <Compile Include="Model\ModifyAccountBuySettingPar.cs" />
     <Compile Include="Model\ModifyAccountHoldConditionTrade.cs" />
     <Compile Include="Model\ModifyAccountOptionalGroup.cs" />
     <Compile Include="Model\ModifyAccountOptionalGroupRelGroupIsContinue.cs" />
@@ -224,7 +229,6 @@
     <Compile Include="Model\ModifyConditiontradeTemplateBuyOtherPar.cs" />
     <Compile Include="Model\ModifyConditiontradeTemplateSellDetails.cs" />
     <Compile Include="Model\RelIdInfo.cs" />
-    <Compile Include="Model\SetAccountRemainDeposit.cs" />
     <Compile Include="ModifyStatusRequest.cs" />
     <Compile Include="MQHandler.cs" />
     <Compile Include="OptionalTrend.cs" />
@@ -280,6 +284,12 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_account_registerLog.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_buy_setting.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_buy_setting_par.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_account_shares_conditiontrade_buy.cs">

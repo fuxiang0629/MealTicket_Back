@@ -34,7 +34,6 @@ F:\项目\饭票后端\TransactionDataUpdate_NO3\bin\Debug\zh-Hans\EntityFramewo
 F:\项目\饭票后端\TransactionDataUpdate_NO3\obj\Debug\TransactionDataUpdate_NO3.csproj.CopyComplete
 F:\项目\饭票后端\TransactionDataUpdate_NO3\obj\Debug\TransactionDataUpdate_NO3.exe
 F:\项目\饭票后端\TransactionDataUpdate_NO3\obj\Debug\TransactionDataUpdate_NO3.pdb
-F:\项目\饭票后端\TransactionDataUpdate_NO3\obj\Debug\TransactionDataUpdate_NO3.csprojAssemblyReference.cache
 D:\项目\饭票\后端\TransactionDataUpdate_NO3\bin\Debug\TransactionDataUpdate_NO3.exe.config
 D:\项目\饭票\后端\TransactionDataUpdate_NO3\bin\Debug\TransactionDataUpdate_NO3.exe
 D:\项目\饭票\后端\TransactionDataUpdate_NO3\bin\Debug\TransactionDataUpdate_NO3.pdb

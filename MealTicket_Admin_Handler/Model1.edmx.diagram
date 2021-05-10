@@ -31,7 +31,6 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_search" Width="1.5" PointX="13.375" PointY="14.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_bank_card" Width="1.5" PointX="7.375" PointY="15.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_baseinfo" Width="1.5" PointX="15.375" PointY="9.75" />
-        <EntityTypeShape EntityType="meal_ticketModel.t_account_wallet" Width="1.5" PointX="15.375" PointY="14.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_login_token" Width="1.5" PointX="16.375" PointY="5.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_bank" Width="1.5" PointX="17.375" PointY="0.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_registerLog" Width="1.5" PointX="17.375" PointY="8.75" />
@@ -149,6 +148,7 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_sys_conditiontrade_template_buy_auto_trend_other_par" Width="1.5" PointX="24.375" PointY="16.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_sys_conditiontrade_template_buy_other_trend_other" Width="1.5" PointX="36.375" PointY="6.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_sys_conditiontrade_template_buy_other_trend_other_par" Width="1.5" PointX="36.375" PointY="10.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_wallet" Width="1.5" PointX="36.375" PointY="13.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

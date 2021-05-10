@@ -42,24 +42,6 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
-        /// 设置用户保留余额
-        /// </summary>
-        /// <returns></returns>
-        [Description("设置用户保留余额")]
-        [Route("account/deposit/remain/set"), HttpPost]
-        [CheckUserLoginFilter]
-        public object SetAccountRemainDeposit(SetAccountRemainDepositRequest request)
-        {
-            if (request == null)
-            {
-                throw new WebApiException(400, "参数错误");
-            }
-            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
-            trendHandler.SetAccountRemainDeposit(request, basedata);
-            return null;
-        }
-
-        /// <summary>
         /// 根据股票代码/名称/简拼获取股票列表
         /// </summary>
         /// <returns></returns>
@@ -5088,6 +5070,112 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             trendHandler.DeleteConditiontradeBuyGroupSharesAccount(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取用户买入条件设置
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取用户买入条件设置")]
+        [Route("account/buy/setting"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<AccountBuySettingInfo> GetAccountBuySetting(GetAccountBuySettingRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountBuySetting(request, basedata);
+        }
+
+        /// <summary>
+        /// 修改用户买入条件设置
+        /// </summary>
+        /// <returns></returns>
+        [Description("修改用户买入条件设置")]
+        [Route("account/buy/setting/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifyAccountBuySetting(ModifyAccountBuySettingRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountBuySetting(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取用户买入条件设置参数列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取用户买入条件设置参数列表")]
+        [Route("account/buy/setting/par"), HttpPost]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuySettingParInfo> GetAccountBuySettingParList(GetAccountBuySettingParListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountBuySettingParList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加用户买入条件设置参数
+        /// </summary>
+        /// <returns></returns>
+        [Description("添加用户买入条件设置参数")]
+        [Route("account/buy/setting/par/add"), HttpPost]
+        [CheckUserLoginFilter]
+        public object AddAccountBuySettingPar(AddAccountBuySettingParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountBuySettingPar(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑用户买入条件设置参数
+        /// </summary>
+        /// <returns></returns>
+        [Description("编辑用户买入条件设置参数")]
+        [Route("account/buy/setting/par/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifyAccountBuySettingPar(ModifyAccountBuySettingParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountBuySettingPar(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除用户买入条件设置参数
+        /// </summary>
+        /// <returns></returns>
+        [Description("删除用户买入条件设置参数")]
+        [Route("account/buy/setting/par/delete"), HttpPost]
+        [CheckUserLoginFilter]
+        public object DeleteAccountBuySettingPar(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountBuySettingPar(request, basedata);
             return null;
         }
     }

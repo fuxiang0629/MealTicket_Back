@@ -28,50 +28,29 @@ namespace MealTicket_Web_Handler
             {
                 request.Id = basedata.AccountId;
             }
+            long DepositAmount = 0;
+            long RemainDeposit = 0;
             using (var db = new meal_ticketEntities())
             {
                 var wallet = (from item in db.t_account_wallet
                               where item.AccountId == request.Id
                               select item).FirstOrDefault();
-                if (wallet == null)
+                if (wallet != null)
                 {
-                    return new AccountWalletInfo
-                    {
-                        DepositAmount = 0,
-                        RemainDeposit=0
-                    };
+                    DepositAmount = wallet.Deposit;
+                }
+                var parSetting = (from item in db.t_account_shares_buy_setting
+                                  where item.AccountId == request.Id && item.Type == 1
+                                  select item).FirstOrDefault();
+                if (parSetting != null)
+                {
+                    RemainDeposit = parSetting.ParValue;
                 }
                 return new AccountWalletInfo
                 {
-                    DepositAmount = wallet.Deposit / 100 * 100,
-                    RemainDeposit= wallet.RemainDeposit / 100 * 100,
+                    DepositAmount = DepositAmount / 100 * 100,
+                    RemainDeposit= RemainDeposit / 100 * 100,
                 };
-            }
-        }
-
-        /// <summary>
-        /// 设置用户保留余额
-        /// </summary>
-        /// <param name="request"></param>
-        /// <param name="basedata"></param>
-        public void SetAccountRemainDeposit(SetAccountRemainDepositRequest request, HeadBase basedata) 
-        {
-            if (request.Id == 0)
-            {
-                request.Id = basedata.AccountId;
-            }
-            using (var db = new meal_ticketEntities())
-            {
-                var wallet = (from item in db.t_account_wallet
-                              where item.AccountId == request.Id
-                              select item).FirstOrDefault();
-                if (wallet == null)
-                {
-                    throw new WebApiException(400,"用户不存在");
-                }
-                wallet.RemainDeposit = request.RemainDeposit <= 0 ? 0 : request.RemainDeposit;
-                wallet.MaxBuySharesCount = request.MaxBuySharesCount;
-                db.SaveChanges();
             }
         }
 
@@ -1724,9 +1703,20 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 if (accountWallet != null)
                 {
                     RemainDeposit = accountWallet.Deposit / 100 * 100;
-                    RetainDeposit = accountWallet.RemainDeposit / 100 * 100;
-                    MaxBuySharesCount = accountWallet.MaxBuySharesCount;
 
+                }
+                var buySetting = (from item in db.t_account_shares_buy_setting
+                                  where item.AccountId == request.Id
+                                  select item).ToList();
+                var temp1=buySetting.Where(e => e.Type == 1).FirstOrDefault();
+                if (temp1 != null)
+                {
+                    RetainDeposit = temp1.ParValue / 100 * 100;
+                }
+                var temp2 = buySetting.Where(e => e.Type == 2).FirstOrDefault();
+                if (temp2 != null)
+                {
+                    MaxBuySharesCount = (int)temp2.ParValue;
                 }
                 //股票持有
                 var sharesHold = from item in db.t_account_shares_hold
@@ -2360,17 +2350,29 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 if (request.AccountId == 0)
                 {
                     request.AccountId = basedata.AccountId;
+                    long RemainDeposit = 0;
+                    long Deposit = 0;
                     //计算本人购买仓位比
-                    var buyRateTemp = (from item in db.t_account_wallet
-                                       where item.AccountId == request.AccountId
-                                       select item).FirstOrDefault();
-                    if (buyRateTemp == null)
+                    var wallet = (from item in db.t_account_wallet
+                                  where item.AccountId == request.AccountId
+                                  select item).FirstOrDefault();
+                    if (wallet == null)
                     {
                         throw new WebApiException(400, "账户有误");
                     }
-                    if (request.BuyAmount > (buyRateTemp.Deposit - buyRateTemp.RemainDeposit))
+                    Deposit = wallet.Deposit;
+
+                    var buySetting = (from item in db.t_account_shares_buy_setting
+                                      where item.AccountId == request.AccountId && item.Type == 1
+                                      select item).FirstOrDefault();
+                    if (buySetting != null)
                     {
-                        request.BuyAmount = buyRateTemp.Deposit - buyRateTemp.RemainDeposit;
+                        RemainDeposit = buySetting.ParValue / 100 * 100;
+                    }
+
+                    if (request.BuyAmount > (Deposit - RemainDeposit))
+                    {
+                        request.BuyAmount = Deposit - RemainDeposit;
                     }
                     buyList.Add(new
                     {
@@ -2378,7 +2380,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                         BuyAmount = request.BuyAmount
                     });
 
-                    var buyRate = request.BuyAmount * 1.0 / (buyRateTemp.Deposit- buyRateTemp.RemainDeposit);//仓位占比
+                    var buyRate = request.BuyAmount * 1.0 / (Deposit - RemainDeposit);//仓位占比
                     foreach (var account in request.FollowList)
                     {
                         var temp = followList.Where(e => e.AccountId == account).FirstOrDefault();
@@ -2386,10 +2388,18 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                         {
                             continue;
                         }
+                        long followRemainDeposit = 0;
+                        var followBuySetting = (from item in db.t_account_shares_buy_setting
+                                                where item.AccountId == account && item.Type == 1
+                                                select item).FirstOrDefault();
+                        if (followBuySetting != null)
+                        {
+                            followRemainDeposit = followBuySetting.ParValue / 100 * 100;
+                        }
                         buyList.Add(new
                         {
                             AccountId = account,
-                            BuyAmount = (long)((temp.Deposit-temp.RemainDeposit) * buyRate)
+                            BuyAmount = (long)((temp.Deposit - followRemainDeposit) * buyRate)
                         });
                     }
                 }
@@ -2473,6 +2483,11 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                             error = ex.Message;
                             Logger.WriteFileLog("购买失败", ex);
                             tran.Rollback();
+                            if (buy.AccountId == basedata.AccountId)//主账号失败直接退出
+                            {
+                                sendDataList = new List<dynamic>();
+                                break;
+                            }
                         }
                     }
 
@@ -10812,6 +10827,213 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 }
 
                 db.t_account_shares_conditiontrade_buy_group_share_account.Remove(result);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取用户买入条件设置
+        /// </summary>
+        /// <returns></returns>
+        public List<AccountBuySettingInfo> GetAccountBuySetting(GetAccountBuySettingRequest request,HeadBase basedata) 
+        {
+            var tempList = new List<AccountBuySettingInfo>();
+            tempList.Add(new AccountBuySettingInfo 
+            {
+                Type=1,
+                Name="保留余额",
+                Description="保留余额",
+                ParValue=0
+            });
+            tempList.Add(new AccountBuySettingInfo
+            {
+                Type = 2,
+                Name = "最大持仓数量",
+                Description = "最大持仓数量",
+                ParValue = 0
+            });
+            tempList.Add(new AccountBuySettingInfo
+            {
+                Type = 3,
+                Name = "板块最大持仓数量",
+                Description = "板块最大持仓数量",
+                ParValue = 0
+            });
+            if (request.AccountId == 0)
+            {
+                request.AccountId = basedata.AccountId;
+            }
+            using (var db = new meal_ticketEntities())
+            {
+                var buySetting = (from item in db.t_account_shares_buy_setting
+                                  where item.AccountId == request.AccountId
+                                  select item).ToList();
+                foreach (var item in tempList)
+                {
+                    var temp = buySetting.Where(e => e.Type == item.Type).FirstOrDefault();
+                    if (temp == null)
+                    {
+                        temp = new t_account_shares_buy_setting 
+                        {
+                            AccountId=request.AccountId,
+                            CreateTime=DateTime.Now,
+                            Description=item.Description,
+                            LastModified=DateTime.Now,
+                            Name=item.Name,
+                            ParValue=item.ParValue,
+                            Type=item.Type
+                        };
+                        db.t_account_shares_buy_setting.Add(temp);
+                        db.SaveChanges();
+                        buySetting.Add(temp);
+                    }
+                }
+
+                var result = (from item in buySetting
+                              orderby item.Type
+                              select new AccountBuySettingInfo
+                              {
+                                  CreateTime = item.LastModified,
+                                  Description = item.Description,
+                                  Id = item.Id,
+                                  Name = item.Name,
+                                  ParValue = item.ParValue,
+                                  Type = item.Type
+                              }).ToList();
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// 修改用户买入条件设置
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountBuySetting(ModifyAccountBuySettingRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var buySetting = (from item in db.t_account_shares_buy_setting
+                                  where item.Id == request.Id
+                                  select item).FirstOrDefault();
+                if (buySetting == null)
+                {
+                    throw new WebApiException(400,"数据不存在");
+                }
+                buySetting.LastModified = DateTime.Now;
+                buySetting.ParValue = request.ParValue;
+                buySetting.Description = request.Description;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取用户买入条件设置参数列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuySettingParInfo> GetAccountBuySettingParList(GetAccountBuySettingParListRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var parlist = from item in db.t_account_shares_buy_setting_par
+                              where item.SettingId == request.Id && item.PlateType==request.Type
+                              select item;
+                int totalCount = parlist.Count();
+
+                return new PageRes<AccountBuySettingParInfo>
+                {
+                    TotalCount = totalCount,
+                    MaxId = 0,
+                    List = (from item in parlist
+                            join item2 in db.t_shares_plate on item.PlateId equals item2.Id into a from ai in a.DefaultIfEmpty()
+                            orderby item.CreateTime descending
+                            select new AccountBuySettingParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                MaxBuyCount = item.MaxBuyCount,
+                                PlateId = ai == null ? 0 : ai.Id,
+                                PlateName = ai == null ? "" : ai.Name
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加用户买入条件设置参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void AddAccountBuySettingPar(AddAccountBuySettingParRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //判断设置色否存在
+                var setting = (from item in db.t_account_shares_buy_setting
+                               where item.Id == request.SettingId
+                               select item).FirstOrDefault();
+                if (setting == null)
+                {
+                    throw new WebApiException(400,"设置不存在");
+                }
+                //判断板块是否存在
+                var plate = (from item in db.t_shares_plate
+                             where item.Id == request.PlateId
+                             select item).FirstOrDefault();
+                if (plate == null)
+                {
+                    throw new WebApiException(400,"板块不存在");
+                }
+                db.t_account_shares_buy_setting_par.Add(new t_account_shares_buy_setting_par 
+                {
+                    SettingId=request.SettingId,
+                    CreateTime=DateTime.Now,
+                    LastModified=DateTime.Now,
+                    MaxBuyCount=request.MaxBuyCount,
+                    PlateType= plate.Type,
+                    PlateId =request.PlateId
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 编辑用户买入条件设置参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountBuySettingPar(ModifyAccountBuySettingParRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var par = (from item in db.t_account_shares_buy_setting_par
+                           where item.Id == request.Id
+                           select item).FirstOrDefault();
+                if (par == null)
+                {
+                    throw new WebApiException(400,"参数不存在");
+                }
+                par.MaxBuyCount = request.MaxBuyCount;
+                par.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除用户买入条件设置参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteAccountBuySettingPar(DeleteRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var par = (from item in db.t_account_shares_buy_setting_par
+                           where item.Id == request.Id
+                           select item).FirstOrDefault();
+                if (par == null)
+                {
+                    throw new WebApiException(400, "参数不存在");
+                }
+                db.t_account_shares_buy_setting_par.Remove(par);
                 db.SaveChanges();
             }
         }

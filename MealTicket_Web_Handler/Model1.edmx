@@ -230,6 +230,31 @@
           <Property Name="DeviceUA" Type="nvarchar" MaxLength="512" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="t_account_shares_buy_setting">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountId" Type="bigint" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" />
+          <Property Name="ParValue" Type="bigint" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_buy_setting_par">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SettingId" Type="bigint" Nullable="false" />
+          <Property Name="PlateId" Type="bigint" Nullable="false" />
+          <Property Name="PlateType" Type="int" Nullable="false" />
+          <Property Name="MaxBuyCount" Type="bigint" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="t_account_shares_conditiontrade_buy">
           <Key>
             <PropertyRef Name="Id" />
@@ -1033,8 +1058,6 @@
           </Key>
           <Property Name="AccountId" Type="bigint" Nullable="false" />
           <Property Name="Deposit" Type="bigint" Nullable="false" />
-          <Property Name="RemainDeposit" Type="bigint" Nullable="false" />
-          <Property Name="MaxBuySharesCount" Type="int" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
@@ -3328,6 +3351,8 @@
           <EntitySet Name="t_account_recommend_prize_type" EntityType="Self.t_account_recommend_prize_type" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_recommend_prize_type_level" EntityType="Self.t_account_recommend_prize_type_level" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_registerLog" EntityType="Self.t_account_registerLog" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_buy_setting" EntityType="Self.t_account_shares_buy_setting" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_buy_setting_par" EntityType="Self.t_account_shares_buy_setting_par" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_conditiontrade_buy" EntityType="Self.t_account_shares_conditiontrade_buy" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_conditiontrade_buy_details" EntityType="Self.t_account_shares_conditiontrade_buy_details" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_conditiontrade_buy_details_auto" EntityType="Self.t_account_shares_conditiontrade_buy_details_auto" Schema="dbo" store:Type="Tables" />
@@ -4290,18 +4315,6 @@
           <Property Name="PicIsUsed" Type="Boolean" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
-        </EntityType>
-        <EntityType Name="t_account_wallet">
-          <Key>
-            <PropertyRef Name="AccountId" />
-          </Key>
-          <Property Name="AccountId" Type="Int64" Nullable="false" />
-          <Property Name="Deposit" Type="Int64" Nullable="false" />
-          <Property Name="Status" Type="Int32" Nullable="false" />
-          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="RemainDeposit" Type="Int64" Nullable="false" />
-          <Property Name="MaxBuySharesCount" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_account_wallet_change_record">
           <Key>
@@ -5912,7 +5925,6 @@
           <EntitySet Name="t_account_shares_seat_order" EntityType="Self.t_account_shares_seat_order" />
           <EntitySet Name="t_account_shares_seat_order_details" EntityType="Self.t_account_shares_seat_order_details" />
           <EntitySet Name="t_account_verifyCode" EntityType="Self.t_account_verifyCode" />
-          <EntitySet Name="t_account_wallet" EntityType="Self.t_account_wallet" />
           <EntitySet Name="t_account_wallet_change_record" EntityType="Self.t_account_wallet_change_record" />
           <EntitySet Name="t_admin_api" EntityType="Self.t_admin_api" />
           <EntitySet Name="t_admin_baseinfo" EntityType="Self.t_admin_baseinfo" />
@@ -6501,6 +6513,9 @@
           <EntitySet Name="t_account_shares_conditiontrade_buy_details_auto_trend_other_par" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_auto_trend_other_par" />
           <EntitySet Name="t_account_shares_conditiontrade_buy_details_other_trend_other" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_other_trend_other" />
           <EntitySet Name="t_account_shares_conditiontrade_buy_details_other_trend_other_par" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_other_trend_other_par" />
+          <EntitySet Name="t_account_shares_buy_setting" EntityType="meal_ticketModel.t_account_shares_buy_setting" />
+          <EntitySet Name="t_account_shares_buy_setting_par" EntityType="meal_ticketModel.t_account_shares_buy_setting_par" />
+          <EntitySet Name="t_account_wallet" EntityType="meal_ticketModel.t_account_wallet" />
         </EntityContainer>
         <EntityType Name="t_shares_plate">
           <Key>
@@ -7042,6 +7057,41 @@
           <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="OtherTrendOtherId" Type="Int64" Nullable="false" />
           <Property Name="ParamsInfo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_buy_setting">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ParValue" Type="Int64" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_buy_setting_par">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SettingId" Type="Int64" Nullable="false" />
+          <Property Name="PlateId" Type="Int64" Nullable="false" />
+          <Property Name="MaxBuyCount" Type="Int64" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="PlateType" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_wallet">
+          <Key>
+            <PropertyRef Name="AccountId" />
+          </Key>
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="Deposit" Type="Int64" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
@@ -7830,19 +7880,6 @@
                 <ScalarProperty Name="PicVerifyCode" ColumnName="PicVerifyCode" />
                 <ScalarProperty Name="PicVerifyCodeUrl" ColumnName="PicVerifyCodeUrl" />
                 <ScalarProperty Name="PicIsUsed" ColumnName="PicIsUsed" />
-                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="t_account_wallet">
-            <EntityTypeMapping TypeName="meal_ticketModel.t_account_wallet">
-              <MappingFragment StoreEntitySet="t_account_wallet">
-                <ScalarProperty Name="MaxBuySharesCount" ColumnName="MaxBuySharesCount" />
-                <ScalarProperty Name="RemainDeposit" ColumnName="RemainDeposit" />
-                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
-                <ScalarProperty Name="Deposit" ColumnName="Deposit" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
               </MappingFragment>
@@ -10157,6 +10194,44 @@
                 <ScalarProperty Name="ParamsInfo" ColumnName="ParamsInfo" />
                 <ScalarProperty Name="OtherTrendOtherId" ColumnName="OtherTrendOtherId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_buy_setting">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_buy_setting">
+              <MappingFragment StoreEntitySet="t_account_shares_buy_setting">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="ParValue" ColumnName="ParValue" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_buy_setting_par">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_buy_setting_par">
+              <MappingFragment StoreEntitySet="t_account_shares_buy_setting_par">
+                <ScalarProperty Name="PlateType" ColumnName="PlateType" />
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="MaxBuyCount" ColumnName="MaxBuyCount" />
+                <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+                <ScalarProperty Name="SettingId" ColumnName="SettingId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_wallet">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_wallet">
+              <MappingFragment StoreEntitySet="t_account_wallet">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Deposit" ColumnName="Deposit" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

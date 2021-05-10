@@ -162,6 +162,19 @@
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="ExamineFinishTime" Type="datetime" />
         </EntityType>
+        <EntityType Name="t_account_shares_buy_setting">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountId" Type="bigint" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" />
+          <Property Name="ParValue" Type="bigint" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="t_account_shares_conditiontrade_buy">
           <Key>
             <PropertyRef Name="Id" />
@@ -186,6 +199,7 @@
           <Property Name="IsGreater" Type="bit" Nullable="false" />
           <Property Name="ConditionRelativeType" Type="int" Nullable="false" />
           <Property Name="ConditionRelativeRate" Type="int" Nullable="false" />
+          <Property Name="OtherConditionRelative" Type="int" Nullable="false" />
           <Property Name="EntrustAmount" Type="bigint" Nullable="false" />
           <Property Name="EntrustType" Type="int" Nullable="false" />
           <Property Name="EntrustPriceGear" Type="int" Nullable="false" />
@@ -454,7 +468,6 @@
           </Key>
           <Property Name="AccountId" Type="bigint" Nullable="false" />
           <Property Name="Deposit" Type="bigint" Nullable="false" />
-          <Property Name="RemainDeposit" Type="bigint" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
@@ -904,6 +917,7 @@
           <Property Name="ShareClosedPrice" Type="bigint" Nullable="false" />
           <Property Name="Market" Type="int" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="MarketStatus" Type="int" Nullable="false" />
           <Property Name="ForbidStatus" Type="int" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
         </EntityType>
@@ -1073,6 +1087,10 @@
           <Property Name="SpeedUp" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="Activity" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
+          <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
+          <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
+          <Property Name="PriceType" Type="int" Nullable="false" />
+          <Property Name="TriPriceType" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_search">
           <Key>
@@ -1461,6 +1479,7 @@
           <EntitySet Name="t_account_loginlog" EntityType="Self.t_account_loginlog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_par_setting" EntityType="Self.t_account_par_setting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_realname" EntityType="Self.t_account_realname" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_buy_setting" EntityType="Self.t_account_shares_buy_setting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_conditiontrade_buy" EntityType="Self.t_account_shares_conditiontrade_buy" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_conditiontrade_buy_details" EntityType="Self.t_account_shares_conditiontrade_buy_details" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_conditiontrade_buy_details_auto" EntityType="Self.t_account_shares_conditiontrade_buy_details_auto" Schema="dbo" store:Type="Tables" />
@@ -1635,7 +1654,6 @@
             <Parameter Name="errorCode" Mode="InOut" Type="Int32" />
             <Parameter Name="errorMessage" Mode="InOut" Type="String" />
           </FunctionImport>
-          <EntitySet Name="t_account_wallet" EntityType="meal_ticketModel.t_account_wallet" />
           <FunctionImport Name="P_MakeupDeposit">
             <Parameter Name="accountId" Mode="In" Type="Int64" />
             <Parameter Name="holdId" Mode="In" Type="Int64" />
@@ -1869,6 +1887,8 @@
           <EntitySet Name="t_account_shares_conditiontrade_buy_details_other_trend" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_other_trend" />
           <EntitySet Name="t_account_shares_conditiontrade_buy_details_other_trend_par" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_details_other_trend_par" />
           <EntitySet Name="t_account_shares_conditiontrade_buy" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy" />
+          <EntitySet Name="t_account_wallet" EntityType="meal_ticketModel.t_account_wallet" />
+          <EntitySet Name="t_account_shares_buy_setting" EntityType="meal_ticketModel.t_account_shares_buy_setting" />
         </EntityContainer>
         <EntityType Name="t_authority_account_visitlog">
           <Key>
@@ -1956,17 +1976,10 @@
           <Property Name="SpeedUp" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="Activity" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
-        </EntityType>
-        <EntityType Name="t_account_wallet">
-          <Key>
-            <PropertyRef Name="AccountId" />
-          </Key>
-          <Property Name="AccountId" Type="Int64" Nullable="false" />
-          <Property Name="Deposit" Type="Int64" Nullable="false" />
-          <Property Name="Status" Type="Int32" Nullable="false" />
-          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="RemainDeposit" Type="Int64" Nullable="false" />
+          <Property Name="LimitUpPrice" Type="Int64" Nullable="false" />
+          <Property Name="LimitDownPrice" Type="Int64" Nullable="false" />
+          <Property Name="PriceType" Type="Int32" Nullable="false" />
+          <Property Name="TriPriceType" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_account_baseinfo">
           <Key>
@@ -2501,6 +2514,7 @@
           <Property Name="ForbidStatus" Type="Int32" Nullable="false" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="SharesPyjc" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="MarketStatus" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_suspension">
           <Key>
@@ -2984,6 +2998,7 @@
           <Property Name="ExecStatus" Type="Int32" Nullable="false" />
           <Property Name="FirstExecTime" Type="DateTime" Precision="3" />
           <Property Name="LimitUp" Type="Boolean" Nullable="false" />
+          <Property Name="OtherConditionRelative" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_account_shares_conditiontrade_buy_details_auto">
           <Key>
@@ -3065,6 +3080,29 @@
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
+        <EntityType Name="t_account_wallet">
+          <Key>
+            <PropertyRef Name="AccountId" />
+          </Key>
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="Deposit" Type="Int64" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_buy_setting">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ParValue" Type="Int64" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -3143,6 +3181,10 @@
           <EntitySetMapping Name="t_shares_quotes">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes">
               <MappingFragment StoreEntitySet="t_shares_quotes">
+                <ScalarProperty Name="TriPriceType" ColumnName="TriPriceType" />
+                <ScalarProperty Name="PriceType" ColumnName="PriceType" />
+                <ScalarProperty Name="LimitDownPrice" ColumnName="LimitDownPrice" />
+                <ScalarProperty Name="LimitUpPrice" ColumnName="LimitUpPrice" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
                 <ScalarProperty Name="Activity" ColumnName="Activity" />
                 <ScalarProperty Name="SpeedUp" ColumnName="SpeedUp" />
@@ -3183,18 +3225,6 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="P_SetTradeClosingTime" FunctionName="meal_ticketModel.Store.P_SetTradeClosingTime" />
-          <EntitySetMapping Name="t_account_wallet">
-            <EntityTypeMapping TypeName="meal_ticketModel.t_account_wallet">
-              <MappingFragment StoreEntitySet="t_account_wallet">
-                <ScalarProperty Name="RemainDeposit" ColumnName="RemainDeposit" />
-                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
-                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="Deposit" ColumnName="Deposit" />
-                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="P_MakeupDeposit" FunctionName="meal_ticketModel.Store.P_MakeupDeposit" />
           <EntitySetMapping Name="t_account_baseinfo">
             <EntityTypeMapping TypeName="meal_ticketModel.t_account_baseinfo">
@@ -3761,6 +3791,7 @@
           <EntitySetMapping Name="t_shares_all">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_all">
               <MappingFragment StoreEntitySet="t_shares_all">
+                <ScalarProperty Name="MarketStatus" ColumnName="MarketStatus" />
                 <ScalarProperty Name="SharesPyjc" ColumnName="SharesPyjc" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
                 <ScalarProperty Name="ForbidStatus" ColumnName="ForbidStatus" />
@@ -4273,6 +4304,7 @@
           <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details">
             <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details">
               <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details">
+                <ScalarProperty Name="OtherConditionRelative" ColumnName="OtherConditionRelative" />
                 <ScalarProperty Name="LimitUp" ColumnName="LimitUp" />
                 <ScalarProperty Name="FirstExecTime" ColumnName="FirstExecTime" />
                 <ScalarProperty Name="ExecStatus" ColumnName="ExecStatus" />
@@ -4382,6 +4414,31 @@
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
                 <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_wallet">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_wallet">
+              <MappingFragment StoreEntitySet="t_account_wallet">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Deposit" ColumnName="Deposit" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_buy_setting">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_buy_setting">
+              <MappingFragment StoreEntitySet="t_account_shares_buy_setting">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="ParValue" ColumnName="ParValue" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
                 <ScalarProperty Name="AccountId" ColumnName="AccountId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
