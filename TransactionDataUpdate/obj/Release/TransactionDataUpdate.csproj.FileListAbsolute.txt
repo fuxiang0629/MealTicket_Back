@@ -70,4 +70,8 @@ D:\项目\饭票\后端\TransactionDataUpdate\obj\Release\TransactionDataUpdate.
 D:\项目\饭票\后端\TransactionDataUpdate\obj\Release\TransactionDataUpdate.csproj.CopyComplete
 D:\项目\饭票\后端\TransactionDataUpdate\obj\Release\TransactionDataUpdate.exe
 D:\项目\饭票\后端\TransactionDataUpdate\obj\Release\TransactionDataUpdate.pdb
+<<<<<<< HEAD
 F:\项目\饭票后端\TransactionDataUpdate\obj\Release\TransactionDataUpdate.csprojAssemblyReference.cache
+=======
+D:\项目\饭票\后端\TransactionDataUpdate\obj\Release\TransactionDataUpdate.csprojAssemblyReference.cache
+>>>>>>> a5f1657f8dce15a003c04fbd57b1f9b101e98c64
