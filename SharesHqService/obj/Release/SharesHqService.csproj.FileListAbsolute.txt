@@ -115,4 +115,3 @@ D:\项目\饭票\后端\SharesHqService\obj\Release\SharesHqService.csproj.CopyC
 D:\项目\饭票\后端\SharesHqService\obj\Release\SharesHqService.exe
 D:\项目\饭票\后端\SharesHqService\obj\Release\SharesHqService.pdb
 D:\项目\饭票\后端\SharesHqService\obj\Release\SharesHqService.csprojAssemblyReference.cache
-F:\项目\饭票后端\SharesHqService\obj\Release\SharesHqService.csprojAssemblyReference.cache
