@@ -418,6 +418,9 @@
     <Compile Include="t_account_shares_hold_conditiontrade_child.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="t_account_shares_hold_conditiontrade_follow.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="t_account_shares_hold_deposit_changelog.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -858,6 +861,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="v_plate_shares.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="v_shares_baseinfo.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="WebApiException.cs" />

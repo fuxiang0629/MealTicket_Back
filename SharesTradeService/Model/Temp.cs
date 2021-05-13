@@ -12,6 +12,7 @@ namespace SharesTradeService.Model
 
     public class SellEntrustManagerSelect
     {
+        public long Id { get; set; }
         public int EntrustCount { get; set; }
         public long BuyId { get; set; }
     }

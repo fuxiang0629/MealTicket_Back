@@ -83,6 +83,11 @@ namespace MealTicket_Admin_Handler.Model
         public bool LimitUp { get; set; }
 
         /// <summary>
+        /// 是否判断持仓不买入
+        /// </summary>
+        public bool IsHold { get; set; }
+
+        /// <summary>
         /// 其他买入条件
         /// </summary>
         public int OtherConditionRelative { get; set; }

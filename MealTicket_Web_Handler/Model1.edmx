@@ -296,6 +296,7 @@
           <Property Name="ExecStatus" Type="int" Nullable="false" />
           <Property Name="FirstExecTime" Type="datetime" />
           <Property Name="LimitUp" Type="bit" Nullable="false" />
+          <Property Name="IsHold" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="t_account_shares_conditiontrade_buy_details_auto">
           <Key>
@@ -514,6 +515,7 @@
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
           <Property Name="LimitUp" Type="bit" Nullable="false" />
+          <Property Name="IsHold" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="t_account_shares_conditiontrade_template_buy_auto">
           <Key>
@@ -839,6 +841,15 @@
           <Property Name="ConditionId" Type="bigint" Nullable="false" />
           <Property Name="ChildId" Type="bigint" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_hold_conditiontrade_follow">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="ConditiontradeId" Type="bigint" Nullable="false" />
+          <Property Name="FollowAccountId" Type="bigint" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="t_account_shares_hold_deposit_changelog">
           <Key>
@@ -2641,6 +2652,7 @@
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
           <Property Name="LimitUp" Type="bit" Nullable="false" />
+          <Property Name="IsHold" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="t_sys_conditiontrade_template_buy_auto">
           <Key>
@@ -2883,6 +2895,39 @@
           <Property Name="CirculatingCapital" Type="bigint" />
           <Property Name="PresentPrice" Type="bigint" />
           <Property Name="ClosedPrice" Type="bigint" />
+        </EntityType>
+        <!--生成过程中发现错误:
+警告 6002: 表/视图“meal_ticket.dbo.v_shares_baseinfo”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+        <EntityType Name="v_shares_baseinfo">
+          <Key>
+            <PropertyRef Name="Market" />
+            <PropertyRef Name="SharesCode" />
+            <PropertyRef Name="SharesName" />
+            <PropertyRef Name="SharesPyjc" />
+            <PropertyRef Name="SharesHandCount" />
+            <PropertyRef Name="MarketStatus" />
+            <PropertyRef Name="ForbidStatus" />
+            <PropertyRef Name="PresentPrice" />
+            <PropertyRef Name="ClosedPrice" />
+            <PropertyRef Name="OpenedPrice" />
+          </Key>
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="SharesName" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="SharesPyjc" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="SharesHandCount" Type="int" Nullable="false" />
+          <Property Name="MarketStatus" Type="int" Nullable="false" />
+          <Property Name="ForbidStatus" Type="int" Nullable="false" />
+          <Property Name="MarketTime" Type="datetime" />
+          <Property Name="Business" Type="nvarchar(max)" />
+          <Property Name="TotalCapital" Type="bigint" />
+          <Property Name="CirculatingCapital" Type="bigint" />
+          <Property Name="Industry" Type="nvarchar(max)" />
+          <Property Name="Area" Type="nvarchar(max)" />
+          <Property Name="Idea" Type="nvarchar(max)" />
+          <Property Name="PresentPrice" Type="bigint" Nullable="false" />
+          <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
+          <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
         </EntityType>
         <Function Name="f_getTradeDate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="datetime">
           <Parameter Name="date" Type="datetime" Mode="In" />
@@ -3395,6 +3440,7 @@
           <EntitySet Name="t_account_shares_hold" EntityType="Self.t_account_shares_hold" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_hold_conditiontrade" EntityType="Self.t_account_shares_hold_conditiontrade" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_hold_conditiontrade_child" EntityType="Self.t_account_shares_hold_conditiontrade_child" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_hold_conditiontrade_follow" EntityType="Self.t_account_shares_hold_conditiontrade_follow" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_hold_deposit_changelog" EntityType="Self.t_account_shares_hold_deposit_changelog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_hold_fundamount_changelog" EntityType="Self.t_account_shares_hold_fundamount_changelog" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_hold_manager" EntityType="Self.t_account_shares_hold_manager" Schema="dbo" store:Type="Tables" />
@@ -3571,6 +3617,27 @@
     [v_plate_shares].[PresentPrice] AS [PresentPrice], 
     [v_plate_shares].[ClosedPrice] AS [ClosedPrice]
     FROM [dbo].[v_plate_shares] AS [v_plate_shares]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="v_shares_baseinfo" EntityType="Self.v_shares_baseinfo" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [v_shares_baseinfo].[Market] AS [Market], 
+    [v_shares_baseinfo].[SharesCode] AS [SharesCode], 
+    [v_shares_baseinfo].[SharesName] AS [SharesName], 
+    [v_shares_baseinfo].[SharesPyjc] AS [SharesPyjc], 
+    [v_shares_baseinfo].[SharesHandCount] AS [SharesHandCount], 
+    [v_shares_baseinfo].[MarketStatus] AS [MarketStatus], 
+    [v_shares_baseinfo].[ForbidStatus] AS [ForbidStatus], 
+    [v_shares_baseinfo].[MarketTime] AS [MarketTime], 
+    [v_shares_baseinfo].[Business] AS [Business], 
+    [v_shares_baseinfo].[TotalCapital] AS [TotalCapital], 
+    [v_shares_baseinfo].[CirculatingCapital] AS [CirculatingCapital], 
+    [v_shares_baseinfo].[Industry] AS [Industry], 
+    [v_shares_baseinfo].[Area] AS [Area], 
+    [v_shares_baseinfo].[Idea] AS [Idea], 
+    [v_shares_baseinfo].[PresentPrice] AS [PresentPrice], 
+    [v_shares_baseinfo].[ClosedPrice] AS [ClosedPrice], 
+    [v_shares_baseinfo].[OpenedPrice] AS [OpenedPrice]
+    FROM [dbo].[v_shares_baseinfo] AS [v_shares_baseinfo]</DefiningQuery>
           </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -3846,6 +3913,7 @@
           <Property Name="LimitUp" Type="Boolean" Nullable="false" />
           <Property Name="FirstExecTime" Type="DateTime" Precision="3" />
           <Property Name="OtherConditionRelative" Type="Int32" Nullable="false" />
+          <Property Name="IsHold" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="t_account_shares_conditiontrade_buy_details_auto">
           <Key>
@@ -6516,6 +6584,8 @@
           <EntitySet Name="t_account_shares_buy_setting" EntityType="meal_ticketModel.t_account_shares_buy_setting" />
           <EntitySet Name="t_account_shares_buy_setting_par" EntityType="meal_ticketModel.t_account_shares_buy_setting_par" />
           <EntitySet Name="t_account_wallet" EntityType="meal_ticketModel.t_account_wallet" />
+          <EntitySet Name="v_shares_baseinfo" EntityType="meal_ticketModel.v_shares_baseinfo" />
+          <EntitySet Name="t_account_shares_hold_conditiontrade_follow" EntityType="meal_ticketModel.t_account_shares_hold_conditiontrade_follow" />
         </EntityContainer>
         <EntityType Name="t_shares_plate">
           <Key>
@@ -6655,6 +6725,7 @@
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LimitUp" Type="Boolean" Nullable="false" />
           <Property Name="OtherConditionRelative" Type="Int32" Nullable="false" />
+          <Property Name="IsHold" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="t_sys_conditiontrade_template_buy_auto">
           <Key>
@@ -6755,6 +6826,7 @@
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LimitUp" Type="Boolean" Nullable="false" />
           <Property Name="OtherConditionRelative" Type="Int32" Nullable="false" />
+          <Property Name="IsHold" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="t_account_shares_conditiontrade_template_buy_auto">
           <Key>
@@ -7095,6 +7167,46 @@
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
+        <EntityType Name="v_shares_baseinfo">
+          <Key>
+            <PropertyRef Name="Market" />
+            <PropertyRef Name="SharesCode" />
+            <PropertyRef Name="SharesName" />
+            <PropertyRef Name="SharesPyjc" />
+            <PropertyRef Name="SharesHandCount" />
+            <PropertyRef Name="MarketStatus" />
+            <PropertyRef Name="ForbidStatus" />
+            <PropertyRef Name="PresentPrice" />
+            <PropertyRef Name="ClosedPrice" />
+            <PropertyRef Name="OpenedPrice" />
+          </Key>
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SharesName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="SharesPyjc" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SharesHandCount" Type="Int32" Nullable="false" />
+          <Property Name="MarketStatus" Type="Int32" Nullable="false" />
+          <Property Name="ForbidStatus" Type="Int32" Nullable="false" />
+          <Property Name="MarketTime" Type="DateTime" Precision="3" />
+          <Property Name="Business" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="TotalCapital" Type="Int64" />
+          <Property Name="CirculatingCapital" Type="Int64" />
+          <Property Name="Industry" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Area" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Idea" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PresentPrice" Type="Int64" Nullable="false" />
+          <Property Name="ClosedPrice" Type="Int64" Nullable="false" />
+          <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_account_shares_hold_conditiontrade_follow">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="ConditiontradeId" Type="Int64" Nullable="false" />
+          <Property Name="FollowAccountId" Type="Int64" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -7357,6 +7469,7 @@
           <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details">
             <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details">
               <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details">
+                <ScalarProperty Name="IsHold" ColumnName="IsHold" />
                 <ScalarProperty Name="OtherConditionRelative" ColumnName="OtherConditionRelative" />
                 <ScalarProperty Name="FirstExecTime" ColumnName="FirstExecTime" />
                 <ScalarProperty Name="LimitUp" ColumnName="LimitUp" />
@@ -9746,6 +9859,7 @@
           <EntitySetMapping Name="t_sys_conditiontrade_template_buy">
             <EntityTypeMapping TypeName="meal_ticketModel.t_sys_conditiontrade_template_buy">
               <MappingFragment StoreEntitySet="t_sys_conditiontrade_template_buy">
+                <ScalarProperty Name="IsHold" ColumnName="IsHold" />
                 <ScalarProperty Name="OtherConditionRelative" ColumnName="OtherConditionRelative" />
                 <ScalarProperty Name="LimitUp" ColumnName="LimitUp" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
@@ -9854,6 +9968,7 @@
           <EntitySetMapping Name="t_account_shares_conditiontrade_template_buy">
             <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_template_buy">
               <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_template_buy">
+                <ScalarProperty Name="IsHold" ColumnName="IsHold" />
                 <ScalarProperty Name="OtherConditionRelative" ColumnName="OtherConditionRelative" />
                 <ScalarProperty Name="LimitUp" ColumnName="LimitUp" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
@@ -10232,6 +10347,39 @@
                 <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="Deposit" ColumnName="Deposit" />
                 <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="v_shares_baseinfo">
+            <EntityTypeMapping TypeName="meal_ticketModel.v_shares_baseinfo">
+              <MappingFragment StoreEntitySet="v_shares_baseinfo">
+                <ScalarProperty Name="OpenedPrice" ColumnName="OpenedPrice" />
+                <ScalarProperty Name="ClosedPrice" ColumnName="ClosedPrice" />
+                <ScalarProperty Name="PresentPrice" ColumnName="PresentPrice" />
+                <ScalarProperty Name="Idea" ColumnName="Idea" />
+                <ScalarProperty Name="Area" ColumnName="Area" />
+                <ScalarProperty Name="Industry" ColumnName="Industry" />
+                <ScalarProperty Name="CirculatingCapital" ColumnName="CirculatingCapital" />
+                <ScalarProperty Name="TotalCapital" ColumnName="TotalCapital" />
+                <ScalarProperty Name="Business" ColumnName="Business" />
+                <ScalarProperty Name="MarketTime" ColumnName="MarketTime" />
+                <ScalarProperty Name="ForbidStatus" ColumnName="ForbidStatus" />
+                <ScalarProperty Name="MarketStatus" ColumnName="MarketStatus" />
+                <ScalarProperty Name="SharesHandCount" ColumnName="SharesHandCount" />
+                <ScalarProperty Name="SharesPyjc" ColumnName="SharesPyjc" />
+                <ScalarProperty Name="SharesName" ColumnName="SharesName" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_hold_conditiontrade_follow">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_hold_conditiontrade_follow">
+              <MappingFragment StoreEntitySet="t_account_shares_hold_conditiontrade_follow">
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="FollowAccountId" ColumnName="FollowAccountId" />
+                <ScalarProperty Name="ConditiontradeId" ColumnName="ConditiontradeId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

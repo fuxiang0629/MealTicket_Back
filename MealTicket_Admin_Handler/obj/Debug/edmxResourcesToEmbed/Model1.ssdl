@@ -523,8 +523,6 @@
     </Key>
     <Property Name="AccountId" Type="bigint" Nullable="false" />
     <Property Name="Deposit" Type="bigint" Nullable="false" />
-    <Property Name="RemainDeposit" Type="bigint" Nullable="false" />
-    <Property Name="MaxBuySharesCount" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />

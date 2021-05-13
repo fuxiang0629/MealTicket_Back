@@ -71,7 +71,6 @@ C:\Users\37863\Desktop\项目\饭票后端\TransactionDataTri\obj\Debug\Transact
 C:\Users\37863\Desktop\项目\饭票后端\TransactionDataTri\obj\Debug\TransactionDataTri.csproj.CopyComplete
 C:\Users\37863\Desktop\项目\饭票后端\TransactionDataTri\obj\Debug\TransactionDataTri.exe
 C:\Users\37863\Desktop\项目\饭票后端\TransactionDataTri\obj\Debug\TransactionDataTri.pdb
-F:\项目\饭票后端\TransactionDataTri\obj\Debug\TransactionDataTri.csprojAssemblyReference.cache
 D:\项目\饭票\后端\TransactionDataTri\bin\Debug\TransactionDataTri.exe.config
 D:\项目\饭票\后端\TransactionDataTri\bin\Debug\TransactionDataTri.exe
 D:\项目\饭票\后端\TransactionDataTri\bin\Debug\TransactionDataTri.pdb

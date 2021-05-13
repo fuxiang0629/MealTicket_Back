@@ -1800,6 +1800,7 @@
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="LimitUp" Type="bit" Nullable="false" />
+    <Property Name="IsHold" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="t_sys_conditiontrade_template_buy_auto">
     <Key>

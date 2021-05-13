@@ -32,5 +32,6 @@ namespace MealTicket_Web_Handler
         public System.DateTime LastModified { get; set; }
         public bool LimitUp { get; set; }
         public int OtherConditionRelative { get; set; }
+        public bool IsHold { get; set; }
     }
 }

@@ -257,6 +257,7 @@
     <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details">
         <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details">
+          <ScalarProperty Name="IsHold" ColumnName="IsHold" />
           <ScalarProperty Name="OtherConditionRelative" ColumnName="OtherConditionRelative" />
           <ScalarProperty Name="FirstExecTime" ColumnName="FirstExecTime" />
           <ScalarProperty Name="LimitUp" ColumnName="LimitUp" />
@@ -780,19 +781,6 @@
           <ScalarProperty Name="PicVerifyCode" ColumnName="PicVerifyCode" />
           <ScalarProperty Name="PicVerifyCodeUrl" ColumnName="PicVerifyCodeUrl" />
           <ScalarProperty Name="PicIsUsed" ColumnName="PicIsUsed" />
-          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="t_account_wallet">
-      <EntityTypeMapping TypeName="meal_ticketModel.t_account_wallet">
-        <MappingFragment StoreEntitySet="t_account_wallet">
-          <ScalarProperty Name="MaxBuySharesCount" ColumnName="MaxBuySharesCount" />
-          <ScalarProperty Name="RemainDeposit" ColumnName="RemainDeposit" />
-          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
-          <ScalarProperty Name="Deposit" ColumnName="Deposit" />
-          <ScalarProperty Name="Status" ColumnName="Status" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
         </MappingFragment>
@@ -2659,6 +2647,7 @@
     <EntitySetMapping Name="t_sys_conditiontrade_template_buy">
       <EntityTypeMapping TypeName="meal_ticketModel.t_sys_conditiontrade_template_buy">
         <MappingFragment StoreEntitySet="t_sys_conditiontrade_template_buy">
+          <ScalarProperty Name="IsHold" ColumnName="IsHold" />
           <ScalarProperty Name="OtherConditionRelative" ColumnName="OtherConditionRelative" />
           <ScalarProperty Name="LimitUp" ColumnName="LimitUp" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
@@ -2767,6 +2756,7 @@
     <EntitySetMapping Name="t_account_shares_conditiontrade_template_buy">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_template_buy">
         <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_template_buy">
+          <ScalarProperty Name="IsHold" ColumnName="IsHold" />
           <ScalarProperty Name="OtherConditionRelative" ColumnName="OtherConditionRelative" />
           <ScalarProperty Name="LimitUp" ColumnName="LimitUp" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
@@ -3106,6 +3096,77 @@
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="ParamsInfo" ColumnName="ParamsInfo" />
           <ScalarProperty Name="OtherTrendOtherId" ColumnName="OtherTrendOtherId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_buy_setting">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_buy_setting">
+        <MappingFragment StoreEntitySet="t_account_shares_buy_setting">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="ParValue" ColumnName="ParValue" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_buy_setting_par">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_buy_setting_par">
+        <MappingFragment StoreEntitySet="t_account_shares_buy_setting_par">
+          <ScalarProperty Name="PlateType" ColumnName="PlateType" />
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="MaxBuyCount" ColumnName="MaxBuyCount" />
+          <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+          <ScalarProperty Name="SettingId" ColumnName="SettingId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_wallet">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_wallet">
+        <MappingFragment StoreEntitySet="t_account_wallet">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Deposit" ColumnName="Deposit" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="v_shares_baseinfo">
+      <EntityTypeMapping TypeName="meal_ticketModel.v_shares_baseinfo">
+        <MappingFragment StoreEntitySet="v_shares_baseinfo">
+          <ScalarProperty Name="OpenedPrice" ColumnName="OpenedPrice" />
+          <ScalarProperty Name="ClosedPrice" ColumnName="ClosedPrice" />
+          <ScalarProperty Name="PresentPrice" ColumnName="PresentPrice" />
+          <ScalarProperty Name="Idea" ColumnName="Idea" />
+          <ScalarProperty Name="Area" ColumnName="Area" />
+          <ScalarProperty Name="Industry" ColumnName="Industry" />
+          <ScalarProperty Name="CirculatingCapital" ColumnName="CirculatingCapital" />
+          <ScalarProperty Name="TotalCapital" ColumnName="TotalCapital" />
+          <ScalarProperty Name="Business" ColumnName="Business" />
+          <ScalarProperty Name="MarketTime" ColumnName="MarketTime" />
+          <ScalarProperty Name="ForbidStatus" ColumnName="ForbidStatus" />
+          <ScalarProperty Name="MarketStatus" ColumnName="MarketStatus" />
+          <ScalarProperty Name="SharesHandCount" ColumnName="SharesHandCount" />
+          <ScalarProperty Name="SharesPyjc" ColumnName="SharesPyjc" />
+          <ScalarProperty Name="SharesName" ColumnName="SharesName" />
+          <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+          <ScalarProperty Name="Market" ColumnName="Market" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_hold_conditiontrade_follow">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_hold_conditiontrade_follow">
+        <MappingFragment StoreEntitySet="t_account_shares_hold_conditiontrade_follow">
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="FollowAccountId" ColumnName="FollowAccountId" />
+          <ScalarProperty Name="ConditiontradeId" ColumnName="ConditiontradeId" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>

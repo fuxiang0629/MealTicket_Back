@@ -8379,6 +8379,11 @@
             是否判断涨停休眠
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateBuyDetailsRequest.IsHold">
+            <summary>
+            是否判断持仓不买入
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateBuyDetailsRequest.OtherConditionRelative">
             <summary>
             其他买入条件
@@ -8862,6 +8867,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateBuyDetailsInfo.LimitUp">
             <summary>
             是否判断涨停休眠
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateBuyDetailsInfo.IsHold">
+            <summary>
+            是否判断持仓不买入
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateBuyDetailsInfo.OtherConditionRelative">
@@ -9442,6 +9452,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyDetailsRequest.LimitUp">
             <summary>
             是否判断涨停休眠
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyDetailsRequest.IsHold">
+            <summary>
+            是否判断持仓不买入
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyDetailsRequest.OtherConditionRelative">

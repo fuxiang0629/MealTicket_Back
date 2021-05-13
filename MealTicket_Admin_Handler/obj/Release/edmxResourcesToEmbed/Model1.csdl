@@ -2170,6 +2170,7 @@
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LimitUp" Type="Boolean" Nullable="false" />
     <Property Name="OtherConditionRelative" Type="Int32" Nullable="false" />
+    <Property Name="IsHold" Type="Boolean" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_buy_trend_par_template">
     <Key>

@@ -394,11 +394,13 @@ namespace SharesTradeService.Handler
                         bool error = false;
                         try
                         {
+                            string managerIdListStr="("+string.Join(",", tradeInfo.Value.EntrustManagerList.Select(e => e.EntrustManagerId).ToList())+")";
+                            string sql = @"select Id,EntrustCount,BuyId from t_account_shares_entrust_manager with(xlock) where Id in {0} and TradeType=2 and [Status]=1";
+                            var entrustManagerList = db.Database.SqlQuery<SellEntrustManagerSelect>(string.Format(sql, managerIdListStr)).ToList();
                             //判断卖出账户，生成sellDic
                             foreach (var manager in tradeInfo.Value.EntrustManagerList)
                             {
-                                string sql = @"select top 1 EntrustCount,BuyId from t_account_shares_entrust_manager with(TABLOCKX) where Id={0} and TradeType=2 and [Status]=1";
-                                var entrustManager = db.Database.SqlQuery<SellEntrustManagerSelect>(string.Format(sql, manager.EntrustManagerId)).FirstOrDefault();
+                                var entrustManager = entrustManagerList.Where(e => e.Id == manager.EntrustManagerId).FirstOrDefault();
                                 if (entrustManager == null)
                                 {
                                     throw new Exception("委托manager不存在");
@@ -511,6 +513,11 @@ namespace SharesTradeService.Handler
                                 db.Database.ExecuteSqlCommand(string.Format(sql, manager.EntrustManagerId));
                             }
 
+                            if (tradeInfo.Value.SellCount <= 0)
+                            {
+                                continue;
+                            }
+
                             StringBuilder sErrInfo = new StringBuilder(256);
                             StringBuilder sResult = new StringBuilder(1024 * 1024);
                             var client = Singleton.instance.sellTradeClient.GetTradeClient(tradeInfo.Key);
@@ -617,43 +624,20 @@ namespace SharesTradeService.Handler
             {
                 try
                 {
-                    StringBuilder strApp = new StringBuilder();
-
-                    string sql = string.Format("select top 1 AccountCanSoldCount from t_broker_account_shares_rel with(xlock) where TradeAccountCode='{0}' and Market={1} and SharesCode='{2}'", tradeAccountCode, sellInfo.Market, sellInfo.SharesCode);
-                    int accountCanSoldCount=db.Database.SqlQuery<int>(sql).FirstOrDefault();
-                    strApp.AppendLine("更新前可卖数量："+ accountCanSoldCount);
-                    strApp.AppendLine("当前卖出数量：" + sellInfo.SellCount);
-
-                    //查询账户持仓情况
-                    sql = string.Format("update t_broker_account_shares_rel set AccountCanSoldCount=AccountCanSoldCount-{0},AccountSellingCount=AccountSellingCount+{0} where TradeAccountCode='{1}' and Market={2} and SharesCode='{3}'", sellInfo.SellCount, tradeAccountCode, sellInfo.Market, sellInfo.SharesCode);
-                    int error=db.Database.ExecuteSqlCommand(sql);
-                    if (error <= 0)
-                    {
-                        throw new Exception("更新数据库出错");
-                    }
-
-                    sql = string.Format("select top 1 AccountCanSoldCount from t_broker_account_shares_rel with(xlock) where TradeAccountCode='{0}' and Market={1} and SharesCode='{2}'", tradeAccountCode, sellInfo.Market, sellInfo.SharesCode);
-                    accountCanSoldCount = db.Database.SqlQuery<int>(sql).FirstOrDefault();
-                    strApp.AppendLine("更新后卖出数量：" + accountCanSoldCount);
-
-                    Logger.WriteFileLog(strApp.ToString(),DateTime.Now.ToString("yyyy-MM-dd")+"/"+ sellInfo.SharesCode, null);
-
+                    string managerIdListStr = "(" + string.Join(",", sellInfo.EntrustManagerList.Select(e => e.EntrustManagerId).ToList()) + ")";
+                    string sql = @"select Id from t_account_shares_entrust_manager with(xlock) where Id in {0} and TradeType=2 and [Status]=2";
+                    var entrustManagerList = db.Database.SqlQuery<long>(string.Format(sql, managerIdListStr)).ToList();
                     foreach (var manager in sellInfo.EntrustManagerList)
                     {
-                        var entrustManager = (from item in db.t_account_shares_entrust_manager
-                                              where item.Id == manager.EntrustManagerId && item.TradeType == 2 && item.Status == 2
-                                              select item).FirstOrDefault();
-                        if (entrustManager == null)
-                        {
-                            throw new Exception("委托账户不存在");
-                        }
-                        //更新账户委托实际提交委托数量
-                        entrustManager.RealEntrustCount = manager.EntrustCount;
-                        entrustManager.EntrustId = tradeEntrustId;
-                        entrustManager.EntrustTime = DateTime.Now;
-                        entrustManager.LastModified = DateTime.Now;
+                        sql = "update t_account_shares_entrust_manager set RealEntrustCount={0},EntrustId='{1}',EntrustTime='{2}',LastModified='{2}' where Id={3}";
+                        db.Database.ExecuteSqlCommand(string.Format(sql, manager.EntrustCount, tradeEntrustId, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), manager.EntrustManagerId));
                     }
-                    db.SaveChanges();
+
+                    sql = string.Format("select top 1 Id from t_broker_account_shares_rel with(xlock) where TradeAccountCode='{0}' and Market={1} and SharesCode='{2}'", tradeAccountCode, sellInfo.Market, sellInfo.SharesCode);
+                    long brokerId=db.Database.SqlQuery<long>(sql).FirstOrDefault();
+
+                    sql = string.Format("update t_broker_account_shares_rel set AccountCanSoldCount=AccountCanSoldCount-{0},AccountSellingCount=AccountSellingCount+{0} where Id={1}", sellInfo.SellCount, brokerId);
+                    db.Database.ExecuteSqlCommand(sql);
 
                     tran.Commit();
                 }

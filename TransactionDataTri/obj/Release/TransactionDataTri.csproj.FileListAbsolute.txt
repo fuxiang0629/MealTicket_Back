@@ -70,5 +70,4 @@ D:\项目\饭票\后端\TransactionDataTri\obj\Release\TransactionDataTri.csproj
 D:\项目\饭票\后端\TransactionDataTri\obj\Release\TransactionDataTri.csproj.CopyComplete
 D:\项目\饭票\后端\TransactionDataTri\obj\Release\TransactionDataTri.exe
 D:\项目\饭票\后端\TransactionDataTri\obj\Release\TransactionDataTri.pdb
-F:\项目\饭票后端\TransactionDataTri\obj\Release\TransactionDataTri.csprojAssemblyReference.cache
 D:\项目\饭票\后端\TransactionDataTri\obj\Release\TransactionDataTri.csprojAssemblyReference.cache
