@@ -119,5 +119,10 @@ namespace MealTicket_Web_Handler.Model
         /// 实际成交数量
         /// </summary>
         public int RelDealCount { get; set; }
+
+        /// <summary>
+        /// 跟投用户Id列表
+        /// </summary>
+        public List<long> FollowAccountList { get; set; }
     }
 }

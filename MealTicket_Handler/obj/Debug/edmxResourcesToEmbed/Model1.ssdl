@@ -157,6 +157,19 @@
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="ExamineFinishTime" Type="datetime" />
   </EntityType>
+  <EntityType Name="t_account_shares_buy_setting">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="500" />
+    <Property Name="ParValue" Type="bigint" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_buy">
     <Key>
       <PropertyRef Name="Id" />
@@ -181,6 +194,7 @@
     <Property Name="IsGreater" Type="bit" Nullable="false" />
     <Property Name="ConditionRelativeType" Type="int" Nullable="false" />
     <Property Name="ConditionRelativeRate" Type="int" Nullable="false" />
+    <Property Name="OtherConditionRelative" Type="int" Nullable="false" />
     <Property Name="EntrustAmount" Type="bigint" Nullable="false" />
     <Property Name="EntrustType" Type="int" Nullable="false" />
     <Property Name="EntrustPriceGear" Type="int" Nullable="false" />
@@ -449,7 +463,6 @@
     </Key>
     <Property Name="AccountId" Type="bigint" Nullable="false" />
     <Property Name="Deposit" Type="bigint" Nullable="false" />
-    <Property Name="RemainDeposit" Type="bigint" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
@@ -899,6 +912,7 @@
     <Property Name="ShareClosedPrice" Type="bigint" Nullable="false" />
     <Property Name="Market" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="MarketStatus" Type="int" Nullable="false" />
     <Property Name="ForbidStatus" Type="int" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
@@ -1068,6 +1082,10 @@
     <Property Name="SpeedUp" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="Activity" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
+    <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
+    <Property Name="PriceType" Type="int" Nullable="false" />
+    <Property Name="TriPriceType" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_search">
     <Key>
@@ -1456,6 +1474,7 @@
     <EntitySet Name="t_account_loginlog" EntityType="Self.t_account_loginlog" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_par_setting" EntityType="Self.t_account_par_setting" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_realname" EntityType="Self.t_account_realname" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_buy_setting" EntityType="Self.t_account_shares_buy_setting" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_conditiontrade_buy" EntityType="Self.t_account_shares_conditiontrade_buy" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_details" EntityType="Self.t_account_shares_conditiontrade_buy_details" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_details_auto" EntityType="Self.t_account_shares_conditiontrade_buy_details_auto" Schema="dbo" store:Type="Tables" />

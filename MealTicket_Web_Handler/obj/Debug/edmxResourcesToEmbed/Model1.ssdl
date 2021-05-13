@@ -225,6 +225,31 @@
     <Property Name="DeviceUA" Type="nvarchar" MaxLength="512" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
   </EntityType>
+  <EntityType Name="t_account_shares_buy_setting">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="500" />
+    <Property Name="ParValue" Type="bigint" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_buy_setting_par">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SettingId" Type="bigint" Nullable="false" />
+    <Property Name="PlateId" Type="bigint" Nullable="false" />
+    <Property Name="PlateType" Type="int" Nullable="false" />
+    <Property Name="MaxBuyCount" Type="bigint" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_buy">
     <Key>
       <PropertyRef Name="Id" />
@@ -266,6 +291,7 @@
     <Property Name="ExecStatus" Type="int" Nullable="false" />
     <Property Name="FirstExecTime" Type="datetime" />
     <Property Name="LimitUp" Type="bit" Nullable="false" />
+    <Property Name="IsHold" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_buy_details_auto">
     <Key>
@@ -484,6 +510,7 @@
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="LimitUp" Type="bit" Nullable="false" />
+    <Property Name="IsHold" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_template_buy_auto">
     <Key>
@@ -810,6 +837,15 @@
     <Property Name="ChildId" Type="bigint" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
   </EntityType>
+  <EntityType Name="t_account_shares_hold_conditiontrade_follow">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ConditiontradeId" Type="bigint" Nullable="false" />
+    <Property Name="FollowAccountId" Type="bigint" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_account_shares_hold_deposit_changelog">
     <Key>
       <PropertyRef Name="Id" />
@@ -1028,8 +1064,6 @@
     </Key>
     <Property Name="AccountId" Type="bigint" Nullable="false" />
     <Property Name="Deposit" Type="bigint" Nullable="false" />
-    <Property Name="RemainDeposit" Type="bigint" Nullable="false" />
-    <Property Name="MaxBuySharesCount" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
@@ -2613,6 +2647,7 @@
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="LimitUp" Type="bit" Nullable="false" />
+    <Property Name="IsHold" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="t_sys_conditiontrade_template_buy_auto">
     <Key>
@@ -2855,6 +2890,39 @@
     <Property Name="CirculatingCapital" Type="bigint" />
     <Property Name="PresentPrice" Type="bigint" />
     <Property Name="ClosedPrice" Type="bigint" />
+  </EntityType>
+  <!--生成过程中发现错误:
+警告 6002: 表/视图“meal_ticket.dbo.v_shares_baseinfo”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+  <EntityType Name="v_shares_baseinfo">
+    <Key>
+      <PropertyRef Name="Market" />
+      <PropertyRef Name="SharesCode" />
+      <PropertyRef Name="SharesName" />
+      <PropertyRef Name="SharesPyjc" />
+      <PropertyRef Name="SharesHandCount" />
+      <PropertyRef Name="MarketStatus" />
+      <PropertyRef Name="ForbidStatus" />
+      <PropertyRef Name="PresentPrice" />
+      <PropertyRef Name="ClosedPrice" />
+      <PropertyRef Name="OpenedPrice" />
+    </Key>
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="SharesName" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="SharesPyjc" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="SharesHandCount" Type="int" Nullable="false" />
+    <Property Name="MarketStatus" Type="int" Nullable="false" />
+    <Property Name="ForbidStatus" Type="int" Nullable="false" />
+    <Property Name="MarketTime" Type="datetime" />
+    <Property Name="Business" Type="nvarchar(max)" />
+    <Property Name="TotalCapital" Type="bigint" />
+    <Property Name="CirculatingCapital" Type="bigint" />
+    <Property Name="Industry" Type="nvarchar(max)" />
+    <Property Name="Area" Type="nvarchar(max)" />
+    <Property Name="Idea" Type="nvarchar(max)" />
+    <Property Name="PresentPrice" Type="bigint" Nullable="false" />
+    <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
   </EntityType>
   <Function Name="f_getTradeDate" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="true" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" ReturnType="datetime">
     <Parameter Name="date" Type="datetime" Mode="In" />
@@ -3323,6 +3391,8 @@
     <EntitySet Name="t_account_recommend_prize_type" EntityType="Self.t_account_recommend_prize_type" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_recommend_prize_type_level" EntityType="Self.t_account_recommend_prize_type_level" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_registerLog" EntityType="Self.t_account_registerLog" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_buy_setting" EntityType="Self.t_account_shares_buy_setting" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_buy_setting_par" EntityType="Self.t_account_shares_buy_setting_par" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_conditiontrade_buy" EntityType="Self.t_account_shares_conditiontrade_buy" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_details" EntityType="Self.t_account_shares_conditiontrade_buy_details" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_details_auto" EntityType="Self.t_account_shares_conditiontrade_buy_details_auto" Schema="dbo" store:Type="Tables" />
@@ -3365,6 +3435,7 @@
     <EntitySet Name="t_account_shares_hold" EntityType="Self.t_account_shares_hold" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_hold_conditiontrade" EntityType="Self.t_account_shares_hold_conditiontrade" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_hold_conditiontrade_child" EntityType="Self.t_account_shares_hold_conditiontrade_child" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_hold_conditiontrade_follow" EntityType="Self.t_account_shares_hold_conditiontrade_follow" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_hold_deposit_changelog" EntityType="Self.t_account_shares_hold_deposit_changelog" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_hold_fundamount_changelog" EntityType="Self.t_account_shares_hold_fundamount_changelog" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_hold_manager" EntityType="Self.t_account_shares_hold_manager" Schema="dbo" store:Type="Tables" />
@@ -3541,6 +3612,27 @@
     [v_plate_shares].[PresentPrice] AS [PresentPrice], 
     [v_plate_shares].[ClosedPrice] AS [ClosedPrice]
     FROM [dbo].[v_plate_shares] AS [v_plate_shares]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="v_shares_baseinfo" EntityType="Self.v_shares_baseinfo" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [v_shares_baseinfo].[Market] AS [Market], 
+    [v_shares_baseinfo].[SharesCode] AS [SharesCode], 
+    [v_shares_baseinfo].[SharesName] AS [SharesName], 
+    [v_shares_baseinfo].[SharesPyjc] AS [SharesPyjc], 
+    [v_shares_baseinfo].[SharesHandCount] AS [SharesHandCount], 
+    [v_shares_baseinfo].[MarketStatus] AS [MarketStatus], 
+    [v_shares_baseinfo].[ForbidStatus] AS [ForbidStatus], 
+    [v_shares_baseinfo].[MarketTime] AS [MarketTime], 
+    [v_shares_baseinfo].[Business] AS [Business], 
+    [v_shares_baseinfo].[TotalCapital] AS [TotalCapital], 
+    [v_shares_baseinfo].[CirculatingCapital] AS [CirculatingCapital], 
+    [v_shares_baseinfo].[Industry] AS [Industry], 
+    [v_shares_baseinfo].[Area] AS [Area], 
+    [v_shares_baseinfo].[Idea] AS [Idea], 
+    [v_shares_baseinfo].[PresentPrice] AS [PresentPrice], 
+    [v_shares_baseinfo].[ClosedPrice] AS [ClosedPrice], 
+    [v_shares_baseinfo].[OpenedPrice] AS [OpenedPrice]
+    FROM [dbo].[v_shares_baseinfo] AS [v_shares_baseinfo]</DefiningQuery>
     </EntitySet>
   </EntityContainer>
 </Schema>

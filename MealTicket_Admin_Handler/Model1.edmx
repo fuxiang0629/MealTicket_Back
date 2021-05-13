@@ -1805,6 +1805,7 @@
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
           <Property Name="LimitUp" Type="bit" Nullable="false" />
+          <Property Name="IsHold" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="t_sys_conditiontrade_template_buy_auto">
           <Key>
@@ -4517,6 +4518,7 @@
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LimitUp" Type="Boolean" Nullable="false" />
           <Property Name="OtherConditionRelative" Type="Int32" Nullable="false" />
+          <Property Name="IsHold" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="t_account_shares_conditiontrade_buy_trend_par_template">
           <Key>
@@ -6657,6 +6659,7 @@
           <EntitySetMapping Name="t_sys_conditiontrade_template_buy">
             <EntityTypeMapping TypeName="meal_ticketModel.t_sys_conditiontrade_template_buy">
               <MappingFragment StoreEntitySet="t_sys_conditiontrade_template_buy">
+                <ScalarProperty Name="IsHold" ColumnName="IsHold" />
                 <ScalarProperty Name="OtherConditionRelative" ColumnName="OtherConditionRelative" />
                 <ScalarProperty Name="LimitUp" ColumnName="LimitUp" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />

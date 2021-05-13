@@ -166,13 +166,13 @@ namespace MealTicket_Web_Handler
                         cost = cost + hold.Sum(e => e.ServiceFee);
                     }
                     result = (from item in db.t_account_shares_entrust
-                              where IdList.Contains(item.HoldId)
+                              where IdList.Contains(item.HoldId) && item.DealCount>0 
                               select item).ToList();
                 }
                 if (Type == 2)
                 {
                     result = (from item in db.t_account_shares_entrust
-                              where IdList.Contains(item.Id)
+                              where IdList.Contains(item.Id) && item.DealCount > 0
                               select item).ToList();
                 }
                 if (result.Count() > 0)

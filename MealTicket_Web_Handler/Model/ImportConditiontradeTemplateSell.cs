@@ -41,5 +41,10 @@ namespace MealTicket_Web_Handler.Model
         /// 跟投人员列表
         /// </summary>
         public List<long> FollowList { get; set; }
+
+        /// <summary>
+        /// 是否同时导入到跟投账户
+        /// </summary>
+        public bool IsImportToFollow { get; set; }
     }
 }

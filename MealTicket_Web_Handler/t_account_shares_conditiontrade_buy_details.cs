@@ -39,5 +39,6 @@ namespace MealTicket_Web_Handler
         public bool LimitUp { get; set; }
         public Nullable<System.DateTime> FirstExecTime { get; set; }
         public int OtherConditionRelative { get; set; }
+        public bool IsHold { get; set; }
     }
 }

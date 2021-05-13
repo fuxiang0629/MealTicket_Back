@@ -269,6 +269,7 @@
     <Property Name="LimitUp" Type="Boolean" Nullable="false" />
     <Property Name="FirstExecTime" Type="DateTime" Precision="3" />
     <Property Name="OtherConditionRelative" Type="Int32" Nullable="false" />
+    <Property Name="IsHold" Type="Boolean" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_buy_details_auto">
     <Key>
@@ -2939,6 +2940,8 @@
     <EntitySet Name="t_account_shares_buy_setting" EntityType="meal_ticketModel.t_account_shares_buy_setting" />
     <EntitySet Name="t_account_shares_buy_setting_par" EntityType="meal_ticketModel.t_account_shares_buy_setting_par" />
     <EntitySet Name="t_account_wallet" EntityType="meal_ticketModel.t_account_wallet" />
+    <EntitySet Name="v_shares_baseinfo" EntityType="meal_ticketModel.v_shares_baseinfo" />
+    <EntitySet Name="t_account_shares_hold_conditiontrade_follow" EntityType="meal_ticketModel.t_account_shares_hold_conditiontrade_follow" />
   </EntityContainer>
   <EntityType Name="t_shares_plate">
     <Key>
@@ -3078,6 +3081,7 @@
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LimitUp" Type="Boolean" Nullable="false" />
     <Property Name="OtherConditionRelative" Type="Int32" Nullable="false" />
+    <Property Name="IsHold" Type="Boolean" Nullable="false" />
   </EntityType>
   <EntityType Name="t_sys_conditiontrade_template_buy_auto">
     <Key>
@@ -3178,6 +3182,7 @@
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LimitUp" Type="Boolean" Nullable="false" />
     <Property Name="OtherConditionRelative" Type="Int32" Nullable="false" />
+    <Property Name="IsHold" Type="Boolean" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_template_buy_auto">
     <Key>
@@ -3517,5 +3522,45 @@
     <Property Name="Status" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="v_shares_baseinfo">
+    <Key>
+      <PropertyRef Name="Market" />
+      <PropertyRef Name="SharesCode" />
+      <PropertyRef Name="SharesName" />
+      <PropertyRef Name="SharesPyjc" />
+      <PropertyRef Name="SharesHandCount" />
+      <PropertyRef Name="MarketStatus" />
+      <PropertyRef Name="ForbidStatus" />
+      <PropertyRef Name="PresentPrice" />
+      <PropertyRef Name="ClosedPrice" />
+      <PropertyRef Name="OpenedPrice" />
+    </Key>
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="SharesName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="SharesPyjc" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="SharesHandCount" Type="Int32" Nullable="false" />
+    <Property Name="MarketStatus" Type="Int32" Nullable="false" />
+    <Property Name="ForbidStatus" Type="Int32" Nullable="false" />
+    <Property Name="MarketTime" Type="DateTime" Precision="3" />
+    <Property Name="Business" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="TotalCapital" Type="Int64" />
+    <Property Name="CirculatingCapital" Type="Int64" />
+    <Property Name="Industry" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Area" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="Idea" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="PresentPrice" Type="Int64" Nullable="false" />
+    <Property Name="ClosedPrice" Type="Int64" Nullable="false" />
+    <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_hold_conditiontrade_follow">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ConditiontradeId" Type="Int64" Nullable="false" />
+    <Property Name="FollowAccountId" Type="Int64" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
 </Schema>

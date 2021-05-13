@@ -397,19 +397,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="t_account_wallet">
-      <EntityTypeMapping TypeName="meal_ticketModel.t_account_wallet">
-        <MappingFragment StoreEntitySet="t_account_wallet">
-          <ScalarProperty Name="MaxBuySharesCount" ColumnName="MaxBuySharesCount" />
-          <ScalarProperty Name="RemainDeposit" ColumnName="RemainDeposit" />
-          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
-          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-          <ScalarProperty Name="Status" ColumnName="Status" />
-          <ScalarProperty Name="Deposit" ColumnName="Deposit" />
-          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="t_account_login_token">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_login_token">
         <MappingFragment StoreEntitySet="t_account_login_token">
@@ -2157,6 +2144,17 @@
           <ScalarProperty Name="ParamsInfo" ColumnName="ParamsInfo" />
           <ScalarProperty Name="OtherTrendOtherId" ColumnName="OtherTrendOtherId" />
           <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_wallet">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_wallet">
+        <MappingFragment StoreEntitySet="t_account_wallet">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Deposit" ColumnName="Deposit" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

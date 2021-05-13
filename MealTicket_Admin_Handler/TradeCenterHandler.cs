@@ -3775,6 +3775,7 @@ namespace MealTicket_Admin_Handler
                                 Name = item.Name,
                                 BuyAuto=item.BuyAuto,
                                 LimitUp=item.LimitUp,
+                                IsHold=item.IsHold,
                                 OtherConditionRelative=item.OtherConditionRelative,
                                 CreateTime = item.CreateTime,
                                 OtherConditionCount = (from x in db.t_sys_conditiontrade_template_buy_other
@@ -3832,7 +3833,8 @@ namespace MealTicket_Admin_Handler
                         ConditionPriceRate=request.ConditionRelativeRate,
                         ConditionPriceType=request.ConditionRelativeType,
                         OtherConditionRelative=request.OtherConditionRelative,
-                        TemplateId=request.TemplateId
+                        TemplateId=request.TemplateId,
+                        IsHold=request.IsHold
                     };
                     db.t_sys_conditiontrade_template_buy.Add(temp);
                     db.SaveChanges();
@@ -3897,6 +3899,7 @@ namespace MealTicket_Admin_Handler
                     conditiontrade.ConditionPriceType = request.ConditionRelativeType;
                     conditiontrade.IsGreater = request.IsGreater;
                     conditiontrade.LimitUp = request.LimitUp;
+                    conditiontrade.IsHold = request.IsHold;
                     conditiontrade.OtherConditionRelative = request.OtherConditionRelative;
                     db.SaveChanges();
 
