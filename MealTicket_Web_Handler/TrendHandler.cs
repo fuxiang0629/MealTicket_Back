@@ -7151,6 +7151,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                             group new { item, ai } by item into g
                                             select g).ToList();
                                 List<t_account_shares_hold_conditiontrade_child> tempList = new List<t_account_shares_hold_conditiontrade_child>();
+                                List<t_account_shares_hold_conditiontrade_follow> tempFollowList = new List<t_account_shares_hold_conditiontrade_follow>();
                                 List<RelIdInfo> relIdList = new List<RelIdInfo>();
                                 foreach (var item in sell)
                                 {
@@ -7215,12 +7216,25 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                             ChildId = x.ai.ChildId,
                                         });
                                     }
+                                    //导入跟投
+                                    foreach (var x in request.FollowList)
+                                    {
+                                        tempFollowList.Add(new t_account_shares_hold_conditiontrade_follow
+                                        {
+                                            ConditiontradeId = temp.Id,
+                                            FollowAccountId = x,
+                                            CreateTime = DateTime.Now
+                                        });
+                                    }
                                 }
+
                                 foreach (var x in tempList)
                                 {
                                     x.ChildId = relIdList.Where(e => e.TemplateId == x.ChildId).Select(e => e.RelId).FirstOrDefault();
                                     db.t_account_shares_hold_conditiontrade_child.Add(x);
                                 }
+                                db.SaveChanges();
+                                db.t_account_shares_hold_conditiontrade_follow.AddRange(tempFollowList);
                                 db.SaveChanges();
                             }
                             else
@@ -9696,6 +9710,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                     BusinessStatus = 0,
                     ExecStatus = 0,
                     LimitUp = item.Key.LimitUp,
+                    IsHold = item.Key.LimitUp,
                     EntrustAmount = EntrustAmount,
                     ConditionPrice = conditionPrice,
                     OtherConditionRelative=item.Key.OtherConditionRelative
@@ -9981,6 +9996,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                     BusinessStatus = 0,
                     ExecStatus = 0,
                     LimitUp = item.Key.LimitUp,
+                    IsHold=item.Key.LimitUp,
                     EntrustAmount = EntrustAmount,
                     ConditionPrice = conditionPrice,
                     OtherConditionRelative = item.Key.OtherConditionRelative
