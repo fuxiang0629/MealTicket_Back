@@ -1174,6 +1174,17 @@ namespace MealTicket_Handler
             {
                 try
                 {
+                    var account = (from item in db.t_account_baseinfo
+                                   where item.Id == basedata.AccountId
+                                   select item).FirstOrDefault();
+                    if (account == null)
+                    {
+                        throw new WebApiException(400,"用户不存在");
+                    }
+                    if (account.MultipleChangeStatus != 1)
+                    {
+                        throw new WebApiException(400,"无修改权限，请联系客服");
+                    }
                     //判断杠杆倍数是否存在
                     var fundmultiple = (from item in db.t_shares_limit_fundmultiple
                                         where item.Id == request.FundmultipleId

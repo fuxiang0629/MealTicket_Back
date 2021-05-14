@@ -449,6 +449,7 @@
     <Property Name="RegisterPageUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
     <Property Name="MonitorStatus" Type="Int32" Nullable="false" />
     <Property Name="CashStatus" Type="Int32" Nullable="false" />
+    <Property Name="MultipleChangeStatus" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_message">
     <Key>
@@ -1443,6 +1444,7 @@
     <Property Name="FirstExecTime" Type="DateTime" Precision="3" />
     <Property Name="LimitUp" Type="Boolean" Nullable="false" />
     <Property Name="OtherConditionRelative" Type="Int32" Nullable="false" />
+    <Property Name="IsHold" Type="Boolean" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_buy_details_auto">
     <Key>

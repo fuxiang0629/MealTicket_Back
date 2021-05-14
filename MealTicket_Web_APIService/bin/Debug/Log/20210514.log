@@ -1,0 +1,42 @@
+2021/5/14 19:46:07
+记录访问日志失败
+System.Data.SqlClient.SqlException (0x80131904): 将截断字符串或二进制数据。
+语句已终止。
+   在 FXCommon.Database.SqlHelper.ExecuteNonQuery(String sql) 位置 F:\项目\饭票后端\FXCommon\Database\SqlHelper.cs:行号 36
+   在 MealTicket_Web_Handler.AuthorityHandler.AddVisitLog(VisitLog log) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\AuthorityHandler.cs:行号 22
+   在 MealTicket_Web_APIService.Filter.LogActionFilter.AddVisitLog(VisitLog log) 位置 F:\项目\饭票后端\MealTicket_Web_APIService\filter\LogActionFilter.cs:行号 128
+ClientConnectionId:dc535eb3-13f5-4f7e-8595-a0e013272465
+Error Number:8152,State:4,Class:16
+
+2021/5/14 20:08:18
+自动买入交易出错
+System.ComponentModel.Win32Exception (0x80004005): 等待的操作过时。
+
+2021/5/14 20:08:54
+自动买入交易出错
+System.ComponentModel.Win32Exception (0x80004005): 等待的操作过时。
+
+2021/5/14 20:09:08
+记录访问日志失败
+System.Data.SqlClient.SqlException (0x80131904): 将截断字符串或二进制数据。
+语句已终止。
+   在 FXCommon.Database.SqlHelper.ExecuteNonQuery(String sql) 位置 F:\项目\饭票后端\FXCommon\Database\SqlHelper.cs:行号 36
+   在 MealTicket_Web_Handler.AuthorityHandler.AddVisitLog(VisitLog log) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\AuthorityHandler.cs:行号 22
+   在 MealTicket_Web_APIService.Filter.LogActionFilter.AddVisitLog(VisitLog log) 位置 F:\项目\饭票后端\MealTicket_Web_APIService\filter\LogActionFilter.cs:行号 128
+ClientConnectionId:f7cb774f-162c-47e2-ba16-7cb509c9c076
+Error Number:8152,State:4,Class:16
+
+2021/5/14 20:10:50
+自动买入交易出错
+System.ComponentModel.Win32Exception (0x80004005): 等待的操作过时。
+
+2021/5/14 20:11:42
+记录访问日志失败
+System.Data.SqlClient.SqlException (0x80131904): 将截断字符串或二进制数据。
+语句已终止。
+   在 FXCommon.Database.SqlHelper.ExecuteNonQuery(String sql) 位置 F:\项目\饭票后端\FXCommon\Database\SqlHelper.cs:行号 36
+   在 MealTicket_Web_Handler.AuthorityHandler.AddVisitLog(VisitLog log) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\AuthorityHandler.cs:行号 22
+   在 MealTicket_Web_APIService.Filter.LogActionFilter.AddVisitLog(VisitLog log) 位置 F:\项目\饭票后端\MealTicket_Web_APIService\filter\LogActionFilter.cs:行号 128
+ClientConnectionId:f7cb774f-162c-47e2-ba16-7cb509c9c076
+Error Number:8152,State:4,Class:16
+

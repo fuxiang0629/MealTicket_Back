@@ -40,6 +40,7 @@
     <Property Name="ForbidStatus" Type="int" Nullable="false" />
     <Property Name="CashStatus" Type="int" Nullable="false" />
     <Property Name="MonitorStatus" Type="int" Nullable="false" />
+    <Property Name="MultipleChangeStatus" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="QrCodeUrl" Type="varchar" MaxLength="200" />
     <Property Name="RegisterPageUrl" Type="varchar" MaxLength="200" />

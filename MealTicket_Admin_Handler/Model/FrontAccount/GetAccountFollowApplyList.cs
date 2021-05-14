@@ -79,5 +79,10 @@ namespace MealTicket_Admin_Handler.Model
         /// 交易状态
         /// </summary>
         public int ForbidStatus { get; set; }
+
+        /// <summary>
+        /// 倍数修改状态
+        /// </summary>
+        public int MultipleChangeStatus { get; set; }
     }
 }

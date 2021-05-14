@@ -112,6 +112,11 @@ namespace MealTicket_Admin_Handler.Model
         public int MonitorStatus { get; set; }
 
         /// <summary>
+        /// 杠杆倍数设置状态
+        /// </summary>
+        public int MultipleChangeStatus { get; set; }
+
+        /// <summary>
         /// 提现状态 1有效 2无效
         /// </summary>
         public int CashStatus { get; set; }

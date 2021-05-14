@@ -757,6 +757,13 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.FrontAccountController.GetFrontAccountInfo(MealTicket_Admin_Handler.Model.DetailsRequest)">
+            <summary>
+            查询前端账户个人信息
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.controller.FrontAccountController.ModifyFrontAccountBaseInfo(MealTicket_Admin_Handler.Model.ModifyFrontAccountBaseInfoRequest)">
             <summary>
             编辑前端账户基础信息
@@ -795,6 +802,13 @@
         <member name="M:MealTicket_Admin_APIService.controller.FrontAccountController.ModifyFrontAccountCashStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
             <summary>
             修改前端账户提现状态
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.FrontAccountController.ModifyFrontAccountMultipleChangeStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改前端账户倍数修改状态
             </summary>
             <param name="request"></param>
             <returns></returns>

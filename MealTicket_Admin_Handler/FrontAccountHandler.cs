@@ -67,6 +67,7 @@ namespace MealTicket_Admin_Handler
                                 Status = item.item.Status,
                                 ForbidStatus = item.item.ForbidStatus,
                                 MonitorStatus = item.item.MonitorStatus,
+                                MultipleChangeStatus = item.item.MultipleChangeStatus,
                                 CashStatus = item.item.CashStatus,
                                 AccountId = item.item.Id,
                                 BirthDay = item.item.BirthDay,
@@ -130,6 +131,25 @@ namespace MealTicket_Admin_Handler
                     TotalCount = totalCount,
                     List = list
                 };
+            }
+        }
+
+        /// <summary>
+        /// 查询前端账户个人信息
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public FrontAccountInfo GetFrontAccountInfo(DetailsRequest request) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var accountInfo = (from item in db.t_account_baseinfo
+                                   where item.Id == request.Id
+                                   select new FrontAccountInfo
+                                   {
+                                       MultipleChangeStatus = item.MultipleChangeStatus
+                                   }).FirstOrDefault();
+                return accountInfo;
             }
         }
 
@@ -260,6 +280,26 @@ namespace MealTicket_Admin_Handler
                     throw new WebApiException(400, "账户不存在");
                 }
                 account.CashStatus = request.Status;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改前端账户倍数修改状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyFrontAccountMultipleChangeStatus(ModifyStatusRequest request) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var account = (from item in db.t_account_baseinfo
+                               where item.Id == request.Id
+                               select item).FirstOrDefault();
+                if (account == null)
+                {
+                    throw new WebApiException(400, "账户不存在");
+                }
+                account.MultipleChangeStatus = request.Status;
                 db.SaveChanges();
             }
         }
@@ -2165,6 +2205,7 @@ namespace MealTicket_Admin_Handler
                     }
                     followAccount.item.CashStatus = request.CashStatus;
                     followAccount.item.ForbidStatus = request.ForbidStatus;
+                    followAccount.item.MultipleChangeStatus = request.MultipleChangeStatus;
                     db.SaveChanges();
                     if (followAccount.ai != null)
                     {
@@ -2282,6 +2323,7 @@ namespace MealTicket_Admin_Handler
                     }
                     account.CashStatus = request.CashStatus;
                     account.ForbidStatus = request.ForbidStatus;
+                    account.MultipleChangeStatus = request.MultipleChangeStatus;
                     db.SaveChanges();
                     if (request.MainAccountId > 0)
                     {
@@ -2843,7 +2885,8 @@ namespace MealTicket_Admin_Handler
                                 AccountMobile = item2.Mobile,
                                 AccountName = item2.NickName,
                                 CashStatus=item2.CashStatus,
-                                ForbidStatus=item2.ForbidStatus
+                                ForbidStatus=item2.ForbidStatus,
+                                MultipleChangeStatus=item2.MultipleChangeStatus
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
                 };
             }

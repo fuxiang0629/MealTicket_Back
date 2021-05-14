@@ -634,6 +634,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_Handler.FrontAccountHandler.GetFrontAccountInfo(MealTicket_Admin_Handler.Model.DetailsRequest)">
+            <summary>
+            查询前端账户个人信息
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_Handler.FrontAccountHandler.ModifyFrontAccountBaseInfo(MealTicket_Admin_Handler.Model.ModifyFrontAccountBaseInfoRequest)">
             <summary>
             编辑前端账户基础信息
@@ -664,6 +671,12 @@
         <member name="M:MealTicket_Admin_Handler.FrontAccountHandler.ModifyFrontAccountCashStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
             <summary>
             修改前端账户提现状态
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.FrontAccountHandler.ModifyFrontAccountMultipleChangeStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改前端账户倍数修改状态
             </summary>
             <param name="request"></param>
         </member>
@@ -3689,6 +3702,11 @@
             交易状态
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddFrontAccountFollowRequest.MultipleChangeStatus">
+            <summary>
+            倍数修改状态
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.AddFrontAccountMainRequest.AccountId">
             <summary>
             用户Id
@@ -3707,6 +3725,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.AddFrontAccountMainRequest.ForbidStatus">
             <summary>
             交易状态
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddFrontAccountMainRequest.MultipleChangeStatus">
+            <summary>
+            倍数修改状态
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.AddFrontAccountOptionalRequest.AccountId">
@@ -3984,6 +4007,11 @@
             交易状态
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AccountFollowApplyInfo.MultipleChangeStatus">
+            <summary>
+            倍数修改状态
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.AccountFundmultipleInfo.Id">
             <summary>
             Id
@@ -4232,6 +4260,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.FrontAccountInfo.MonitorStatus">
             <summary>
             监控状态1有效 2无效
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.FrontAccountInfo.MultipleChangeStatus">
+            <summary>
+            杠杆倍数设置状态
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.FrontAccountInfo.CashStatus">

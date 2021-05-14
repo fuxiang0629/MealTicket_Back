@@ -374,6 +374,7 @@
     <EntitySetMapping Name="t_account_baseinfo">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_baseinfo">
         <MappingFragment StoreEntitySet="t_account_baseinfo">
+          <ScalarProperty Name="MultipleChangeStatus" ColumnName="MultipleChangeStatus" />
           <ScalarProperty Name="CashStatus" ColumnName="CashStatus" />
           <ScalarProperty Name="MonitorStatus" ColumnName="MonitorStatus" />
           <ScalarProperty Name="RegisterPageUrl" ColumnName="RegisterPageUrl" />

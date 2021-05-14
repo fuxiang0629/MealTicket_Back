@@ -43,6 +43,23 @@ namespace MealTicket_Admin_APIService.controller
         }
 
         /// <summary>
+        /// 查询前端账户个人信息
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("info"), HttpPost]
+        [Description("查询前端账户个人信息")]
+        public FrontAccountInfo GetFrontAccountInfo(DetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return frontAccountHandler.GetFrontAccountInfo(request);
+        }
+
+        /// <summary>
         /// 编辑前端账户基础信息
         /// </summary>
         /// <param name="request"></param>
@@ -147,6 +164,24 @@ namespace MealTicket_Admin_APIService.controller
                 throw new WebApiException(400, "参数错误");
             }
             frontAccountHandler.ModifyFrontAccountCashStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改前端账户倍数修改状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("trade/status/multiplechange/modify")]
+        [Description("修改前端账户倍数修改状态")]
+        public object ModifyFrontAccountMultipleChangeStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            frontAccountHandler.ModifyFrontAccountMultipleChangeStatus(request);
             return null;
         }
 

@@ -34,5 +34,6 @@ namespace MealTicket_Handler
         public string RegisterPageUrl { get; set; }
         public int MonitorStatus { get; set; }
         public int CashStatus { get; set; }
+        public int MultipleChangeStatus { get; set; }
     }
 }
