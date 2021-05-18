@@ -40,6 +40,7 @@
     <Property Name="ForbidStatus" Type="int" Nullable="false" />
     <Property Name="CashStatus" Type="int" Nullable="false" />
     <Property Name="MonitorStatus" Type="int" Nullable="false" />
+    <Property Name="MultipleChangeStatus" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="QrCodeUrl" Type="varchar" MaxLength="200" />
     <Property Name="RegisterPageUrl" Type="varchar" MaxLength="200" />
@@ -1800,6 +1801,7 @@
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="LimitUp" Type="bit" Nullable="false" />
+    <Property Name="IsHold" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="t_sys_conditiontrade_template_buy_auto">
     <Key>

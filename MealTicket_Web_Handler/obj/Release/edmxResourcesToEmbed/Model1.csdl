@@ -52,6 +52,7 @@
     <Property Name="TransactionPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="MultipleChangeStatus" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_cash_record">
     <Key>
@@ -518,6 +519,7 @@
     <Property Name="EntrustId" Type="Int64" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="OtherConditionRelative" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_hold_conditiontrade_child">
     <Key>
@@ -2942,6 +2944,7 @@
     <EntitySet Name="t_account_wallet" EntityType="meal_ticketModel.t_account_wallet" />
     <EntitySet Name="v_shares_baseinfo" EntityType="meal_ticketModel.v_shares_baseinfo" />
     <EntitySet Name="t_account_shares_hold_conditiontrade_follow" EntityType="meal_ticketModel.t_account_shares_hold_conditiontrade_follow" />
+    <EntitySet Name="t_shares_limit_autobuy" EntityType="meal_ticketModel.t_shares_limit_autobuy" />
   </EntityContainer>
   <EntityType Name="t_shares_plate">
     <Key>
@@ -3007,6 +3010,7 @@
     <Property Name="Status" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="OtherConditionRelative" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_sys_conditiontrade_template">
     <Key>
@@ -3040,6 +3044,7 @@
     <Property Name="Status" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="OtherConditionRelative" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_sys_conditiontrade_template_sell_child">
     <Key>
@@ -3562,5 +3567,17 @@
     <Property Name="ConditiontradeId" Type="Int64" Nullable="false" />
     <Property Name="FollowAccountId" Type="Int64" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_limit_autobuy">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="LimitMarket" Type="Int32" Nullable="false" />
+    <Property Name="LimitKey" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="MaxBuyCount" Type="Int32" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
 </Schema>

@@ -3520,13 +3520,16 @@ namespace MealTicket_Admin_Handler
                                         EntrustPriceGear = item.EntrustPriceGear,
                                         ForbidType = item.ForbidType,
                                         EntrustType = item.EntrustType,
+                                        OtherConditionRelative=item.OtherConditionRelative,
                                         Id = item.Id,
                                         Name = item.Name,
                                         ChildList = (from x in db.t_sys_conditiontrade_template_sell_child
+                                                     join x2 in db.t_sys_conditiontrade_template_sell on x.ChildId equals x2.Id
                                                      where x.FatherId == item.Id
                                                      select new ConditionChild
                                                      {
                                                          Status = x.Status,
+                                                         Type= x2.Type,
                                                          ChildId = x.ChildId
                                                      }).ToList()
                                     }).ToList();
@@ -3571,7 +3574,8 @@ namespace MealTicket_Admin_Handler
                         ConditionPriceRate = request.ConditionRelativeRate,
                         ConditionPriceType = request.ConditionRelativeType,
                         ConditionType = request.ConditionPriceType,
-                        TemplateId = request.TemplateId
+                        TemplateId = request.TemplateId,
+                        OtherConditionRelative=request.OtherConditionRelative
                     };
                     db.t_sys_conditiontrade_template_sell.Add(temp);
                     db.SaveChanges();
@@ -3635,6 +3639,7 @@ namespace MealTicket_Admin_Handler
                     conditiontrade.ConditionTime = request.ConditionTime;
                     conditiontrade.ConditionDay = request.ConditionDay;
                     conditiontrade.ConditionPriceType = request.ConditionRelativeType;
+                    conditiontrade.OtherConditionRelative = request.OtherConditionRelative;
                     db.SaveChanges();
 
                     var child = (from item in db.t_sys_conditiontrade_template_sell_child
@@ -6141,6 +6146,355 @@ namespace MealTicket_Admin_Handler
                 }
                 db.t_account_shares_conditiontrade_buy_trend_par_template.Remove(trendPar);
                 db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取自动买入限制列表
+        /// </summary>
+        /// <returns></returns>
+        public PageRes<SharesLimitAutoBuyInfo> GetSharesLimitAutoBuyList(PageRequest request) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var limit = from item in db.t_shares_limit_autobuy
+                            select item;
+
+                int totalCount = limit.Count();
+
+                return new PageRes<SharesLimitAutoBuyInfo>
+                {
+                    TotalCount = totalCount,
+                    MaxId = 0,
+                    List = (from item in limit
+                            orderby item.CreateTime descending
+                            select new SharesLimitAutoBuyInfo
+                            {
+                                Status = item.Status,
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                LimitKey = item.LimitKey,
+                                LimitMarket = item.LimitMarket,
+                                MaxBuyCount = item.MaxBuyCount
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加自动买入限制
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddSharesLimitAutoBuy(AddSharesLimitAutoBuyRequest request) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                db.t_shares_limit_autobuy.Add(new t_shares_limit_autobuy 
+                { 
+                    Status=1,
+                    CreateTime=DateTime.Now,
+                    LastModified=DateTime.Now,
+                    LimitKey=request.LimitKey,
+                    LimitMarket=request.LimitMarket,
+                    MaxBuyCount=request.MaxBuyCount
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 编辑自动买入限制
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifySharesLimitAutoBuy(ModifySharesLimitAutoBuyRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var limit = (from item in db.t_shares_limit_autobuy
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (limit == null)
+                {
+                    throw new WebApiException(400,"数据不存在");
+                }
+                limit.LastModified = DateTime.Now;
+                limit.LimitKey = request.LimitKey;
+                limit.LimitMarket = request.LimitMarket;
+                limit.MaxBuyCount = request.MaxBuyCount;
+                db.SaveChanges(); 
+            }
+        }
+
+        /// <summary>
+        /// 修改自动买入限制状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifySharesLimitAutoBuyStatus(ModifyStatusRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var limit = (from item in db.t_shares_limit_autobuy
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (limit == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                limit.LastModified = DateTime.Now;
+                limit.Status = request.Status;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除自动买入限制
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteSharesLimitAutoBuy(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var limit = (from item in db.t_shares_limit_autobuy
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (limit == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_shares_limit_autobuy.Remove(limit);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取自动买入优先级列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<SharesPriorityAutoBuyInfo> GetSharesPriorityAutoBuyList(PageRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_limit_autobuy_priority
+                             join item2 in db.t_account_baseinfo on item.AccountId equals item2.Id into a
+                             from ai in a.DefaultIfEmpty()
+                             select new { item, ai };
+                int totalCount = result.Count();
+
+                return new PageRes<SharesPriorityAutoBuyInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in result
+                            orderby item.item.CreateTime descending
+                            select new SharesPriorityAutoBuyInfo
+                            {
+                                AccountId = item.ai == null ? 0 : item.ai.Id,
+                                AccountMobile = item.ai == null ? "" : item.ai.Mobile,
+                                AccountNickName = item.ai == null ? "" : item.ai.NickName,
+                                CreateTime = item.item.CreateTime,
+                                Id = item.item.Id,
+                                Priority = item.item.Priority
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加自动买入优先级
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddSharesPriorityAutoBuy(AddSharesPriorityAutoBuyRequest request) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //判断用户是否存在
+                var account = (from item in db.t_account_baseinfo
+                               where item.Id == request.AccountId
+                               select item).FirstOrDefault();
+                if (account == null)
+                {
+                    throw new WebApiException(400,"账户不存在");
+                }
+                //判断是否已添加
+                var priority = (from item in db.t_shares_limit_autobuy_priority
+                                where item.AccountId == request.AccountId
+                                select item).FirstOrDefault();
+                if (priority != null)
+                {
+                    throw new WebApiException(400,"账户已添加");
+                }
+
+                db.t_shares_limit_autobuy_priority.Add(new t_shares_limit_autobuy_priority 
+                { 
+                    AccountId=request.AccountId,
+                    CreateTime=DateTime.Now,
+                    LastModified=DateTime.Now,
+                    Priority=request.Priority
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 编辑自动买入优先级
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifySharesPriorityAutoBuy(ModifySharesPriorityAutoBuyRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = (from item in db.t_shares_limit_autobuy_priority
+                              where item.Id == request.Id
+                              select item).FirstOrDefault();
+                if (result == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                //判断用户是否存在
+                var account = (from item in db.t_account_baseinfo
+                               where item.Id == request.AccountId
+                               select item).FirstOrDefault();
+                if (account == null)
+                {
+                    throw new WebApiException(400, "账户不存在");
+                }
+                //判断是否已添加
+                var priority = (from item in db.t_shares_limit_autobuy_priority
+                                where item.AccountId == request.AccountId && item.Id != request.Id
+                                select item).FirstOrDefault();
+                if (priority != null)
+                {
+                    throw new WebApiException(400, "账户已添加");
+                }
+
+                result.AccountId = request.AccountId;
+                result.LastModified = DateTime.Now;
+                result.Priority = request.Priority;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除自动买入优先级
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteSharesPriorityAutoBuy(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = (from item in db.t_shares_limit_autobuy_priority
+                              where item.Id == request.Id
+                              select item).FirstOrDefault();
+                if (result == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_shares_limit_autobuy_priority.Remove(result);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取自动买入优先级适用板块列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<SharesPriorityAutoBuyPlateInfo> GetSharesPriorityAutoBuyPlateList(GetSharesPriorityAutoBuyPlateListRequest request) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var plate = from item in db.t_shares_plate
+                            where item.Type == request.Type
+                            select item;
+                var priority_plate = from item in db.t_shares_limit_autobuy_priority_plate
+                                     join item2 in plate on item.PlateId equals item2.Id into a from ai in a.DefaultIfEmpty()
+                                     where item.PriorityId == request.PriorityId && (item.PlateId > 0 || -request.Type == item.PlateId)
+                                     select new { item, ai };
+                int totalCount = priority_plate.Count();
+                return new PageRes<SharesPriorityAutoBuyPlateInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in priority_plate
+                            orderby item.item.CreateTime descending
+                            select new SharesPriorityAutoBuyPlateInfo
+                            {
+                                CreateTime = item.item.CreateTime,
+                                Id = item.item.Id,
+                                PlateId = item.item.PlateId,
+                                PlateName = item.ai==null?(item.item.PlateId==-1?"全部行业": item.item.PlateId == -2 ? "全部地区" : item.item.PlateId == -3 ? "全部概念" :"未知") : item.ai.Name
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加自动买入优先级适用板块
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddSharesPriorityAutoBuyPlate(AddSharesPriorityAutoBuyPlateRequest request) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //判断优先级是否存在
+                var priority = (from item in db.t_shares_limit_autobuy_priority
+                                where item.Id == request.PriorityId
+                                select item).FirstOrDefault();
+                if (priority == null)
+                {
+                    throw new WebApiException(400,"优先级不存在");
+                }
+                //判断板块是否存在
+                if (request.PlateId >= 0)
+                {
+                    var plate = (from item in db.t_shares_plate
+                                 where item.Id == request.PlateId
+                                 select item).FirstOrDefault();
+                    if (plate == null)
+                    {
+                        throw new WebApiException(400, "板块不存在");
+                    }
+                }
+                //判断板块是否已经添加
+                var priority_plate = (from item in db.t_shares_limit_autobuy_priority_plate
+                                      where item.PriorityId == request.PriorityId && item.PlateId == request.PlateId
+                                      select item).FirstOrDefault();
+                if (priority_plate != null)
+                {
+                    throw new WebApiException(400,"板块已添加");
+                }
+                db.t_shares_limit_autobuy_priority_plate.Add(new t_shares_limit_autobuy_priority_plate 
+                {
+                    CreateTime=DateTime.Now,
+                    LastModified=DateTime.Now,
+                    PlateId=request.PlateId,
+                    PriorityId=request.PriorityId
+                });
+                db.SaveChanges();
+
+            }
+        }
+
+        /// <summary>
+        /// 删除自动买入优先级适用板块
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteSharesPriorityAutoBuyPlate(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //判断板块是否已经添加
+                var priority_plate = (from item in db.t_shares_limit_autobuy_priority_plate
+                                      where item.Id == request.Id
+                                      select item).FirstOrDefault();
+                if (priority_plate == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_shares_limit_autobuy_priority_plate.Remove(priority_plate);
+                db.SaveChanges();
+
             }
         }
         #endregion

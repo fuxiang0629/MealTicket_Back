@@ -8537,6 +8537,11 @@
             子条件列表
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateSellDetailsRequest.OtherConditionRelative">
+            <summary>
+            额外卖出条件0无 1封涨停板 2封跌停板
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.AddSharesCorrigendumRequest.Market">
             <summary>
             市场代码0深圳 1上海
@@ -8595,6 +8600,21 @@
         <member name="P:MealTicket_Admin_Handler.Model.AddSharesForbidRequest.ForbidType">
             <summary>
             禁止类型1禁止买入 2禁止卖出 3禁止交易
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesLimitAutoBuyRequest.LimitMarket">
+            <summary>
+            市场0深圳 1上海 -1全部
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesLimitAutoBuyRequest.LimitKey">
+            <summary>
+            限制股票code
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesLimitAutoBuyRequest.MaxBuyCount">
+            <summary>
+            最大可买账户数量
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.AddSharesMonitorRequest.Market">
@@ -8700,6 +8720,26 @@
         <member name="P:MealTicket_Admin_Handler.Model.AddSharesPositionRulesOtherRequest.Rate">
             <summary>
             仓位占比
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesPriorityAutoBuyRequest.AccountId">
+            <summary>
+            账户Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesPriorityAutoBuyRequest.Priority">
+            <summary>
+            优先级
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesPriorityAutoBuyPlateRequest.PriorityId">
+            <summary>
+            优先级Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesPriorityAutoBuyPlateRequest.PlateId">
+            <summary>
+            板块Id
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.BatchAddSharesConditionTrendPar2Obj.GroupName">
@@ -9102,6 +9142,11 @@
             子条件列表
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateSellDetailsInfo.OtherConditionRelative">
+            <summary>
+            额外卖出条件0无 1封涨停板 2封跌停板
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.ConditionChild.ChildId">
             <summary>
             子条件
@@ -9110,6 +9155,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.ConditionChild.Status">
             <summary>
             状态1有效 2无效
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditionChild.Type">
+            <summary>
+            1指定时间 2止盈 3止损
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.GetSharesConditionTrendParPlatePageRequest.GroupType">
@@ -9153,6 +9203,36 @@
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.SharesCorrigendumInfo.CreateTime">
+            <summary>
+            数据创建时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesLimitAutoBuyInfo.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesLimitAutoBuyInfo.LimitMarket">
+            <summary>
+            限制市场类型0深圳 1上海 -1全部
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesLimitAutoBuyInfo.LimitKey">
+            <summary>
+            限制股票匹配代码
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesLimitAutoBuyInfo.MaxBuyCount">
+            <summary>
+            最大可购买账户数量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesLimitAutoBuyInfo.Status">
+            <summary>
+            状态1有效 2无效
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesLimitAutoBuyInfo.CreateTime">
             <summary>
             数据创建时间
             </summary>
@@ -9313,6 +9393,66 @@
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.CreateTime">
+            <summary>
+            数据创建时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPriorityAutoBuyInfo.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPriorityAutoBuyInfo.AccountId">
+            <summary>
+            账户Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPriorityAutoBuyInfo.AccountMobile">
+            <summary>
+            账户手机号
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPriorityAutoBuyInfo.AccountNickName">
+            <summary>
+            账户昵称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPriorityAutoBuyInfo.Priority">
+            <summary>
+            优先级
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPriorityAutoBuyInfo.CreateTime">
+            <summary>
+            数据创建时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetSharesPriorityAutoBuyPlateListRequest.PriorityId">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetSharesPriorityAutoBuyPlateListRequest.Type">
+            <summary>
+            类型1行业 2地区 3概念
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPriorityAutoBuyPlateInfo.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPriorityAutoBuyPlateInfo.PlateId">
+            <summary>
+            板块Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPriorityAutoBuyPlateInfo.PlateName">
+            <summary>
+            板块名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPriorityAutoBuyPlateInfo.CreateTime">
             <summary>
             数据创建时间
             </summary>
@@ -9597,6 +9737,11 @@
             子条件列表
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSellDetailsRequest.OtherConditionRelative">
+            <summary>
+            额外卖出条件0无 1封涨停板 2封跌停板
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.ModifySharesCorrigendumRequest.Id">
             <summary>
             Id
@@ -9605,6 +9750,26 @@
         <member name="P:MealTicket_Admin_Handler.Model.ModifySharesCorrigendumRequest.SharesPyjc">
             <summary>
             名称拼音简称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesLimitAutoBuyRequest.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesLimitAutoBuyRequest.LimitMarket">
+            <summary>
+            市场0深圳 1上海 -1全部
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesLimitAutoBuyRequest.LimitKey">
+            <summary>
+            限制股票code
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesLimitAutoBuyRequest.MaxBuyCount">
+            <summary>
+            最大可买账户数量
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.ModifySharesMonitorTrendRequest.Id">
@@ -9650,6 +9815,21 @@
         <member name="P:MealTicket_Admin_Handler.Model.ModifySharesPlateRequest.Name">
             <summary>
             名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesPriorityAutoBuyRequest.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesPriorityAutoBuyRequest.AccountId">
+            <summary>
+            账户Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesPriorityAutoBuyRequest.Priority">
+            <summary>
+            优先级
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.ModifySharesRiskRulesRequest.Id">
@@ -12716,6 +12896,80 @@
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteSharesConditionTrendPar(MealTicket_Admin_Handler.Model.DeleteRequest)">
             <summary>
             删除走势模板参数
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetSharesLimitAutoBuyList(MealTicket_Admin_Handler.Model.PageRequest)">
+            <summary>
+            获取自动买入限制列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.AddSharesLimitAutoBuy(MealTicket_Admin_Handler.Model.AddSharesLimitAutoBuyRequest)">
+            <summary>
+            添加自动买入限制
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesLimitAutoBuy(MealTicket_Admin_Handler.Model.ModifySharesLimitAutoBuyRequest)">
+            <summary>
+            编辑自动买入限制
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesLimitAutoBuyStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改自动买入限制状态
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteSharesLimitAutoBuy(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除自动买入限制
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetSharesPriorityAutoBuyList(MealTicket_Admin_Handler.Model.PageRequest)">
+            <summary>
+            获取自动买入优先级列表
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.AddSharesPriorityAutoBuy(MealTicket_Admin_Handler.Model.AddSharesPriorityAutoBuyRequest)">
+            <summary>
+            添加自动买入优先级
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesPriorityAutoBuy(MealTicket_Admin_Handler.Model.ModifySharesPriorityAutoBuyRequest)">
+            <summary>
+            编辑自动买入优先级
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteSharesPriorityAutoBuy(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除自动买入优先级
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetSharesPriorityAutoBuyPlateList(MealTicket_Admin_Handler.Model.GetSharesPriorityAutoBuyPlateListRequest)">
+            <summary>
+            获取自动买入优先级适用板块列表
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.AddSharesPriorityAutoBuyPlate(MealTicket_Admin_Handler.Model.AddSharesPriorityAutoBuyPlateRequest)">
+            <summary>
+            添加自动买入优先级适用板块
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteSharesPriorityAutoBuyPlate(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除自动买入优先级适用板块
             </summary>
             <param name="request"></param>
         </member>

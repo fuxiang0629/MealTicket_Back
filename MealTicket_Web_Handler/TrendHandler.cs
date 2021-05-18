@@ -1867,7 +1867,8 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 int totalCount = sharesHold.Count();
 
                 var tempList = (from item in sharesHold
-                                orderby item.item.CreateTime descending
+                                let orderIndex=item.item.RemainCount>0?1:2
+                                orderby orderIndex,item.item.CreateTime descending
                                 select item).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                 List<AccountTradeHoldInfo> list = new List<AccountTradeHoldInfo>();
 
@@ -3042,16 +3043,19 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                           ConditionRelativeRate = item.ConditionRelativeRate,
                                           ConditionRelativeType = item.ConditionRelativeType,
                                           ConditionType = item.ConditionType,
+                                          OtherConditionRelative=item.OtherConditionRelative,
                                           EntrustId = item.EntrustId,
                                           FollowAccountList=(from x in db.t_account_shares_hold_conditiontrade_follow
                                                             where x.ConditiontradeId==item.Id
                                                             select x.FollowAccountId).ToList(),
                                           ChildList = (from x in db.t_account_shares_hold_conditiontrade_child
+                                                       join x2 in db.t_account_shares_hold_conditiontrade on x.ChildId equals x2.Id
                                                        where x.ConditionId == item.Id
                                                        select new ConditionChild
                                                        {
                                                            Status = x.Status,
-                                                           ChildId = x.ChildId
+                                                           ChildId = x.ChildId,
+                                                           Type=x2.Type
                                                        }).ToList()
                                       }).ToList();
                 foreach (var item in conditiontrade)
@@ -3126,6 +3130,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                         ConditionRelativeRate = request.ConditionRelativeRate,
                         ConditionRelativeType = request.ConditionRelativeType,
                         ConditionType = request.ConditionType,
+                        OtherConditionRelative=request.OtherConditionRelative,
                         SourceFrom = 1,
                         Status = 2,
                         FatherId = 0,
@@ -3224,6 +3229,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                         EntrustType = condition.EntrustType,
                         FatherId = 0,
                         ForbidType = condition.ForbidType,
+                        OtherConditionRelative=condition.OtherConditionRelative,
                         HoldId = condition.HoldId,
                         LastModified = DateTime.Now,
                         Name = condition.Name,
@@ -3297,6 +3303,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                     conditiontrade.ConditionRelativeType = request.ConditionRelativeType;
                     conditiontrade.ConditionTime = request.ConditionTime;
                     conditiontrade.ConditionPrice = request.ConditionPrice;
+                    conditiontrade.OtherConditionRelative = request.OtherConditionRelative;
                     db.SaveChanges();
 
                     var child = (from item in db.t_account_shares_hold_conditiontrade_child
@@ -6706,13 +6713,16 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                         EntrustPriceGear = item.EntrustPriceGear,
                                         ForbidType = item.ForbidType,
                                         EntrustType = item.EntrustType,
+                                        OtherConditionRelative = item.OtherConditionRelative,
                                         Id = item.Id,
                                         Name = item.Name,
                                         ChildList = (from x in db.t_account_shares_conditiontrade_template_sell_child
+                                                     join x2 in db.t_account_shares_conditiontrade_template_sell on x.ChildId equals x2.Id
                                                      where x.FatherId == item.Id
                                                      select new ConditionChild
                                                      {
                                                          Status = x.Status,
+                                                         Type=x2.Type,
                                                          ChildId = x.ChildId
                                                      }).ToList()
                                     }).ToList();
@@ -6758,6 +6768,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                         ConditionPriceRate = request.ConditionRelativeRate,
                         ConditionPriceType = request.ConditionRelativeType,
                         ConditionType = request.ConditionPriceType,
+                        OtherConditionRelative=request.OtherConditionRelative,
                         TemplateId = request.TemplateId
                     };
                     db.t_account_shares_conditiontrade_template_sell.Add(temp);
@@ -6822,6 +6833,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                     conditiontrade.ConditionTime = request.ConditionTime;
                     conditiontrade.ConditionDay = request.ConditionDay;
                     conditiontrade.ConditionPriceType = request.ConditionRelativeType;
+                    conditiontrade.OtherConditionRelative = request.OtherConditionRelative;
                     db.SaveChanges();
 
                     var child = (from item in db.t_account_shares_conditiontrade_template_sell_child
@@ -7092,6 +7104,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                         TriggerTime = null,
                                         ConditionRelativeType = item.Key.ConditionPriceType ?? 0,
                                         ConditionRelativeRate = item.Key.ConditionPriceRate ?? 0,
+                                        OtherConditionRelative=item.Key.OtherConditionRelative,
                                         ConditionPrice = conditionPrice
                                     };
                                     db.t_account_shares_hold_conditiontrade.Add(temp);
@@ -7194,6 +7207,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                         TriggerTime = null,
                                         ConditionRelativeType = item.Key.ConditionPriceType ?? 0,
                                         ConditionRelativeRate = item.Key.ConditionPriceRate ?? 0,
+                                        OtherConditionRelative=item.Key.OtherConditionRelative,
                                         ConditionPrice = conditionPrice
                                     };
                                     db.t_account_shares_hold_conditiontrade.Add(temp);

@@ -149,6 +149,9 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_sys_conditiontrade_template_buy_other_trend_other" Width="1.5" PointX="36.375" PointY="6.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_sys_conditiontrade_template_buy_other_trend_other_par" Width="1.5" PointX="36.375" PointY="10.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_wallet" Width="1.5" PointX="36.375" PointY="13.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_autobuy" Width="1.5" PointX="29.375" PointY="36.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_autobuy_priority" Width="1.5" PointX="31.375" PointY="36.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_autobuy_priority_plate" Width="1.5" PointX="37.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

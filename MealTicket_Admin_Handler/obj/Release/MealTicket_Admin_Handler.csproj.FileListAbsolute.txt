@@ -150,6 +150,7 @@ F:\项目\饭票后端\MealTicket_Admin_Handler\bin\Release\System.Numerics.Vect
 F:\项目\饭票后端\MealTicket_Admin_Handler\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
 F:\项目\饭票后端\MealTicket_Admin_Handler\bin\Release\System.Threading.Channels.xml
 F:\项目\饭票后端\MealTicket_Admin_Handler\bin\Release\System.Threading.Tasks.Extensions.xml
+F:\项目\饭票后端\MealTicket_Admin_Handler\obj\Release\MealTicket_Admin_Handler.csprojAssemblyReference.cache
 F:\项目\饭票后端\MealTicket_Admin_Handler\obj\Release\MealTicket_Admin_Handler.csproj.CoreCompileInputs.cache
 F:\项目\饭票后端\MealTicket_Admin_Handler\obj\Release\MealTicket_Admin_Handler.csproj.CopyComplete
 F:\项目\饭票后端\MealTicket_Admin_Handler\obj\Release\MealTicket_Admin_Handler.dll

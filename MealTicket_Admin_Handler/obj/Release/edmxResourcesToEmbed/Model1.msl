@@ -1891,6 +1891,7 @@
     <EntitySetMapping Name="t_sys_conditiontrade_template_sell">
       <EntityTypeMapping TypeName="meal_ticketModel.t_sys_conditiontrade_template_sell">
         <MappingFragment StoreEntitySet="t_sys_conditiontrade_template_sell">
+          <ScalarProperty Name="OtherConditionRelative" ColumnName="OtherConditionRelative" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="Status" ColumnName="Status" />
@@ -2157,6 +2158,41 @@
           <ScalarProperty Name="Status" ColumnName="Status" />
           <ScalarProperty Name="Deposit" ColumnName="Deposit" />
           <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_shares_limit_autobuy">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_shares_limit_autobuy">
+        <MappingFragment StoreEntitySet="t_shares_limit_autobuy">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="MaxBuyCount" ColumnName="MaxBuyCount" />
+          <ScalarProperty Name="LimitKey" ColumnName="LimitKey" />
+          <ScalarProperty Name="LimitMarket" ColumnName="LimitMarket" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_shares_limit_autobuy_priority">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_shares_limit_autobuy_priority">
+        <MappingFragment StoreEntitySet="t_shares_limit_autobuy_priority">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Priority" ColumnName="Priority" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_shares_limit_autobuy_priority_plate">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_shares_limit_autobuy_priority_plate">
+        <MappingFragment StoreEntitySet="t_shares_limit_autobuy_priority_plate">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+          <ScalarProperty Name="PriorityId" ColumnName="PriorityId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

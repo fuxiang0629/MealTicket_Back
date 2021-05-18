@@ -4092,6 +4092,207 @@ namespace MealTicket_Admin_APIService.controller
             tradeCenterHandler.DeleteSharesConditionTrendPar(request);
             return null;
         }
+
+        /// <summary>
+        /// 获取自动买入限制列表
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/limit/autobuy/list"), HttpPost]
+        [Description("获取自动买入限制列表")]
+        public PageRes<SharesLimitAutoBuyInfo> GetSharesLimitAutoBuyList(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesLimitAutoBuyList(request);
+        }
+
+        /// <summary>
+        /// 添加自动买入限制
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/limit/autobuy/add"), HttpPost]
+        [Description("添加自动买入限制")]
+        public object AddSharesLimitAutoBuy(AddSharesLimitAutoBuyRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesLimitAutoBuy(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑自动买入限制
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/limit/autobuy/modify"), HttpPost]
+        [Description("编辑自动买入限制")]
+        public object ModifySharesLimitAutoBuy(ModifySharesLimitAutoBuyRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesLimitAutoBuy(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改自动买入限制状态
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/limit/autobuy/status/modify"), HttpPost]
+        [Description("修改自动买入限制状态")]
+        public object ModifySharesLimitAutoBuyStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesLimitAutoBuyStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除自动买入限制
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/limit/autobuy/delete"), HttpPost]
+        [Description("删除自动买入限制")]
+        public object DeleteSharesLimitAutoBuy(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesLimitAutoBuy(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取自动买入优先级列表
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/priority/autobuy/list"), HttpPost]
+        [Description("获取自动买入优先级列表")]
+        public PageRes<SharesPriorityAutoBuyInfo> GetSharesPriorityAutoBuyList(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesPriorityAutoBuyList(request);
+        }
+
+        /// <summary>
+        /// 添加自动买入优先级
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/priority/autobuy/add"), HttpPost]
+        [Description("添加自动买入优先级")]
+        public object AddSharesPriorityAutoBuy(AddSharesPriorityAutoBuyRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesPriorityAutoBuy(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑自动买入优先级
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/priority/autobuy/modify"), HttpPost]
+        [Description("编辑自动买入优先级")]
+        public object ModifySharesPriorityAutoBuy(ModifySharesPriorityAutoBuyRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesPriorityAutoBuy(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除自动买入优先级
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/priority/autobuy/delete"), HttpPost]
+        [Description("删除自动买入优先级")]
+        public object DeleteSharesPriorityAutoBuy(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesPriorityAutoBuy(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取自动买入优先级适用板块列表
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/priority/autobuy/plate/list"), HttpPost]
+        [Description("获取自动买入优先级适用板块列表")]
+        public PageRes<SharesPriorityAutoBuyPlateInfo> GetSharesPriorityAutoBuyPlateList(GetSharesPriorityAutoBuyPlateListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesPriorityAutoBuyPlateList(request);
+        }
+
+        /// <summary>
+        /// 添加自动买入优先级适用板块
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/priority/autobuy/plate/add"), HttpPost]
+        [Description("添加自动买入优先级适用板块")]
+        public object AddSharesPriorityAutoBuyPlate(AddSharesPriorityAutoBuyPlateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesPriorityAutoBuyPlate(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除自动买入优先级适用板块
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/priority/autobuy/plate/delete"), HttpPost]
+        [Description("删除自动买入优先级适用板块")]
+        public object DeleteSharesPriorityAutoBuyPlate(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesPriorityAutoBuyPlate(request);
+            return null;
+        }
         #endregion
     }
 }

@@ -100,5 +100,10 @@ namespace MealTicket_Web_Handler.Model
         /// 子条件列表
         /// </summary>
         public List<ConditionChild> ChildList { get; set; }
+
+        /// <summary>
+        /// 额外卖出条件0无 1封涨停板 2封跌停板
+        /// </summary>
+        public int OtherConditionRelative { get; set; }
     }
 }

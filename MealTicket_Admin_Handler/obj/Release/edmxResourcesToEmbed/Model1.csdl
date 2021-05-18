@@ -307,6 +307,9 @@
     <EntitySet Name="t_sys_conditiontrade_template_buy_other_trend_other" EntityType="meal_ticketModel.t_sys_conditiontrade_template_buy_other_trend_other" />
     <EntitySet Name="t_sys_conditiontrade_template_buy_other_trend_other_par" EntityType="meal_ticketModel.t_sys_conditiontrade_template_buy_other_trend_other_par" />
     <EntitySet Name="t_account_wallet" EntityType="meal_ticketModel.t_account_wallet" />
+    <EntitySet Name="t_shares_limit_autobuy" EntityType="meal_ticketModel.t_shares_limit_autobuy" />
+    <EntitySet Name="t_shares_limit_autobuy_priority" EntityType="meal_ticketModel.t_shares_limit_autobuy_priority" />
+    <EntitySet Name="t_shares_limit_autobuy_priority_plate" EntityType="meal_ticketModel.t_shares_limit_autobuy_priority_plate" />
   </EntityContainer>
   <EntityType Name="t_admin_department">
     <Key>
@@ -2073,6 +2076,7 @@
     <Property Name="Status" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="OtherConditionRelative" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_sys_conditiontrade_template_sell_child">
     <Key>
@@ -2309,6 +2313,38 @@
     <Property Name="AccountId" Type="Int64" Nullable="false" />
     <Property Name="Deposit" Type="Int64" Nullable="false" />
     <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_limit_autobuy">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="LimitMarket" Type="Int32" Nullable="false" />
+    <Property Name="LimitKey" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="MaxBuyCount" Type="Int32" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_limit_autobuy_priority">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="Priority" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_limit_autobuy_priority_plate">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PriorityId" Type="Int64" Nullable="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>

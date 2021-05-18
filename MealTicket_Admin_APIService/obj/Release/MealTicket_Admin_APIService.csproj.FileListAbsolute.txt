@@ -144,7 +144,6 @@ C:\Users\37863\Desktop\饭票后端\MealTicket_Admin_APIService\obj\Release\Meal
 C:\Users\37863\Desktop\饭票后端\MealTicket_Admin_APIService\obj\Release\MealTicket_Admin_APIService.csproj.CopyComplete
 C:\Users\37863\Desktop\饭票后端\MealTicket_Admin_APIService\obj\Release\MealTicket_Admin_APIService.exe
 C:\Users\37863\Desktop\饭票后端\MealTicket_Admin_APIService\obj\Release\MealTicket_Admin_APIService.pdb
-F:\项目\饭票后端\MealTicket_Admin_APIService\bin\Release\ThoughtWorks.QRCode.dll
 D:\项目\饭票\后端\MealTicket_Admin_APIService\bin\Release\Areas\HelpPage\Views\Help\HelpPage.css
 D:\项目\饭票\后端\MealTicket_Admin_APIService\bin\Release\Areas\HelpPage\Views\Help\api.cshtml
 D:\项目\饭票\后端\MealTicket_Admin_APIService\bin\Release\Areas\HelpPage\Views\Help\DisplayTemplates\ApiGroup.cshtml
@@ -258,6 +257,7 @@ F:\项目\饭票后端\MealTicket_Admin_APIService\bin\Release\System.Web.Http.O
 F:\项目\饭票后端\MealTicket_Admin_APIService\bin\Release\System.Web.Razor.dll
 F:\项目\饭票后端\MealTicket_Admin_APIService\bin\Release\Qiniu.dll
 F:\项目\饭票后端\MealTicket_Admin_APIService\bin\Release\Oracle.DataAccess.dll
+F:\项目\饭票后端\MealTicket_Admin_APIService\bin\Release\ThoughtWorks.QRCode.dll
 F:\项目\饭票后端\MealTicket_Admin_APIService\bin\Release\AopSdk.dll
 F:\项目\饭票后端\MealTicket_Admin_APIService\bin\Release\RabbitMQ.Client.dll
 F:\项目\饭票后端\MealTicket_Admin_APIService\bin\Release\NoticeHandler.dll

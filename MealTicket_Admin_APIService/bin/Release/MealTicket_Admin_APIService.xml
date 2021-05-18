@@ -3165,6 +3165,78 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetSharesLimitAutoBuyList(MealTicket_Admin_Handler.Model.PageRequest)">
+            <summary>
+            获取自动买入限制列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.AddSharesLimitAutoBuy(MealTicket_Admin_Handler.Model.AddSharesLimitAutoBuyRequest)">
+            <summary>
+            添加自动买入限制
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifySharesLimitAutoBuy(MealTicket_Admin_Handler.Model.ModifySharesLimitAutoBuyRequest)">
+            <summary>
+            编辑自动买入限制
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifySharesLimitAutoBuyStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改自动买入限制状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeleteSharesLimitAutoBuy(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除自动买入限制
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetSharesPriorityAutoBuyList(MealTicket_Admin_Handler.Model.PageRequest)">
+            <summary>
+            获取自动买入优先级列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.AddSharesPriorityAutoBuy(MealTicket_Admin_Handler.Model.AddSharesPriorityAutoBuyRequest)">
+            <summary>
+            添加自动买入优先级
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifySharesPriorityAutoBuy(MealTicket_Admin_Handler.Model.ModifySharesPriorityAutoBuyRequest)">
+            <summary>
+            编辑自动买入优先级
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeleteSharesPriorityAutoBuy(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除自动买入优先级
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetSharesPriorityAutoBuyPlateList(MealTicket_Admin_Handler.Model.GetSharesPriorityAutoBuyPlateListRequest)">
+            <summary>
+            获取自动买入优先级适用板块列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.AddSharesPriorityAutoBuyPlate(MealTicket_Admin_Handler.Model.AddSharesPriorityAutoBuyPlateRequest)">
+            <summary>
+            添加自动买入优先级适用板块
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeleteSharesPriorityAutoBuyPlate(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除自动买入优先级适用板块
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.ExtensionHelper.GetAllWebApi(System.Web.Http.HttpConfiguration)">
             <summary>
             获取当前配置内的所有web api

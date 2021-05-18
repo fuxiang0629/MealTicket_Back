@@ -171,6 +171,9 @@ namespace MealTicket_Admin_Handler
         public virtual DbSet<t_sys_conditiontrade_template_buy_other_trend_other> t_sys_conditiontrade_template_buy_other_trend_other { get; set; }
         public virtual DbSet<t_sys_conditiontrade_template_buy_other_trend_other_par> t_sys_conditiontrade_template_buy_other_trend_other_par { get; set; }
         public virtual DbSet<t_account_wallet> t_account_wallet { get; set; }
+        public virtual DbSet<t_shares_limit_autobuy> t_shares_limit_autobuy { get; set; }
+        public virtual DbSet<t_shares_limit_autobuy_priority> t_shares_limit_autobuy_priority { get; set; }
+        public virtual DbSet<t_shares_limit_autobuy_priority_plate> t_shares_limit_autobuy_priority_plate { get; set; }
     
         public virtual int P_Admin_CheckLogin(string token, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter accountId, ObjectParameter loginLogId)
         {

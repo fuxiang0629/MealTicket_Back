@@ -31,7 +31,6 @@ F:\项目\饭票后端\TrendAnalyse\obj\Debug\TrendAnalyse.csproj.CoreCompileInp
 F:\项目\饭票后端\TrendAnalyse\obj\Debug\TrendAnalyse.csproj.CopyComplete
 F:\项目\饭票后端\TrendAnalyse\obj\Debug\TrendAnalyse.exe
 F:\项目\饭票后端\TrendAnalyse\obj\Debug\TrendAnalyse.pdb
-F:\项目\饭票后端\TrendAnalyse\obj\Debug\TrendAnalyse.csprojAssemblyReference.cache
 D:\项目\饭票\后端\TrendAnalyse\bin\Debug\TrendAnalyse.exe.config
 D:\项目\饭票\后端\TrendAnalyse\bin\Debug\TrendAnalyse.exe
 D:\项目\饭票\后端\TrendAnalyse\bin\Debug\TrendAnalyse.pdb
@@ -66,3 +65,4 @@ D:\项目\饭票\后端\TrendAnalyse\obj\Debug\TrendAnalyse.csproj.CoreCompileIn
 D:\项目\饭票\后端\TrendAnalyse\obj\Debug\TrendAnalyse.csproj.CopyComplete
 D:\项目\饭票\后端\TrendAnalyse\obj\Debug\TrendAnalyse.exe
 D:\项目\饭票\后端\TrendAnalyse\obj\Debug\TrendAnalyse.pdb
+F:\项目\饭票后端\TrendAnalyse\obj\Debug\TrendAnalyse.csprojAssemblyReference.cache

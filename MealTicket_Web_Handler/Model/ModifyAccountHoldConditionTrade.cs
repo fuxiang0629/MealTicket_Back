@@ -77,5 +77,10 @@ namespace MealTicket_Web_Handler.Model
         /// 跟投用户Id列表
         /// </summary>
         public List<long> FollowAccountList { get; set; }
+
+        /// <summary>
+        /// 额外卖出条件0无 1封涨停板 2封跌停板
+        /// </summary>
+        public int OtherConditionRelative { get; set; }
     }
 }

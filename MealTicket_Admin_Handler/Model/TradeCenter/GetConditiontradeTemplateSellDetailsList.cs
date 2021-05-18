@@ -100,6 +100,11 @@ namespace MealTicket_Admin_Handler.Model
         /// 子条件列表
         /// </summary>
         public List<ConditionChild> ChildList { get; set; }
+
+        /// <summary>
+        /// 额外卖出条件0无 1封涨停板 2封跌停板
+        /// </summary>
+        public int OtherConditionRelative { get; set; }
     }
 
     public class ConditionChild
@@ -113,5 +118,10 @@ namespace MealTicket_Admin_Handler.Model
         /// 状态1有效 2无效
         /// </summary>
         public int Status { get; set; }
+
+        /// <summary>
+        /// 1指定时间 2止盈 3止损
+        /// </summary>
+        public int Type { get; set; }
     }
 }

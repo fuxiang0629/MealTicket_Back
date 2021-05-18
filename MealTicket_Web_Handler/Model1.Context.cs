@@ -236,6 +236,7 @@ namespace MealTicket_Web_Handler
         public virtual DbSet<t_account_wallet> t_account_wallet { get; set; }
         public virtual DbSet<v_shares_baseinfo> v_shares_baseinfo { get; set; }
         public virtual DbSet<t_account_shares_hold_conditiontrade_follow> t_account_shares_hold_conditiontrade_follow { get; set; }
+        public virtual DbSet<t_shares_limit_autobuy> t_shares_limit_autobuy { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)

@@ -916,24 +916,38 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                     foreach (var p in par)
                     {
                         var temp = JsonConvert.DeserializeObject<dynamic>(p);
-                        if (temp.GroupId == 0)
+                        long groupId = 0;
+                        int dataType = 1;
+                        int compare = 0;
+                        double rate = 0;
+                        try
+                        { 
+                            groupId = temp.GroupId; 
+                            compare = temp.Compare;
+                            rate = temp.Rate;
+                            dataType = temp.DataType;
+                        }
+                        catch (Exception ex)
+                        {
+                        }
+                        if (groupId == 0)
                         {
                             AllSetPar.Add(p);
                         }
 
-                        var plate = plateRate.Where(e => e.PlateId == temp.GroupId).FirstOrDefault();
+                        var plate = plateRate.Where(e => e.PlateId == groupId).FirstOrDefault();
                         if (plate == null)
                         {
                             continue;
                         }
-                        if (temp.DataType == 2)
+                        if (dataType == 2)
                         {
                             AllSetPlateList2.Add(plate.PlateId);
-                            if (temp.Compare == 1 && plate.RiseRate < temp.Rate * 100)
+                            if (compare == 1 && plate.RiseRate < rate * 100)
                             {
                                 continue;
                             }
-                            if (temp.Compare == 2 && plate.RiseRate > temp.Rate * 100)
+                            if (compare == 2 && plate.RiseRate > rate * 100)
                             {
                                 continue;
                             }
@@ -951,7 +965,10 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                     foreach (var p in AllSetPar)
                     {
                         var temp = JsonConvert.DeserializeObject<dynamic>(p);
-                        var plate = plateRate.Where(e => e.PlateType == temp.GroupType && ((temp.Compare == 1 && e.RiseRate >= temp.Rate * 100) || (temp.Compare == 2 && e.RiseRate <= temp.Rate * 100))).Select(e => e.PlateId).ToList();
+                        int groupType = temp.GroupType;
+                        int tempCompare = temp.Compare;
+                        double tempRate = temp.Rate;
+                        var plate = plateRate.Where(e => e.PlateType == groupType && ((tempCompare == 1 && e.RiseRate >= tempRate * 100) || (tempCompare == 2 && e.RiseRate <= tempRate * 100))).Select(e => e.PlateId).ToList();
                         if (plate.Count() <= 0)
                         {
                             continue;
