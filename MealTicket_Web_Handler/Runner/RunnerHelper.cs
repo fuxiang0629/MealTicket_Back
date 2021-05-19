@@ -210,7 +210,7 @@ namespace MealTicket_Web_Handler.Runner
                     else if (item.Key.Type == 2)
                     {
                         holdList = (from hold in holdList
-                                    let disPrice = hold.item.ConditionType == 1 ? hold.item.ConditionPrice : (hold.item.ConditionRelativeType == 1 ? maxPrice : hold.item.ConditionRelativeType == 2 ? minPrice : (long)(Math.Round((hold.item.ConditionRelativeRate * 1.0 / 10000 * hold.item3.ClosedPrice + hold.item3.ClosedPrice) / 100) * 100))
+                                    let disPrice = hold.item.ConditionType == 1 ? hold.item.ConditionPrice : (hold.item.ConditionRelativeType == 1 ? maxPrice+ hold.item.ConditionRelativeRate*100 : hold.item.ConditionRelativeType == 2 ? minPrice+ hold.item.ConditionRelativeRate * 100 : (long)(Math.Round((hold.item.ConditionRelativeRate * 1.0 / 10000 * hold.item3.ClosedPrice + hold.item3.ClosedPrice) / 100) * 100))
                                     where hold.item3.PresentPrice >= disPrice
                                     orderby disPrice
                                     select hold).ToList();
@@ -218,7 +218,7 @@ namespace MealTicket_Web_Handler.Runner
                     else if (item.Key.Type == 3)
                     {
                         holdList = (from hold in holdList
-                                    let disPrice = hold.item.ConditionType == 1 ? hold.item.ConditionPrice : (hold.item.ConditionRelativeType == 1 ? maxPrice : hold.item.ConditionRelativeType == 2 ? minPrice : (long)(Math.Round((hold.item.ConditionRelativeRate * 1.0 / 10000 * hold.item3.ClosedPrice + hold.item3.ClosedPrice) / 100) * 100))
+                                    let disPrice = hold.item.ConditionType == 1 ? hold.item.ConditionPrice : (hold.item.ConditionRelativeType == 1 ? maxPrice+ hold.item.ConditionRelativeRate * 100 : hold.item.ConditionRelativeType == 2 ? minPrice+ hold.item.ConditionRelativeRate * 100 : (long)(Math.Round((hold.item.ConditionRelativeRate * 1.0 / 10000 * hold.item3.ClosedPrice + hold.item3.ClosedPrice) / 100) * 100))
                                     where hold.item3.PresentPrice <= disPrice
                                     orderby disPrice descending
                                     select hold).ToList();
@@ -285,7 +285,7 @@ namespace MealTicket_Web_Handler.Runner
                             }
                         }
 
-                        int EntrustCount = hold.item.EntrustCount;
+                        int EntrustCount = hold.item.EntrustCount%100==0? hold.item.EntrustCount: (hold.item.EntrustCount / 100 * 100+100);
                         if (hold.item2.CanSoldCount < EntrustCount)
                         {
                             EntrustCount = hold.item2.CanSoldCount;

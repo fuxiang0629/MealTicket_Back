@@ -6697,8 +6697,18 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
         {
             using (var db = new meal_ticketEntities())
             {
-                var sell_details = (from item in db.t_account_shares_conditiontrade_template_sell
-                                    where item.TemplateId == request.TemplateId && item.Type == request.Type
+                var temp = from item in db.t_account_shares_conditiontrade_template_sell
+                           where item.TemplateId == request.TemplateId
+                           select item;
+                if (request.Type != 0)
+                {
+                    temp = from item in temp
+                           where item.Type == request.Type
+                           select item;
+                }
+
+                var sell_details = (from item in temp
+                                    orderby item.Type
                                     select new ConditiontradeTemplateSellDetailsInfo
                                     {
                                         Status = item.Status,
@@ -6712,6 +6722,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                         EntrustCount = item.EntrustCount,
                                         EntrustPriceGear = item.EntrustPriceGear,
                                         ForbidType = item.ForbidType,
+                                        Type=item.Type,
                                         EntrustType = item.EntrustType,
                                         OtherConditionRelative = item.OtherConditionRelative,
                                         Id = item.Id,
@@ -6722,10 +6733,89 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                                      select new ConditionChild
                                                      {
                                                          Status = x.Status,
-                                                         Type=x2.Type,
+                                                         Type = x2.Type,
                                                          ChildId = x.ChildId
                                                      }).ToList()
                                     }).ToList();
+                int lastType = 0;
+                foreach (var item in sell_details)
+                {
+                    if (item.Type != lastType)
+                    {
+                        item.IsShowType = true;
+                    }
+                    else
+                    {
+                        item.IsShowType = false;
+                    }
+                    lastType = item.Type;
+                }
+                return sell_details;
+            }
+        }
+
+        /// <summary>
+        /// 获取系统条件卖出模板详情列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public List<ConditiontradeTemplateSellDetailsInfo> GetSysConditiontradeTemplateSellDetailsList(GetConditiontradeTemplateSellDetailsListRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var temp = from item in db.t_sys_conditiontrade_template_sell
+                           where item.TemplateId == request.TemplateId
+                           select item;
+                if (request.Type != 0)
+                {
+                    temp = from item in temp
+                           where item.Type == request.Type
+                           select item;
+                }
+                var sell_details = (from item in temp
+                                    orderby item.Type
+                                    select new ConditiontradeTemplateSellDetailsInfo
+                                    {
+                                        Status = item.Status,
+                                        ConditionDay = item.ConditionDay,
+                                        ConditionPriceBase = item.ConditionPriceBase,
+                                        ConditionPriceType = item.ConditionType,
+                                        ConditionRelativeRate = item.ConditionPriceRate,
+                                        ConditionRelativeType = item.ConditionPriceType,
+                                        ConditionTime = item.ConditionTime,
+                                        CreateTime = item.CreateTime,
+                                        EntrustCount = item.EntrustCount,
+                                        EntrustPriceGear = item.EntrustPriceGear,
+                                        ForbidType = item.ForbidType,
+                                        Type = item.Type,
+                                        EntrustType = item.EntrustType,
+                                        OtherConditionRelative = item.OtherConditionRelative,
+                                        Id = item.Id,
+                                        
+                                        Name = item.Name,
+                                        ChildList = (from x in db.t_sys_conditiontrade_template_sell_child
+                                                     join x2 in db.t_sys_conditiontrade_template_sell on x.ChildId equals x2.Id
+                                                     where x.FatherId == item.Id
+                                                     select new ConditionChild
+                                                     {
+                                                         Status = x.Status,
+                                                         Type = x2.Type,
+                                                         ChildId = x.ChildId
+                                                     }).ToList()
+                                    }).ToList();
+                int lastType = 0;
+                foreach (var item in sell_details)
+                {
+                    if (item.Type != lastType)
+                    {
+                        item.IsShowType = true;
+                    }
+                    else
+                    {
+                        item.IsShowType = false;
+                    }
+                    lastType = item.Type;
+                }
                 return sell_details;
             }
         }
@@ -7065,27 +7155,31 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                 List<RelIdInfo> relIdList = new List<RelIdInfo>();
                                 foreach (var item in sell)
                                 {
+                                    var tempDetails = request.TemplateDetailsList.Where(e => e.Id == item.Key.Id).FirstOrDefault();
+                                    if (tempDetails == null)
+                                    {
+                                        continue;
+                                    }
+                                    int ConditionDay = tempDetails.ConditionDay??0;
+                                    string ConditionTime = tempDetails.ConditionTime;
+                                    long conditionPrice = 0;
+                                    int entrustCount = tempDetails.DisCount;
+                                    int status = tempDetails.Status;
+
                                     DateTime? tempTime = null;
                                     if (item.Key.Type == 1)
                                     {
-                                        tempTime = DateTime.Parse(DateTime.Now.Date.AddDays(item.Key.ConditionDay ?? 0).ToString("yyyy-MM-dd") + " " + item.Key.ConditionTime);
+                                        tempTime = DateTime.Parse(DateTime.Now.Date.AddDays(ConditionDay).ToString("yyyy-MM-dd") + " " + ConditionTime);
                                     }
-                                    int entrustCount = item.Key.EntrustCount * hold.RemainCount / sharesInfo.SharesHandCount;
-                                    if (entrustCount < sharesInfo.SharesHandCount)
-                                    {
-                                        entrustCount = sharesInfo.SharesHandCount;
-                                    }
-                                    long conditionPrice = 0;
                                     if (item.Key.ConditionType == 1)
                                     {
-                                        long basePrice = item.Key.ConditionPriceBase == 1 ? costPrice : item.Key.ConditionPriceBase == 2 ? currPrice : closedPrice;
-                                        conditionPrice = item.Key.ConditionPriceType == 1 ? ((long)Math.Round(basePrice / 100 + basePrice / 100 * 1.0 / 10000 * range)) * 100 : item.Key.ConditionPriceType == 2 ? ((long)Math.Round(basePrice / 100 - basePrice / 100 * 1.0 / 10000 * range)) * 100 : ((long)Math.Round(basePrice / 100 + basePrice / 100 * 1.0 / 10000 * item.Key.ConditionPriceRate ?? 0))*100;
+                                        conditionPrice = tempDetails.DisPrice;
                                     }
 
                                     t_account_shares_hold_conditiontrade temp = new t_account_shares_hold_conditiontrade
                                     {
                                         SourceFrom = 1,
-                                        Status = item.Key.Status,
+                                        Status = status,
                                         AccountId = accountId,
                                         CreateTime = DateTime.Now,
                                         EntrustId = 0,
@@ -7102,9 +7196,9 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                         Name = item.Key.Name,
                                         TradeType = 2,
                                         TriggerTime = null,
-                                        ConditionRelativeType = item.Key.ConditionPriceType ?? 0,
-                                        ConditionRelativeRate = item.Key.ConditionPriceRate ?? 0,
-                                        OtherConditionRelative=item.Key.OtherConditionRelative,
+                                        ConditionRelativeType = tempDetails.ConditionRelativeType ?? 0,
+                                        ConditionRelativeRate = tempDetails.ConditionRelativeRate ?? 0,
+                                        OtherConditionRelative= tempDetails.OtherConditionRelative,
                                         ConditionPrice = conditionPrice
                                     };
                                     db.t_account_shares_hold_conditiontrade.Add(temp);
@@ -7168,27 +7262,31 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                 List<RelIdInfo> relIdList = new List<RelIdInfo>();
                                 foreach (var item in sell)
                                 {
+                                    var tempDetails = request.TemplateDetailsList.Where(e => e.Id == item.Key.Id).FirstOrDefault();
+                                    if (tempDetails == null)
+                                    {
+                                        continue;
+                                    }
+                                    int ConditionDay = tempDetails.ConditionDay ?? 0;
+                                    string ConditionTime = tempDetails.ConditionTime;
+                                    long conditionPrice = 0;
+                                    int entrustCount = tempDetails.DisCount;
+                                    int status = tempDetails.Status;
+
                                     DateTime? tempTime = null;
                                     if (item.Key.Type == 1)
                                     {
-                                        tempTime = DateTime.Parse(DateTime.Now.Date.AddDays(item.Key.ConditionDay ?? 0).ToString("yyyy-MM-dd") + " " + item.Key.ConditionTime);
+                                        tempTime = DateTime.Parse(DateTime.Now.Date.AddDays(ConditionDay).ToString("yyyy-MM-dd") + " " + ConditionTime);
                                     }
-                                    int entrustCount = item.Key.EntrustCount * hold.RemainCount / sharesInfo.SharesHandCount;
-                                    if (entrustCount < sharesInfo.SharesHandCount)
-                                    {
-                                        entrustCount = sharesInfo.SharesHandCount;
-                                    }
-                                    long conditionPrice = 0;
                                     if (item.Key.ConditionType == 1)
                                     {
-                                        long basePrice = item.Key.ConditionPriceBase == 1 ? costPrice : item.Key.ConditionPriceBase == 2 ? currPrice : closedPrice;
-                                        conditionPrice = item.Key.ConditionPriceType == 1 ? ((long)Math.Round(basePrice / 100 + basePrice / 100 * 1.0 / 10000 * range)) * 100 : item.Key.ConditionPriceType == 2 ? ((long)Math.Round(basePrice / 100 - basePrice / 100 * 1.0 / 10000 * range)) * 100 : ((long)Math.Round(basePrice / 100 + basePrice / 100 * 1.0 / 10000 * item.Key.ConditionPriceRate ?? 0));
+                                        conditionPrice = tempDetails.DisPrice;
                                     }
 
                                     t_account_shares_hold_conditiontrade temp = new t_account_shares_hold_conditiontrade
                                     {
                                         SourceFrom = 1,
-                                        Status = item.Key.Status,
+                                        Status = status,
                                         AccountId = accountId,
                                         CreateTime = DateTime.Now,
                                         EntrustId = 0,
@@ -7205,9 +7303,9 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                         Name = item.Key.Name,
                                         TradeType = 2,
                                         TriggerTime = null,
-                                        ConditionRelativeType = item.Key.ConditionPriceType ?? 0,
-                                        ConditionRelativeRate = item.Key.ConditionPriceRate ?? 0,
-                                        OtherConditionRelative=item.Key.OtherConditionRelative,
+                                        ConditionRelativeType = tempDetails.ConditionRelativeType ?? 0,
+                                        ConditionRelativeRate = tempDetails.ConditionRelativeRate ?? 0,
+                                        OtherConditionRelative = tempDetails.OtherConditionRelative,
                                         ConditionPrice = conditionPrice
                                     };
                                     db.t_account_shares_hold_conditiontrade.Add(temp);

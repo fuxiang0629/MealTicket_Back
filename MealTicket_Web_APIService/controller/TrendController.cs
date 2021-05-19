@@ -3061,6 +3061,24 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 获取系统条件卖出模板详情列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("sys/conditiontrade/template/sell/details/list"), HttpPost]
+        [Description("获取系统条件卖出模板详情列表")]
+        [CheckUserLoginFilter]
+        public List<ConditiontradeTemplateSellDetailsInfo> GetSysConditiontradeTemplateSellDetailsList(GetConditiontradeTemplateSellDetailsListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSysConditiontradeTemplateSellDetailsList(request);
+        }
+
+        /// <summary>
         /// 添加条件卖出模板详情
         /// </summary>
         /// <param name="request"></param>

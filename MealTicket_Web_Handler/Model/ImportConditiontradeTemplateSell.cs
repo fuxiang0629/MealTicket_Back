@@ -46,5 +46,10 @@ namespace MealTicket_Web_Handler.Model
         /// 是否同时导入到跟投账户
         /// </summary>
         public bool IsImportToFollow { get; set; }
+
+        /// <summary>
+        /// 详细数据
+        /// </summary>
+        public List<ConditiontradeTemplateSellDetailsInfo> TemplateDetailsList { get; set; }
     }
 }

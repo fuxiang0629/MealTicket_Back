@@ -37,6 +37,11 @@ namespace MealTicket_Web_Handler.Model
         public string Name { get; set; }
 
         /// <summary>
+        /// 类型
+        /// </summary>
+        public int Type { get; set; }
+
+        /// <summary>
         /// 指定相对时间(天)
         /// </summary>
         public int? ConditionDay { get; set; }
@@ -105,5 +110,14 @@ namespace MealTicket_Web_Handler.Model
         /// 额外卖出条件0无 1封涨停板 2封跌停板
         /// </summary>
         public int OtherConditionRelative { get; set; }
+
+        /// <summary>
+        /// 前端用
+        /// </summary>
+        public bool IsShowType { get; set; }
+
+        public int DisCount { get; set; }
+
+        public int DisPrice { get; set; }
     }
 }

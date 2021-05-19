@@ -442,17 +442,48 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 int rateCompare = 0;
                 int rateCount = 0;
                 int limitDay = 0;
+                bool triPrice = false;
                 try
                 {
                     day = Convert.ToInt32(temp.Day);
-                    type = Convert.ToInt32(temp.Type);
-                    compare = Convert.ToInt32(temp.Compare);
-                    count = (type == 11 || type == 12) ? (int)(Convert.ToDouble(temp.Count) * 100) : Convert.ToInt32(temp.Count);
-                    rateCompare = Convert.ToInt32(temp.RateCompare);
-                    rateCount = (int)(Convert.ToDouble(temp.RateCount) * 100);
-                    limitDay = Convert.ToInt32(temp.LimitDay);
                 }
                 catch (Exception) { }
+                try
+                {
+                    type = Convert.ToInt32(temp.Type);
+                } 
+                catch (Exception) { }
+                try
+                {
+                    compare = Convert.ToInt32(temp.Compare);
+                } 
+                catch (Exception) { }
+                try
+                {
+                    count = (type == 11 || type == 12) ? (int)(Convert.ToDouble(temp.Count) * 100) : Convert.ToInt32(temp.Count);
+                } 
+                catch (Exception) { }
+                try
+                {
+                    rateCompare = Convert.ToInt32(temp.RateCompare);
+                } 
+                catch (Exception) { }
+                try
+                {
+                    rateCount = (int)(Convert.ToDouble(temp.RateCount) * 100);
+                } 
+                catch (Exception) { }
+                try
+                {
+                    limitDay = Convert.ToInt32(temp.LimitDay);
+                } 
+                catch (Exception) { }
+                try
+                {
+                    triPrice = Convert.ToBoolean(temp.TriPrice);
+                }
+                catch (Exception) { }
+
                 if (day <= 0)
                 {
                     return -1;
@@ -481,7 +512,16 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                     //涨停次数
                     else if (type == 2)
                     {
-                        int tempCount = quotes_date.Where(e => e.PriceType == 1).Count();
+                        int tempCount = 0;
+                        if (triPrice)
+                        {
+                            tempCount = quotes_date.Where(e => e.TriPriceType == 1).Count();
+                        }
+                        else
+                        {
+                            tempCount = quotes_date.Where(e => e.PriceType == 1).Count();
+                        }
+
                         if (compare == 1 && tempCount >= count)
                         {
                             return 0;
@@ -495,7 +535,15 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                     //跌停次数
                     else if (type == 3)
                     {
-                        int tempCount = quotes_date.Where(e => e.PriceType == 2).Count();
+                        int tempCount = 0;
+                        if (triPrice)
+                        {
+                            tempCount = quotes_date.Where(e => e.TriPriceType == 2).Count();
+                        }
+                        else
+                        {
+                            tempCount = quotes_date.Where(e => e.PriceType == 2).Count();
+                        }
                         if (compare == 1 && tempCount >= count)
                         {
                             return 0;
