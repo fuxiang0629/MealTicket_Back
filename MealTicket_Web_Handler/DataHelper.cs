@@ -1,7 +1,6 @@
 ﻿using FXCommon.Common;
 using MealTicket_Web_Handler.Model;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using stock_db_core;
 using System;
 using System.Collections.Generic;
@@ -10,7 +9,6 @@ using System.Data.Entity.SqlServer;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using static StockTrendMonitor.Define.StockMonitorDefine;
 
 namespace MealTicket_Web_Handler
@@ -22,7 +20,7 @@ namespace MealTicket_Web_Handler
         /// </summary>
         /// <param name="time">日期，null表示当天</param>
         /// <returns></returns>
-        public static bool CheckTradeDate(DateTime? date=null)
+        public static bool CheckTradeDate(DateTime? date = null)
         {
             DateTime timeDate = DateTime.Now.Date;
             if (date != null)
@@ -109,7 +107,7 @@ namespace MealTicket_Web_Handler
                 {
                     throw ex;
                 }
-                finally 
+                finally
                 {
                     conn.Close();
                 }
@@ -148,8 +146,8 @@ namespace MealTicket_Web_Handler
             {
                 return;
             }
-            string sqlQuery=CreateSql(sharesList);
-            var dataList=GetTrendPar(sqlQuery);
+            string sqlQuery = CreateSql(sharesList);
+            var dataList = GetTrendPar(sqlQuery);
 
             var accountDataList = (from item in dataList
                                    group item by item.AccountId into g
@@ -215,7 +213,7 @@ namespace MealTicket_Web_Handler
         /// 拼接sql语句
         /// </summary>
         /// <returns></returns>
-        private static string CreateSql(List<SharesInfo> sharesList) 
+        private static string CreateSql(List<SharesInfo> sharesList)
         {
             DateTime timeNow = DateTime.Now;
 
@@ -245,7 +243,7 @@ inner join t_shares_all t5 with(xlock) on t.SharesCode=t5.SharesCode and t.Marke
 inner join t_account_shares_optional_trend_rel_par t6 with(xlock) on t3.Id=t6.RelId
 inner join t_account_login_token_web t7 on t.AccountId=t7.AccountId
 where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and datediff(SS,t7.HeartTime,'{0}')<{2} and t2.ValidEndTime>'{0}' and 
-(t.SharesCode+','+convert(varchar(10),t.Market)) in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToString(),Singleton.Instance.HeartSecond);
+(t.SharesCode+','+convert(varchar(10),t.Market)) in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToString(), Singleton.Instance.HeartSecond);
             return sql;
         }
 
@@ -254,7 +252,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
         /// </summary>
         /// <param name="sql"></param>
         /// <returns></returns>
-        private static List<OptionalTrend> GetTrendPar(string sql) 
+        private static List<OptionalTrend> GetTrendPar(string sql)
         {
             List<OptionalTrend> list = new List<OptionalTrend>();
             using (SqlConnection conn = new SqlConnection(Singleton.Instance.connString_meal_ticket))
@@ -294,7 +292,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                                     TrendDescription = TrendDescription,
                                     RelId = RelId,
                                     OptionalId = OptionalId,
-                                    ParList = new List<string> 
+                                    ParList = new List<string>
                                     {
                                         ParamsInfo
                                     }
@@ -312,7 +310,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 {
                     throw ex;
                 }
-                finally 
+                finally
                 {
                     conn.Close();
                 }
@@ -451,32 +449,32 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 try
                 {
                     type = Convert.ToInt32(temp.Type);
-                } 
+                }
                 catch (Exception) { }
                 try
                 {
                     compare = Convert.ToInt32(temp.Compare);
-                } 
+                }
                 catch (Exception) { }
                 try
                 {
                     count = (type == 11 || type == 12) ? (int)(Convert.ToDouble(temp.Count) * 100) : Convert.ToInt32(temp.Count);
-                } 
+                }
                 catch (Exception) { }
                 try
                 {
                     rateCompare = Convert.ToInt32(temp.RateCompare);
-                } 
+                }
                 catch (Exception) { }
                 try
                 {
                     rateCount = (int)(Convert.ToDouble(temp.RateCount) * 100);
-                } 
+                }
                 catch (Exception) { }
                 try
                 {
                     limitDay = Convert.ToInt32(temp.LimitDay);
-                } 
+                }
                 catch (Exception) { }
                 try
                 {
@@ -969,8 +967,8 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         int compare = 0;
                         double rate = 0;
                         try
-                        { 
-                            groupId = temp.GroupId; 
+                        {
+                            groupId = temp.GroupId;
                             compare = temp.Compare;
                             rate = temp.Rate;
                             dataType = temp.DataType;
@@ -1076,7 +1074,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         case 1:
                             realCount = quotes.BuyCount1;
                             break;
-                        case 21:
+                        case 2:
                             realCount = quotes.BuyCount2;
                             break;
                         case 3:
@@ -1141,6 +1139,10 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                             return 0;
                         }
                     }
+                    else if (countType == 3)//流通市值百分比
+                    {
+
+                    }
                     return -1;
                 }
             }
@@ -1178,7 +1180,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                     var quotes = (from item in db.t_shares_quotes_date
                                   where item.Market == market && item.SharesCode == sharesCode
                                   orderby item.Date descending
-                                  select item).Take(day+1).ToList();
+                                  select item).Take(day + 1).ToList();
                     if (quotes.Count() <= 0)
                     {
                         return -1;
@@ -1265,7 +1267,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 }
                 catch (Exception)
                 {
-                    
+
                 }
 
                 DateTime timeNow = DateTime.Now;
@@ -1274,7 +1276,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                     var quotes = (from item in db.t_shares_quotes_date
                                   where item.Market == market && item.SharesCode == sharesCode
                                   orderby item.Date descending
-                                  select item).Take(day1+day2).ToList();
+                                  select item).Take(day1 + day2).ToList();
                     if (quotes.Count() < day1)
                     {
                         return -1;
@@ -1352,10 +1354,229 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
             }
         }
 
+        //分析五档变化速度
+        public static int Analysis_QuotesChangeRate(string sharesCode, int market, List<string> par)
+        {
+            var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
+            int compare = 0;
+            int type = 0;
+            double count = 0;
+            try
+            {
+                compare = Convert.ToInt32(temp.Compare);
+                type = Convert.ToInt32(temp.Type);
+                count = Convert.ToDouble(temp.Count);
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+
+            DateTime timeNow = DateTime.Now;
+            using (var db = new meal_ticketEntities())
+            {
+                var quotes = (from item in db.t_shares_quotes
+                              where item.Market == market && item.SharesCode == sharesCode && SqlFunctions.DateAdd("MI", 1, item.LastModified) > timeNow
+                              select item).FirstOrDefault();
+                if (quotes == null)
+                {
+                    return -1;
+                }
+                var lastquotes = (from item in db.t_shares_quotes_last
+                                  where item.Market == market && item.SharesCode == sharesCode && SqlFunctions.DateAdd("MI", 1, item.LastModified) > timeNow
+                                  select item).FirstOrDefault();
+                if (lastquotes == null)
+                {
+                    return -1;
+                }
+                int disCount = 0;
+                long disPrice = 0;
+                int lastCount = 0;
+                long lastPrice = 0;
+                int tradetype = 0;
+
+                switch (type)
+                {
+                    case 1:
+                        disCount = quotes.BuyCount1;
+                        disPrice = quotes.BuyPrice1;
+                        lastCount = lastquotes.BuyCount1;
+                        lastPrice = lastquotes.BuyPrice1;
+                        tradetype = 1;
+                        break;
+                    case 2:
+                        disCount = quotes.BuyCount2;
+                        disPrice = quotes.BuyPrice2;
+                        lastCount = lastquotes.BuyCount2;
+                        lastPrice = lastquotes.BuyPrice2;
+                        tradetype = 1;
+                        break;
+                    case 3:
+                        disCount = quotes.BuyCount3;
+                        disPrice = quotes.BuyPrice3;
+                        lastCount = lastquotes.BuyCount3;
+                        lastPrice = lastquotes.BuyPrice3;
+                        tradetype = 1;
+                        break;
+                    case 4:
+                        disCount = quotes.BuyCount4;
+                        disPrice = quotes.BuyPrice4;
+                        lastCount = lastquotes.BuyCount4;
+                        lastPrice = lastquotes.BuyPrice4;
+                        tradetype = 1;
+                        break;
+                    case 5:
+                        disCount = quotes.BuyCount5;
+                        disPrice = quotes.BuyPrice5;
+                        lastCount = lastquotes.BuyCount5;
+                        lastPrice = lastquotes.BuyPrice5;
+                        tradetype = 1;
+                        break;
+                    case 6:
+                        disCount = quotes.SellCount1;
+                        disPrice = quotes.SellPrice1;
+                        lastCount = lastquotes.SellCount1;
+                        lastPrice = lastquotes.SellPrice1;
+                        tradetype = 2;
+                        break;
+                    case 7:
+                        disCount = quotes.SellCount2;
+                        disPrice = quotes.SellPrice2;
+                        lastCount = lastquotes.SellCount2;
+                        lastPrice = lastquotes.SellPrice2;
+                        tradetype = 2;
+                        break;
+                    case 8:
+                        disCount = quotes.SellCount3;
+                        disPrice = quotes.SellPrice3;
+                        lastCount = lastquotes.SellCount3;
+                        lastPrice = lastquotes.SellPrice3;
+                        tradetype = 2;
+                        break;
+                    case 9:
+                        disCount = quotes.SellCount4;
+                        disPrice = quotes.SellPrice4;
+                        lastCount = lastquotes.SellCount4;
+                        lastPrice = lastquotes.SellPrice4;
+                        tradetype = 2;
+                        break;
+                    case 10:
+                        disCount = quotes.SellCount5;
+                        disPrice = quotes.SellPrice5;
+                        lastCount = lastquotes.SellCount5;
+                        lastPrice = lastquotes.SellPrice5;
+                        tradetype = 2;
+                        break;
+                    default:
+                        return -1;
+                }
+
+                if (lastCount <= 0 || lastPrice <= 0)
+                {
+                    return -1;
+                }
+
+                double rate = 0;
+                //当前价格等于0，速率为-100%
+                if (disPrice <= 0)
+                {
+                    rate = -100;
+                }
+                //价格相等，计算速率
+                else if (lastPrice == disPrice)
+                {
+                    rate = (disCount - lastCount) * 1.0 / lastCount * 100;
+                }
+                else if (lastPrice > disPrice)
+                {
+                    //卖单则为无限大（999999999）
+                    if (tradetype == 2)
+                    {
+                        rate = 999999999;
+                    }
+                    else
+                    {
+                        rate = -100;
+                    }
+                }
+                else
+                {
+                    //买单则为无限大（999999999）
+                    if (tradetype == 1)
+                    {
+                        rate = 999999999;
+                    }
+                    else
+                    {
+                        rate = -100;
+                    }
+                }
+
+                if (compare == 1 && rate >= count)
+                {
+                    return 0;
+                }
+                if (compare == 2 && rate <= count)
+                {
+                    return 0;
+                }
+                return -1;
+            }
+        }
+
+        //分析按当前价格
+        public static int Analysis_CurrentPrice(string sharesCode, int market, List<string> par)
+        {
+            var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
+            int riseType = 0;
+            try
+            {
+                riseType = Convert.ToInt32(temp.RiseType);
+            }
+            catch (Exception)
+            {
+                return -1;
+            }
+
+            DateTime timeNow = DateTime.Now;
+            using (var db = new meal_ticketEntities())
+            {
+                //当前价格
+                var quotes = (from item in db.t_shares_quotes
+                              where item.Market == market && item.SharesCode == sharesCode && SqlFunctions.DateAdd("MI", 1, item.LastModified) > timeNow
+                              select item).FirstOrDefault();
+                if (quotes == null)
+                {
+                    return -1;
+                }
+
+                if (riseType == 1 && quotes.TriPriceType == 1)
+                {
+                    return 0;
+                }
+
+                if (riseType == 2 && quotes.TriPriceType == 2)
+                {
+                    return 0;
+                }
+
+                if (riseType == 3 && quotes.PriceType == 1)
+                {
+                    return 0;
+                }
+
+                if (riseType == 4 && quotes.PriceType == 2)
+                {
+                    return 0;
+                }
+                return -1;
+            }
+        }
+
         /// <summary>
         /// 触发
         /// </summary>
-        private static void TrendTri(long relId, int market, string sharesCode, long accountId, long trendId, string sharesName, string trendName, string trendDescription, long optionalId, DateTime pushTime,string pushDesc)
+        private static void TrendTri(long relId, int market, string sharesCode, long accountId, long trendId, string sharesName, string trendName, string trendDescription, long optionalId, DateTime pushTime, string pushDesc)
         {
             bool IsPush = false;
             bool IsFirst = false;
@@ -1493,7 +1714,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 {
                     Logger.WriteFileLog("触发分析出错", ex);
                 }
-                finally 
+                finally
                 {
                     conn.Close();
                 }

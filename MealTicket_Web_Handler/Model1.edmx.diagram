@@ -215,6 +215,7 @@
         <EntityTypeShape EntityType="meal_ticketModel.v_shares_baseinfo" Width="1.5" PointX="23.375" PointY="42.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_hold_conditiontrade_follow" Width="1.5" PointX="25.375" PointY="42.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_autobuy" Width="1.5" PointX="27.375" PointY="42.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_quotes_last" Width="1.5" PointX="39.375" PointY="42.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

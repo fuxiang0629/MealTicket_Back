@@ -2313,10 +2313,16 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 }
 
                 //计算杠杆倍数
+                var accountRules = from item in db.t_shares_limit_fundmultiple_account
+                                   where item.AccountId == request.AccountId
+                                   select item;
+
+
                 var rules = (from item in db.t_shares_limit_fundmultiple
+                             join item2 in accountRules on item.Id equals item2.FundmultipleId into a from ai in a.DefaultIfEmpty()
                              where (item.LimitMarket == sharesQuotes.Market || item.LimitMarket == -1) && (sharesQuotes.SharesCode.StartsWith(item.LimitKey))
                              orderby item.Priority descending, item.FundMultiple
-                             select item).FirstOrDefault();
+                             select new { item, ai }).FirstOrDefault();
                 if (rules == null)
                 {
                     sharesQuotes.FundMultiple = 0;
@@ -2324,8 +2330,8 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 }
                 else
                 {
-                    sharesQuotes.FundMultiple = rules.FundMultiple;
-                    sharesQuotes.TotalRise = isSt ? rules.Range / 2 : rules.Range;
+                    sharesQuotes.FundMultiple = rules.ai==null? rules.item.FundMultiple:rules.ai.FundMultiple;
+                    sharesQuotes.TotalRise = isSt ? rules.item.Range / 2 : rules.item.Range;
                 }
                 return sharesQuotes;
             }

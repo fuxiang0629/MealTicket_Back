@@ -776,6 +776,42 @@ namespace MealTicket_Web_Handler.Runner
                                 }
                                 logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend10);
                             }
+                            //五档变化速度
+                            if (tr.TrendId == 11)
+                            {
+                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "五档变化速度判断-额外参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend11 == 0)
+                                {
+                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend11);
+                            }
+                            //当前价格
+                            if (tr.TrendId == 12)
+                            {
+                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "按当前价格判断-额外参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                int errorCode_Trend12 = DataHelper.Analysis_CurrentPrice(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend12 == 0)
+                                {
+                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend12);
+                            }
                         }
                         if (!tempTri)
                         {
@@ -1050,6 +1086,42 @@ namespace MealTicket_Web_Handler.Runner
                                     }
                                 }
                                 logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend10);
+                            }
+                            //五档变化速度
+                            if (tr.TrendId == 11)
+                            {
+                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "五档变化速度判断-转自动参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend11 == 0)
+                                {
+                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend11);
+                            }
+                            //当前价格
+                            if (tr.TrendId == 12)
+                            {
+                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "按当前价格判断-转自动参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                int errorCode_Trend12 = DataHelper.Analysis_CurrentPrice(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend12 == 0)
+                                {
+                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend12);
                             }
                         }
                         if (!tempTri)
@@ -1502,6 +1574,26 @@ namespace MealTicket_Web_Handler.Runner
                         tempTri = true;
                     }
                 }
+                //五档变化速度
+                if (tr.TrendId == 11)
+                {
+                    trendName = "五档变化速度";
+                    int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(sharesCode, market, par);
+                    if (errorCode_Trend11 == 0)
+                    {
+                        tempTri = true;
+                    }
+                }
+                //当前价格
+                if (tr.TrendId == 12)
+                {
+                    trendName = "按当前价格";
+                    int errorCode_Trend12 = DataHelper.Analysis_CurrentPrice(sharesCode, market, par);
+                    if (errorCode_Trend12 == 0)
+                    {
+                        tempTri = true;
+                    }
+                }
 
                 if (!tempTri)
                 {
@@ -1686,6 +1778,26 @@ namespace MealTicket_Web_Handler.Runner
                     trendName = "按均线价格";
                     int errorCode_Trend10 = DataHelper.Analysis_ReferAverage(sharesCode, market, par);
                     if (errorCode_Trend10 == 0)
+                    {
+                        tempTri = true;
+                    }
+                }
+                //五档变化速度
+                if (tr.TrendId == 11)
+                {
+                    trendName = "五档变化速度";
+                    int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(sharesCode, market, par);
+                    if (errorCode_Trend11 == 0)
+                    {
+                        tempTri = true;
+                    }
+                }
+                //当前价格
+                if (tr.TrendId == 12)
+                {
+                    trendName = "按当前价格";
+                    int errorCode_Trend12 = DataHelper.Analysis_CurrentPrice(sharesCode, market, par);
+                    if (errorCode_Trend12 == 0)
                     {
                         tempTri = true;
                     }

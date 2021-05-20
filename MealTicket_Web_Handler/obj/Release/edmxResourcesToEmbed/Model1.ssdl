@@ -2457,6 +2457,51 @@
     <Property Name="BusinessType" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
   </EntityType>
+  <EntityType Name="t_shares_quotes_last">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="PresentPrice" Type="bigint" Nullable="false" />
+    <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
+    <Property Name="MaxPrice" Type="bigint" Nullable="false" />
+    <Property Name="MinPrice" Type="bigint" Nullable="false" />
+    <Property Name="TotalCount" Type="int" Nullable="false" />
+    <Property Name="PresentCount" Type="int" Nullable="false" />
+    <Property Name="TotalAmount" Type="bigint" Nullable="false" />
+    <Property Name="InvolCount" Type="int" Nullable="false" />
+    <Property Name="OuterCount" Type="int" Nullable="false" />
+    <Property Name="BuyPrice1" Type="bigint" Nullable="false" />
+    <Property Name="BuyCount1" Type="int" Nullable="false" />
+    <Property Name="BuyPrice2" Type="bigint" Nullable="false" />
+    <Property Name="BuyCount2" Type="int" Nullable="false" />
+    <Property Name="BuyPrice3" Type="bigint" Nullable="false" />
+    <Property Name="BuyCount3" Type="int" Nullable="false" />
+    <Property Name="BuyPrice4" Type="bigint" Nullable="false" />
+    <Property Name="BuyCount4" Type="int" Nullable="false" />
+    <Property Name="BuyPrice5" Type="bigint" Nullable="false" />
+    <Property Name="BuyCount5" Type="int" Nullable="false" />
+    <Property Name="SellPrice1" Type="bigint" Nullable="false" />
+    <Property Name="SellCount1" Type="int" Nullable="false" />
+    <Property Name="SellPrice2" Type="bigint" Nullable="false" />
+    <Property Name="SellCount2" Type="int" Nullable="false" />
+    <Property Name="SellPrice3" Type="bigint" Nullable="false" />
+    <Property Name="SellCount3" Type="int" Nullable="false" />
+    <Property Name="SellPrice4" Type="bigint" Nullable="false" />
+    <Property Name="SellCount4" Type="int" Nullable="false" />
+    <Property Name="SellPrice5" Type="bigint" Nullable="false" />
+    <Property Name="SellCount5" Type="int" Nullable="false" />
+    <Property Name="SpeedUp" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Activity" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
+    <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
+    <Property Name="PriceType" Type="int" Nullable="false" />
+    <Property Name="TriPriceType" Type="int" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_shares_quotes_temp">
     <Key>
       <PropertyRef Name="Id" />
@@ -3570,6 +3615,7 @@
     <EntitySet Name="t_shares_quotes" EntityType="Self.t_shares_quotes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_quotes_date" EntityType="Self.t_shares_quotes_date" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_quotes_history" EntityType="Self.t_shares_quotes_history" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_quotes_last" EntityType="Self.t_shares_quotes_last" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_quotes_temp" EntityType="Self.t_shares_quotes_temp" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_search" EntityType="Self.t_shares_search" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_suspension" EntityType="Self.t_shares_suspension" Schema="dbo" store:Type="Tables" />
