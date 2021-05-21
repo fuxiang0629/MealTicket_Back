@@ -819,10 +819,18 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 try
                 {
                     type = Convert.ToInt32(temp.Type);
-                    compare = Convert.ToInt32(temp.Compare);
-                    count = (type == 5) ? (int)(Convert.ToDouble(temp.Count) * 100) : Convert.ToInt32(temp.Count);
                 }
                 catch (Exception) { }
+                try
+                {
+                    compare = Convert.ToInt32(temp.Compare);
+                }
+                catch (Exception ex) { }
+                try
+                {
+                    count = (type == 5|| type==6) ? (int)(Convert.ToDouble(temp.Count) * 100) : Convert.ToInt32(temp.Count);
+                }
+                catch (Exception ex) { }
                 DateTime dateNow = DateTime.Now.Date;
                 using (var db = new meal_ticketEntities())
                 {
@@ -917,6 +925,27 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                             return -1;
                         }
                         int rate = (int)((openPrice - closePrice) * 1.0 / closePrice * 10000);
+                        if (compare == 1 && rate >= count)
+                        {
+                            return 0;
+                        }
+                        if (compare == 2 && rate <= count)
+                        {
+                            return 0;
+                        }
+                        return -1;
+                    }
+                    //振幅
+                    else if (type == 6)
+                    {
+                        long maxPrice = quotes_date.MaxPrice;
+                        long minPrice = quotes_date.MinPrice;
+                        long closePrice = quotes_date.ClosedPrice;
+                        if (closePrice <= 0 || maxPrice <= 0 || minPrice<=0)
+                        {
+                            return -1;
+                        }
+                        int rate = (int)((maxPrice - minPrice) * 1.0 / closePrice * 10000);
                         if (compare == 1 && rate >= count)
                         {
                             return 0;
