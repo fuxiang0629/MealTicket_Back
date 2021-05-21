@@ -2442,6 +2442,10 @@
     <Property Name="LimitDownCount" Type="int" Nullable="false" />
     <Property Name="LimitUpBombCount" Type="int" Nullable="false" />
     <Property Name="LimitDownBombCount" Type="int" Nullable="false" />
+    <Property Name="TriLimitUpCount" Type="int" Nullable="false" />
+    <Property Name="TriLimitDownCount" Type="int" Nullable="false" />
+    <Property Name="TriLimitUpBombCount" Type="int" Nullable="false" />
+    <Property Name="TriLimitDownBombCount" Type="int" Nullable="false" />
     <Property Name="PriceType" Type="int" Nullable="false" />
     <Property Name="TriPriceType" Type="int" Nullable="false" />
   </EntityType>

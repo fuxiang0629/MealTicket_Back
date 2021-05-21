@@ -2202,6 +2202,10 @@
     <EntitySetMapping Name="t_shares_quotes_date">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes_date">
         <MappingFragment StoreEntitySet="t_shares_quotes_date">
+          <ScalarProperty Name="TriLimitDownBombCount" ColumnName="TriLimitDownBombCount" />
+          <ScalarProperty Name="TriLimitUpBombCount" ColumnName="TriLimitUpBombCount" />
+          <ScalarProperty Name="TriLimitDownCount" ColumnName="TriLimitDownCount" />
+          <ScalarProperty Name="TriLimitUpCount" ColumnName="TriLimitUpCount" />
           <ScalarProperty Name="TriPriceType" ColumnName="TriPriceType" />
           <ScalarProperty Name="LimitDownPrice" ColumnName="LimitDownPrice" />
           <ScalarProperty Name="LimitUpPrice" ColumnName="LimitUpPrice" />

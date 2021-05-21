@@ -2082,6 +2082,10 @@
     <Property Name="LimitUpPrice" Type="Int64" Nullable="false" />
     <Property Name="LimitDownPrice" Type="Int64" Nullable="false" />
     <Property Name="TriPriceType" Type="Int32" Nullable="false" />
+    <Property Name="TriLimitUpCount" Type="Int32" Nullable="false" />
+    <Property Name="TriLimitDownCount" Type="Int32" Nullable="false" />
+    <Property Name="TriLimitUpBombCount" Type="Int32" Nullable="false" />
+    <Property Name="TriLimitDownBombCount" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_quotes_temp">
     <Key>

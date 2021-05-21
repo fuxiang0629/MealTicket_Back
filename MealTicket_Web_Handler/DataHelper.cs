@@ -440,6 +440,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 int rateCompare = 0;
                 int rateCount = 0;
                 int limitDay = 0;
+                bool flatRise = false;
                 bool triPrice = false;
                 try
                 {
@@ -458,7 +459,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 catch (Exception) { }
                 try
                 {
-                    count = (type == 11 || type == 12) ? (int)(Convert.ToDouble(temp.Count) * 100) : Convert.ToInt32(temp.Count);
+                    count = (type == 11 || type == 12) ? (int)(Convert.ToDouble(temp.Rise) * 100) : Convert.ToInt32(temp.Count);
                 }
                 catch (Exception) { }
                 try
@@ -479,6 +480,11 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 try
                 {
                     triPrice = Convert.ToBoolean(temp.TriPrice);
+                }
+                catch (Exception) { }
+                try
+                {
+                    flatRise = Convert.ToBoolean(temp.FlatRise);
                 }
                 catch (Exception) { }
 
@@ -566,7 +572,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         }
                         return -1;
                     }
-                    //涨幅
+                    //每日涨幅
                     else if (type == 5)
                     {
                         int i = 0;
@@ -578,6 +584,10 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                             }
                             int rate = (int)((quote.PresentPrice - quote.ClosedPrice) * 1.0 / quote.ClosedPrice * 10000);
                             if (rate < 0)
+                            {
+                                continue;
+                            }
+                            if (!flatRise && rate == 0)
                             {
                                 continue;
                             }
@@ -602,7 +612,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         }
                         return -1;
                     }
-                    //跌幅
+                    //每日跌幅
                     else if (type == 6)
                     {
                         int i = 0;
@@ -617,7 +627,46 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                             {
                                 continue;
                             }
-                            rate = Math.Abs(rate);
+                            if (!flatRise && rate == 0)
+                            {
+                                continue;
+                            }
+                            if (rateCompare == 1 && rate >= rateCount)
+                            {
+                                i++;
+                                continue;
+                            }
+                            if (rateCompare == 2 && rate <= rateCount)
+                            {
+                                i++;
+                                continue;
+                            }
+                        }
+                        if (compare == 1 && i >= count)
+                        {
+                            return 0;
+                        }
+                        if (compare == 2 && i <= count)
+                        {
+                            return 0;
+                        }
+                        return -1;
+                    }
+                    //每日涨跌幅
+                    else if (type == 13)
+                    {
+                        int i = 0;
+                        foreach (var quote in quotes_date)
+                        {
+                            if (quote.PresentPrice <= 0 || quote.ClosedPrice <= 0)
+                            {
+                                continue;
+                            }
+                            int rate = (int)((quote.PresentPrice - quote.ClosedPrice) * 1.0 / quote.ClosedPrice * 10000);
+                            if (!flatRise && rate == 0)
+                            {
+                                continue;
+                            }
                             if (rateCompare == 1 && rate >= rateCount)
                             {
                                 i++;
@@ -737,6 +786,10 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         {
                             return -1;
                         }
+                        if (!flatRise && rate == 0)
+                        {
+                            return -1;
+                        }
                         if (compare == 1)
                         {
                             if (rate >= count)
@@ -772,7 +825,45 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         {
                             return -1;
                         }
-                        rate = Math.Abs(rate);
+                        if (!flatRise && rate == 0)
+                        {
+                            return -1;
+                        }
+                        if (compare == 1)
+                        {
+                            if (rate >= count)
+                            {
+                                return 0;
+                            }
+                            return -1;
+                        }
+                        else if (compare == 2)
+                        {
+                            if (rate <= count)
+                            {
+                                return 0;
+                            }
+                            return -1;
+                        }
+                        else
+                        {
+                            return -1;
+                        }
+                    }
+                    //总涨跌幅
+                    else if (type == 14)
+                    {
+                        long closePrice = quotes_date.OrderBy(e => e.Date).Select(e => e.ClosedPrice).FirstOrDefault();
+                        long presentPrice = quotes_date.OrderByDescending(e => e.Date).Select(e => e.PresentPrice).FirstOrDefault();
+                        if (closePrice <= 0 || presentPrice <= 0)
+                        {
+                            return -1;
+                        }
+                        int rate = (int)((presentPrice - closePrice) * 1.0 / closePrice * 10000);
+                        if (!flatRise && rate == 0)
+                        {
+                            return -1;
+                        }
                         if (compare == 1)
                         {
                             if (rate >= count)
@@ -816,6 +907,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 int type = 0;
                 int compare = 0;
                 int count = 0;
+                bool triPrice = false;
                 try
                 {
                     type = Convert.ToInt32(temp.Type);
@@ -831,6 +923,11 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                     count = (type == 5|| type==6) ? (int)(Convert.ToDouble(temp.Count) * 100) : Convert.ToInt32(temp.Count);
                 }
                 catch (Exception ex) { }
+                try
+                {
+                    triPrice = Convert.ToBoolean(temp.TriPrice);
+                }
+                catch (Exception) { }
                 DateTime dateNow = DateTime.Now.Date;
                 using (var db = new meal_ticketEntities())
                 {
@@ -845,11 +942,19 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                     //涨停次数
                     if (type == 1)
                     {
-                        if (compare == 1 && quotes_date.LimitUpCount >= count)
+                        if (compare == 1 && !triPrice && quotes_date.LimitUpCount >= count)
                         {
                             return 0;
                         }
-                        if (compare == 2 && quotes_date.LimitUpCount <= count)
+                        if (compare == 2 && !triPrice && quotes_date.LimitUpCount <= count)
+                        {
+                            return 0;
+                        }
+                        if (compare == 1 && triPrice && quotes_date.TriLimitUpCount >= count)
+                        {
+                            return 0;
+                        }
+                        if (compare == 2 && triPrice && quotes_date.TriLimitUpCount <= count)
                         {
                             return 0;
                         }
@@ -858,11 +963,19 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                     //跌停次数
                     if (type == 2)
                     {
-                        if (compare == 1 && quotes_date.LimitDownCount >= count)
+                        if (compare == 1 && !triPrice && quotes_date.LimitDownCount >= count)
                         {
                             return 0;
                         }
-                        if (compare == 2 && quotes_date.LimitDownCount <= count)
+                        if (compare == 2 && !triPrice && quotes_date.LimitDownCount <= count)
+                        {
+                            return 0;
+                        }
+                        if (compare == 1 && triPrice && quotes_date.TriLimitDownCount >= count)
+                        {
+                            return 0;
+                        }
+                        if (compare == 2 && triPrice && quotes_date.TriLimitDownCount <= count)
                         {
                             return 0;
                         }

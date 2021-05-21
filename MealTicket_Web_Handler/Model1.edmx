@@ -2447,6 +2447,10 @@
           <Property Name="LimitDownCount" Type="int" Nullable="false" />
           <Property Name="LimitUpBombCount" Type="int" Nullable="false" />
           <Property Name="LimitDownBombCount" Type="int" Nullable="false" />
+          <Property Name="TriLimitUpCount" Type="int" Nullable="false" />
+          <Property Name="TriLimitDownCount" Type="int" Nullable="false" />
+          <Property Name="TriLimitUpBombCount" Type="int" Nullable="false" />
+          <Property Name="TriLimitDownBombCount" Type="int" Nullable="false" />
           <Property Name="PriceType" Type="int" Nullable="false" />
           <Property Name="TriPriceType" Type="int" Nullable="false" />
         </EntityType>
@@ -5789,6 +5793,10 @@
           <Property Name="LimitUpPrice" Type="Int64" Nullable="false" />
           <Property Name="LimitDownPrice" Type="Int64" Nullable="false" />
           <Property Name="TriPriceType" Type="Int32" Nullable="false" />
+          <Property Name="TriLimitUpCount" Type="Int32" Nullable="false" />
+          <Property Name="TriLimitDownCount" Type="Int32" Nullable="false" />
+          <Property Name="TriLimitUpBombCount" Type="Int32" Nullable="false" />
+          <Property Name="TriLimitDownBombCount" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_quotes_temp">
           <Key>
@@ -9540,6 +9548,10 @@
           <EntitySetMapping Name="t_shares_quotes_date">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes_date">
               <MappingFragment StoreEntitySet="t_shares_quotes_date">
+                <ScalarProperty Name="TriLimitDownBombCount" ColumnName="TriLimitDownBombCount" />
+                <ScalarProperty Name="TriLimitUpBombCount" ColumnName="TriLimitUpBombCount" />
+                <ScalarProperty Name="TriLimitDownCount" ColumnName="TriLimitDownCount" />
+                <ScalarProperty Name="TriLimitUpCount" ColumnName="TriLimitUpCount" />
                 <ScalarProperty Name="TriPriceType" ColumnName="TriPriceType" />
                 <ScalarProperty Name="LimitDownPrice" ColumnName="LimitDownPrice" />
                 <ScalarProperty Name="LimitUpPrice" ColumnName="LimitUpPrice" />
