@@ -74,5 +74,7 @@ namespace MealTicket_Web_Handler.Model
         /// 最大涨跌幅
         /// </summary>
         public long Range { get; set; }
+
+        public long MonitorId { get; set; }
     }
 }

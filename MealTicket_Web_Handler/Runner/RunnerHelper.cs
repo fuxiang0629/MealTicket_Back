@@ -3,7 +3,6 @@ using MealTicket_Web_Handler.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data.Entity.Core.Objects;
@@ -372,7 +371,6 @@ namespace MealTicket_Web_Handler.Runner
         /// </summary>
         public static void TradeAutoBuy()
         {
-            DateTime timeNow = DateTime.Now;
             using (var db = new meal_ticketEntities())
             {
                 //查询价格条件达标的数据
@@ -381,8 +379,13 @@ namespace MealTicket_Web_Handler.Runner
                                  join item3 in db.t_shares_quotes on new { item2.Market, item2.SharesCode } equals new { item3.Market, item3.SharesCode }
                                  where item.Status == 1 && item2.Status == 1 && item.BusinessStatus == 0
                                  select new { item, item2, item3 }).ToList();
+                DateTime timeNow = DateTime.Now;
                 foreach (var item in disResult)
                 {
+                    string sql = "";
+                    StringBuilder logRecord = new StringBuilder();//判断日志
+                    logRecord.AppendLine("===定时器进入时间" + timeNow.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                    logRecord.AppendLine("===开始判断价格条件" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                     if (item.item3.LastModified < timeNow.AddSeconds(-30) || item.item3.LimitUpPrice<=0 || item.item3.LimitDownPrice<=0)
                     {
                         continue;
@@ -405,12 +408,12 @@ namespace MealTicket_Web_Handler.Runner
                     //判断是否当天第一次跑
                     if (item.item.FirstExecTime == null || item.item.FirstExecTime < timeNow.Date)
                     {
-                        item.item.FirstExecTime = timeNow;
-                        item.item.ExecStatus = 0;
-                        db.SaveChanges();
+                        sql = string.Format("update t_account_shares_conditiontrade_buy_details set FirstExecTime='{0}',ExecStatus=0 where Id={1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss.fff"), item.item.Id);
+                        db.Database.ExecuteSqlCommand(sql);
                     }
 
                     //判断当前是否涨停
+                    int ExecStatus = 0;
                     if (item.item3.BuyPrice1 == item.item3.LimitUpPrice)//买一价为涨停价
                     {
                         if (item.item.LimitUp)
@@ -421,25 +424,31 @@ namespace MealTicket_Web_Handler.Runner
                             }
                             else if (item.item.ExecStatus == 0)
                             {
-                                item.item.ExecStatus = 1;
-                                db.SaveChanges();
-                                continue;
+                                ExecStatus = 1;
                             }
                         }
                         else if(item.item.ExecStatus!=2)
                         {
-                            item.item.ExecStatus = 2;
-                            db.SaveChanges();
+                            ExecStatus = 2;
                         }
                     }
                     else
                     {
                         if (item.item.ExecStatus != 2)
                         {
-                            item.item.ExecStatus = 2;
-                            db.SaveChanges();
+                            ExecStatus = 2;
                         }
                     }
+                    if (ExecStatus != 0)
+                    {
+                        sql = string.Format("update t_account_shares_conditiontrade_buy_details set ExecStatus={0} where Id={1}", ExecStatus,item.item.Id);
+                        db.Database.ExecuteSqlCommand(sql);
+                        if (ExecStatus == 1)
+                        {
+                            continue;
+                        }
+                    }
+
 
                     //判断价格条件
                     if (item.item.ConditionType == 1)//绝对价格
@@ -484,7 +493,7 @@ namespace MealTicket_Web_Handler.Runner
                     if (item.item.IsHold)
                     {
                         //查询当前是否存在该股票持仓
-                        string sql = @"select top 1 1
+                        sql = @"select top 1 1
 		                               from
 		                               (
 			                                select SharesCode,Market
@@ -520,7 +529,7 @@ namespace MealTicket_Web_Handler.Runner
                     var other = (from x in db.t_account_shares_conditiontrade_buy_details_other
                                  where x.DetailsId == item.item.Id && x.Status == 1
                                  select x).ToList();
-                    StringBuilder logRecord = new StringBuilder();//判断日志
+                    logRecord.AppendLine("===开始判断额外/转自动条件" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                     foreach (var th in other)
                     {
                         var trend = (from x in db.t_account_shares_conditiontrade_buy_details_other_trend
@@ -536,10 +545,201 @@ namespace MealTicket_Web_Handler.Runner
                             {
                                 tempTri = false;
                                 break;
-                            }    
+                            }
+                            //时间段
+                            if (tr.TrendId == 4)//指定时间段 
+                            {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "指定时间段判断-额外参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
+                                JArray timeList = temp.Times;
+                                if (timeNow >= DateTime.Parse(timeList[0].ToString()) && timeNow < DateTime.Parse(timeList[1].ToString()))
+                                {
+                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足");
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                            }
+                            //当前价格
+                            if (tr.TrendId == 12)
+                            {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "按当前价格判断-额外参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                int errorCode_Trend12 = DataHelper.Analysis_CurrentPrice(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend12 == 0)
+                                {
+                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend12);
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                            }
+                            //历史涨跌幅
+                            if (tr.TrendId == 5)
+                            {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "历史涨跌幅判断-额外参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                int errorCode_Trend5 = DataHelper.Analysis_HisRiseRate(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend5 == 0)
+                                {
+                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend5);
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                            }
+                            //当前涨跌幅
+                            if (tr.TrendId == 6)
+                            {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "当前涨跌幅判断-额外参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend6 == 0)
+                                {
+                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足");
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                            }
+                            //板块涨跌幅
+                            if (tr.TrendId == 7)
+                            {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "板块涨跌幅判断-额外参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                int errorCode_Trend7 = DataHelper.Analysis_PlateRiseRate(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend7 == 0)
+                                {
+                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend7);
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                            }
+                            //判断买卖单占比
+                            if (tr.TrendId == 8)
+                            {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "买卖单占比判断-额外参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                int errorCode_Trend8 = DataHelper.Analysis_BuyOrSellCount(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend8 == 0)
+                                {
+                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend8);
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                            }
+                            //判断按参照价格
+                            if (tr.TrendId == 9)
+                            {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "按参照价格判断-额外参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                int errorCode_Trend9 = DataHelper.Analysis_ReferPrice(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend9 == 0)
+                                {
+                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend9);
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                            }
+                            //判断按均线价格
+                            if (tr.TrendId == 10)
+                            {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "按均线价格判断-额外参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                int errorCode_Trend10 = DataHelper.Analysis_ReferAverage(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend10 == 0)
+                                {
+                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend10);
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                            }
+                            //五档变化速度
+                            if (tr.TrendId == 11)
+                            {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "五档变化速度判断-额外参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend11 == 0)
+                                {
+                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend11);
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                            }
                             //快速拉升
                             if (tr.TrendId == 1)//快速拉升 
                             {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                                 logRecord.AppendLine("股票：" + item.item2.SharesCode + "快速拉升判断-额外参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
@@ -568,16 +768,19 @@ namespace MealTicket_Web_Handler.Runner
                                             if (tempTri)
                                             {
                                                 logRecord.AppendLine("\t结果：达到要求");
+                                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                                                 break;
                                             }
                                         }
                                     }
                                 }
                                 logRecord.AppendLine("\t结果：未满足,返回code：" + errorCode_Trend1);
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                             }
                             //多头向上
                             if (tr.TrendId == 2)//多头向上 
                             {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                                 logRecord.AppendLine("股票：" + item.item2.SharesCode + "多头向上判断-额外参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
@@ -605,16 +808,19 @@ namespace MealTicket_Web_Handler.Runner
                                             if (tempTri)
                                             {
                                                 logRecord.AppendLine("\t结果：达到要求");
+                                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                                                 break;
                                             }
                                         }
                                     }
                                 }
                                 logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend2);
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                             }
                             //箱体上涨
                             if (tr.TrendId == 3)//箱体突破 
                             {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                                 logRecord.AppendLine("股票：" + item.item2.SharesCode + "箱体突破判断-额外参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
@@ -642,175 +848,14 @@ namespace MealTicket_Web_Handler.Runner
                                             if (tempTri)
                                             {
                                                 logRecord.AppendLine("\t结果：达到要求");
+                                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                                                 break;
                                             }
                                         }
                                     }
                                 }
                                 logRecord.AppendLine("\t结果：未满足，返回code" + errorCode_Trend3);
-                            }
-                            //时间段
-                            if (tr.TrendId == 4)//指定时间段 
-                            {
-                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "指定时间段判断-额外参数：");
-                                logRecord.AppendLine("\t分组名称：" + th.Name);
-                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                var temp=JsonConvert.DeserializeObject<dynamic>(par[0]);
-                                JArray timeList = temp.Times; 
-                                if (timeNow >= DateTime.Parse(timeList[0].ToString()) && timeNow < DateTime.Parse(timeList[1].ToString()))
-                                {
-                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
-                                    if (tempTri)
-                                    {
-                                        logRecord.AppendLine("\t结果：达到要求");
-                                        break;
-                                    }
-                                }
-                                logRecord.AppendLine("\t结果：未满足");
-                            }
-                            //历史涨跌幅
-                            if (tr.TrendId == 5)
-                            {
-                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "历史涨跌幅判断-额外参数：");
-                                logRecord.AppendLine("\t分组名称：" + th.Name);
-                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend5 = DataHelper.Analysis_HisRiseRate(item.item2.SharesCode, item.item2.Market, par);
-                                if (errorCode_Trend5 == 0)
-                                {
-                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
-                                    if (tempTri)
-                                    {
-                                        logRecord.AppendLine("\t结果：达到要求");
-                                        break;
-                                    }
-                                }
-                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend5);
-                            }
-                            //当前涨跌幅
-                            if (tr.TrendId == 6)
-                            {
-                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "当前涨跌幅判断-额外参数：");
-                                logRecord.AppendLine("\t分组名称：" + th.Name);
-                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(item.item2.SharesCode, item.item2.Market, par);
-                                if (errorCode_Trend6 == 0)
-                                {
-                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
-                                    if (tempTri)
-                                    {
-                                        logRecord.AppendLine("\t结果：达到要求");
-                                        break;
-                                    }
-                                }
-                                logRecord.AppendLine("\t结果：未满足");
-                            }
-                            //板块涨跌幅
-                            if (tr.TrendId == 7)
-                            {
-                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "板块涨跌幅判断-额外参数：");
-                                logRecord.AppendLine("\t分组名称：" + th.Name);
-                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend7 = DataHelper.Analysis_PlateRiseRate(item.item2.SharesCode, item.item2.Market, par);
-                                if (errorCode_Trend7 == 0)
-                                {
-                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
-                                    if (tempTri)
-                                    {
-                                        logRecord.AppendLine("\t结果：达到要求");
-                                        break;
-                                    }
-                                }
-                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend7);
-                            }
-                            //判断买卖单占比
-                            if (tr.TrendId == 8)
-                            {
-                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "买卖单占比判断-额外参数：");
-                                logRecord.AppendLine("\t分组名称：" + th.Name);
-                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend8 = DataHelper.Analysis_BuyOrSellCount(item.item2.SharesCode, item.item2.Market, par);
-                                if (errorCode_Trend8 == 0)
-                                {
-                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
-                                    if (tempTri)
-                                    {
-                                        logRecord.AppendLine("\t结果：达到要求");
-                                        break;
-                                    }
-                                }
-                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend8);
-                            }
-                            //判断按参照价格
-                            if (tr.TrendId == 9)
-                            {
-                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "按参照价格判断-额外参数：");
-                                logRecord.AppendLine("\t分组名称：" + th.Name);
-                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend9 = DataHelper.Analysis_ReferPrice(item.item2.SharesCode, item.item2.Market, par);
-                                if (errorCode_Trend9 == 0)
-                                {
-                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
-                                    if (tempTri)
-                                    {
-                                        logRecord.AppendLine("\t结果：达到要求");
-                                        break;
-                                    }
-                                }
-                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend9);
-                            }
-                            //判断按均线价格
-                            if (tr.TrendId == 10)
-                            {
-                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "按均线价格判断-额外参数：");
-                                logRecord.AppendLine("\t分组名称：" + th.Name);
-                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend10 = DataHelper.Analysis_ReferAverage(item.item2.SharesCode, item.item2.Market, par);
-                                if (errorCode_Trend10 == 0)
-                                {
-                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
-                                    if (tempTri)
-                                    {
-                                        logRecord.AppendLine("\t结果：达到要求");
-                                        break;
-                                    }
-                                }
-                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend10);
-                            }
-                            //五档变化速度
-                            if (tr.TrendId == 11)
-                            {
-                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "五档变化速度判断-额外参数：");
-                                logRecord.AppendLine("\t分组名称：" + th.Name);
-                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(item.item2.SharesCode, item.item2.Market, par);
-                                if (errorCode_Trend11 == 0)
-                                {
-                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
-                                    if (tempTri)
-                                    {
-                                        logRecord.AppendLine("\t结果：达到要求");
-                                        break;
-                                    }
-                                }
-                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend11);
-                            }
-                            //当前价格
-                            if (tr.TrendId == 12)
-                            {
-                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "按当前价格判断-额外参数：");
-                                logRecord.AppendLine("\t分组名称：" + th.Name);
-                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend12 = DataHelper.Analysis_CurrentPrice(item.item2.SharesCode, item.item2.Market, par);
-                                if (errorCode_Trend12 == 0)
-                                {
-                                    tempTri = IsGetOther(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
-                                    if (tempTri)
-                                    {
-                                        logRecord.AppendLine("\t结果：达到要求");
-                                        break;
-                                    }
-                                }
-                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend12);
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                             }
                         }
                         if (!tempTri)
@@ -848,9 +893,200 @@ namespace MealTicket_Web_Handler.Runner
                                 tempTri = false;
                                 break;
                             }
+                            //时间段
+                            if (tr.TrendId == 4)//指定时间段 
+                            {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "指定时间段判断-转自动参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
+                                JArray timeList = temp.Times;
+                                if (timeNow >= DateTime.Parse(timeList[0].ToString()) && timeNow < DateTime.Parse(timeList[1].ToString()))
+                                {
+                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足");
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                            }
+                            //当前价格
+                            if (tr.TrendId == 12)
+                            {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "按当前价格判断-转自动参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                int errorCode_Trend12 = DataHelper.Analysis_CurrentPrice(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend12 == 0)
+                                {
+                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend12);
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                            }
+                            //历史涨跌幅
+                            if (tr.TrendId == 5)
+                            {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "历史涨跌幅判断-转自动参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                int errorCode_Trend5 = DataHelper.Analysis_HisRiseRate(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend5 == 0)
+                                {
+                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend5);
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                            }
+                            //当前涨跌幅
+                            if (tr.TrendId == 6)
+                            {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "当前涨跌幅判断-转自动参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend6 == 0)
+                                {
+                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足");
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                            }
+                            //板块涨跌幅
+                            if (tr.TrendId == 7)
+                            {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "板块涨跌幅判断-转自动参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                int errorCode_Trend7 = DataHelper.Analysis_PlateRiseRate(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend7 == 0)
+                                {
+                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend7);
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                            }
+                            //判断买卖单占比
+                            if (tr.TrendId == 8)
+                            {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "买卖单占比判断-转自动参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                int errorCode_Trend8 = DataHelper.Analysis_BuyOrSellCount(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend8 == 0)
+                                {
+                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend8);
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                            }
+                            //判断按参照价格
+                            if (tr.TrendId == 9)
+                            {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "按参照价格判断-转自动参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                int errorCode_Trend9 = DataHelper.Analysis_ReferPrice(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend9 == 0)
+                                {
+                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend9);
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                            }
+                            //判断按均线价格
+                            if (tr.TrendId == 10)
+                            {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "按均线价格判断-转自动参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                int errorCode_Trend10 = DataHelper.Analysis_ReferAverage(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend10 == 0)
+                                {
+                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend10);
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                            }
+                            //五档变化速度
+                            if (tr.TrendId == 11)
+                            {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "五档变化速度判断-转自动参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(item.item2.SharesCode, item.item2.Market, par);
+                                if (errorCode_Trend11 == 0)
+                                {
+                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend11);
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                            }
                             //快速拉升
                             if (tr.TrendId == 1)//快速拉升 
                             {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                                 logRecord.AppendLine("股票：" + item.item2.SharesCode + "快速拉升判断-转自动参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
@@ -879,16 +1115,19 @@ namespace MealTicket_Web_Handler.Runner
                                             if (tempTri)
                                             {
                                                 logRecord.AppendLine("\t结果：达到要求");
+                                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                                                 break;
                                             }
                                         }
                                     }
                                 }
                                 logRecord.AppendLine("\t结果：未满足,返回code：" + errorCode_Trend1);
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                             }
                             //多头向上
                             if (tr.TrendId == 2)//多头向上 
                             {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                                 logRecord.AppendLine("股票：" + item.item2.SharesCode + "多头向上判断-转自动参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
@@ -916,16 +1155,19 @@ namespace MealTicket_Web_Handler.Runner
                                             if (tempTri)
                                             {
                                                 logRecord.AppendLine("\t结果：达到要求");
+                                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                                                 break;
                                             }
                                         }
                                     }
                                 }
                                 logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend2);
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                             }
                             //箱体上涨
                             if (tr.TrendId == 3)//箱体突破 
                             {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                                 logRecord.AppendLine("股票：" + item.item2.SharesCode + "箱体突破判断-转自动参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
@@ -953,175 +1195,14 @@ namespace MealTicket_Web_Handler.Runner
                                             if (tempTri)
                                             {
                                                 logRecord.AppendLine("\t结果：达到要求");
+                                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                                                 break;
                                             }
                                         }
                                     }
                                 }
                                 logRecord.AppendLine("\t结果：未满足，返回code" + errorCode_Trend3);
-                            }
-                            //时间段
-                            if (tr.TrendId == 4)//指定时间段 
-                            {
-                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "指定时间段判断-转自动参数：");
-                                logRecord.AppendLine("\t分组名称：" + th.Name);
-                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
-                                JArray timeList = temp.Times;
-                                if (timeNow >= DateTime.Parse(timeList[0].ToString()) && timeNow < DateTime.Parse(timeList[1].ToString()))
-                                {
-                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
-                                    if (tempTri)
-                                    {
-                                        logRecord.AppendLine("\t结果：达到要求");
-                                        break;
-                                    }
-                                }
-                                logRecord.AppendLine("\t结果：未满足");
-                            }
-                            //历史涨跌幅
-                            if (tr.TrendId == 5)
-                            {
-                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "历史涨跌幅判断-转自动参数：");
-                                logRecord.AppendLine("\t分组名称：" + th.Name);
-                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend5 = DataHelper.Analysis_HisRiseRate(item.item2.SharesCode, item.item2.Market, par);
-                                if (errorCode_Trend5 == 0)
-                                {
-                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
-                                    if (tempTri)
-                                    {
-                                        logRecord.AppendLine("\t结果：达到要求");
-                                        break;
-                                    }
-                                }
-                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend5);
-                            }
-                            //当前涨跌幅
-                            if (tr.TrendId == 6) 
-                            {
-                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "当前涨跌幅判断-转自动参数：");
-                                logRecord.AppendLine("\t分组名称：" + th.Name);
-                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(item.item2.SharesCode, item.item2.Market, par);
-                                if (errorCode_Trend6 == 0)
-                                {
-                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
-                                    if (tempTri)
-                                    {
-                                        logRecord.AppendLine("\t结果：达到要求");
-                                        break;
-                                    }
-                                }
-                                logRecord.AppendLine("\t结果：未满足");
-                            }
-                            //板块涨跌幅
-                            if (tr.TrendId == 7)
-                            {
-                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "板块涨跌幅判断-转自动参数：");
-                                logRecord.AppendLine("\t分组名称：" + th.Name);
-                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend7 = DataHelper.Analysis_PlateRiseRate(item.item2.SharesCode, item.item2.Market, par);
-                                if (errorCode_Trend7 == 0)
-                                {
-                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
-                                    if (tempTri)
-                                    {
-                                        logRecord.AppendLine("\t结果：达到要求");
-                                        break;
-                                    }
-                                }
-                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend7);
-                            }
-                            //判断买卖单占比
-                            if (tr.TrendId == 8)
-                            {
-                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "买卖单占比判断-转自动参数：");
-                                logRecord.AppendLine("\t分组名称：" + th.Name);
-                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend8 = DataHelper.Analysis_BuyOrSellCount(item.item2.SharesCode, item.item2.Market, par);
-                                if (errorCode_Trend8 == 0)
-                                {
-                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
-                                    if (tempTri)
-                                    {
-                                        logRecord.AppendLine("\t结果：达到要求");
-                                        break;
-                                    }
-                                }
-                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend8);
-                            }
-                            //判断按参照价格
-                            if (tr.TrendId == 9)
-                            {
-                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "按参照价格判断-转自动参数：");
-                                logRecord.AppendLine("\t分组名称：" + th.Name);
-                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend9 = DataHelper.Analysis_ReferPrice(item.item2.SharesCode, item.item2.Market, par);
-                                if (errorCode_Trend9 == 0)
-                                {
-                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
-                                    if (tempTri)
-                                    {
-                                        logRecord.AppendLine("\t结果：达到要求");
-                                        break;
-                                    }
-                                }
-                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend9);
-                            }
-                            //判断按均线价格
-                            if (tr.TrendId == 10)
-                            {
-                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "按均线价格判断-转自动参数：");
-                                logRecord.AppendLine("\t分组名称：" + th.Name);
-                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend10 = DataHelper.Analysis_ReferAverage(item.item2.SharesCode, item.item2.Market, par);
-                                if (errorCode_Trend10 == 0)
-                                {
-                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
-                                    if (tempTri)
-                                    {
-                                        logRecord.AppendLine("\t结果：达到要求");
-                                        break;
-                                    }
-                                }
-                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend10);
-                            }
-                            //五档变化速度
-                            if (tr.TrendId == 11)
-                            {
-                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "五档变化速度判断-转自动参数：");
-                                logRecord.AppendLine("\t分组名称：" + th.Name);
-                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(item.item2.SharesCode, item.item2.Market, par);
-                                if (errorCode_Trend11 == 0)
-                                {
-                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
-                                    if (tempTri)
-                                    {
-                                        logRecord.AppendLine("\t结果：达到要求");
-                                        break;
-                                    }
-                                }
-                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend11);
-                            }
-                            //当前价格
-                            if (tr.TrendId == 12)
-                            {
-                                logRecord.AppendLine("股票：" + item.item2.SharesCode + "按当前价格判断-转自动参数：");
-                                logRecord.AppendLine("\t分组名称：" + th.Name);
-                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend12 = DataHelper.Analysis_CurrentPrice(item.item2.SharesCode, item.item2.Market, par);
-                                if (errorCode_Trend12 == 0)
-                                {
-                                    tempTri = IsGetAuto(db, tr.Id, item.item2.SharesCode, item.item2.Market, logRecord);
-                                    if (tempTri)
-                                    {
-                                        logRecord.AppendLine("\t结果：达到要求");
-                                        break;
-                                    }
-                                }
-                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend12);
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                             }
                         }
                         if (!tempTri)
@@ -1415,6 +1496,97 @@ namespace MealTicket_Web_Handler.Runner
                     tempTri = false;
                     break;
                 }
+                //时间段
+                if (tr.TrendId == 4)//指定时间段 
+                {
+                    trendName = "指定时间段";
+                    var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
+                    JArray timeList = temp.Times;
+                    if (timeNow >= DateTime.Parse(timeList[0].ToString()) && timeNow < DateTime.Parse(timeList[1].ToString()))
+                    {
+                        tempTri = true;
+                    }
+                }
+                //当前价格
+                if (tr.TrendId == 12)
+                {
+                    trendName = "按当前价格";
+                    int errorCode_Trend12 = DataHelper.Analysis_CurrentPrice(sharesCode, market, par);
+                    if (errorCode_Trend12 == 0)
+                    {
+                        tempTri = true;
+                    }
+                }
+                //历史涨跌幅
+                if (tr.TrendId == 5)
+                {
+                    trendName = "历史涨跌幅";
+                    int errorCode_Trend5 = DataHelper.Analysis_HisRiseRate(sharesCode, market, par);
+                    if (errorCode_Trend5 == 0)
+                    {
+                        tempTri = true;
+                    }
+                }
+                //当前涨跌幅
+                if (tr.TrendId == 6)
+                {
+                    trendName = "当前涨跌幅";
+                    int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(sharesCode, market, par);
+                    if (errorCode_Trend6 == 0)
+                    {
+                        tempTri = true;
+                    }
+                }
+                //板块涨跌幅
+                if (tr.TrendId == 7)
+                {
+                    trendName = "板块涨跌幅";
+                    int errorCode_Trend7 = DataHelper.Analysis_PlateRiseRate(sharesCode, market, par);
+                    if (errorCode_Trend7 == 0)
+                    {
+                        tempTri = true;
+                    }
+                }
+                //判断买卖单占比
+                if (tr.TrendId == 8)
+                {
+                    trendName = "买卖单占比";
+                    int errorCode_Trend8 = DataHelper.Analysis_BuyOrSellCount(sharesCode, market, par);
+                    if (errorCode_Trend8 == 0)
+                    {
+                        tempTri = true;
+                    }
+                }
+                //判断按参照价格
+                if (tr.TrendId == 9)
+                {
+                    trendName = "按参照价格";
+                    int errorCode_Trend9 = DataHelper.Analysis_ReferPrice(sharesCode, market, par);
+                    if (errorCode_Trend9 == 0)
+                    {
+                        tempTri = true;
+                    }
+                }
+                //判断按均线价格
+                if (tr.TrendId == 10)
+                {
+                    trendName = "按均线价格";
+                    int errorCode_Trend10 = DataHelper.Analysis_ReferAverage(sharesCode, market, par);
+                    if (errorCode_Trend10 == 0)
+                    {
+                        tempTri = true;
+                    }
+                }
+                //五档变化速度
+                if (tr.TrendId == 11)
+                {
+                    trendName = "五档变化速度";
+                    int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(sharesCode, market, par);
+                    if (errorCode_Trend11 == 0)
+                    {
+                        tempTri = true;
+                    }
+                }
                 //快速拉升
                 if (tr.TrendId == 1)//快速拉升 
                 {
@@ -1503,6 +1675,35 @@ namespace MealTicket_Web_Handler.Runner
                         }
                     }
                 }
+
+                if (!tempTri)
+                {
+                    logRecord.AppendLine("\t\t额外关系-"+ trendName+"未满足条件");
+                    break;
+                }
+            }
+            return tempTri;
+        }
+
+        private static bool IsGetAuto(meal_ticketEntities db, long autoTrendId, string sharesCode, int market,StringBuilder logRecord)
+        {
+            var timeNow = DateTime.Now;
+            var trend = (from x in db.t_account_shares_conditiontrade_buy_details_auto_trend_other
+                         where x.AutoTrendId == autoTrendId && x.Status == 1
+                         select x).ToList();
+            bool tempTri = true;
+            string trendName = "";
+            foreach (var tr in trend)
+            {
+                tempTri = false;
+                var par = (from x in db.t_account_shares_conditiontrade_buy_details_auto_trend_other_par
+                           where x.AutoTrendOtherId == tr.Id
+                           select x.ParamsInfo).ToList();
+                if (par.Count() <= 0)
+                {
+                    tempTri = false;
+                    break;
+                }
                 //时间段
                 if (tr.TrendId == 4)//指定时间段 
                 {
@@ -1510,6 +1711,16 @@ namespace MealTicket_Web_Handler.Runner
                     var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
                     JArray timeList = temp.Times;
                     if (timeNow >= DateTime.Parse(timeList[0].ToString()) && timeNow < DateTime.Parse(timeList[1].ToString()))
+                    {
+                        tempTri = true;
+                    }
+                }
+                //当前价格
+                if (tr.TrendId == 12)
+                {
+                    trendName = "按当前价格";
+                    int errorCode_Trend12 = DataHelper.Analysis_CurrentPrice(sharesCode, market, par);
+                    if (errorCode_Trend12 == 0)
                     {
                         tempTri = true;
                     }
@@ -1583,45 +1794,6 @@ namespace MealTicket_Web_Handler.Runner
                     {
                         tempTri = true;
                     }
-                }
-                //当前价格
-                if (tr.TrendId == 12)
-                {
-                    trendName = "按当前价格";
-                    int errorCode_Trend12 = DataHelper.Analysis_CurrentPrice(sharesCode, market, par);
-                    if (errorCode_Trend12 == 0)
-                    {
-                        tempTri = true;
-                    }
-                }
-
-                if (!tempTri)
-                {
-                    logRecord.AppendLine("\t\t额外关系-"+ trendName+"未满足条件");
-                    break;
-                }
-            }
-            return tempTri;
-        }
-
-        private static bool IsGetAuto(meal_ticketEntities db, long autoTrendId, string sharesCode, int market,StringBuilder logRecord)
-        {
-            var timeNow = DateTime.Now;
-            var trend = (from x in db.t_account_shares_conditiontrade_buy_details_auto_trend_other
-                         where x.AutoTrendId == autoTrendId && x.Status == 1
-                         select x).ToList();
-            bool tempTri = true;
-            string trendName = "";
-            foreach (var tr in trend)
-            {
-                tempTri = false;
-                var par = (from x in db.t_account_shares_conditiontrade_buy_details_auto_trend_other_par
-                           where x.AutoTrendOtherId == tr.Id
-                           select x.ParamsInfo).ToList();
-                if (par.Count() <= 0)
-                {
-                    tempTri = false;
-                    break;
                 }
                 //快速拉升
                 if (tr.TrendId == 1)//快速拉升 
@@ -1711,97 +1883,6 @@ namespace MealTicket_Web_Handler.Runner
                         }
                     }
                 }
-                //时间段
-                if (tr.TrendId == 4)//指定时间段 
-                {
-                    trendName = "指定时间段";
-                    var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
-                    JArray timeList = temp.Times;
-                    if (timeNow >= DateTime.Parse(timeList[0].ToString()) && timeNow < DateTime.Parse(timeList[1].ToString()))
-                    {
-                        tempTri = true;
-                    }
-                }
-                //历史涨跌幅
-                if (tr.TrendId == 5)
-                {
-                    trendName = "历史涨跌幅";
-                    int errorCode_Trend5 = DataHelper.Analysis_HisRiseRate(sharesCode, market, par);
-                    if (errorCode_Trend5 == 0)
-                    {
-                        tempTri = true;
-                    }
-                }
-                //当前涨跌幅
-                if (tr.TrendId == 6)
-                {
-                    trendName = "当前涨跌幅";
-                    int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(sharesCode, market, par);
-                    if (errorCode_Trend6 == 0)
-                    {
-                        tempTri = true;
-                    }
-                }
-                //板块涨跌幅
-                if (tr.TrendId == 7)
-                {
-                    trendName = "板块涨跌幅";
-                    int errorCode_Trend7 = DataHelper.Analysis_PlateRiseRate(sharesCode, market, par);
-                    if (errorCode_Trend7 == 0)
-                    {
-                        tempTri = true;
-                    }
-                }
-                //判断买卖单占比
-                if (tr.TrendId == 8)
-                {
-                    trendName = "买卖单占比";
-                    int errorCode_Trend8 = DataHelper.Analysis_BuyOrSellCount(sharesCode, market, par);
-                    if (errorCode_Trend8 == 0)
-                    {
-                        tempTri = true;
-                    }
-                }
-                //判断按参照价格
-                if (tr.TrendId == 9)
-                {
-                    trendName = "按参照价格";
-                    int errorCode_Trend9 = DataHelper.Analysis_ReferPrice(sharesCode, market, par);
-                    if (errorCode_Trend9 == 0)
-                    {
-                        tempTri = true;
-                    }
-                }
-                //判断按均线价格
-                if (tr.TrendId == 10)
-                {
-                    trendName = "按均线价格";
-                    int errorCode_Trend10 = DataHelper.Analysis_ReferAverage(sharesCode, market, par);
-                    if (errorCode_Trend10 == 0)
-                    {
-                        tempTri = true;
-                    }
-                }
-                //五档变化速度
-                if (tr.TrendId == 11)
-                {
-                    trendName = "五档变化速度";
-                    int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(sharesCode, market, par);
-                    if (errorCode_Trend11 == 0)
-                    {
-                        tempTri = true;
-                    }
-                }
-                //当前价格
-                if (tr.TrendId == 12)
-                {
-                    trendName = "按当前价格";
-                    int errorCode_Trend12 = DataHelper.Analysis_CurrentPrice(sharesCode, market, par);
-                    if (errorCode_Trend12 == 0)
-                    {
-                        tempTri = true;
-                    }
-                }
 
                 if (!tempTri)
                 {
@@ -1811,5 +1892,12 @@ namespace MealTicket_Web_Handler.Runner
             }
             return tempTri;
         }
+    }
+
+    public class TastResult 
+    {
+        public bool IsSuccess { get; set; }
+
+        public string Log { get; set; }
     }
 }

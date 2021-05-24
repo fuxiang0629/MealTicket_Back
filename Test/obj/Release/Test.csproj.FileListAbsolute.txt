@@ -10,3 +10,4 @@ D:\项目\饭票\后端\Test\bin\Release\Test.pdb
 D:\项目\饭票\后端\Test\obj\Release\Test.csproj.CoreCompileInputs.cache
 D:\项目\饭票\后端\Test\obj\Release\Test.exe
 D:\项目\饭票\后端\Test\obj\Release\Test.pdb
+F:\项目\饭票后端\Test\obj\Release\Test.csprojAssemblyReference.cache

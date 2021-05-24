@@ -174,6 +174,7 @@ namespace MealTicket_Admin_Handler
         public virtual DbSet<t_shares_limit_autobuy> t_shares_limit_autobuy { get; set; }
         public virtual DbSet<t_shares_limit_autobuy_priority> t_shares_limit_autobuy_priority { get; set; }
         public virtual DbSet<t_shares_limit_autobuy_priority_plate> t_shares_limit_autobuy_priority_plate { get; set; }
+        public virtual DbSet<t_shares_plate_shares_limit> t_shares_plate_shares_limit { get; set; }
     
         public virtual int P_Admin_CheckLogin(string token, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter accountId, ObjectParameter loginLogId)
         {

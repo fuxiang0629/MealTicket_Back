@@ -11910,6 +11910,31 @@
             </summary>
             <param name="request"></param>
         </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetSharesPlateForbidList(MealTicket_Admin_Handler.Model.PageRequest)">
+            <summary>
+            查询板块涨跌幅过滤列表
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.AddSharesPlateForbid(MealTicket_Admin_Handler.Model.AddSharesForbidRequest)">
+            <summary>
+            添加板块涨跌幅过滤
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesPlateForbid(MealTicket_Admin_Handler.Model.ModifySharesForbidRequest)">
+            <summary>
+            编辑板块涨跌幅过滤
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteSharesPlateForbid(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除板块涨跌幅过滤
+            </summary>
+            <param name="request"></param>
+        </member>
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetSharesForbidList(MealTicket_Admin_Handler.Model.GetSharesForbidListRequest)">
             <summary>
             查询禁止名单列表

@@ -2196,5 +2196,17 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="t_shares_plate_shares_limit">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_shares_plate_shares_limit">
+        <MappingFragment StoreEntitySet="t_shares_plate_shares_limit">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="LimitType" ColumnName="LimitType" />
+          <ScalarProperty Name="LimitKey" ColumnName="LimitKey" />
+          <ScalarProperty Name="LimitMarket" ColumnName="LimitMarket" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

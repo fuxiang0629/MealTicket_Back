@@ -392,6 +392,194 @@ namespace MealTicket_Web_Handler
         }
 
         /// <summary>
+        /// 批量导入用户自选股
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAddAccountOptional(long accountId, List<SharesInfo> list)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //判断是否存在
+                    var optional = (from item in db.t_account_shares_optional
+                                    where item.AccountId == accountId
+                                    select item).ToList();
+                    //判断是否在监控股票中
+                    var monitor = (from item in db.t_shares_monitor
+                                   where item.Status == 1
+                                   select item).ToList();
+                    //查询参数
+                    var parList = (from x in db.t_shares_monitor_trend_rel
+                                   join x2 in db.t_shares_monitor_trend_rel_par on x.Id equals x2.RelId
+                                   select new { x, x2 }).ToList();
+                    List<SharesInfo> tempList = new List<SharesInfo>();
+                    foreach (var item in list)
+                    {
+                        if (optional.Where(e => e.Market == item.Market && e.SharesCode == item.SharesCode).FirstOrDefault() != null)
+                        {
+                            continue;
+                        }
+                        var temp = monitor.Where(e => e.Market == item.Market && e.SharesCode == item.SharesCode).FirstOrDefault();
+                        if (temp == null)
+                        {
+                            continue;
+                        }
+                        item.MonitorId = temp.Id;
+                        tempList.Add(item);
+                    }
+
+                    foreach (var item in tempList)
+                    {
+                        //查询参数
+                        var par = (from x in parList
+                                   where x.x.MonitorId == item.MonitorId
+                                   select x).ToList();
+
+                        var addOptional = new t_account_shares_optional
+                        {
+                            SharesCode = item.SharesCode,
+                            AccountId = accountId,
+                            CreateTime = DateTime.Now,
+                            IsTrendClose = false,
+                            Market = item.Market,
+                            TriCountToday = 0
+                        };
+                        db.t_account_shares_optional.Add(addOptional);
+                        db.SaveChanges();
+
+                        t_account_shares_optional_trend_rel trend1 = new t_account_shares_optional_trend_rel
+                        {
+                            Status = 1,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            OptionalId = addOptional.Id,
+                            TrendId = 1
+                        };
+                        db.t_account_shares_optional_trend_rel.Add(trend1);
+                        db.SaveChanges();
+
+                        List<t_account_shares_optional_trend_rel_par> parList1 = (from x in par
+                                                                                  where x.x.TrendId == 1
+                                                                                  select new t_account_shares_optional_trend_rel_par
+                                                                                  {
+                                                                                      CreateTime = DateTime.Now,
+                                                                                      LastModified = DateTime.Now,
+                                                                                      ParamsInfo = x.x2.ParamsInfo,
+                                                                                      RelId = trend1.Id
+                                                                                  }).ToList();
+                        db.t_account_shares_optional_trend_rel_par.AddRange(parList1);
+                        db.SaveChanges();
+
+                        db.t_account_shares_optional_trend_rel_tri.Add(new t_account_shares_optional_trend_rel_tri
+                        {
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            RelId = trend1.Id,
+                            LastPushPrice = null,
+                            LastPushRiseRate = null,
+                            LastPushTime = null,
+                            MinPushRateInterval = Singleton.Instance.MinPushRateInterval,
+                            MinPushTimeInterval = Singleton.Instance.MinPushTimeInterval,
+                            TriCountToday = 0,
+                            MinTodayPrice = -1
+                        });
+                        db.SaveChanges();
+
+
+                        t_account_shares_optional_trend_rel trend2 = new t_account_shares_optional_trend_rel
+                        {
+                            Status = 1,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            OptionalId = addOptional.Id,
+                            TrendId = 2
+                        };
+                        db.t_account_shares_optional_trend_rel.Add(trend2);
+                        db.SaveChanges();
+
+                        List<t_account_shares_optional_trend_rel_par> parList2 = (from x in par
+                                                                                  where x.x.TrendId == 2
+                                                                                  select new t_account_shares_optional_trend_rel_par
+                                                                                  {
+                                                                                      CreateTime = DateTime.Now,
+                                                                                      LastModified = DateTime.Now,
+                                                                                      ParamsInfo = x.x2.ParamsInfo,
+                                                                                      RelId = trend2.Id
+                                                                                  }).ToList();
+                        db.t_account_shares_optional_trend_rel_par.AddRange(parList2);
+                        db.SaveChanges();
+
+                        db.t_account_shares_optional_trend_rel_tri.Add(new t_account_shares_optional_trend_rel_tri
+                        {
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            RelId = trend2.Id,
+                            LastPushPrice = null,
+                            LastPushRiseRate = null,
+                            LastPushTime = null,
+                            MinPushRateInterval = Singleton.Instance.MinPushRateInterval,
+                            MinPushTimeInterval = Singleton.Instance.MinPushTimeInterval,
+                            TriCountToday = 0,
+                            MinTodayPrice = -1
+                        });
+                        db.SaveChanges();
+
+                        t_account_shares_optional_trend_rel trend3 = new t_account_shares_optional_trend_rel
+                        {
+                            Status = 1,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            OptionalId = addOptional.Id,
+                            TrendId = 3
+                        };
+                        db.t_account_shares_optional_trend_rel.Add(trend3);
+                        db.SaveChanges();
+
+                        List<t_account_shares_optional_trend_rel_par> parList3 = (from x in par
+                                                                                  where x.x.TrendId == 3
+                                                                                  select new t_account_shares_optional_trend_rel_par
+                                                                                  {
+                                                                                      CreateTime = DateTime.Now,
+                                                                                      LastModified = DateTime.Now,
+                                                                                      ParamsInfo = x.x2.ParamsInfo,
+                                                                                      RelId = trend3.Id
+                                                                                  }).ToList();
+                        db.t_account_shares_optional_trend_rel_par.AddRange(parList3);
+                        db.SaveChanges();
+
+                        db.t_account_shares_optional_trend_rel_tri.Add(new t_account_shares_optional_trend_rel_tri
+                        {
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            RelId = trend3.Id,
+                            LastPushPrice = null,
+                            LastPushRiseRate = null,
+                            LastPushTime = null,
+                            MinPushRateInterval = Singleton.Instance.MinPushRateInterval,
+                            MinPushTimeInterval = Singleton.Instance.MinPushTimeInterval,
+                            TriCountToday = 0,
+                            MinTodayPrice = -1
+                        });
+                        db.SaveChanges();
+                    }
+
+                    tran.Commit();
+                    return tempList.Count();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+
+        /// <summary>
         /// 删除自选股
         /// </summary>
         /// <param name="request"></param>
@@ -10129,7 +10317,7 @@ select @buyId;";
                                                 else
                                                 {
                                                     long basePrice = ConditionPriceBase == 1 ? closedPrice : currPrice;
-                                                    conditionPrice = ConditionRelativeType == 1 ? ((long)Math.Round(basePrice / 100 + basePrice / 100 * 1.0 / 10000 * range + ConditionRelativeRate)) * 100 : ConditionRelativeType == 2 ? ((long)Math.Round(basePrice / 100 - basePrice / 100 * 1.0 / 10000 * range + ConditionRelativeRate)) * 100 : ((long)Math.Round(basePrice / 100 + basePrice / 100 * 1.0 / 10000 * ConditionRelativeRate));
+                                                    conditionPrice = ConditionRelativeType == 1 ? ((long)Math.Round(basePrice / 100 + basePrice / 100 * 1.0 / 10000 * range + ConditionRelativeRate)) * 100 : ConditionRelativeType == 2 ? ((long)Math.Round(basePrice / 100 - basePrice / 100 * 1.0 / 10000 * range + ConditionRelativeRate)) * 100 : ((long)Math.Round(basePrice / 100 + basePrice / 100 * 1.0 / 10000 * ConditionRelativeRate))*100;
                                                 }
                                             }
                                             t_account_shares_conditiontrade_buy_details temp = new t_account_shares_conditiontrade_buy_details

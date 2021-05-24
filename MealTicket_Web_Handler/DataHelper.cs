@@ -459,7 +459,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 catch (Exception) { }
                 try
                 {
-                    count = (type == 11 || type == 12) ? (int)(Convert.ToDouble(temp.Rise) * 100) : Convert.ToInt32(temp.Count);
+                    count = (type == 11 || type == 12 || type == 14) ? (int)(Convert.ToDouble(temp.Rise) * 100) : Convert.ToInt32(temp.Count);
                 }
                 catch (Exception) { }
                 try
@@ -920,7 +920,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 catch (Exception ex) { }
                 try
                 {
-                    count = (type == 5|| type==6) ? (int)(Convert.ToDouble(temp.Count) * 100) : Convert.ToInt32(temp.Count);
+                    count = (type == 5 || type == 6) ? (int)(Convert.ToDouble(temp.Count) * 100) : Convert.ToInt32(temp.Count);
                 }
                 catch (Exception ex) { }
                 try
@@ -1054,7 +1054,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         long maxPrice = quotes_date.MaxPrice;
                         long minPrice = quotes_date.MinPrice;
                         long closePrice = quotes_date.ClosedPrice;
-                        if (closePrice <= 0 || maxPrice <= 0 || minPrice<=0)
+                        if (closePrice <= 0 || maxPrice <= 0 || minPrice <= 0)
                         {
                             return -1;
                         }
@@ -1317,7 +1317,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                     return -1;
                 }
                 DateTime timeNow = DateTime.Now;
-                using (var db = new meal_ticketEntities())
+                using (var db =new meal_ticketEntities())
                 {
                     var quotes = (from item in db.t_shares_quotes_date
                                   where item.Market == market && item.SharesCode == sharesCode
@@ -1419,10 +1419,10 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                                   where item.Market == market && item.SharesCode == sharesCode
                                   orderby item.Date descending
                                   select item).Take(day1 + day2).ToList();
-                    if (quotes.Count() < day1)
-                    {
-                        return -1;
-                    }
+                    //if (quotes.Count() < day1)
+                    //{
+                    //    return -1;
+                    //}
                     var presentInfo = quotes.OrderByDescending(e => e.Date).FirstOrDefault();
                     if (presentInfo.LastModified < timeNow.AddMinutes(-1))
                     {
@@ -1435,6 +1435,10 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                     }
                     //计算均线价格
                     var list1 = quotes.Take(day1).ToList();
+                    if (list1.Count() <= 0)
+                    {
+                        return -1;
+                    }
                     long averagePrice = (long)list1.Average(e => e.PresentPrice);
                     if (count != 0)//计算偏差
                     {
@@ -1445,16 +1449,24 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                     {
                         if (day2 >= 2)//计算每日均线
                         {
-                            if (quotes.Count() < day1 + day2 - 1)
-                            {
-                                return -1;
-                            }
+                            //if (quotes.Count() < day1 + day2 - 1)
+                            //{
+                            //    return -1;
+                            //}
                             //判断均线向上或向下
                             long lastAveragePrice = 0;
                             for (int i = 0; i < day2; i++)
                             {
+                                long tempAveragePrice;
                                 var list2 = quotes.Skip(i).Take(day1).ToList();
-                                var tempAveragePrice = (long)list2.Average(e => e.PresentPrice);
+                                if (list2.Count() <= 0)
+                                {
+                                    tempAveragePrice = 0;
+                                }
+                                else
+                                {
+                                    tempAveragePrice = (long)list2.Average(e => e.PresentPrice);
+                                }
                                 if (upOrDown == 1)
                                 {
                                     //向上，则当前必须<=前一个数据

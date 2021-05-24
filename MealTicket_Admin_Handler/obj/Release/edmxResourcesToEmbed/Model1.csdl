@@ -310,6 +310,7 @@
     <EntitySet Name="t_shares_limit_autobuy" EntityType="meal_ticketModel.t_shares_limit_autobuy" />
     <EntitySet Name="t_shares_limit_autobuy_priority" EntityType="meal_ticketModel.t_shares_limit_autobuy_priority" />
     <EntitySet Name="t_shares_limit_autobuy_priority_plate" EntityType="meal_ticketModel.t_shares_limit_autobuy_priority_plate" />
+    <EntitySet Name="t_shares_plate_shares_limit" EntityType="meal_ticketModel.t_shares_plate_shares_limit" />
   </EntityContainer>
   <EntityType Name="t_admin_department">
     <Key>
@@ -2345,6 +2346,17 @@
     <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="PriorityId" Type="Int64" Nullable="false" />
     <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_shares_limit">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="LimitMarket" Type="Int32" Nullable="false" />
+    <Property Name="LimitKey" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="LimitType" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
