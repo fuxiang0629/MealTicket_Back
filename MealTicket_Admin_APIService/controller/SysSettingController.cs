@@ -294,6 +294,73 @@ namespace MealTicket_Admin_APIService.controller
         }
 
         /// <summary>
+        /// 查询券商账户绑定前端账户列表
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("broker/account/bind/frontaccount/list")]
+        [Description("查询券商账户绑定前端账户列表"), HttpPost]
+        public PageRes<BrokerAccountBindFrontAccountInfo> GetBrokerAccountBindFrontAccountList(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return sysSettingHandler.GetBrokerAccountBindFrontAccountList(request);
+        }
+
+        /// <summary>
+        /// 添加券商账户绑定前端账户
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("broker/account/bind/frontaccount/add")]
+        [Description("添加券商账户绑定前端账户"), HttpPost]
+        public object AddBrokerAccountBindFrontAccount(AddBrokerAccountBindFrontAccountRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            sysSettingHandler.AddBrokerAccountBindFrontAccount(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改券商账户绑定前端账户状态
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("broker/account/bind/frontaccount/status/modify")]
+        [Description("修改券商账户绑定前端账户状态"), HttpPost]
+        public object ModifyBrokerAccountBindFrontAccountStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            sysSettingHandler.ModifyBrokerAccountBindFrontAccountStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除券商账户绑定前端账户
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("broker/account/bind/frontaccount/delete")]
+        [Description("删除券商账户绑定前端账户"), HttpPost]
+        public object DeleteBrokerAccountBindFrontAccount(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            sysSettingHandler.DeleteBrokerAccountBindFrontAccount(request);
+            return null;
+        }
+
+        /// <summary>
         /// 查询券商账户持仓信息
         /// </summary>
         /// <returns></returns>

@@ -1356,6 +1356,7 @@
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="SynchronizationStatus" Type="int" Nullable="false" />
     <Property Name="SynchronizationTime" Type="datetime" />
+    <Property Name="IsPrivate" Type="bit" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
@@ -2932,7 +2933,7 @@
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="SharesCount" Type="int" />
-    <Property Name="RiseRate" Type="bigint" />
+    <Property Name="RiseRate" Type="bigint" Nullable="false" />
   </EntityType>
   <!--生成过程中发现错误:
 警告 6002: 表/视图“meal_ticket.dbo.v_plate_shares”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
@@ -3233,6 +3234,7 @@
     <Parameter Name="entrustPrice" Type="bigint" Mode="In" />
     <Parameter Name="closingTime" Type="datetime" Mode="In" />
     <Parameter Name="isFollow" Type="bit" Mode="In" />
+    <Parameter Name="mainAccountId" Type="bigint" Mode="In" />
     <Parameter Name="errorCode" Type="int" Mode="InOut" />
     <Parameter Name="errorMessage" Type="nvarchar" Mode="InOut" />
     <Parameter Name="buyId" Type="bigint" Mode="InOut" />
@@ -3428,6 +3430,11 @@
     <Parameter Name="entrustManagerId" Type="bigint" Mode="In" />
     <Parameter Name="dealPrice" Type="bigint" Mode="In" />
     <Parameter Name="dealCount" Type="int" Mode="In" />
+  </Function>
+  <Function Name="P_TradePar_Parse_CurrentPrice" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="sharesCode" Type="varchar" Mode="In" />
+    <Parameter Name="market" Type="int" Mode="In" />
+    <Parameter Name="tempTri" Type="bit" Mode="InOut" />
   </Function>
   <Function Name="P_TradeRecovery" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="holdId" Type="bigint" Mode="In" />

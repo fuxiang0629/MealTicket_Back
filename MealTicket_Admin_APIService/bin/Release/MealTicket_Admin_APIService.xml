@@ -1506,6 +1506,30 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.SysSettingController.GetBrokerAccountBindFrontAccountList(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
+            <summary>
+            查询券商账户绑定前端账户列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.SysSettingController.AddBrokerAccountBindFrontAccount(MealTicket_Admin_Handler.Model.AddBrokerAccountBindFrontAccountRequest)">
+            <summary>
+            添加券商账户绑定前端账户
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.SysSettingController.ModifyBrokerAccountBindFrontAccountStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改券商账户绑定前端账户状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.SysSettingController.DeleteBrokerAccountBindFrontAccount(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除券商账户绑定前端账户
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.controller.SysSettingController.GetBrokerAccountPositionInfo(MealTicket_Admin_Handler.Model.GetBrokerAccountPositionInfoRequest)">
             <summary>
             查询券商账户持仓信息

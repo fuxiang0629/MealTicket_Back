@@ -898,6 +898,38 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
             }
         }
 
+        public static int Analysis_HisRiseRate_back(string sharesCode, int market, List<string> par)
+        {
+            try
+            {
+                using (var db = new meal_ticketEntities())
+                {
+                    StringBuilder sql = new StringBuilder();
+                    sql.AppendLine("declare @trendpar_table TrendPar;");
+                    sql.AppendLine("declare @tempTri bit=0;");
+                    foreach (var parStr in par)
+                    {
+                        sql.AppendLine("insert into @trendpar_table(Par)");
+                        sql.AppendLine(string.Format("values('{0}');", parStr));
+                    }
+                    sql.AppendLine(string.Format("exec P_TradePar_Parse_HisRiseRate @trendpar_table,'{0}',{1},@tempTri output;", sharesCode, market));
+                    sql.AppendLine("select @tempTri");
+
+                    bool result = db.Database.SqlQuery<bool>(sql.ToString()).FirstOrDefault();
+                    if (result)
+                    {
+                        return 0;
+                    }
+                    return -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("Analysis_ReferAverage异常", ex);
+                return -1;
+            }
+        }
+
         //分析今日涨跌幅
         public static int Analysis_TodayRiseRate(string sharesCode, int market, List<string> par)
         {
@@ -1090,16 +1122,33 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 using (var db = new meal_ticketEntities())
                 {
                     //查询股票所属板块及板块涨跌幅
-                    var plateList = (from item in db.t_shares_plate_rel
-                                     where item.Market == market && item.SharesCode == sharesCode
-                                     select item.PlateId).ToList();
                     //查询板块涨跌幅
-                    var plateRate = (from item in db.v_plate
-                                     where plateList.Contains(item.PlateId)
-                                     select item).ToList();
+                    string sql = string.Format(@"	select t.PlateId,t.PlateName,t.PlateType,t.[Status],t.CreateTime,COUNT(t.PlateId) SharesCount,
+	   isnull(cast(round(avg(case when t.Id is not null then null else (t.PresentPrice-t.ClosedPrice)*1.0/t.ClosedPrice end)*10000,0) as bigint),0) RiseRate
+from
+(
+	select t.PlateId,t.PlateName,t.PlateType,t.[Status],t.CreateTime,t.PresentPrice,t.ClosedPrice,t2.Id
+	from 
+	(
+				SELECT   * from v_plate_shares
+				where Market={0} and SharesCode='{1}'
+				
+	) t
+	inner join t_shares_all t1 with(nolock) on t.Market=t1.Market and t.SharesCode=t1.SharesCode
+	left join t_shares_plate_shares_limit t2 with(nolock) on (t2.LimitMarket=-1 or t.Market=t2.LimitMarket) and ((t2.LimitType=1 and t.SharesCode like t2.LimitKey+'%') or (t2.LimitType=2 and upper(t1.SharesName) like UPPER(t2.LimitKey)+'%'))
+	where PresentPrice>0 and ClosedPrice>0
+)t
+group by t.PlateId,t.PlateName,t.PlateType,t.[Status],t.CreateTime", market, sharesCode);
+
+                    var plateRate=db.Database.SqlQuery<v_plate>(sql).ToList();
+
+                    //var plateRate = (from item in db.t_shares_plate_rel
+                    //                 join item2 in db.v_plate on item.PlateId equals item2.PlateId
+                    //                 where item.Market == market && item.SharesCode == sharesCode
+                    //                 select item2).ToList();
+
                     List<long> PlateList1 = new List<long>();
                     List<long> PlateList2 = new List<long>();
-                    List<long> AllSetPlateList2 = new List<long>();
                     List<string> AllSetPar = new List<string>();
                     foreach (var p in par)
                     {
@@ -1130,7 +1179,6 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         }
                         if (dataType == 2)
                         {
-                            AllSetPlateList2.Add(plate.PlateId);
                             if (compare == 1 && plate.RiseRate < rate * 100)
                             {
                                 continue;
@@ -1147,9 +1195,6 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         }
                     }
 
-                    var otherPlate = (from item in plateRate
-                                      where !AllSetPlateList2.Contains(item.PlateId)
-                                      select item).ToList();
                     foreach (var p in AllSetPar)
                     {
                         var temp = JsonConvert.DeserializeObject<dynamic>(p);
@@ -1175,6 +1220,38 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
             catch (Exception ex)
             {
                 Logger.WriteFileLog("分析板块涨跌幅出错了", ex);
+                return -1;
+            }
+        }
+
+        public static int Analysis_PlateRiseRate_back(string sharesCode, int market, List<string> par)
+        {
+            try
+            {
+                using (var db = new meal_ticketEntities())
+                {
+                    StringBuilder sql = new StringBuilder();
+                    sql.AppendLine("declare @trendpar_table TrendPar;");
+                    sql.AppendLine("declare @tempTri bit=0;");
+                    foreach (var parStr in par)
+                    {
+                        sql.AppendLine("insert into @trendpar_table(Par)");
+                        sql.AppendLine(string.Format("values('{0}');", parStr));
+                    }
+                    sql.AppendLine(string.Format("exec P_TradePar_Parse_PlateRiseRate @trendpar_table,'{0}',{1},@tempTri output;", sharesCode, market));
+                    sql.AppendLine("select @tempTri");
+
+                    bool result = db.Database.SqlQuery<bool>(sql.ToString()).FirstOrDefault();
+                    if (result)
+                    {
+                        return 0;
+                    }
+                    return -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("Analysis_ReferAverage异常", ex);
                 return -1;
             }
         }
@@ -1295,6 +1372,38 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
             }
         }
 
+        public static int Analysis_BuyOrSellCount_back(string sharesCode, int market, List<string> par)
+        {
+            try
+            {
+                using (var db = new meal_ticketEntities())
+                {
+                    StringBuilder sql = new StringBuilder();
+                    sql.AppendLine("declare @trendpar_table TrendPar;");
+                    sql.AppendLine("declare @tempTri bit=0;");
+                    foreach (var parStr in par)
+                    {
+                        sql.AppendLine("insert into @trendpar_table(Par)");
+                        sql.AppendLine(string.Format("values('{0}');", parStr));
+                    }
+                    sql.AppendLine(string.Format("exec P_TradePar_Parse_BuyOrSellCount @trendpar_table,'{0}',{1},@tempTri output;", sharesCode, market));
+                    sql.AppendLine("select @tempTri");
+
+                    bool result = db.Database.SqlQuery<bool>(sql.ToString()).FirstOrDefault();
+                    if (result)
+                    {
+                        return 0;
+                    }
+                    return -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("Analysis_ReferAverage异常", ex);
+                return -1;
+            }
+        }
+
         //分析按参照价格
         public static int Analysis_ReferPrice(string sharesCode, int market, List<string> par)
         {
@@ -1381,6 +1490,38 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
             }
         }
 
+        public static int Analysis_ReferPrice_back(string sharesCode, int market, List<string> par)
+        {
+            try
+            {
+                using (var db = new meal_ticketEntities())
+                {
+                    StringBuilder sql = new StringBuilder();
+                    sql.AppendLine("declare @trendpar_table TrendPar;");
+                    sql.AppendLine("declare @tempTri bit=0;");
+                    foreach (var parStr in par)
+                    {
+                        sql.AppendLine("insert into @trendpar_table(Par)");
+                        sql.AppendLine(string.Format("values('{0}');", parStr));
+                    }
+                    sql.AppendLine(string.Format("exec P_TradePar_Parse_ReferPrice @trendpar_table,'{0}',{1},@tempTri output;", sharesCode, market));
+                    sql.AppendLine("select @tempTri");
+
+                    bool result = db.Database.SqlQuery<bool>(sql.ToString()).FirstOrDefault();
+                    if (result)
+                    {
+                        return 0;
+                    }
+                    return -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("Analysis_ReferAverage异常", ex);
+                return -1;
+            }
+        }
+
         //分析按均线价格
         public static int Analysis_ReferAverage(string sharesCode, int market, List<string> par)
         {
@@ -1392,6 +1533,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 int day2 = 0;
                 double count = 0;
                 int upOrDown = 0;
+                int dayShortageType = 1;
                 try
                 {
                     compare = Convert.ToInt32(temp.Compare);
@@ -1411,6 +1553,13 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 {
 
                 }
+                try
+                {
+                    dayShortageType = Convert.ToInt32(temp.DayShortageType);
+                }
+                catch (Exception )
+                {
+                }
 
                 DateTime timeNow = DateTime.Now;
                 using (var db = new meal_ticketEntities())
@@ -1419,10 +1568,6 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                                   where item.Market == market && item.SharesCode == sharesCode
                                   orderby item.Date descending
                                   select item).Take(day1 + day2).ToList();
-                    //if (quotes.Count() < day1)
-                    //{
-                    //    return -1;
-                    //}
                     var presentInfo = quotes.OrderByDescending(e => e.Date).FirstOrDefault();
                     if (presentInfo.LastModified < timeNow.AddMinutes(-1))
                     {
@@ -1439,6 +1584,17 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                     {
                         return -1;
                     }
+                    if (list1.Count() < day1)
+                    {
+                        if (dayShortageType == 2)
+                        {
+                            return 0;
+                        }
+                        if (dayShortageType == 3)
+                        {
+                            return -1;
+                        }
+                    }
                     long averagePrice = (long)list1.Average(e => e.PresentPrice);
                     if (count != 0)//计算偏差
                     {
@@ -1449,11 +1605,6 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                     {
                         if (day2 >= 2)//计算每日均线
                         {
-                            //if (quotes.Count() < day1 + day2 - 1)
-                            //{
-                            //    return -1;
-                            //}
-                            //判断均线向上或向下
                             long lastAveragePrice = 0;
                             for (int i = 0; i < day2; i++)
                             {
@@ -1504,6 +1655,38 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
             catch (Exception ex)
             {
                 Logger.WriteFileLog("分析按均线价格出错了", ex);
+                return -1;
+            }
+        }
+
+        public static int Analysis_ReferAverage_back(string sharesCode, int market, List<string> par)
+        {
+            try
+            {
+                using (var db = new meal_ticketEntities())
+                {
+                    StringBuilder sql = new StringBuilder();
+                    sql.AppendLine("declare @trendpar_table TrendPar;");
+                    sql.AppendLine("declare @tempTri bit=0;");
+                    foreach (var parStr in par)
+                    {
+                        sql.AppendLine("insert into @trendpar_table(Par)");
+                        sql.AppendLine(string.Format("values('{0}');", parStr));
+                    }
+                    sql.AppendLine(string.Format("exec P_TradePar_Parse_ReferAverage @trendpar_table,'{0}',{1},@tempTri output;", sharesCode, market));
+                    sql.AppendLine("select @tempTri");
+
+                    bool result = db.Database.SqlQuery<bool>(sql.ToString()).FirstOrDefault();
+                    if (result)
+                    {
+                        return 0;
+                    }
+                    return -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("Analysis_ReferAverage异常", ex);
                 return -1;
             }
         }
@@ -1678,6 +1861,38 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
             }
         }
 
+        public static int Analysis_QuotesChangeRate_back(string sharesCode, int market, List<string> par)
+        {
+            try
+            {
+                using (var db = new meal_ticketEntities())
+                {
+                    StringBuilder sql = new StringBuilder();
+                    sql.AppendLine("declare @trendpar_table TrendPar;");
+                    sql.AppendLine("declare @tempTri bit=0;");
+                    foreach (var parStr in par)
+                    {
+                        sql.AppendLine("insert into @trendpar_table(Par)");
+                        sql.AppendLine(string.Format("values('{0}');", parStr));
+                    }
+                    sql.AppendLine(string.Format("exec P_TradePar_Parse_QuotesChangeRate @trendpar_table,'{0}',{1},@tempTri output;", sharesCode, market));
+                    sql.AppendLine("select @tempTri");
+
+                    bool result = db.Database.SqlQuery<bool>(sql.ToString()).FirstOrDefault();
+                    if (result)
+                    {
+                        return 0;
+                    }
+                    return -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("Analysis_QuotesChangeRate异常", ex);
+                return -1;
+            }
+        }
+
         //分析按当前价格
         public static int Analysis_CurrentPrice(string sharesCode, int market, List<string> par)
         {
@@ -1723,6 +1938,38 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 {
                     return 0;
                 }
+                return -1;
+            }
+        }
+
+        public static int Analysis_CurrentPrice_back(string sharesCode, int market, List<string> par)
+        {
+            try
+            {
+                using (var db = new meal_ticketEntities())
+                {
+                    StringBuilder sql = new StringBuilder();
+                    sql.AppendLine("declare @trendpar_table TrendPar;");
+                    sql.AppendLine("declare @tempTri bit=0;");
+                    foreach (var parStr in par)
+                    {
+                        sql.AppendLine("insert into @trendpar_table(Par)");
+                        sql.AppendLine(string.Format("values('{0}');", parStr));
+                    }
+                    sql.AppendLine(string.Format("exec P_TradePar_Parse_CurrentPrice @trendpar_table,'{0}',{1},@tempTri output;", sharesCode, market));
+                    sql.AppendLine("select @tempTri");
+
+                    bool result = db.Database.SqlQuery<bool>(sql.ToString()).FirstOrDefault();
+                    if (result)
+                    {
+                        return 0;
+                    }
+                    return -1;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("Analysis_CurrentPrice异常", ex);
                 return -1;
             }
         }

@@ -1490,7 +1490,7 @@ namespace MealTicket_Web_Handler.Runner
                                 ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                                 ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
                                 ObjectParameter buyIdDb = new ObjectParameter("buyId", 0);
-                                db.P_ApplyTradeBuy(buy.AccountId, item.Market, item.SharesCode, buy.BuyAmount, -1, EntrustPrice, null, true, errorCodeDb, errorMessageDb, buyIdDb);
+                                db.P_ApplyTradeBuy(buy.AccountId, item.Market, item.SharesCode, buy.BuyAmount, -1, EntrustPrice, null, true, item.AccountId, errorCodeDb, errorMessageDb, buyIdDb);
                                 int errorCode = (int)errorCodeDb.Value;
                                 string errorMessage = errorMessageDb.Value.ToString();
                                 if (errorCode != 0)

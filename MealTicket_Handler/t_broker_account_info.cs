@@ -32,5 +32,6 @@ namespace MealTicket_Handler
         public Nullable<System.DateTime> SynchronizationTime { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
+        public bool IsPrivate { get; set; }
     }
 }

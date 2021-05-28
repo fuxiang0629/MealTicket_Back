@@ -153,6 +153,7 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_autobuy_priority" Width="1.5" PointX="31.375" PointY="36.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_autobuy_priority_plate" Width="1.5" PointX="37.375" PointY="0.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_shares_limit" Width="1.5" PointX="37.375" PointY="20.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_broker_account_info_frontaccount_rel" Width="1.5" PointX="22.375" PointY="37.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

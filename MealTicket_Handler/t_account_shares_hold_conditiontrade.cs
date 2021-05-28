@@ -36,5 +36,6 @@ namespace MealTicket_Handler
         public int ConditionType { get; set; }
         public int ConditionRelativeType { get; set; }
         public int ConditionRelativeRate { get; set; }
+        public int OtherConditionRelative { get; set; }
     }
 }

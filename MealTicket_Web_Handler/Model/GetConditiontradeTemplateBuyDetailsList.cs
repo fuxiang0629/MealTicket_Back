@@ -134,5 +134,9 @@ namespace MealTicket_Web_Handler.Model
         /// 额外买入条件
         /// </summary>
         public int OtherConditionRelative { get; set; }
+
+        public long AllAmount { get; set; }
+
+        public int AllCount { get; set; }
     }
 }

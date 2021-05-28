@@ -143,12 +143,7 @@ namespace SharesTradeService
 
             AllTradeAccountCodeList = TradeLoginList.Select(e => e.AccountCode).ToList();
 
-            if (TradeClientParallel == "false")
-            {
-                BuyKey = TradeLoginList.Select(e=>e.AccountCode).FirstOrDefault();
-            }
-
-            buyTradeClient.Init(TradeLoginList, BuyKey);
+            buyTradeClient.Init(TradeLoginList);
             if (TradeClientParallel == "false")
             {
                 sellTradeClient = buyTradeClient;

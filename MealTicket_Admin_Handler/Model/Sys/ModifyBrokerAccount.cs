@@ -76,5 +76,10 @@ namespace MealTicket_Admin_Handler.Model
         /// 营业部code
         /// </summary>
         public int DepartmentCode { get; set; }
+
+        /// <summary>
+        /// 是否是有账户
+        /// </summary>
+        public bool IsPrivate { get; set; }
     }
 }

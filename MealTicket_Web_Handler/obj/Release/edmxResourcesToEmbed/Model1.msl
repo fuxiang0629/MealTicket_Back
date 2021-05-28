@@ -1077,6 +1077,7 @@
     <EntitySetMapping Name="t_broker_account_info">
       <EntityTypeMapping TypeName="meal_ticketModel.t_broker_account_info">
         <MappingFragment StoreEntitySet="t_broker_account_info">
+          <ScalarProperty Name="IsPrivate" ColumnName="IsPrivate" />
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="AccountCode" ColumnName="AccountCode" />
           <ScalarProperty Name="AccountType" ColumnName="AccountType" />

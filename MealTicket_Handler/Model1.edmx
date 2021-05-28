@@ -412,6 +412,7 @@
           <Property Name="ConditionPrice" Type="bigint" />
           <Property Name="ConditionRelativeType" Type="int" Nullable="false" />
           <Property Name="ConditionRelativeRate" Type="int" Nullable="false" />
+          <Property Name="OtherConditionRelative" Type="int" Nullable="false" />
           <Property Name="TradeType" Type="int" Nullable="false" />
           <Property Name="EntrustCount" Type="int" Nullable="false" />
           <Property Name="EntrustType" Type="int" Nullable="false" />
@@ -591,6 +592,7 @@
           <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="SynchronizationStatus" Type="int" Nullable="false" />
           <Property Name="SynchronizationTime" Type="datetime" />
+          <Property Name="IsPrivate" Type="bit" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
         </EntityType>
@@ -1323,6 +1325,7 @@
           <Parameter Name="entrustPrice" Type="bigint" Mode="In" />
           <Parameter Name="closingTime" Type="datetime" Mode="In" />
           <Parameter Name="isFollow" Type="bit" Mode="In" />
+          <Parameter Name="mainAccountId" Type="bigint" Mode="In" />
           <Parameter Name="errorCode" Type="int" Mode="InOut" />
           <Parameter Name="errorMessage" Type="nvarchar" Mode="InOut" />
           <Parameter Name="buyId" Type="bigint" Mode="InOut" />
@@ -1723,6 +1726,7 @@
             <Parameter Name="entrustPrice" Mode="In" Type="Int64" />
             <Parameter Name="closingTime" Mode="In" Type="DateTime" />
             <Parameter Name="isFollow" Mode="In" Type="Boolean" />
+            <Parameter Name="mainAccountId" Mode="In" Type="Int64" />
             <Parameter Name="errorCode" Mode="InOut" Type="Int32" />
             <Parameter Name="errorMessage" Mode="InOut" Type="String" />
             <Parameter Name="buyId" Mode="InOut" Type="Int64" />
@@ -2615,6 +2619,7 @@
           <Property Name="SynchronizationTime" Type="DateTime" Precision="3" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsPrivate" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="t_server">
           <Key>
@@ -2963,6 +2968,7 @@
           <Property Name="ConditionType" Type="Int32" Nullable="false" />
           <Property Name="ConditionRelativeType" Type="Int32" Nullable="false" />
           <Property Name="ConditionRelativeRate" Type="Int32" Nullable="false" />
+          <Property Name="OtherConditionRelative" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_account_shares_hold_conditiontrade_child">
           <Key>
@@ -3898,6 +3904,7 @@
           <EntitySetMapping Name="t_broker_account_info">
             <EntityTypeMapping TypeName="meal_ticketModel.t_broker_account_info">
               <MappingFragment StoreEntitySet="t_broker_account_info">
+                <ScalarProperty Name="IsPrivate" ColumnName="IsPrivate" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="SynchronizationTime" ColumnName="SynchronizationTime" />
@@ -4271,6 +4278,7 @@
           <EntitySetMapping Name="t_account_shares_hold_conditiontrade">
             <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_hold_conditiontrade">
               <MappingFragment StoreEntitySet="t_account_shares_hold_conditiontrade">
+                <ScalarProperty Name="OtherConditionRelative" ColumnName="OtherConditionRelative" />
                 <ScalarProperty Name="ConditionRelativeRate" ColumnName="ConditionRelativeRate" />
                 <ScalarProperty Name="ConditionRelativeType" ColumnName="ConditionRelativeType" />
                 <ScalarProperty Name="ConditionType" ColumnName="ConditionType" />

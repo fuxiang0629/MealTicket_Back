@@ -94,5 +94,23 @@ namespace SharesTradeService
                 return false;
             }
         }
+
+        //检查两个数组是否相等
+
+        public static bool CompareArray<T>(T[] bt1, T[] bt2)
+        {
+            var len1 = bt1.Length;
+            var len2 = bt2.Length;
+            if (len1 != len2)
+            {
+                return false;
+            }
+            for (var i = 0; i < len1; i++)
+            {
+                if (!bt1[i].Equals(bt2[i]))
+                    return false;
+            }
+            return true;
+        }
     }
 }

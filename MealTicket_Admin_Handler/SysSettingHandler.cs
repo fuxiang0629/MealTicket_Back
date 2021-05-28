@@ -460,6 +460,7 @@ namespace MealTicket_Admin_Handler
                                 DepartmentCode = item.DepartmentCode,
                                 Id = item.Id,
                                 JyPassword = item.JyPassword,
+                                IsPrivate=item.IsPrivate,
                                 TradeAccountNo0 = item.TradeAccountNo0,
                                 TradeAccountNo1 = item.TradeAccountNo1,
                                 TxPassword = item.TxPassword,
@@ -536,7 +537,8 @@ namespace MealTicket_Admin_Handler
                     Holder0 = request.Holder0,
                     Holder1 = request.Holder1,
                     InitialFunding = request.InitialFunding,
-                    TxPassword = request.TxPassword
+                    TxPassword = request.TxPassword,
+                    IsPrivate=request.IsPrivate
                 });
                 db.SaveChanges();
             }
@@ -608,6 +610,7 @@ namespace MealTicket_Admin_Handler
                 brokerAccount.Holder1 = request.Holder1;
                 brokerAccount.InitialFunding = request.InitialFunding;
                 brokerAccount.TxPassword = request.TxPassword;
+                brokerAccount.IsPrivate = request.IsPrivate;
                 db.SaveChanges();
             }
         }
@@ -669,6 +672,127 @@ namespace MealTicket_Admin_Handler
                     tran.Rollback();
                     throw ex;
                 }
+            }
+        }
+
+        /// <summary>
+        /// 查询券商账户绑定前端账户列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<BrokerAccountBindFrontAccountInfo> GetBrokerAccountBindFrontAccountList(DetailsPageRequest request) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_broker_account_info_frontaccount_rel
+                             join item2 in db.t_account_baseinfo on item.AccountId equals item2.Id
+                             where item.BrokerAccountId==request.Id
+                             select new { item, item2 };
+
+                int totalCount = result.Count();
+
+                return new PageRes<BrokerAccountBindFrontAccountInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in result
+                            orderby item.item.CreateTime descending
+                            select new BrokerAccountBindFrontAccountInfo
+                            {
+                                Status = item.item.Status,
+                                AccountId = item.item.AccountId,
+                                AccountMobile = item.item2.Mobile,
+                                AccountNickName = item.item2.NickName,
+                                CreateTime = item.item.CreateTime,
+                                Id = item.item.Id
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加券商账户绑定前端账户
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddBrokerAccountBindFrontAccount(AddBrokerAccountBindFrontAccountRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //判断券商Id是否存在
+                var brokerAccount = (from item in db.t_broker_account_info
+                                     where item.Id == request.BrokerAccountId
+                                     select item).FirstOrDefault();
+                if (brokerAccount == null)
+                {
+                    throw new WebApiException(400,"券商账户不存在");
+                }
+
+                //判断前端账户是否存在
+                var frontAccount = (from item in db.t_account_baseinfo
+                                    where item.Id == request.FrontAccountId
+                                    select item).FirstOrDefault();
+                if (frontAccount == null)
+                {
+                    throw new WebApiException(400,"前端账户不存在");
+                }
+
+                //判断是否已经添加
+                var rel = (from item in db.t_broker_account_info_frontaccount_rel
+                           where item.BrokerAccountId == request.BrokerAccountId && item.AccountId == request.FrontAccountId
+                           select item).FirstOrDefault();
+                if (rel != null)
+                {
+                    throw new WebApiException(400,"账户已添加");
+                }
+
+                db.t_broker_account_info_frontaccount_rel.Add(new t_broker_account_info_frontaccount_rel 
+                { 
+                    Status=1,
+                    AccountId=request.FrontAccountId,
+                    BrokerAccountId=request.BrokerAccountId,
+                    CreateTime=DateTime.Now
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改券商账户绑定前端账户状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyBrokerAccountBindFrontAccountStatus(ModifyStatusRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var rel = (from item in db.t_broker_account_info_frontaccount_rel
+                           where item.Id==request.Id
+                           select item).FirstOrDefault();
+                if (rel == null)
+                {
+                    throw new WebApiException(400,"数据不存在");
+                }
+                rel.Status = request.Status;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除券商账户绑定前端账户
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteBrokerAccountBindFrontAccount(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var rel = (from item in db.t_broker_account_info_frontaccount_rel
+                           where item.Id == request.Id
+                           select item).FirstOrDefault();
+                if (rel == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_broker_account_info_frontaccount_rel.Remove(rel);
+                db.SaveChanges();
             }
         }
 

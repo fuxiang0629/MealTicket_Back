@@ -124,5 +124,10 @@ namespace MealTicket_Admin_Handler.Model
         /// 是否可以勾选
         /// </summary>
         public bool CanChecked { get; set; }
+
+        /// <summary>
+        /// 是否是有账户
+        /// </summary>
+        public bool IsPrivate { get; set; }
     }
 }

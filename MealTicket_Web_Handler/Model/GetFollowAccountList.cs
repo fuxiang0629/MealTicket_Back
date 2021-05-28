@@ -10,6 +10,19 @@ namespace MealTicket_Web_Handler.Model
     {
     }
 
+    public class GetFollowAccountListRequest
+    {
+        /// <summary>
+        /// 市场
+        /// </summary>
+        public int Market { get; set; }
+
+        /// <summary>
+        /// 股票代码
+        /// </summary>
+        public string SharesCode { get; set; }
+    }
+
     public class FollowAccountInfo
     {
         /// <summary>
@@ -26,5 +39,15 @@ namespace MealTicket_Web_Handler.Model
         /// 账户昵称
         /// </summary>
         public string AccountName { get; set; }
+
+        /// <summary>
+        /// 最大可用余额
+        /// </summary>
+        public long MaxDeposit { get; set; }
+
+        /// <summary>
+        /// 最大跟投倍数
+        /// </summary>
+        public long MaxFundMultiple { get; set; }
     }
 }

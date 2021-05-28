@@ -47,13 +47,15 @@ namespace MealTicket_Web_APIService.controller
         /// <returns></returns>
         [Description("根据股票代码/名称/简拼获取股票列表")]
         [Route("shares/list"), HttpPost]
+        [CheckUserLoginFilter]
         public List<SharesInfo> GetSharesList(GetSharesListRequest request)
         {
             if (request == null)
             {
                 throw new WebApiException(400, "参数错误");
             }
-            return trendHandler.GetSharesList(request);
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesList(request,basedata);
         }
 
         /// <summary>
@@ -871,10 +873,10 @@ namespace MealTicket_Web_APIService.controller
         [Route("follow/account/list"), HttpPost]
         [Description("查询跟投人")]
         [CheckUserLoginFilter]
-        public List<FollowAccountInfo> GetFollowAccountList()
+        public List<FollowAccountInfo> GetFollowAccountList(GetFollowAccountListRequest request)
         {
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
-            return trendHandler.GetFollowAccountList(basedata);
+            return trendHandler.GetFollowAccountList(request,basedata);
         }
 
         /// <summary>

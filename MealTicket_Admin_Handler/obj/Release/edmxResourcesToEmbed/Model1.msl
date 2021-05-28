@@ -1115,6 +1115,7 @@
     <EntitySetMapping Name="t_broker_account_info">
       <EntityTypeMapping TypeName="meal_ticketModel.t_broker_account_info">
         <MappingFragment StoreEntitySet="t_broker_account_info">
+          <ScalarProperty Name="IsPrivate" ColumnName="IsPrivate" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="SynchronizationTime" ColumnName="SynchronizationTime" />
@@ -2204,6 +2205,17 @@
           <ScalarProperty Name="LimitType" ColumnName="LimitType" />
           <ScalarProperty Name="LimitKey" ColumnName="LimitKey" />
           <ScalarProperty Name="LimitMarket" ColumnName="LimitMarket" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_broker_account_info_frontaccount_rel">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_broker_account_info_frontaccount_rel">
+        <MappingFragment StoreEntitySet="t_broker_account_info_frontaccount_rel">
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="BrokerAccountId" ColumnName="BrokerAccountId" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>

@@ -760,7 +760,7 @@ namespace MealTicket_Web_Handler
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Admin_ModifyPassword", accountIdParameter, oldPasswordParameter, newPasswordParameter, loginLogIdParameter, errorCode, errorMessage, token);
         }
     
-        public virtual int P_ApplyTradeBuy(Nullable<long> accountId, Nullable<int> market, string sharesCode, Nullable<long> buyAmount, Nullable<int> fundMultiple, Nullable<long> entrustPrice, Nullable<System.DateTime> closingTime, Nullable<bool> isFollow, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter buyId)
+        public virtual int P_ApplyTradeBuy(Nullable<long> accountId, Nullable<int> market, string sharesCode, Nullable<long> buyAmount, Nullable<int> fundMultiple, Nullable<long> entrustPrice, Nullable<System.DateTime> closingTime, Nullable<bool> isFollow, Nullable<long> mainAccountId, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter buyId)
         {
             var accountIdParameter = accountId.HasValue ?
                 new ObjectParameter("accountId", accountId) :
@@ -794,7 +794,11 @@ namespace MealTicket_Web_Handler
                 new ObjectParameter("isFollow", isFollow) :
                 new ObjectParameter("isFollow", typeof(bool));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_ApplyTradeBuy", accountIdParameter, marketParameter, sharesCodeParameter, buyAmountParameter, fundMultipleParameter, entrustPriceParameter, closingTimeParameter, isFollowParameter, errorCode, errorMessage, buyId);
+            var mainAccountIdParameter = mainAccountId.HasValue ?
+                new ObjectParameter("mainAccountId", mainAccountId) :
+                new ObjectParameter("mainAccountId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_ApplyTradeBuy", accountIdParameter, marketParameter, sharesCodeParameter, buyAmountParameter, fundMultipleParameter, entrustPriceParameter, closingTimeParameter, isFollowParameter, mainAccountIdParameter, errorCode, errorMessage, buyId);
         }
     
         public virtual int P_ApplyTradeCancel(Nullable<long> accountId, Nullable<long> entrustId, ObjectParameter errorCode, ObjectParameter errorMessage)

@@ -262,6 +262,7 @@
     <Compile Include="Model\PageRes.cs" />
     <Compile Include="Model\Sys\AddBroker.cs" />
     <Compile Include="Model\Sys\AddBrokerAccount.cs" />
+    <Compile Include="Model\Sys\AddBrokerAccountBindFrontAccount.cs" />
     <Compile Include="Model\Sys\AddBrokerDepartment.cs" />
     <Compile Include="Model\Sys\AddBrokerHqHost.cs" />
     <Compile Include="Model\Sys\AddBrokerTradeHost.cs" />
@@ -281,6 +282,7 @@
     <Compile Include="Model\Sys\BindSysPaymentCashChannelTransferAccount.cs" />
     <Compile Include="Model\Sys\BindSysPaymentChannelAccount.cs" />
     <Compile Include="Model\Sys\DeleteServer.cs" />
+    <Compile Include="Model\Sys\GetBrokerAccountBindFrontAccountList.cs" />
     <Compile Include="Model\Sys\GetBrokerAccountList.cs" />
     <Compile Include="Model\Sys\GetBrokerAccountPositionInfo.cs" />
     <Compile Include="Model\Sys\GetBrokerAccountSysPositionDetails.cs" />
@@ -610,6 +612,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_broker_account_info_capital.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_broker_account_info_frontaccount_rel.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_broker_account_info_position.cs">

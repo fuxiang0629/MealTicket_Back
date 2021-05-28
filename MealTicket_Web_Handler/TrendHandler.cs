@@ -59,8 +59,12 @@ namespace MealTicket_Web_Handler
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public List<SharesInfo> GetSharesList(GetSharesListRequest request)
+        public List<SharesInfo> GetSharesList(GetSharesListRequest request, HeadBase basedata)
         {
+            if (request.AccountId == 0)
+            {
+                request.AccountId = basedata.AccountId;
+            }
             using (var db = new meal_ticketEntities())
             {
                 if (request.SharesInfo == null)
@@ -112,13 +116,26 @@ namespace MealTicket_Web_Handler
                         }
 
                         //计算杠杆倍数
+                        var accountRules = from x in db.t_shares_limit_fundmultiple_account
+                                           where x.AccountId == request.AccountId
+                                           select x;
+
+
                         var rules = (from x in db.t_shares_limit_fundmultiple
+                                     join x2 in accountRules on x.Id equals x2.FundmultipleId into a
+                                     from ai in a.DefaultIfEmpty()
                                      where (x.LimitMarket == item.Market || x.LimitMarket == -1) && (item.SharesCode.StartsWith(x.LimitKey))
                                      orderby x.Priority descending, x.FundMultiple
-                                     select x).FirstOrDefault();
-                        if (rules != null)
+                                     select new { x, ai }).FirstOrDefault();
+                        if (rules == null)
                         {
-                            item.Range = rules.Range;
+                            item.Fundmultiple = 0;
+                            item.Range = 0;
+                        }
+                        else
+                        {
+                            item.Fundmultiple = (rules.ai == null || rules.x.FundMultiple < rules.ai.FundMultiple) ? rules.x.FundMultiple : rules.ai.FundMultiple;
+                            item.Range = rules.x.Range;
                         }
                     }
                 }
@@ -1841,20 +1858,53 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
         /// 查询跟投人
         /// </summary>
         /// <returns></returns>
-        public List<FollowAccountInfo> GetFollowAccountList(HeadBase basedata)
+        public List<FollowAccountInfo> GetFollowAccountList(GetFollowAccountListRequest request,HeadBase basedata)
         {
             using (var db = new meal_ticketEntities())
             {
+
+                var buySetting = from item in db.t_account_shares_buy_setting
+                                 where item.Type == 1
+                                 select item;
                 var followList = (from item in db.t_account_follow_rel
                                   join item2 in db.t_account_baseinfo on item.FollowAccountId equals item2.Id
+                                  join item3 in db.t_account_wallet on item.FollowAccountId equals item3.AccountId
+                                  join item4 in buySetting on item.FollowAccountId equals item4.AccountId into a from ai in a.DefaultIfEmpty()
                                   where item.AccountId == basedata.AccountId && item2.Status == 1
                                   orderby item.CreateTime
                                   select new FollowAccountInfo
                                   {
                                       AccountId = item.FollowAccountId,
                                       AccountMobile = item2.Mobile,
-                                      AccountName = item2.NickName
+                                      AccountName = item2.NickName,
+                                      MaxDeposit=item3.Deposit-(ai==null?0:ai.ParValue)
                                   }).ToList();
+                if (!string.IsNullOrEmpty(request.SharesCode))
+                {
+                    foreach (var follow in followList)
+                    {
+                        //计算杠杆倍数
+                        var accountRules = from item in db.t_shares_limit_fundmultiple_account
+                                           where item.AccountId == follow.AccountId
+                                           select item;
+
+
+                        var rules = (from item in db.t_shares_limit_fundmultiple
+                                     join item2 in accountRules on item.Id equals item2.FundmultipleId into a
+                                     from ai in a.DefaultIfEmpty()
+                                     where (item.LimitMarket == request.Market || item.LimitMarket == -1) && (request.SharesCode.StartsWith(item.LimitKey))
+                                     orderby item.Priority descending, item.FundMultiple
+                                     select new { item, ai }).FirstOrDefault();
+                        if (rules == null)
+                        {
+                            follow.MaxFundMultiple = 0;
+                        }
+                        else
+                        {
+                            follow.MaxFundMultiple = (rules.ai == null|| rules.item.FundMultiple< rules.ai.FundMultiple) ? rules.item.FundMultiple : rules.ai.FundMultiple;
+                        }
+                    }
+                }
                 return followList;
             }
         }
@@ -2518,7 +2568,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 }
                 else
                 {
-                    sharesQuotes.FundMultiple = rules.ai==null? rules.item.FundMultiple:rules.ai.FundMultiple;
+                    sharesQuotes.FundMultiple = (rules.ai== null || rules.item.FundMultiple < rules.ai.FundMultiple)? rules.item.FundMultiple:rules.ai.FundMultiple;
                     sharesQuotes.TotalRise = isSt ? rules.item.Range / 2 : rules.item.Range;
                 }
                 return sharesQuotes;
@@ -2629,7 +2679,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                             ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                             ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
                             ObjectParameter buyIdDb = new ObjectParameter("buyId", 0);
-                            db.P_ApplyTradeBuy(buy.AccountId, request.Market, request.SharesCode, buy.BuyAmount, request.FundMultiple, request.BuyPrice, null, true, errorCodeDb, errorMessageDb, buyIdDb);
+                            db.P_ApplyTradeBuy(buy.AccountId, request.Market, request.SharesCode, buy.BuyAmount, request.FundMultiple, request.BuyPrice, null, true, request.AccountId == basedata.AccountId ? request.AccountId:0, errorCodeDb, errorMessageDb, buyIdDb);
                             int errorCode = (int)errorCodeDb.Value;
                             string errorMessage = errorMessageDb.Value.ToString();
                             if (errorCode != 0)
@@ -3747,13 +3797,26 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                     item.ParValidCount = details.Where(e => e.Status == 1 && e.TriggerTime == null).Count();
 
                     //计算杠杆倍数
+                    var accountRules = from x in db.t_shares_limit_fundmultiple_account
+                                       where x.AccountId == request.Id
+                                       select x;
+
+
                     var rules = (from x in db.t_shares_limit_fundmultiple
+                                 join x2 in accountRules on x.Id equals x2.FundmultipleId into a
+                                 from ai in a.DefaultIfEmpty()
                                  where (x.LimitMarket == item.Market || x.LimitMarket == -1) && (item.SharesCode.StartsWith(x.LimitKey))
                                  orderby x.Priority descending, x.FundMultiple
-                                 select x).FirstOrDefault();
-                    if (rules != null)
+                                 select new { x, ai }).FirstOrDefault();
+                    if (rules == null)
                     {
-                        item.Range = rules.Range;
+                        item.Fundmultiple = 0;
+                        item.Range = 0;
+                    }
+                    else
+                    {
+                        item.Fundmultiple = (rules.ai == null || rules.x.FundMultiple < rules.ai.FundMultiple) ? rules.x.FundMultiple : rules.ai.FundMultiple;
+                        item.Range = rules.x.Range;
                     }
                     var groupRel = (from x in groupRelList
                                     where x.Market == item.Market && x.SharesCode == item.SharesCode
@@ -6902,7 +6965,8 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 }
 
                 var sell_details = (from item in temp
-                                    orderby item.Type
+                                    let type=item.Type==1?4:item.Type
+                                    orderby type
                                     select new ConditiontradeTemplateSellDetailsInfo
                                     {
                                         Status = item.Status,
@@ -6967,7 +7031,8 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                            select item;
                 }
                 var sell_details = (from item in temp
-                                    orderby item.Type
+                                    let type = item.Type == 1 ? 4 : item.Type
+                                    orderby type
                                     select new ConditiontradeTemplateSellDetailsInfo
                                     {
                                         Status = item.Status,
