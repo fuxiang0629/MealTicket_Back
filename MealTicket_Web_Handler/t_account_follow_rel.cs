@@ -18,5 +18,6 @@ namespace MealTicket_Web_Handler
         public long AccountId { get; set; }
         public long FollowAccountId { get; set; }
         public System.DateTime CreateTime { get; set; }
+        public int OrderIndex { get; set; }
     }
 }

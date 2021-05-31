@@ -963,7 +963,7 @@ namespace MealTicket_Handler
                     ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                     ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
                     ObjectParameter buyIdDb = new ObjectParameter("buyId", 0);
-                    db.P_ApplyTradeBuy(basedata.AccountId, request.Market, request.SharesCode, request.BuyAmount, request.FundMultiple, request.BuyPrice, request.ClosingTime, false, errorCodeDb, errorMessageDb, buyIdDb);
+                    db.P_ApplyTradeBuy(basedata.AccountId, request.Market, request.SharesCode, request.BuyAmount, request.FundMultiple, request.BuyPrice, request.ClosingTime, false,0, errorCodeDb, errorMessageDb, buyIdDb);
                     int errorCode = (int)errorCodeDb.Value;
                     string errorMessage = errorMessageDb.Value.ToString();
                     if (errorCode != 0)

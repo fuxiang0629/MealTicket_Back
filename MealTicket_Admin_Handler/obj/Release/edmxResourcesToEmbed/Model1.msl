@@ -1115,6 +1115,7 @@
     <EntitySetMapping Name="t_broker_account_info">
       <EntityTypeMapping TypeName="meal_ticketModel.t_broker_account_info">
         <MappingFragment StoreEntitySet="t_broker_account_info">
+          <ScalarProperty Name="IsPrivate" ColumnName="IsPrivate" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="SynchronizationTime" ColumnName="SynchronizationTime" />
@@ -1769,6 +1770,7 @@
     <EntitySetMapping Name="t_account_follow_rel">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_follow_rel">
         <MappingFragment StoreEntitySet="t_account_follow_rel">
+          <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="FollowAccountId" ColumnName="FollowAccountId" />
           <ScalarProperty Name="AccountId" ColumnName="AccountId" />
@@ -2192,6 +2194,29 @@
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="PlateId" ColumnName="PlateId" />
           <ScalarProperty Name="PriorityId" ColumnName="PriorityId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_shares_plate_shares_limit">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_shares_plate_shares_limit">
+        <MappingFragment StoreEntitySet="t_shares_plate_shares_limit">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="LimitType" ColumnName="LimitType" />
+          <ScalarProperty Name="LimitKey" ColumnName="LimitKey" />
+          <ScalarProperty Name="LimitMarket" ColumnName="LimitMarket" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_broker_account_info_frontaccount_rel">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_broker_account_info_frontaccount_rel">
+        <MappingFragment StoreEntitySet="t_broker_account_info_frontaccount_rel">
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="BrokerAccountId" ColumnName="BrokerAccountId" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>

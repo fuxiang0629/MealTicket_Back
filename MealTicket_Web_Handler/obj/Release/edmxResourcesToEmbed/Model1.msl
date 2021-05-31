@@ -122,6 +122,7 @@
     <EntitySetMapping Name="t_account_follow_rel">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_follow_rel">
         <MappingFragment StoreEntitySet="t_account_follow_rel">
+          <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="AccountId" ColumnName="AccountId" />
           <ScalarProperty Name="FollowAccountId" ColumnName="FollowAccountId" />
@@ -1077,6 +1078,7 @@
     <EntitySetMapping Name="t_broker_account_info">
       <EntityTypeMapping TypeName="meal_ticketModel.t_broker_account_info">
         <MappingFragment StoreEntitySet="t_broker_account_info">
+          <ScalarProperty Name="IsPrivate" ColumnName="IsPrivate" />
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="AccountCode" ColumnName="AccountCode" />
           <ScalarProperty Name="AccountType" ColumnName="AccountType" />
@@ -2202,6 +2204,10 @@
     <EntitySetMapping Name="t_shares_quotes_date">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes_date">
         <MappingFragment StoreEntitySet="t_shares_quotes_date">
+          <ScalarProperty Name="TriLimitDownBombCount" ColumnName="TriLimitDownBombCount" />
+          <ScalarProperty Name="TriLimitUpBombCount" ColumnName="TriLimitUpBombCount" />
+          <ScalarProperty Name="TriLimitDownCount" ColumnName="TriLimitDownCount" />
+          <ScalarProperty Name="TriLimitUpCount" ColumnName="TriLimitUpCount" />
           <ScalarProperty Name="TriPriceType" ColumnName="TriPriceType" />
           <ScalarProperty Name="LimitDownPrice" ColumnName="LimitDownPrice" />
           <ScalarProperty Name="LimitUpPrice" ColumnName="LimitUpPrice" />

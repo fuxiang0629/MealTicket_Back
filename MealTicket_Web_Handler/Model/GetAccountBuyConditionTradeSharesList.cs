@@ -141,6 +141,11 @@ namespace MealTicket_Web_Handler.Model
         public int Range { get; set; }
 
         /// <summary>
+        /// 杠杆倍数
+        /// </summary>
+        public int Fundmultiple { get; set; }
+
+        /// <summary>
         /// 上市状态1正常 2退市
         /// </summary>
         public int MarketStatus { get; set; }

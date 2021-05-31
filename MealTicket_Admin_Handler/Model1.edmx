@@ -124,6 +124,7 @@
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="AccountId" Type="bigint" Nullable="false" />
           <Property Name="FollowAccountId" Type="bigint" Nullable="false" />
+          <Property Name="OrderIndex" Type="int" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="t_account_login_token">
@@ -801,6 +802,7 @@
           <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="SynchronizationStatus" Type="int" Nullable="false" />
           <Property Name="SynchronizationTime" Type="datetime" />
+          <Property Name="IsPrivate" Type="bit" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
         </EntityType>
@@ -816,6 +818,16 @@
           <Property Name="MarketValue" Type="bigint" Nullable="false" />
           <Property Name="TotalValue" Type="bigint" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_broker_account_info_frontaccount_rel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BrokerAccountId" Type="bigint" Nullable="false" />
+          <Property Name="AccountId" Type="bigint" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="t_broker_account_info_position">
           <Key>
@@ -1645,6 +1657,17 @@
           <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="t_shares_plate_shares_limit">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LimitMarket" Type="int" Nullable="false" />
+          <Property Name="LimitKey" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LimitType" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="t_shares_quotes">
           <Key>
             <PropertyRef Name="Id" />
@@ -2015,6 +2038,7 @@
             <PropertyRef Name="PlateType" />
             <PropertyRef Name="Status" />
             <PropertyRef Name="CreateTime" />
+            
           </Key>
           <Property Name="PlateId" Type="bigint" Nullable="false" />
           <Property Name="PlateName" Type="nvarchar" MaxLength="200" Nullable="false" />
@@ -2022,7 +2046,7 @@
           <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="SharesCount" Type="int" />
-          <Property Name="RiseRate" Type="bigint" />
+          <Property Name="RiseRate" Type="bigint" Nullable="false" />
         </EntityType>
         <!--生成过程中发现错误:
 警告 6002: 表/视图“meal_ticket.dbo.v_plate_shares”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
@@ -2266,6 +2290,7 @@
           <EntitySet Name="t_broker" EntityType="Self.t_broker" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_broker_account_info" EntityType="Self.t_broker_account_info" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_broker_account_info_capital" EntityType="Self.t_broker_account_info_capital" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_broker_account_info_frontaccount_rel" EntityType="Self.t_broker_account_info_frontaccount_rel" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_broker_account_info_position" EntityType="Self.t_broker_account_info_position" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_broker_account_shares_rel" EntityType="Self.t_broker_account_shares_rel" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_broker_account_shares_rel_entrust" EntityType="Self.t_broker_account_shares_rel_entrust" Schema="dbo" store:Type="Tables" />
@@ -2329,6 +2354,7 @@
           <EntitySet Name="t_shares_monitor_trend_rel_par" EntityType="Self.t_shares_monitor_trend_rel_par" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_plate" EntityType="Self.t_shares_plate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_plate_rel" EntityType="Self.t_shares_plate_rel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_plate_shares_limit" EntityType="Self.t_shares_plate_shares_limit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_quotes" EntityType="Self.t_shares_quotes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_search" EntityType="Self.t_shares_search" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_suspension" EntityType="Self.t_shares_suspension" Schema="dbo" store:Type="Tables" />
@@ -2695,6 +2721,8 @@
           <EntitySet Name="t_shares_limit_autobuy" EntityType="meal_ticketModel.t_shares_limit_autobuy" />
           <EntitySet Name="t_shares_limit_autobuy_priority" EntityType="meal_ticketModel.t_shares_limit_autobuy_priority" />
           <EntitySet Name="t_shares_limit_autobuy_priority_plate" EntityType="meal_ticketModel.t_shares_limit_autobuy_priority_plate" />
+          <EntitySet Name="t_shares_plate_shares_limit" EntityType="meal_ticketModel.t_shares_plate_shares_limit" />
+          <EntitySet Name="t_broker_account_info_frontaccount_rel" EntityType="meal_ticketModel.t_broker_account_info_frontaccount_rel" />
         </EntityContainer>
         <EntityType Name="t_admin_department">
           <Key>
@@ -3741,6 +3769,7 @@
           <Property Name="SynchronizationTime" Type="DateTime" Precision="3" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsPrivate" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="t_server_broker_account_rel">
           <Key>
@@ -4336,6 +4365,7 @@
           <Property Name="AccountId" Type="Int64" Nullable="false" />
           <Property Name="FollowAccountId" Type="Int64" Nullable="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="OrderIndex" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_app_version">
           <Key>
@@ -4643,7 +4673,7 @@
           <Property Name="Status" Type="Int32" Nullable="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="SharesCount" Type="Int32" />
-          <Property Name="RiseRate" Type="Int64" />
+          <Property Name="RiseRate" Type="Int64" Nullable="false" />
         </EntityType>
         <EntityType Name="t_sys_conditiontrade_template_buy_auto_trend_other">
           <Key>
@@ -4732,6 +4762,27 @@
           <Property Name="PlateId" Type="Int64" Nullable="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_plate_shares_limit">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LimitMarket" Type="Int32" Nullable="false" />
+          <Property Name="LimitKey" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LimitType" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_broker_account_info_frontaccount_rel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BrokerAccountId" Type="Int64" Nullable="false" />
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -5853,6 +5904,7 @@
           <EntitySetMapping Name="t_broker_account_info">
             <EntityTypeMapping TypeName="meal_ticketModel.t_broker_account_info">
               <MappingFragment StoreEntitySet="t_broker_account_info">
+                <ScalarProperty Name="IsPrivate" ColumnName="IsPrivate" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="SynchronizationTime" ColumnName="SynchronizationTime" />
@@ -6507,6 +6559,7 @@
           <EntitySetMapping Name="t_account_follow_rel">
             <EntityTypeMapping TypeName="meal_ticketModel.t_account_follow_rel">
               <MappingFragment StoreEntitySet="t_account_follow_rel">
+                <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="FollowAccountId" ColumnName="FollowAccountId" />
                 <ScalarProperty Name="AccountId" ColumnName="AccountId" />
@@ -6930,6 +6983,29 @@
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="PlateId" ColumnName="PlateId" />
                 <ScalarProperty Name="PriorityId" ColumnName="PriorityId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_plate_shares_limit">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_plate_shares_limit">
+              <MappingFragment StoreEntitySet="t_shares_plate_shares_limit">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="LimitType" ColumnName="LimitType" />
+                <ScalarProperty Name="LimitKey" ColumnName="LimitKey" />
+                <ScalarProperty Name="LimitMarket" ColumnName="LimitMarket" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_broker_account_info_frontaccount_rel">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_broker_account_info_frontaccount_rel">
+              <MappingFragment StoreEntitySet="t_broker_account_info_frontaccount_rel">
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="BrokerAccountId" ColumnName="BrokerAccountId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

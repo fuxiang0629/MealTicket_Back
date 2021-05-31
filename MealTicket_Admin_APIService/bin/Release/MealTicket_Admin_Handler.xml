@@ -966,6 +966,12 @@
             </summary>
             <param name="request"></param>
         </member>
+        <member name="M:MealTicket_Admin_Handler.FrontAccountHandler.ModifyFrontAccountFollowOrderIndex(MealTicket_Admin_Handler.Model.ModifyFrontAccountFollowOrderIndexRequest)">
+            <summary>
+            编辑跟投用户排序值
+            </summary>
+            <param name="request"></param>
+        </member>
         <member name="M:MealTicket_Admin_Handler.FrontAccountHandler.DeleteFrontAccountFollow(MealTicket_Admin_Handler.Model.DeleteFrontAccountFollowRequest)">
             <summary>
             删除跟投用户
@@ -4327,6 +4333,11 @@
             操盘账户
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.FrontAccountInfo.OrderIndex">
+            <summary>
+            排序值
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.GetFrontAccountLoginLogRequest.AccountInfo">
             <summary>
             用户信息
@@ -5807,6 +5818,21 @@
             出生年月
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyFrontAccountFollowOrderIndexRequest.AccountId">
+            <summary>
+            用户Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyFrontAccountFollowOrderIndexRequest.FollowAccountId">
+            <summary>
+            跟投用户Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyFrontAccountFollowOrderIndexRequest.OrderIndex">
+            <summary>
+            排序值
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.ModifyFrontAccountOptionalTrendParRequest.Id">
             <summary>
             Id
@@ -6242,6 +6268,21 @@
             营业部code
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddBrokerAccountRequest.IsPrivate">
+            <summary>
+            是否是有账户
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddBrokerAccountBindFrontAccountRequest.BrokerAccountId">
+            <summary>
+            券商账户Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddBrokerAccountBindFrontAccountRequest.FrontAccountId">
+            <summary>
+            前端账户Id
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.AddBrokerDepartmentRequest.BrokerCode">
             <summary>
             券商Code
@@ -6557,6 +6598,36 @@
             服务器代码
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.BrokerAccountBindFrontAccountInfo.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.BrokerAccountBindFrontAccountInfo.AccountId">
+            <summary>
+            前端账户id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.BrokerAccountBindFrontAccountInfo.AccountNickName">
+            <summary>
+            前端账户昵称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.BrokerAccountBindFrontAccountInfo.AccountMobile">
+            <summary>
+            前端账户手机号
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.BrokerAccountBindFrontAccountInfo.Status">
+            <summary>
+            状态
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.BrokerAccountBindFrontAccountInfo.CreateTime">
+            <summary>
+            数据创建时间
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.GetBrokerAccountListRequest.AccountNo">
             <summary>
             账户名称
@@ -6665,6 +6736,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.BrokerAccountInfo.CanChecked">
             <summary>
             是否可以勾选
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.BrokerAccountInfo.IsPrivate">
+            <summary>
+            是否是有账户
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.GetBrokerAccountPositionInfoRequest.TradeAccountCode">
@@ -7870,6 +7946,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.ModifyBrokerAccountRequest.DepartmentCode">
             <summary>
             营业部code
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyBrokerAccountRequest.IsPrivate">
+            <summary>
+            是否是有账户
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.ModifyBrokerDepartmentRequest.Id">
@@ -11294,6 +11375,31 @@
             删除券商账户
             </summary>
         </member>
+        <member name="M:MealTicket_Admin_Handler.SysSettingHandler.GetBrokerAccountBindFrontAccountList(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
+            <summary>
+            查询券商账户绑定前端账户列表
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.SysSettingHandler.AddBrokerAccountBindFrontAccount(MealTicket_Admin_Handler.Model.AddBrokerAccountBindFrontAccountRequest)">
+            <summary>
+            添加券商账户绑定前端账户
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.SysSettingHandler.ModifyBrokerAccountBindFrontAccountStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改券商账户绑定前端账户状态
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.SysSettingHandler.DeleteBrokerAccountBindFrontAccount(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除券商账户绑定前端账户
+            </summary>
+            <param name="request"></param>
+        </member>
         <member name="M:MealTicket_Admin_Handler.SysSettingHandler.GetBrokerAccountPositionInfo(MealTicket_Admin_Handler.Model.GetBrokerAccountPositionInfoRequest)">
             <summary>
             查询券商账户持仓信息
@@ -11907,6 +12013,31 @@
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteSharesPlateShares(MealTicket_Admin_Handler.Model.DeleteRequest)">
             <summary>
             删除板块股票
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetSharesPlateForbidList(MealTicket_Admin_Handler.Model.PageRequest)">
+            <summary>
+            查询板块涨跌幅过滤列表
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.AddSharesPlateForbid(MealTicket_Admin_Handler.Model.AddSharesForbidRequest)">
+            <summary>
+            添加板块涨跌幅过滤
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesPlateForbid(MealTicket_Admin_Handler.Model.ModifySharesForbidRequest)">
+            <summary>
+            编辑板块涨跌幅过滤
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteSharesPlateForbid(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除板块涨跌幅过滤
             </summary>
             <param name="request"></param>
         </member>

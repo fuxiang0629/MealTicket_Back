@@ -20,6 +20,6 @@ namespace MealTicket_Web_Handler
         public int Status { get; set; }
         public System.DateTime CreateTime { get; set; }
         public Nullable<int> SharesCount { get; set; }
-        public Nullable<long> RiseRate { get; set; }
+        public long RiseRate { get; set; }
     }
 }

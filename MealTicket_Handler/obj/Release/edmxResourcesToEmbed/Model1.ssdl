@@ -407,6 +407,7 @@
     <Property Name="ConditionPrice" Type="bigint" />
     <Property Name="ConditionRelativeType" Type="int" Nullable="false" />
     <Property Name="ConditionRelativeRate" Type="int" Nullable="false" />
+    <Property Name="OtherConditionRelative" Type="int" Nullable="false" />
     <Property Name="TradeType" Type="int" Nullable="false" />
     <Property Name="EntrustCount" Type="int" Nullable="false" />
     <Property Name="EntrustType" Type="int" Nullable="false" />
@@ -586,6 +587,7 @@
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="SynchronizationStatus" Type="int" Nullable="false" />
     <Property Name="SynchronizationTime" Type="datetime" />
+    <Property Name="IsPrivate" Type="bit" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
@@ -1318,6 +1320,7 @@
     <Parameter Name="entrustPrice" Type="bigint" Mode="In" />
     <Parameter Name="closingTime" Type="datetime" Mode="In" />
     <Parameter Name="isFollow" Type="bit" Mode="In" />
+    <Parameter Name="mainAccountId" Type="bigint" Mode="In" />
     <Parameter Name="errorCode" Type="int" Mode="InOut" />
     <Parameter Name="errorMessage" Type="nvarchar" Mode="InOut" />
     <Parameter Name="buyId" Type="bigint" Mode="InOut" />

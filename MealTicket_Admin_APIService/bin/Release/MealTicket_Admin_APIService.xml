@@ -1130,6 +1130,13 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.FrontAccountController.ModifyFrontAccountFollowOrderIndex(MealTicket_Admin_Handler.Model.ModifyFrontAccountFollowOrderIndexRequest)">
+            <summary>
+            编辑跟投用户排序值
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.controller.FrontAccountController.DeleteFrontAccountFollow(MealTicket_Admin_Handler.Model.DeleteFrontAccountFollowRequest)">
             <summary>
             删除跟投用户
@@ -1503,6 +1510,30 @@
         <member name="M:MealTicket_Admin_APIService.controller.SysSettingController.DeleteBrokerAccount(MealTicket_Admin_Handler.Model.DeleteRequest)">
             <summary>
             删除券商账户
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.SysSettingController.GetBrokerAccountBindFrontAccountList(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
+            <summary>
+            查询券商账户绑定前端账户列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.SysSettingController.AddBrokerAccountBindFrontAccount(MealTicket_Admin_Handler.Model.AddBrokerAccountBindFrontAccountRequest)">
+            <summary>
+            添加券商账户绑定前端账户
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.SysSettingController.ModifyBrokerAccountBindFrontAccountStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改券商账户绑定前端账户状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.SysSettingController.DeleteBrokerAccountBindFrontAccount(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除券商账户绑定前端账户
             </summary>
             <returns></returns>
         </member>
@@ -2154,6 +2185,30 @@
             删除板块股票
             </summary>
             <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetSharesPlateForbidList(MealTicket_Admin_Handler.Model.PageRequest)">
+            <summary>
+            查询板块涨跌幅过滤列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.AddSharesPlateForbid(MealTicket_Admin_Handler.Model.AddSharesForbidRequest)">
+            <summary>
+            添加板块涨跌幅过滤
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifySharesPlateForbid(MealTicket_Admin_Handler.Model.ModifySharesForbidRequest)">
+            <summary>
+            编辑板块涨跌幅过滤
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeleteSharesPlateForbid(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除板块涨跌幅过滤
+            </summary>
             <returns></returns>
         </member>
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetSharesForbidList(MealTicket_Admin_Handler.Model.GetSharesForbidListRequest)">

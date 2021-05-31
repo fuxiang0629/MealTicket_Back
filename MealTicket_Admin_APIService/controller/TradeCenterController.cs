@@ -772,6 +772,73 @@ namespace MealTicket_Admin_APIService.controller
             tradeCenterHandler.DeleteSharesPlateShares(request);
             return null;
         }
+
+        /// <summary>
+        /// 查询板块涨跌幅过滤列表
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/plate/forbid/list"), HttpPost]
+        [Description("查询板块涨跌幅过滤列表")]
+        public PageRes<SharesForbidInfo> GetSharesPlateForbidList(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesPlateForbidList(request);
+        }
+
+        /// <summary>
+        /// 添加板块涨跌幅过滤
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/plate/forbid/add"), HttpPost]
+        [Description("添加板块涨跌幅过滤")]
+        public object AddSharesPlateForbid(AddSharesForbidRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.AddSharesPlateForbid(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑板块涨跌幅过滤
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/plate/forbid/modify"), HttpPost]
+        [Description("编辑板块涨跌幅过滤")]
+        public object ModifySharesPlateForbid(ModifySharesForbidRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesPlateForbid(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除板块涨跌幅过滤
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/plate/forbid/delete"), HttpPost]
+        [Description("删除板块涨跌幅过滤")]
+        public object DeleteSharesPlateForbid(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.DeleteSharesPlateForbid(request);
+            return null;
+        }
         #endregion
 
         #region====交易管理====

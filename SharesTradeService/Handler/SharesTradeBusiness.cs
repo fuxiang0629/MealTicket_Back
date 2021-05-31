@@ -24,6 +24,7 @@ namespace SharesTradeService.Handler
         public static void BuyTrade(List<dynamic> buyList)
         {
             BuyInfo buyInfo = null;
+            string[] accounrCodeList=null;
             using (var db = new meal_ticketEntities())
             {
                 foreach (var buy in buyList)
@@ -46,6 +47,42 @@ namespace SharesTradeService.Handler
                                 {
                                     throw new Exception();
                                 }
+
+                                //判断当前账户可使用的券商账户
+                                string sql = string.Format(@"if(not exists(select BrokerAccountId
+  from t_broker_account_info_frontaccount_rel t with(nolock)
+  inner join t_broker_account_info t1 with(nolock) on t.BrokerAccountId=t1.Id
+  where t.AccountId={0} and t1.[Status]=1 and t1.IsPrivate=1))
+  begin
+	select AccountCode from t_broker_account_info t with(nolock) where t.[Status]=1 and t.IsPrivate=0
+  end
+  else
+  begin
+	select t.AccountCode from t_broker_account_info t with(nolock)
+	inner join t_broker_account_info_frontaccount_rel t1 with(nolock) on t.Id=t1.BrokerAccountId
+	where t.[Status]=1 and t1.AccountId={0} and t1.[Status]=1 and t.IsPrivate=1
+  end", entrust.AccountId);
+
+                                var tempCodeList=db.Database.SqlQuery<string>(sql).ToArray();
+                                if (accounrCodeList == null)
+                                {
+                                    accounrCodeList = tempCodeList;
+                                }
+                                else
+                                {
+                                    if (!Helper.CompareArray<string>(tempCodeList, accounrCodeList))
+                                    {
+                                        BuyTradeFinish(new List<BuyDetails>
+                                        {
+                                            new BuyDetails
+                                            {
+                                                EntrustId=entrustId
+                                            }
+                                        }, db);
+                                        continue;
+                                    }
+                                }
+
                                 //查询委托账户已买入数量
                                 int managerCount = 0;
                                 var manager = (from item in db.t_account_shares_entrust_manager
@@ -148,10 +185,21 @@ namespace SharesTradeService.Handler
                         Logger.WriteFileLog("数据库事务创建出错", ex);
                     }
                 }
+
                 if (buyInfo == null)
                 {
                     return;
                 }
+
+                //没有可用券商账户
+                if (accounrCodeList == null || accounrCodeList.Length <= 0)
+                {
+                    BuyTradeFinish(buyInfo.BuyList, db);
+                    return;
+                }
+
+                //支持券商账户随机排序
+                accounrCodeList = accounrCodeList.OrderBy(c => Guid.NewGuid()).ToArray();
 
                 //取过的连接
                 List<string> accountList = new List<string>();
@@ -159,26 +207,29 @@ namespace SharesTradeService.Handler
                 var quotaList = (from item in db.t_shares_limit_tradequota
                                  where (item.LimitMarket == -1 || item.LimitMarket == buyInfo.Market) && item.Status == 1 && (buyInfo.SharesCode.StartsWith(item.LimitKey) || item.LimitKey == "9999999")
                                  select item).ToList();
+
+                int takeCount = 0;
                 do
                 {
                     //当前委托数量
                     int currEntrustCount = buyInfo.BuyCount;
                     //所有帐户都操作过了，直接退出
-                    if (Singleton.instance.AllTradeAccountCodeList.Count() <= accountList.Count())
+                    if (accounrCodeList.Length <= takeCount)
                     {
                         break;
                     }
                     //取不到连接，直接退出
-                    var client = Singleton.instance.buyTradeClient.GetTradeClient(Singleton.instance.BuyKey);
+                    var client = Singleton.instance.buyTradeClient.GetTradeClient(accounrCodeList[takeCount]);
                     if (client == null)
                     {
                         break;
                     }
+                    takeCount++;
                     //连接已被取过
                     if (accountList.Contains(client.AccountCode))
                     {
                         //归还连接
-                        Singleton.instance.buyTradeClient.AddTradeClient(client, Singleton.instance.BuyKey);
+                        Singleton.instance.buyTradeClient.AddTradeClient(client);
                         break;
                     }
                     accountList.Add(client.AccountCode);//加入取过的连接
@@ -274,7 +325,7 @@ namespace SharesTradeService.Handler
                     finally 
                     {
                         //归还连接
-                        Singleton.instance.buyTradeClient.AddTradeClient(client, Singleton.instance.BuyKey);
+                        Singleton.instance.buyTradeClient.AddTradeClient(client);
                     }
 
                 } while (buyInfo.BuyCount > 0);

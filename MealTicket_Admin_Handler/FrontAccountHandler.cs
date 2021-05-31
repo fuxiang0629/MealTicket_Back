@@ -2164,6 +2164,7 @@ namespace MealTicket_Admin_Handler
                                 AccountId = item.item.Id,
                                 NickName = item.item.NickName,
                                 Mobile = item.item.Mobile,
+                                OrderIndex=item.item2.OrderIndex,
                                 CreateTime = item.item2.CreateTime
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
                 };
@@ -2246,6 +2247,27 @@ namespace MealTicket_Admin_Handler
                     tran.Rollback();
                     throw ex;
                 }
+            }
+        }
+
+
+        /// <summary>
+        /// 编辑跟投用户排序值
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyFrontAccountFollowOrderIndex(ModifyFrontAccountFollowOrderIndexRequest request) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var rel = (from item in db.t_account_follow_rel
+                           where item.AccountId == request.AccountId && item.FollowAccountId == request.FollowAccountId
+                           select item).FirstOrDefault();
+                if (rel == null)
+                {
+                    throw new WebApiException(400,"数据不存在");
+                }
+                rel.OrderIndex = request.OrderIndex;
+                db.SaveChanges();
             }
         }
 

@@ -1048,6 +1048,24 @@ namespace MealTicket_Admin_APIService.controller
         }
 
         /// <summary>
+        /// 编辑跟投用户排序值
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("follow/orderindex/modify"), HttpPost]
+        [Description("编辑跟投用户排序值")]
+        [CheckUserPowerFilter]
+        public object ModifyFrontAccountFollowOrderIndex(ModifyFrontAccountFollowOrderIndexRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            frontAccountHandler.ModifyFrontAccountFollowOrderIndex(request);
+            return null;
+        }
+
+        /// <summary>
         /// 删除跟投用户
         /// </summary>
         /// <param name="request"></param>

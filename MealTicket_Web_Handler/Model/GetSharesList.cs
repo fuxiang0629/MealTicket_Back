@@ -13,6 +13,11 @@ namespace MealTicket_Web_Handler.Model
     public class GetSharesListRequest
     {
         /// <summary>
+        /// 用户Id
+        /// </summary>
+        public long AccountId { get; set; }
+
+        /// <summary>
         /// 股票信息
         /// </summary>
         public string SharesInfo { get; set; }
@@ -74,5 +79,9 @@ namespace MealTicket_Web_Handler.Model
         /// 最大涨跌幅
         /// </summary>
         public long Range { get; set; }
+
+        public int Fundmultiple { get; set; }
+
+        public long MonitorId { get; set; }
     }
 }

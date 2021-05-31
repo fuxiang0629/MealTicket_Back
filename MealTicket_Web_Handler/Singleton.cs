@@ -52,6 +52,11 @@ namespace MealTicket_Web_Handler
         public int ClearTransactiondataEndHour = 8;
 
         /// <summary>
+        /// 自动买入最大任务数量
+        /// </summary>
+        public int AutoBuyTaskMaxCount = 50;
+
+        /// <summary>
         /// adb.net操作对象
         /// </summary>
         public SqlHelper sqlHelper;
@@ -258,6 +263,17 @@ namespace MealTicket_Web_Handler
                         {
                             this.ClearTransactiondataEndHour = sysValue.ClearTransactiondataEndHour;
                         }
+                    }
+                }
+                catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "AutoBuyTaskMaxCount"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        this.AutoBuyTaskMaxCount = int.Parse(sysPar.ParamValue);
                     }
                 }
                 catch { }

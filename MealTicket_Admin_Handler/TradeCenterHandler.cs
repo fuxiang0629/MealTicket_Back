@@ -1116,6 +1116,100 @@ namespace MealTicket_Admin_Handler
                 db.SaveChanges();
             }
         }
+
+        /// <summary>
+        /// 查询板块涨跌幅过滤列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<SharesForbidInfo> GetSharesPlateForbidList(PageRequest request) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_plate_shares_limit
+                             select item;
+                int totalCount = result.Count();
+
+                return new PageRes<SharesForbidInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in result
+                            orderby item.CreateTime descending
+                            select new SharesForbidInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                LimitKey = item.LimitKey,
+                                LimitMarket = item.LimitMarket,
+                                LimitType = item.LimitType
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加板块涨跌幅过滤
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddSharesPlateForbid(AddSharesForbidRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                db.t_shares_plate_shares_limit.Add(new t_shares_plate_shares_limit
+                {
+                    CreateTime = DateTime.Now,
+                    LastModified = DateTime.Now,
+                    LimitKey = request.LimitKey,
+                    LimitMarket = request.LimitMarket,
+                    LimitType = request.LimitType
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 编辑板块涨跌幅过滤
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifySharesPlateForbid(ModifySharesForbidRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var forbidShares = (from item in db.t_shares_plate_shares_limit
+                                    where item.Id == request.Id
+                                    select item).FirstOrDefault();
+                if (forbidShares == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                forbidShares.LastModified = DateTime.Now;
+                forbidShares.LimitKey = request.LimitKey;
+                forbidShares.LimitMarket = request.LimitMarket;
+                forbidShares.LimitType = request.LimitType;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除板块涨跌幅过滤
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteSharesPlateForbid(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var forbidShares = (from item in db.t_shares_plate_shares_limit
+                                    where item.Id == request.Id
+                                    select item).FirstOrDefault();
+                if (forbidShares == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_shares_plate_shares_limit.Remove(forbidShares);
+                db.SaveChanges();
+            }
+        }
         #endregion
 
         #region====交易管理====

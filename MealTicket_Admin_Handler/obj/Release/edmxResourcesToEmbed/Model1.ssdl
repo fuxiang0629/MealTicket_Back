@@ -119,6 +119,7 @@
     <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="AccountId" Type="bigint" Nullable="false" />
     <Property Name="FollowAccountId" Type="bigint" Nullable="false" />
+    <Property Name="OrderIndex" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_login_token">
@@ -796,6 +797,7 @@
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="SynchronizationStatus" Type="int" Nullable="false" />
     <Property Name="SynchronizationTime" Type="datetime" />
+    <Property Name="IsPrivate" Type="bit" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
@@ -811,6 +813,16 @@
     <Property Name="MarketValue" Type="bigint" Nullable="false" />
     <Property Name="TotalValue" Type="bigint" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_broker_account_info_frontaccount_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="BrokerAccountId" Type="bigint" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="t_broker_account_info_position">
     <Key>
@@ -1640,6 +1652,17 @@
     <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
   </EntityType>
+  <EntityType Name="t_shares_plate_shares_limit">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="LimitMarket" Type="int" Nullable="false" />
+    <Property Name="LimitKey" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="LimitType" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_shares_quotes">
     <Key>
       <PropertyRef Name="Id" />
@@ -2017,7 +2040,7 @@
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="SharesCount" Type="int" />
-    <Property Name="RiseRate" Type="bigint" />
+    <Property Name="RiseRate" Type="bigint" Nullable="false" />
   </EntityType>
   <!--生成过程中发现错误:
 警告 6002: 表/视图“meal_ticket.dbo.v_plate_shares”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
@@ -2261,6 +2284,7 @@
     <EntitySet Name="t_broker" EntityType="Self.t_broker" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_broker_account_info" EntityType="Self.t_broker_account_info" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_broker_account_info_capital" EntityType="Self.t_broker_account_info_capital" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_broker_account_info_frontaccount_rel" EntityType="Self.t_broker_account_info_frontaccount_rel" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_broker_account_info_position" EntityType="Self.t_broker_account_info_position" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_broker_account_shares_rel" EntityType="Self.t_broker_account_shares_rel" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_broker_account_shares_rel_entrust" EntityType="Self.t_broker_account_shares_rel_entrust" Schema="dbo" store:Type="Tables" />
@@ -2324,6 +2348,7 @@
     <EntitySet Name="t_shares_monitor_trend_rel_par" EntityType="Self.t_shares_monitor_trend_rel_par" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_plate" EntityType="Self.t_shares_plate" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_plate_rel" EntityType="Self.t_shares_plate_rel" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_plate_shares_limit" EntityType="Self.t_shares_plate_shares_limit" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_quotes" EntityType="Self.t_shares_quotes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_search" EntityType="Self.t_shares_search" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_suspension" EntityType="Self.t_shares_suspension" Schema="dbo" store:Type="Tables" />

@@ -59,8 +59,12 @@ namespace MealTicket_Web_Handler
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public List<SharesInfo> GetSharesList(GetSharesListRequest request)
+        public List<SharesInfo> GetSharesList(GetSharesListRequest request, HeadBase basedata)
         {
+            if (request.AccountId == 0)
+            {
+                request.AccountId = basedata.AccountId;
+            }
             using (var db = new meal_ticketEntities())
             {
                 if (request.SharesInfo == null)
@@ -112,13 +116,26 @@ namespace MealTicket_Web_Handler
                         }
 
                         //计算杠杆倍数
+                        var accountRules = from x in db.t_shares_limit_fundmultiple_account
+                                           where x.AccountId == request.AccountId
+                                           select x;
+
+
                         var rules = (from x in db.t_shares_limit_fundmultiple
+                                     join x2 in accountRules on x.Id equals x2.FundmultipleId into a
+                                     from ai in a.DefaultIfEmpty()
                                      where (x.LimitMarket == item.Market || x.LimitMarket == -1) && (item.SharesCode.StartsWith(x.LimitKey))
                                      orderby x.Priority descending, x.FundMultiple
-                                     select x).FirstOrDefault();
-                        if (rules != null)
+                                     select new { x, ai }).FirstOrDefault();
+                        if (rules == null)
                         {
-                            item.Range = rules.Range;
+                            item.Fundmultiple = 0;
+                            item.Range = 0;
+                        }
+                        else
+                        {
+                            item.Fundmultiple = (rules.ai == null || rules.x.FundMultiple < rules.ai.FundMultiple) ? rules.x.FundMultiple : rules.ai.FundMultiple;
+                            item.Range = rules.x.Range;
                         }
                     }
                 }
@@ -390,6 +407,194 @@ namespace MealTicket_Web_Handler
                 }
             }
         }
+
+        /// <summary>
+        /// 批量导入用户自选股
+        /// </summary>
+        /// <param name="accountId"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAddAccountOptional(long accountId, List<SharesInfo> list)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //判断是否存在
+                    var optional = (from item in db.t_account_shares_optional
+                                    where item.AccountId == accountId
+                                    select item).ToList();
+                    //判断是否在监控股票中
+                    var monitor = (from item in db.t_shares_monitor
+                                   where item.Status == 1
+                                   select item).ToList();
+                    //查询参数
+                    var parList = (from x in db.t_shares_monitor_trend_rel
+                                   join x2 in db.t_shares_monitor_trend_rel_par on x.Id equals x2.RelId
+                                   select new { x, x2 }).ToList();
+                    List<SharesInfo> tempList = new List<SharesInfo>();
+                    foreach (var item in list)
+                    {
+                        if (optional.Where(e => e.Market == item.Market && e.SharesCode == item.SharesCode).FirstOrDefault() != null)
+                        {
+                            continue;
+                        }
+                        var temp = monitor.Where(e => e.Market == item.Market && e.SharesCode == item.SharesCode).FirstOrDefault();
+                        if (temp == null)
+                        {
+                            continue;
+                        }
+                        item.MonitorId = temp.Id;
+                        tempList.Add(item);
+                    }
+
+                    foreach (var item in tempList)
+                    {
+                        //查询参数
+                        var par = (from x in parList
+                                   where x.x.MonitorId == item.MonitorId
+                                   select x).ToList();
+
+                        var addOptional = new t_account_shares_optional
+                        {
+                            SharesCode = item.SharesCode,
+                            AccountId = accountId,
+                            CreateTime = DateTime.Now,
+                            IsTrendClose = false,
+                            Market = item.Market,
+                            TriCountToday = 0
+                        };
+                        db.t_account_shares_optional.Add(addOptional);
+                        db.SaveChanges();
+
+                        t_account_shares_optional_trend_rel trend1 = new t_account_shares_optional_trend_rel
+                        {
+                            Status = 1,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            OptionalId = addOptional.Id,
+                            TrendId = 1
+                        };
+                        db.t_account_shares_optional_trend_rel.Add(trend1);
+                        db.SaveChanges();
+
+                        List<t_account_shares_optional_trend_rel_par> parList1 = (from x in par
+                                                                                  where x.x.TrendId == 1
+                                                                                  select new t_account_shares_optional_trend_rel_par
+                                                                                  {
+                                                                                      CreateTime = DateTime.Now,
+                                                                                      LastModified = DateTime.Now,
+                                                                                      ParamsInfo = x.x2.ParamsInfo,
+                                                                                      RelId = trend1.Id
+                                                                                  }).ToList();
+                        db.t_account_shares_optional_trend_rel_par.AddRange(parList1);
+                        db.SaveChanges();
+
+                        db.t_account_shares_optional_trend_rel_tri.Add(new t_account_shares_optional_trend_rel_tri
+                        {
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            RelId = trend1.Id,
+                            LastPushPrice = null,
+                            LastPushRiseRate = null,
+                            LastPushTime = null,
+                            MinPushRateInterval = Singleton.Instance.MinPushRateInterval,
+                            MinPushTimeInterval = Singleton.Instance.MinPushTimeInterval,
+                            TriCountToday = 0,
+                            MinTodayPrice = -1
+                        });
+                        db.SaveChanges();
+
+
+                        t_account_shares_optional_trend_rel trend2 = new t_account_shares_optional_trend_rel
+                        {
+                            Status = 1,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            OptionalId = addOptional.Id,
+                            TrendId = 2
+                        };
+                        db.t_account_shares_optional_trend_rel.Add(trend2);
+                        db.SaveChanges();
+
+                        List<t_account_shares_optional_trend_rel_par> parList2 = (from x in par
+                                                                                  where x.x.TrendId == 2
+                                                                                  select new t_account_shares_optional_trend_rel_par
+                                                                                  {
+                                                                                      CreateTime = DateTime.Now,
+                                                                                      LastModified = DateTime.Now,
+                                                                                      ParamsInfo = x.x2.ParamsInfo,
+                                                                                      RelId = trend2.Id
+                                                                                  }).ToList();
+                        db.t_account_shares_optional_trend_rel_par.AddRange(parList2);
+                        db.SaveChanges();
+
+                        db.t_account_shares_optional_trend_rel_tri.Add(new t_account_shares_optional_trend_rel_tri
+                        {
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            RelId = trend2.Id,
+                            LastPushPrice = null,
+                            LastPushRiseRate = null,
+                            LastPushTime = null,
+                            MinPushRateInterval = Singleton.Instance.MinPushRateInterval,
+                            MinPushTimeInterval = Singleton.Instance.MinPushTimeInterval,
+                            TriCountToday = 0,
+                            MinTodayPrice = -1
+                        });
+                        db.SaveChanges();
+
+                        t_account_shares_optional_trend_rel trend3 = new t_account_shares_optional_trend_rel
+                        {
+                            Status = 1,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            OptionalId = addOptional.Id,
+                            TrendId = 3
+                        };
+                        db.t_account_shares_optional_trend_rel.Add(trend3);
+                        db.SaveChanges();
+
+                        List<t_account_shares_optional_trend_rel_par> parList3 = (from x in par
+                                                                                  where x.x.TrendId == 3
+                                                                                  select new t_account_shares_optional_trend_rel_par
+                                                                                  {
+                                                                                      CreateTime = DateTime.Now,
+                                                                                      LastModified = DateTime.Now,
+                                                                                      ParamsInfo = x.x2.ParamsInfo,
+                                                                                      RelId = trend3.Id
+                                                                                  }).ToList();
+                        db.t_account_shares_optional_trend_rel_par.AddRange(parList3);
+                        db.SaveChanges();
+
+                        db.t_account_shares_optional_trend_rel_tri.Add(new t_account_shares_optional_trend_rel_tri
+                        {
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            RelId = trend3.Id,
+                            LastPushPrice = null,
+                            LastPushRiseRate = null,
+                            LastPushTime = null,
+                            MinPushRateInterval = Singleton.Instance.MinPushRateInterval,
+                            MinPushTimeInterval = Singleton.Instance.MinPushTimeInterval,
+                            TriCountToday = 0,
+                            MinTodayPrice = -1
+                        });
+                        db.SaveChanges();
+                    }
+
+                    tran.Commit();
+                    return tempList.Count();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
 
         /// <summary>
         /// 删除自选股
@@ -1653,20 +1858,53 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
         /// 查询跟投人
         /// </summary>
         /// <returns></returns>
-        public List<FollowAccountInfo> GetFollowAccountList(HeadBase basedata)
+        public List<FollowAccountInfo> GetFollowAccountList(GetFollowAccountListRequest request,HeadBase basedata)
         {
             using (var db = new meal_ticketEntities())
             {
+
+                var buySetting = from item in db.t_account_shares_buy_setting
+                                 where item.Type == 1
+                                 select item;
                 var followList = (from item in db.t_account_follow_rel
                                   join item2 in db.t_account_baseinfo on item.FollowAccountId equals item2.Id
+                                  join item3 in db.t_account_wallet on item.FollowAccountId equals item3.AccountId
+                                  join item4 in buySetting on item.FollowAccountId equals item4.AccountId into a from ai in a.DefaultIfEmpty()
                                   where item.AccountId == basedata.AccountId && item2.Status == 1
-                                  orderby item.CreateTime
+                                  orderby item.OrderIndex descending,item.CreateTime
                                   select new FollowAccountInfo
                                   {
                                       AccountId = item.FollowAccountId,
                                       AccountMobile = item2.Mobile,
-                                      AccountName = item2.NickName
+                                      AccountName = item2.NickName,
+                                      MaxDeposit=item3.Deposit-(ai==null?0:ai.ParValue)
                                   }).ToList();
+                if (!string.IsNullOrEmpty(request.SharesCode))
+                {
+                    foreach (var follow in followList)
+                    {
+                        //计算杠杆倍数
+                        var accountRules = from item in db.t_shares_limit_fundmultiple_account
+                                           where item.AccountId == follow.AccountId
+                                           select item;
+
+
+                        var rules = (from item in db.t_shares_limit_fundmultiple
+                                     join item2 in accountRules on item.Id equals item2.FundmultipleId into a
+                                     from ai in a.DefaultIfEmpty()
+                                     where (item.LimitMarket == request.Market || item.LimitMarket == -1) && (request.SharesCode.StartsWith(item.LimitKey))
+                                     orderby item.Priority descending, item.FundMultiple
+                                     select new { item, ai }).FirstOrDefault();
+                        if (rules == null)
+                        {
+                            follow.MaxFundMultiple = 0;
+                        }
+                        else
+                        {
+                            follow.MaxFundMultiple = (rules.ai == null|| rules.item.FundMultiple< rules.ai.FundMultiple) ? rules.item.FundMultiple : rules.ai.FundMultiple;
+                        }
+                    }
+                }
                 return followList;
             }
         }
@@ -2330,7 +2568,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 }
                 else
                 {
-                    sharesQuotes.FundMultiple = rules.ai==null? rules.item.FundMultiple:rules.ai.FundMultiple;
+                    sharesQuotes.FundMultiple = (rules.ai== null || rules.item.FundMultiple < rules.ai.FundMultiple)? rules.item.FundMultiple:rules.ai.FundMultiple;
                     sharesQuotes.TotalRise = isSt ? rules.item.Range / 2 : rules.item.Range;
                 }
                 return sharesQuotes;
@@ -2441,7 +2679,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                             ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                             ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
                             ObjectParameter buyIdDb = new ObjectParameter("buyId", 0);
-                            db.P_ApplyTradeBuy(buy.AccountId, request.Market, request.SharesCode, buy.BuyAmount, request.FundMultiple, request.BuyPrice, null, true, errorCodeDb, errorMessageDb, buyIdDb);
+                            db.P_ApplyTradeBuy(buy.AccountId, request.Market, request.SharesCode, buy.BuyAmount, request.FundMultiple, request.BuyPrice, null, true, request.AccountId == basedata.AccountId ? request.AccountId:0, errorCodeDb, errorMessageDb, buyIdDb);
                             int errorCode = (int)errorCodeDb.Value;
                             string errorMessage = errorMessageDb.Value.ToString();
                             if (errorCode != 0)
@@ -3559,13 +3797,26 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                     item.ParValidCount = details.Where(e => e.Status == 1 && e.TriggerTime == null).Count();
 
                     //计算杠杆倍数
+                    var accountRules = from x in db.t_shares_limit_fundmultiple_account
+                                       where x.AccountId == request.Id
+                                       select x;
+
+
                     var rules = (from x in db.t_shares_limit_fundmultiple
+                                 join x2 in accountRules on x.Id equals x2.FundmultipleId into a
+                                 from ai in a.DefaultIfEmpty()
                                  where (x.LimitMarket == item.Market || x.LimitMarket == -1) && (item.SharesCode.StartsWith(x.LimitKey))
                                  orderby x.Priority descending, x.FundMultiple
-                                 select x).FirstOrDefault();
-                    if (rules != null)
+                                 select new { x, ai }).FirstOrDefault();
+                    if (rules == null)
                     {
-                        item.Range = rules.Range;
+                        item.Fundmultiple = 0;
+                        item.Range = 0;
+                    }
+                    else
+                    {
+                        item.Fundmultiple = (rules.ai == null || rules.x.FundMultiple < rules.ai.FundMultiple) ? rules.x.FundMultiple : rules.ai.FundMultiple;
+                        item.Range = rules.x.Range;
                     }
                     var groupRel = (from x in groupRelList
                                     where x.Market == item.Market && x.SharesCode == item.SharesCode
@@ -6714,7 +6965,8 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 }
 
                 var sell_details = (from item in temp
-                                    orderby item.Type
+                                    let type=item.Type==1?4:item.Type
+                                    orderby type
                                     select new ConditiontradeTemplateSellDetailsInfo
                                     {
                                         Status = item.Status,
@@ -6779,7 +7031,8 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                            select item;
                 }
                 var sell_details = (from item in temp
-                                    orderby item.Type
+                                    let type = item.Type == 1 ? 4 : item.Type
+                                    orderby type
                                     select new ConditiontradeTemplateSellDetailsInfo
                                     {
                                         Status = item.Status,
@@ -10129,7 +10382,7 @@ select @buyId;";
                                                 else
                                                 {
                                                     long basePrice = ConditionPriceBase == 1 ? closedPrice : currPrice;
-                                                    conditionPrice = ConditionRelativeType == 1 ? ((long)Math.Round(basePrice / 100 + basePrice / 100 * 1.0 / 10000 * range + ConditionRelativeRate)) * 100 : ConditionRelativeType == 2 ? ((long)Math.Round(basePrice / 100 - basePrice / 100 * 1.0 / 10000 * range + ConditionRelativeRate)) * 100 : ((long)Math.Round(basePrice / 100 + basePrice / 100 * 1.0 / 10000 * ConditionRelativeRate));
+                                                    conditionPrice = ConditionRelativeType == 1 ? ((long)Math.Round(basePrice / 100 + basePrice / 100 * 1.0 / 10000 * range + ConditionRelativeRate)) * 100 : ConditionRelativeType == 2 ? ((long)Math.Round(basePrice / 100 - basePrice / 100 * 1.0 / 10000 * range + ConditionRelativeRate)) * 100 : ((long)Math.Round(basePrice / 100 + basePrice / 100 * 1.0 / 10000 * ConditionRelativeRate))*100;
                                                 }
                                             }
                                             t_account_shares_conditiontrade_buy_details temp = new t_account_shares_conditiontrade_buy_details
@@ -11402,6 +11655,117 @@ select @buyId;";
                 }
                 db.t_account_shares_buy_setting_par.Remove(par);
                 db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取用户买入条件触发记录
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionRecordInfo> GetAccountBuyConditionRecord(GetAccountBuyConditionRecordRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_account_shares_conditiontrade_buy_details
+                             join item2 in db.t_account_shares_conditiontrade_buy on item.ConditionId equals item2.Id
+                             join item3 in db.t_account_baseinfo on item2.AccountId equals item3.Id
+                             join item4 in db.t_shares_all on new { item2.Market, item2.SharesCode } equals new { item4.Market, item4.SharesCode }
+                             join item5 in db.t_account_shares_entrust on item.EntrustId equals item5.Id into a from ai in a.DefaultIfEmpty()
+                             where item.CreateAccountId == basedata.AccountId && item.TriggerTime != null
+                             select new { item, item2, item3, item4, ai };
+                if (request.BusinessStatus == 1)
+                {
+                    result = from item in result
+                             where item.item.BuyAuto==true
+                             select item;
+                }
+                if (request.BusinessStatus == 2)
+                {
+                    result = from item in result
+                             where item.item.BuyAuto == false
+                             select item;
+                }
+                if (!string.IsNullOrEmpty(request.StartTime) && !string.IsNullOrEmpty(request.EndTime))
+                {
+                    var startTime = DateTime.Parse(request.StartTime);
+                    var endTime = DateTime.Parse(request.EndTime);
+                    result = from item in result
+                             where item.item.TriggerTime >= startTime && item.item.TriggerTime < endTime
+                             select item;
+                }
+                if (!string.IsNullOrEmpty(request.SharesInfo))
+                {
+                    result = from item in result
+                             where item.item4.SharesCode.Contains(request.SharesInfo) || item.item4.SharesName.Contains(request.SharesInfo) || item.item4.SharesPyjc.Contains(request.SharesInfo)
+                             select item;
+                }
+                if (request.EntrustStatus == 1)
+                {
+                    result = from item in result
+                             where item.ai != null && item.ai.Status==1
+                             select item;
+                }
+                if (request.EntrustStatus == 2)
+                {
+                    result = from item in result
+                             where item.ai != null && (item.ai.Status == 2 || item.ai.Status == 5)
+                             select item;
+                }
+                if (request.EntrustStatus == 3)
+                {
+                    result = from item in result
+                             where item.ai != null && item.ai.Status == 3 && item.ai.DealCount<=0
+                             select item;
+                }
+                if (request.EntrustStatus == 4)
+                {
+                    result = from item in result
+                             where item.ai != null && item.ai.Status == 3 && item.ai.DealCount >0 && item.ai.DealCount<item.ai.EntrustCount
+                             select item;
+                }
+                if (request.EntrustStatus == 5)
+                {
+                    result = from item in result
+                             where item.ai != null && item.ai.Status == 3 && item.ai.DealCount==item.ai.EntrustCount
+                             select item;
+                }
+                if (request.EntrustStatus == 6)
+                {
+                    result = from item in result
+                             where item.ai == null
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                return new PageRes<AccountBuyConditionRecordInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in result
+                            orderby item.item.TriggerTime descending
+                            select new AccountBuyConditionRecordInfo
+                            {
+                                SharesCode = item.item2.SharesCode,
+                                Market = item.item2.Market,
+                                SharesName = item.item4.SharesName,
+                                BusinessStatus = item.item.BuyAuto?1:2,
+                                EntrustStatus = item.ai == null ? 6 : item.ai.Status,
+                                EntrustStatusDes = item.ai == null ? "" : item.ai.StatusDes,
+                                AccountId = item.item2.AccountId,
+                                AccountMobile = item.item3.Mobile,
+                                AccountNickName = item.item3.NickName,
+                                DealCount = item.ai == null ? 0 : item.ai.DealCount,
+                                EntrustCount = item.ai == null ? 0 : item.ai.EntrustCount,
+                                EntrustPrice = item.ai == null ? 0 : item.ai.EntrustPrice,
+                                EntrustType = item.ai == null ? 0 : item.ai.EntrustType,
+                                Id = item.item.Id,
+                                EntrustId=item.item.EntrustId,
+                                TriggerTime = item.item.TriggerTime
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+
             }
         }
     }

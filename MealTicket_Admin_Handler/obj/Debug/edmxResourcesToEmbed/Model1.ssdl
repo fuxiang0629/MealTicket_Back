@@ -1391,6 +1391,38 @@
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
+  <EntityType Name="t_shares_limit_autobuy">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="LimitMarket" Type="int" Nullable="false" />
+    <Property Name="LimitKey" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="MaxBuyCount" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_limit_autobuy_priority">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="Priority" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_limit_autobuy_priority_plate">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PriorityId" Type="bigint" Nullable="false" />
+    <Property Name="PlateId" Type="bigint" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_shares_limit_date">
     <Key>
       <PropertyRef Name="Id" />
@@ -1607,6 +1639,17 @@
     <Property Name="Market" Type="int" Nullable="false" />
     <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_shares_limit">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="LimitMarket" Type="int" Nullable="false" />
+    <Property Name="LimitKey" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="LimitType" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_quotes">
     <Key>
@@ -1947,6 +1990,7 @@
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="OtherConditionRelative" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="t_sys_conditiontrade_template_sell_child">
     <Key>
@@ -2270,6 +2314,9 @@
     <EntitySet Name="t_shares_allot_account" EntityType="Self.t_shares_allot_account" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_hq_host" EntityType="Self.t_shares_hq_host" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_limit" EntityType="Self.t_shares_limit" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_limit_autobuy" EntityType="Self.t_shares_limit_autobuy" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_limit_autobuy_priority" EntityType="Self.t_shares_limit_autobuy_priority" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_limit_autobuy_priority_plate" EntityType="Self.t_shares_limit_autobuy_priority_plate" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_limit_date" EntityType="Self.t_shares_limit_date" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_limit_date_group" EntityType="Self.t_shares_limit_date_group" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_limit_fundmultiple" EntityType="Self.t_shares_limit_fundmultiple" Schema="dbo" store:Type="Tables" />
@@ -2288,6 +2335,7 @@
     <EntitySet Name="t_shares_monitor_trend_rel_par" EntityType="Self.t_shares_monitor_trend_rel_par" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_plate" EntityType="Self.t_shares_plate" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_plate_rel" EntityType="Self.t_shares_plate_rel" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_plate_shares_limit" EntityType="Self.t_shares_plate_shares_limit" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_quotes" EntityType="Self.t_shares_quotes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_search" EntityType="Self.t_shares_search" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_suspension" EntityType="Self.t_shares_suspension" Schema="dbo" store:Type="Tables" />

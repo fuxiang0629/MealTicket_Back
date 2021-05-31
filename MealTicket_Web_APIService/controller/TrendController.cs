@@ -47,13 +47,15 @@ namespace MealTicket_Web_APIService.controller
         /// <returns></returns>
         [Description("根据股票代码/名称/简拼获取股票列表")]
         [Route("shares/list"), HttpPost]
+        [CheckUserLoginFilter]
         public List<SharesInfo> GetSharesList(GetSharesListRequest request)
         {
             if (request == null)
             {
                 throw new WebApiException(400, "参数错误");
             }
-            return trendHandler.GetSharesList(request);
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesList(request,basedata);
         }
 
         /// <summary>
@@ -118,6 +120,80 @@ namespace MealTicket_Web_APIService.controller
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             trendHandler.AddAccountOptional(request, basedata);
             return null;
+        }
+
+        /// <summary>
+        /// 批量导入自选股列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/optional/batch/add"), HttpPost]
+        [Description("批量导入自选股列表")]
+        [CheckUserLoginFilter]
+        public async Task<object> BatchAddAccountOptional()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<SharesInfo> sharesList = new List<SharesInfo>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+                            if (datas.Length < 2)
+                            {
+                                continue;
+                            }
+                            var stock = datas[0].Split('.');
+                            if (stock.Count() != 2)
+                            {
+                                continue;
+                            }
+
+                            sharesList.Add(new SharesInfo
+                            {
+                                Market = stock[1] == "SZ" ? 0 : 1,
+                                SharesCode = int.Parse(stock[0]).ToString("000000"),
+                                SharesName = datas[1]
+                            });
+                        }
+                        HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+                        return trendHandler.BatchAddAccountOptional(basedata.AccountId, sharesList);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
         }
 
         /// <summary>
@@ -797,10 +873,10 @@ namespace MealTicket_Web_APIService.controller
         [Route("follow/account/list"), HttpPost]
         [Description("查询跟投人")]
         [CheckUserLoginFilter]
-        public List<FollowAccountInfo> GetFollowAccountList()
+        public List<FollowAccountInfo> GetFollowAccountList(GetFollowAccountListRequest request)
         {
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
-            return trendHandler.GetFollowAccountList(basedata);
+            return trendHandler.GetFollowAccountList(request,basedata);
         }
 
         /// <summary>
@@ -5195,6 +5271,23 @@ namespace MealTicket_Web_APIService.controller
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             trendHandler.DeleteAccountBuySettingPar(request, basedata);
             return null;
+        }
+
+        /// <summary>
+        /// 获取用户买入条件触发记录
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取用户买入条件触发记录")]
+        [Route("account/buy/condition/record"), HttpPost]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionRecordInfo> GetAccountBuyConditionRecord(GetAccountBuyConditionRecordRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountBuyConditionRecord(request, basedata);
         }
     }
 }
