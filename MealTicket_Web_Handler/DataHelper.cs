@@ -1101,6 +1101,17 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         }
                         return -1;
                     }
+                    //成交额
+                    else if (type == 7)
+                    {
+                        //查询前几个交易日平均交易额
+
+                    }
+                    //成交量
+                    else if (type == 8)
+                    {
+
+                    }
                     else
                     {
                         return -1;
