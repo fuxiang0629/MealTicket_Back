@@ -122,6 +122,7 @@
     <EntitySetMapping Name="t_account_follow_rel">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_follow_rel">
         <MappingFragment StoreEntitySet="t_account_follow_rel">
+          <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="AccountId" ColumnName="AccountId" />
           <ScalarProperty Name="FollowAccountId" ColumnName="FollowAccountId" />

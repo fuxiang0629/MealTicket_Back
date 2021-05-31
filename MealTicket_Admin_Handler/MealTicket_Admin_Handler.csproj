@@ -240,6 +240,7 @@
     <Compile Include="Model\FrontAccount\ModifyAccountOptionalGroup.cs" />
     <Compile Include="Model\FrontAccount\ModifyAccountOptionalGroupRelGroupIsContinue.cs" />
     <Compile Include="Model\FrontAccount\ModifyFrontAccountBaseInfo.cs" />
+    <Compile Include="Model\FrontAccount\ModifyFrontAccountFollowOrderIndex.cs" />
     <Compile Include="Model\FrontAccount\ModifyFrontAccountOptionalTrendPar.cs" />
     <Compile Include="Model\FrontAccount\ModifyFrontAccountOptionalTrendTri.cs" />
     <Compile Include="Model\FrontAccount\ModifyFrontAccountPassword.cs" />

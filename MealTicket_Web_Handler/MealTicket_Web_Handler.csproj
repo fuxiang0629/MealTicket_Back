@@ -152,6 +152,7 @@
     <Compile Include="Model\GetAccountBuyConditionOtherGroupList.cs" />
     <Compile Include="Model\GetAccountBuyConditionOtherList.cs" />
     <Compile Include="Model\GetAccountBuyConditionOtherPar.cs" />
+    <Compile Include="Model\GetAccountBuyConditionRecord.cs" />
     <Compile Include="Model\GetAccountBuySetting.cs" />
     <Compile Include="Model\GetAccountBuySettingParList.cs" />
     <Compile Include="Model\GetAccountSharesPlateSharesList.cs" />

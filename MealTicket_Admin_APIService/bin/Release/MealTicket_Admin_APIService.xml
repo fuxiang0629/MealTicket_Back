@@ -1130,6 +1130,13 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.FrontAccountController.ModifyFrontAccountFollowOrderIndex(MealTicket_Admin_Handler.Model.ModifyFrontAccountFollowOrderIndexRequest)">
+            <summary>
+            编辑跟投用户排序值
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.controller.FrontAccountController.DeleteFrontAccountFollow(MealTicket_Admin_Handler.Model.DeleteFrontAccountFollowRequest)">
             <summary>
             删除跟投用户

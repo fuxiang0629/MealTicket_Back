@@ -175,5 +175,10 @@ namespace MealTicket_Admin_Handler.Model
         /// 操盘账户
         /// </summary>
         public string MainAccountInfo { get; set; }
+
+        /// <summary>
+        /// 排序值
+        /// </summary>
+        public int OrderIndex { get; set; }
     }
 }

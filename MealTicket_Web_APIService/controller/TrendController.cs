@@ -5272,5 +5272,22 @@ namespace MealTicket_Web_APIService.controller
             trendHandler.DeleteAccountBuySettingPar(request, basedata);
             return null;
         }
+
+        /// <summary>
+        /// 获取用户买入条件触发记录
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取用户买入条件触发记录")]
+        [Route("account/buy/condition/record"), HttpPost]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionRecordInfo> GetAccountBuyConditionRecord(GetAccountBuyConditionRecordRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountBuyConditionRecord(request, basedata);
+        }
     }
 }

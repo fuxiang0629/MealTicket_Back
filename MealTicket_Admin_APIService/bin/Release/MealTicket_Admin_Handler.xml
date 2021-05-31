@@ -966,6 +966,12 @@
             </summary>
             <param name="request"></param>
         </member>
+        <member name="M:MealTicket_Admin_Handler.FrontAccountHandler.ModifyFrontAccountFollowOrderIndex(MealTicket_Admin_Handler.Model.ModifyFrontAccountFollowOrderIndexRequest)">
+            <summary>
+            编辑跟投用户排序值
+            </summary>
+            <param name="request"></param>
+        </member>
         <member name="M:MealTicket_Admin_Handler.FrontAccountHandler.DeleteFrontAccountFollow(MealTicket_Admin_Handler.Model.DeleteFrontAccountFollowRequest)">
             <summary>
             删除跟投用户
@@ -4327,6 +4333,11 @@
             操盘账户
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.FrontAccountInfo.OrderIndex">
+            <summary>
+            排序值
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.GetFrontAccountLoginLogRequest.AccountInfo">
             <summary>
             用户信息
@@ -5805,6 +5816,21 @@
         <member name="P:MealTicket_Admin_Handler.Model.ModifyFrontAccountBaseInfoRequest.BirthDay">
             <summary>
             出生年月
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyFrontAccountFollowOrderIndexRequest.AccountId">
+            <summary>
+            用户Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyFrontAccountFollowOrderIndexRequest.FollowAccountId">
+            <summary>
+            跟投用户Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyFrontAccountFollowOrderIndexRequest.OrderIndex">
+            <summary>
+            排序值
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.ModifyFrontAccountOptionalTrendParRequest.Id">

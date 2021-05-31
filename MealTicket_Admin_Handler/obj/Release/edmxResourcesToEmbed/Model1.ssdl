@@ -119,6 +119,7 @@
     <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="AccountId" Type="bigint" Nullable="false" />
     <Property Name="FollowAccountId" Type="bigint" Nullable="false" />
+    <Property Name="OrderIndex" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_login_token">

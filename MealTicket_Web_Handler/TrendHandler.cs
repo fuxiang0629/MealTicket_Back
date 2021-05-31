@@ -1871,7 +1871,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                   join item3 in db.t_account_wallet on item.FollowAccountId equals item3.AccountId
                                   join item4 in buySetting on item.FollowAccountId equals item4.AccountId into a from ai in a.DefaultIfEmpty()
                                   where item.AccountId == basedata.AccountId && item2.Status == 1
-                                  orderby item.CreateTime
+                                  orderby item.OrderIndex descending,item.CreateTime
                                   select new FollowAccountInfo
                                   {
                                       AccountId = item.FollowAccountId,
@@ -11655,6 +11655,117 @@ select @buyId;";
                 }
                 db.t_account_shares_buy_setting_par.Remove(par);
                 db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取用户买入条件触发记录
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionRecordInfo> GetAccountBuyConditionRecord(GetAccountBuyConditionRecordRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_account_shares_conditiontrade_buy_details
+                             join item2 in db.t_account_shares_conditiontrade_buy on item.ConditionId equals item2.Id
+                             join item3 in db.t_account_baseinfo on item2.AccountId equals item3.Id
+                             join item4 in db.t_shares_all on new { item2.Market, item2.SharesCode } equals new { item4.Market, item4.SharesCode }
+                             join item5 in db.t_account_shares_entrust on item.EntrustId equals item5.Id into a from ai in a.DefaultIfEmpty()
+                             where item.CreateAccountId == basedata.AccountId && item.TriggerTime != null
+                             select new { item, item2, item3, item4, ai };
+                if (request.BusinessStatus == 1)
+                {
+                    result = from item in result
+                             where item.item.BuyAuto==true
+                             select item;
+                }
+                if (request.BusinessStatus == 2)
+                {
+                    result = from item in result
+                             where item.item.BuyAuto == false
+                             select item;
+                }
+                if (!string.IsNullOrEmpty(request.StartTime) && !string.IsNullOrEmpty(request.EndTime))
+                {
+                    var startTime = DateTime.Parse(request.StartTime);
+                    var endTime = DateTime.Parse(request.EndTime);
+                    result = from item in result
+                             where item.item.TriggerTime >= startTime && item.item.TriggerTime < endTime
+                             select item;
+                }
+                if (!string.IsNullOrEmpty(request.SharesInfo))
+                {
+                    result = from item in result
+                             where item.item4.SharesCode.Contains(request.SharesInfo) || item.item4.SharesName.Contains(request.SharesInfo) || item.item4.SharesPyjc.Contains(request.SharesInfo)
+                             select item;
+                }
+                if (request.EntrustStatus == 1)
+                {
+                    result = from item in result
+                             where item.ai != null && item.ai.Status==1
+                             select item;
+                }
+                if (request.EntrustStatus == 2)
+                {
+                    result = from item in result
+                             where item.ai != null && (item.ai.Status == 2 || item.ai.Status == 5)
+                             select item;
+                }
+                if (request.EntrustStatus == 3)
+                {
+                    result = from item in result
+                             where item.ai != null && item.ai.Status == 3 && item.ai.DealCount<=0
+                             select item;
+                }
+                if (request.EntrustStatus == 4)
+                {
+                    result = from item in result
+                             where item.ai != null && item.ai.Status == 3 && item.ai.DealCount >0 && item.ai.DealCount<item.ai.EntrustCount
+                             select item;
+                }
+                if (request.EntrustStatus == 5)
+                {
+                    result = from item in result
+                             where item.ai != null && item.ai.Status == 3 && item.ai.DealCount==item.ai.EntrustCount
+                             select item;
+                }
+                if (request.EntrustStatus == 6)
+                {
+                    result = from item in result
+                             where item.ai == null
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                return new PageRes<AccountBuyConditionRecordInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in result
+                            orderby item.item.TriggerTime descending
+                            select new AccountBuyConditionRecordInfo
+                            {
+                                SharesCode = item.item2.SharesCode,
+                                Market = item.item2.Market,
+                                SharesName = item.item4.SharesName,
+                                BusinessStatus = item.item.BuyAuto?1:2,
+                                EntrustStatus = item.ai == null ? 6 : item.ai.Status,
+                                EntrustStatusDes = item.ai == null ? "" : item.ai.StatusDes,
+                                AccountId = item.item2.AccountId,
+                                AccountMobile = item.item3.Mobile,
+                                AccountNickName = item.item3.NickName,
+                                DealCount = item.ai == null ? 0 : item.ai.DealCount,
+                                EntrustCount = item.ai == null ? 0 : item.ai.EntrustCount,
+                                EntrustPrice = item.ai == null ? 0 : item.ai.EntrustPrice,
+                                EntrustType = item.ai == null ? 0 : item.ai.EntrustType,
+                                Id = item.item.Id,
+                                EntrustId=item.item.EntrustId,
+                                TriggerTime = item.item.TriggerTime
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+
             }
         }
     }
