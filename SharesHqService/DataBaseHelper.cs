@@ -351,6 +351,15 @@ then insert(Market,SharesCode,PresentPrice,ClosedPrice,OpenedPrice,MaxPrice,MinP
                             cmd.ExecuteNonQuery();
                         }
 
+                        sqlUpdate = "insert into t_shares_plate_riserate select PlateId,PlateName,PlateType,SharesCount,RiseRate,getdate() from v_plate where [Status]=1";
+                        using (var cmd = conn.CreateCommand())
+                        {
+                            cmd.CommandType = CommandType.Text;
+                            cmd.Transaction = tran;
+                            cmd.CommandText = sqlUpdate;   //sql语句
+                            cmd.ExecuteNonQuery();
+                        }
+
                         tran.Commit();
                     }
                     catch (Exception ex)
