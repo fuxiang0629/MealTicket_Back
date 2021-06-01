@@ -5289,5 +5289,112 @@ namespace MealTicket_Web_APIService.controller
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.GetAccountBuyConditionRecord(request, basedata);
         }
+
+        /// <summary>
+        /// 获取跟投分组列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取跟投分组列表")]
+        [Route("account/follow/group/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public PageRes<AccountFollowGroupInfo> GetAccountFollowGroupList(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountFollowGroupList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加跟投分组
+        /// </summary>
+        /// <returns></returns>
+        [Description("添加跟投分组")]
+        [Route("account/follow/group/add"), HttpPost]
+        [CheckUserLoginFilter]
+        public object AddAccountFollowGroup(AddAccountFollowGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountFollowGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑跟投分组
+        /// </summary>
+        /// <returns></returns>
+        [Description("编辑跟投分组")]
+        [Route("account/follow/group/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifyAccountFollowGroup(ModifyAccountFollowGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountFollowGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改跟投分组状态
+        /// </summary>
+        /// <returns></returns>
+        [Description("修改跟投分组状态")]
+        [Route("account/follow/group/status/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifyAccountFollowGroupStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountFollowGroupStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 跟投分组绑定跟投账户
+        /// </summary>
+        /// <returns></returns>
+        [Description("跟投分组绑定跟投账户")]
+        [Route("account/follow/group/bind"), HttpPost]
+        [CheckUserLoginFilter]
+        public object BindAccountFollowGroup(BindAccountFollowGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BindAccountFollowGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除跟投分组
+        /// </summary>
+        /// <returns></returns>
+        [Description("删除跟投分组")]
+        [Route("account/follow/group/delete"), HttpPost]
+        [CheckUserLoginFilter]
+        public object DeleteAccountFollowGroup(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountFollowGroup(request, basedata);
+            return null;
+        }
     }
 }

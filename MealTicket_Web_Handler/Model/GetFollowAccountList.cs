@@ -26,6 +26,11 @@ namespace MealTicket_Web_Handler.Model
     public class FollowAccountInfo
     {
         /// <summary>
+        /// Id
+        /// </summary>
+        public long Id { get; set; }
+
+        /// <summary>
         /// 账户Id
         /// </summary>
         public long AccountId { get; set; }

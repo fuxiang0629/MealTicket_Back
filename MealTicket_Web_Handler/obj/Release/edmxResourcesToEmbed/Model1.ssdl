@@ -112,6 +112,26 @@
     <Property Name="HandlerTime" Type="datetime" />
     <Property Name="FinishTime" Type="datetime" />
   </EntityType>
+  <EntityType Name="t_account_follow_group">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="GroupName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="OrderIndex" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_follow_group_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="GroupId" Type="bigint" Nullable="false" />
+    <Property Name="RelId" Type="bigint" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_account_follow_rel">
     <Key>
       <PropertyRef Name="Id" />
@@ -294,6 +314,7 @@
     <Property Name="FirstExecTime" Type="datetime" />
     <Property Name="LimitUp" Type="bit" Nullable="false" />
     <Property Name="IsHold" Type="bit" Nullable="false" />
+    <Property Name="FollowType" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_buy_details_auto">
     <Key>
@@ -2450,6 +2471,8 @@
     <Property Name="TriLimitDownBombCount" Type="int" Nullable="false" />
     <Property Name="PriceType" Type="int" Nullable="false" />
     <Property Name="TriPriceType" Type="int" Nullable="false" />
+    <Property Name="TotalAmount" Type="bigint" Nullable="false" />
+    <Property Name="TotalCount" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_quotes_history">
     <Key>
@@ -3455,6 +3478,8 @@
     <EntitySet Name="t_account_cash_record" EntityType="Self.t_account_cash_record" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_cash_record_details" EntityType="Self.t_account_cash_record_details" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_follow_apply_record" EntityType="Self.t_account_follow_apply_record" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_follow_group" EntityType="Self.t_account_follow_group" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_follow_group_rel" EntityType="Self.t_account_follow_group_rel" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_follow_rel" EntityType="Self.t_account_follow_rel" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_login_token" EntityType="Self.t_account_login_token" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_login_token_web" EntityType="Self.t_account_login_token_web" Schema="dbo" store:Type="Tables" />
