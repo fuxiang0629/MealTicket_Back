@@ -273,6 +273,7 @@
     <Property Name="OtherConditionRelative" Type="Int32" Nullable="false" />
     <Property Name="IsHold" Type="Boolean" Nullable="false" />
     <Property Name="FollowType" Type="Int32" Nullable="false" />
+    <Property Name="EntrustErrorDes" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_buy_details_auto">
     <Key>
@@ -3657,5 +3658,9 @@
     <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="GroupId" Type="Int64" Nullable="false" />
     <Property Name="RelId" Type="Int64" Nullable="false" />
+    <Property Name="BuyAmount" Type="Int64" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
   </EntityType>
 </Schema>

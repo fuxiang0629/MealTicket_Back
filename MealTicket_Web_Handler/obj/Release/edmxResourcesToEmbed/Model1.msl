@@ -259,6 +259,7 @@
     <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details">
         <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details">
+          <ScalarProperty Name="EntrustErrorDes" ColumnName="EntrustErrorDes" />
           <ScalarProperty Name="FollowType" ColumnName="FollowType" />
           <ScalarProperty Name="IsHold" ColumnName="IsHold" />
           <ScalarProperty Name="OtherConditionRelative" ColumnName="OtherConditionRelative" />
@@ -3259,6 +3260,10 @@
     <EntitySetMapping Name="t_account_follow_group_rel">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_follow_group_rel">
         <MappingFragment StoreEntitySet="t_account_follow_group_rel">
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="BuyAmount" ColumnName="BuyAmount" />
           <ScalarProperty Name="RelId" ColumnName="RelId" />
           <ScalarProperty Name="GroupId" ColumnName="GroupId" />
           <ScalarProperty Name="Id" ColumnName="Id" />

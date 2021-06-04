@@ -17,5 +17,9 @@ namespace MealTicket_Web_Handler
         public long Id { get; set; }
         public long GroupId { get; set; }
         public long RelId { get; set; }
+        public long BuyAmount { get; set; }
+        public System.DateTime CreateTime { get; set; }
+        public System.DateTime LastModified { get; set; }
+        public int Status { get; set; }
     }
 }

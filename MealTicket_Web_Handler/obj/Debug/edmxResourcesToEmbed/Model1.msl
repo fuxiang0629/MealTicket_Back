@@ -259,6 +259,8 @@
     <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details">
         <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details">
+          <ScalarProperty Name="EntrustErrorDes" ColumnName="EntrustErrorDes" />
+          <ScalarProperty Name="FollowType" ColumnName="FollowType" />
           <ScalarProperty Name="IsHold" ColumnName="IsHold" />
           <ScalarProperty Name="OtherConditionRelative" ColumnName="OtherConditionRelative" />
           <ScalarProperty Name="FirstExecTime" ColumnName="FirstExecTime" />
@@ -3238,6 +3240,28 @@
           <ScalarProperty Name="PresentPrice" ColumnName="PresentPrice" />
           <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
           <ScalarProperty Name="Market" ColumnName="Market" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_follow_group">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_follow_group">
+        <MappingFragment StoreEntitySet="t_account_follow_group">
+          <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_follow_group_rel">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_follow_group_rel">
+        <MappingFragment StoreEntitySet="t_account_follow_group_rel">
+          <ScalarProperty Name="RelId" ColumnName="RelId" />
+          <ScalarProperty Name="GroupId" ColumnName="GroupId" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>

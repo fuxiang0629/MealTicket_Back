@@ -9,6 +9,7 @@ using System.Data.Entity.SqlServer;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Transactions;
 using static StockTrendMonitor.Define.StockMonitorDefine;
 
 namespace MealTicket_Web_Handler
@@ -933,6 +934,8 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
         //分析今日涨跌幅
         public static int Analysis_TodayRiseRate(string sharesCode, int market, List<string> par)
         {
+            string comeTime = string.Empty;
+            string outTime = string.Empty;
             try
             {
                 var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
@@ -990,13 +993,15 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                     dayShortageType = Convert.ToInt32(temp.DayShortageType);
                 }
                 catch (Exception) { }
+
                 DateTime dateNow = DateTime.Now.Date;
                 using (var db = new meal_ticketEntities())
                 {
-                    var quotes_date = (from item in db.t_shares_quotes_date
-                                       where item.SharesCode == sharesCode && item.Market == market && item.LastModified > dateNow
-                                       orderby item.Date
-                                       select item).FirstOrDefault();
+                    comeTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                    string sqlQuery = string.Format("select top 1 LimitUpCount,TriLimitUpCount,LimitDownCount,TriLimitDownCount,LimitUpBombCount,OpenedPrice,ClosedPrice,MaxPrice,MinPrice,TotalAmount,TotalCount from t_shares_quotes_date with(nolock) where SharesCode='{0}' and Market={1} and LastModified>'{2}'", sharesCode, market, dateNow.ToString("yyyy-MM-dd"));
+                    var quotes_date=db.Database.SqlQuery<QuotesDate>(sqlQuery).FirstOrDefault();
+                   
+                    outTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
                     if (quotes_date == null)
                     {
                         return -1;
@@ -1190,7 +1195,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         long avgResult = db.Database.SqlQuery<long>(sql).FirstOrDefault();
                         if ((compare == 1 && quotes_date.TotalCount >= avgResult * multiple) || (compare == 2 && quotes_date.TotalCount <= avgResult * multiple))
                         {
-                            if ((compare2 == 1 && avgResult*100 >= count) || (compare2 == 2 && avgResult * 100 <= count))
+                            if ((compare2 == 1 && avgResult * 100 >= count) || (compare2 == 2 && avgResult * 100 <= count))
                             {
                                 return 0;
                             }
@@ -1205,7 +1210,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
             }
             catch (Exception ex)
             {
-                Logger.WriteFileLog("分析今日涨跌幅出错了", ex);
+                Logger.WriteFileLog(string.Format("分析今日涨跌幅出错了-{0}-{1}-{2}", sharesCode, comeTime, outTime), ex);
                 return -1;
             }
         }
@@ -1347,7 +1352,7 @@ group by t.PlateId,t.PlateName,t.PlateType,t.[Status],t.CreateTime", market, sha
             }
             catch (Exception ex)
             {
-                Logger.WriteFileLog("Analysis_ReferAverage异常", ex);
+                Logger.WriteFileLog("Analysis_PlateRiseRate异常", ex);
                 return -1;
             }
         }
@@ -2217,5 +2222,20 @@ group by t.PlateId,t.PlateName,t.PlateType,t.[Status],t.CreateTime", market, sha
                 }
             }
         }
+    }
+
+    public class QuotesDate
+    {
+        public int LimitUpCount { get; set; }
+        public int TriLimitUpCount { get; set; }
+        public int LimitDownCount { get; set; }
+        public int TriLimitDownCount { get; set; }
+        public int LimitUpBombCount { get; set; }
+        public long OpenedPrice { get; set; }
+        public long ClosedPrice { get; set; }
+        public long MaxPrice { get; set; }
+        public long MinPrice { get; set; }
+        public long TotalAmount { get; set; }
+        public int TotalCount { get; set; }
     }
 }

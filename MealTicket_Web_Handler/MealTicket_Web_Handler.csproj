@@ -123,6 +123,7 @@
     <Compile Include="Model\AddAccountBuyConditionTradeShares.cs" />
     <Compile Include="Model\AddAccountBuySettingPar.cs" />
     <Compile Include="Model\AddAccountFollowGroup.cs" />
+    <Compile Include="Model\AddAccountFollowGroupFollowAccount.cs" />
     <Compile Include="Model\AddAccountHoldConditionTrade.cs" />
     <Compile Include="Model\AddAccountOptional.cs" />
     <Compile Include="Model\AddAccountOptionalGroup.cs" />
@@ -144,7 +145,6 @@
     <Compile Include="Model\BatchDeleteConditiontradeBuyShares.cs" />
     <Compile Include="Model\BatchModifyAccountSharesPlateStatus.cs" />
     <Compile Include="Model\BatchSetConditiontradeBuySharesFollow.cs" />
-    <Compile Include="Model\BindAccountFollowGroup.cs" />
     <Compile Include="Model\BindAccountOptionalSeat.cs" />
     <Compile Include="Model\DeleteConditiontradeBuyGroup.cs" />
     <Compile Include="Model\GetAccountBuyConditionAutoGroupList.cs" />
@@ -157,6 +157,7 @@
     <Compile Include="Model\GetAccountBuyConditionRecord.cs" />
     <Compile Include="Model\GetAccountBuySetting.cs" />
     <Compile Include="Model\GetAccountBuySettingParList.cs" />
+    <Compile Include="Model\GetAccountFollowGroupFollowAccountList.cs" />
     <Compile Include="Model\GetAccountFollowGroupList.cs" />
     <Compile Include="Model\GetAccountSharesPlateSharesList.cs" />
     <Compile Include="Model\GetConditiontradeBuyGroupList.cs" />
@@ -214,6 +215,7 @@
     <Compile Include="Model\ModifyAccountBuySetting.cs" />
     <Compile Include="Model\ModifyAccountBuySettingPar.cs" />
     <Compile Include="Model\ModifyAccountFollowGroup.cs" />
+    <Compile Include="Model\ModifyAccountFollowGroupFollowAccount.cs" />
     <Compile Include="Model\ModifyAccountHoldConditionTrade.cs" />
     <Compile Include="Model\ModifyAccountOptionalGroup.cs" />
     <Compile Include="Model\ModifyAccountOptionalGroupRelGroupIsContinue.cs" />

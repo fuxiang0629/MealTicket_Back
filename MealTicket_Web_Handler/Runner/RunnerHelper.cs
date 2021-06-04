@@ -378,49 +378,18 @@ namespace MealTicket_Web_Handler.Runner
             {
                 List<TradeAutoBuyCondition> disResult = new List<TradeAutoBuyCondition>();
                 //查询价格条件达标的数据
-                disResult = (from item in db.t_account_shares_conditiontrade_buy_details
-                             join item2 in db.t_account_shares_conditiontrade_buy on item.ConditionId equals item2.Id
-                             join item3 in db.t_shares_quotes on new { item2.Market, item2.SharesCode } equals new { item3.Market, item3.SharesCode }
-                             where item.Status == 1 && item2.Status == 1 && item.BusinessStatus == 0
-                             select new TradeAutoBuyCondition
-                             {
-                                 Id = item.Id,
-                                 AccountId = item2.AccountId,
-                                 SharesCode = item2.SharesCode,
-                                 Market = item2.Market,
-                                 PresentPrice = item3.PresentPrice,
-                                 ClosedPrice = item3.ClosedPrice,
-                                 LastModified = item3.LastModified,
-                                 LimitUp = item.LimitUp,
-                                 LimitUpPrice = item3.LimitUpPrice,
-                                 LimitDownPrice = item3.LimitDownPrice,
-                                 ForbidType = item.ForbidType,
-                                 FirstExecTime = item.FirstExecTime,
-                                 BuyPrice1 = item3.BuyPrice1,
-                                 BuyPrice2 = item3.BuyPrice2,
-                                 BuyPrice3 = item3.BuyPrice3,
-                                 BuyPrice4 = item3.BuyPrice4,
-                                 BuyPrice5 = item3.BuyPrice5,
-                                 SellPrice1 = item3.SellPrice1,
-                                 SellPrice2 = item3.SellPrice2,
-                                 SellPrice3 = item3.SellPrice3,
-                                 SellPrice4 = item3.SellPrice4,
-                                 SellPrice5 = item3.SellPrice5,
-                                 ConditionPrice = item.ConditionPrice,
-                                 ConditionType = item.ConditionType,
-                                 ConditionRelativeType = item.ConditionRelativeType,
-                                 ConditionRelativeRate = item.ConditionRelativeRate,
-                                 IsGreater = item.IsGreater,
-                                 OtherConditionRelative = item.OtherConditionRelative,
-                                 BusinessStatus = item.BusinessStatus,
-                                 TriggerTime = item.TriggerTime,
-                                 ExecStatus = item.ExecStatus,
-                                 BuyAuto = item.BuyAuto,
-                                 EntrustPriceGear = item.EntrustPriceGear,
-                                 EntrustType = item.EntrustType,
-                                 EntrustAmount = item.EntrustAmount,
-                                 IsHold=item.IsHold
-                             }).ToList();
+                string sql = @"select t.Id,t1.AccountId,t1.SharesCode,t1.Market,t2.PresentPrice,t2.ClosedPrice,t2.LastModified,t.LimitUp,t2.LimitUpPrice,t2.LimitDownPrice,
+t.ForbidType,t.FirstExecTime,t2.BuyPrice1,t2.BuyPrice2,t2.BuyPrice3,t2.BuyPrice4,t2.BuyPrice5,t2.SellPrice1,t2.SellPrice2,t2.SellPrice3,
+t2.SellPrice4,t2.SellPrice5,t.ConditionPrice,t.ConditionType,t.ConditionRelativeType,t.ConditionRelativeRate,t.IsGreater,t.OtherConditionRelative,
+t.BusinessStatus,t.TriggerTime,t.ExecStatus,t.BuyAuto,t.EntrustPriceGear,t.EntrustType,t.EntrustAmount,t.IsHold,t.FollowType
+from t_account_shares_conditiontrade_buy_details t with(nolock)
+inner join t_account_shares_conditiontrade_buy t1 with(nolock) on t.ConditionId=t1.Id
+inner join t_shares_quotes t2 with(nolock) on t1.Market=t2.Market and t1.SharesCode=t2.SharesCode
+where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
+                disResult=db.Database.SqlQuery<TradeAutoBuyCondition>(sql).ToList();
+
+
+
                 if (disResult.Count() <= 0)
                 {
                     conditionData.Release();
@@ -1403,9 +1372,74 @@ namespace MealTicket_Web_Handler.Runner
                     db.Database.ExecuteSqlCommand(sql);
 
                     //查询跟投设置
-                    var FollowList = (from x in db.t_account_shares_conditiontrade_buy_details_follow
+                    List<FollowAccountInfo> FollowList = new List<FollowAccountInfo>();
+                    if (item.FollowType == 1)
+                    {
+                        //查询当前轮询
+                        using (var tran = db.Database.BeginTransaction())
+                        {
+                            try
+                            {
+                                sql = string.Format(@"if(not exists(select top 1 1 from t_account_shares_buy_setting with(xlock) where AccountId={0} and [Type]=3)) 
+begin  
+    insert into t_account_shares_buy_setting(AccountId,[Type],Name,[Description],ParValue,CreateTime,LastModified)
+    values({0},3,'跟投分组轮序位置','跟投分组轮序位置',0,getdate(),getdate())
+end", item.AccountId);
+                                db.Database.ExecuteSqlCommand(sql);
+
+                                sql = string.Format("select top 1 ParValue from t_account_shares_buy_setting where AccountId={0} and [Type]=3", item.AccountId);
+                                var turn = db.Database.SqlQuery<long>(sql).FirstOrDefault();
+
+                                //查询跟投分组信息
+                                sql = string.Format(@"select Id
+  from t_account_follow_group
+  where AccountId = {0} and[Status] = 1
+  order by OrderIndex", item.AccountId);
+                                var groupList = db.Database.SqlQuery<long>(sql).ToList();
+                                int groupCount = groupList.Count();
+                                if (groupCount <= 0)
+                                {
+                                    FollowList = new List<FollowAccountInfo>();
+                                }
+                                else
+                                {
+                                    int thisIndex = (int)turn % groupCount;
+                                    long thisId = groupList[thisIndex];
+
+                                    sql = string.Format(@"select t2.FollowAccountId AccountId,t1.BuyAmount
+  from t_account_follow_group t
+  inner
+  join t_account_follow_group_rel t1 on t.Id = t1.GroupId
+
+inner
+  join t_account_follow_rel t2 on t1.RelId = t2.Id
+  where t.Id = {0} and t.AccountId = {1} and t.[Status]= 1 and t2.AccountId = {1}", thisId, item.AccountId);
+                                    FollowList = db.Database.SqlQuery<FollowAccountInfo>(sql).ToList();
+                                }
+
+                                sql = string.Format("update t_account_shares_buy_setting set ParValue=ParValue+1 where AccountId={0} and [Type]=3", item.AccountId);
+                                db.Database.ExecuteSqlCommand(sql);
+
+                                tran.Commit();
+                            }
+                            catch (Exception ex)
+                            {
+                                tran.Rollback();
+                                throw new WebApiException(400, "跟投分组查询出错");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        FollowList = (from x in db.t_account_shares_conditiontrade_buy_details_follow
                                       where x.DetailsId == item.Id
-                                      select x.FollowAccountId).ToList();
+                                      select new FollowAccountInfo
+                                      {
+                                          AccountId = x.FollowAccountId,
+                                          BuyAmount = 0
+                                      }).ToList();
+                    }
+
 
 
                     //查询跟投人员
@@ -1451,23 +1485,24 @@ namespace MealTicket_Web_Handler.Runner
                     var buyRate = EntrustAmount * 1.0 / (Deposit - RemainDeposit);//仓位占比
                     foreach (var account in FollowList)
                     {
-                        var temp = followList.Where(e => e.AccountId == account).FirstOrDefault();
+                        var temp = followList.Where(e => e.AccountId == account.AccountId).FirstOrDefault();
                         if (temp == null)
                         {
                             continue;
                         }
                         long followRemainDeposit = 0;
                         var followBuySetting = (from x in db.t_account_shares_buy_setting
-                                                where x.AccountId == account && x.Type == 1
+                                                where x.AccountId == account.AccountId && x.Type == 1
                                                 select x).FirstOrDefault();
                         if (followBuySetting != null)
                         {
                             followRemainDeposit = followBuySetting.ParValue / 100 * 100;
                         }
+                        var tempRate = account.BuyAmount == 0 ? buyRate : account.BuyAmount == -1 ? 1 : -1;
                         buyList.Add(new
                         {
-                            AccountId = account,
-                            BuyAmount = (long)((temp.Deposit - followRemainDeposit) * buyRate)
+                            AccountId = account.AccountId,
+                            BuyAmount = tempRate==-1? account.BuyAmount:(long)((temp.Deposit - followRemainDeposit) * tempRate)
                         });
                     }
 
@@ -1540,6 +1575,9 @@ namespace MealTicket_Web_Handler.Runner
                                 tran.Rollback();
                                 if (buy.AccountId == item.AccountId)//主账号失败直接退出
                                 {
+                                    //更新错误原因
+                                    sql = string.Format("update t_account_shares_conditiontrade_buy_details set EntrustErrorDes='{0}' where Id={1}", ex.Message, item.Id);
+                                    db.Database.ExecuteSqlCommand(sql);
                                     sendDataList = new List<dynamic>();
                                     break;
                                 }
@@ -2066,6 +2104,8 @@ namespace MealTicket_Web_Handler.Runner
         public long EntrustAmount { get; set; }
 
         public bool IsHold { get; set; }
+
+        public int FollowType { get; set; }
     }
 
     public class TradeAutoBuyConditionGroup
@@ -2077,5 +2117,12 @@ namespace MealTicket_Web_Handler.Runner
         public int Market { get; set; }
 
         public List<TradeAutoBuyCondition> List { get; set; }
+    }
+
+    public class FollowAccountInfo 
+    {
+        public long AccountId { get; set; }
+
+        public long BuyAmount { get; set; }
     }
 }

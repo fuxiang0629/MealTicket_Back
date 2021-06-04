@@ -272,6 +272,8 @@
     <Property Name="FirstExecTime" Type="DateTime" Precision="3" />
     <Property Name="OtherConditionRelative" Type="Int32" Nullable="false" />
     <Property Name="IsHold" Type="Boolean" Nullable="false" />
+    <Property Name="FollowType" Type="Int32" Nullable="false" />
+    <Property Name="EntrustErrorDes" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_buy_details_auto">
     <Key>
@@ -2955,6 +2957,8 @@
     <EntitySet Name="t_account_shares_hold_conditiontrade_follow" EntityType="meal_ticketModel.t_account_shares_hold_conditiontrade_follow" />
     <EntitySet Name="t_shares_limit_autobuy" EntityType="meal_ticketModel.t_shares_limit_autobuy" />
     <EntitySet Name="t_shares_quotes_last" EntityType="meal_ticketModel.t_shares_quotes_last" />
+    <EntitySet Name="t_account_follow_group" EntityType="meal_ticketModel.t_account_follow_group" />
+    <EntitySet Name="t_account_follow_group_rel" EntityType="meal_ticketModel.t_account_follow_group_rel" />
   </EntityContainer>
   <EntityType Name="t_shares_plate">
     <Key>
@@ -3634,5 +3638,25 @@
     <Property Name="LimitDownPrice" Type="Int64" Nullable="false" />
     <Property Name="PriceType" Type="Int32" Nullable="false" />
     <Property Name="TriPriceType" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_follow_group">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="GroupName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="OrderIndex" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_follow_group_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="GroupId" Type="Int64" Nullable="false" />
+    <Property Name="RelId" Type="Int64" Nullable="false" />
   </EntityType>
 </Schema>
