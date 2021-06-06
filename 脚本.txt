@@ -1,5 +1,8 @@
 v_plate
-
+v_plate_shares
+  alter table t_shares_plate add SharesType int not null default 0;
+  alter table t_shares_plate add SharesMarket int not null default 0;
+  alter table t_shares_plate add SharesCode varchar(50);
 
 t_shares_info_fund_group
 t_shares_info_fund_group_details

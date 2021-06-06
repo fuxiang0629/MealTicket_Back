@@ -1227,6 +1227,13 @@
             </summary>
             <param name="request"></param>
         </member>
+        <member name="M:MealTicket_Admin_Handler.FrontAccountHandler.BatchAddFrontAccountSharesAllot(System.Collections.Generic.List{MealTicket_Admin_Handler.Model.AddFrontAccountSharesAllotRequest})">
+            <summary>
+            批量导入股票派股派息
+            </summary>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_Handler.FrontAccountHandler.ModifyFrontAccountSharesAllot(MealTicket_Admin_Handler.Model.ModifyFrontAccountSharesAllotRequest)">
             <summary>
             编辑股票派股派息
@@ -8758,6 +8765,21 @@
             名称
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesPlateRequest.SharesType">
+            <summary>
+            0指定股票 2代码匹配
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesPlateRequest.SharesMarket">
+            <summary>
+            匹配市场
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesPlateRequest.SharesCode">
+            <summary>
+            匹配代码
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.AddSharesPlateSharesRequest.PlateId">
             <summary>
             板块Id
@@ -9473,6 +9495,21 @@
             涨幅
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.SharesType">
+            <summary>
+            0指定股票 1代码匹配
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.SharesMarket">
+            <summary>
+            匹配市场
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.SharesCode">
+            <summary>
+            匹配代码
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.CreateTime">
             <summary>
             数据创建时间
@@ -9896,6 +9933,21 @@
         <member name="P:MealTicket_Admin_Handler.Model.ModifySharesPlateRequest.Name">
             <summary>
             名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesPlateRequest.SharesType">
+            <summary>
+            0指定股票 2代码匹配
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesPlateRequest.SharesMarket">
+            <summary>
+            匹配市场
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesPlateRequest.SharesCode">
+            <summary>
+            匹配代码
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.ModifySharesPriorityAutoBuyRequest.Id">
@@ -12009,6 +12061,12 @@
             添加板块股票
             </summary>
             <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesPlateShares(System.Collections.Generic.List{MealTicket_Admin_Handler.Model.SharesInfo},System.Int64)">
+            <summary>
+            批量导入板块股票
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteSharesPlateShares(MealTicket_Admin_Handler.Model.DeleteRequest)">
             <summary>

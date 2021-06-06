@@ -1,6 +1,7 @@
 ﻿using MealTicket_Admin_APIService.Filter;
 using MealTicket_Admin_Handler;
 using MealTicket_Admin_Handler.Model;
+using Newtonsoft.Json;
 using Ninject;
 using System;
 using System.Collections.Generic;
@@ -1791,6 +1792,100 @@ namespace MealTicket_Admin_APIService.controller
             }
             frontAccountHandler.AddFrontAccountSharesAllot(request);
             return null;
+        }
+
+        /// <summary>
+        /// 批量导入股票派股派息
+        /// </summary>
+        /// <returns></returns>
+        [Route("shares/allot/batch/add"), HttpPost]
+        [Description("批量导入股票派股派息")]
+        [CheckUserLoginFilter]
+        public async Task<object> BatchAddFrontAccountSharesAllot()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<AddFrontAccountSharesAllotRequest> sharesList = new List<AddFrontAccountSharesAllotRequest>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+                            if (datas.Length < 7)
+                            {
+                                continue;
+                            }
+                            var stock = datas[0].Split('.');
+                            if (stock.Count() != 2)
+                            {
+                                continue;
+                            }
+                            DateTime AllotDate;
+                            try
+                            {
+                                AllotDate = DateTime.Parse(datas[6]);
+                            }
+                            catch (Exception ex)
+                            {
+                                continue;
+                            }
+                            sharesList.Add(new AddFrontAccountSharesAllotRequest
+                            {
+                                Market = stock[1] == "SZ" ? 0 : 1,
+                                SharesCode = int.Parse(stock[0]).ToString("000000"),
+                                AllotDate= AllotDate,
+                                AllotSharesInfo=string.IsNullOrEmpty(datas[2])?null:JsonConvert.SerializeObject(new 
+                                {
+                                    BaseCount= datas[2].Split('/')[0],
+                                    AllotCount= datas[2].Split('/')[1],
+                                    Remark= datas[3]
+                                }),
+                                AllotBonusInfo= string.IsNullOrEmpty(datas[4]) ? null : JsonConvert.SerializeObject(new
+                                {
+                                    BaseCount = datas[4].Split('/')[0],
+                                    AllotCount = (long.Parse(datas[4].Split('/')[1])*10000).ToString(),
+                                    Remark = datas[5]
+                                }),
+                            });
+                        }
+                        HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+                        return frontAccountHandler.BatchAddFrontAccountSharesAllot(sharesList);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
         }
 
         /// <summary>

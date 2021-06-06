@@ -1386,6 +1386,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.FrontAccountController.BatchAddFrontAccountSharesAllot">
+            <summary>
+            批量导入股票派股派息
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.controller.FrontAccountController.ModifyFrontAccountSharesAllot(MealTicket_Admin_Handler.Model.ModifyFrontAccountSharesAllotRequest)">
             <summary>
             编辑股票派股派息
@@ -2178,6 +2184,12 @@
             添加板块股票
             </summary>
             <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.BatchAddSharesPlateShares">
+            <summary>
+            批量导入板块股票
+            </summary>
             <returns></returns>
         </member>
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeleteSharesPlateShares(MealTicket_Admin_Handler.Model.DeleteRequest)">

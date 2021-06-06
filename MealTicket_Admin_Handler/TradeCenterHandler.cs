@@ -842,6 +842,9 @@ namespace MealTicket_Admin_Handler
                                       Id = item.PlateId,
                                       SharesCount = item.SharesCount ?? 0,
                                       Name = item.PlateName,
+                                      SharesCode=item.LimitSharesCode,
+                                      SharesMarket=item.LimitSharesMarket,
+                                      SharesType=item.SharesType,
                                       RiseRate = item.RiseRate
                                   }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                     }
@@ -856,6 +859,9 @@ namespace MealTicket_Admin_Handler
                                       Id = item.PlateId,
                                       SharesCount = item.SharesCount ?? 0,
                                       Name = item.PlateName,
+                                      SharesCode = item.LimitSharesCode,
+                                      SharesMarket = item.LimitSharesMarket,
+                                      SharesType = item.SharesType,
                                       RiseRate = item.RiseRate
                                   }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                     }
@@ -871,6 +877,9 @@ namespace MealTicket_Admin_Handler
                                   Id = item.PlateId,
                                   SharesCount = item.SharesCount ?? 0,
                                   Name = item.PlateName,
+                                  SharesCode = item.LimitSharesCode,
+                                  SharesMarket = item.LimitSharesMarket,
+                                  SharesType = item.SharesType,
                                   RiseRate = item.RiseRate
                               }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                 }
@@ -908,7 +917,11 @@ namespace MealTicket_Admin_Handler
                     CreateTime=DateTime.Now,
                     LastModified=DateTime.Now,
                     Name=request.Name,
-                    Type=request.Type
+                    Type=request.Type,
+                    SharesMarket=request.SharesMarket,
+                    SharesCode=request.SharesCode,
+                    SharesType=request.SharesType
+
                 });
                 db.SaveChanges();
             }
@@ -973,6 +986,9 @@ namespace MealTicket_Admin_Handler
                 }
 
                 plate.Name = request.Name;
+                plate.SharesType = request.SharesType;
+                plate.SharesCode = request.SharesCode;
+                plate.SharesMarket = request.SharesMarket;
                 plate.LastModified = DateTime.Now;
                 db.SaveChanges();
             }
@@ -1030,9 +1046,9 @@ namespace MealTicket_Admin_Handler
         {
             using (var db = new meal_ticketEntities())
             {
-                var list = from item in db.t_shares_plate_rel
-                           join item2 in db.t_shares_all on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
-                           where item.PlateId == request.Id
+                var list = from item in db.v_plate_shares
+                           join item2 in db.t_shares_all on new { Market=item.Market.Value,item.SharesCode} equals new { item2.Market,item2.SharesCode}
+                           where item.PlateId == request.Id && item.Market!=null
                            select new { item, item2 };
                 int totalCount = list.Count();
                 return new PageRes<SharesInfo> 
@@ -1043,11 +1059,11 @@ namespace MealTicket_Admin_Handler
                          orderby item.item.CreateTime descending
                          select new SharesInfo
                          {
-                             Id=item.item.Id,
-                             SharesCode=item.item2.SharesCode,
+                             Id=item.item.PlateId,
+                             SharesCode=item.item.SharesCode,
                              SharesName=item.item2.SharesName,
                              SharesNamePY=item.item2.SharesPyjc,
-                             Market=item.item2.Market
+                             Market=item.item.Market.Value
                          }).Skip((request.PageIndex-1)*request.PageSize).Take(request.PageSize).ToList()
                 };
             }
@@ -1094,6 +1110,39 @@ namespace MealTicket_Admin_Handler
                     PlateId = request.PlateId
                 });
                 db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 批量导入板块股票
+        /// </summary>
+        /// <returns></returns>
+        public int BatchAddSharesPlateShares(List<SharesInfo> list,long plateId) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                int resultCount = 0;
+                foreach (var item in list)
+                {
+                    //判断是否存在
+                    var plateSHares = (from x in db.t_shares_plate_rel
+                                       where x.PlateId == plateId && x.Market == item.Market && x.SharesCode == item.SharesCode
+                                       select x).FirstOrDefault();
+                    if (plateSHares != null)
+                    {
+                        continue;
+                    }
+                    db.t_shares_plate_rel.Add(new t_shares_plate_rel
+                    {
+                        PlateId = plateId,
+                        CreateTime = DateTime.Now,
+                        SharesCode = item.SharesCode,
+                        Market = item.Market
+                    });
+                    resultCount++;
+                }
+                db.SaveChanges();
+                return resultCount;
             }
         }
 

@@ -1,0 +1,32 @@
+USE [meal_ticket]
+GO
+
+/****** Object:  View [dbo].[v_plate_shares]    Script Date: 2021-06-06 21:52:49 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+
+
+ALTER VIEW [dbo].[v_plate_shares]
+AS
+SELECT   t.Id AS PlateId, t.Name AS PlateName, t.Type AS PlateType,t.[Status],t.SharesType,t.SharesMarket LimitSharesMarket,t.SharesCode LimitSharesCode,t.CreateTime,t1.Market, t1.SharesCode, t2.TotalCapital, 
+                t2.CirculatingCapital, t3.PresentPrice, t3.ClosedPrice
+FROM      dbo.t_shares_plate AS t with(nolock) left join
+                dbo.t_shares_plate_rel AS t1 with(nolock) ON t.Id = t1.PlateId left join
+                dbo.t_shares_markettime AS t2 with(nolock) ON t1.Market = t2.Market AND t1.SharesCode = t2.SharesCode left join
+                dbo.t_shares_quotes AS t3 with(nolock) ON t1.Market = t3.Market AND t1.SharesCode = t3.SharesCode
+
+
+
+
+
+
+GO
+
+

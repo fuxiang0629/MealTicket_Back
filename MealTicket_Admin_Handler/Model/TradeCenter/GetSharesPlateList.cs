@@ -61,6 +61,21 @@ namespace MealTicket_Admin_Handler.Model
         public long? RiseRate { get; set; }
 
         /// <summary>
+        /// 0指定股票 1代码匹配
+        /// </summary>
+        public int SharesType { get; set; }
+
+        /// <summary>
+        /// 匹配市场
+        /// </summary>
+        public int SharesMarket { get; set; }
+
+        /// <summary>
+        /// 匹配代码
+        /// </summary>
+        public string SharesCode { get; set; }
+
+        /// <summary>
         /// 数据创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }

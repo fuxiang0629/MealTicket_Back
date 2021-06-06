@@ -1848,6 +1848,9 @@
     <EntitySetMapping Name="t_shares_plate">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_plate">
         <MappingFragment StoreEntitySet="t_shares_plate">
+          <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+          <ScalarProperty Name="SharesMarket" ColumnName="SharesMarket" />
+          <ScalarProperty Name="SharesType" ColumnName="SharesType" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="Status" ColumnName="Status" />
@@ -2059,6 +2062,9 @@
     <EntitySetMapping Name="v_plate_shares">
       <EntityTypeMapping TypeName="meal_ticketModel.v_plate_shares">
         <MappingFragment StoreEntitySet="v_plate_shares">
+          <ScalarProperty Name="LimitSharesCode" ColumnName="LimitSharesCode" />
+          <ScalarProperty Name="LimitSharesMarket" ColumnName="LimitSharesMarket" />
+          <ScalarProperty Name="SharesType" ColumnName="SharesType" />
           <ScalarProperty Name="ClosedPrice" ColumnName="ClosedPrice" />
           <ScalarProperty Name="PresentPrice" ColumnName="PresentPrice" />
           <ScalarProperty Name="CirculatingCapital" ColumnName="CirculatingCapital" />
@@ -2092,6 +2098,9 @@
     <EntitySetMapping Name="v_plate">
       <EntityTypeMapping TypeName="meal_ticketModel.v_plate">
         <MappingFragment StoreEntitySet="v_plate">
+          <ScalarProperty Name="LimitSharesCode" ColumnName="LimitSharesCode" />
+          <ScalarProperty Name="LimitSharesMarket" ColumnName="LimitSharesMarket" />
+          <ScalarProperty Name="SharesType" ColumnName="SharesType" />
           <ScalarProperty Name="RiseRate" ColumnName="RiseRate" />
           <ScalarProperty Name="SharesCount" ColumnName="SharesCount" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />

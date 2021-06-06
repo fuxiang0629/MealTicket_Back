@@ -1644,6 +1644,9 @@
           <Property Name="Name" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="Type" Type="int" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="SharesType" Type="int" Nullable="false" />
+          <Property Name="SharesMarket" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="50" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
         </EntityType>
@@ -2037,6 +2040,8 @@
             <PropertyRef Name="PlateName" />
             <PropertyRef Name="PlateType" />
             <PropertyRef Name="Status" />
+            <PropertyRef Name="SharesType" />
+            <PropertyRef Name="LimitSharesMarket" />
             <PropertyRef Name="CreateTime" />
             
           </Key>
@@ -2044,6 +2049,9 @@
           <Property Name="PlateName" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="PlateType" Type="int" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="SharesType" Type="int" Nullable="false" />
+          <Property Name="LimitSharesMarket" Type="int" Nullable="false" />
+          <Property Name="LimitSharesCode" Type="varchar" MaxLength="50" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="SharesCount" Type="int" />
           <Property Name="RiseRate" Type="bigint" Nullable="false" />
@@ -2056,12 +2064,17 @@
             <PropertyRef Name="PlateName" />
             <PropertyRef Name="PlateType" />
             <PropertyRef Name="Status" />
+            <PropertyRef Name="SharesType" />
+            <PropertyRef Name="LimitSharesMarket" />
             <PropertyRef Name="CreateTime" />
           </Key>
           <Property Name="PlateId" Type="bigint" Nullable="false" />
           <Property Name="PlateName" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="PlateType" Type="int" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="SharesType" Type="int" Nullable="false" />
+          <Property Name="LimitSharesMarket" Type="int" Nullable="false" />
+          <Property Name="LimitSharesCode" Type="varchar" MaxLength="50" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="Market" Type="int" />
           <Property Name="SharesCode" Type="varchar" MaxLength="20" />
@@ -2386,6 +2399,9 @@
     [v_plate].[PlateName] AS [PlateName], 
     [v_plate].[PlateType] AS [PlateType], 
     [v_plate].[Status] AS [Status], 
+    [v_plate].[SharesType] AS [SharesType], 
+    [v_plate].[LimitSharesMarket] AS [LimitSharesMarket], 
+    [v_plate].[LimitSharesCode] AS [LimitSharesCode], 
     [v_plate].[CreateTime] AS [CreateTime], 
     [v_plate].[SharesCount] AS [SharesCount], 
     [v_plate].[RiseRate] AS [RiseRate]
@@ -2397,6 +2413,9 @@
     [v_plate_shares].[PlateName] AS [PlateName], 
     [v_plate_shares].[PlateType] AS [PlateType], 
     [v_plate_shares].[Status] AS [Status], 
+    [v_plate_shares].[SharesType] AS [SharesType], 
+    [v_plate_shares].[LimitSharesMarket] AS [LimitSharesMarket], 
+    [v_plate_shares].[LimitSharesCode] AS [LimitSharesCode], 
     [v_plate_shares].[CreateTime] AS [CreateTime], 
     [v_plate_shares].[Market] AS [Market], 
     [v_plate_shares].[SharesCode] AS [SharesCode], 
@@ -4439,6 +4458,9 @@
           <Property Name="Status" Type="Int32" Nullable="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="SharesType" Type="Int32" Nullable="false" />
+          <Property Name="SharesMarket" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="t_shares_plate_rel">
           <Key>
@@ -4631,6 +4653,8 @@
             <PropertyRef Name="PlateType" />
             <PropertyRef Name="Status" />
             <PropertyRef Name="CreateTime" />
+            <PropertyRef Name="SharesType" />
+            <PropertyRef Name="LimitSharesMarket" />
           </Key>
           <Property Name="PlateId" Type="Int64" Nullable="false" />
           <Property Name="PlateName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
@@ -4643,6 +4667,9 @@
           <Property Name="CirculatingCapital" Type="Int64" />
           <Property Name="PresentPrice" Type="Int64" />
           <Property Name="ClosedPrice" Type="Int64" />
+          <Property Name="SharesType" Type="Int32" Nullable="false" />
+          <Property Name="LimitSharesMarket" Type="Int32" Nullable="false" />
+          <Property Name="LimitSharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="t_shares_markettime">
           <Key>
@@ -4666,6 +4693,8 @@
             <PropertyRef Name="PlateType" />
             <PropertyRef Name="Status" />
             <PropertyRef Name="CreateTime" />
+            <PropertyRef Name="SharesType" />
+            <PropertyRef Name="LimitSharesMarket" />
           </Key>
           <Property Name="PlateId" Type="Int64" Nullable="false" />
           <Property Name="PlateName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
@@ -4674,6 +4703,9 @@
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="SharesCount" Type="Int32" />
           <Property Name="RiseRate" Type="Int64" Nullable="false" />
+          <Property Name="SharesType" Type="Int32" Nullable="false" />
+          <Property Name="LimitSharesMarket" Type="Int32" Nullable="false" />
+          <Property Name="LimitSharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
         </EntityType>
         <EntityType Name="t_sys_conditiontrade_template_buy_auto_trend_other">
           <Key>
@@ -6637,6 +6669,9 @@
           <EntitySetMapping Name="t_shares_plate">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_plate">
               <MappingFragment StoreEntitySet="t_shares_plate">
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="SharesMarket" ColumnName="SharesMarket" />
+                <ScalarProperty Name="SharesType" ColumnName="SharesType" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
@@ -6848,6 +6883,9 @@
           <EntitySetMapping Name="v_plate_shares">
             <EntityTypeMapping TypeName="meal_ticketModel.v_plate_shares">
               <MappingFragment StoreEntitySet="v_plate_shares">
+                <ScalarProperty Name="LimitSharesCode" ColumnName="LimitSharesCode" />
+                <ScalarProperty Name="LimitSharesMarket" ColumnName="LimitSharesMarket" />
+                <ScalarProperty Name="SharesType" ColumnName="SharesType" />
                 <ScalarProperty Name="ClosedPrice" ColumnName="ClosedPrice" />
                 <ScalarProperty Name="PresentPrice" ColumnName="PresentPrice" />
                 <ScalarProperty Name="CirculatingCapital" ColumnName="CirculatingCapital" />
@@ -6881,6 +6919,9 @@
           <EntitySetMapping Name="v_plate">
             <EntityTypeMapping TypeName="meal_ticketModel.v_plate">
               <MappingFragment StoreEntitySet="v_plate">
+                <ScalarProperty Name="LimitSharesCode" ColumnName="LimitSharesCode" />
+                <ScalarProperty Name="LimitSharesMarket" ColumnName="LimitSharesMarket" />
+                <ScalarProperty Name="SharesType" ColumnName="SharesType" />
                 <ScalarProperty Name="RiseRate" ColumnName="RiseRate" />
                 <ScalarProperty Name="SharesCount" ColumnName="SharesCount" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
