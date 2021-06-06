@@ -38,6 +38,11 @@ namespace MealTicket_Web_Handler.Model
         public List<string> SharesList { get; set; }
 
         /// <summary>
+        /// 跟投类型0指定账户 1分组轮询
+        /// </summary>
+        public int FollowType { get; set; }
+
+        /// <summary>
         /// 跟投用户
         /// </summary>
         public List<long> FollowList { get; set; }

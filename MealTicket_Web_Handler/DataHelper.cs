@@ -9,6 +9,7 @@ using System.Data.Entity.SqlServer;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Transactions;
 using static StockTrendMonitor.Define.StockMonitorDefine;
 
 namespace MealTicket_Web_Handler
@@ -933,13 +934,20 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
         //分析今日涨跌幅
         public static int Analysis_TodayRiseRate(string sharesCode, int market, List<string> par)
         {
+            string comeTime = string.Empty;
+            string outTime = string.Empty;
             try
             {
                 var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
                 int type = 0;
                 int compare = 0;
-                int count = 0;
+                long count = 0;
                 bool triPrice = false;
+                int firstDay = 0;
+                int secondDay = 0;
+                double multiple = 0;
+                int compare2 = 0;
+                int dayShortageType = 0;
                 try
                 {
                     type = Convert.ToInt32(temp.Type);
@@ -952,7 +960,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 catch (Exception ex) { }
                 try
                 {
-                    count = (type == 5 || type == 6) ? (int)(Convert.ToDouble(temp.Count) * 100) : Convert.ToInt32(temp.Count);
+                    count = (type == 5 || type == 6) ? (int)(Convert.ToDouble(temp.Count) * 100) : Convert.ToInt64(temp.Count);
                 }
                 catch (Exception ex) { }
                 try
@@ -960,13 +968,40 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                     triPrice = Convert.ToBoolean(temp.TriPrice);
                 }
                 catch (Exception) { }
+                try
+                {
+                    firstDay = Convert.ToInt32(temp.FirstDay);
+                }
+                catch (Exception) { }
+                try
+                {
+                    secondDay = Convert.ToInt32(temp.SecondDay);
+                }
+                catch (Exception) { }
+                try
+                {
+                    multiple = Convert.ToDouble(temp.Multiple);
+                }
+                catch (Exception) { }
+                try
+                {
+                    compare2 = Convert.ToInt32(temp.Compare2);
+                }
+                catch (Exception) { }
+                try
+                {
+                    dayShortageType = Convert.ToInt32(temp.DayShortageType);
+                }
+                catch (Exception) { }
+
                 DateTime dateNow = DateTime.Now.Date;
                 using (var db = new meal_ticketEntities())
                 {
-                    var quotes_date = (from item in db.t_shares_quotes_date
-                                       where item.SharesCode == sharesCode && item.Market == market && item.LastModified > dateNow
-                                       orderby item.Date
-                                       select item).FirstOrDefault();
+                    comeTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                    string sqlQuery = string.Format("select top 1 LimitUpCount,TriLimitUpCount,LimitDownCount,TriLimitDownCount,LimitUpBombCount,OpenedPrice,ClosedPrice,MaxPrice,MinPrice,TotalAmount,TotalCount from t_shares_quotes_date with(nolock) where SharesCode='{0}' and Market={1} and LastModified>'{2}'", sharesCode, market, dateNow.ToString("yyyy-MM-dd"));
+                    var quotes_date=db.Database.SqlQuery<QuotesDate>(sqlQuery).FirstOrDefault();
+                   
+                    outTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
                     if (quotes_date == null)
                     {
                         return -1;
@@ -1104,13 +1139,68 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                     //成交额
                     else if (type == 7)
                     {
+                        var quotesCount = (from item in db.t_shares_quotes_date
+                                           where item.SharesCode == sharesCode && item.Market == market && item.LastModified < dateNow
+                                           select item).Count();
+                        if (dayShortageType == 2 && quotesCount < firstDay)
+                        {
+                            return 0;
+                        }
+                        if (dayShortageType == 3 && quotesCount < firstDay)
+                        {
+                            return -1;
+                        }
                         //查询前几个交易日平均交易额
-
+                        string sql = string.Format(@"select convert(bigint,avg(TotalAmount)) AvgTotalAmount
+  from
+  (
+	select [Date],TotalAmount,row_number()over(order by [Date] desc) num
+	from t_shares_quotes_date with(nolock)
+	where LastModified<'{0}' and SharesCode='{1}' and Market={2}
+  )t
+  where t.num>={3} and t.num<={4}", dateNow.ToString("yyyy-MM-dd"), sharesCode, market, secondDay, firstDay);
+                        long avgResult = db.Database.SqlQuery<long>(sql).FirstOrDefault();
+                        if ((compare == 1 && quotes_date.TotalAmount >= avgResult * multiple) || (compare == 2 && quotes_date.TotalAmount <= avgResult * multiple))
+                        {
+                            if ((compare2 == 1 && avgResult >= count * 10000) || (compare2 == 2 && avgResult <= count * 10000))
+                            {
+                                return 0;
+                            }
+                        }
+                        return -1;
                     }
                     //成交量
                     else if (type == 8)
                     {
-
+                        var quotesCount = (from item in db.t_shares_quotes_date
+                                           where item.SharesCode == sharesCode && item.Market == market && item.LastModified < dateNow
+                                           select item).Count();
+                        if (dayShortageType == 2 && quotesCount < firstDay)
+                        {
+                            return 0;
+                        }
+                        if (dayShortageType == 3 && quotesCount < firstDay)
+                        {
+                            return -1;
+                        }
+                        //查询前几个交易日平均成交量
+                        string sql = string.Format(@"select convert(bigint,avg(TotalCount)) AvgTotalCount
+  from
+  (
+	select [Date],TotalCount,row_number()over(order by [Date] desc) num
+	from t_shares_quotes_date with(nolock)
+	where LastModified<'{0}' and SharesCode='{1}' and Market={2}
+  )t
+  where t.num>={3} and t.num<={4}", dateNow.ToString("yyyy-MM-dd"), sharesCode, market, secondDay, firstDay);
+                        long avgResult = db.Database.SqlQuery<long>(sql).FirstOrDefault();
+                        if ((compare == 1 && quotes_date.TotalCount >= avgResult * multiple) || (compare == 2 && quotes_date.TotalCount <= avgResult * multiple))
+                        {
+                            if ((compare2 == 1 && avgResult * 100 >= count) || (compare2 == 2 && avgResult * 100 <= count))
+                            {
+                                return 0;
+                            }
+                        }
+                        return -1;
                     }
                     else
                     {
@@ -1120,7 +1210,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
             }
             catch (Exception ex)
             {
-                Logger.WriteFileLog("分析今日涨跌幅出错了", ex);
+                Logger.WriteFileLog(string.Format("分析今日涨跌幅出错了-{0}-{1}-{2}", sharesCode, comeTime, outTime), ex);
                 return -1;
             }
         }
@@ -1262,7 +1352,7 @@ group by t.PlateId,t.PlateName,t.PlateType,t.[Status],t.CreateTime", market, sha
             }
             catch (Exception ex)
             {
-                Logger.WriteFileLog("Analysis_ReferAverage异常", ex);
+                Logger.WriteFileLog("Analysis_PlateRiseRate异常", ex);
                 return -1;
             }
         }
@@ -2132,5 +2222,20 @@ group by t.PlateId,t.PlateName,t.PlateType,t.[Status],t.CreateTime", market, sha
                 }
             }
         }
+    }
+
+    public class QuotesDate
+    {
+        public int LimitUpCount { get; set; }
+        public int TriLimitUpCount { get; set; }
+        public int LimitDownCount { get; set; }
+        public int TriLimitDownCount { get; set; }
+        public int LimitUpBombCount { get; set; }
+        public long OpenedPrice { get; set; }
+        public long ClosedPrice { get; set; }
+        public long MaxPrice { get; set; }
+        public long MinPrice { get; set; }
+        public long TotalAmount { get; set; }
+        public int TotalCount { get; set; }
     }
 }

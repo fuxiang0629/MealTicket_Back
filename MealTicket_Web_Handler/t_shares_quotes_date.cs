@@ -36,5 +36,7 @@ namespace MealTicket_Web_Handler
         public int TriLimitDownCount { get; set; }
         public int TriLimitUpBombCount { get; set; }
         public int TriLimitDownBombCount { get; set; }
+        public long TotalAmount { get; set; }
+        public int TotalCount { get; set; }
     }
 }

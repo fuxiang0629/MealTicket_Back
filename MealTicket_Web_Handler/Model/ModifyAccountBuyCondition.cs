@@ -97,5 +97,10 @@ namespace MealTicket_Web_Handler.Model
         /// 额外买入条件
         /// </summary>
         public int OtherConditionRelative { get; set; }
+
+        /// <summary>
+        /// 跟投类型0指定账户 1分组轮询
+        /// </summary>
+        public int FollowType { get; set; }
     }
 }

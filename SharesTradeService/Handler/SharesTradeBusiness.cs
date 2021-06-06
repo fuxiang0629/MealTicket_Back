@@ -316,6 +316,8 @@ namespace SharesTradeService.Handler
                             }
                             else
                             {
+                                var EntrustList = string.Join(",", buyInfo.BuyList.Select(e => e.EntrustId).ToArray()); 
+                                string sql = string.Format("update t_account_shares_entrust set StatusDes='{0}' where Id in {1}", sErrInfo.ToString(), EntrustList);
                                 continue;
                             }
                         }

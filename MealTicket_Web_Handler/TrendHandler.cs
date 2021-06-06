@@ -1874,6 +1874,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                   orderby item.OrderIndex descending,item.CreateTime
                                   select new FollowAccountInfo
                                   {
+                                      Id=item.Id,
                                       AccountId = item.FollowAccountId,
                                       AccountMobile = item2.Mobile,
                                       AccountName = item2.NickName,
@@ -4423,6 +4424,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                 ConditionType = item.ConditionType,
                                 EntrustId = item.EntrustId,
                                 EntrustPrice = item.ConditionPrice,
+                                FollowType=item.FollowType,
                                 Id = item.Id,
                                 IsGreater = item.IsGreater,
                                 EntrustType = item.EntrustType,
@@ -4487,6 +4489,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                         ConditionId = request.ConditionId,
                         BuyAuto = request.BuyAuto,
                         ConditionPrice = request.ConditionPrice,
+                        FollowType=request.FollowType,
                         CreateTime = DateTime.Now,
                         EntrustAmount = request.EntrustAmount,
                         EntrustId = 0,
@@ -4586,6 +4589,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                         ConditionRelativeType= condition.ConditionRelativeType,
                         ConditionType= condition.ConditionType,
                         CreateAccountId= basedata.AccountId,
+                        FollowType=condition.FollowType,
                         CreateTime=DateTime.Now,
                         EntrustAmount= condition.EntrustAmount,
                         EntrustId=0,
@@ -4800,6 +4804,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                     buy_details.IsGreater = request.IsGreater;
                     buy_details.IsHold = request.IsHold;
                     buy_details.LimitUp = request.LimitUp;
+                    buy_details.FollowType = request.FollowType;
                     buy_details.LastModified = DateTime.Now;
                     buy_details.Name = string.IsNullOrEmpty(request.Name) ? Guid.NewGuid().ToString("N") : request.Name;
                     buy_details.ConditionRelativeRate = request.ConditionRelativeRate;
@@ -10395,6 +10400,7 @@ select @buyId;";
                                                 ConditionType = ConditionType,
                                                 EntrustType = buy.EntrustType,
                                                 ForbidType = buy.ForbidType,
+                                                FollowType=request.FollowType,
                                                 Name = buy.Name,
                                                 TriggerTime = null,
                                                 ConditionRelativeType = ConditionRelativeType,
@@ -11453,6 +11459,13 @@ select @buyId;";
                 Description = "最大持仓数量",
                 ParValue = -1
             });
+            tempList.Add(new AccountBuySettingInfo
+            {
+                Type = 3,
+                Name = "跟投分组轮序位置",
+                Description = "跟投分组轮序位置",
+                ParValue = 0
+            });
             if (request.AccountId == 0)
             {
                 request.AccountId = basedata.AccountId;
@@ -11752,7 +11765,7 @@ select @buyId;";
                                 SharesName = item.item4.SharesName,
                                 BusinessStatus = item.item.BuyAuto?1:2,
                                 EntrustStatus = item.ai == null ? 6 : item.ai.Status,
-                                EntrustStatusDes = item.ai == null ? "" : item.ai.StatusDes,
+                                EntrustStatusDes = item.ai == null ? item.item.EntrustErrorDes : item.ai.StatusDes,
                                 AccountId = item.item2.AccountId,
                                 AccountMobile = item.item3.Mobile,
                                 AccountNickName = item.item3.NickName,
@@ -11766,6 +11779,324 @@ select @buyId;";
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
                 };
 
+            }
+        }
+
+        /// <summary>
+        /// 获取跟投分组列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<AccountFollowGroupInfo> GetAccountFollowGroupList(PageRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var followGroup = from item in db.t_account_follow_group
+                                  where item.AccountId == basedata.AccountId
+                                  select item;
+                int totalCount = followGroup.Count();
+
+                return new PageRes<AccountFollowGroupInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in followGroup
+                            orderby item.CreateTime descending
+                            select new AccountFollowGroupInfo
+                            {
+                                Status = item.Status,
+                                CreateTime = item.CreateTime,
+                                GroupName = item.GroupName,
+                                OrderIndex=item.OrderIndex,
+                                Id = item.Id,
+                                FollowAccountList = (from x in db.t_account_follow_group_rel
+                                                     join x2 in db.t_account_follow_rel on x.RelId equals x2.Id
+                                                     where x.GroupId == item.Id && x2.AccountId== basedata.AccountId
+                                                     select x2.Id).ToList()
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加跟投分组
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddAccountFollowGroup(AddAccountFollowGroupRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //判断分组名称是否存在
+                var followGroup = (from item in db.t_account_follow_group
+                                   where item.AccountId == basedata.AccountId && item.GroupName == request.GroupName
+                                   select item).FirstOrDefault();
+                if (followGroup != null)
+                {
+                    throw new WebApiException(400,"分组已添加");
+                }
+                db.t_account_follow_group.Add(new t_account_follow_group 
+                {
+                    Status=1,
+                    AccountId=basedata.AccountId,
+                    CreateTime=DateTime.Now,
+                    GroupName=request.GroupName,
+                    OrderIndex=request.OrderIndex,
+                    LastModified=DateTime.Now
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 编辑跟投分组
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountFollowGroup(ModifyAccountFollowGroupRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var dis = (from item in db.t_account_follow_group
+                           where item.Id == request.Id
+                           select item).FirstOrDefault();
+                if (dis == null)
+                {
+                    throw new WebApiException(400,"数据不存在");
+                }
+
+
+                //判断分组名称是否存在
+                var followGroup = (from item in db.t_account_follow_group
+                                   where item.AccountId == basedata.AccountId && item.GroupName == request.GroupName && item.Id!= request.Id
+                                   select item).FirstOrDefault();
+                if (followGroup != null)
+                {
+                    throw new WebApiException(400, "分组已存在");
+                }
+                dis.GroupName = request.GroupName;
+                dis.OrderIndex = request.OrderIndex;
+                dis.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改跟投分组状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountFollowGroupStatus(ModifyStatusRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var dis = (from item in db.t_account_follow_group
+                           where item.Id == request.Id
+                           select item).FirstOrDefault();
+                if (dis == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                dis.Status = request.Status;
+                dis.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除跟投分组
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteAccountFollowGroup(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran=db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var group_rel = (from item in db.t_account_follow_group_rel
+                                     where item.GroupId == request.Id
+                                     select item).ToList();
+                    if (group_rel.Count()>0)
+                    {
+                        db.t_account_follow_group_rel.RemoveRange(group_rel);
+                        db.SaveChanges();
+                    }
+
+                    var dis = (from item in db.t_account_follow_group
+                               where item.Id == request.Id
+                               select item).FirstOrDefault();
+                    if (dis == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    db.t_account_follow_group.Remove(dis);
+                    db.SaveChanges();
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取跟投分组账户列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<AccountFollowGroupFollowAccountInfo> GetAccountFollowGroupFollowAccountList(DetailsPageRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var rel = from item in db.t_account_follow_group_rel
+                          join item2 in db.t_account_follow_rel on item.RelId equals item2.Id
+                          join item3 in db.t_account_baseinfo on item2.FollowAccountId equals item3.Id
+                          where item.GroupId == request.Id
+                          select new { item, item2, item3 };
+                int totalCount = rel.Count();
+
+                return new PageRes<AccountFollowGroupFollowAccountInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in rel
+                            orderby item.item.CreateTime descending
+                            select new AccountFollowGroupFollowAccountInfo
+                            {
+                                BuyAmount = item.item.BuyAmount,
+                                CreateTime = item.item.CreateTime,
+                                FollowAccountMobile = item.item3.Mobile,
+                                Status=item.item.Status,
+                                FollowAccountName = item.item3.NickName,
+                                FollowId=item.item2.Id,
+                                Id = item.item.Id
+                            }).Skip((request.PageIndex-1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加跟投分组账户
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddAccountFollowGroupFollowAccount(AddAccountFollowGroupFollowAccountRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //判断分组是否存在
+                var groupInfo = (from item in db.t_account_follow_group
+                                 where item.Id == request.GroupId && item.AccountId==basedata.AccountId
+                                 select item).FirstOrDefault();
+                if (groupInfo == null)
+                {
+                    throw new WebApiException(400,"跟投分组不存在");
+                }
+                //判断跟投是否存在
+                var follow = (from item in db.t_account_follow_rel
+                              where item.Id == request.FollowId && item.AccountId == basedata.AccountId
+                              select item).FirstOrDefault();
+                if (follow == null)
+                {
+                    throw new WebApiException(400, "跟投账户不存在");
+                }
+                //判断跟投账户是否已经添加
+                var groupRel = (from item in db.t_account_follow_group_rel
+                                where item.GroupId == request.GroupId && item.RelId == request.FollowId
+                                select item).FirstOrDefault();
+                if (groupRel != null)
+                {
+                    throw new WebApiException(400, "跟投账户已添加");
+                }
+                db.t_account_follow_group_rel.Add(new t_account_follow_group_rel
+                {
+                    GroupId = request.GroupId,
+                    RelId = request.FollowId,
+                    BuyAmount=request.BuyAmount,
+                    Status=1,
+                    CreateTime=DateTime.Now,
+                    LastModified=DateTime.Now
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 编辑跟投分组账户
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountFollowGroupFollowAccount(ModifyAccountFollowGroupFollowAccountRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var groupRel = (from item in db.t_account_follow_group_rel
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (groupRel == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                //判断跟投是否存在
+                var follow = (from item in db.t_account_follow_rel
+                              where item.Id == request.FollowId && item.AccountId == basedata.AccountId
+                              select item).FirstOrDefault();
+                if (follow == null)
+                {
+                    throw new WebApiException(400, "跟投账户不存在");
+                }
+                //判断跟投账户是否已经添加
+                var groupTemp = (from item in db.t_account_follow_group_rel
+                                 where item.GroupId == groupRel.GroupId && item.RelId == request.FollowId && item.Id != request.Id
+                                 select item).FirstOrDefault();
+                if (groupTemp != null)
+                {
+                    throw new WebApiException(400, "跟投账户已添加");
+                }
+                groupRel.RelId = request.FollowId;
+                groupRel.BuyAmount = request.BuyAmount;
+                groupRel.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改跟投分组账户状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountFollowGroupFollowAccountStatus(ModifyStatusRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var groupRel = (from item in db.t_account_follow_group_rel
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (groupRel == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                groupRel.Status = request.Status;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除跟投分组账户
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteAccountFollowGroupFollowAccount(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var groupRel = (from item in db.t_account_follow_group_rel
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (groupRel == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_account_follow_group_rel.Remove(groupRel);
+                db.SaveChanges();
             }
         }
     }
