@@ -25,5 +25,8 @@ namespace MealTicket_Admin_Handler
         public Nullable<long> CirculatingCapital { get; set; }
         public Nullable<long> PresentPrice { get; set; }
         public Nullable<long> ClosedPrice { get; set; }
+        public int SharesType { get; set; }
+        public int LimitSharesMarket { get; set; }
+        public string LimitSharesCode { get; set; }
     }
 }

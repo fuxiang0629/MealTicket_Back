@@ -1999,6 +1999,8 @@ group by t.PlateId,t.PlateName,t.PlateType,t.[Status],t.CreateTime", market, sha
         {
             var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
             int riseType = 0;
+            int compare = 0;
+            long count = 0;
             try
             {
                 riseType = Convert.ToInt32(temp.RiseType);
@@ -2006,6 +2008,20 @@ group by t.PlateId,t.PlateName,t.PlateType,t.[Status],t.CreateTime", market, sha
             catch (Exception)
             {
                 return -1;
+            }
+            try
+            {
+                compare = Convert.ToInt32(temp.Compare);
+            }
+            catch (Exception)
+            {
+            }
+            try
+            {
+                count = (long)(Convert.ToDouble(temp.Count)*10000);
+            }
+            catch (Exception)
+            {
             }
 
             DateTime timeNow = DateTime.Now;
@@ -2038,6 +2054,45 @@ group by t.PlateId,t.PlateName,t.PlateType,t.[Status],t.CreateTime", market, sha
                 if (riseType == 4 && quotes.PriceType == 2)
                 {
                     return 0;
+                }
+                if (riseType == 5)
+                {
+                    if ((compare == 1 && quotes.PresentPrice >= count) || (compare == 2 && quotes.PresentPrice <= count))
+                    {
+                        return 0;
+                    }
+                }
+                if (riseType == 6)
+                {
+                    //查询流通股
+                    var sharesInfo = (from item in db.t_shares_markettime
+                                      where item.Market == market && item.SharesCode == sharesCode
+                                      select item).FirstOrDefault();
+                    if (sharesInfo == null)
+                    {
+                        return -1;
+                    }
+                    long circulatingCapital = sharesInfo.CirculatingCapital;
+                    if ((compare == 1 && quotes.PresentPrice* circulatingCapital >= count) || (compare == 2 && quotes.PresentPrice * circulatingCapital <= count))
+                    {
+                        return 0;
+                    }
+                }
+                if (riseType == 7)
+                {
+                    //查询总股本
+                    var sharesInfo = (from item in db.t_shares_markettime
+                                      where item.Market == market && item.SharesCode == sharesCode
+                                      select item).FirstOrDefault();
+                    if (sharesInfo == null)
+                    {
+                        return -1;
+                    }
+                    long totalCapital = sharesInfo.TotalCapital;
+                    if ((compare == 1 && quotes.PresentPrice * totalCapital >= count) || (compare == 2 && quotes.PresentPrice * totalCapital <= count))
+                    {
+                        return 0;
+                    }
                 }
                 return -1;
             }

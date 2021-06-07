@@ -4789,6 +4789,98 @@ namespace MealTicket_Admin_Handler
         }
 
         /// <summary>
+        /// 批量导入股票派股派息
+        /// </summary>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAddFrontAccountSharesAllot(List<AddFrontAccountSharesAllotRequest> list) 
+        {
+            int result = 0;
+            using (var db = new meal_ticketEntities())
+            {
+                foreach (var request in list)
+                {
+                    //判断股票是否存在
+                    var shares = (from item in db.t_shares_all
+                                  where item.Market == request.Market && item.SharesCode == request.SharesCode
+                                  select item).FirstOrDefault();
+                    if (shares == null)
+                    {
+                        continue;
+                    }
+                    //判断派息日期
+                    if (request.AllotDate.Date <= DateTime.Now.Date)
+                    {
+                        continue;
+                    }
+                    //判断派息信息是否存在
+                    var allot = (from item in db.t_shares_allot
+                                 where item.Market == request.Market && item.SharesCode == request.SharesCode && item.AllotDate == request.AllotDate
+                                 select item).FirstOrDefault();
+                    if (allot != null)
+                    {
+                        continue;
+                    }
+                    //判断派息派股信息
+                    if (string.IsNullOrEmpty(request.AllotBonusInfo) && string.IsNullOrEmpty(request.AllotSharesInfo))
+                    {
+                        continue;
+                    }
+                    if (!string.IsNullOrEmpty(request.AllotSharesInfo))
+                    {
+                        try
+                        {
+                            var temp = JsonConvert.DeserializeObject<dynamic>(request.AllotSharesInfo);
+                            int baseCount = temp.BaseCount;
+                            int allotCount = temp.AllotCount;
+                            if (baseCount <= 0 || allotCount <= 0)
+                            {
+                                continue;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            continue;
+                        }
+                    }
+                    if (!string.IsNullOrEmpty(request.AllotBonusInfo))
+                    {
+                        try
+                        {
+                            var temp = JsonConvert.DeserializeObject<dynamic>(request.AllotBonusInfo);
+                            int baseCount = temp.BaseCount;
+                            int allotCount = temp.AllotCount;
+                            if (baseCount <= 0 || allotCount <= 0)
+                            {
+                                continue;
+                            }
+                        }
+                        catch (Exception)
+                        {
+                            continue;
+                        }
+                    }
+
+                    db.t_shares_allot.Add(new t_shares_allot
+                    {
+                        SharesCode = request.SharesCode,
+                        HandleStatus = 1,
+                        AllotDate = request.AllotDate,
+                        CreateTime = DateTime.Now,
+                        HandleTime = null,
+                        LastModified = DateTime.Now,
+                        Market = request.Market,
+                        AllotSharesInfo = request.AllotSharesInfo,
+                        AllotBonusInfo = request.AllotBonusInfo
+                    });
+                    result++;
+                }
+                db.SaveChanges();
+                return result;
+            }
+        }
+
+        /// <summary>
         /// 编辑股票派股派息
         /// </summary>
         /// <param name="request"></param>

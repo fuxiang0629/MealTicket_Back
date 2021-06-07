@@ -20,5 +20,8 @@ namespace MealTicket_Admin_Handler
         public int Status { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
+        public int SharesType { get; set; }
+        public int SharesMarket { get; set; }
+        public string SharesCode { get; set; }
     }
 }

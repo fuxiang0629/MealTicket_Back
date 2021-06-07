@@ -21,5 +21,8 @@ namespace MealTicket_Admin_Handler
         public System.DateTime CreateTime { get; set; }
         public Nullable<int> SharesCount { get; set; }
         public long RiseRate { get; set; }
+        public int SharesType { get; set; }
+        public int LimitSharesMarket { get; set; }
+        public string LimitSharesCode { get; set; }
     }
 }
