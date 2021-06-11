@@ -172,6 +172,7 @@
           <Property Name="LimitKey" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Priority" Type="int" Nullable="false" />
           <Property Name="Range" Type="int" Nullable="false" />
+          <Property Name="NearLimitRange" Type="int" Nullable="false" />
           <Property Name="FundMultiple" Type="int" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
@@ -261,6 +262,8 @@
           <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
           <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
           <Property Name="PriceType" Type="int" Nullable="false" />
+          <Property Name="TriPriceType" Type="int" Nullable="false" />
+          <Property Name="TriNearLimitType" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_quotes_date">
           <Key>
@@ -282,7 +285,15 @@
           <Property Name="LimitDownCount" Type="int" Nullable="false" />
           <Property Name="LimitUpBombCount" Type="int" Nullable="false" />
           <Property Name="LimitDownBombCount" Type="int" Nullable="false" />
+          <Property Name="TriLimitUpCount" Type="int" Nullable="false" />
+          <Property Name="TriLimitDownCount" Type="int" Nullable="false" />
+          <Property Name="TriLimitUpBombCount" Type="int" Nullable="false" />
+          <Property Name="TriLimitDownBombCount" Type="int" Nullable="false" />
           <Property Name="PriceType" Type="int" Nullable="false" />
+          <Property Name="TriPriceType" Type="int" Nullable="false" />
+          <Property Name="TriNearLimitType" Type="int" Nullable="false" />
+          <Property Name="TotalAmount" Type="bigint" Nullable="false" />
+          <Property Name="TotalCount" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_quotes_temp">
           <Key>
@@ -328,6 +339,8 @@
           <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
           <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
           <Property Name="PriceType" Type="int" Nullable="false" />
+          <Property Name="TriPriceType" Type="int" Nullable="false" />
+          <Property Name="TriNearLimitType" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_transactiondata">
           <Key>
@@ -548,6 +561,8 @@
           <Property Name="LimitUpPrice" Type="Int64" Nullable="false" />
           <Property Name="LimitDownPrice" Type="Int64" Nullable="false" />
           <Property Name="PriceType" Type="Int32" Nullable="false" />
+          <Property Name="TriPriceType" Type="Int32" Nullable="false" />
+          <Property Name="TriNearLimitType" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_transactiondata">
           <Key>
@@ -688,6 +703,8 @@
           <Property Name="LimitUpPrice" Type="Int64" Nullable="false" />
           <Property Name="LimitDownPrice" Type="Int64" Nullable="false" />
           <Property Name="PriceType" Type="Int32" Nullable="false" />
+          <Property Name="TriPriceType" Type="Int32" Nullable="false" />
+          <Property Name="TriNearLimitType" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_all">
           <Key>
@@ -730,6 +747,7 @@
           <Property Name="FundMultiple" Type="Int32" Nullable="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="NearLimitRange" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_quotes_date">
           <Key>
@@ -752,6 +770,14 @@
           <Property Name="LimitUpBombCount" Type="Int32" Nullable="false" />
           <Property Name="LimitDownBombCount" Type="Int32" Nullable="false" />
           <Property Name="PriceType" Type="Int32" Nullable="false" />
+          <Property Name="TriLimitUpCount" Type="Int32" Nullable="false" />
+          <Property Name="TriLimitDownCount" Type="Int32" Nullable="false" />
+          <Property Name="TriLimitUpBombCount" Type="Int32" Nullable="false" />
+          <Property Name="TriLimitDownBombCount" Type="Int32" Nullable="false" />
+          <Property Name="TriPriceType" Type="Int32" Nullable="false" />
+          <Property Name="TotalAmount" Type="Int64" Nullable="false" />
+          <Property Name="TotalCount" Type="Int32" Nullable="false" />
+          <Property Name="TriNearLimitType" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -871,6 +897,8 @@
           <EntitySetMapping Name="t_shares_quotes">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes">
               <MappingFragment StoreEntitySet="t_shares_quotes">
+                <ScalarProperty Name="TriNearLimitType" ColumnName="TriNearLimitType" />
+                <ScalarProperty Name="TriPriceType" ColumnName="TriPriceType" />
                 <ScalarProperty Name="PriceType" ColumnName="PriceType" />
                 <ScalarProperty Name="LimitDownPrice" ColumnName="LimitDownPrice" />
                 <ScalarProperty Name="LimitUpPrice" ColumnName="LimitUpPrice" />
@@ -1018,6 +1046,8 @@
           <EntitySetMapping Name="t_shares_quotes_temp">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes_temp">
               <MappingFragment StoreEntitySet="t_shares_quotes_temp">
+                <ScalarProperty Name="TriNearLimitType" ColumnName="TriNearLimitType" />
+                <ScalarProperty Name="TriPriceType" ColumnName="TriPriceType" />
                 <ScalarProperty Name="PriceType" ColumnName="PriceType" />
                 <ScalarProperty Name="LimitDownPrice" ColumnName="LimitDownPrice" />
                 <ScalarProperty Name="LimitUpPrice" ColumnName="LimitUpPrice" />
@@ -1094,6 +1124,7 @@
           <EntitySetMapping Name="t_shares_limit_fundmultiple">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_limit_fundmultiple">
               <MappingFragment StoreEntitySet="t_shares_limit_fundmultiple">
+                <ScalarProperty Name="NearLimitRange" ColumnName="NearLimitRange" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="FundMultiple" ColumnName="FundMultiple" />
@@ -1109,6 +1140,14 @@
           <EntitySetMapping Name="t_shares_quotes_date">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes_date">
               <MappingFragment StoreEntitySet="t_shares_quotes_date">
+                <ScalarProperty Name="TriNearLimitType" ColumnName="TriNearLimitType" />
+                <ScalarProperty Name="TotalCount" ColumnName="TotalCount" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+                <ScalarProperty Name="TriPriceType" ColumnName="TriPriceType" />
+                <ScalarProperty Name="TriLimitDownBombCount" ColumnName="TriLimitDownBombCount" />
+                <ScalarProperty Name="TriLimitUpBombCount" ColumnName="TriLimitUpBombCount" />
+                <ScalarProperty Name="TriLimitDownCount" ColumnName="TriLimitDownCount" />
+                <ScalarProperty Name="TriLimitUpCount" ColumnName="TriLimitUpCount" />
                 <ScalarProperty Name="PriceType" ColumnName="PriceType" />
                 <ScalarProperty Name="LimitDownBombCount" ColumnName="LimitDownBombCount" />
                 <ScalarProperty Name="LimitUpBombCount" ColumnName="LimitUpBombCount" />

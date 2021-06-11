@@ -2165,9 +2165,29 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifySharesPlateChooseStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改板块管理挑选状态
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifySharesPlateChooseStatusBatch">
+            <summary>
+            批量修改板块管理挑选状态
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeleteSharesPlate(MealTicket_Admin_Handler.Model.DeleteRequest)">
             <summary>
             删除板块管理
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.BatchDeleteSharesPlate(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            批量删除板块管理
             </summary>
             <param name="request"></param>
             <returns></returns>
@@ -2935,6 +2955,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.BatchDeleteConditiontradeTemplateBuyOtherPar(MealTicket_Admin_Handler.Model.BatchDeleteConditiontradeTemplateBuyOtherParRequest)">
+            <summary>
+            批量删除条件买入模板额外条件类型参数（板块涨跌幅）
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyConditiontradeTemplateBuyOtherPar(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyOtherParRequest)">
             <summary>
             编辑条件买入模板额外条件类型参数
@@ -2980,6 +3007,13 @@
             <summary>
             批量添加条件买入模板转自动条件类型参数(板块涨跌幅2)
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.BatchDeleteConditiontradeTemplateBuyAutoPar(MealTicket_Admin_Handler.Model.BatchDeleteConditiontradeTemplateBuyAutoParRequest)">
+            <summary>
+            批量删除条件买入模板转自动条件类型参数(板块涨跌幅)
+            </summary>
+            <param name="request"></param>
             <returns></returns>
         </member>
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyConditiontradeTemplateBuyAutoPar(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyAutoParRequest)">
@@ -3089,6 +3123,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.BatchDeleteConditiontradeTemplateBuyOtherPar_Other(MealTicket_Admin_Handler.Model.BatchDeleteConditiontradeTemplateBuyOtherPar_OtherRequest)">
+            <summary>
+            批量删除条件买入模板额外条件类型参数(板块涨跌幅)-额外关系
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyConditiontradeTemplateBuyOtherPar_Other(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyOtherParRequest)">
             <summary>
             编辑条件买入模板额外条件类型参数-额外关系
@@ -3134,6 +3175,13 @@
             <summary>
             批量添加条件买入模板转自动条件类型参数(板块涨跌幅2)-额外关系
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.BatchDeleteConditiontradeTemplateBuyAutoPar_Other(MealTicket_Admin_Handler.Model.BatchDeleteConditiontradeTemplateBuyAutoPar_OtherRequest)">
+            <summary>
+            批量删除条件买入模板转自动条件类型参数(板块涨跌幅)-额外关系
+            </summary>
+            <param name="request"></param>
             <returns></returns>
         </member>
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyConditiontradeTemplateBuyAutoPar_Other(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyAutoParRequest)">
@@ -3210,6 +3258,13 @@
             <summary>
             批量条件单走势模板参数(板块涨跌幅1)
             </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.BatchDeleteSharesConditionTrendPar(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            批量删除条件单走势模板参数(板块涨跌幅)
+            </summary>
+            <param name="request"></param>
             <returns></returns>
         </member>
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.BatchAddSharesConditionTrendPar2">

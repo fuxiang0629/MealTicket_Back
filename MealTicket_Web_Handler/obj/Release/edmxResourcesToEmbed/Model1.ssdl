@@ -483,6 +483,16 @@
     <Property Name="ShareAccountId" Type="bigint" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
   </EntityType>
+  <EntityType Name="t_account_shares_conditiontrade_buy_plate">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="PlateId" Type="bigint" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_buy_trend_par_template">
     <Key>
       <PropertyRef Name="Id" />
@@ -2186,6 +2196,7 @@
     <Property Name="LimitKey" Type="nvarchar" MaxLength="50" Nullable="false" />
     <Property Name="Priority" Type="int" Nullable="false" />
     <Property Name="Range" Type="int" Nullable="false" />
+    <Property Name="NearLimitRange" Type="int" Nullable="false" />
     <Property Name="FundMultiple" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
@@ -2392,6 +2403,15 @@
     <Property Name="Name" Type="nvarchar" MaxLength="200" Nullable="false" />
     <Property Name="Type" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="SharesType" Type="int" Nullable="false" />
+    <Property Name="CalType" Type="int" Nullable="false" />
+    <Property Name="SharesMarket" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="50" />
+    <Property Name="WeightMarket" Type="int" Nullable="false" />
+    <Property Name="WeightSharesCode" Type="varchar" MaxLength="50" />
+    <Property Name="NoWeightMarket" Type="int" Nullable="false" />
+    <Property Name="NoWeightSharesCode" Type="varchar" MaxLength="50" />
+    <Property Name="ChooseStatus" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
@@ -2449,6 +2469,7 @@
     <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
     <Property Name="PriceType" Type="int" Nullable="false" />
     <Property Name="TriPriceType" Type="int" Nullable="false" />
+    <Property Name="TriNearLimitType" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_quotes_date">
     <Key>
@@ -2476,6 +2497,7 @@
     <Property Name="TriLimitDownBombCount" Type="int" Nullable="false" />
     <Property Name="PriceType" Type="int" Nullable="false" />
     <Property Name="TriPriceType" Type="int" Nullable="false" />
+    <Property Name="TriNearLimitType" Type="int" Nullable="false" />
     <Property Name="TotalAmount" Type="bigint" Nullable="false" />
     <Property Name="TotalCount" Type="int" Nullable="false" />
   </EntityType>
@@ -2581,6 +2603,7 @@
     <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
     <Property Name="PriceType" Type="int" Nullable="false" />
     <Property Name="TriPriceType" Type="int" Nullable="false" />
+    <Property Name="TriNearLimitType" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_search">
     <Key>
@@ -2953,16 +2976,36 @@
       <PropertyRef Name="PlateId" />
       <PropertyRef Name="PlateName" />
       <PropertyRef Name="PlateType" />
+      <PropertyRef Name="CalType" />
+      <PropertyRef Name="ChooseStatus" />
       <PropertyRef Name="Status" />
+      <PropertyRef Name="SharesType" />
+      <PropertyRef Name="LimitSharesMarket" />
       <PropertyRef Name="CreateTime" />
+      <PropertyRef Name="WeightMarket" />
+      <PropertyRef Name="NoWeightMarket" />
     </Key>
     <Property Name="PlateId" Type="bigint" Nullable="false" />
     <Property Name="PlateName" Type="nvarchar" MaxLength="200" Nullable="false" />
     <Property Name="PlateType" Type="int" Nullable="false" />
+    <Property Name="CalType" Type="int" Nullable="false" />
+    <Property Name="ChooseStatus" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="SharesType" Type="int" Nullable="false" />
+    <Property Name="LimitSharesMarket" Type="int" Nullable="false" />
+    <Property Name="LimitSharesCode" Type="varchar" MaxLength="50" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="SharesCount" Type="int" />
-    <Property Name="RiseRate" Type="bigint" Nullable="false" />
+    <Property Name="WeightRiseIndex" Type="bigint" />
+    <Property Name="WeightRiseRate" Type="bigint" />
+    <Property Name="RiseIndex" Type="bigint" />
+    <Property Name="RiseRate" Type="bigint" />
+    <Property Name="WeightMarket" Type="int" Nullable="false" />
+    <Property Name="WeightSharesCode" Type="varchar" MaxLength="50" />
+    <Property Name="NoWeightMarket" Type="int" Nullable="false" />
+    <Property Name="NoWeightSharesCode" Type="varchar" MaxLength="50" />
+    <Property Name="RiseLimitCount" Type="int" />
+    <Property Name="DownLimitCount" Type="int" />
   </EntityType>
   <!--生成过程中发现错误:
 警告 6002: 表/视图“meal_ticket.dbo.v_plate_shares”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
@@ -2972,12 +3015,23 @@
       <PropertyRef Name="PlateName" />
       <PropertyRef Name="PlateType" />
       <PropertyRef Name="Status" />
+      <PropertyRef Name="SharesType" />
+      <PropertyRef Name="CalType" />
+      <PropertyRef Name="ChooseStatus" />
+      <PropertyRef Name="LimitSharesMarket" />
       <PropertyRef Name="CreateTime" />
+      <PropertyRef Name="WeightMarket" />
+      <PropertyRef Name="NoWeightMarket" />
     </Key>
     <Property Name="PlateId" Type="bigint" Nullable="false" />
     <Property Name="PlateName" Type="nvarchar" MaxLength="200" Nullable="false" />
     <Property Name="PlateType" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="SharesType" Type="int" Nullable="false" />
+    <Property Name="CalType" Type="int" Nullable="false" />
+    <Property Name="ChooseStatus" Type="int" Nullable="false" />
+    <Property Name="LimitSharesMarket" Type="int" Nullable="false" />
+    <Property Name="LimitSharesCode" Type="varchar" MaxLength="50" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="Market" Type="int" />
     <Property Name="SharesCode" Type="varchar" MaxLength="20" />
@@ -2985,6 +3039,11 @@
     <Property Name="CirculatingCapital" Type="bigint" />
     <Property Name="PresentPrice" Type="bigint" />
     <Property Name="ClosedPrice" Type="bigint" />
+    <Property Name="WeightMarket" Type="int" Nullable="false" />
+    <Property Name="WeightSharesCode" Type="varchar" MaxLength="50" />
+    <Property Name="NoWeightMarket" Type="int" Nullable="false" />
+    <Property Name="NoWeightSharesCode" Type="varchar" MaxLength="50" />
+    <Property Name="PriceType" Type="int" />
   </EntityType>
   <!--生成过程中发现错误:
 警告 6002: 表/视图“meal_ticket.dbo.v_shares_baseinfo”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
@@ -3513,6 +3572,7 @@
     <EntitySet Name="t_account_shares_conditiontrade_buy_group" EntityType="Self.t_account_shares_conditiontrade_buy_group" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_group_rel" EntityType="Self.t_account_shares_conditiontrade_buy_group_rel" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_group_share_account" EntityType="Self.t_account_shares_conditiontrade_buy_group_share_account" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_conditiontrade_buy_plate" EntityType="Self.t_account_shares_conditiontrade_buy_plate" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_trend_par_template" EntityType="Self.t_account_shares_conditiontrade_buy_trend_par_template" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_trend_template" EntityType="Self.t_account_shares_conditiontrade_buy_trend_template" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_conditiontrade_template" EntityType="Self.t_account_shares_conditiontrade_template" Schema="dbo" store:Type="Tables" />
@@ -3697,10 +3757,24 @@
     [v_plate].[PlateId] AS [PlateId], 
     [v_plate].[PlateName] AS [PlateName], 
     [v_plate].[PlateType] AS [PlateType], 
+    [v_plate].[CalType] AS [CalType], 
+    [v_plate].[ChooseStatus] AS [ChooseStatus], 
     [v_plate].[Status] AS [Status], 
+    [v_plate].[SharesType] AS [SharesType], 
+    [v_plate].[LimitSharesMarket] AS [LimitSharesMarket], 
+    [v_plate].[LimitSharesCode] AS [LimitSharesCode], 
     [v_plate].[CreateTime] AS [CreateTime], 
     [v_plate].[SharesCount] AS [SharesCount], 
-    [v_plate].[RiseRate] AS [RiseRate]
+    [v_plate].[WeightRiseIndex] AS [WeightRiseIndex], 
+    [v_plate].[WeightRiseRate] AS [WeightRiseRate], 
+    [v_plate].[RiseIndex] AS [RiseIndex], 
+    [v_plate].[RiseRate] AS [RiseRate], 
+    [v_plate].[WeightMarket] AS [WeightMarket], 
+    [v_plate].[WeightSharesCode] AS [WeightSharesCode], 
+    [v_plate].[NoWeightMarket] AS [NoWeightMarket], 
+    [v_plate].[NoWeightSharesCode] AS [NoWeightSharesCode], 
+    [v_plate].[RiseLimitCount] AS [RiseLimitCount], 
+    [v_plate].[DownLimitCount] AS [DownLimitCount]
     FROM [dbo].[v_plate] AS [v_plate]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="v_plate_shares" EntityType="Self.v_plate_shares" store:Type="Views" store:Schema="dbo">
@@ -3709,13 +3783,23 @@
     [v_plate_shares].[PlateName] AS [PlateName], 
     [v_plate_shares].[PlateType] AS [PlateType], 
     [v_plate_shares].[Status] AS [Status], 
+    [v_plate_shares].[SharesType] AS [SharesType], 
+    [v_plate_shares].[CalType] AS [CalType], 
+    [v_plate_shares].[ChooseStatus] AS [ChooseStatus], 
+    [v_plate_shares].[LimitSharesMarket] AS [LimitSharesMarket], 
+    [v_plate_shares].[LimitSharesCode] AS [LimitSharesCode], 
     [v_plate_shares].[CreateTime] AS [CreateTime], 
     [v_plate_shares].[Market] AS [Market], 
     [v_plate_shares].[SharesCode] AS [SharesCode], 
     [v_plate_shares].[TotalCapital] AS [TotalCapital], 
     [v_plate_shares].[CirculatingCapital] AS [CirculatingCapital], 
     [v_plate_shares].[PresentPrice] AS [PresentPrice], 
-    [v_plate_shares].[ClosedPrice] AS [ClosedPrice]
+    [v_plate_shares].[ClosedPrice] AS [ClosedPrice], 
+    [v_plate_shares].[WeightMarket] AS [WeightMarket], 
+    [v_plate_shares].[WeightSharesCode] AS [WeightSharesCode], 
+    [v_plate_shares].[NoWeightMarket] AS [NoWeightMarket], 
+    [v_plate_shares].[NoWeightSharesCode] AS [NoWeightSharesCode], 
+    [v_plate_shares].[PriceType] AS [PriceType]
     FROM [dbo].[v_plate_shares] AS [v_plate_shares]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="v_shares_baseinfo" EntityType="Self.v_shares_baseinfo" store:Type="Views" store:Schema="dbo">

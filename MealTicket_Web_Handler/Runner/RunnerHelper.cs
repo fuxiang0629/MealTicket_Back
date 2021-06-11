@@ -561,6 +561,23 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                     return;
                 }
 
+                sql = string.Format("select top 1 ParValue from t_account_shares_buy_setting with(nolock) where AccountId={0} and [Type]=4", item.AccountId);
+                long ParValue = db.Database.SqlQuery<long>(sql).FirstOrDefault();
+                if (ParValue==1)
+                {
+                    logRecord.AppendLine("===开始判断所属板块是否可买入" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                    sql = string.Format(@"select top 1 1  
+  from t_shares_plate_rel t with(nolock)
+  inner join t_account_shares_conditiontrade_buy_plate t1 with(nolock) on t.PlateId=t1.PlateId
+  inner join t_shares_plate t2 with(nolock) on t.PlateId=t2.Id
+  where t.Market={0} and t.SharesCode='{1}' and AccountId={2} and t2.ChooseStatus=1 and t2.[Status]=1",item.Market,item.SharesCode,item.AccountId);
+                    int result=db.Database.SqlQuery<int>(sql).FirstOrDefault();
+                    if (result != 1)
+                    {
+                        return;
+                    }
+                }
+
                 //判断是否存在持仓
                 if (item.IsHold)
                 {

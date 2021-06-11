@@ -167,6 +167,7 @@
     <Property Name="LimitKey" Type="nvarchar" MaxLength="50" Nullable="false" />
     <Property Name="Priority" Type="int" Nullable="false" />
     <Property Name="Range" Type="int" Nullable="false" />
+    <Property Name="NearLimitRange" Type="int" Nullable="false" />
     <Property Name="FundMultiple" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
@@ -256,6 +257,8 @@
     <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
     <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
     <Property Name="PriceType" Type="int" Nullable="false" />
+    <Property Name="TriPriceType" Type="int" Nullable="false" />
+    <Property Name="TriNearLimitType" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_quotes_date">
     <Key>
@@ -277,7 +280,15 @@
     <Property Name="LimitDownCount" Type="int" Nullable="false" />
     <Property Name="LimitUpBombCount" Type="int" Nullable="false" />
     <Property Name="LimitDownBombCount" Type="int" Nullable="false" />
+    <Property Name="TriLimitUpCount" Type="int" Nullable="false" />
+    <Property Name="TriLimitDownCount" Type="int" Nullable="false" />
+    <Property Name="TriLimitUpBombCount" Type="int" Nullable="false" />
+    <Property Name="TriLimitDownBombCount" Type="int" Nullable="false" />
     <Property Name="PriceType" Type="int" Nullable="false" />
+    <Property Name="TriPriceType" Type="int" Nullable="false" />
+    <Property Name="TriNearLimitType" Type="int" Nullable="false" />
+    <Property Name="TotalAmount" Type="bigint" Nullable="false" />
+    <Property Name="TotalCount" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_quotes_temp">
     <Key>
@@ -323,6 +334,8 @@
     <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
     <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
     <Property Name="PriceType" Type="int" Nullable="false" />
+    <Property Name="TriPriceType" Type="int" Nullable="false" />
+    <Property Name="TriNearLimitType" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_transactiondata">
     <Key>

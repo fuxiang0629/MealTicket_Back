@@ -106,6 +106,7 @@
     <Compile Include="ShareData\SharesBaseInfo.cs" />
     <Compile Include="ShareData\SharesIndexBarsInfo.cs" />
     <Compile Include="ShareData\SharesMinuteTimeData.cs" />
+    <Compile Include="ShareData\SharesQuotesHistory.cs" />
     <Compile Include="ShareData\SharesQuotesInfo.cs" />
     <Compile Include="ShareData\SharesTransactionDataInfo.cs" />
     <Compile Include="ShareHelper.cs" />

@@ -143,7 +143,6 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_trend_template" Width="1.5" PointX="35.375" PointY="23.75" />
         <EntityTypeShape EntityType="meal_ticketModel.v_plate_shares" Width="1.5" PointX="35.375" PointY="26.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_markettime" Width="1.5" PointX="27.375" PointY="35.75" />
-        <EntityTypeShape EntityType="meal_ticketModel.v_plate" Width="1.5" PointX="35.375" PointY="30.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_sys_conditiontrade_template_buy_auto_trend_other" Width="1.5" PointX="35.375" PointY="34.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_sys_conditiontrade_template_buy_auto_trend_other_par" Width="1.5" PointX="24.375" PointY="16.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_sys_conditiontrade_template_buy_other_trend_other" Width="1.5" PointX="36.375" PointY="6.75" />
@@ -154,6 +153,7 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_autobuy_priority_plate" Width="1.5" PointX="37.375" PointY="0.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_shares_limit" Width="1.5" PointX="37.375" PointY="20.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_broker_account_info_frontaccount_rel" Width="1.5" PointX="22.375" PointY="37.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.v_plate" Width="1.5" PointX="37.375" PointY="23.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

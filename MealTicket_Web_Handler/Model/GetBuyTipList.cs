@@ -96,5 +96,10 @@ namespace MealTicket_Web_Handler.Model
         /// 昨日收盘价
         /// </summary>
         public long ClosedPrice { get; set; }
+
+        /// <summary>
+        /// 板块列表
+        /// </summary>
+        public List<SharesPlateInfo> PlateList { get; set; }
     }
 }

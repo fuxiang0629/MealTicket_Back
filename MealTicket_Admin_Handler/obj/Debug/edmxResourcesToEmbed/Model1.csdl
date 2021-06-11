@@ -301,7 +301,6 @@
     <EntitySet Name="t_account_shares_conditiontrade_buy_trend_template" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_trend_template" />
     <EntitySet Name="v_plate_shares" EntityType="meal_ticketModel.v_plate_shares" />
     <EntitySet Name="t_shares_markettime" EntityType="meal_ticketModel.t_shares_markettime" />
-    <EntitySet Name="v_plate" EntityType="meal_ticketModel.v_plate" />
     <EntitySet Name="t_sys_conditiontrade_template_buy_auto_trend_other" EntityType="meal_ticketModel.t_sys_conditiontrade_template_buy_auto_trend_other" />
     <EntitySet Name="t_sys_conditiontrade_template_buy_auto_trend_other_par" EntityType="meal_ticketModel.t_sys_conditiontrade_template_buy_auto_trend_other_par" />
     <EntitySet Name="t_sys_conditiontrade_template_buy_other_trend_other" EntityType="meal_ticketModel.t_sys_conditiontrade_template_buy_other_trend_other" />
@@ -311,6 +310,8 @@
     <EntitySet Name="t_shares_limit_autobuy_priority" EntityType="meal_ticketModel.t_shares_limit_autobuy_priority" />
     <EntitySet Name="t_shares_limit_autobuy_priority_plate" EntityType="meal_ticketModel.t_shares_limit_autobuy_priority_plate" />
     <EntitySet Name="t_shares_plate_shares_limit" EntityType="meal_ticketModel.t_shares_plate_shares_limit" />
+    <EntitySet Name="t_broker_account_info_frontaccount_rel" EntityType="meal_ticketModel.t_broker_account_info_frontaccount_rel" />
+    <EntitySet Name="v_plate" EntityType="meal_ticketModel.v_plate" />
   </EntityContainer>
   <EntityType Name="t_admin_department">
     <Key>
@@ -620,6 +621,7 @@
     <Property Name="LimitDownPrice" Type="Int64" Nullable="false" />
     <Property Name="PriceType" Type="Int32" Nullable="false" />
     <Property Name="TriPriceType" Type="Int32" Nullable="false" />
+    <Property Name="TriNearLimitType" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_search">
     <Key>
@@ -1223,6 +1225,7 @@
     <Property Name="FundMultiple" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="NearLimitRange" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_wallet_change_record">
     <Key>
@@ -1357,6 +1360,7 @@
     <Property Name="SynchronizationTime" Type="DateTime" Precision="3" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="IsPrivate" Type="Boolean" Nullable="false" />
   </EntityType>
   <EntityType Name="t_server_broker_account_rel">
     <Key>
@@ -1952,6 +1956,7 @@
     <Property Name="AccountId" Type="Int64" Nullable="false" />
     <Property Name="FollowAccountId" Type="Int64" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="OrderIndex" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_app_version">
     <Key>
@@ -2025,6 +2030,15 @@
     <Property Name="Status" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="SharesType" Type="Int32" Nullable="false" />
+    <Property Name="SharesMarket" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ChooseStatus" Type="Int32" Nullable="false" />
+    <Property Name="WeightMarket" Type="Int32" Nullable="false" />
+    <Property Name="WeightSharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="NoWeightMarket" Type="Int32" Nullable="false" />
+    <Property Name="NoWeightSharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="CalType" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_plate_rel">
     <Key>
@@ -2217,6 +2231,11 @@
       <PropertyRef Name="PlateType" />
       <PropertyRef Name="Status" />
       <PropertyRef Name="CreateTime" />
+      <PropertyRef Name="SharesType" />
+      <PropertyRef Name="LimitSharesMarket" />
+      <PropertyRef Name="ChooseStatus" />
+      <PropertyRef Name="WeightMarket" />
+      <PropertyRef Name="NoWeightMarket" />
     </Key>
     <Property Name="PlateId" Type="Int64" Nullable="false" />
     <Property Name="PlateName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
@@ -2229,6 +2248,14 @@
     <Property Name="CirculatingCapital" Type="Int64" />
     <Property Name="PresentPrice" Type="Int64" />
     <Property Name="ClosedPrice" Type="Int64" />
+    <Property Name="SharesType" Type="Int32" Nullable="false" />
+    <Property Name="LimitSharesMarket" Type="Int32" Nullable="false" />
+    <Property Name="LimitSharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="ChooseStatus" Type="Int32" Nullable="false" />
+    <Property Name="WeightMarket" Type="Int32" Nullable="false" />
+    <Property Name="WeightSharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="NoWeightMarket" Type="Int32" Nullable="false" />
+    <Property Name="NoWeightSharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
   </EntityType>
   <EntityType Name="t_shares_markettime">
     <Key>
@@ -2244,22 +2271,6 @@
     <Property Name="Business" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="TotalCapital" Type="Int64" Nullable="false" />
     <Property Name="CirculatingCapital" Type="Int64" Nullable="false" />
-  </EntityType>
-  <EntityType Name="v_plate">
-    <Key>
-      <PropertyRef Name="PlateId" />
-      <PropertyRef Name="PlateName" />
-      <PropertyRef Name="PlateType" />
-      <PropertyRef Name="Status" />
-      <PropertyRef Name="CreateTime" />
-    </Key>
-    <Property Name="PlateId" Type="Int64" Nullable="false" />
-    <Property Name="PlateName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
-    <Property Name="PlateType" Type="Int32" Nullable="false" />
-    <Property Name="Status" Type="Int32" Nullable="false" />
-    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="SharesCount" Type="Int32" />
-    <Property Name="RiseRate" Type="Int64" />
   </EntityType>
   <EntityType Name="t_sys_conditiontrade_template_buy_auto_trend_other">
     <Key>
@@ -2359,5 +2370,47 @@
     <Property Name="LimitType" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_broker_account_info_frontaccount_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BrokerAccountId" Type="Int64" Nullable="false" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="v_plate">
+    <Key>
+      <PropertyRef Name="PlateId" />
+      <PropertyRef Name="PlateName" />
+      <PropertyRef Name="PlateType" />
+      <PropertyRef Name="ChooseStatus" />
+      <PropertyRef Name="Status" />
+      <PropertyRef Name="SharesType" />
+      <PropertyRef Name="LimitSharesMarket" />
+      <PropertyRef Name="CreateTime" />
+      <PropertyRef Name="WeightMarket" />
+      <PropertyRef Name="NoWeightMarket" />
+    </Key>
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="PlateName" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="PlateType" Type="Int32" Nullable="false" />
+    <Property Name="ChooseStatus" Type="Int32" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="SharesType" Type="Int32" Nullable="false" />
+    <Property Name="LimitSharesMarket" Type="Int32" Nullable="false" />
+    <Property Name="LimitSharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="SharesCount" Type="Int32" />
+    <Property Name="WeightRiseIndex" Type="Int64" />
+    <Property Name="WeightRiseRate" Type="Int64" />
+    <Property Name="RiseIndex" Type="Int64" />
+    <Property Name="RiseRate" Type="Int64" />
+    <Property Name="WeightMarket" Type="Int32" Nullable="false" />
+    <Property Name="WeightSharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="NoWeightMarket" Type="Int32" Nullable="false" />
+    <Property Name="NoWeightSharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
   </EntityType>
 </Schema>

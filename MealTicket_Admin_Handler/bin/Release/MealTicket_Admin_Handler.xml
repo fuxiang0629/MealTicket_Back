@@ -8780,6 +8780,31 @@
             匹配代码
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesPlateRequest.WeightMarket">
+            <summary>
+            加权指数市场
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesPlateRequest.WeightSharesCode">
+            <summary>
+            加权指数code
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesPlateRequest.NoWeightMarket">
+            <summary>
+            不加权指数市场
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesPlateRequest.CalType">
+            <summary>
+            计算类型0未知 1板块指数 2市场指数 3成分指数
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesPlateRequest.NoWeightSharesCode">
+            <summary>
+            不加权指数code
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.AddSharesPlateSharesRequest.PlateId">
             <summary>
             板块Id
@@ -8858,6 +8883,46 @@
         <member name="P:MealTicket_Admin_Handler.Model.BatchAddSharesConditionTrendPar2Obj.Rate">
             <summary>
             百分比
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.BatchDeleteConditiontradeTemplateBuyAutoParRequest.AutoTrendId">
+            <summary>
+            转自动走势Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.BatchDeleteConditiontradeTemplateBuyAutoParRequest.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.BatchDeleteConditiontradeTemplateBuyAutoPar_OtherRequest.AutoTrendOtherId">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.BatchDeleteConditiontradeTemplateBuyAutoPar_OtherRequest.Id">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.BatchDeleteConditiontradeTemplateBuyOtherParRequest.OtherTrendId">
+            <summary>
+            额外走势iId
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.BatchDeleteConditiontradeTemplateBuyOtherParRequest.Id">
+            <summary>
+            datatype*10+grouptype
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.BatchDeleteConditiontradeTemplateBuyOtherPar_OtherRequest.OtherTrendOtherId">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.BatchDeleteConditiontradeTemplateBuyOtherPar_OtherRequest.Id">
+            <summary>
+            
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.BatchUpdateMonitorTrendParRequest.SharesCode">
@@ -9457,7 +9522,12 @@
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.GetSharesPlateListRequest.Type">
             <summary>
-            1.行业管理 2.地区管理 3.概念管理
+            0 所有 1.行业管理 2.地区管理 3.概念管理
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetSharesPlateListRequest.ChooseStatus">
+            <summary>
+            0全部 1被挑选 2未被挑选
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.GetSharesPlateListRequest.OrderType">
@@ -9495,6 +9565,21 @@
             涨幅
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.RiseIndex">
+            <summary>
+            指数
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.WeightRiseRate">
+            <summary>
+            加权涨幅
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.WeightRiseIndex">
+            <summary>
+            加权指数
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.SharesType">
             <summary>
             0指定股票 1代码匹配
@@ -9508,6 +9593,41 @@
         <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.SharesCode">
             <summary>
             匹配代码
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.WeightMarket">
+            <summary>
+            加权指数市场
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.WeightSharesCode">
+            <summary>
+            加权指数code
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.WeightSharesName">
+            <summary>
+            加权指数名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.NoWeightMarket">
+            <summary>
+            不加权指数市场
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.NoWeightSharesCode">
+            <summary>
+            不加权指数code
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.NoWeightSharesName">
+            <summary>
+            不加权指数名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.CalType">
+            <summary>
+            计算类型0未知 1板块指数 2市场指数 3成分指数
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.CreateTime">
@@ -9950,6 +10070,31 @@
             匹配代码
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesPlateRequest.WeightMarket">
+            <summary>
+            加权指数市场
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesPlateRequest.WeightSharesCode">
+            <summary>
+            加权指数code
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesPlateRequest.NoWeightMarket">
+            <summary>
+            不加权指数市场
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesPlateRequest.CalType">
+            <summary>
+            计算类型0未知 1板块指数 2市场指数 3成分指数
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesPlateRequest.NoWeightSharesCode">
+            <summary>
+            不加权指数code
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.ModifySharesPriorityAutoBuyRequest.Id">
             <summary>
             Id
@@ -10008,6 +10153,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.AddSharesTradeLeverRequest.Range">
             <summary>
             涨跌幅
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesTradeLeverRequest.NearLimitRange">
+            <summary>
+            接近涨跌停幅度
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.AddSharesTradeLeverRequest.FundMultiple">
@@ -10565,6 +10715,11 @@
             涨跌幅
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesTradeLeverInfo.NearLimitRange">
+            <summary>
+            接近涨跌停幅度
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.SharesTradeLeverInfo.FundMultiple">
             <summary>
             杠杆倍数
@@ -10998,6 +11153,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.ModifySharesTradeLeverRequest.Range">
             <summary>
             涨跌幅
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesTradeLeverRequest.NearLimitRange">
+            <summary>
+            接近涨跌停幅度
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.ModifySharesTradeLeverRequest.FundMultiple">
@@ -12043,9 +12203,28 @@
             </summary>
             <param name="request"></param>
         </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesPlateChooseStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改板块管理状态
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesPlateChooseStatusBatch(System.Collections.Generic.List{MealTicket_Admin_Handler.Model.AddSharesPlateRequest})">
+            <summary>
+            批量修改板块管理挑选状态
+            </summary>
+            <param name="list"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteSharesPlate(MealTicket_Admin_Handler.Model.DeleteRequest)">
             <summary>
             删除板块管理
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchDeleteSharesPlate(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            批量删除板块管理
             </summary>
             <param name="request"></param>
         </member>
@@ -12786,6 +12965,12 @@
             <param name="list"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchDeleteConditiontradeTemplateBuyOtherPar(MealTicket_Admin_Handler.Model.BatchDeleteConditiontradeTemplateBuyOtherParRequest)">
+            <summary>
+            批量删除条件买入模板额外条件类型参数（板块涨跌幅）
+            </summary>
+            <param name="request"></param>
+        </member>
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifyConditiontradeTemplateBuyOtherPar(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyOtherParRequest)">
             <summary>
             编辑条件买入模板额外条件类型参数
@@ -12834,6 +13019,12 @@
             <param name="Type"></param>
             <param name="list"></param>
             <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchDeleteConditiontradeTemplateBuyAutoPar(MealTicket_Admin_Handler.Model.BatchDeleteConditiontradeTemplateBuyAutoParRequest)">
+            <summary>
+            批量删除条件买入模板转自动条件类型参数(板块涨跌幅)
+            </summary>
+            <param name="request"></param>
         </member>
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifyConditiontradeTemplateBuyAutoPar(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyAutoParRequest)">
             <summary>
@@ -12947,6 +13138,12 @@
             <param name="list"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchDeleteConditiontradeTemplateBuyOtherPar_Other(MealTicket_Admin_Handler.Model.BatchDeleteConditiontradeTemplateBuyOtherPar_OtherRequest)">
+            <summary>
+            批量删除条件买入模板额外条件类型参数(板块涨跌幅)-额外关系
+            </summary>
+            <param name="request"></param>
+        </member>
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifyConditiontradeTemplateBuyOtherPar_Other(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyOtherParRequest)">
             <summary>
             编辑条件买入模板额外条件类型参数
@@ -12995,6 +13192,12 @@
             <param name="Type"></param>
             <param name="list"></param>
             <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchDeleteConditiontradeTemplateBuyAutoPar_Other(MealTicket_Admin_Handler.Model.BatchDeleteConditiontradeTemplateBuyAutoPar_OtherRequest)">
+            <summary>
+            批量删除条件买入模板转自动条件类型参数(板块涨跌幅)-额外关系
+            </summary>
+            <param name="request"></param>
         </member>
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifyConditiontradeTemplateBuyAutoPar_Other(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyAutoParRequest)">
             <summary>
@@ -13067,6 +13270,11 @@
             <param name="Type"></param>
             <param name="list"></param>
             <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchDeleteSharesConditionTrendPar(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            批量删除条件单走势模板参数(板块涨跌幅)
+            </summary>
         </member>
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesConditionTrendPar2(System.Int32,System.Collections.Generic.List{MealTicket_Admin_Handler.Model.BatchAddSharesConditionTrendPar2Obj})">
             <summary>

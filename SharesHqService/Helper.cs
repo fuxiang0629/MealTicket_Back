@@ -222,6 +222,69 @@ namespace SharesHqService
                 return false;
             }
         }
+
+        /// <summary>
+        /// 检查是否计算五档任务
+        /// </summary>
+        /// <returns></returns>
+        public static bool CheckTradeTimeForQuotes()
+        {
+            if (!CheckTradeDate())
+            {
+                return false;
+            }
+            DateTime timeDis = DateTime.Now;
+            TimeSpan timeSpanNow = TimeSpan.Parse(timeDis.ToString("HH:mm:ss"));
+            using (var db = new meal_ticketEntities())
+            {
+                var tradeTime = (from item in db.t_shares_limit_time
+                                 select item).ToList();
+                foreach (var item in tradeTime)
+                {
+                    //解析time1
+                    if (item.Time1 != null)
+                    {
+                        string[] timeArr = item.Time1.Split(',');
+                        foreach (var times in timeArr)
+                        {
+                            var timeSpanArr = times.Split('-');
+                            if (timeSpanArr.Length != 2)
+                            {
+                                continue;
+                            }
+                            TimeSpan timeStart = TimeSpan.Parse(timeSpanArr[0]);
+                            TimeSpan timeEnd = TimeSpan.Parse(timeSpanArr[1]);
+                            if (timeSpanNow < timeEnd)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                   
+                    //解析time4
+                    if (item.Time4 != null)
+                    {
+                        string[] timeArr = item.Time4.Split(',');
+                        foreach (var times in timeArr)
+                        {
+                            var timeSpanArr = times.Split('-');
+                            if (timeSpanArr.Length != 2)
+                            {
+                                continue;
+                            }
+                            TimeSpan timeStart = TimeSpan.Parse(timeSpanArr[0]);
+                            TimeSpan timeEnd = TimeSpan.Parse(timeSpanArr[1]);
+                            if (timeSpanNow >= timeStart && timeSpanNow < timeEnd)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+                return true;
+            }
+        }
+
         ///<summary>
         /// 汉字转拼音缩写
         ///</summary>

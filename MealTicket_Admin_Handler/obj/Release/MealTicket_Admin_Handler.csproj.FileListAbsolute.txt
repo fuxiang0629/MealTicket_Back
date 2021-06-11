@@ -154,4 +154,3 @@ F:\项目\饭票后端\MealTicket_Admin_Handler\obj\Release\MealTicket_Admin_Han
 F:\项目\饭票后端\MealTicket_Admin_Handler\obj\Release\MealTicket_Admin_Handler.csproj.CopyComplete
 F:\项目\饭票后端\MealTicket_Admin_Handler\obj\Release\MealTicket_Admin_Handler.dll
 F:\项目\饭票后端\MealTicket_Admin_Handler\obj\Release\MealTicket_Admin_Handler.pdb
-F:\项目\饭票后端\MealTicket_Admin_Handler\obj\Release\MealTicket_Admin_Handler.csprojAssemblyReference.cache

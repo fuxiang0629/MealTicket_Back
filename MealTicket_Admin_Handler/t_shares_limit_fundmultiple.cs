@@ -23,5 +23,6 @@ namespace MealTicket_Admin_Handler
         public int FundMultiple { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
+        public int NearLimitRange { get; set; }
     }
 }

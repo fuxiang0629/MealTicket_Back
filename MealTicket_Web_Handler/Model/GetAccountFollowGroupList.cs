@@ -10,6 +10,14 @@ namespace MealTicket_Web_Handler.Model
     {
     }
 
+    public class GetAccountFollowGroupListRequest : PageRequest
+    {
+        /// <summary>
+        /// 状态
+        /// </summary>
+        public int Status { get; set; }
+    }
+
     public class AccountFollowGroupInfo
     {
         /// <summary>
@@ -30,7 +38,7 @@ namespace MealTicket_Web_Handler.Model
         /// <summary>
         /// 跟投账户列表
         /// </summary>
-        public List<long> FollowAccountList { get; set; }
+        public List<AccountFollowGroupFollowAccountInfo> FollowAccountList { get; set; }
 
         /// <summary>
         /// 状态1有效 2无效

@@ -20,6 +20,20 @@ namespace MealTicket_Web_Handler
         public int Status { get; set; }
         public System.DateTime CreateTime { get; set; }
         public Nullable<int> SharesCount { get; set; }
-        public long RiseRate { get; set; }
+        public Nullable<long> RiseRate { get; set; }
+        public int SharesType { get; set; }
+        public int LimitSharesMarket { get; set; }
+        public string LimitSharesCode { get; set; }
+        public int ChooseStatus { get; set; }
+        public int CalType { get; set; }
+        public Nullable<long> WeightRiseIndex { get; set; }
+        public Nullable<long> WeightRiseRate { get; set; }
+        public Nullable<long> RiseIndex { get; set; }
+        public int WeightMarket { get; set; }
+        public string WeightSharesCode { get; set; }
+        public int NoWeightMarket { get; set; }
+        public string NoWeightSharesCode { get; set; }
+        public Nullable<int> RiseLimitCount { get; set; }
+        public Nullable<int> DownLimitCount { get; set; }
     }
 }

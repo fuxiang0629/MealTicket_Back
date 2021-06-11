@@ -55,4 +55,22 @@ namespace MealTicket_Web_Handler.Model
         /// </summary>
         public DateTime CreateTime { get; set; }
     }
+
+    public class AccountRiseLimitTriDetails
+    {
+        /// <summary>
+        /// 股票代码
+        /// </summary>
+        public string SharesCode { get; set; }
+
+        /// <summary>
+        /// 股票名称
+        /// </summary>
+        public string SharesName { get; set; }
+
+        /// <summary>
+        /// 触发时间
+        /// </summary>
+        public DateTime CreateTime { get; set; }
+    }
 }

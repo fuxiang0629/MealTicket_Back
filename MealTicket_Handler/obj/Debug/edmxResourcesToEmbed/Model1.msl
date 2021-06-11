@@ -786,6 +786,7 @@
     <EntitySetMapping Name="t_broker_account_info">
       <EntityTypeMapping TypeName="meal_ticketModel.t_broker_account_info">
         <MappingFragment StoreEntitySet="t_broker_account_info">
+          <ScalarProperty Name="IsPrivate" ColumnName="IsPrivate" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="SynchronizationTime" ColumnName="SynchronizationTime" />
@@ -1159,6 +1160,7 @@
     <EntitySetMapping Name="t_account_shares_hold_conditiontrade">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_hold_conditiontrade">
         <MappingFragment StoreEntitySet="t_account_shares_hold_conditiontrade">
+          <ScalarProperty Name="OtherConditionRelative" ColumnName="OtherConditionRelative" />
           <ScalarProperty Name="ConditionRelativeRate" ColumnName="ConditionRelativeRate" />
           <ScalarProperty Name="ConditionRelativeType" ColumnName="ConditionRelativeType" />
           <ScalarProperty Name="ConditionType" ColumnName="ConditionType" />

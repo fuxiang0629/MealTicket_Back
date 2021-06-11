@@ -142,7 +142,7 @@ namespace SharesHqService
             //拼接所有股票
             List<SharesBaseInfo> tempList = new List<SharesBaseInfo>(); 
             List<SharesQuotesInfo> resultlist = new List<SharesQuotesInfo>();
-            if (Singleton.SharesBaseInfoList.TryGetValue(0, out tempList))
+            if (Singleton.Instance.SharesBaseInfoList.TryGetValue(0, out tempList))
             {
                 Regex regex = new Regex(Singleton.Instance.SharesCodeMatch0);
                 tempList = (from item in tempList
@@ -150,7 +150,7 @@ namespace SharesHqService
                             select item).ToList();
                 list.AddRange(tempList);
             }
-            if (Singleton.SharesBaseInfoList.TryGetValue(1, out tempList))
+            if (Singleton.Instance.SharesBaseInfoList.TryGetValue(1, out tempList))
             {
                 Regex regex = new Regex(Singleton.Instance.SharesCodeMatch1);
                 tempList = (from item in tempList
@@ -364,7 +364,7 @@ namespace SharesHqService
             List<SharesBaseInfo> list = new List<SharesBaseInfo>();
             //拼接所有股票
             List<SharesBaseInfo> tempList = new List<SharesBaseInfo>();
-            if (Singleton.SharesBaseInfoList.TryGetValue(0, out tempList))
+            if (Singleton.Instance.SharesBaseInfoList.TryGetValue(0, out tempList))
             {
                 Regex regex = new Regex(Singleton.Instance.SharesCodeMatch0);
                 tempList = (from item in tempList
@@ -372,7 +372,7 @@ namespace SharesHqService
                             select item).ToList();
                 list.AddRange(tempList);
             }
-            if (Singleton.SharesBaseInfoList.TryGetValue(1, out tempList))
+            if (Singleton.Instance.SharesBaseInfoList.TryGetValue(1, out tempList))
             {
                 Regex regex = new Regex(Singleton.Instance.SharesCodeMatch1);
                 tempList = (from item in tempList
@@ -514,7 +514,7 @@ namespace SharesHqService
             List<SharesBaseInfo> list = new List<SharesBaseInfo>();
             //拼接所有股票
             List<SharesBaseInfo> tempList = new List<SharesBaseInfo>();
-            if (Singleton.SharesBaseInfoList.TryGetValue(0, out tempList))
+            if (Singleton.Instance.SharesBaseInfoList.TryGetValue(0, out tempList))
             {
                 Regex regex = new Regex(Singleton.Instance.SharesCodeMatch0);
                 tempList = (from item in tempList
@@ -522,7 +522,7 @@ namespace SharesHqService
                             select item).ToList();
                 list.AddRange(tempList);
             }
-            if (Singleton.SharesBaseInfoList.TryGetValue(1, out tempList))
+            if (Singleton.Instance.SharesBaseInfoList.TryGetValue(1, out tempList))
             {
                 Regex regex = new Regex(Singleton.Instance.SharesCodeMatch1);
                 tempList = (from item in tempList
@@ -667,7 +667,7 @@ namespace SharesHqService
             List<SharesBaseInfo> list = new List<SharesBaseInfo>();
             //拼接所有股票
             List<SharesBaseInfo> tempList = new List<SharesBaseInfo>();
-            if (Singleton.SharesBaseInfoList.TryGetValue(0, out tempList))
+            if (Singleton.Instance.SharesBaseInfoList.TryGetValue(0, out tempList))
             {
                 Regex regex = new Regex(Singleton.Instance.SharesCodeMatch0);
                 tempList = (from item in tempList
@@ -675,7 +675,7 @@ namespace SharesHqService
                             select item).ToList();
                 list.AddRange(tempList);
             }
-            if (Singleton.SharesBaseInfoList.TryGetValue(1, out tempList))
+            if (Singleton.Instance.SharesBaseInfoList.TryGetValue(1, out tempList))
             {
                 Regex regex = new Regex(Singleton.Instance.SharesCodeMatch1);
                 tempList = (from item in tempList
@@ -789,7 +789,7 @@ namespace SharesHqService
             List<SharesBaseInfo> list = new List<SharesBaseInfo>();
             //拼接所有股票
             List<SharesBaseInfo> tempList = new List<SharesBaseInfo>();
-            if (Singleton.SharesBaseInfoList.TryGetValue(0, out tempList))
+            if (Singleton.Instance.SharesBaseInfoList.TryGetValue(0, out tempList))
             {
                 Regex regex = new Regex(Singleton.Instance.SharesCodeMatch0);
                 tempList = (from item in tempList
@@ -797,7 +797,7 @@ namespace SharesHqService
                             select item).ToList();
                 list.AddRange(tempList);
             }
-            if (Singleton.SharesBaseInfoList.TryGetValue(1, out tempList))
+            if (Singleton.Instance.SharesBaseInfoList.TryGetValue(1, out tempList))
             {
                 Regex regex = new Regex(Singleton.Instance.SharesCodeMatch1);
                 tempList = (from item in tempList

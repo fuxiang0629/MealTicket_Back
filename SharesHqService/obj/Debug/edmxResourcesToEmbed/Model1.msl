@@ -113,6 +113,8 @@
     <EntitySetMapping Name="t_shares_quotes">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes">
         <MappingFragment StoreEntitySet="t_shares_quotes">
+          <ScalarProperty Name="TriNearLimitType" ColumnName="TriNearLimitType" />
+          <ScalarProperty Name="TriPriceType" ColumnName="TriPriceType" />
           <ScalarProperty Name="PriceType" ColumnName="PriceType" />
           <ScalarProperty Name="LimitDownPrice" ColumnName="LimitDownPrice" />
           <ScalarProperty Name="LimitUpPrice" ColumnName="LimitUpPrice" />
@@ -260,6 +262,8 @@
     <EntitySetMapping Name="t_shares_quotes_temp">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes_temp">
         <MappingFragment StoreEntitySet="t_shares_quotes_temp">
+          <ScalarProperty Name="TriNearLimitType" ColumnName="TriNearLimitType" />
+          <ScalarProperty Name="TriPriceType" ColumnName="TriPriceType" />
           <ScalarProperty Name="PriceType" ColumnName="PriceType" />
           <ScalarProperty Name="LimitDownPrice" ColumnName="LimitDownPrice" />
           <ScalarProperty Name="LimitUpPrice" ColumnName="LimitUpPrice" />
@@ -336,6 +340,7 @@
     <EntitySetMapping Name="t_shares_limit_fundmultiple">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_limit_fundmultiple">
         <MappingFragment StoreEntitySet="t_shares_limit_fundmultiple">
+          <ScalarProperty Name="NearLimitRange" ColumnName="NearLimitRange" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="FundMultiple" ColumnName="FundMultiple" />
@@ -351,6 +356,14 @@
     <EntitySetMapping Name="t_shares_quotes_date">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes_date">
         <MappingFragment StoreEntitySet="t_shares_quotes_date">
+          <ScalarProperty Name="TriNearLimitType" ColumnName="TriNearLimitType" />
+          <ScalarProperty Name="TotalCount" ColumnName="TotalCount" />
+          <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+          <ScalarProperty Name="TriPriceType" ColumnName="TriPriceType" />
+          <ScalarProperty Name="TriLimitDownBombCount" ColumnName="TriLimitDownBombCount" />
+          <ScalarProperty Name="TriLimitUpBombCount" ColumnName="TriLimitUpBombCount" />
+          <ScalarProperty Name="TriLimitDownCount" ColumnName="TriLimitDownCount" />
+          <ScalarProperty Name="TriLimitUpCount" ColumnName="TriLimitUpCount" />
           <ScalarProperty Name="PriceType" ColumnName="PriceType" />
           <ScalarProperty Name="LimitDownBombCount" ColumnName="LimitDownBombCount" />
           <ScalarProperty Name="LimitUpBombCount" ColumnName="LimitUpBombCount" />

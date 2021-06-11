@@ -23,6 +23,8 @@ namespace SharesHqService
         /// </summary>
         Thread SysparUpdateThread;
 
+        object quotesLock = new object();
+
         /// <summary>
         /// 系统参数更新线程等待队列
         /// </summary>
@@ -56,7 +58,17 @@ namespace SharesHqService
         /// <summary>
         /// 股票基本信息列表
         /// </summary>
-        public static Dictionary<int, List<SharesBaseInfo>> SharesBaseInfoList;
+        public Dictionary<int, List<SharesBaseInfo>> SharesBaseInfoList=new Dictionary<int, List<SharesBaseInfo>>();
+
+        /// <summary>
+        /// 股票基本信息列表
+        /// </summary>
+        public Dictionary<int, Dictionary<string, SharesBaseInfo>> SharesBaseInfoDic=new Dictionary<int, Dictionary<string, SharesBaseInfo>>();
+
+        /// <summary>
+        /// 上一次五档行情数据
+        /// </summary>
+        public List<SharesQuotesInfo> LastSharesQuotesList;
 
         /// <summary>
         /// 深圳股票匹配
@@ -135,6 +147,33 @@ namespace SharesHqService
 
         //股票昨日收盘价缓存
         public List<SharesBaseInfo> SharesList = new List<SharesBaseInfo>();
+
+        //是否可以进入行情更新
+        public bool QuotesCanEnter = true;
+
+        public bool TryQuotesCanEnter()
+        {
+            lock (quotesLock)
+            {
+                if (!QuotesCanEnter) { return false; }
+
+                QuotesCanEnter = false;
+            }
+
+            return true;
+        }
+
+        public bool TryQuotesCanLeave()
+        {
+            lock (quotesLock)
+            {
+                if (QuotesCanEnter) { return false; }
+
+                QuotesCanEnter = true;
+            }
+
+            return true;
+        }
 
         #region====暂未使用====
         /// <summary>
@@ -295,6 +334,74 @@ namespace SharesHqService
                                            }).ToList()
                               }).ToDictionary(e => e.Key, e => e.Value);
                 SharesBaseInfoList = result;
+
+                foreach (var item in result)
+                {
+                    Dictionary<string, SharesBaseInfo> dicInfo = new Dictionary<string, SharesBaseInfo>();
+                    foreach (var k in item.Value)
+                    {
+                        dicInfo.Add(k.ShareCode, k);
+                    }
+
+                    SharesBaseInfoDic.Add(item.Key, dicInfo);
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取股票五档数据列表
+        /// </summary>
+        public void GetLastSharesQuotesList()
+        {
+            DateTime dateNow = DateTime.Now.Date;
+            using (var db = new meal_ticketEntities())
+            {
+                var result = (from item in db.t_shares_quotes
+                              where item.LastModified > dateNow
+                              select new SharesQuotesInfo
+                              {
+                                  SellCount1=item.SellCount1,
+                                  SellCount2=item.SellCount2,
+                                  SellCount3=item.SellCount3,
+                                  SellCount4=item.SellCount4,
+                                  SellCount5=item.SellCount5,
+                                  SellPrice1=item.SellPrice1,
+                                  SellPrice2=item.SellPrice2,
+                                  SellPrice3=item.SellPrice3,
+                                  SellPrice4=item.SellPrice4,
+                                  SellPrice5=item.SellPrice5,
+                                  SharesCode=item.SharesCode,
+                                  SpeedUp=item.SpeedUp,
+                                  Activity=item.Activity,
+                                  BuyCount1=item.BuyCount1,
+                                  BuyCount2=item.BuyCount2,
+                                  BuyCount3=item.BuyCount3,
+                                  BuyCount4=item.BuyCount4,
+                                  BuyCount5=item.BuyCount5,
+                                  BuyPrice1=item.BuyPrice1,
+                                  BuyPrice2=item.BuyPrice2,
+                                  BuyPrice3=item.BuyPrice3,
+                                  BuyPrice4=item.BuyPrice4,
+                                  BuyPrice5=item.BuyPrice5,
+                                  ClosedPrice=item.ClosedPrice,
+                                  InvolCount=item.InvolCount,
+                                  LimitDownPrice=item.LimitDownPrice,
+                                  LimitUpPrice=item.LimitUpPrice,
+                                  Market=item.Market,
+                                  MaxPrice=item.MaxPrice,
+                                  MinPrice=item.MinPrice,
+                                  OuterCount=item.OuterCount,
+                                  OpenedPrice=item.OpenedPrice,
+                                  PresentCount=item.PresentCount,
+                                  PriceType=item.PriceType,
+                                  PresentPrice=item.PresentPrice,
+                                  TotalAmount=item.TotalAmount,
+                                  TotalCount=item.TotalCount,
+                                  TriNearLimitType=item.TriNearLimitType,
+                                  TriPriceType=item.TriPriceType,
+                                  BackSharesCode=item.SharesCode
+                              }).ToList();
+                LastSharesQuotesList = result;
             }
         }
 
