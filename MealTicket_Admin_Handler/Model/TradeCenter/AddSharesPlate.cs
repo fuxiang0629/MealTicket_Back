@@ -36,5 +36,30 @@ namespace MealTicket_Admin_Handler.Model
         /// 匹配代码
         /// </summary>
         public string SharesCode { get; set; }
+
+        /// <summary>
+        /// 加权指数市场
+        /// </summary>
+        public int WeightMarket { get; set; }
+
+        /// <summary>
+        /// 加权指数code
+        /// </summary>
+        public string WeightSharesCode { get; set; }
+
+        /// <summary>
+        /// 不加权指数市场
+        /// </summary>
+        public int NoWeightMarket { get; set; }
+
+        /// <summary>
+        /// 计算类型0未知 1板块指数 2市场指数 3成分指数
+        /// </summary>
+        public int CalType { get; set; }
+
+        /// <summary>
+        /// 不加权指数code
+        /// </summary>
+        public string NoWeightSharesCode { get; set; }
     }
 }

@@ -31,5 +31,13 @@ namespace SharesHqService
         public int LimitUpBombCount { get; set; }
         public int LimitDownBombCount { get; set; }
         public int PriceType { get; set; }
+        public int TriLimitUpCount { get; set; }
+        public int TriLimitDownCount { get; set; }
+        public int TriLimitUpBombCount { get; set; }
+        public int TriLimitDownBombCount { get; set; }
+        public int TriPriceType { get; set; }
+        public long TotalAmount { get; set; }
+        public int TotalCount { get; set; }
+        public int TriNearLimitType { get; set; }
     }
 }

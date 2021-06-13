@@ -167,6 +167,8 @@
     <Property Name="LimitUpPrice" Type="Int64" Nullable="false" />
     <Property Name="LimitDownPrice" Type="Int64" Nullable="false" />
     <Property Name="PriceType" Type="Int32" Nullable="false" />
+    <Property Name="TriPriceType" Type="Int32" Nullable="false" />
+    <Property Name="TriNearLimitType" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_transactiondata">
     <Key>
@@ -307,6 +309,8 @@
     <Property Name="LimitUpPrice" Type="Int64" Nullable="false" />
     <Property Name="LimitDownPrice" Type="Int64" Nullable="false" />
     <Property Name="PriceType" Type="Int32" Nullable="false" />
+    <Property Name="TriPriceType" Type="Int32" Nullable="false" />
+    <Property Name="TriNearLimitType" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_all">
     <Key>
@@ -349,6 +353,7 @@
     <Property Name="FundMultiple" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="NearLimitRange" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_quotes_date">
     <Key>
@@ -371,5 +376,13 @@
     <Property Name="LimitUpBombCount" Type="Int32" Nullable="false" />
     <Property Name="LimitDownBombCount" Type="Int32" Nullable="false" />
     <Property Name="PriceType" Type="Int32" Nullable="false" />
+    <Property Name="TriLimitUpCount" Type="Int32" Nullable="false" />
+    <Property Name="TriLimitDownCount" Type="Int32" Nullable="false" />
+    <Property Name="TriLimitUpBombCount" Type="Int32" Nullable="false" />
+    <Property Name="TriLimitDownBombCount" Type="Int32" Nullable="false" />
+    <Property Name="TriPriceType" Type="Int32" Nullable="false" />
+    <Property Name="TotalAmount" Type="Int64" Nullable="false" />
+    <Property Name="TotalCount" Type="Int32" Nullable="false" />
+    <Property Name="TriNearLimitType" Type="Int32" Nullable="false" />
   </EntityType>
 </Schema>

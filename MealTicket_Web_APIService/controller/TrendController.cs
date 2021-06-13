@@ -725,6 +725,38 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 查询今日触发涨跌停股票数据
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/riselimit/tri/list"), HttpPost]
+        [Description("查询今日触发涨跌停股票数据")]
+        [CheckUserLoginFilter]
+        public List<AccountRiseLimitTriInfo> GetAccountRiseLimitTriList()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountRiseLimitTriList(basedata);
+        }
+
+        /// <summary>
+        /// 查询今日触发涨跌停股票数据详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/riselimit/tri/details"), HttpPost]
+        [Description("查询今日触发涨跌停股票数据详情")]
+        [CheckUserLoginFilter]
+        public List<AccountRiseLimitTriDetails> GetAccountRiseLimitTriDetails(GetAccountTrendTriDetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountRiseLimitTriDetails(request, basedata);
+        }
+
+        /// <summary>
         /// 关闭已触发股票
         /// </summary>
         /// <param name="request"></param>
@@ -1363,6 +1395,44 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.GetSharesPlateList(request,basedata);
+        }
+
+        /// <summary>
+        /// 添加买入板块设置
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("condition/buy/plate/add"), HttpPost]
+        [Description("添加买入板块设置")]
+        [CheckUserLoginFilter]
+        public object AddConditionBuyPlate(AddConditionBuyPlateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddConditionBuyPlate(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除买入板块设置
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("condition/buy/plate/delete"), HttpPost]
+        [Description("删除买入板块设置")]
+        [CheckUserLoginFilter]
+        public object DeleteConditionBuyPlate(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteConditionBuyPlate(request, basedata);
+            return null;
         }
 
         /// <summary>
@@ -2090,6 +2160,25 @@ namespace MealTicket_Web_APIService.controller
             }
         }
 
+        /// <summary>
+        /// 批量删除股票买入额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/par/delete/batch"), HttpPost]
+        [Description("批量删除股票买入额外条件类型参数")]
+        [CheckUserLoginFilter]
+        public object BatchDeleteAccountBuyConditionOtherPar(BatchDeleteAccountBuyConditionOtherParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BatchDeleteAccountBuyConditionOtherPar(request, basedata);
+            return null;
+        }
+
 
         /// <summary>
         /// 编辑股票买入额外条件类型参数
@@ -2316,6 +2405,25 @@ namespace MealTicket_Web_APIService.controller
             {
                 throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
             }
+        }
+
+        /// <summary>
+        /// 批量删除股票买入转自动条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/par/delete/batch"), HttpPost]
+        [Description("批量删除股票买入转自动条件类型参数")]
+        [CheckUserLoginFilter]
+        public object BatchDeleteAccountBuyConditionAutoPar(BatchDeleteAccountBuyConditionAutoParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BatchDeleteAccountBuyConditionAutoPar(request, basedata);
+            return null;
         }
 
         /// <summary>
@@ -2724,6 +2832,25 @@ namespace MealTicket_Web_APIService.controller
             }
         }
 
+        /// <summary>
+        /// 批量删除股票买入额外条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/other/par/delete/other/batch"), HttpPost]
+        [Description("批量删除股票买入额外条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public object BatchDeleteAccountBuyConditionOtherPar_Other(BatchDeleteAccountBuyConditionOtherPar_OtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BatchDeleteAccountBuyConditionOtherPar_Other(request, basedata);
+            return null;
+        }
+
 
         /// <summary>
         /// 编辑股票买入额外条件类型参数-额外关系
@@ -2950,6 +3077,25 @@ namespace MealTicket_Web_APIService.controller
             {
                 throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
             }
+        }
+
+        /// <summary>
+        /// 批量删除股票买入转自动条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/conditiontrade/buy/auto/par/delete/other/batch"), HttpPost]
+        [Description("批量删除股票买入转自动条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public object BatchDeleteAccountBuyConditionAutoPar_Other(BatchDeleteAccountBuyConditionAutoPar_OtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BatchDeleteAccountBuyConditionAutoPar_Other(request, basedata);
+            return null;
         }
 
         /// <summary>
@@ -3953,6 +4099,25 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 批量删除条件买入模板额外条件类型参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/par/delete/batch"), HttpPost]
+        [Description("批量删除条件买入模板额外条件类型参数(板块涨跌幅)")]
+        [CheckUserLoginFilter]
+        public object BatchDeleteConditiontradeTemplateBuyOtherPar(BatchDeleteConditiontradeTemplateBuyOtherParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BatchDeleteConditiontradeTemplateBuyOtherPar(request, basedata);
+            return null;
+        }
+
+        /// <summary>
         /// 编辑条件买入模板额外条件类型参数
         /// </summary>
         /// <param name="request"></param>
@@ -4177,6 +4342,25 @@ namespace MealTicket_Web_APIService.controller
             {
                 throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
             }
+        }
+
+        /// <summary>
+        /// 批量删除条件买入模板转自动条件类型参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/par/delete/batch"), HttpPost]
+        [Description("批量删除条件买入模板转自动条件类型参数(板块涨跌幅)")]
+        [CheckUserLoginFilter]
+        public object BatchDeleteConditiontradeTemplateBuyAutoPar(BatchDeleteConditiontradeTemplateBuyAutoParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BatchDeleteConditiontradeTemplateBuyAutoPar(request, basedata);
+            return null;
         }
 
         /// <summary>
@@ -4587,6 +4771,25 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 批量删除条件买入模板额外条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/par/delete/other/batch"), HttpPost]
+        [Description("批量删除条件买入模板额外条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public object BatchDeleteConditiontradeTemplateBuyOtherPar_Other(BatchDeleteConditiontradeTemplateBuyOtherPar_OtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BatchDeleteConditiontradeTemplateBuyOtherPar_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
         /// 编辑条件买入模板额外条件类型参数-额外关系
         /// </summary>
         /// <param name="request"></param>
@@ -4811,6 +5014,25 @@ namespace MealTicket_Web_APIService.controller
             {
                 throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
             }
+        }
+
+        /// <summary>
+        /// 批量删除条件买入模板转自动条件类型参数(板块涨跌幅)-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/par/delete/other/batch"), HttpPost]
+        [Description("批量删除条件买入模板转自动条件类型参数(板块涨跌幅)-额外关系")]
+        [CheckUserLoginFilter]
+        public object BatchDeleteConditiontradeTemplateBuyAutoPar_Other(BatchDeleteConditiontradeTemplateBuyAutoPar_OtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BatchDeleteConditiontradeTemplateBuyAutoPar_Other(request, basedata);
+            return null;
         }
 
         /// <summary>
@@ -5297,7 +5519,7 @@ namespace MealTicket_Web_APIService.controller
         [Description("获取跟投分组列表")]
         [Route("account/follow/group/list"), HttpPost]
         [CheckUserLoginFilter]
-        public PageRes<AccountFollowGroupInfo> GetAccountFollowGroupList(PageRequest request)
+        public PageRes<AccountFollowGroupInfo> GetAccountFollowGroupList(GetAccountFollowGroupListRequest request)
         {
             if (request == null)
             {
@@ -5305,6 +5527,19 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.GetAccountFollowGroupList(request, basedata);
+        }
+
+        /// <summary>
+        /// 获取下一跟投分组
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取跟投分组列表")]
+        [Route("account/follow/group/next"), HttpPost]
+        [CheckUserLoginFilter]
+        public AccountFollowGroupInfo GetAccountNextFollowGroup()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountNextFollowGroup(basedata);
         }
 
         /// <summary>

@@ -359,6 +359,10 @@
     <Compile Include="Model\TradeCenter\AddSharesPriorityAutoBuy.cs" />
     <Compile Include="Model\TradeCenter\AddSharesPriorityAutoBuyPlate.cs" />
     <Compile Include="Model\TradeCenter\BatchAddSharesConditionTrendPar2.cs" />
+    <Compile Include="Model\TradeCenter\BatchDeleteConditiontradeTemplateBuyAutoPar.cs" />
+    <Compile Include="Model\TradeCenter\BatchDeleteConditiontradeTemplateBuyAutoPar_Other.cs" />
+    <Compile Include="Model\TradeCenter\BatchDeleteConditiontradeTemplateBuyOtherPar.cs" />
+    <Compile Include="Model\TradeCenter\BatchDeleteConditiontradeTemplateBuyOtherPar_Other.cs" />
     <Compile Include="Model\TradeCenter\BatchUpdateMonitorTrendPar.cs" />
     <Compile Include="Model\TradeCenter\GetConditiontradeTemplateBuyAutoGroupList.cs" />
     <Compile Include="Model\TradeCenter\GetConditiontradeTemplateBuyAutoList.cs" />

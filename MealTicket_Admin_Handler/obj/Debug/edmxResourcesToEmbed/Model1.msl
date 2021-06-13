@@ -300,6 +300,7 @@
     <EntitySetMapping Name="t_shares_quotes">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes">
         <MappingFragment StoreEntitySet="t_shares_quotes">
+          <ScalarProperty Name="TriNearLimitType" ColumnName="TriNearLimitType" />
           <ScalarProperty Name="TriPriceType" ColumnName="TriPriceType" />
           <ScalarProperty Name="PriceType" ColumnName="PriceType" />
           <ScalarProperty Name="LimitDownPrice" ColumnName="LimitDownPrice" />
@@ -979,6 +980,7 @@
     <EntitySetMapping Name="t_shares_limit_fundmultiple">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_limit_fundmultiple">
         <MappingFragment StoreEntitySet="t_shares_limit_fundmultiple">
+          <ScalarProperty Name="NearLimitRange" ColumnName="NearLimitRange" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="FundMultiple" ColumnName="FundMultiple" />
@@ -1115,6 +1117,7 @@
     <EntitySetMapping Name="t_broker_account_info">
       <EntityTypeMapping TypeName="meal_ticketModel.t_broker_account_info">
         <MappingFragment StoreEntitySet="t_broker_account_info">
+          <ScalarProperty Name="IsPrivate" ColumnName="IsPrivate" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="SynchronizationTime" ColumnName="SynchronizationTime" />
@@ -1769,6 +1772,7 @@
     <EntitySetMapping Name="t_account_follow_rel">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_follow_rel">
         <MappingFragment StoreEntitySet="t_account_follow_rel">
+          <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="FollowAccountId" ColumnName="FollowAccountId" />
           <ScalarProperty Name="AccountId" ColumnName="AccountId" />
@@ -1846,6 +1850,15 @@
     <EntitySetMapping Name="t_shares_plate">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_plate">
         <MappingFragment StoreEntitySet="t_shares_plate">
+          <ScalarProperty Name="CalType" ColumnName="CalType" />
+          <ScalarProperty Name="NoWeightSharesCode" ColumnName="NoWeightSharesCode" />
+          <ScalarProperty Name="NoWeightMarket" ColumnName="NoWeightMarket" />
+          <ScalarProperty Name="WeightSharesCode" ColumnName="WeightSharesCode" />
+          <ScalarProperty Name="WeightMarket" ColumnName="WeightMarket" />
+          <ScalarProperty Name="ChooseStatus" ColumnName="ChooseStatus" />
+          <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+          <ScalarProperty Name="SharesMarket" ColumnName="SharesMarket" />
+          <ScalarProperty Name="SharesType" ColumnName="SharesType" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="Status" ColumnName="Status" />
@@ -2057,6 +2070,14 @@
     <EntitySetMapping Name="v_plate_shares">
       <EntityTypeMapping TypeName="meal_ticketModel.v_plate_shares">
         <MappingFragment StoreEntitySet="v_plate_shares">
+          <ScalarProperty Name="NoWeightSharesCode" ColumnName="NoWeightSharesCode" />
+          <ScalarProperty Name="NoWeightMarket" ColumnName="NoWeightMarket" />
+          <ScalarProperty Name="WeightSharesCode" ColumnName="WeightSharesCode" />
+          <ScalarProperty Name="WeightMarket" ColumnName="WeightMarket" />
+          <ScalarProperty Name="ChooseStatus" ColumnName="ChooseStatus" />
+          <ScalarProperty Name="LimitSharesCode" ColumnName="LimitSharesCode" />
+          <ScalarProperty Name="LimitSharesMarket" ColumnName="LimitSharesMarket" />
+          <ScalarProperty Name="SharesType" ColumnName="SharesType" />
           <ScalarProperty Name="ClosedPrice" ColumnName="ClosedPrice" />
           <ScalarProperty Name="PresentPrice" ColumnName="PresentPrice" />
           <ScalarProperty Name="CirculatingCapital" ColumnName="CirculatingCapital" />
@@ -2084,19 +2105,6 @@
           <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
           <ScalarProperty Name="Market" ColumnName="Market" />
           <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="v_plate">
-      <EntityTypeMapping TypeName="meal_ticketModel.v_plate">
-        <MappingFragment StoreEntitySet="v_plate">
-          <ScalarProperty Name="RiseRate" ColumnName="RiseRate" />
-          <ScalarProperty Name="SharesCount" ColumnName="SharesCount" />
-          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-          <ScalarProperty Name="Status" ColumnName="Status" />
-          <ScalarProperty Name="PlateType" ColumnName="PlateType" />
-          <ScalarProperty Name="PlateName" ColumnName="PlateName" />
-          <ScalarProperty Name="PlateId" ColumnName="PlateId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
@@ -2205,6 +2213,41 @@
           <ScalarProperty Name="LimitKey" ColumnName="LimitKey" />
           <ScalarProperty Name="LimitMarket" ColumnName="LimitMarket" />
           <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_broker_account_info_frontaccount_rel">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_broker_account_info_frontaccount_rel">
+        <MappingFragment StoreEntitySet="t_broker_account_info_frontaccount_rel">
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="BrokerAccountId" ColumnName="BrokerAccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="v_plate">
+      <EntityTypeMapping TypeName="meal_ticketModel.v_plate">
+        <MappingFragment StoreEntitySet="v_plate">
+          <ScalarProperty Name="NoWeightSharesCode" ColumnName="NoWeightSharesCode" />
+          <ScalarProperty Name="NoWeightMarket" ColumnName="NoWeightMarket" />
+          <ScalarProperty Name="WeightSharesCode" ColumnName="WeightSharesCode" />
+          <ScalarProperty Name="WeightMarket" ColumnName="WeightMarket" />
+          <ScalarProperty Name="RiseRate" ColumnName="RiseRate" />
+          <ScalarProperty Name="RiseIndex" ColumnName="RiseIndex" />
+          <ScalarProperty Name="WeightRiseRate" ColumnName="WeightRiseRate" />
+          <ScalarProperty Name="WeightRiseIndex" ColumnName="WeightRiseIndex" />
+          <ScalarProperty Name="SharesCount" ColumnName="SharesCount" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="LimitSharesCode" ColumnName="LimitSharesCode" />
+          <ScalarProperty Name="LimitSharesMarket" ColumnName="LimitSharesMarket" />
+          <ScalarProperty Name="SharesType" ColumnName="SharesType" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="ChooseStatus" ColumnName="ChooseStatus" />
+          <ScalarProperty Name="PlateType" ColumnName="PlateType" />
+          <ScalarProperty Name="PlateName" ColumnName="PlateName" />
+          <ScalarProperty Name="PlateId" ColumnName="PlateId" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

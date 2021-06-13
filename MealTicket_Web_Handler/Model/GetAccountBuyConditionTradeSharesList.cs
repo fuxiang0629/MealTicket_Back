@@ -149,5 +149,10 @@ namespace MealTicket_Web_Handler.Model
         /// 上市状态1正常 2退市
         /// </summary>
         public int MarketStatus { get; set; }
+
+        /// <summary>
+        /// 板块列表
+        /// </summary>
+        public List<SharesPlateInfo> PlateList { get; set; }
     }
 }

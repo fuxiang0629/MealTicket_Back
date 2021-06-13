@@ -51,6 +51,31 @@ namespace MealTicket_Web_Handler.Model
         /// 无效股票数量
         /// </summary>
         public int InValidCount { get; set; }
+
+        /// <summary>
+        /// 系统股票数量
+        /// </summary>
+        public int SysSharesCount { get; set; }
+
+        /// <summary>
+        /// 1允许买入 2不允许买入
+        /// </summary>
+        public int BuyStatus { get; set; }
+
+        /// <summary>
+        /// 账户买入板块设置Id
+        /// </summary>
+        public long BuyPlateId { get;set; }
+
+        /// <summary>
+        /// 涨停股票数量
+        /// </summary>
+        public int RiseLimitCount { get; set; }
+
+        /// <summary>
+        /// 跌停股票数量
+        /// </summary>
+        public int DownLimitCount { get; set; }
     }
 
     public class GetSharesPlateListRequest:DetailsPageRequest 
@@ -66,8 +91,28 @@ namespace MealTicket_Web_Handler.Model
         public int Type { get; set; }
 
         /// <summary>
+        /// 挑选状态0全部 1被挑选 2未被挑选
+        /// </summary>
+        public int ChooseStatus { get; set; }
+
+        /// <summary>
         /// 不获取数量信息
         /// </summary>
         public bool NoGetCount { get; set; }
+
+        /// <summary>
+        /// 排序方式0时间 1.涨跌幅
+        /// </summary>
+        public int OrderType { get; set; }
+
+        /// <summary>
+        /// ascending：升序  descending：降序
+        /// </summary>
+        public string OrderMethod { get; set; }
+
+        /// <summary>
+        /// 买入状态0全部 1可买入 2不可买入
+        /// </summary>
+        public int BuyStatus { get; set; }
     }
 }

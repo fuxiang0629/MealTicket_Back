@@ -28,5 +28,11 @@ namespace MealTicket_Admin_Handler
         public int SharesType { get; set; }
         public int LimitSharesMarket { get; set; }
         public string LimitSharesCode { get; set; }
+        public int ChooseStatus { get; set; }
+        public int WeightMarket { get; set; }
+        public string WeightSharesCode { get; set; }
+        public int NoWeightMarket { get; set; }
+        public string NoWeightSharesCode { get; set; }
+        public int CalType { get; set; }
     }
 }

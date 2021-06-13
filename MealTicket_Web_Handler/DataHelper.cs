@@ -238,11 +238,11 @@ namespace MealTicket_Web_Handler
 from t_account_shares_optional t with(nolock) 
 inner join t_account_shares_optional_seat_rel t1 with(nolock) on t.Id=t1.OptionalId
 inner join t_account_shares_seat t2 with(nolock) on t1.SeatId=t2.Id and t.AccountId=t2.AccountId
-inner join t_account_shares_optional_trend_rel t3 with(xlock) on t.Id=t3.OptionalId
-inner join t_shares_monitor_trend t4 with(xlock) on t3.TrendId=t4.Id
-inner join t_shares_all t5 with(xlock) on t.SharesCode=t5.SharesCode and t.Market=t5.Market
-inner join t_account_shares_optional_trend_rel_par t6 with(xlock) on t3.Id=t6.RelId
-inner join t_account_login_token_web t7 on t.AccountId=t7.AccountId
+inner join t_account_shares_optional_trend_rel t3 with(nolock) on t.Id=t3.OptionalId
+inner join t_shares_monitor_trend t4 with(nolock) on t3.TrendId=t4.Id
+inner join t_shares_all t5 with(nolock) on t.SharesCode=t5.SharesCode and t.Market=t5.Market
+inner join t_account_shares_optional_trend_rel_par t6 with(nolock) on t3.Id=t6.RelId
+inner join t_account_login_token_web t7 with(nolock) on t.AccountId=t7.AccountId
 where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and datediff(SS,t7.HeartTime,'{0}')<{2} and t2.ValidEndTime>'{0}' and 
 (t.SharesCode+','+convert(varchar(10),t.Market)) in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToString(), Singleton.Instance.HeartSecond);
             return sql;
@@ -1223,30 +1223,10 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 using (var db = new meal_ticketEntities())
                 {
                     //查询股票所属板块及板块涨跌幅
-                    //查询板块涨跌幅
-                    string sql = string.Format(@"	select t.PlateId,t.PlateName,t.PlateType,t.[Status],t.CreateTime,COUNT(t.PlateId) SharesCount,
-	   isnull(cast(round(avg(case when t.Id is not null then null else (t.PresentPrice-t.ClosedPrice)*1.0/t.ClosedPrice end)*10000,0) as bigint),0) RiseRate
-from
-(
-	select t.PlateId,t.PlateName,t.PlateType,t.[Status],t.CreateTime,t.PresentPrice,t.ClosedPrice,t2.Id
-	from 
-	(
-				SELECT   * from v_plate_shares
-				where Market={0} and SharesCode='{1}'
-				
-	) t
-	inner join t_shares_all t1 with(nolock) on t.Market=t1.Market and t.SharesCode=t1.SharesCode
-	left join t_shares_plate_shares_limit t2 with(nolock) on (t2.LimitMarket=-1 or t.Market=t2.LimitMarket) and ((t2.LimitType=1 and t.SharesCode like t2.LimitKey+'%') or (t2.LimitType=2 and upper(t1.SharesName) like UPPER(t2.LimitKey)+'%'))
-	where PresentPrice>0 and ClosedPrice>0
-)t
-group by t.PlateId,t.PlateName,t.PlateType,t.[Status],t.CreateTime", market, sharesCode);
-
-                    var plateRate=db.Database.SqlQuery<v_plate>(sql).ToList();
-
-                    //var plateRate = (from item in db.t_shares_plate_rel
-                    //                 join item2 in db.v_plate on item.PlateId equals item2.PlateId
-                    //                 where item.Market == market && item.SharesCode == sharesCode
-                    //                 select item2).ToList();
+                    var plateRate = (from item in db.t_shares_plate_rel
+                                     join item2 in db.v_plate on item.PlateId equals item2.PlateId
+                                     where item.Market == market && item.SharesCode == sharesCode
+                                     select item2).ToList();
 
                     List<long> PlateList1 = new List<long>();
                     List<long> PlateList2 = new List<long>();

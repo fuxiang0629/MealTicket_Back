@@ -165,7 +165,6 @@ namespace MealTicket_Admin_Handler
         public virtual DbSet<t_account_shares_conditiontrade_buy_trend_template> t_account_shares_conditiontrade_buy_trend_template { get; set; }
         public virtual DbSet<v_plate_shares> v_plate_shares { get; set; }
         public virtual DbSet<t_shares_markettime> t_shares_markettime { get; set; }
-        public virtual DbSet<v_plate> v_plate { get; set; }
         public virtual DbSet<t_sys_conditiontrade_template_buy_auto_trend_other> t_sys_conditiontrade_template_buy_auto_trend_other { get; set; }
         public virtual DbSet<t_sys_conditiontrade_template_buy_auto_trend_other_par> t_sys_conditiontrade_template_buy_auto_trend_other_par { get; set; }
         public virtual DbSet<t_sys_conditiontrade_template_buy_other_trend_other> t_sys_conditiontrade_template_buy_other_trend_other { get; set; }
@@ -176,6 +175,7 @@ namespace MealTicket_Admin_Handler
         public virtual DbSet<t_shares_limit_autobuy_priority_plate> t_shares_limit_autobuy_priority_plate { get; set; }
         public virtual DbSet<t_shares_plate_shares_limit> t_shares_plate_shares_limit { get; set; }
         public virtual DbSet<t_broker_account_info_frontaccount_rel> t_broker_account_info_frontaccount_rel { get; set; }
+        public virtual DbSet<v_plate> v_plate { get; set; }
     
         public virtual int P_Admin_CheckLogin(string token, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter accountId, ObjectParameter loginLogId)
         {

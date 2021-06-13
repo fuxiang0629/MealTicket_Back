@@ -703,6 +703,101 @@ namespace MealTicket_Admin_APIService.controller
         }
 
         /// <summary>
+        /// 修改板块管理挑选状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/plate/choosestatus/modify"), HttpPost]
+        [Description("修改板块管理挑选状态")]
+        public object ModifySharesPlateChooseStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesPlateChooseStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量修改板块管理挑选状态
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("shares/plate/choosestatus/modify/batch"), HttpPost]
+        [Description("批量修改板块管理挑选状态")]
+        public async Task<object> ModifySharesPlateChooseStatusBatch()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<AddSharesPlateRequest> list = new List<AddSharesPlateRequest>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string datas = temp[i];
+                            var result=datas.Split(',');
+                            if (result.Length < 2)
+                            {
+                                continue;
+                            }
+                            int type = 0;
+                            try
+                            {
+                                type = int.Parse(result[1]);
+                            }
+                            catch (Exception ex)
+                            {
+                                continue;
+                            }
+
+                            list.Add(new AddSharesPlateRequest 
+                            {
+                                Type= type,
+                                Name= result[0]
+                            });
+                        }
+                        return tradeCenterHandler.ModifySharesPlateChooseStatusBatch(list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
         /// 删除板块管理
         /// </summary>
         /// <param name="request"></param>
@@ -717,6 +812,24 @@ namespace MealTicket_Admin_APIService.controller
                 throw new WebApiException(400, "参数错误");
             }
             tradeCenterHandler.DeleteSharesPlate(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量删除板块管理
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/plate/delete/batch"), HttpPost]
+        [Description("批量删除板块管理")]
+        public object BatchDeleteSharesPlate(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.BatchDeleteSharesPlate(request);
             return null;
         }
 
@@ -3027,6 +3140,25 @@ namespace MealTicket_Admin_APIService.controller
         }
 
         /// <summary>
+        /// 批量删除条件买入模板额外条件类型参数（板块涨跌幅）
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/par/delete/batch"), HttpPost]
+        [Description("批量删除条件买入模板额外条件类型参数（板块涨跌幅）")]
+        [CheckUserPowerFilter]
+        public object BatchDeleteConditiontradeTemplateBuyOtherPar(BatchDeleteConditiontradeTemplateBuyOtherParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.BatchDeleteConditiontradeTemplateBuyOtherPar(request);
+            return null;
+        }
+
+        /// <summary>
         /// 编辑条件买入模板额外条件类型参数
         /// </summary>
         /// <param name="request"></param>
@@ -3251,6 +3383,25 @@ namespace MealTicket_Admin_APIService.controller
             {
                 throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
             }
+        }
+
+        /// <summary>
+        /// 批量删除条件买入模板转自动条件类型参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/par/delete/batch"), HttpPost]
+        [Description("批量删除条件买入模板转自动条件类型参数(板块涨跌幅)")]
+        [CheckUserPowerFilter]
+        public object BatchDeleteConditiontradeTemplateBuyAutoPar(BatchDeleteConditiontradeTemplateBuyAutoParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.BatchDeleteConditiontradeTemplateBuyAutoPar(request);
+            return null;
         }
 
         /// <summary>
@@ -3660,6 +3811,25 @@ namespace MealTicket_Admin_APIService.controller
         }
 
         /// <summary>
+        /// 批量删除条件买入模板额外条件类型参数(板块涨跌幅)-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/other/par/delete/other/batch"), HttpPost]
+        [Description("批量删除条件买入模板额外条件类型参数(板块涨跌幅)-额外关系")]
+        [CheckUserPowerFilter]
+        public object BatchDeleteConditiontradeTemplateBuyOtherPar_Other(BatchDeleteConditiontradeTemplateBuyOtherPar_OtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.BatchDeleteConditiontradeTemplateBuyOtherPar_Other(request);
+            return null;
+        }
+
+        /// <summary>
         /// 编辑条件买入模板额外条件类型参数-额外关系
         /// </summary>
         /// <param name="request"></param>
@@ -3884,6 +4054,25 @@ namespace MealTicket_Admin_APIService.controller
             {
                 throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
             }
+        }
+
+        /// <summary>
+        /// 批量删除条件买入模板转自动条件类型参数(板块涨跌幅)-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/buy/auto/par/delete/other/batch"), HttpPost]
+        [Description("批量删除条件买入模板转自动条件类型参数(板块涨跌幅)-额外关系")]
+        [CheckUserPowerFilter]
+        public object BatchDeleteConditiontradeTemplateBuyAutoPar_Other(BatchDeleteConditiontradeTemplateBuyAutoPar_OtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.BatchDeleteConditiontradeTemplateBuyAutoPar_Other(request);
+            return null;
         }
 
         /// <summary>
@@ -4124,6 +4313,24 @@ namespace MealTicket_Admin_APIService.controller
             {
                 throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
             }
+        }
+
+        /// <summary>
+        /// 批量删除条件单走势模板参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/condition/trend/par/delete/batch"), HttpPost]
+        [Description("批量删除条件单走势模板参数(板块涨跌幅1)")]
+        public object BatchDeleteSharesConditionTrendPar(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.BatchDeleteSharesConditionTrendPar(request);
+            return null;
         }
 
         /// <summary>

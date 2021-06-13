@@ -50,4 +50,8 @@ F:\项目\饭票后端\FXCommon\obj\Release\FXCommon.csproj.CoreCompileInputs.ca
 F:\项目\饭票后端\FXCommon\obj\Release\FXCommon.csproj.CopyComplete
 F:\项目\饭票后端\FXCommon\obj\Release\FXCommon.dll
 F:\项目\饭票后端\FXCommon\obj\Release\FXCommon.pdb
+<<<<<<< HEAD
 F:\项目\饭票后端\FXCommon\obj\Release\FXCommon.csprojAssemblyReference.cache
+=======
+D:\项目\饭票\后端\FXCommon\obj\Release\FXCommon.csprojAssemblyReference.cache
+>>>>>>> 6f77ade39280bc07cbbb6ed66236bcda8af7e824

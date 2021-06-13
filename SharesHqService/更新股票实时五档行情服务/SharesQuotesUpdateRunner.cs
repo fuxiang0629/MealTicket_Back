@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace SharesHqService
 {
-    public class SharesQuotesUpdateRunner:Runner
+    public class SharesQuotesUpdateRunner : Runner
     {
         static int checkTimes = 0;
 
@@ -22,6 +22,7 @@ namespace SharesHqService
         {
             get
             {
+                return true;
                 DateTime timeNow = DateTime.Now;
                 try
                 {
@@ -49,25 +50,41 @@ namespace SharesHqService
 
         public override void Execute()
         {
-            try
+            if (!Singleton.Instance.TryQuotesCanEnter())
             {
-                Stopwatch stopwatch = new Stopwatch();
-                stopwatch.Start();
-                Console.WriteLine("==========开始获取五档行情=================");
-                var list = ShareHelper.TdxHq_GetSecurityQuotes();
-                Console.WriteLine("==========开始更新五档行情=================");
-                if (list != null && list.Count() > 0)
+                return;
+            }
+            Task task = new Task(() =>
+            {
+                try
                 {
-                    DataBaseHelper.UpdateSharesQuotes(list);
+                    Stopwatch stopwatch = new Stopwatch();
+                    stopwatch.Start();
+                    Console.WriteLine("==========开始获取五档行情=================");
+                    var list = ShareHelper.TdxHq_GetSecurityQuotes();
+                    stopwatch.Stop();
+                    Console.WriteLine("=====获取五档行情结束:" + stopwatch.ElapsedMilliseconds + "============");
+                    Console.WriteLine("==========开始更新五档行情=================");
+                    stopwatch.Restart();
+                    if (list != null && list.Count() > 0)
+                    {
+                        DataBaseHelper.UpdateSharesQuotes(list);
+                    }
+                    stopwatch.Stop();
+                    Console.WriteLine("=====五档行情更新结束:" + stopwatch.ElapsedMilliseconds + "============");
+                    Console.WriteLine("");
+                    Console.WriteLine("");
                 }
-                stopwatch.Stop();
-                Console.WriteLine(stopwatch.ElapsedMilliseconds);
-                Console.WriteLine("==========五档行情更新结束=================");
-            }
-            catch (Exception ex)
-            {
-                Logger.WriteFileLog("更新所有股票数据出错", ex);
-            }
+                catch (Exception ex)
+                {
+                    Logger.WriteFileLog("更新五档数据出错", ex);
+                }
+                finally
+                {
+                    Singleton.Instance.TryQuotesCanLeave();
+                }
+            });
+            task.Start();
         }
     }
 }

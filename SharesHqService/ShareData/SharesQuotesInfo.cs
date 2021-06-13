@@ -24,6 +24,11 @@ namespace SharesHqService
         public string BackSharesCode { get; set; }
 
         /// <summary>
+        /// 股票名称
+        /// </summary>
+        public string SharesName { get; set; }
+
+        /// <summary>
         /// 现价
         /// </summary>
         public long PresentPrice { get; set; }
@@ -184,8 +189,28 @@ namespace SharesHqService
         public string Activity { get; set; }
 
         /// <summary>
-        /// 批次
+        /// 涨停价
         /// </summary>
-        public int Size { get; set; }
+        public long LimitUpPrice { get; set; }
+
+        /// <summary>
+        /// 跌停价
+        /// </summary>
+        public long LimitDownPrice { get; set; }
+
+        /// <summary>
+        /// 0普通 1封涨停板 2封跌停板
+        /// </summary>
+        public int PriceType { get; set; }
+
+        /// <summary>
+        /// 0普通 1触发涨停 2触发封跌停
+        /// </summary>
+        public int TriPriceType { get; set; }
+
+        /// <summary>
+        /// 0普通 1接近停板 2接近停板
+        /// </summary>
+        public int TriNearLimitType { get; set; }
     }
 }
