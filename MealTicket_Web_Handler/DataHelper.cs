@@ -1224,9 +1224,16 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 {
                     //查询股票所属板块及板块涨跌幅
                     var plateRate = (from item in db.t_shares_plate_rel
-                                     join item2 in db.v_plate on item.PlateId equals item2.PlateId
+                                     join item2 in db.t_shares_plate_riserate_last on item.PlateId equals item2.PlateId
+                                     join item3 in db.t_shares_plate on item.PlateId equals item3.Id
                                      where item.Market == market && item.SharesCode == sharesCode
-                                     select item2).ToList();
+                                     select new
+                                     {
+                                         SharesCount=item2.SharesCount,
+                                         PlateId=item.PlateId,
+                                         RiseRate=item2.RiseRate,
+                                         PlateType=item3.Type,
+                                     }).ToList();
 
                     List<long> PlateList1 = new List<long>();
                     List<long> PlateList2 = new List<long>();

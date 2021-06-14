@@ -3318,5 +3318,20 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="t_shares_plate_riserate_last">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_shares_plate_riserate_last">
+        <MappingFragment StoreEntitySet="t_shares_plate_riserate_last">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="DownLimitCount" ColumnName="DownLimitCount" />
+          <ScalarProperty Name="RiseLimitCount" ColumnName="RiseLimitCount" />
+          <ScalarProperty Name="WeightRiseIndex" ColumnName="WeightRiseIndex" />
+          <ScalarProperty Name="WeightRiseRate" ColumnName="WeightRiseRate" />
+          <ScalarProperty Name="RiseIndex" ColumnName="RiseIndex" />
+          <ScalarProperty Name="RiseRate" ColumnName="RiseRate" />
+          <ScalarProperty Name="SharesCount" ColumnName="SharesCount" />
+          <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

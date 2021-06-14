@@ -2178,6 +2178,13 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.BatchDeleteSharesPlateChooseStatus">
+            <summary>
+            批量修改板块管理挑选状态(删除)
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeleteSharesPlate(MealTicket_Admin_Handler.Model.DeleteRequest)">
             <summary>
             删除板块管理

@@ -9545,6 +9545,11 @@
             Id
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.Type">
+            <summary>
+            板块类型
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.Name">
             <summary>
             名称
@@ -12215,6 +12220,11 @@
             </summary>
             <param name="list"></param>
             <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchDeleteSharesPlateChooseStatus">
+            <summary>
+            批量修改板块管理挑选状态(删除)
+            </summary>
         </member>
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteSharesPlate(MealTicket_Admin_Handler.Model.DeleteRequest)">
             <summary>

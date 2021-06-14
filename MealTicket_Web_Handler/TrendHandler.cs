@@ -1588,6 +1588,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
   where [Date]='{0}' and TriNearLimitType=2 and LimitDownCount=0--即将跌停池
   )t
   inner join v_shares_baseinfo  t1 with(nolock)on t.Market=t1.Market and t.SharesCode=t1.SharesCode
+  left join t_shares_limit t3 on (t.Market=t3.LimitMarket or t3.LimitMarket=-1) and ((t3.LimitType=1 and t.SharesCode like t3.LimitKey+'%') or (t3.LimitType=2 and t1.SharesName like t3.LimitKey+'%'))
   left join
   (	
 	select Market,SharesCode,
@@ -1598,7 +1599,9 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
 	from t_shares_quotes_history with(nolock)
 	where [Date]='{0}'
 	group by Market,SharesCode,[Type],BusinessType
-  )t2 on t.Market=t2.Market and t.SharesCode=t2.SharesCode and t.[Type]=t2.[Type] where t2.PushTime is not null order by t2.PushTime desc,t.SharesCode", DateTime.Now.ToString("yyyy-MM-dd"));
+  )t2 on t.Market=t2.Market and t.SharesCode=t2.SharesCode and t.[Type]=t2.[Type] 
+  where t2.PushTime is not null and t3.Id is null
+  order by t2.PushTime desc,t.SharesCode", DateTime.Now.ToString("yyyy-MM-dd"));
 
                 return db.Database.SqlQuery<AccountRiseLimitTriInfo>(sql).ToList();
             }
@@ -3814,51 +3817,96 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 }
 
                 int totalCount = result.Count();
-                var list = (from item in result
-                            let currPrice = item.bi == null ? 0 : item.bi.PresentPrice
-                            let riseRate = (item.bi == null || item.bi.ClosedPrice <= 0) ? 0 : (int)((currPrice - item.bi.ClosedPrice) * 1.0 / item.bi.ClosedPrice * 10000)
-                            select new AccountBuyConditionTradeSharesInfo
-                            {
-                                SharesCode = item.item.SharesCode,
-                                SharesName = item.ai == null ? "" : item.ai.SharesName,
-                                Status = item.item.Status,
-                                CreateTime = item.item.CreateTime,
-                                CurrPrice = currPrice,
-                                ClosedPrice = item.bi == null ? 0 : item.bi.ClosedPrice,
-                                Id = item.item.Id,
-                                MarketStatus=item.ai==null?0:item.ai.MarketStatus,
-                                Market = item.item.Market,
-                                RisePrice = item.bi == null ? 0 : (currPrice - item.bi.ClosedPrice),
-                                RiseRate = riseRate,
-                            }).ToList();
+                List<AccountBuyConditionTradeSharesInfo> list = new List<AccountBuyConditionTradeSharesInfo>();
+
                 if (request.OrderType == 2)
                 {
                     if (request.OrderMethod == "descending")
                     {
-                        list = (from item in list
-                                orderby item.RiseRate descending
-                                select item).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+                        list = (from item in result
+                                let currPrice = item.bi == null ? 0 : item.bi.PresentPrice
+                                let riseRate = (item.bi == null || item.bi.ClosedPrice <= 0) ? 0 : (int)((currPrice - item.bi.ClosedPrice) * 1.0 / item.bi.ClosedPrice * 10000)
+                                orderby riseRate descending
+                                select new AccountBuyConditionTradeSharesInfo
+                                {
+                                    SharesCode = item.item.SharesCode,
+                                    SharesName = item.ai == null ? "" : item.ai.SharesName,
+                                    Status = item.item.Status,
+                                    CreateTime = item.item.CreateTime,
+                                    CurrPrice = currPrice,
+                                    ClosedPrice = item.bi == null ? 0 : item.bi.ClosedPrice,
+                                    Id = item.item.Id,
+                                    MarketStatus = item.ai == null ? 0 : item.ai.MarketStatus,
+                                    Market = item.item.Market,
+                                    RisePrice = item.bi == null ? 0 : (currPrice - item.bi.ClosedPrice),
+                                    RiseRate = riseRate,
+                                }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                     }
                     else
                     {
-                        list = (from item in list
-                                orderby item.RiseRate
-                                select item).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+                        list = (from item in result
+                                let currPrice = item.bi == null ? 0 : item.bi.PresentPrice
+                                let riseRate = (item.bi == null || item.bi.ClosedPrice <= 0) ? 0 : (int)((currPrice - item.bi.ClosedPrice) * 1.0 / item.bi.ClosedPrice * 10000)
+                                orderby riseRate
+                                select new AccountBuyConditionTradeSharesInfo
+                                {
+                                    SharesCode = item.item.SharesCode,
+                                    SharesName = item.ai == null ? "" : item.ai.SharesName,
+                                    Status = item.item.Status,
+                                    CreateTime = item.item.CreateTime,
+                                    CurrPrice = currPrice,
+                                    ClosedPrice = item.bi == null ? 0 : item.bi.ClosedPrice,
+                                    Id = item.item.Id,
+                                    MarketStatus = item.ai == null ? 0 : item.ai.MarketStatus,
+                                    Market = item.item.Market,
+                                    RisePrice = item.bi == null ? 0 : (currPrice - item.bi.ClosedPrice),
+                                    RiseRate = riseRate,
+                                }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                     }
                 }
                 else
                 {
                     if (request.OrderMethod == "descending")
                     {
-                        list = (from item in list
-                                orderby item.CreateTime descending
-                                select item).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+                        list = (from item in result
+                                let currPrice = item.bi == null ? 0 : item.bi.PresentPrice
+                                let riseRate = (item.bi == null || item.bi.ClosedPrice <= 0) ? 0 : (int)((currPrice - item.bi.ClosedPrice) * 1.0 / item.bi.ClosedPrice * 10000)
+                                orderby item.item.CreateTime descending
+                                select new AccountBuyConditionTradeSharesInfo
+                                {
+                                    SharesCode = item.item.SharesCode,
+                                    SharesName = item.ai == null ? "" : item.ai.SharesName,
+                                    Status = item.item.Status,
+                                    CreateTime = item.item.CreateTime,
+                                    CurrPrice = currPrice,
+                                    ClosedPrice = item.bi == null ? 0 : item.bi.ClosedPrice,
+                                    Id = item.item.Id,
+                                    MarketStatus = item.ai == null ? 0 : item.ai.MarketStatus,
+                                    Market = item.item.Market,
+                                    RisePrice = item.bi == null ? 0 : (currPrice - item.bi.ClosedPrice),
+                                    RiseRate = riseRate,
+                                }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                     }
                     else
                     {
-                        list = (from item in list
-                                orderby item.CreateTime
-                                select item).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+                        list = (from item in result
+                                let currPrice = item.bi == null ? 0 : item.bi.PresentPrice
+                                let riseRate = (item.bi == null || item.bi.ClosedPrice <= 0) ? 0 : (int)((currPrice - item.bi.ClosedPrice) * 1.0 / item.bi.ClosedPrice * 10000)
+                                orderby item.item.CreateTime
+                                select new AccountBuyConditionTradeSharesInfo
+                                {
+                                    SharesCode = item.item.SharesCode,
+                                    SharesName = item.ai == null ? "" : item.ai.SharesName,
+                                    Status = item.item.Status,
+                                    CreateTime = item.item.CreateTime,
+                                    CurrPrice = currPrice,
+                                    ClosedPrice = item.bi == null ? 0 : item.bi.ClosedPrice,
+                                    Id = item.item.Id,
+                                    MarketStatus = item.ai == null ? 0 : item.ai.MarketStatus,
+                                    Market = item.item.Market,
+                                    RisePrice = item.bi == null ? 0 : (currPrice - item.bi.ClosedPrice),
+                                    RiseRate = riseRate,
+                                }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                     }
                 }
                 List<long> detailsIdList = list.Select(e => e.Id).ToList();
@@ -3869,6 +3917,30 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                     join x2 in db.t_account_shares_conditiontrade_buy_group on x.GroupId equals x2.Id
                                     where x2.AccountId == request.Id
                                     select x).ToList();
+
+                //计算杠杆倍数
+                var accountRules = (from x in db.t_shares_limit_fundmultiple_account
+                                    where x.AccountId == request.Id
+                                    select x).ToList();
+                var fundmultiple = (from x in db.t_shares_limit_fundmultiple
+                                    select x).ToList();
+
+                var sharesList = list.Select(e => e.Market + "" + e.SharesCode).ToList();
+                var plateList = (from x in db.t_shares_plate_rel
+                                     join x2 in db.t_shares_plate on x.PlateId equals x2.Id
+                                     join x3 in db.t_shares_plate_riserate_last on x.PlateId equals x3.PlateId
+                                     where sharesList.Contains(x.Market + "" + x.SharesCode) && x2.Status == 1 && x2.ChooseStatus == 1
+                                     select new SharesPlateInfo
+                                     {
+                                         SharesCode=x.SharesCode,
+                                         Market=x.Market,
+                                         Type = x2.Type,
+                                         Name = x2.Name,
+                                         SharesCount = x3.SharesCount,
+                                         RiseRate = x3.RiseRate,
+                                         DownLimitCount = x3.DownLimitCount,
+                                         RiseLimitCount = x3.RiseLimitCount
+                                     }).ToList();
                 foreach (var item in list)
                 {
                     var details = (from x in detailsList
@@ -3878,13 +3950,8 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                     item.ParExecuteCount = details.Where(e => e.TriggerTime != null).Count();
                     item.ParValidCount = details.Where(e => e.Status == 1 && e.TriggerTime == null).Count();
 
-                    //计算杠杆倍数
-                    var accountRules = from x in db.t_shares_limit_fundmultiple_account
-                                       where x.AccountId == request.Id
-                                       select x;
 
-
-                    var rules = (from x in db.t_shares_limit_fundmultiple
+                    var rules = (from x in fundmultiple
                                  join x2 in accountRules on x.Id equals x2.FundmultipleId into a
                                  from ai in a.DefaultIfEmpty()
                                  where (x.LimitMarket == item.Market || x.LimitMarket == -1) && (item.SharesCode.StartsWith(x.LimitKey))
@@ -3907,22 +3974,9 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                     item.GroupList = groupRel.Select(e => e.GroupId).ToList();
 
                     //查询股票属于哪个板块
-                    var plateIdList = (from x in db.t_shares_plate_rel
-                                       join x2 in db.t_shares_plate on x.PlateId equals x2.Id
-                                       where x.Market == item.Market && x.SharesCode == item.SharesCode && x2.Status == 1 && x2.ChooseStatus == 1
-                                       select x.PlateId).ToList();
-                    item.PlateList = (from x in db.v_plate
-                                      where plateIdList.Contains(x.PlateId)
-                                      orderby x.RiseRate descending
-                                      select new SharesPlateInfo
-                                      {
-                                          Type = x.PlateType,
-                                          Name = x.PlateName,
-                                          SharesCount = x.SharesCount ?? 0,
-                                          RiseRate = x.RiseRate,
-                                          DownLimitCount = x.DownLimitCount ?? 0,
-                                          RiseLimitCount = x.RiseLimitCount ?? 0
-                                      }).ToList();
+                    item.PlateList = (from x in plateList
+                                      where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                      select x).ToList();
                 }
                 return new PageRes<AccountBuyConditionTradeSharesInfo>
                 {
@@ -7131,25 +7185,28 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                                        where x.DetailsId == item.Id
                                                        select x.FollowAccountId).ToList()
                               }).ToList();
+                var sharesList = result.Select(e => e.Market + "" + e.SharesCode).ToList();
+                var plateList = (from x in db.t_shares_plate_rel
+                                 join x2 in db.t_shares_plate on x.PlateId equals x2.Id
+                                 join x3 in db.t_shares_plate_riserate_last on x.PlateId equals x3.PlateId
+                                 where sharesList.Contains(x.Market + "" + x.SharesCode) && x2.Status == 1 && x2.ChooseStatus == 1
+                                 select new SharesPlateInfo
+                                 {
+                                     SharesCode = x.SharesCode,
+                                     Market = x.Market,
+                                     Type = x2.Type,
+                                     Name = x2.Name,
+                                     SharesCount = x3.SharesCount,
+                                     RiseRate = x3.RiseRate,
+                                     DownLimitCount = x3.DownLimitCount,
+                                     RiseLimitCount = x3.RiseLimitCount
+                                 }).ToList();
                 foreach (var item in result)
                 {
-                    //查询股票属于哪个板块
-                    var plateIdList = (from x in db.t_shares_plate_rel
-                                       join x2 in db.t_shares_plate on x.PlateId equals x2.Id
-                                       where x.Market == item.Market && x.SharesCode == item.SharesCode && x2.Status == 1 && x2.ChooseStatus == 1
-                                       select x.PlateId).ToList();
-                    item.PlateList = (from x in db.v_plate
-                                      where plateIdList.Contains(x.PlateId)
+                    item.PlateList = (from x in plateList
+                                      where x.Market==item.Market && x.SharesCode==item.SharesCode
                                       orderby x.RiseRate descending
-                                      select new SharesPlateInfo
-                                      {
-                                          Type = x.PlateType,
-                                          Name = x.PlateName,
-                                          SharesCount = x.SharesCount ?? 0,
-                                          RiseRate = x.RiseRate,
-                                          DownLimitCount = x.DownLimitCount ?? 0,
-                                          RiseLimitCount = x.RiseLimitCount ?? 0
-                                      }).ToList();
+                                      select x).ToList();
                 }
                 scope.Complete();
                 return result;
@@ -12001,8 +12058,10 @@ select @buyId;";
                 Description = "买入板块限制",
                 ParValue = 0
             });
+            bool IsMain = false;
             if (request.AccountId == 0)
             {
+                IsMain = true;
                 request.AccountId = basedata.AccountId;
             }
             using (var db = new meal_ticketEntities())
@@ -12032,6 +12091,7 @@ select @buyId;";
                 }
 
                 var result = (from item in buySetting
+                              where IsMain==true || item.Type==1 || item.Type == 2
                               orderby item.Type
                               select new AccountBuySettingInfo
                               {

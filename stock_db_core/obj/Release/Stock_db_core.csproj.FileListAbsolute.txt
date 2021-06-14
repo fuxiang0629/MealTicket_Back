@@ -3,13 +3,3 @@ D:\项目\饭票\后端\Stock_db_core\bin\Release\stock_db_core.pdb
 D:\项目\饭票\后端\Stock_db_core\obj\Release\stock_db_core.csproj.CoreCompileInputs.cache
 D:\项目\饭票\后端\Stock_db_core\obj\Release\stock_db_core.dll
 D:\项目\饭票\后端\Stock_db_core\obj\Release\stock_db_core.pdb
-F:\项目\饭票后端\Stock_db_core\bin\Release\stock_db_core.dll
-F:\项目\饭票后端\Stock_db_core\bin\Release\stock_db_core.pdb
-F:\项目\饭票后端\Stock_db_core\obj\Release\stock_db_core.csproj.CoreCompileInputs.cache
-F:\项目\饭票后端\Stock_db_core\obj\Release\stock_db_core.dll
-F:\项目\饭票后端\Stock_db_core\obj\Release\stock_db_core.pdb
-<<<<<<< HEAD
-F:\项目\饭票后端\Stock_db_core\obj\Release\stock_db_core.csprojAssemblyReference.cache
-D:\项目\饭票\后端\Stock_db_core\obj\Release\stock_db_core.csprojAssemblyReference.cache
-=======
->>>>>>> 6f77ade39280bc07cbbb6ed66236bcda8af7e824
