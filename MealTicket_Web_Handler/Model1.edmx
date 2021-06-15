@@ -2430,6 +2430,20 @@
           <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="t_shares_plate_riserate_last">
+          <Key>
+            <PropertyRef Name="PlateId" />
+          </Key>
+          <Property Name="PlateId" Type="bigint" Nullable="false" />
+          <Property Name="SharesCount" Type="int" Nullable="false" />
+          <Property Name="RiseRate" Type="bigint" Nullable="false" />
+          <Property Name="RiseIndex" Type="bigint" Nullable="false" />
+          <Property Name="WeightRiseRate" Type="bigint" Nullable="false" />
+          <Property Name="WeightRiseIndex" Type="bigint" Nullable="false" />
+          <Property Name="RiseLimitCount" Type="int" Nullable="false" />
+          <Property Name="DownLimitCount" Type="int" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="t_shares_quotes">
           <Key>
             <PropertyRef Name="Id" />
@@ -3719,6 +3733,7 @@
           <EntitySet Name="t_shares_monitor_trend_rel_par" EntityType="Self.t_shares_monitor_trend_rel_par" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_plate" EntityType="Self.t_shares_plate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_plate_rel" EntityType="Self.t_shares_plate_rel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_plate_riserate_last" EntityType="Self.t_shares_plate_riserate_last" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_quotes" EntityType="Self.t_shares_quotes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_quotes_date" EntityType="Self.t_shares_quotes_date" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_quotes_history" EntityType="Self.t_shares_quotes_history" Schema="dbo" store:Type="Tables" />
@@ -6797,6 +6812,7 @@
           <EntitySet Name="t_account_follow_group" EntityType="meal_ticketModel.t_account_follow_group" />
           <EntitySet Name="t_account_follow_group_rel" EntityType="meal_ticketModel.t_account_follow_group_rel" />
           <EntitySet Name="t_account_shares_conditiontrade_buy_plate" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_plate" />
+          <EntitySet Name="t_shares_plate_riserate_last" EntityType="meal_ticketModel.t_shares_plate_riserate_last" />
         </EntityContainer>
         <EntityType Name="t_shares_plate">
           <Key>
@@ -7554,6 +7570,20 @@
           <Property Name="AccountId" Type="Int64" Nullable="false" />
           <Property Name="PlateId" Type="Int64" Nullable="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_plate_riserate_last">
+          <Key>
+            <PropertyRef Name="PlateId" />
+          </Key>
+          <Property Name="PlateId" Type="Int64" Nullable="false" />
+          <Property Name="SharesCount" Type="Int32" Nullable="false" />
+          <Property Name="RiseRate" Type="Int64" Nullable="false" />
+          <Property Name="RiseIndex" Type="Int64" Nullable="false" />
+          <Property Name="WeightRiseRate" Type="Int64" Nullable="false" />
+          <Property Name="WeightRiseIndex" Type="Int64" Nullable="false" />
+          <Property Name="RiseLimitCount" Type="Int32" Nullable="false" />
+          <Property Name="DownLimitCount" Type="Int32" Nullable="false" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
       </Schema>
@@ -10876,6 +10906,21 @@
                 <ScalarProperty Name="PlateId" ColumnName="PlateId" />
                 <ScalarProperty Name="AccountId" ColumnName="AccountId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_plate_riserate_last">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_plate_riserate_last">
+              <MappingFragment StoreEntitySet="t_shares_plate_riserate_last">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="DownLimitCount" ColumnName="DownLimitCount" />
+                <ScalarProperty Name="RiseLimitCount" ColumnName="RiseLimitCount" />
+                <ScalarProperty Name="WeightRiseIndex" ColumnName="WeightRiseIndex" />
+                <ScalarProperty Name="WeightRiseRate" ColumnName="WeightRiseRate" />
+                <ScalarProperty Name="RiseIndex" ColumnName="RiseIndex" />
+                <ScalarProperty Name="RiseRate" ColumnName="RiseRate" />
+                <ScalarProperty Name="SharesCount" ColumnName="SharesCount" />
+                <ScalarProperty Name="PlateId" ColumnName="PlateId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

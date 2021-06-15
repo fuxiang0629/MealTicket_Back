@@ -2425,6 +2425,20 @@
     <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
   </EntityType>
+  <EntityType Name="t_shares_plate_riserate_last">
+    <Key>
+      <PropertyRef Name="PlateId" />
+    </Key>
+    <Property Name="PlateId" Type="bigint" Nullable="false" />
+    <Property Name="SharesCount" Type="int" Nullable="false" />
+    <Property Name="RiseRate" Type="bigint" Nullable="false" />
+    <Property Name="RiseIndex" Type="bigint" Nullable="false" />
+    <Property Name="WeightRiseRate" Type="bigint" Nullable="false" />
+    <Property Name="WeightRiseIndex" Type="bigint" Nullable="false" />
+    <Property Name="RiseLimitCount" Type="int" Nullable="false" />
+    <Property Name="DownLimitCount" Type="int" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_shares_quotes">
     <Key>
       <PropertyRef Name="Id" />
@@ -3714,6 +3728,7 @@
     <EntitySet Name="t_shares_monitor_trend_rel_par" EntityType="Self.t_shares_monitor_trend_rel_par" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_plate" EntityType="Self.t_shares_plate" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_plate_rel" EntityType="Self.t_shares_plate_rel" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_plate_riserate_last" EntityType="Self.t_shares_plate_riserate_last" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_quotes" EntityType="Self.t_shares_quotes" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_quotes_date" EntityType="Self.t_shares_quotes_date" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_quotes_history" EntityType="Self.t_shares_quotes_history" Schema="dbo" store:Type="Tables" />

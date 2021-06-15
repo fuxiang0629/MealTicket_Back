@@ -798,6 +798,20 @@ namespace MealTicket_Admin_APIService.controller
         }
 
         /// <summary>
+        /// 批量修改板块管理挑选状态(删除)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/plate/choosestatus/delete/batch"), HttpPost]
+        [Description("批量修改板块管理挑选状态(删除)")]
+        public object BatchDeleteSharesPlateChooseStatus()
+        {
+            tradeCenterHandler.BatchDeleteSharesPlateChooseStatus();
+            return null;
+        }
+
+        /// <summary>
         /// 删除板块管理
         /// </summary>
         /// <param name="request"></param>

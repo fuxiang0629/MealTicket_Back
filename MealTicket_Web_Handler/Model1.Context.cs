@@ -241,6 +241,7 @@ namespace MealTicket_Web_Handler
         public virtual DbSet<t_account_follow_group> t_account_follow_group { get; set; }
         public virtual DbSet<t_account_follow_group_rel> t_account_follow_group_rel { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_plate> t_account_shares_conditiontrade_buy_plate { get; set; }
+        public virtual DbSet<t_shares_plate_riserate_last> t_shares_plate_riserate_last { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)

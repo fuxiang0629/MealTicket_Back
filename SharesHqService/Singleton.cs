@@ -68,7 +68,7 @@ namespace SharesHqService
         /// <summary>
         /// 上一次五档行情数据
         /// </summary>
-        public List<SharesQuotesInfo> LastSharesQuotesList;
+        public Dictionary<string, SharesQuotesInfo> LastSharesQuotesList = new Dictionary<string, SharesQuotesInfo>();
 
         /// <summary>
         /// 深圳股票匹配
@@ -400,7 +400,7 @@ namespace SharesHqService
                                   TriNearLimitType=item.TriNearLimitType,
                                   TriPriceType=item.TriPriceType,
                                   BackSharesCode=item.SharesCode
-                              }).ToList();
+                              }).ToDictionary(e => e.Market+""+e.SharesCode, e => e);
                 LastSharesQuotesList = result;
             }
         }

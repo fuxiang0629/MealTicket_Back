@@ -2964,6 +2964,7 @@
     <EntitySet Name="t_account_follow_group" EntityType="meal_ticketModel.t_account_follow_group" />
     <EntitySet Name="t_account_follow_group_rel" EntityType="meal_ticketModel.t_account_follow_group_rel" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_plate" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_plate" />
+    <EntitySet Name="t_shares_plate_riserate_last" EntityType="meal_ticketModel.t_shares_plate_riserate_last" />
   </EntityContainer>
   <EntityType Name="t_shares_plate">
     <Key>
@@ -3721,6 +3722,20 @@
     <Property Name="AccountId" Type="Int64" Nullable="false" />
     <Property Name="PlateId" Type="Int64" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_riserate_last">
+    <Key>
+      <PropertyRef Name="PlateId" />
+    </Key>
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="SharesCount" Type="Int32" Nullable="false" />
+    <Property Name="RiseRate" Type="Int64" Nullable="false" />
+    <Property Name="RiseIndex" Type="Int64" Nullable="false" />
+    <Property Name="WeightRiseRate" Type="Int64" Nullable="false" />
+    <Property Name="WeightRiseIndex" Type="Int64" Nullable="false" />
+    <Property Name="RiseLimitCount" Type="Int32" Nullable="false" />
+    <Property Name="DownLimitCount" Type="Int32" Nullable="false" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
 </Schema>

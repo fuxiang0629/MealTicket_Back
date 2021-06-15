@@ -859,6 +859,7 @@ namespace MealTicket_Admin_Handler
                                       Status = item.Status,
                                       CreateTime = item.CreateTime,
                                       Id = item.PlateId,
+                                      Type=item.PlateType,
                                       SharesCount = item.SharesCount ?? 0,
                                       Name = item.PlateName,
                                       SharesCode = item.LimitSharesCode,
@@ -890,6 +891,7 @@ namespace MealTicket_Admin_Handler
                                       Status = item.Status,
                                       CreateTime = item.CreateTime,
                                       Id = item.PlateId,
+                                      Type = item.PlateType,
                                       SharesCount = item.SharesCount ?? 0,
                                       Name = item.PlateName,
                                       SharesCode = item.LimitSharesCode,
@@ -922,6 +924,7 @@ namespace MealTicket_Admin_Handler
                                   Status = item.Status,
                                   CreateTime = item.CreateTime,
                                   Id = item.PlateId,
+                                  Type = item.PlateType,
                                   SharesCount = item.SharesCount ?? 0,
                                   Name = item.PlateName,
                                   SharesCode = item.LimitSharesCode,
@@ -1135,6 +1138,35 @@ namespace MealTicket_Admin_Handler
                     }
                     tran.Commit();
                     return i;
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 批量修改板块管理挑选状态(删除)
+        /// </summary>
+        public void BatchDeleteSharesPlateChooseStatus()
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //查询板块
+                    var plate = (from item in db.t_shares_plate
+                                 where item.ChooseStatus==1
+                                 select item).ToList();
+                    foreach (var item in plate)
+                    {
+                        item.ChooseStatus = 0;
+                    }
+                    db.SaveChanges();
+                    tran.Commit();
                 }
                 catch (Exception ex)
                 {

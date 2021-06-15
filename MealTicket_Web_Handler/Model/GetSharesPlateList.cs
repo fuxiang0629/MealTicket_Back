@@ -23,6 +23,16 @@ namespace MealTicket_Web_Handler.Model
         public int Type { get; set; }
 
         /// <summary>
+        /// 市场
+        /// </summary>
+        public int Market { get; set; }
+
+        /// <summary>
+        /// 股票代码
+        /// </summary>
+        public string SharesCode { get; set; }
+
+        /// <summary>
         /// 名称
         /// </summary>
         public string Name { get; set; }

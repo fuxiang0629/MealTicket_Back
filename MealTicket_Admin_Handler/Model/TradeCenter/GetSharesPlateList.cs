@@ -46,6 +46,11 @@ namespace MealTicket_Admin_Handler.Model
         public long Id { get; set; }
 
         /// <summary>
+        /// 板块类型
+        /// </summary>
+        public int Type { get; set; }
+
+        /// <summary>
         /// 名称
         /// </summary>
         public string Name { get; set; }

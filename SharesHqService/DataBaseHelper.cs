@@ -484,29 +484,31 @@ then insert(Market,SharesCode,PresentPrice,ClosedPrice,OpenedPrice,MaxPrice,MinP
                     var range = Singleton.Instance.RangeList.Where(e => (e.LimitMarket == item.Market || e.LimitMarket == -1) && item.SharesCode.StartsWith(e.LimitKey)).FirstOrDefault();
                     if (range != null && item.ClosedPrice > 0 && item.PresentPrice > 0)
                     {
-                        if (range.Range > 0)
+                        int maxRange = range.Range;
+                        int maxNearLimitRange = range.NearLimitRange;
+                        if (maxRange > 0)
                         {
                             if (item.SharesName.Contains("ST"))
                             {
-                                range.Range = range.Range / 2;
+                                maxRange = maxRange / 2;
                             }
-                            item.LimitUpPrice = (long)((item.ClosedPrice + item.ClosedPrice * (range.Range * 1.0 / 10000)) / 100 + 0.5) * 100;
-                            item.LimitDownPrice = (long)((item.ClosedPrice - item.ClosedPrice * (range.Range * 1.0 / 10000)) / 100 + 0.5) * 100;
+                            item.LimitUpPrice = (long)((item.ClosedPrice + item.ClosedPrice * (maxRange * 1.0 / 10000)) / 100 + 0.5) * 100;
+                            item.LimitDownPrice = (long)((item.ClosedPrice - item.ClosedPrice * (maxRange * 1.0 / 10000)) / 100 + 0.5) * 100;
                             item.PriceType = item.LimitUpPrice == item.BuyPrice1 ? 1 : item.LimitDownPrice == item.SellPrice1 ? 2 : 0;
                             item.TriPriceType = item.LimitUpPrice == item.PresentPrice ? 1 : item.LimitDownPrice == item.PresentPrice ? 2 : 0;
                         }
-                        if (range.NearLimitRange > 0)
+                        if (maxNearLimitRange > 0)
                         {
                             if (item.SharesName.Contains("ST"))
                             {
-                                range.NearLimitRange = range.NearLimitRange / 2;
+                                maxNearLimitRange = maxNearLimitRange / 2;
                             }
                             int tempRange = (int)((item.PresentPrice - item.ClosedPrice) * 1.0 / item.ClosedPrice * 10000);
-                            if (tempRange >= range.NearLimitRange)
+                            if (tempRange >= maxNearLimitRange)
                             {
                                 item.TriNearLimitType = 1;
                             }
-                            else if (tempRange <= -range.NearLimitRange)
+                            else if (tempRange <= -maxNearLimitRange)
                             {
                                 item.TriNearLimitType = 2;
                             }
@@ -678,7 +680,7 @@ then insert(Market,SharesCode,PresentPrice,ClosedPrice,OpenedPrice,MaxPrice,MinP
             }
             stopwatch.Stop();
             Console.WriteLine("\t=====任务执行结束:" + stopwatch.ElapsedMilliseconds + "============");
-            Singleton.Instance.LastSharesQuotesList = list;
+            Singleton.Instance.LastSharesQuotesList = list.ToDictionary(e => e.Market + "" + e.SharesCode, e => e);
         }
 
         /// <summary>
@@ -926,7 +928,8 @@ then insert(Market,SharesCode,PresentPrice,ClosedPrice,OpenedPrice,MaxPrice,MinP
                                     int TriLimitUpBombCount = 0;
                                     int TriLimitDownBombCount = 0;
 
-                                    var lastQuote = Singleton.Instance.LastSharesQuotesList.Where(e => e.Market == item.Market && e.SharesCode == item.SharesCode).FirstOrDefault();
+                                    SharesQuotesInfo lastQuote = null;
+                                    Singleton.Instance.LastSharesQuotesList.TryGetValue(item.Market + "" + item.SharesCode, out lastQuote);
                                     if (item.PriceType == 1 && (lastQuote == null || lastQuote.PriceType != 1))
                                     {
                                         LimitUpCount = 1;
@@ -1027,8 +1030,8 @@ ON t.Market = t1.Market and t.SharesCode = t1.SharesCode and t.[Date]=t1.[Date]
 when matched
 then update set t.PresentPrice = t1.PresentPrice,t.ClosedPrice = t1.ClosedPrice,t.OpenedPrice = t1.OpenedPrice,t.MaxPrice = t1.MaxPrice,t.MinPrice = t1.MinPrice,t.LastModified = t1.LastModified,t.LimitUpPrice=t1.LimitUpPrice,t.LimitDownPrice=t1.LimitDownPrice,t.PriceType=t1.PriceType,t.TriPriceType=t1.TriPriceType,t.TriNearLimitType=t1.TriNearLimitType,t.TotalAmount=t1.TotalAmount,t.TotalCount=t1.TotalCount,t.LimitUpCount=t.LimitUpCount+t1.LimitUpCount,t.LimitDownCount=t.LimitDownCount+t1.LimitDownCount,t.LimitUpBombCount=t.LimitUpBombCount+t1.LimitUpBombCount,t.LimitDownBombCount=t.LimitDownBombCount+t1.LimitDownBombCount,t.TriLimitUpCount=t.TriLimitUpCount+t1.TriLimitUpCount,t.TriLimitDownCount=t.TriLimitDownCount+t1.TriLimitDownCount,t.TriLimitUpBombCount=t.TriLimitUpBombCount+t1.TriLimitUpBombCount,t.TriLimitDownBombCount=t.TriLimitDownBombCount+t1.TriLimitDownBombCount
 when not matched by target
-then insert(Market,SharesCode,PresentPrice,ClosedPrice,OpenedPrice,MaxPrice,MinPrice,LastModified,[Date],LimitUpPrice,LimitDownPrice,PriceType,TriPriceType,TriNearLimitType,TotalAmount,TotalCount) 
-values(t1.Market,t1.SharesCode,t1.PresentPrice,t1.ClosedPrice,t1.OpenedPrice,t1.MaxPrice,t1.MinPrice,t1.LastModified,t1.[Date],t1.LimitUpPrice,t1.LimitDownPrice,t1.PriceType,t1.TriPriceType,t1.TriNearLimitType,t1.TotalAmount,t1.TotalCount);");
+then insert(Market,SharesCode,PresentPrice,ClosedPrice,OpenedPrice,MaxPrice,MinPrice,LastModified,[Date],LimitUpPrice,LimitDownPrice,PriceType,TriPriceType,TriNearLimitType,TotalAmount,TotalCount,LimitUpCount,LimitDownCount,LimitUpBombCount,LimitDownBombCount,TriLimitUpCount,TriLimitDownCount,TriLimitUpBombCount,TriLimitDownBombCount) 
+values(t1.Market,t1.SharesCode,t1.PresentPrice,t1.ClosedPrice,t1.OpenedPrice,t1.MaxPrice,t1.MinPrice,t1.LastModified,t1.[Date],t1.LimitUpPrice,t1.LimitDownPrice,t1.PriceType,t1.TriPriceType,t1.TriNearLimitType,t1.TotalAmount,t1.TotalCount,t1.LimitUpCount,t1.LimitDownCount,t1.LimitUpBombCount,t1.LimitDownBombCount,t1.TriLimitUpCount,t1.TriLimitDownCount,t1.TriLimitUpBombCount,t1.TriLimitDownBombCount);");
                             cmd.CommandText = sql;
                             cmd.ExecuteNonQuery();
                         }
@@ -1119,7 +1122,7 @@ values(t1.Market,t1.SharesCode,t1.PresentPrice,t1.ClosedPrice,t1.OpenedPrice,t1.
                                 table.Columns.Add("PriceType", typeof(int));
                                 table.Columns.Add("TriPriceType", typeof(int));
                                 #endregion
-                                foreach (var item in Singleton.Instance.LastSharesQuotesList)
+                                foreach (var item in Singleton.Instance.LastSharesQuotesList.Values)
                                 {
                                     DataRow row = table.NewRow();
                                     row["Id"] = 0;

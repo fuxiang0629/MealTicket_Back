@@ -22,7 +22,6 @@ namespace SharesHqService
         {
             get
             {
-                return true;
                 DateTime timeNow = DateTime.Now;
                 try
                 {

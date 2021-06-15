@@ -219,6 +219,7 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_account_follow_group" Width="1.5" PointX="42.375" PointY="35.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_follow_group_rel" Width="1.5" PointX="41.375" PointY="42.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_plate" Width="1.5" PointX="43.375" PointY="0.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_riserate_last" Width="1.5" PointX="0.75" PointY="43.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
