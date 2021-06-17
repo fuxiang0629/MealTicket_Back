@@ -34,5 +34,6 @@ namespace SharesTradeService
         public System.DateTime LastModified { get; set; }
         public int CashStatus { get; set; }
         public int MonitorStatus { get; set; }
+        public int MultipleChangeStatus { get; set; }
     }
 }

@@ -15,10 +15,8 @@ namespace NewTransactionDataUpdate
     public partial class t_shares_monitor
     {
         public long Id { get; set; }
-        public int LimitMarket { get; set; }
-        public string LimitKey { get; set; }
-        public int LimitType { get; set; }
-        public int Type { get; set; }
+        public int Market { get; set; }
+        public string SharesCode { get; set; }
         public int Status { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }

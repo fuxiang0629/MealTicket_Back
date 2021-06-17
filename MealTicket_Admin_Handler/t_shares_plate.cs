@@ -29,5 +29,6 @@ namespace MealTicket_Admin_Handler
         public int NoWeightMarket { get; set; }
         public string NoWeightSharesCode { get; set; }
         public int CalType { get; set; }
+        public int BaseStatus { get; set; }
     }
 }

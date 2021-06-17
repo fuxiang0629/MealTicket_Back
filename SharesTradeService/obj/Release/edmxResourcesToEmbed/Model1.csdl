@@ -32,7 +32,6 @@
     <EntitySet Name="t_broker_account_info_position" EntityType="meal_ticketModel.t_broker_account_info_position" />
     <EntitySet Name="t_broker_account_info_capital" EntityType="meal_ticketModel.t_broker_account_info_capital" />
     <EntitySet Name="t_system_param" EntityType="meal_ticketModel.t_system_param" />
-    <EntitySet Name="t_shares_quotes" EntityType="meal_ticketModel.t_shares_quotes" />
     <FunctionImport Name="P_Check_TradeTime">
       <Parameter Name="market" Mode="In" Type="Int32" />
       <Parameter Name="sharesCode" Mode="In" Type="String" />
@@ -45,6 +44,7 @@
     <EntitySet Name="t_account_shares_hold" EntityType="meal_ticketModel.t_account_shares_hold" />
     <EntitySet Name="t_notice_hold" EntityType="meal_ticketModel.t_notice_hold" />
     <EntitySet Name="t_account_shares_entrust_manager_dealdetails_real" EntityType="meal_ticketModel.t_account_shares_entrust_manager_dealdetails_real" />
+    <EntitySet Name="v_shares_quotes_last" EntityType="meal_ticketModel.v_shares_quotes_last" />
   </EntityContainer>
   <EntityType Name="t_broker">
     <Key>
@@ -334,6 +334,7 @@
     <Property Name="ForbidStatus" Type="Int32" Nullable="false" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="SharesPyjc" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="MarketStatus" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_broker_account_shares_rel_entrust">
     <Key>
@@ -396,47 +397,6 @@
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="IsJson" Type="Boolean" Nullable="false" />
   </EntityType>
-  <EntityType Name="t_shares_quotes">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Market" Type="Int32" Nullable="false" />
-    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="PresentPrice" Type="Int64" Nullable="false" />
-    <Property Name="ClosedPrice" Type="Int64" Nullable="false" />
-    <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
-    <Property Name="MaxPrice" Type="Int64" Nullable="false" />
-    <Property Name="MinPrice" Type="Int64" Nullable="false" />
-    <Property Name="TotalCount" Type="Int32" Nullable="false" />
-    <Property Name="PresentCount" Type="Int32" Nullable="false" />
-    <Property Name="TotalAmount" Type="Int64" Nullable="false" />
-    <Property Name="InvolCount" Type="Int32" Nullable="false" />
-    <Property Name="OuterCount" Type="Int32" Nullable="false" />
-    <Property Name="BuyPrice1" Type="Int64" Nullable="false" />
-    <Property Name="BuyCount1" Type="Int32" Nullable="false" />
-    <Property Name="BuyPrice2" Type="Int64" Nullable="false" />
-    <Property Name="BuyCount2" Type="Int32" Nullable="false" />
-    <Property Name="BuyPrice3" Type="Int64" Nullable="false" />
-    <Property Name="BuyCount3" Type="Int32" Nullable="false" />
-    <Property Name="BuyPrice4" Type="Int64" Nullable="false" />
-    <Property Name="BuyCount4" Type="Int32" Nullable="false" />
-    <Property Name="BuyPrice5" Type="Int64" Nullable="false" />
-    <Property Name="BuyCount5" Type="Int32" Nullable="false" />
-    <Property Name="SellPrice1" Type="Int64" Nullable="false" />
-    <Property Name="SellCount1" Type="Int32" Nullable="false" />
-    <Property Name="SellPrice2" Type="Int64" Nullable="false" />
-    <Property Name="SellCount2" Type="Int32" Nullable="false" />
-    <Property Name="SellPrice3" Type="Int64" Nullable="false" />
-    <Property Name="SellCount3" Type="Int32" Nullable="false" />
-    <Property Name="SellPrice4" Type="Int64" Nullable="false" />
-    <Property Name="SellCount4" Type="Int32" Nullable="false" />
-    <Property Name="SellPrice5" Type="Int64" Nullable="false" />
-    <Property Name="SellCount5" Type="Int32" Nullable="false" />
-    <Property Name="SpeedUp" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="Activity" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
-  </EntityType>
   <EntityType Name="t_server_broker_account_rel">
     <Key>
       <PropertyRef Name="Id" />
@@ -467,6 +427,7 @@
     <Property Name="SynchronizationTime" Type="DateTime" Precision="3" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="IsPrivate" Type="Boolean" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_baseinfo">
     <Key>
@@ -492,6 +453,7 @@
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="CashStatus" Type="Int32" Nullable="false" />
     <Property Name="MonitorStatus" Type="Int32" Nullable="false" />
+    <Property Name="MultipleChangeStatus" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_hold">
     <Key>
@@ -546,5 +508,93 @@
     <Property Name="DealAmount" Type="Int64" Nullable="false" />
     <Property Name="DealId" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
     <Property Name="DealTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="v_shares_quotes_last">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="Market" />
+      <PropertyRef Name="SharesCode" />
+      <PropertyRef Name="PresentPrice" />
+      <PropertyRef Name="ClosedPrice" />
+      <PropertyRef Name="OpenedPrice" />
+      <PropertyRef Name="MaxPrice" />
+      <PropertyRef Name="MinPrice" />
+      <PropertyRef Name="TotalCount" />
+      <PropertyRef Name="PresentCount" />
+      <PropertyRef Name="TotalAmount" />
+      <PropertyRef Name="InvolCount" />
+      <PropertyRef Name="OuterCount" />
+      <PropertyRef Name="BuyPrice1" />
+      <PropertyRef Name="BuyCount1" />
+      <PropertyRef Name="BuyPrice2" />
+      <PropertyRef Name="BuyCount2" />
+      <PropertyRef Name="BuyPrice3" />
+      <PropertyRef Name="BuyCount3" />
+      <PropertyRef Name="BuyPrice4" />
+      <PropertyRef Name="BuyCount4" />
+      <PropertyRef Name="BuyPrice5" />
+      <PropertyRef Name="BuyCount5" />
+      <PropertyRef Name="SellPrice1" />
+      <PropertyRef Name="SellCount1" />
+      <PropertyRef Name="SellPrice2" />
+      <PropertyRef Name="SellCount2" />
+      <PropertyRef Name="SellPrice3" />
+      <PropertyRef Name="SellCount3" />
+      <PropertyRef Name="SellPrice4" />
+      <PropertyRef Name="SellCount4" />
+      <PropertyRef Name="SellPrice5" />
+      <PropertyRef Name="SellCount5" />
+      <PropertyRef Name="SpeedUp" />
+      <PropertyRef Name="Activity" />
+      <PropertyRef Name="LastModified" />
+      <PropertyRef Name="LimitUpPrice" />
+      <PropertyRef Name="LimitDownPrice" />
+      <PropertyRef Name="PriceType" />
+      <PropertyRef Name="TriPriceType" />
+      <PropertyRef Name="TriNearLimitType" />
+      <PropertyRef Name="DataType" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="PresentPrice" Type="Int64" Nullable="false" />
+    <Property Name="ClosedPrice" Type="Int64" Nullable="false" />
+    <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
+    <Property Name="MaxPrice" Type="Int64" Nullable="false" />
+    <Property Name="MinPrice" Type="Int64" Nullable="false" />
+    <Property Name="TotalCount" Type="Int32" Nullable="false" />
+    <Property Name="PresentCount" Type="Int32" Nullable="false" />
+    <Property Name="TotalAmount" Type="Int64" Nullable="false" />
+    <Property Name="InvolCount" Type="Int32" Nullable="false" />
+    <Property Name="OuterCount" Type="Int32" Nullable="false" />
+    <Property Name="BuyPrice1" Type="Int64" Nullable="false" />
+    <Property Name="BuyCount1" Type="Int32" Nullable="false" />
+    <Property Name="BuyPrice2" Type="Int64" Nullable="false" />
+    <Property Name="BuyCount2" Type="Int32" Nullable="false" />
+    <Property Name="BuyPrice3" Type="Int64" Nullable="false" />
+    <Property Name="BuyCount3" Type="Int32" Nullable="false" />
+    <Property Name="BuyPrice4" Type="Int64" Nullable="false" />
+    <Property Name="BuyCount4" Type="Int32" Nullable="false" />
+    <Property Name="BuyPrice5" Type="Int64" Nullable="false" />
+    <Property Name="BuyCount5" Type="Int32" Nullable="false" />
+    <Property Name="SellPrice1" Type="Int64" Nullable="false" />
+    <Property Name="SellCount1" Type="Int32" Nullable="false" />
+    <Property Name="SellPrice2" Type="Int64" Nullable="false" />
+    <Property Name="SellCount2" Type="Int32" Nullable="false" />
+    <Property Name="SellPrice3" Type="Int64" Nullable="false" />
+    <Property Name="SellCount3" Type="Int32" Nullable="false" />
+    <Property Name="SellPrice4" Type="Int64" Nullable="false" />
+    <Property Name="SellCount4" Type="Int32" Nullable="false" />
+    <Property Name="SellPrice5" Type="Int64" Nullable="false" />
+    <Property Name="SellCount5" Type="Int32" Nullable="false" />
+    <Property Name="SpeedUp" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Activity" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LimitUpPrice" Type="Int64" Nullable="false" />
+    <Property Name="LimitDownPrice" Type="Int64" Nullable="false" />
+    <Property Name="PriceType" Type="Int32" Nullable="false" />
+    <Property Name="TriPriceType" Type="Int32" Nullable="false" />
+    <Property Name="TriNearLimitType" Type="Int32" Nullable="false" />
+    <Property Name="DataType" Type="Int32" Nullable="false" />
   </EntityType>
 </Schema>

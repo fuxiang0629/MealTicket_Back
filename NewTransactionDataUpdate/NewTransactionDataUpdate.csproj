@@ -124,10 +124,10 @@
     <Compile Include="t_shares_monitor.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="t_shares_quotes.cs">
+    <Compile Include="t_system_param.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="t_system_param.cs">
+    <Compile Include="v_shares_quotes_last.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
   </ItemGroup>

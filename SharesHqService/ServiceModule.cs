@@ -11,7 +11,7 @@ namespace SharesHqService
         {
             Bind<Runner>().To<AllSharesUpdateRunner>().InSingletonScope();
             Bind<Runner>().To<SharesQuotesUpdateRunner>().InSingletonScope();
-            //Bind<Runner>().To<SharesF10UpdateRunner>().InSingletonScope();
+            Bind<Runner>().To<BusinessTableUpdateRunner>().InSingletonScope();
         }
     }
 }

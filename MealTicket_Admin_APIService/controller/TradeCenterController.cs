@@ -568,6 +568,35 @@ namespace MealTicket_Admin_APIService.controller
         }
 
         /// <summary>
+        /// 获取各类型板块数量
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/plate/count"), HttpPost]
+        [Description("获取各类型板块数量")]
+        public List<SharesPlateTypeCount> GetSharesPlateTypeCount()
+        {
+            return tradeCenterHandler.GetSharesPlateTypeCount();
+        }
+
+        /// <summary>
+        /// 修改类型板块是否包含基础板块
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/plate/isbaseplate/modify"), HttpPost]
+        [Description("修改类型板块是否包含基础板块")]
+        public object ModifySharesPlateTypeIsBasePlate(ModifyStatusRequest request)
+        {
+            if (Request == null)
+            {
+                throw new WebApiException(400,"参数错误");
+            }
+            tradeCenterHandler.ModifySharesPlateTypeIsBasePlate(request);
+            return null;
+        }
+
+        /// <summary>
         /// 获取板块管理列表
         /// </summary>
         /// <param name="request"></param>
@@ -703,6 +732,24 @@ namespace MealTicket_Admin_APIService.controller
         }
 
         /// <summary>
+        /// 修改板块管理基础版块状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/plate/basestatus/modify"), HttpPost]
+        [Description("修改板块管理基础版块状态")]
+        public object ModifySharesPlateBaseStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifySharesPlateBaseStatus(request);
+            return null;
+        }
+
+        /// <summary>
         /// 修改板块管理挑选状态
         /// </summary>
         /// <param name="request"></param>
@@ -743,6 +790,7 @@ namespace MealTicket_Admin_APIService.controller
                     if (provider.FileData.Count() > 0)
                     {
                         var file = provider.FileData[0];
+                        var plateType = int.Parse(provider.FormData["PlateType"]);
                         var fileInfo = new FileInfo(file.LocalFileName);
                         var fileStream = fileInfo.OpenRead();
                         int fsLen = (int)fileStream.Length;
@@ -750,7 +798,7 @@ namespace MealTicket_Admin_APIService.controller
                         int r = fileStream.Read(heByte, 0, heByte.Length);
                         string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
                         string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
-                        List<AddSharesPlateRequest> list = new List<AddSharesPlateRequest>();
+                        List<string> list = new List<string>();
                         for (int i = 0; i < temp.Length; i++)
                         {
                             if (i == 0)
@@ -758,28 +806,13 @@ namespace MealTicket_Admin_APIService.controller
                                 continue;
                             }
                             string datas = temp[i];
-                            var result=datas.Split(',');
-                            if (result.Length < 2)
+                            if (string.IsNullOrEmpty(datas))
                             {
                                 continue;
                             }
-                            int type = 0;
-                            try
-                            {
-                                type = int.Parse(result[1]);
-                            }
-                            catch (Exception ex)
-                            {
-                                continue;
-                            }
-
-                            list.Add(new AddSharesPlateRequest 
-                            {
-                                Type= type,
-                                Name= result[0]
-                            });
+                            list.Add(datas);
                         }
-                        return tradeCenterHandler.ModifySharesPlateChooseStatusBatch(list);
+                        return tradeCenterHandler.ModifySharesPlateChooseStatusBatch(list, plateType);
                     }
                     else
                     {
@@ -805,9 +838,95 @@ namespace MealTicket_Admin_APIService.controller
         [CheckUserPowerFilter]
         [Route("shares/plate/choosestatus/delete/batch"), HttpPost]
         [Description("批量修改板块管理挑选状态(删除)")]
-        public object BatchDeleteSharesPlateChooseStatus()
+        public object BatchDeleteSharesPlateChooseStatus(DetailsRequest request)
         {
-            tradeCenterHandler.BatchDeleteSharesPlateChooseStatus();
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.BatchDeleteSharesPlateChooseStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量修改板块管理基础版块状态
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("shares/plate/basestatus/modify/batch"), HttpPost]
+        [Description("批量修改板块管理基础版块状态")]
+        public async Task<object> ModifySharesPlateBaseStatusBatch()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var plateType = int.Parse(provider.FormData["PlateType"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<string> list = new List<string>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string datas = temp[i];
+                            if (string.IsNullOrEmpty(datas))
+                            {
+                                continue;
+                            }
+
+                            list.Add(datas);
+                        }
+                        return tradeCenterHandler.ModifySharesPlateBaseStatusBatch(list, plateType);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 批量修改板块管理基础版块状态(删除)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/plate/basestatus/delete/batch"), HttpPost]
+        [Description("批量修改板块管理基础版块状态(删除)")]
+        public object BatchDeleteSharesPlateBaseStatus(DetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400,"参数错误");
+            }
+            tradeCenterHandler.BatchDeleteSharesPlateBaseStatus(request);
             return null;
         }
 

@@ -24,5 +24,6 @@ namespace NewTransactionDataUpdate
         public int Status { get; set; }
         public int ForbidStatus { get; set; }
         public System.DateTime LastModified { get; set; }
+        public int MarketStatus { get; set; }
     }
 }

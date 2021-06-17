@@ -381,6 +381,7 @@
     <Compile Include="Model\TradeCenter\GetSharesMonitorTrendPar.cs" />
     <Compile Include="Model\TradeCenter\GetSharesMonitorTrendRelList.cs" />
     <Compile Include="Model\TradeCenter\GetSharesPlateList.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesPlateTypeCount.cs" />
     <Compile Include="Model\TradeCenter\GetSharesPriorityAutoBuyList.cs" />
     <Compile Include="Model\TradeCenter\GetSharesPriorityAutoBuyPlateList.cs" />
     <Compile Include="Model\TradeCenter\GetSharesTransactionDataList.cs" />
@@ -811,10 +812,13 @@
     <Compile Include="t_shares_plate_rel.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="t_shares_plate_riserate_last.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="t_shares_plate_shares_limit.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="t_shares_quotes.cs">
+    <Compile Include="t_shares_plate_type_business.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_shares_search.cs">
@@ -893,6 +897,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="v_plate_shares.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="v_shares_quotes_last.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
   </ItemGroup>

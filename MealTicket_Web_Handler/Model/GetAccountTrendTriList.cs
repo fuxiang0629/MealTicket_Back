@@ -10,6 +10,14 @@ namespace MealTicket_Web_Handler.Model
     {
     }
 
+    public class GetAccountTrendTriListRequest
+    {
+        /// <summary>
+        /// 最后数据时间
+        /// </summary>
+        public DateTime? LastDataTime { get; set; }    
+    }
+
     public class AccountTrendTriInfo
     {
         /// <summary>

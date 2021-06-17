@@ -10,6 +10,11 @@ namespace MealTicket_Web_Handler.Model
     {
     }
 
+    public class GetAccountRiseLimitTriListRequest
+    {
+        public DateTime? LastDataTime { get; set; }
+    }
+
     public class AccountRiseLimitTriInfo
     {
         /// <summary>

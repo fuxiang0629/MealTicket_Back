@@ -31,7 +31,6 @@ namespace SharesHqService
         public virtual DbSet<t_shares_bars_temp> t_shares_bars_temp { get; set; }
         public virtual DbSet<t_shares_minutetimedata> t_shares_minutetimedata { get; set; }
         public virtual DbSet<t_shares_minutetimedata_temp> t_shares_minutetimedata_temp { get; set; }
-        public virtual DbSet<t_shares_quotes> t_shares_quotes { get; set; }
         public virtual DbSet<t_shares_transactiondata> t_shares_transactiondata { get; set; }
         public virtual DbSet<t_shares_hq_host> t_shares_hq_host { get; set; }
         public virtual DbSet<t_shares_limit_date> t_shares_limit_date { get; set; }
@@ -44,5 +43,6 @@ namespace SharesHqService
         public virtual DbSet<t_shares_all_corrigendum> t_shares_all_corrigendum { get; set; }
         public virtual DbSet<t_shares_limit_fundmultiple> t_shares_limit_fundmultiple { get; set; }
         public virtual DbSet<t_shares_quotes_date> t_shares_quotes_date { get; set; }
+        public virtual DbSet<v_shares_quotes_last> v_shares_quotes_last { get; set; }
     }
 }

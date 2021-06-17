@@ -9522,7 +9522,7 @@
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.GetSharesPlateListRequest.Type">
             <summary>
-            0 所有 1.行业管理 2.地区管理 3.概念管理
+            0 所有 1.行业管理 2.地区管理 3.概念管理 4.指数管理
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.GetSharesPlateListRequest.ChooseStatus">
@@ -9558,6 +9558,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.Status">
             <summary>
             状态
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.BaseStatus">
+            <summary>
+            是否基础板块1是 2否
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.SharesCount">
@@ -9638,6 +9643,31 @@
         <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.CreateTime">
             <summary>
             数据创建时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateTypeCount.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateTypeCount.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateTypeCount.IsBasePlate">
+            <summary>
+            是否包含基础板块
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateTypeCount.PlateCount">
+            <summary>
+            板块数量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesPlateTypeCount.CreateTime">
+            <summary>
+            数据更新时间
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.SharesPriorityAutoBuyInfo.Id">
@@ -12177,6 +12207,18 @@
             </summary>
             <param name="request"></param>
         </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetSharesPlateTypeCount">
+            <summary>
+            获取各类型板块数量
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesPlateTypeIsBasePlate(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改类型板块是否包含基础板块
+            </summary>
+            <param name="request"></param>
+        </member>
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetSharesPlateList(MealTicket_Admin_Handler.Model.GetSharesPlateListRequest)">
             <summary>
             获取板块管理列表
@@ -12208,23 +12250,43 @@
             </summary>
             <param name="request"></param>
         </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesPlateBaseStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改板块管理状态
+            </summary>
+            <param name="request"></param>
+        </member>
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesPlateChooseStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
             <summary>
             修改板块管理状态
             </summary>
             <param name="request"></param>
         </member>
-        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesPlateChooseStatusBatch(System.Collections.Generic.List{MealTicket_Admin_Handler.Model.AddSharesPlateRequest})">
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesPlateChooseStatusBatch(System.Collections.Generic.List{System.String},System.Int32)">
             <summary>
             批量修改板块管理挑选状态
             </summary>
             <param name="list"></param>
             <returns></returns>
         </member>
-        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchDeleteSharesPlateChooseStatus">
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchDeleteSharesPlateChooseStatus(MealTicket_Admin_Handler.Model.DetailsRequest)">
             <summary>
             批量修改板块管理挑选状态(删除)
             </summary>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesPlateBaseStatusBatch(System.Collections.Generic.List{System.String},System.Int32)">
+            <summary>
+            批量修改板块管理基础版块状态
+            </summary>
+            <param name="list"></param>
+            <param name="plateType"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchDeleteSharesPlateBaseStatus(MealTicket_Admin_Handler.Model.DetailsRequest)">
+            <summary>
+            批量修改板块管理基础版块状态(删除)
+            </summary>
+            <param name="request"></param>
         </member>
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteSharesPlate(MealTicket_Admin_Handler.Model.DeleteRequest)">
             <summary>
@@ -13276,7 +13338,6 @@
             <summary>
             批量条件单走势模板参数(板块涨跌幅)
             </summary>
-            <param name="TrendId"></param>
             <param name="Type"></param>
             <param name="list"></param>
             <returns></returns>

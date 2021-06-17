@@ -88,7 +88,7 @@ namespace MealTicket_Admin_Handler
                 foreach (var item in list)
                 {
                     var temp = (from x in db.t_account_shares_hold
-                                join x2 in db.t_shares_quotes on new { x.Market, x.SharesCode } equals new { x2.Market, x2.SharesCode }
+                                join x2 in db.v_shares_quotes_last on new { x.Market, x.SharesCode } equals new { x2.Market, x2.SharesCode }
                                 where x.AccountId == item.AccountId && x.RemainCount > 0 && x2.ClosedPrice>0
                                 select new { x, x2 }).ToList();
                     if (temp.Count() > 0)
@@ -1367,7 +1367,7 @@ namespace MealTicket_Admin_Handler
                 var optional = from item in db.t_account_shares_optional.AsNoTracking()
                                join item2 in db.t_shares_all.AsNoTracking() on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into c
                                from ci in c.DefaultIfEmpty()
-                               join item3 in db.t_shares_quotes.AsNoTracking() on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into a
+                               join item3 in db.v_shares_quotes_last.AsNoTracking() on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into a
                                from ai in a.DefaultIfEmpty()
                                join item4 in db.t_shares_monitor.AsNoTracking() on new { item.Market, item.SharesCode } equals new { item4.Market, item4.SharesCode } into b
                                from bi in b.DefaultIfEmpty()
@@ -3312,7 +3312,7 @@ namespace MealTicket_Admin_Handler
             using (var db = new meal_ticketEntities())
             {
                 var hold = from item in db.t_account_shares_hold
-                           join item2 in db.t_shares_quotes on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
+                           join item2 in db.v_shares_quotes_last on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
                            from ai in a.DefaultIfEmpty()
                            join item3 in db.t_account_baseinfo on item.AccountId equals item3.Id
                            where item.Status == 1 && (item.RemainCount > 0 || item.LastModified > dateNow)
@@ -3430,7 +3430,7 @@ namespace MealTicket_Admin_Handler
                     maxId = hold.Max(e => e.Id);
                 }
                 var List = (from item in hold
-                            join item2 in db.t_shares_quotes on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
+                            join item2 in db.v_shares_quotes_last on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
                             from ai in a.DefaultIfEmpty()
                             join item3 in db.t_shares_all on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode }
                             orderby item.CreateTime descending
@@ -3879,7 +3879,7 @@ namespace MealTicket_Admin_Handler
             using (var db = new meal_ticketEntities())
             {
                 var hold = from item in db.t_account_shares_hold
-                           join item2 in db.t_shares_quotes on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
+                           join item2 in db.v_shares_quotes_last on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
                            from ai in a.DefaultIfEmpty()
                            join item3 in db.t_account_baseinfo on item.AccountId equals item3.Id
                            where item.Status > 0
@@ -4019,7 +4019,7 @@ namespace MealTicket_Admin_Handler
                     maxId = hold.Max(e => e.Id);
                 }
                 var list = (from item in hold
-                            join item2 in db.t_shares_quotes on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
+                            join item2 in db.v_shares_quotes_last on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
                             from ai in a.DefaultIfEmpty()
                             join item3 in db.t_shares_all on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode }
                             orderby item.Status, item.CreateTime descending

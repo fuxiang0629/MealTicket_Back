@@ -102,45 +102,94 @@ namespace MealTicket_Web_Handler
                                       SharesName = item.SharesName,
                                       Market = item.Market
                                   }).Take(10).ToList();
-                if (request.RealInfo)
+
+                var groupRelList = (from x in db.t_account_shares_conditiontrade_buy_group_rel
+                                    join x2 in db.t_account_shares_conditiontrade_buy_group on x.GroupId equals x2.Id
+                                    where x2.AccountId == request.AccountId
+                                    select x).ToList();
+
+                //计算杠杆倍数
+                var accountRules = (from x in db.t_shares_limit_fundmultiple_account
+                                    where x.AccountId == request.AccountId
+                                    select x).ToList();
+                var fundmultiple = (from x in db.t_shares_limit_fundmultiple
+                                    select x).ToList();
+
+                List<string> sharesInfoList = resultList.Select(e => e.Market + "" + e.SharesCode).ToList();
+                var quotesList = (from x in db.v_shares_quotes_last
+                                  where sharesInfoList.Contains(x.Market + "" + x.SharesCode)
+                                  select x).ToList();
+                foreach (var item in resultList)
                 {
-                    foreach (var item in resultList)
+                    var quote = (from x in quotesList
+                                 where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                 select x).FirstOrDefault();
+                    if (quote != null)
                     {
-                        var quote = (from x in db.t_shares_quotes
-                                     where x.Market == item.Market && x.SharesCode == item.SharesCode
-                                     select x).FirstOrDefault();
-                        if (quote != null)
-                        {
-                            item.ClosedPrice = quote.ClosedPrice;
-                            item.CurrPrice = quote.PresentPrice;
-                        }
-
-                        //计算杠杆倍数
-                        var accountRules = from x in db.t_shares_limit_fundmultiple_account
-                                           where x.AccountId == request.AccountId
-                                           select x;
+                        item.ClosedPrice = quote.ClosedPrice;
+                        item.CurrPrice = quote.PresentPrice;
+                    }
 
 
-                        var rules = (from x in db.t_shares_limit_fundmultiple
-                                     join x2 in accountRules on x.Id equals x2.FundmultipleId into a
-                                     from ai in a.DefaultIfEmpty()
-                                     where (x.LimitMarket == item.Market || x.LimitMarket == -1) && (item.SharesCode.StartsWith(x.LimitKey))
-                                     orderby x.Priority descending, x.FundMultiple
-                                     select new { x, ai }).FirstOrDefault();
-                        if (rules == null)
+
+                    var rules = (from x in fundmultiple
+                                 join x2 in accountRules on x.Id equals x2.FundmultipleId into a
+                                 from ai in a.DefaultIfEmpty()
+                                 where (x.LimitMarket == item.Market || x.LimitMarket == -1) && (item.SharesCode.StartsWith(x.LimitKey))
+                                 orderby x.Priority descending, x.FundMultiple
+                                 select new { x, ai }).FirstOrDefault();
+                    if (rules == null)
+                    {
+                        item.Fundmultiple = 0;
+                        item.Range = 0;
+                    }
+                    else
+                    {
+                        item.Fundmultiple = (rules.ai == null || rules.x.FundMultiple < rules.ai.FundMultiple) ? rules.x.FundMultiple : rules.ai.FundMultiple;
+                        item.Range = rules.x.Range;
+                        if (item.SharesName.ToUpper().Contains("ST"))
                         {
-                            item.Fundmultiple = 0;
-                            item.Range = 0;
-                        }
-                        else
-                        {
-                            item.Fundmultiple = (rules.ai == null || rules.x.FundMultiple < rules.ai.FundMultiple) ? rules.x.FundMultiple : rules.ai.FundMultiple;
-                            item.Range = rules.x.Range;
+                            item.Range = item.Range / 2;
                         }
                     }
+
+                    var groupRel = (from x in groupRelList
+                                    where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                    select x).ToList();
+
+                    item.GroupList = groupRel.Select(e => e.GroupId).ToList();
                 }
 
                 return resultList;
+            }
+        }
+
+        /// <summary>
+        /// 获取股票涨跌幅
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public List<SharesListQuotesInfo> GetSharesListQuotes(List<SharesListQuotesInfo> request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                List<string> sharesInfoList = request.Select(e => e.Market + "" + e.SharesCode).ToList();
+                var shares_quotes_last = (from item in db.v_shares_quotes_last
+                                          where sharesInfoList.Contains(item.Market + "" + item.SharesCode)
+                                          select item).ToList();
+                var quotes = (from item in shares_quotes_last
+                              join item2 in request on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                              where item.ClosedPrice > 0 && item.PresentPrice > 0
+                              select new SharesListQuotesInfo
+                              {
+                                  SharesCode = item.SharesCode,
+                                  Market = item.Market,
+                                  CurrPrice = item.PresentPrice,
+                                  RisePrice = item.PresentPrice - item.ClosedPrice,
+                                  RiseRate = (int)Math.Round(((item.PresentPrice - item.ClosedPrice) * 1.0 / item.ClosedPrice) * 10000, 0),
+                              }).Take(50).ToList();
+                return quotes;
             }
         }
 
@@ -236,7 +285,7 @@ namespace MealTicket_Web_Handler
                 var optional = from item in db.t_account_shares_optional.AsNoTracking()
                                join item2 in db.t_shares_all.AsNoTracking() on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
                                join item4 in db.t_shares_monitor.AsNoTracking() on new { item.Market, item.SharesCode } equals new { item4.Market, item4.SharesCode }
-                               join item3 in db.t_shares_quotes.AsNoTracking() on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into a
+                               join item3 in db.v_shares_quotes_last.AsNoTracking() on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into a
                                from ai in a.DefaultIfEmpty()
                                join item5 in db.t_shares_markettime.AsNoTracking() on new { item.Market, item.SharesCode } equals new { item5.Market, item5.SharesCode } into b
                                from bi in b.DefaultIfEmpty()
@@ -1109,7 +1158,7 @@ namespace MealTicket_Web_Handler
             {
                 var list = (from item in db.t_shares_today
                             join item2 in db.t_shares_all on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
-                            join item3 in db.t_shares_quotes on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into a
+                            join item3 in db.v_shares_quotes_last on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into a
                             from ai in a.DefaultIfEmpty()
                             where item.Status == 1
                             orderby item.OrderIndex
@@ -1454,9 +1503,13 @@ namespace MealTicket_Web_Handler
         /// 查询今日触发股票数据
         /// </summary>
         /// <returns></returns>
-        public List<AccountTrendTriInfo> GetAccountTrendTriList(HeadBase basedata)
+        public List<AccountTrendTriInfo> GetAccountTrendTriList(GetAccountTrendTriListRequest request,HeadBase basedata)
         {
-            DateTime dateNow = DateTime.Now.Date; 
+            DateTime dateNow = DateTime.Now.Date;
+            if (request==null || request.LastDataTime == null)
+            {
+                request.LastDataTime = dateNow.Date;
+            }
             using (var ts = new TransactionScope(TransactionScopeOption.Required,
                          new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
             using (var db = new meal_ticketEntities())
@@ -1474,9 +1527,9 @@ from
 	inner join t_shares_monitor t6 with(nolock) on t.Market=t6.Market and t.SharesCode=t6.SharesCode 
 	inner join t_account_shares_optional_trend_rel_tri_record_statistic t7 with(nolock) on t.Market=t7.Market and t.SharesCode=t7.SharesCode 
 	and t.AccountId=t7.AccountId and t7.[Date]='{1}'
-	where t.AccountId={0} and t1.[Status]=1 and t2.LastPushTime>'{1}' and t.IsTrendClose=0 
+	where t.AccountId={0} and t1.[Status]=1 and convert(varchar(20),t2.LastPushTime,120)>'{2}' and t.IsTrendClose=0 
 )t
-where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
+where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.LastDataTime.Value.ToString("yyyy-MM-dd HH:mm:ss"));
                 var result = db.Database.SqlQuery<AccountTrendTriInfo>(sql).ToList();
                 var groupList = (from x in db.t_account_shares_optional_group_rel
                                  where x.GroupIsContinue || (x.ValidStartTime <= dateNow && x.ValidEndTime >= dateNow)
@@ -1556,11 +1609,16 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
         /// 查询今日触发涨跌停股票数据
         /// </summary>
         /// <returns></returns>
-        public List<AccountRiseLimitTriInfo> GetAccountRiseLimitTriList(HeadBase basedata) 
+        public List<AccountRiseLimitTriInfo> GetAccountRiseLimitTriList(GetAccountRiseLimitTriListRequest request,HeadBase basedata) 
         {
+            DateTime timeNow = DateTime.Now;
+            if (request == null || request.LastDataTime == null)
+            {
+                request.LastDataTime = timeNow.Date;
+            }
             using (var db = new meal_ticketEntities())
             {
-                string sql = string.Format(@" select t.SharesCode RelId,t.Market,t.SharesCode,t1.SharesName,t.ClosedPrice,t.PresentPrice,t.[Type],t1.Business,t1.Industry,t2.PushTime,t2.TriCountToday
+                string sql = string.Format(@"select t.SharesCode RelId,t.Market,t.SharesCode,t1.SharesName,t.ClosedPrice,t.PresentPrice,t.[Type],t1.Business,t1.Industry,t2.PushTime,t2.TriCountToday
   from
   (
   select Market,SharesCode,ClosedPrice,PresentPrice,-1 [Type]
@@ -1600,8 +1658,8 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
 	where [Date]='{0}'
 	group by Market,SharesCode,[Type],BusinessType
   )t2 on t.Market=t2.Market and t.SharesCode=t2.SharesCode and t.[Type]=t2.[Type] 
-  where t2.PushTime is not null and t3.Id is null
-  order by t2.PushTime desc,t.SharesCode", DateTime.Now.ToString("yyyy-MM-dd"));
+  where convert(varchar(20),t2.PushTime,120)>'{1}' and t3.Id is null
+  order by t2.PushTime desc,t.SharesCode", timeNow.ToString("yyyy-MM-dd"), request.LastDataTime.Value.ToString("yyyy-MM-dd HH:mm:ss"));
 
                 return db.Database.SqlQuery<AccountRiseLimitTriInfo>(sql).ToList();
             }
@@ -1624,7 +1682,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
             {
                 var record = (from item in db.t_shares_quotes_history
                               join item2 in db.t_shares_all on new { item.Market,item.SharesCode} equals new { item2.Market,item2.SharesCode}
-                              where item.Market == request.Market && item.SharesCode == request.SharesCode  && item.CreateTime >= dateNow && item.CreateTime < dateTomorrow
+                              where item.Market == request.Market && item.SharesCode == request.SharesCode  && item.CreateTime >= dateNow && item.CreateTime < dateTomorrow && item.Type==request.Type && item.BusinessType==request.BusinessType
                               orderby item.CreateTime descending
                               select new AccountRiseLimitTriDetails
                               {
@@ -2052,7 +2110,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                  where item.AccountId == request.Id
                                  select new { item, item2 };
                 var sharesHold_ing = from item in sharesHold
-                                     join item2 in db.t_shares_quotes on new { item.item.Market, item.item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                                     join item2 in db.v_shares_quotes_last on new { item.item.Market, item.item.SharesCode } equals new { item2.Market, item2.SharesCode }
                                      where item.item.Status == 1 && (item.item.RemainCount > 0 || item.item.LastModified > dateNow)
                                      select new { item, item2 };
                 //总市值
@@ -2085,7 +2143,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
 
                 long totalDeposit = 0;
                 var entrust = from item in db.t_account_shares_entrust
-                              join item2 in db.t_shares_quotes on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                              join item2 in db.v_shares_quotes_last on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
                               where item.AccountId == request.Id && item.CreateTime >= dateNow && item.Status == 3 && item.DealCount>0
                               select new { item, item2 };
 
@@ -2184,7 +2242,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 }
                 var sharesHold = from item in db.t_account_shares_hold
                                  join item2 in db.t_shares_all on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
-                                 join item3 in db.t_shares_quotes on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode }
+                                 join item3 in db.v_shares_quotes_last on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode }
                                  where item.AccountId == request.Id && item.Status == 1 && (item.RemainCount > 0 || item.LastModified >= dateNow)
                                  select new { item, item2, item3 };
                 int totalCount = sharesHold.Count();
@@ -2376,7 +2434,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
 
                 var result = (from item in entrustList
                               join item2 in db.t_shares_all on new { item.Market,item.SharesCode} equals new { item2.Market,item2.SharesCode} into a from ai in a.DefaultIfEmpty()
-                              join item3 in db.t_shares_quotes on new { item.Market,item.SharesCode} equals new { item3.Market,item3.SharesCode} into b from bi in b.DefaultIfEmpty()
+                              join item3 in db.v_shares_quotes_last on new { item.Market,item.SharesCode} equals new { item3.Market,item3.SharesCode} into b from bi in b.DefaultIfEmpty()
                               orderby item.CreateTime descending
                               select new AccountTradeEntrustInfo
                               {
@@ -2506,7 +2564,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
 
                 foreach (var item in sharesList)
                 {
-                    var quotes = (from x in db.t_shares_quotes
+                    var quotes = (from x in db.v_shares_quotes_last
                                   where x.Market == item.Market && x.SharesCode == item.SharesCode
                                   select x).FirstOrDefault();
                     if (quotes != null)
@@ -2538,7 +2596,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
             DateTime dateNow = DateTime.Now.Date;
             using (var db = new meal_ticketEntities())
             {
-                var sharesQuotes = (from item in db.t_shares_quotes
+                var sharesQuotes = (from item in db.v_shares_quotes_last
                                     join item2 in db.t_shares_all on new { item.SharesCode, item.Market } equals new { item2.SharesCode, item2.Market }
                                     where item.Market == request.Market && item.SharesCode == request.SharesCode
                                     select new TradeSharesQuotesInfo
@@ -3759,7 +3817,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 var result = from item in db.t_account_shares_conditiontrade_buy
                              join item2 in db.t_shares_all on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
                              from ai in a.DefaultIfEmpty()
-                             join item3 in db.t_shares_quotes on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into b
+                             join item3 in db.v_shares_quotes_last on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into b
                              from bi in b.DefaultIfEmpty()
                              where item.AccountId == request.Id
                              select new { item, ai, bi };
@@ -3928,18 +3986,19 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 var sharesList = list.Select(e => e.Market + "" + e.SharesCode).ToList();
                 var plateList = (from x in db.t_shares_plate_rel
                                      join x2 in db.t_shares_plate on x.PlateId equals x2.Id
-                                     join x3 in db.t_shares_plate_riserate_last on x.PlateId equals x3.PlateId
-                                     where sharesList.Contains(x.Market + "" + x.SharesCode) && x2.Status == 1 && x2.ChooseStatus == 1
+                                     join x3 in db.t_shares_plate_riserate_last on x.PlateId equals x3.PlateId into a from ai in a.DefaultIfEmpty()
+                                     join x4 in db.t_shares_plate_type_business on x2.Type equals x4.Id
+                                     where sharesList.Contains(x.Market + "" + x.SharesCode) && x2.Status == 1 && (x2.ChooseStatus == 1 || (x4.IsBasePlate==1 && x2.BaseStatus==1))
                                      select new SharesPlateInfo
                                      {
                                          SharesCode=x.SharesCode,
                                          Market=x.Market,
                                          Type = x2.Type,
                                          Name = x2.Name,
-                                         SharesCount = x3.SharesCount,
-                                         RiseRate = x3.RiseRate,
-                                         DownLimitCount = x3.DownLimitCount,
-                                         RiseLimitCount = x3.RiseLimitCount
+                                         SharesCount = ai==null?0:ai.SharesCount,
+                                         RiseRate = ai == null ? 0 : ai.RiseRate,
+                                         DownLimitCount = ai == null ? 0 : ai.DownLimitCount,
+                                         RiseLimitCount = ai == null ? 0 : ai.RiseLimitCount
                                      }).ToList();
                 foreach (var item in list)
                 {
@@ -3966,6 +4025,10 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                     {
                         item.Fundmultiple = (rules.ai == null || rules.x.FundMultiple < rules.ai.FundMultiple) ? rules.x.FundMultiple : rules.ai.FundMultiple;
                         item.Range = rules.x.Range;
+                        if (item.SharesName.ToUpper().Contains("ST"))
+                        {
+                            item.Range = item.Range / 2;
+                        }
                     }
                     var groupRel = (from x in groupRelList
                                     where x.Market == item.Market && x.SharesCode == item.SharesCode
@@ -3976,6 +4039,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                     //查询股票属于哪个板块
                     item.PlateList = (from x in plateList
                                       where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                      orderby x.RiseRate descending
                                       select x).ToList();
                 }
                 return new PageRes<AccountBuyConditionTradeSharesInfo>
@@ -4032,14 +4096,36 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
         /// 批量导入条件买入股票数据
         /// </summary>
         /// <param name="list"></param>
-        public int BatchAddAccountBuyConditionTradeShares(List<SharesInfo> list, long accountId, List<long> groupIdList)
+        public int BatchAddAccountBuyConditionTradeShares(List<SharesInfo> list, long accountId, List<long> groupIdList,string newGroupName="")
         {
+            groupIdList = groupIdList.Distinct().ToList();
             using (var db = new meal_ticketEntities())
             {
                 //判断是否存在
                 var conditiontrade_buy = (from x in db.t_account_shares_conditiontrade_buy
                                           where x.AccountId == accountId
                                           select x).ToList();
+                if (!string.IsNullOrEmpty(newGroupName))
+                {
+                    //创建分组
+                    //判断分组名称是否添加
+                    var groupInfo = (from item in db.t_account_shares_conditiontrade_buy_group
+                                     where item.Name == newGroupName && item.AccountId == accountId
+                                     select item).FirstOrDefault();
+                    if (groupInfo == null)
+                    {
+                        t_account_shares_conditiontrade_buy_group temp = new t_account_shares_conditiontrade_buy_group
+                        {
+                            AccountId = accountId,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            Name = newGroupName
+                        };
+                        db.t_account_shares_conditiontrade_buy_group.Add(temp);
+                        db.SaveChanges();
+                        groupIdList.Add(temp.Id);
+                    }
+                }
                 int resultCount = 0;
                 foreach (var item in list)
                 {
@@ -4176,44 +4262,42 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                    where item.AccountId == request.Id
                                    select item).ToList();
 
-                var plateList = from item in db.v_plate
-                           where item.Status == 1
-                           select item;
+                var plateList = from item in db.t_shares_plate
+                                join item2 in db.t_shares_plate_riserate_last on item.Id equals item2.PlateId into a
+                                from ai in a.DefaultIfEmpty()
+                                where item.Status == 1
+                                select new { item, ai };
                 if (request.Type != 0)
                 {
                     plateList = from item in plateList
-                                where item.PlateType == request.Type
-                                select item;
-                }
-                else
-                {
-                    plateList = from item in plateList
-                                where item.PlateType == 1 || item.PlateType == 2 || item.PlateType == 3
+                                where item.item.Type == request.Type
                                 select item;
                 }
                 if (request.ChooseStatus!=0)
                 {
+                    //查询板块类型设置
                     plateList = from item in plateList
-                                where item.ChooseStatus == request.ChooseStatus
+                                join item2 in db.t_shares_plate_type_business on item.item.Type equals item2.Id
+                                where item.item.ChooseStatus == request.ChooseStatus || (item2.IsBasePlate==1 && item.item.BaseStatus==1)
                                 select item;
                 }
                 if (!string.IsNullOrEmpty(request.Name))
                 {
                     plateList = from item in plateList
-                              where item.PlateName.Contains(request.Name)
+                              where item.item.Name.Contains(request.Name)
                               select item;
                 }
                 var thisPlate = accountPlate.Select(e => e.PlateId).ToList();
                 if (request.BuyStatus == 1)
                 {
                     plateList = from item in plateList
-                                where thisPlate.Contains(item.PlateId)
+                                where thisPlate.Contains(item.item.Id)
                                 select item;
                 }
                 if (request.BuyStatus == 2)
                 {
                     plateList = from item in plateList
-                                where !thisPlate.Contains(item.PlateId)
+                                where !thisPlate.Contains(item.item.Id)
                                 select item;
                 }
 
@@ -4225,41 +4309,43 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                     if (request.OrderMethod == "ascending")
                     {
                         list = (from item in plateList
-                                orderby item.RiseRate
-                                  select new SharesPlateInfo
-                                  {
-                                      CreateTime = item.CreateTime,
-                                      Id = item.PlateId,
-                                      Type = item.PlateType,
-                                      RiseRate = item.RiseRate,
-                                      Name = item.PlateName
-                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+                                let RiseRate = item.ai == null ? 0 : item.ai.RiseRate
+                                orderby RiseRate
+                                select new SharesPlateInfo
+                                {
+                                    CreateTime = item.item.CreateTime,
+                                    Id = item.item.Id,
+                                    Type = item.item.Type,
+                                    RiseRate = RiseRate,
+                                    Name = item.item.Name
+                                }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                     }
                     else
                     {
                         list = (from item in plateList
-                                orderby item.RiseRate descending
-                                  select new SharesPlateInfo
-                                  {
-                                      CreateTime = item.CreateTime,
-                                      Id = item.PlateId,
-                                      Type = item.PlateType,
-                                      RiseRate = item.RiseRate,
-                                      Name = item.PlateName
-                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+                                let RiseRate = item.ai == null ? 0 : item.ai.RiseRate
+                                orderby RiseRate descending
+                                select new SharesPlateInfo
+                                {
+                                    CreateTime = item.item.CreateTime,
+                                    Id = item.item.Id,
+                                    Type = item.item.Type,
+                                    RiseRate = RiseRate,
+                                    Name = item.item.Name
+                                }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                     }
                 }
                 else
                 {
                     list = (from item in plateList
-                            orderby item.CreateTime descending, item.PlateId descending
+                            orderby item.item.CreateTime descending, item.item.Id descending
                               select new SharesPlateInfo
                               {
-                                  CreateTime = item.CreateTime,
-                                  Id = item.PlateId,
-                                  Type = item.PlateType,
-                                  RiseRate = item.RiseRate,
-                                  Name = item.PlateName
+                                  CreateTime = item.item.CreateTime,
+                                  Id = item.item.Id,
+                                  Type = item.item.Type,
+                                  RiseRate = item.ai == null ? 0 : item.ai.RiseRate,
+                                  Name = item.item.Name
                               }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                 }
                 if (!request.NoGetCount)
@@ -4409,7 +4495,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                     return 0;
                 }
             }
-            return BatchAddAccountBuyConditionTradeShares(list, request.AccountId, request.GroupList);
+            return BatchAddAccountBuyConditionTradeShares(list, request.AccountId, request.GroupList, request.NewGroupName);
         }
 
         /// <summary>
@@ -4477,7 +4563,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                  from ci in c.DefaultIfEmpty()
                                  join item2 in db.t_shares_all on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
                                  from ai in a.DefaultIfEmpty()
-                                 join item3 in db.t_shares_quotes on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into b
+                                 join item3 in db.v_shares_quotes_last on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into b
                                  from bi in b.DefaultIfEmpty()
                                  where item.AccountId == request.AccountId
                                  select new { item, ai, bi, ci };
@@ -4546,7 +4632,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                                  join item4 in db.t_account_shares_conditiontrade_buy_group_rel on new { item.Market, item.SharesCode } equals new { item4.Market, item4.SharesCode }
                                  join item2 in db.t_shares_all on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
                                  from ai in a.DefaultIfEmpty()
-                                 join item3 in db.t_shares_quotes on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into b
+                                 join item3 in db.v_shares_quotes_last on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into b
                                  from bi in b.DefaultIfEmpty()
                                  where item.AccountId == request.AccountId && item4.GroupId==request.Id
                                  select new { item, ai, bi, item4 };
@@ -5835,6 +5921,38 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 }
                 else
                 {
+                    if (request.TrendId == 7)
+                    {
+                        var source = JsonConvert.DeserializeObject<dynamic>(request.ParamsInfo);
+                        long sourcegroupId = source.GroupId;
+                        int sourcegroupType = source.GroupType;
+                        int sourcedataType = source.DataType;
+                        //判断分组是否存在
+                        var tempLit = (from item in db.t_account_shares_conditiontrade_buy_details_other_trend_par
+                                       where item.OtherTrendId == request.RelId
+                                       select item).ToList();
+                        foreach (var item in tempLit)
+                        {
+                            var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                            long groupId = 0;
+                            int groupType = 0;
+                            int dataType = 0;
+                            try
+                            {
+                                groupId = temp.GroupId;
+                                groupType = temp.GroupType;
+                                dataType = temp.DataType;
+                            }
+                            catch (Exception ex)
+                            {
+                                continue;
+                            }
+                            if (sourcegroupId == groupId && sourcegroupType == groupType && sourcedataType == dataType)
+                            {
+                                throw new WebApiException(400, "该分组已添加");
+                            }
+                        }
+                    }
                     db.t_account_shares_conditiontrade_buy_details_other_trend_par.Add(new t_account_shares_conditiontrade_buy_details_other_trend_par
                     {
                         CreateTime = DateTime.Now,
@@ -5862,6 +5980,35 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 var plate = (from item in db.t_shares_plate
                              where item.Type == Type && list.Contains(item.Name)
                              select item).ToList();
+                //判断分组是否存在
+                var tempLit = (from item in db.t_account_shares_conditiontrade_buy_details_other_trend_par
+                               where item.OtherTrendId == RelId
+                               select item).ToList();
+                List<long> groupIdList = plate.Select(e => e.Id).ToList();
+                foreach (var item in tempLit)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    long groupId = 0;
+                    int groupType = 0;
+                    int dataType = 0;
+                    try
+                    {
+                        groupId = temp.GroupId;
+                        groupType = temp.GroupType;
+                        dataType = temp.DataType;
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
+                    if (groupIdList.Contains(groupId) && groupType == Type && dataType == 1)
+                    {
+                        groupIdList.Remove(groupId);
+                    }
+                }
+                plate = (from item in plate
+                         where groupIdList.Contains(item.Id)
+                         select item).ToList();
                 var result = (from item in plate
                               select new t_account_shares_conditiontrade_buy_details_other_trend_par
                               {
@@ -6113,6 +6260,38 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 }
                 else
                 {
+                    if (request.TrendId == 7)
+                    {
+                        var source = JsonConvert.DeserializeObject<dynamic>(request.ParamsInfo);
+                        long sourcegroupId = source.GroupId;
+                        int sourcegroupType = source.GroupType;
+                        int sourcedataType = source.DataType;
+                        //判断分组是否存在
+                        var tempLit = (from item in db.t_account_shares_conditiontrade_buy_details_auto_trend_par
+                                       where item.AutoTrendId == request.RelId
+                                       select item).ToList();
+                        foreach (var item in tempLit)
+                        {
+                            var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                            long groupId = 0;
+                            int groupType = 0;
+                            int dataType = 0;
+                            try
+                            {
+                                groupId = temp.GroupId;
+                                groupType = temp.GroupType;
+                                dataType = temp.DataType;
+                            }
+                            catch (Exception ex)
+                            {
+                                continue;
+                            }
+                            if (sourcegroupId == groupId && sourcegroupType == groupType && sourcedataType == dataType)
+                            {
+                                throw new WebApiException(400, "该分组已添加");
+                            }
+                        }
+                    }
                     db.t_account_shares_conditiontrade_buy_details_auto_trend_par.Add(new t_account_shares_conditiontrade_buy_details_auto_trend_par
                     {
                         CreateTime = DateTime.Now,
@@ -6141,6 +6320,35 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 var plate = (from item in db.t_shares_plate
                              where item.Type == Type && list.Contains(item.Name)
                              select item).ToList();
+                //判断分组是否存在
+                var tempLit = (from item in db.t_account_shares_conditiontrade_buy_details_auto_trend_par
+                               where item.AutoTrendId == RelId
+                               select item).ToList();
+                List<long> groupIdList = plate.Select(e => e.Id).ToList();
+                foreach (var item in tempLit)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    long groupId = 0;
+                    int groupType = 0;
+                    int dataType = 0;
+                    try
+                    {
+                        groupId = temp.GroupId;
+                        groupType = temp.GroupType;
+                        dataType = temp.DataType;
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
+                    if (groupIdList.Contains(groupId) && groupType == Type && dataType == 1)
+                    {
+                        groupIdList.Remove(groupId);
+                    }
+                }
+                plate = (from item in plate
+                         where groupIdList.Contains(item.Id)
+                         select item).ToList();
                 var result = (from item in plate
                               select new t_account_shares_conditiontrade_buy_details_auto_trend_par
                               {
@@ -6692,6 +6900,38 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 }
                 else
                 {
+                    if (request.TrendId == 7)
+                    {
+                        var source = JsonConvert.DeserializeObject<dynamic>(request.ParamsInfo);
+                        long sourcegroupId = source.GroupId;
+                        int sourcegroupType = source.GroupType;
+                        int sourcedataType = source.DataType;
+                        //判断分组是否存在
+                        var tempLit = (from item in db.t_account_shares_conditiontrade_buy_details_other_trend_other_par
+                                       where item.OtherTrendOtherId == request.RelId
+                                       select item).ToList();
+                        foreach (var item in tempLit)
+                        {
+                            var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                            long groupId = 0;
+                            int groupType = 0;
+                            int dataType = 0;
+                            try
+                            {
+                                groupId = temp.GroupId;
+                                groupType = temp.GroupType;
+                                dataType = temp.DataType;
+                            }
+                            catch (Exception ex)
+                            {
+                                continue;
+                            }
+                            if (sourcegroupId == groupId && sourcegroupType == groupType && sourcedataType == dataType)
+                            {
+                                throw new WebApiException(400, "该分组已添加");
+                            }
+                        }
+                    }
                     db.t_account_shares_conditiontrade_buy_details_other_trend_other_par.Add(new t_account_shares_conditiontrade_buy_details_other_trend_other_par
                     {
                         CreateTime = DateTime.Now,
@@ -6719,6 +6959,35 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 var plate = (from item in db.t_shares_plate
                              where item.Type == Type && list.Contains(item.Name)
                              select item).ToList();
+                //判断分组是否存在
+                var tempLit = (from item in db.t_account_shares_conditiontrade_buy_details_other_trend_other_par
+                               where item.OtherTrendOtherId == RelId
+                               select item).ToList();
+                List<long> groupIdList = plate.Select(e => e.Id).ToList();
+                foreach (var item in tempLit)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    long groupId = 0;
+                    int groupType = 0;
+                    int dataType = 0;
+                    try
+                    {
+                        groupId = temp.GroupId;
+                        groupType = temp.GroupType;
+                        dataType = temp.DataType;
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
+                    if (groupIdList.Contains(groupId) && groupType == Type && dataType == 1)
+                    {
+                        groupIdList.Remove(groupId);
+                    }
+                }
+                plate = (from item in plate
+                         where groupIdList.Contains(item.Id)
+                         select item).ToList();
                 var result = (from item in plate
                               select new t_account_shares_conditiontrade_buy_details_other_trend_other_par
                               {
@@ -6971,6 +7240,38 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 }
                 else
                 {
+                    if (request.TrendId == 7)
+                    {
+                        var source = JsonConvert.DeserializeObject<dynamic>(request.ParamsInfo);
+                        long sourcegroupId = source.GroupId;
+                        int sourcegroupType = source.GroupType;
+                        int sourcedataType = source.DataType;
+                        //判断分组是否存在
+                        var tempLit = (from item in db.t_account_shares_conditiontrade_buy_details_auto_trend_other_par
+                                       where item.AutoTrendOtherId == request.RelId
+                                       select item).ToList();
+                        foreach (var item in tempLit)
+                        {
+                            var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                            long groupId = 0;
+                            int groupType = 0;
+                            int dataType = 0;
+                            try
+                            {
+                                groupId = temp.GroupId;
+                                groupType = temp.GroupType;
+                                dataType = temp.DataType;
+                            }
+                            catch (Exception ex)
+                            {
+                                continue;
+                            }
+                            if (sourcegroupId == groupId && sourcegroupType == groupType && sourcedataType == dataType)
+                            {
+                                throw new WebApiException(400, "该分组已添加");
+                            }
+                        }
+                    }
                     db.t_account_shares_conditiontrade_buy_details_auto_trend_other_par.Add(new t_account_shares_conditiontrade_buy_details_auto_trend_other_par
                     {
                         CreateTime = DateTime.Now,
@@ -6999,6 +7300,35 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 var plate = (from item in db.t_shares_plate
                              where item.Type == Type && list.Contains(item.Name)
                              select item).ToList();
+                //判断分组是否存在
+                var tempLit = (from item in db.t_account_shares_conditiontrade_buy_details_auto_trend_other_par
+                               where item.AutoTrendOtherId == RelId
+                               select item).ToList();
+                List<long> groupIdList = plate.Select(e => e.Id).ToList();
+                foreach (var item in tempLit)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    long groupId = 0;
+                    int groupType = 0;
+                    int dataType = 0;
+                    try
+                    {
+                        groupId = temp.GroupId;
+                        groupType = temp.GroupType;
+                        dataType = temp.DataType;
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
+                    if (groupIdList.Contains(groupId) && groupType == Type && dataType == 1)
+                    {
+                        groupIdList.Remove(groupId);
+                    }
+                }
+                plate = (from item in plate
+                         where groupIdList.Contains(item.Id)
+                         select item).ToList();
                 var result = (from item in plate
                               select new t_account_shares_conditiontrade_buy_details_auto_trend_other_par
                               {
@@ -7156,7 +7486,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
             {
                 var result = (from item in db.t_account_shares_conditiontrade_buy_details
                               join item2 in db.t_account_shares_conditiontrade_buy on item.ConditionId equals item2.Id
-                              join item3 in db.t_shares_quotes on new { item2.Market, item2.SharesCode } equals new { item3.Market, item3.SharesCode }
+                              join item3 in db.v_shares_quotes_last on new { item2.Market, item2.SharesCode } equals new { item3.Market, item3.SharesCode }
                               join item4 in db.t_account_baseinfo on item2.AccountId equals item4.Id
                               join item5 in db.t_shares_all on new { item2.Market, item2.SharesCode } equals new { item5.Market, item5.SharesCode }
                               join item6 in db.t_account_shares_entrust on item.EntrustId equals item6.Id into a
@@ -7188,18 +7518,19 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 var sharesList = result.Select(e => e.Market + "" + e.SharesCode).ToList();
                 var plateList = (from x in db.t_shares_plate_rel
                                  join x2 in db.t_shares_plate on x.PlateId equals x2.Id
-                                 join x3 in db.t_shares_plate_riserate_last on x.PlateId equals x3.PlateId
-                                 where sharesList.Contains(x.Market + "" + x.SharesCode) && x2.Status == 1 && x2.ChooseStatus == 1
+                                 join x3 in db.t_shares_plate_riserate_last on x.PlateId equals x3.PlateId into a from ai in a.DefaultIfEmpty()
+                                 join x4 in db.t_shares_plate_type_business on x2.Type equals x4.Id
+                                 where sharesList.Contains(x.Market + "" + x.SharesCode) && x2.Status == 1 && (x2.ChooseStatus == 1 ||(x4.IsBasePlate==1 && x2.BaseStatus==1))
                                  select new SharesPlateInfo
                                  {
                                      SharesCode = x.SharesCode,
                                      Market = x.Market,
                                      Type = x2.Type,
                                      Name = x2.Name,
-                                     SharesCount = x3.SharesCount,
-                                     RiseRate = x3.RiseRate,
-                                     DownLimitCount = x3.DownLimitCount,
-                                     RiseLimitCount = x3.RiseLimitCount
+                                     SharesCount = ai==null?0: ai.SharesCount,
+                                     RiseRate = ai == null ? 0 : ai.RiseRate,
+                                     DownLimitCount = ai == null ? 0 : ai.DownLimitCount,
+                                     RiseLimitCount = ai == null ? 0 : ai.RiseLimitCount
                                  }).ToList();
                 foreach (var item in result)
                 {
@@ -7780,7 +8111,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
 
                             }
                             //当前行情信息
-                            var quote = (from item in db.t_shares_quotes
+                            var quote = (from item in db.v_shares_quotes_last
                                          where item.Market == hold.Market && item.SharesCode == hold.SharesCode
                                          select item).FirstOrDefault();
                             if (quote == null)
@@ -7814,6 +8145,10 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                             else
                             {
                                 range = rules.Range;
+                                if (sharesInfo.SharesName.ToUpper().Contains("ST"))
+                                {
+                                    range = range / 2;
+                                }
                             }
 
                             if (request.IsClear)
@@ -8106,7 +8441,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 var result = from item in db.t_account_shares_conditiontrade_buy
                              join item2 in db.t_shares_all on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
                              from ai in a.DefaultIfEmpty()
-                             join item3 in db.t_shares_quotes on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into b
+                             join item3 in db.v_shares_quotes_last on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into b
                              from bi in b.DefaultIfEmpty()
                              where item.AccountId == basedata.AccountId
                              select new { item, ai, bi };
@@ -9161,6 +9496,38 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 }
                 else
                 {
+                    if (request.TrendId == 7)
+                    {
+                        var source = JsonConvert.DeserializeObject<dynamic>(request.ParamsInfo);
+                        long sourcegroupId = source.GroupId;
+                        int sourcegroupType = source.GroupType;
+                        int sourcedataType = source.DataType;
+                        //判断分组是否存在
+                        var tempLit = (from item in db.t_account_shares_conditiontrade_template_buy_other_trend_par
+                                       where item.OtherTrendId == request.RelId
+                                       select item).ToList();
+                        foreach (var item in tempLit)
+                        {
+                            var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                            long groupId = 0;
+                            int groupType = 0;
+                            int dataType = 0;
+                            try
+                            {
+                                groupId = temp.GroupId;
+                                groupType = temp.GroupType;
+                                dataType = temp.DataType;
+                            }
+                            catch (Exception ex)
+                            {
+                                continue;
+                            }
+                            if (sourcegroupId == groupId && sourcegroupType == groupType && sourcedataType == dataType)
+                            {
+                                throw new WebApiException(400, "该分组已添加");
+                            }
+                        }
+                    }
                     db.t_account_shares_conditiontrade_template_buy_other_trend_par.Add(new t_account_shares_conditiontrade_template_buy_other_trend_par
                     {
                         CreateTime = DateTime.Now,
@@ -9188,6 +9555,35 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 var plate = (from item in db.t_shares_plate
                              where item.Type == Type && list.Contains(item.Name)
                              select item).ToList();
+                //判断分组是否存在
+                var tempLit = (from item in db.t_account_shares_conditiontrade_template_buy_other_trend_par
+                               where item.OtherTrendId == RelId
+                               select item).ToList();
+                List<long> groupIdList = plate.Select(e => e.Id).ToList();
+                foreach (var item in tempLit)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    long groupId = 0;
+                    int groupType = 0;
+                    int dataType = 0;
+                    try
+                    {
+                        groupId = temp.GroupId;
+                        groupType = temp.GroupType;
+                        dataType = temp.DataType;
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
+                    if (groupIdList.Contains(groupId) && groupType == Type && dataType == 1)
+                    {
+                        groupIdList.Remove(groupId);
+                    }
+                }
+                plate = (from item in plate
+                         where groupIdList.Contains(item.Id)
+                         select item).ToList();
                 var result = (from item in plate
                               select new t_account_shares_conditiontrade_template_buy_other_trend_par
                               {
@@ -9439,6 +9835,38 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 }
                 else
                 {
+                    if (request.TrendId == 7)
+                    {
+                        var source = JsonConvert.DeserializeObject<dynamic>(request.ParamsInfo);
+                        long sourcegroupId = source.GroupId;
+                        int sourcegroupType = source.GroupType;
+                        int sourcedataType = source.DataType;
+                        //判断分组是否存在
+                        var tempLit = (from item in db.t_account_shares_conditiontrade_template_buy_auto_trend_par
+                                       where item.AutoTrendId == request.RelId
+                                       select item).ToList();
+                        foreach (var item in tempLit)
+                        {
+                            var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                            long groupId = 0;
+                            int groupType = 0;
+                            int dataType = 0;
+                            try
+                            {
+                                groupId = temp.GroupId;
+                                groupType = temp.GroupType;
+                                dataType = temp.DataType;
+                            }
+                            catch (Exception ex)
+                            {
+                                continue;
+                            }
+                            if (sourcegroupId == groupId && sourcegroupType == groupType && sourcedataType == dataType)
+                            {
+                                throw new WebApiException(400, "该分组已添加");
+                            }
+                        }
+                    }
                     db.t_account_shares_conditiontrade_template_buy_auto_trend_par.Add(new t_account_shares_conditiontrade_template_buy_auto_trend_par
                     {
                         CreateTime = DateTime.Now,
@@ -9466,6 +9894,35 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 var plate = (from item in db.t_shares_plate
                              where item.Type == Type && list.Contains(item.Name)
                              select item).ToList();
+                //判断分组是否存在
+                var tempLit = (from item in db.t_account_shares_conditiontrade_template_buy_auto_trend_par
+                               where item.AutoTrendId == RelId
+                               select item).ToList();
+                List<long> groupIdList = plate.Select(e => e.Id).ToList();
+                foreach (var item in tempLit)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    long groupId = 0;
+                    int groupType = 0;
+                    int dataType = 0;
+                    try
+                    {
+                        groupId = temp.GroupId;
+                        groupType = temp.GroupType;
+                        dataType = temp.DataType;
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
+                    if (groupIdList.Contains(groupId) && groupType == Type && dataType == 1)
+                    {
+                        groupIdList.Remove(groupId);
+                    }
+                }
+                plate = (from item in plate
+                         where groupIdList.Contains(item.Id)
+                         select item).ToList();
                 var result = (from item in plate
                               select new t_account_shares_conditiontrade_template_buy_auto_trend_par
                               {
@@ -10014,6 +10471,38 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 }
                 else
                 {
+                    if (request.TrendId == 7)
+                    {
+                        var source = JsonConvert.DeserializeObject<dynamic>(request.ParamsInfo);
+                        long sourcegroupId = source.GroupId;
+                        int sourcegroupType = source.GroupType;
+                        int sourcedataType = source.DataType;
+                        //判断分组是否存在
+                        var tempLit = (from item in db.t_account_shares_conditiontrade_template_buy_other_trend_other_par
+                                       where item.OtherTrendOtherId == request.RelId
+                                       select item).ToList();
+                        foreach (var item in tempLit)
+                        {
+                            var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                            long groupId = 0;
+                            int groupType = 0;
+                            int dataType = 0;
+                            try
+                            {
+                                groupId = temp.GroupId;
+                                groupType = temp.GroupType;
+                                dataType = temp.DataType;
+                            }
+                            catch (Exception ex)
+                            {
+                                continue;
+                            }
+                            if (sourcegroupId == groupId && sourcegroupType == groupType && sourcedataType == dataType)
+                            {
+                                throw new WebApiException(400, "该分组已添加");
+                            }
+                        }
+                    }
                     db.t_account_shares_conditiontrade_template_buy_other_trend_other_par.Add(new t_account_shares_conditiontrade_template_buy_other_trend_other_par
                     {
                         CreateTime = DateTime.Now,
@@ -10041,6 +10530,35 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 var plate = (from item in db.t_shares_plate
                              where item.Type == Type && list.Contains(item.Name)
                              select item).ToList();
+                //判断分组是否存在
+                var tempLit = (from item in db.t_account_shares_conditiontrade_template_buy_other_trend_other_par
+                               where item.OtherTrendOtherId == RelId
+                               select item).ToList();
+                List<long> groupIdList = plate.Select(e => e.Id).ToList();
+                foreach (var item in tempLit)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    long groupId = 0;
+                    int groupType = 0;
+                    int dataType = 0;
+                    try
+                    {
+                        groupId = temp.GroupId;
+                        groupType = temp.GroupType;
+                        dataType = temp.DataType;
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
+                    if (groupIdList.Contains(groupId) && groupType == Type && dataType == 1)
+                    {
+                        groupIdList.Remove(groupId);
+                    }
+                }
+                plate = (from item in plate
+                         where groupIdList.Contains(item.Id)
+                         select item).ToList();
                 var result = (from item in plate
                               select new t_account_shares_conditiontrade_template_buy_other_trend_other_par
                               {
@@ -10292,6 +10810,38 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 }
                 else
                 {
+                    if (request.TrendId == 7)
+                    {
+                        var source = JsonConvert.DeserializeObject<dynamic>(request.ParamsInfo);
+                        long sourcegroupId = source.GroupId;
+                        int sourcegroupType = source.GroupType;
+                        int sourcedataType = source.DataType;
+                        //判断分组是否存在
+                        var tempLit = (from item in db.t_account_shares_conditiontrade_template_buy_auto_trend_other_par
+                                       where item.AutoTrendOtherId == request.RelId
+                                       select item).ToList();
+                        foreach (var item in tempLit)
+                        {
+                            var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                            long groupId = 0;
+                            int groupType = 0;
+                            int dataType = 0;
+                            try
+                            {
+                                groupId = temp.GroupId;
+                                groupType = temp.GroupType;
+                                dataType = temp.DataType;
+                            }
+                            catch (Exception ex)
+                            {
+                                continue;
+                            }
+                            if (sourcegroupId == groupId && sourcegroupType == groupType && sourcedataType == dataType)
+                            {
+                                throw new WebApiException(400, "该分组已添加");
+                            }
+                        }
+                    }
                     db.t_account_shares_conditiontrade_template_buy_auto_trend_other_par.Add(new t_account_shares_conditiontrade_template_buy_auto_trend_other_par
                     {
                         CreateTime = DateTime.Now,
@@ -10319,6 +10869,35 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"));
                 var plate = (from item in db.t_shares_plate
                              where item.Type == Type && list.Contains(item.Name)
                              select item).ToList();
+                //判断分组是否存在
+                var tempLit = (from item in db.t_account_shares_conditiontrade_template_buy_auto_trend_other_par
+                               where item.AutoTrendOtherId == RelId
+                               select item).ToList();
+                List<long> groupIdList = plate.Select(e => e.Id).ToList();
+                foreach (var item in tempLit)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    long groupId = 0;
+                    int groupType = 0;
+                    int dataType = 0;
+                    try
+                    {
+                        groupId = temp.GroupId;
+                        groupType = temp.GroupType;
+                        dataType = temp.DataType;
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
+                    if (groupIdList.Contains(groupId) && groupType == Type && dataType == 1)
+                    {
+                        groupIdList.Remove(groupId);
+                    }
+                }
+                plate = (from item in plate
+                         where groupIdList.Contains(item.Id)
+                         select item).ToList();
                 var result = (from item in plate
                               select new t_account_shares_conditiontrade_template_buy_auto_trend_other_par
                               {
@@ -10915,7 +11494,7 @@ select @buyId;";
                                         if (request.Model != 1)
                                         {
                                             //当前行情信息
-                                            var quote = (from item in db.t_shares_quotes
+                                            var quote = (from item in db.v_shares_quotes_last
                                                          where item.Market == market && item.SharesCode == sharesCode
                                                          select item).FirstOrDefault();
                                             if (quote == null)
@@ -10939,6 +11518,10 @@ select @buyId;";
                                             else
                                             {
                                                 range = rules.Range;
+                                                if (sharesName.ToUpper().Contains("ST"))
+                                                {
+                                                    range = range / 2;
+                                                }
                                             }
                                         }
                                         if (request.TemplateDetailsList == null)
@@ -11227,6 +11810,28 @@ select @buyId;";
             }
             using (var db = new meal_ticketEntities())
             {
+                if (!string.IsNullOrEmpty(request.NewGroupName))
+                {
+                    //创建分组
+                    //判断分组名称是否添加
+                    var groupInfo = (from item in db.t_account_shares_conditiontrade_buy_group
+                                     where item.Name == request.NewGroupName && item.AccountId == request.AccountId
+                                     select item).FirstOrDefault();
+                    if (groupInfo == null)
+                    {
+                        t_account_shares_conditiontrade_buy_group temp = new t_account_shares_conditiontrade_buy_group
+                        {
+                            AccountId = request.AccountId,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            Name = request.NewGroupName
+                        };
+                        db.t_account_shares_conditiontrade_buy_group.Add(temp);
+                        db.SaveChanges();
+                        request.GroupIdList.Add(temp.Id);
+                    }
+                }
+                request.GroupIdList = request.GroupIdList.Distinct().ToList();
                 foreach (var conditionId in request.ConditionIdList)
                 {
                     //判断条件买入是否存在
@@ -11802,6 +12407,7 @@ select @buyId;";
             {
                 request.AccountId = basedata.AccountId;
             }
+            request.GroupList = request.GroupList.Distinct().ToList();
             using (var db = new meal_ticketEntities())
             using (var tran=db.Database.BeginTransaction())
             {

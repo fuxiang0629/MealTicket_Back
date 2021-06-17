@@ -48,7 +48,7 @@ namespace MealTicket_Handler
 
                 foreach (var item in sharesList)
                 {
-                    var quotes = (from x in db.t_shares_quotes
+                    var quotes = (from x in db.v_shares_quotes_last
                                   where x.Market == item.Market && x.SharesCode == item.SharesCode
                                   select x).FirstOrDefault();
                     if (quotes != null)
@@ -130,7 +130,7 @@ namespace MealTicket_Handler
                               }).Take(20).ToList();
                 foreach (var item in search)
                 {
-                    var quotes = (from x in db.t_shares_quotes
+                    var quotes = (from x in db.v_shares_quotes_last
                                   where x.Market == item.Market && x.SharesCode == item.SharesCode
                                   select x).FirstOrDefault();
                     if (quotes != null)
@@ -162,7 +162,7 @@ namespace MealTicket_Handler
             DateTime dateNow = DateTime.Now.Date;
             using (var db = new meal_ticketEntities())
             {
-                var sharesQuotes = (from item in db.t_shares_quotes
+                var sharesQuotes = (from item in db.v_shares_quotes_last
                                     join item2 in db.t_shares_all on new { item.SharesCode, item.Market } equals new { item2.SharesCode, item2.Market }
                                     where item.Market == request.Market && item.SharesCode == request.SharesCode
                                     select new TradeSharesQuotesInfo
@@ -418,7 +418,7 @@ namespace MealTicket_Handler
                                  where item.AccountId == basedata.AccountId
                                  select new { item, item2 };
                 var sharesHold_ing = from item in sharesHold
-                                     join item2 in db.t_shares_quotes on new { item.item.Market, item.item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                                     join item2 in db.v_shares_quotes_last on new { item.item.Market, item.item.SharesCode } equals new { item2.Market, item2.SharesCode }
                                      where item.item.Status == 1 && (item.item.RemainCount > 0 || item.item.LastModified > dateNow)
                                      select new { item, item2 };
                 //总市值
@@ -452,7 +452,7 @@ namespace MealTicket_Handler
 
                 long totalDeposit = 0;
                 var entrust = from item in db.t_account_shares_entrust
-                              join item2 in db.t_shares_quotes on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                              join item2 in db.v_shares_quotes_last on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
                               where item.AccountId == basedata.AccountId && item.CreateTime >= dateNow && item.Status == 3
                               select new { item, item2 };
 
@@ -529,7 +529,7 @@ namespace MealTicket_Handler
             {
                 var sharesHold = from item in db.t_account_shares_hold
                                  join item2 in db.t_shares_all on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
-                                 join item3 in db.t_shares_quotes on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode }
+                                 join item3 in db.v_shares_quotes_last on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode }
                                  where item.AccountId == basedata.AccountId && item.Status == 1 && (item.RemainCount > 0 || item.LastModified >= dateNow)
                                  select new { item, item2, item3 };
                 if (request.MaxId > 0)
@@ -723,7 +723,7 @@ namespace MealTicket_Handler
                     if (shares != null)
                     {
                         item.SharesName = shares.SharesName;
-                        var quotes = (from x in db.t_shares_quotes
+                        var quotes = (from x in db.v_shares_quotes_last
                                       where x.Market == item.Market && x.SharesCode == item.SharesCode
                                       select x).FirstOrDefault();
                         if (quotes != null)
@@ -881,7 +881,7 @@ namespace MealTicket_Handler
                         var hold = (from item in db.t_account_shares_hold
                                     where item.Id == request.HoldId
                                     select item).FirstOrDefault();
-                        var quotes = (from x in db.t_shares_quotes
+                        var quotes = (from x in db.v_shares_quotes_last
                                       where x.Market == hold.Market && x.SharesCode == hold.SharesCode
                                       select x).FirstOrDefault();
                         var shares = (from x in db.t_shares_all

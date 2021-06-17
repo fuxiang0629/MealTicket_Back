@@ -22,7 +22,7 @@ namespace SharesTradeService
 
                 if (EntrustPrice == "0")
                 {
-                    var quotes = (from item in db.t_shares_quotes
+                    var quotes = (from item in db.v_shares_quotes_last
                                   where item.SharesCode == SharesCode
                                   select item).FirstOrDefault();
                     if (quotes == null || quotes.PresentPrice<=0)
@@ -80,7 +80,7 @@ namespace SharesTradeService
 
                 if (EntrustPrice == "0")
                 {
-                    var quotes = (from item in db.t_shares_quotes
+                    var quotes = (from item in db.v_shares_quotes_last
                                   where item.SharesCode == SharesCode
                                   select item).FirstOrDefault();
                     if (quotes == null || quotes.PresentPrice <= 0)

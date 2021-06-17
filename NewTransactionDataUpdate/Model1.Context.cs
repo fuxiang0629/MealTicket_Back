@@ -31,8 +31,8 @@ namespace NewTransactionDataUpdate
         public virtual DbSet<t_shares_limit_date> t_shares_limit_date { get; set; }
         public virtual DbSet<t_shares_limit_date_group> t_shares_limit_date_group { get; set; }
         public virtual DbSet<t_shares_limit_time> t_shares_limit_time { get; set; }
-        public virtual DbSet<t_shares_quotes> t_shares_quotes { get; set; }
-        public virtual DbSet<t_shares_monitor> t_shares_monitor { get; set; }
         public virtual DbSet<t_shares_all> t_shares_all { get; set; }
+        public virtual DbSet<v_shares_quotes_last> v_shares_quotes_last { get; set; }
+        public virtual DbSet<t_shares_monitor> t_shares_monitor { get; set; }
     }
 }

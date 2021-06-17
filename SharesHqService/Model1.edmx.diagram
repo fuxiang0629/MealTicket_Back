@@ -11,7 +11,6 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_bars_temp" Width="1.5" PointX="2.75" PointY="5.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_minutetimedata" Width="1.5" PointX="4.75" PointY="5.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_minutetimedata_temp" Width="1.5" PointX="6.75" PointY="0.75" />
-        <EntityTypeShape EntityType="meal_ticketModel.t_shares_quotes" Width="1.5" PointX="6.75" PointY="4.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_transactiondata" Width="1.5" PointX="8.75" PointY="9.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_hq_host" Width="1.5" PointX="0.75" PointY="10.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_date" Width="1.5" PointX="3.375" PointY="10.75" />
@@ -24,6 +23,7 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_all_corrigendum" Width="1.5" PointX="7.375" PointY="13.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_fundmultiple" Width="1.5" PointX="9.375" PointY="0.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_quotes_date" Width="1.5" PointX="13.375" PointY="13.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.v_shares_quotes_last" Width="1.5" PointX="0.75" PointY="14.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
