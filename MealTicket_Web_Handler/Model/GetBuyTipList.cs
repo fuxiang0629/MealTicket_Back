@@ -101,5 +101,17 @@ namespace MealTicket_Web_Handler.Model
         /// 板块列表
         /// </summary>
         public List<SharesPlateInfo> PlateList { get; set; }
+
+        /// <summary>
+        /// 最大涨跌幅
+        /// </summary>
+        public long Range { get; set; }
+
+        public int Fundmultiple { get; set; }
+
+        /// <summary>
+        /// 所属自定义分组
+        /// </summary>
+        public List<long> GroupList { get; set; }
     }
 }

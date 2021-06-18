@@ -320,7 +320,8 @@ namespace SharesHqService
                                         PresentPrice = PresentPrice,
                                         TotalAmount = TotalAmount,
                                         TotalCount = TotalCount,
-                                        BackSharesCode = BackSharesCode
+                                        BackSharesCode = BackSharesCode,
+                                        LastModified=DateTime.Now
                                     });
                                 }
                                 catch (Exception)

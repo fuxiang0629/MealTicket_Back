@@ -36,5 +36,38 @@ namespace MealTicket_Web_Handler.Model
         /// 涨跌价
         /// </summary>
         public long RisePrice { get; set; }
+
+        /// <summary>
+        /// 数据时间
+        /// </summary>
+        public DateTime PushTime { get; set; }
+
+        /// <summary>
+        /// 文字颜色
+        /// </summary>
+        public string TextColor
+        {
+            get
+            {
+                DateTime timeNow = DateTime.Now;
+                int intervalSecond = (int)(timeNow - PushTime).TotalSeconds;
+                if (intervalSecond < 60)
+                {
+                    return "rgb(255, 0, 0)";
+                }
+                else if (intervalSecond < 120)
+                {
+                    return "rgb(180, 0, 0)";
+                }
+                else if (intervalSecond < 180)
+                {
+                    return "rgb(100, 0, 0)";
+                }
+                else
+                {
+                    return "rgb(0, 0, 0)";
+                }
+            }
+        }
     }
 }

@@ -1247,7 +1247,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                     foreach (var p in par)
                     {
                         var temp = JsonConvert.DeserializeObject<dynamic>(p);
-                        long groupId = 0;
+                        long groupId = -1;
                         int dataType = 1;
                         int compare = 0;
                         double rate = 0;
@@ -1272,6 +1272,10 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         }
                         catch (Exception ex) { }
 
+                        if (groupId == 0)
+                        {
+                            AllSetPar.Add(p);
+                        }
                         var plate = plateRate.Where(e => e.PlateId == groupId).FirstOrDefault();
                         if (plate == null)
                         {
@@ -1279,10 +1283,6 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         }
                         if (dataType == 2)
                         {
-                            if (groupId == 0)
-                            {
-                                AllSetPar.Add(p);
-                            }
                             if (compare == 1 && plate.RiseRate < rate * 100)
                             {
                                 continue;
@@ -1668,6 +1668,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 try
                 {
                     day2 = Convert.ToInt32(temp.Day2);
+                    day2 = day2 + 1;//多取一天
                     upOrDown = Convert.ToInt32(temp.UpOrDown);
                 }
                 catch (Exception)

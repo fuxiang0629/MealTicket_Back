@@ -457,6 +457,7 @@ namespace SharesHqService
                                   TotalCount=item.TotalCount,
                                   TriNearLimitType=item.TriNearLimitType,
                                   TriPriceType=item.TriPriceType,
+                                  LastModified=item.LastModified,
                                   BackSharesCode=item.SharesCode
                               }).ToDictionary(e => e.Market+""+e.SharesCode, e => e);
                 LastSharesQuotesList = result;

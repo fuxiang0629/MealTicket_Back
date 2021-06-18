@@ -124,5 +124,10 @@ namespace MealTicket_Web_Handler.Model
         /// 买入状态0全部 1可买入 2不可买入
         /// </summary>
         public int BuyStatus { get; set; }
+
+        /// <summary>
+        /// 等级
+        /// </summary>
+        public int Level { get; set; }
     }
 }

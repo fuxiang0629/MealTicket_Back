@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MealTicket_Web_Handler
+namespace MealTicket_Web_Handler.Model
 {
     class GetAccountTradeHoldList
     {
@@ -145,6 +145,11 @@ namespace MealTicket_Web_Handler
         /// 条件卖出已执行参数数量
         /// </summary>
         public int ParExecuteCount { get; set; }
+
+        /// <summary>
+        /// 板块列表
+        /// </summary>
+        public List<SharesPlateInfo> PlateList { get; set; }
     }
 
     public class ClosingLineInfo

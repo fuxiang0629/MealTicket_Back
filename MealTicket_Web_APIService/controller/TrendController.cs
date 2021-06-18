@@ -1252,7 +1252,7 @@ namespace MealTicket_Web_APIService.controller
         [Route("account/conditiontrade/buy/shares/list"), HttpPost]
         [Description("获取买入条件单股票列表")]
         [CheckUserLoginFilter]
-        public PageRes<AccountBuyConditionTradeSharesInfo> GetAccountBuyConditionTradeSharesList(GetAccountBuyConditionTradeSharesListRequest request)
+        public object GetAccountBuyConditionTradeSharesList(GetAccountBuyConditionTradeSharesListRequest request)
         {
             if (request == null)
             {
