@@ -637,7 +637,7 @@ namespace MealTicket_Handler.RunnerHandler
                     }
 
                     //计算当前市值
-                    var quotes = (from x in db.t_shares_quotes
+                    var quotes = (from x in db.v_shares_quotes_last
                                   where x.Market == item.Market && x.SharesCode == item.SharesCode && x.LastModified > SqlFunctions.DateAdd("SS", -30, timeNow)
                                   select x).FirstOrDefault();
                     if (quotes == null)
@@ -1857,7 +1857,7 @@ namespace MealTicket_Handler.RunnerHandler
             DateTime timeDate = DateTime.Now.Date;
             using (var db = new meal_ticketEntities())
             {
-                var shares = (from item in db.t_shares_quotes
+                var shares = (from item in db.v_shares_quotes_last
                               where item.LastModified > timeDate
                               select item).ToList();
                 foreach (var item in shares)
@@ -1892,7 +1892,7 @@ namespace MealTicket_Handler.RunnerHandler
   from
   (
   select t.Market, t.SharesCode
-  from t_shares_quotes t
+  from v_shares_quotes_last t
   inner
   join t_shares_all t1 on t.Market = t1.Market and t.SharesCode = t1.SharesCode
   inner join t_shares_monitor t2 on t.Market = t2.Market and t.SharesCode = t2.SharesCode

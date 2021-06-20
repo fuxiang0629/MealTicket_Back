@@ -27,7 +27,6 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_broker_department" Width="1.5" PointX="0.75" PointY="14.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_broker_host" Width="1.5" PointX="2.75" PointY="14.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_today" Width="1.5" PointX="14.375" PointY="5.75" />
-        <EntityTypeShape EntityType="meal_ticketModel.t_shares_quotes" Width="1.5" PointX="11.375" PointY="14.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_search" Width="1.5" PointX="13.375" PointY="14.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_bank_card" Width="1.5" PointX="7.375" PointY="15.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_baseinfo" Width="1.5" PointX="15.375" PointY="9.75" />
@@ -154,6 +153,9 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_shares_limit" Width="1.5" PointX="37.375" PointY="20.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_broker_account_info_frontaccount_rel" Width="1.5" PointX="22.375" PointY="37.75" />
         <EntityTypeShape EntityType="meal_ticketModel.v_plate" Width="1.5" PointX="37.375" PointY="23.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.v_shares_quotes_last" Width="1.5" PointX="37.375" PointY="29.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_riserate_last" Width="1.5" PointX="9.375" PointY="15.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_type_business" Width="1.5" PointX="9.375" PointY="19.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

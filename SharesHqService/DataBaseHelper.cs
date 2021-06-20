@@ -522,15 +522,12 @@ then insert(Market,SharesCode,PresentPrice,ClosedPrice,OpenedPrice,MaxPrice,MinP
 
             //任务类型1.更新t_shares_quotes_date 2.更新t_shares_quotes_last 3.添加t_shares_quotes_record 4.记录所有板块涨跌幅
             ThreadMsgTemplate<int> taskData1 = new ThreadMsgTemplate<int>();
-            ThreadMsgTemplate<int> taskData2 = new ThreadMsgTemplate<int>();
             Task[] tArr1 = null;
-            Task[] tArr2 = null;
             if (taskExec)
             {
                 taskData1.Init();
                 taskData1.AddMessage(1);
                 taskData1.AddMessage(2);
-                //taskData1.AddMessage(4);
                 int taskCount = taskData1.GetCount();
                 tArr1 = new Task[taskCount];
                 for (int i = 0; i < taskCount; i++)
@@ -560,22 +557,14 @@ then insert(Market,SharesCode,PresentPrice,ClosedPrice,OpenedPrice,MaxPrice,MinP
                             {
                                 try
                                 {
-                                    UpdateQuotesLast();
+                                    if (Singleton.Instance.LastSharesQuotesList.Count() > 0)
+                                    {
+                                        UpdatePreQuotes(Singleton.Instance.LastSharesQuotesList.Values.ToList());
+                                    }
                                 }
                                 catch (Exception ex)
                                 {
-                                    Logger.WriteFileLog("UpdateQuotesLast出错", ex);
-                                }
-                            }
-                            if (taskType == 4)
-                            {
-                                try
-                                {
-                                    AddPlateRiserate();
-                                }
-                                catch (Exception ex)
-                                {
-                                    Logger.WriteFileLog("AddPlateRiserate出错", ex);
+                                    Logger.WriteFileLog("UpdatePreQuotes出错", ex);
                                 }
                             }
                         } while (true);
@@ -634,49 +623,10 @@ then insert(Market,SharesCode,PresentPrice,ClosedPrice,OpenedPrice,MaxPrice,MinP
             Console.WriteLine("\t==========开始执行任务=================");
             stopwatch.Restart();
 
-            taskExec = false;
-            if (taskExec)
-            {
-                taskData2.Init();
-                taskData2.AddMessage(3);
-                int taskCount = taskData2.GetCount();
-                tArr2 = new Task[taskCount];
-                for (int i = 0; i < taskCount; i++)
-                {
-                    tArr2[i] = new Task(() =>
-                    {
-                        do
-                        {
-                            int taskType = 0;
-                            if (!taskData2.GetMessage(ref taskType, true))
-                            {
-                                break;
-                            }
-                            if (taskType == 3)
-                            {
-                                try
-                                {
-                                    UpdateQuotesRecord();
-                                }
-                                catch (Exception ex)
-                                {
-                                    Logger.WriteFileLog("UpdateQuotesRecord出错", ex);
-                                }
-                            }
-                        } while (true);
-                    });
-                    tArr2[i].Start();
-                }
-            }
             if (tArr1 != null)
             {
                 Task.WaitAll(tArr1);
                 taskData1.Release();
-            }
-            if (tArr2 != null)
-            {
-                Task.WaitAll(tArr2);
-                taskData2.Release();
             }
             stopwatch.Stop();
             Console.WriteLine("\t=====任务执行结束:" + stopwatch.ElapsedMilliseconds + "============");
@@ -782,7 +732,7 @@ then insert(Market,SharesCode,PresentPrice,ClosedPrice,OpenedPrice,MaxPrice,MinP
                     row["SellCount5"] = item.SellCount5;
                     row["SpeedUp"] = item.SpeedUp;
                     row["Activity"] = item.Activity;
-                    row["LastModified"] = DateTime.Now;
+                    row["LastModified"] = item.LastModified;
                     row["LimitUpPrice"] = item.LimitUpPrice;
                     row["LimitDownPrice"] = item.LimitDownPrice;
                     row["PriceType"] = item.PriceType;
@@ -848,11 +798,11 @@ then insert(Market,SharesCode,PresentPrice,ClosedPrice,OpenedPrice,MaxPrice,MinP
                 //更新数据到五档表
                 sql = string.Format(@"merge into t_shares_quotes as t
 using (select * from (select *,ROW_NUMBER() OVER(partition by Market,SharesCode order by LastModified desc) num from t_shares_quotes_temp)t where t.num=1) as t1
-ON t.Market = t1.Market and t.SharesCode = t1.SharesCode
+ON t.Market = t1.Market and t.SharesCode = t1.SharesCode and t.DataType=0
 when matched
 then update set t.PresentPrice = t1.PresentPrice,t.ClosedPrice = t1.ClosedPrice,t.OpenedPrice = t1.OpenedPrice,t.MaxPrice = t1.MaxPrice,t.MinPrice = t1.MinPrice,t.TotalCount = t1.TotalCount,t.PresentCount = t1.PresentCount,t.TotalAmount = t1.TotalAmount,t.InvolCount = t1.InvolCount,t.OuterCount = t1.OuterCount,t.BuyPrice1 = t1.BuyPrice1,t.BuyCount1 = t1.BuyCount1,t.BuyPrice2 = t1.BuyPrice2,t.BuyCount2 = t1.BuyCount2,t.BuyPrice3 = t1.BuyPrice3,t.BuyCount3 = t1.BuyCount3,t.BuyPrice4 = t1.BuyPrice4,t.BuyCount4 = t1.BuyCount4,t.BuyPrice5 = t1.BuyPrice5,t.BuyCount5 = t1.BuyCount5,t.SellPrice1 = t1.SellPrice1,t.SellCount1 = t1.SellCount1,t.SellPrice2 = t1.SellPrice2,t.SellCount2 = t1.SellCount2,t.SellPrice3 = t1.SellPrice3,t.SellCount3 = t1.SellCount3,t.SellPrice4 = t1.SellPrice4,t.SellCount4 = t1.SellCount4,t.SellPrice5 = t1.SellPrice5,t.SellCount5 = t1.SellCount5,t.SpeedUp = t1.SpeedUp,t.Activity = t1.Activity,t.LastModified = t1.LastModified,t.LimitUpPrice=t1.LimitUpPrice,t.LimitDownPrice=t1.LimitDownPrice,t.PriceType=t1.PriceType,t.TriPriceType=t1.TriPriceType,t.TriNearLimitType=t1.TriNearLimitType
 when not matched by target
-then insert(Market,SharesCode,PresentPrice,ClosedPrice,OpenedPrice,MaxPrice,MinPrice,TotalCount,PresentCount,TotalAmount,InvolCount,OuterCount,BuyPrice1,BuyCount1,BuyPrice2,BuyCount2,BuyPrice3,BuyCount3,BuyPrice4,BuyCount4,BuyPrice5,BuyCount5,SellPrice1,SellCount1,SellPrice2,SellCount2,SellPrice3,SellCount3,SellPrice4,SellCount4,SellPrice5,SellCount5,SpeedUp,Activity,LastModified,LimitUpPrice,LimitDownPrice,PriceType,TriPriceType,TriNearLimitType) values(t1.Market,t1.SharesCode,t1.PresentPrice,t1.ClosedPrice,t1.OpenedPrice,t1.MaxPrice,t1.MinPrice,t1.TotalCount,t1.PresentCount,t1.TotalAmount,t1.InvolCount,t1.OuterCount,t1.BuyPrice1,t1.BuyCount1,t1.BuyPrice2,t1.BuyCount2,t1.BuyPrice3,t1.BuyCount3,t1.BuyPrice4,t1.BuyCount4,t1.BuyPrice5,t1.BuyCount5,t1.SellPrice1,t1.SellCount1,t1.SellPrice2,t1.SellCount2,t1.SellPrice3,t1.SellCount3,t1.SellPrice4,t1.SellCount4,t1.SellPrice5,t1.SellCount5,t1.SpeedUp,t1.Activity,t1.LastModified,t1.LimitUpPrice,t1.LimitDownPrice,t1.PriceType,t1.TriPriceType,t1.TriNearLimitType);");
+then insert(Market,SharesCode,PresentPrice,ClosedPrice,OpenedPrice,MaxPrice,MinPrice,TotalCount,PresentCount,TotalAmount,InvolCount,OuterCount,BuyPrice1,BuyCount1,BuyPrice2,BuyCount2,BuyPrice3,BuyCount3,BuyPrice4,BuyCount4,BuyPrice5,BuyCount5,SellPrice1,SellCount1,SellPrice2,SellCount2,SellPrice3,SellCount3,SellPrice4,SellCount4,SellPrice5,SellCount5,SpeedUp,Activity,LastModified,LimitUpPrice,LimitDownPrice,PriceType,TriPriceType,TriNearLimitType,DataType) values(t1.Market,t1.SharesCode,t1.PresentPrice,t1.ClosedPrice,t1.OpenedPrice,t1.MaxPrice,t1.MinPrice,t1.TotalCount,t1.PresentCount,t1.TotalAmount,t1.InvolCount,t1.OuterCount,t1.BuyPrice1,t1.BuyCount1,t1.BuyPrice2,t1.BuyCount2,t1.BuyPrice3,t1.BuyCount3,t1.BuyPrice4,t1.BuyCount4,t1.BuyPrice5,t1.BuyCount5,t1.SellPrice1,t1.SellCount1,t1.SellPrice2,t1.SellCount2,t1.SellPrice3,t1.SellCount3,t1.SellPrice4,t1.SellCount4,t1.SellPrice5,t1.SellCount5,t1.SpeedUp,t1.Activity,t1.LastModified,t1.LimitUpPrice,t1.LimitDownPrice,t1.PriceType,t1.TriPriceType,t1.TriNearLimitType,0);");
                 cmd.CommandText = sql;
                 cmd.ExecuteNonQuery();
                 Console.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
@@ -974,8 +924,8 @@ then insert(Market,SharesCode,PresentPrice,ClosedPrice,OpenedPrice,MaxPrice,MinP
                                     row["MinPrice"] = item.MinPrice;
                                     row["LimitUpPrice"] = item.LimitUpPrice;
                                     row["LimitDownPrice"] = item.LimitDownPrice;
-                                    row["LastModified"] = DateTime.Now;
-                                    row["Date"] = DateTime.Now.ToString("yyyy-MM-dd");
+                                    row["LastModified"] = item.LastModified;
+                                    row["Date"] = item.LastModified.ToString("yyyy-MM-dd");
                                     row["LimitUpCount"] = LimitUpCount;
                                     row["LimitDownCount"] = LimitDownCount;
                                     row["LimitUpBombCount"] = LimitUpBombCount;
@@ -1053,7 +1003,7 @@ values(t1.Market,t1.SharesCode,t1.PresentPrice,t1.ClosedPrice,t1.OpenedPrice,t1.
         /// <summary>
         /// 更新上一次五档数据
         /// </summary>
-        private static void UpdateQuotesLast()
+        private static void UpdatePreQuotes(List<SharesQuotesInfo> list)
         {
             string connectionString = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             using (SqlConnection conn = new SqlConnection(connectionString))
@@ -1121,8 +1071,11 @@ values(t1.Market,t1.SharesCode,t1.PresentPrice,t1.ClosedPrice,t1.OpenedPrice,t1.
                                 table.Columns.Add("LimitDownPrice", typeof(long));
                                 table.Columns.Add("PriceType", typeof(int));
                                 table.Columns.Add("TriPriceType", typeof(int));
+                                table.Columns.Add("TriNearLimitType", typeof(int)); 
                                 #endregion
-                                foreach (var item in Singleton.Instance.LastSharesQuotesList.Values)
+
+                                #region====绑定数据====
+                                foreach (var item in list)
                                 {
                                     DataRow row = table.NewRow();
                                     row["Id"] = 0;
@@ -1160,13 +1113,16 @@ values(t1.Market,t1.SharesCode,t1.PresentPrice,t1.ClosedPrice,t1.OpenedPrice,t1.
                                     row["SellCount5"] = item.SellCount5;
                                     row["SpeedUp"] = item.SpeedUp;
                                     row["Activity"] = item.Activity;
-                                    row["LastModified"] = DateTime.Now;
+                                    row["LastModified"] = item.LastModified;
                                     row["LimitUpPrice"] = item.LimitUpPrice;
                                     row["LimitDownPrice"] = item.LimitDownPrice;
                                     row["PriceType"] = item.PriceType;
                                     row["TriPriceType"] = item.TriPriceType;
+                                    row["TriNearLimitType"] = item.TriNearLimitType;
                                     table.Rows.Add(row);
                                 }
+                                #endregion
+
                                 #region====绑定结构字段====
                                 Dictionary<string, string> dic = new Dictionary<string, string>();
                                 dic.Add("Id", "Id");
@@ -1209,34 +1165,21 @@ values(t1.Market,t1.SharesCode,t1.PresentPrice,t1.ClosedPrice,t1.OpenedPrice,t1.
                                 dic.Add("LimitDownPrice", "LimitDownPrice");
                                 dic.Add("PriceType", "PriceType");
                                 dic.Add("TriPriceType", "TriPriceType");
+                                dic.Add("TriNearLimitType", "TriNearLimitType"); 
                                 #endregion
+
                                 bulk.ColumnMappings = dic;
                                 bulk.BatchSize = 10000;
                                 bulk.BulkWriteToServer(conn, table, "t_shares_quotes_last_temp", tran);
                             }
                             //更新到数据表
-                            sql = string.Format(@"merge into t_shares_quotes_last as t
+                            sql = string.Format(@"merge into t_shares_quotes as t
 using (select * from t_shares_quotes_last_temp) as t1
-on t.Market=t1.Market and t.SharesCode=t1.SharesCode
+ON t.Market = t1.Market and t.SharesCode = t1.SharesCode and t.DataType=1
 when matched
-then update set t.PresentPrice=t1.PresentPrice,t.ClosedPrice=t1.ClosedPrice,t.OpenedPrice=t1.OpenedPrice,t.MaxPrice=t1.MaxPrice,
-t.MinPrice=t1.MinPrice,t.TotalCount=t1.TotalCount,t.PresentCount=t1.PresentCount,t.TotalAmount=t1.TotalAmount,t.InvolCount=t1.InvolCount,
-t.OuterCount=t1.OuterCount,t.BuyPrice1=t1.BuyPrice1,t.BuyCount1=t1.BuyCount1,t.BuyPrice2=t1.BuyPrice2,t.BuyCount2=t1.BuyCount2,
-t.BuyPrice3=t1.BuyPrice3,t.BuyCount3=t1.BuyCount3,t.BuyPrice4=t1.BuyPrice4,t.BuyCount4=t1.BuyCount4,
-t.BuyPrice5=t1.BuyPrice5,t.BuyCount5=t1.BuyCount5,t.SellPrice1=t1.SellPrice1,t.SellCount1=t1.SellCount1,
-t.SellPrice2=t1.SellPrice2,t.SellCount2=t1.SellCount2,t.SellPrice3=t1.SellPrice3,t.SellCount3=t1.SellCount3,
-t.SellPrice4=t1.SellPrice4,t.SellCount4=t1.SellCount4,t.SellPrice5=t1.SellPrice5,t.SellCount5=t1.SellCount5,
-t.SpeedUp=t1.SpeedUp,t.Activity=t1.Activity,t.LastModified=t1.LastModified,t.LimitUpPrice=t1.LimitUpPrice,
-t.LimitDownPrice=t1.LimitDownPrice,t.PriceType=t1.PriceType,t.TriPriceType=t1.TriPriceType
+then update set t.PresentPrice = t1.PresentPrice,t.ClosedPrice = t1.ClosedPrice,t.OpenedPrice = t1.OpenedPrice,t.MaxPrice = t1.MaxPrice,t.MinPrice = t1.MinPrice,t.TotalCount = t1.TotalCount,t.PresentCount = t1.PresentCount,t.TotalAmount = t1.TotalAmount,t.InvolCount = t1.InvolCount,t.OuterCount = t1.OuterCount,t.BuyPrice1 = t1.BuyPrice1,t.BuyCount1 = t1.BuyCount1,t.BuyPrice2 = t1.BuyPrice2,t.BuyCount2 = t1.BuyCount2,t.BuyPrice3 = t1.BuyPrice3,t.BuyCount3 = t1.BuyCount3,t.BuyPrice4 = t1.BuyPrice4,t.BuyCount4 = t1.BuyCount4,t.BuyPrice5 = t1.BuyPrice5,t.BuyCount5 = t1.BuyCount5,t.SellPrice1 = t1.SellPrice1,t.SellCount1 = t1.SellCount1,t.SellPrice2 = t1.SellPrice2,t.SellCount2 = t1.SellCount2,t.SellPrice3 = t1.SellPrice3,t.SellCount3 = t1.SellCount3,t.SellPrice4 = t1.SellPrice4,t.SellCount4 = t1.SellCount4,t.SellPrice5 = t1.SellPrice5,t.SellCount5 = t1.SellCount5,t.SpeedUp = t1.SpeedUp,t.Activity = t1.Activity,t.LastModified = t1.LastModified,t.LimitUpPrice=t1.LimitUpPrice,t.LimitDownPrice=t1.LimitDownPrice,t.PriceType=t1.PriceType,t.TriPriceType=t1.TriPriceType,t.TriNearLimitType=t1.TriNearLimitType
 when not matched by target
-then insert(Market,SharesCode,PresentPrice,ClosedPrice,OpenedPrice,MaxPrice,MinPrice,TotalCount,PresentCount,TotalAmount,InvolCount,
-OuterCount,BuyPrice1,BuyCount1,BuyPrice2,BuyCount2,BuyPrice3,BuyCount3,BuyPrice4,BuyCount4,BuyPrice5,BuyCount5,SellPrice1,SellCount1,
-SellPrice2,SellCount2,SellPrice3,SellCount3,SellPrice4,SellCount4,SellPrice5,SellCount5,SpeedUp,Activity,LastModified,LimitUpPrice,
-LimitDownPrice,PriceType,TriPriceType)
-values (t1.Market,t1.SharesCode,t1.PresentPrice,t1.ClosedPrice,t1.OpenedPrice,t1.MaxPrice,t1.MinPrice,t1.TotalCount,t1.PresentCount,
-t1.TotalAmount,t1.InvolCount,t1.OuterCount,t1.BuyPrice1,t1.BuyCount1,t1.BuyPrice2,t1.BuyCount2,t1.BuyPrice3,t1.BuyCount3,t1.BuyPrice4,
-t1.BuyCount4,t1.BuyPrice5,t1.BuyCount5,t1.SellPrice1,t1.SellCount1,t1.SellPrice2,t1.SellCount2,t1.SellPrice3,t1.SellCount3,t1.SellPrice4,
-t1.SellCount4,t1.SellPrice5,t1.SellCount5,t1.SpeedUp,t1.Activity,t1.LastModified,t1.LimitUpPrice,t1.LimitDownPrice,t1.PriceType,t1.TriPriceType);");
+then insert(Market,SharesCode,PresentPrice,ClosedPrice,OpenedPrice,MaxPrice,MinPrice,TotalCount,PresentCount,TotalAmount,InvolCount,OuterCount,BuyPrice1,BuyCount1,BuyPrice2,BuyCount2,BuyPrice3,BuyCount3,BuyPrice4,BuyCount4,BuyPrice5,BuyCount5,SellPrice1,SellCount1,SellPrice2,SellCount2,SellPrice3,SellCount3,SellPrice4,SellCount4,SellPrice5,SellCount5,SpeedUp,Activity,LastModified,LimitUpPrice,LimitDownPrice,PriceType,TriPriceType,TriNearLimitType,DataType) values(t1.Market,t1.SharesCode,t1.PresentPrice,t1.ClosedPrice,t1.OpenedPrice,t1.MaxPrice,t1.MinPrice,t1.TotalCount,t1.PresentCount,t1.TotalAmount,t1.InvolCount,t1.OuterCount,t1.BuyPrice1,t1.BuyCount1,t1.BuyPrice2,t1.BuyCount2,t1.BuyPrice3,t1.BuyCount3,t1.BuyPrice4,t1.BuyCount4,t1.BuyPrice5,t1.BuyCount5,t1.SellPrice1,t1.SellCount1,t1.SellPrice2,t1.SellCount2,t1.SellPrice3,t1.SellCount3,t1.SellPrice4,t1.SellCount4,t1.SellPrice5,t1.SellCount5,t1.SpeedUp,t1.Activity,t1.LastModified,t1.LimitUpPrice,t1.LimitDownPrice,t1.PriceType,t1.TriPriceType,t1.TriNearLimitType,1);");
                             cmd.CommandText = sql;
                             cmd.ExecuteNonQuery();
                         }
@@ -1252,41 +1195,6 @@ t1.SellCount4,t1.SellPrice5,t1.SellCount5,t1.SpeedUp,t1.Activity,t1.LastModified
                         conn.Close();
                     }
                 }
-            }
-        }
-
-        /// <summary>
-        /// 添加五档记录
-        /// </summary>
-        public static void UpdateQuotesRecord()
-        {
-            using (var db = new meal_ticketEntities())
-            {
-                string sql = @"insert into t_shares_quotes_record
-(Market,SharesCode,PresentPrice,ClosedPrice,OpenedPrice,MaxPrice,MinPrice,TotalCount,PresentCount,TotalAmount,InvolCount
- ,OuterCount,BuyPrice1,BuyCount1,BuyPrice2,BuyCount2,BuyPrice3,BuyCount3,BuyPrice4,BuyCount4,BuyPrice5,BuyCount5,SellPrice1
- ,SellCount1,SellPrice2,SellCount2,SellPrice3,SellCount3,SellPrice4,SellCount4,SellPrice5,SellCount5,SpeedUp,Activity
- ,LastModified,LimitUpPrice,LimitDownPrice,PriceType,TriPriceType,TotalCapital,CirculatingCapital)
- select t.Market,t.SharesCode,PresentPrice,ClosedPrice,OpenedPrice,MaxPrice,MinPrice,TotalCount,PresentCount,TotalAmount,InvolCount
- ,OuterCount,BuyPrice1,BuyCount1,BuyPrice2,BuyCount2,BuyPrice3,BuyCount3,BuyPrice4,BuyCount4,BuyPrice5,BuyCount5,SellPrice1
- ,SellCount1,SellPrice2,SellCount2,SellPrice3,SellCount3,SellPrice4,SellCount4,SellPrice5,SellCount5,SpeedUp,Activity
- ,LastModified,LimitUpPrice,LimitDownPrice,PriceType,TriPriceType,isnull(t2.TotalCapital,0),isnull(t2.CirculatingCapital,0)
- from t_shares_quotes t with(nolock)
- left join t_shares_markettime t2 with(nolock) on t.Market=t2.Market and t.SharesCode=t2.SharesCode
- where TriPriceType=1;";
-                db.Database.ExecuteSqlCommand(sql);
-            }
-        }
-
-        /// <summary>
-        /// 记录板块涨跌幅
-        /// </summary>
-        private static void AddPlateRiserate()
-        {   
-            string sql = "insert into t_shares_plate_riserate select PlateId,PlateName,PlateType,SharesCount,RiseRate,getdate() from v_plate where [Status]=1";
-            using (var db = new meal_ticketEntities())
-            {
-                db.Database.ExecuteSqlCommand(sql);
             }
         }
 

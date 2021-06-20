@@ -971,7 +971,7 @@ namespace MealTicket_Admin_Handler
                                select item).ToList();
 
                 var hold = (from item in db.t_account_shares_hold
-                            join item2 in db.t_shares_quotes on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                            join item2 in db.v_shares_quotes_last on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
                             join item3 in db.t_account_baseinfo on item.AccountId equals item3.Id
                             where item.Market + "" + item.SharesCode == request.Code && item.RemainCount > 0
                             let PresentPrice = item2.PresentPrice <= 0 ? item2.ClosedPrice : item2.PresentPrice

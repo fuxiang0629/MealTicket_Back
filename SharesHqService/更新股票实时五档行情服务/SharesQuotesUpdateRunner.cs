@@ -33,6 +33,7 @@ namespace SharesHqService
                         {
                             //如果当前不是交易时间，30秒检查一次
                             SleepTime = 30000;
+                            Singleton.Instance.TryToSetIsRun(false);
                             return false;
                         }
                     }
@@ -42,6 +43,7 @@ namespace SharesHqService
                 }
                 catch (Exception ex)
                 {
+                    Singleton.Instance.TryToSetIsRun(false);
                     return false;
                 }
             }
@@ -81,6 +83,7 @@ namespace SharesHqService
                 finally
                 {
                     Singleton.Instance.TryQuotesCanLeave();
+                    Singleton.Instance.TryToSetIsRun(true);
                 }
             });
             task.Start();

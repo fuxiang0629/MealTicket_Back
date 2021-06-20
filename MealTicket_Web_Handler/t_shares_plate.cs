@@ -29,5 +29,6 @@ namespace MealTicket_Web_Handler
         public string WeightSharesCode { get; set; }
         public int NoWeightMarket { get; set; }
         public string NoWeightSharesCode { get; set; }
+        public int BaseStatus { get; set; }
     }
 }

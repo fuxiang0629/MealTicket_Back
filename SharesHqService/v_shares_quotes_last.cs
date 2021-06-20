@@ -7,12 +7,12 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NewTransactionDataUpdate
+namespace SharesHqService
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class t_shares_quotes
+    public partial class v_shares_quotes_last
     {
         public long Id { get; set; }
         public int Market { get; set; }
@@ -50,5 +50,11 @@ namespace NewTransactionDataUpdate
         public string SpeedUp { get; set; }
         public string Activity { get; set; }
         public System.DateTime LastModified { get; set; }
+        public long LimitUpPrice { get; set; }
+        public long LimitDownPrice { get; set; }
+        public int PriceType { get; set; }
+        public int TriPriceType { get; set; }
+        public int TriNearLimitType { get; set; }
+        public int DataType { get; set; }
     }
 }

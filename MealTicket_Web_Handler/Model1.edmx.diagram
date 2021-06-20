@@ -149,7 +149,6 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_monitor_trend_par" Width="1.5" PointX="34.75" PointY="13.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_monitor_trend_rel" Width="1.5" PointX="34.75" PointY="16.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_monitor_trend_rel_par" Width="1.5" PointX="34.75" PointY="19.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="meal_ticketModel.t_shares_quotes" Width="1.5" PointX="34.75" PointY="22.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_quotes_date" Width="1.5" PointX="28.75" PointY="34.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_quotes_temp" Width="1.5" PointX="30.75" PointY="34.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_search" Width="1.5" PointX="34.75" PointY="31.75" IsExpanded="true" />
@@ -215,11 +214,13 @@
         <EntityTypeShape EntityType="meal_ticketModel.v_shares_baseinfo" Width="1.5" PointX="23.375" PointY="42.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_hold_conditiontrade_follow" Width="1.5" PointX="25.375" PointY="42.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_autobuy" Width="1.5" PointX="27.375" PointY="42.75" />
-        <EntityTypeShape EntityType="meal_ticketModel.t_shares_quotes_last" Width="1.5" PointX="39.375" PointY="42.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_follow_group" Width="1.5" PointX="42.375" PointY="35.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_follow_group_rel" Width="1.5" PointX="41.375" PointY="42.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_plate" Width="1.5" PointX="43.375" PointY="0.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_riserate_last" Width="1.5" PointX="0.75" PointY="43.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.v_shares_quotes_last" Width="1.5" PointX="43.375" PointY="3.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_quotes" Width="1.5" PointX="3.375" PointY="43.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_type_business" Width="1.5" PointX="5.375" PointY="43.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

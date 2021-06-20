@@ -56,6 +56,11 @@ namespace MealTicket_Web_Handler.Model
         /// 状态0全部 1有效 2无效
         /// </summary>
         public int Status { get; set; }
+
+        /// <summary>
+        /// 获取等级
+        /// </summary>
+        public int Level { get; set; }
     }
 
     public class AccountBuyConditionTradeSharesInfo

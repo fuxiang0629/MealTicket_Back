@@ -50,13 +50,13 @@ namespace SharesTradeService
         public virtual DbSet<t_broker_account_info_position> t_broker_account_info_position { get; set; }
         public virtual DbSet<t_broker_account_info_capital> t_broker_account_info_capital { get; set; }
         public virtual DbSet<t_system_param> t_system_param { get; set; }
-        public virtual DbSet<t_shares_quotes> t_shares_quotes { get; set; }
         public virtual DbSet<t_server_broker_account_rel> t_server_broker_account_rel { get; set; }
         public virtual DbSet<t_broker_account_info> t_broker_account_info { get; set; }
         public virtual DbSet<t_account_baseinfo> t_account_baseinfo { get; set; }
         public virtual DbSet<t_account_shares_hold> t_account_shares_hold { get; set; }
         public virtual DbSet<t_notice_hold> t_notice_hold { get; set; }
         public virtual DbSet<t_account_shares_entrust_manager_dealdetails_real> t_account_shares_entrust_manager_dealdetails_real { get; set; }
+        public virtual DbSet<v_shares_quotes_last> v_shares_quotes_last { get; set; }
     
         public virtual int P_TryToCancelEntrust(Nullable<long> entrustId)
         {

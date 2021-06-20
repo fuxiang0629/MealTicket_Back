@@ -55,5 +55,6 @@ namespace MealTicket_Web_Handler
         public int PriceType { get; set; }
         public int TriPriceType { get; set; }
         public int TriNearLimitType { get; set; }
+        public int DataType { get; set; }
     }
 }

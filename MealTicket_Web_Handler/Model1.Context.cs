@@ -171,7 +171,6 @@ namespace MealTicket_Web_Handler
         public virtual DbSet<t_shares_monitor_trend_par> t_shares_monitor_trend_par { get; set; }
         public virtual DbSet<t_shares_monitor_trend_rel> t_shares_monitor_trend_rel { get; set; }
         public virtual DbSet<t_shares_monitor_trend_rel_par> t_shares_monitor_trend_rel_par { get; set; }
-        public virtual DbSet<t_shares_quotes> t_shares_quotes { get; set; }
         public virtual DbSet<t_shares_quotes_date> t_shares_quotes_date { get; set; }
         public virtual DbSet<t_shares_quotes_temp> t_shares_quotes_temp { get; set; }
         public virtual DbSet<t_shares_search> t_shares_search { get; set; }
@@ -237,11 +236,13 @@ namespace MealTicket_Web_Handler
         public virtual DbSet<v_shares_baseinfo> v_shares_baseinfo { get; set; }
         public virtual DbSet<t_account_shares_hold_conditiontrade_follow> t_account_shares_hold_conditiontrade_follow { get; set; }
         public virtual DbSet<t_shares_limit_autobuy> t_shares_limit_autobuy { get; set; }
-        public virtual DbSet<t_shares_quotes_last> t_shares_quotes_last { get; set; }
         public virtual DbSet<t_account_follow_group> t_account_follow_group { get; set; }
         public virtual DbSet<t_account_follow_group_rel> t_account_follow_group_rel { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_plate> t_account_shares_conditiontrade_buy_plate { get; set; }
         public virtual DbSet<t_shares_plate_riserate_last> t_shares_plate_riserate_last { get; set; }
+        public virtual DbSet<v_shares_quotes_last> v_shares_quotes_last { get; set; }
+        public virtual DbSet<t_shares_quotes> t_shares_quotes { get; set; }
+        public virtual DbSet<t_shares_plate_type_business> t_shares_plate_type_business { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)

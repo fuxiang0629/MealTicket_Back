@@ -219,52 +219,6 @@
           <Property Name="LastModified" Type="datetime" Nullable="false" />
           <Property Name="BatchTime" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
-        <EntityType Name="t_shares_quotes">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Market" Type="int" Nullable="false" />
-          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="PresentPrice" Type="bigint" Nullable="false" />
-          <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
-          <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
-          <Property Name="MaxPrice" Type="bigint" Nullable="false" />
-          <Property Name="MinPrice" Type="bigint" Nullable="false" />
-          <Property Name="TotalCount" Type="int" Nullable="false" />
-          <Property Name="PresentCount" Type="int" Nullable="false" />
-          <Property Name="TotalAmount" Type="bigint" Nullable="false" />
-          <Property Name="InvolCount" Type="int" Nullable="false" />
-          <Property Name="OuterCount" Type="int" Nullable="false" />
-          <Property Name="BuyPrice1" Type="bigint" Nullable="false" />
-          <Property Name="BuyCount1" Type="int" Nullable="false" />
-          <Property Name="BuyPrice2" Type="bigint" Nullable="false" />
-          <Property Name="BuyCount2" Type="int" Nullable="false" />
-          <Property Name="BuyPrice3" Type="bigint" Nullable="false" />
-          <Property Name="BuyCount3" Type="int" Nullable="false" />
-          <Property Name="BuyPrice4" Type="bigint" Nullable="false" />
-          <Property Name="BuyCount4" Type="int" Nullable="false" />
-          <Property Name="BuyPrice5" Type="bigint" Nullable="false" />
-          <Property Name="BuyCount5" Type="int" Nullable="false" />
-          <Property Name="SellPrice1" Type="bigint" Nullable="false" />
-          <Property Name="SellCount1" Type="int" Nullable="false" />
-          <Property Name="SellPrice2" Type="bigint" Nullable="false" />
-          <Property Name="SellCount2" Type="int" Nullable="false" />
-          <Property Name="SellPrice3" Type="bigint" Nullable="false" />
-          <Property Name="SellCount3" Type="int" Nullable="false" />
-          <Property Name="SellPrice4" Type="bigint" Nullable="false" />
-          <Property Name="SellCount4" Type="int" Nullable="false" />
-          <Property Name="SellPrice5" Type="bigint" Nullable="false" />
-          <Property Name="SellCount5" Type="int" Nullable="false" />
-          <Property Name="SpeedUp" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="Activity" Type="varchar" MaxLength="20" Nullable="false" />
-          <Property Name="LastModified" Type="datetime" Nullable="false" />
-          <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
-          <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
-          <Property Name="PriceType" Type="int" Nullable="false" />
-          <Property Name="TriPriceType" Type="int" Nullable="false" />
-          <Property Name="TriNearLimitType" Type="int" Nullable="false" />
-        </EntityType>
         <EntityType Name="t_shares_quotes_date">
           <Key>
             <PropertyRef Name="Id" />
@@ -369,6 +323,96 @@
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
         </EntityType>
+        <!--生成过程中发现错误:
+警告 6002: 表/视图“meal_ticket.dbo.v_shares_quotes_last”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+        <EntityType Name="v_shares_quotes_last">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Market" />
+            <PropertyRef Name="SharesCode" />
+            <PropertyRef Name="PresentPrice" />
+            <PropertyRef Name="ClosedPrice" />
+            <PropertyRef Name="OpenedPrice" />
+            <PropertyRef Name="MaxPrice" />
+            <PropertyRef Name="MinPrice" />
+            <PropertyRef Name="TotalCount" />
+            <PropertyRef Name="PresentCount" />
+            <PropertyRef Name="TotalAmount" />
+            <PropertyRef Name="InvolCount" />
+            <PropertyRef Name="OuterCount" />
+            <PropertyRef Name="BuyPrice1" />
+            <PropertyRef Name="BuyCount1" />
+            <PropertyRef Name="BuyPrice2" />
+            <PropertyRef Name="BuyCount2" />
+            <PropertyRef Name="BuyPrice3" />
+            <PropertyRef Name="BuyCount3" />
+            <PropertyRef Name="BuyPrice4" />
+            <PropertyRef Name="BuyCount4" />
+            <PropertyRef Name="BuyPrice5" />
+            <PropertyRef Name="BuyCount5" />
+            <PropertyRef Name="SellPrice1" />
+            <PropertyRef Name="SellCount1" />
+            <PropertyRef Name="SellPrice2" />
+            <PropertyRef Name="SellCount2" />
+            <PropertyRef Name="SellPrice3" />
+            <PropertyRef Name="SellCount3" />
+            <PropertyRef Name="SellPrice4" />
+            <PropertyRef Name="SellCount4" />
+            <PropertyRef Name="SellPrice5" />
+            <PropertyRef Name="SellCount5" />
+            <PropertyRef Name="SpeedUp" />
+            <PropertyRef Name="Activity" />
+            <PropertyRef Name="LastModified" />
+            <PropertyRef Name="LimitUpPrice" />
+            <PropertyRef Name="LimitDownPrice" />
+            <PropertyRef Name="PriceType" />
+            <PropertyRef Name="TriPriceType" />
+            <PropertyRef Name="TriNearLimitType" />
+            <PropertyRef Name="DataType" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="PresentPrice" Type="bigint" Nullable="false" />
+          <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
+          <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
+          <Property Name="MaxPrice" Type="bigint" Nullable="false" />
+          <Property Name="MinPrice" Type="bigint" Nullable="false" />
+          <Property Name="TotalCount" Type="int" Nullable="false" />
+          <Property Name="PresentCount" Type="int" Nullable="false" />
+          <Property Name="TotalAmount" Type="bigint" Nullable="false" />
+          <Property Name="InvolCount" Type="int" Nullable="false" />
+          <Property Name="OuterCount" Type="int" Nullable="false" />
+          <Property Name="BuyPrice1" Type="bigint" Nullable="false" />
+          <Property Name="BuyCount1" Type="int" Nullable="false" />
+          <Property Name="BuyPrice2" Type="bigint" Nullable="false" />
+          <Property Name="BuyCount2" Type="int" Nullable="false" />
+          <Property Name="BuyPrice3" Type="bigint" Nullable="false" />
+          <Property Name="BuyCount3" Type="int" Nullable="false" />
+          <Property Name="BuyPrice4" Type="bigint" Nullable="false" />
+          <Property Name="BuyCount4" Type="int" Nullable="false" />
+          <Property Name="BuyPrice5" Type="bigint" Nullable="false" />
+          <Property Name="BuyCount5" Type="int" Nullable="false" />
+          <Property Name="SellPrice1" Type="bigint" Nullable="false" />
+          <Property Name="SellCount1" Type="int" Nullable="false" />
+          <Property Name="SellPrice2" Type="bigint" Nullable="false" />
+          <Property Name="SellCount2" Type="int" Nullable="false" />
+          <Property Name="SellPrice3" Type="bigint" Nullable="false" />
+          <Property Name="SellCount3" Type="int" Nullable="false" />
+          <Property Name="SellPrice4" Type="bigint" Nullable="false" />
+          <Property Name="SellCount4" Type="int" Nullable="false" />
+          <Property Name="SellPrice5" Type="bigint" Nullable="false" />
+          <Property Name="SellCount5" Type="int" Nullable="false" />
+          <Property Name="SpeedUp" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Activity" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+          <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
+          <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
+          <Property Name="PriceType" Type="int" Nullable="false" />
+          <Property Name="TriPriceType" Type="int" Nullable="false" />
+          <Property Name="TriNearLimitType" Type="int" Nullable="false" />
+          <Property Name="DataType" Type="int" Nullable="false" />
+        </EntityType>
         <EntityContainer Name="meal_ticketModelStoreContainer">
           <EntitySet Name="t_dim_time" EntityType="Self.t_dim_time" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_all" EntityType="Self.t_shares_all" Schema="dbo" store:Type="Tables" />
@@ -384,11 +428,56 @@
           <EntitySet Name="t_shares_limit_time" EntityType="Self.t_shares_limit_time" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_minutetimedata" EntityType="Self.t_shares_minutetimedata" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_minutetimedata_temp" EntityType="Self.t_shares_minutetimedata_temp" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="t_shares_quotes" EntityType="Self.t_shares_quotes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_quotes_date" EntityType="Self.t_shares_quotes_date" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_quotes_temp" EntityType="Self.t_shares_quotes_temp" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_transactiondata" EntityType="Self.t_shares_transactiondata" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_system_param" EntityType="Self.t_system_param" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="v_shares_quotes_last" EntityType="Self.v_shares_quotes_last" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [v_shares_quotes_last].[Id] AS [Id], 
+    [v_shares_quotes_last].[Market] AS [Market], 
+    [v_shares_quotes_last].[SharesCode] AS [SharesCode], 
+    [v_shares_quotes_last].[PresentPrice] AS [PresentPrice], 
+    [v_shares_quotes_last].[ClosedPrice] AS [ClosedPrice], 
+    [v_shares_quotes_last].[OpenedPrice] AS [OpenedPrice], 
+    [v_shares_quotes_last].[MaxPrice] AS [MaxPrice], 
+    [v_shares_quotes_last].[MinPrice] AS [MinPrice], 
+    [v_shares_quotes_last].[TotalCount] AS [TotalCount], 
+    [v_shares_quotes_last].[PresentCount] AS [PresentCount], 
+    [v_shares_quotes_last].[TotalAmount] AS [TotalAmount], 
+    [v_shares_quotes_last].[InvolCount] AS [InvolCount], 
+    [v_shares_quotes_last].[OuterCount] AS [OuterCount], 
+    [v_shares_quotes_last].[BuyPrice1] AS [BuyPrice1], 
+    [v_shares_quotes_last].[BuyCount1] AS [BuyCount1], 
+    [v_shares_quotes_last].[BuyPrice2] AS [BuyPrice2], 
+    [v_shares_quotes_last].[BuyCount2] AS [BuyCount2], 
+    [v_shares_quotes_last].[BuyPrice3] AS [BuyPrice3], 
+    [v_shares_quotes_last].[BuyCount3] AS [BuyCount3], 
+    [v_shares_quotes_last].[BuyPrice4] AS [BuyPrice4], 
+    [v_shares_quotes_last].[BuyCount4] AS [BuyCount4], 
+    [v_shares_quotes_last].[BuyPrice5] AS [BuyPrice5], 
+    [v_shares_quotes_last].[BuyCount5] AS [BuyCount5], 
+    [v_shares_quotes_last].[SellPrice1] AS [SellPrice1], 
+    [v_shares_quotes_last].[SellCount1] AS [SellCount1], 
+    [v_shares_quotes_last].[SellPrice2] AS [SellPrice2], 
+    [v_shares_quotes_last].[SellCount2] AS [SellCount2], 
+    [v_shares_quotes_last].[SellPrice3] AS [SellPrice3], 
+    [v_shares_quotes_last].[SellCount3] AS [SellCount3], 
+    [v_shares_quotes_last].[SellPrice4] AS [SellPrice4], 
+    [v_shares_quotes_last].[SellCount4] AS [SellCount4], 
+    [v_shares_quotes_last].[SellPrice5] AS [SellPrice5], 
+    [v_shares_quotes_last].[SellCount5] AS [SellCount5], 
+    [v_shares_quotes_last].[SpeedUp] AS [SpeedUp], 
+    [v_shares_quotes_last].[Activity] AS [Activity], 
+    [v_shares_quotes_last].[LastModified] AS [LastModified], 
+    [v_shares_quotes_last].[LimitUpPrice] AS [LimitUpPrice], 
+    [v_shares_quotes_last].[LimitDownPrice] AS [LimitDownPrice], 
+    [v_shares_quotes_last].[PriceType] AS [PriceType], 
+    [v_shares_quotes_last].[TriPriceType] AS [TriPriceType], 
+    [v_shares_quotes_last].[TriNearLimitType] AS [TriNearLimitType], 
+    [v_shares_quotes_last].[DataType] AS [DataType]
+    FROM [dbo].[v_shares_quotes_last] AS [v_shares_quotes_last]</DefiningQuery>
+          </EntitySet>
         </EntityContainer>
       </Schema></edmx:StorageModels>
     <!-- CSDL content -->
@@ -401,7 +490,6 @@
           <EntitySet Name="t_shares_bars_temp" EntityType="meal_ticketModel.t_shares_bars_temp" />
           <EntitySet Name="t_shares_minutetimedata" EntityType="meal_ticketModel.t_shares_minutetimedata" />
           <EntitySet Name="t_shares_minutetimedata_temp" EntityType="meal_ticketModel.t_shares_minutetimedata_temp" />
-          <EntitySet Name="t_shares_quotes" EntityType="meal_ticketModel.t_shares_quotes" />
           <EntitySet Name="t_shares_transactiondata" EntityType="meal_ticketModel.t_shares_transactiondata" />
           <EntitySet Name="t_shares_hq_host" EntityType="meal_ticketModel.t_shares_hq_host" />
           <EntitySet Name="t_shares_limit_date" EntityType="meal_ticketModel.t_shares_limit_date" />
@@ -414,6 +502,7 @@
           <EntitySet Name="t_shares_all_corrigendum" EntityType="meal_ticketModel.t_shares_all_corrigendum" />
           <EntitySet Name="t_shares_limit_fundmultiple" EntityType="meal_ticketModel.t_shares_limit_fundmultiple" />
           <EntitySet Name="t_shares_quotes_date" EntityType="meal_ticketModel.t_shares_quotes_date" />
+          <EntitySet Name="v_shares_quotes_last" EntityType="meal_ticketModel.v_shares_quotes_last" />
         </EntityContainer>
         <EntityType Name="t_shares_bars">
           <Key>
@@ -517,52 +606,6 @@
           <Property Name="Volume" Type="Int32" Nullable="false" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="BatchTime" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
-        </EntityType>
-        <EntityType Name="t_shares_quotes">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Market" Type="Int32" Nullable="false" />
-          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="PresentPrice" Type="Int64" Nullable="false" />
-          <Property Name="ClosedPrice" Type="Int64" Nullable="false" />
-          <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
-          <Property Name="MaxPrice" Type="Int64" Nullable="false" />
-          <Property Name="MinPrice" Type="Int64" Nullable="false" />
-          <Property Name="TotalCount" Type="Int32" Nullable="false" />
-          <Property Name="PresentCount" Type="Int32" Nullable="false" />
-          <Property Name="TotalAmount" Type="Int64" Nullable="false" />
-          <Property Name="InvolCount" Type="Int32" Nullable="false" />
-          <Property Name="OuterCount" Type="Int32" Nullable="false" />
-          <Property Name="BuyPrice1" Type="Int64" Nullable="false" />
-          <Property Name="BuyCount1" Type="Int32" Nullable="false" />
-          <Property Name="BuyPrice2" Type="Int64" Nullable="false" />
-          <Property Name="BuyCount2" Type="Int32" Nullable="false" />
-          <Property Name="BuyPrice3" Type="Int64" Nullable="false" />
-          <Property Name="BuyCount3" Type="Int32" Nullable="false" />
-          <Property Name="BuyPrice4" Type="Int64" Nullable="false" />
-          <Property Name="BuyCount4" Type="Int32" Nullable="false" />
-          <Property Name="BuyPrice5" Type="Int64" Nullable="false" />
-          <Property Name="BuyCount5" Type="Int32" Nullable="false" />
-          <Property Name="SellPrice1" Type="Int64" Nullable="false" />
-          <Property Name="SellCount1" Type="Int32" Nullable="false" />
-          <Property Name="SellPrice2" Type="Int64" Nullable="false" />
-          <Property Name="SellCount2" Type="Int32" Nullable="false" />
-          <Property Name="SellPrice3" Type="Int64" Nullable="false" />
-          <Property Name="SellCount3" Type="Int32" Nullable="false" />
-          <Property Name="SellPrice4" Type="Int64" Nullable="false" />
-          <Property Name="SellCount4" Type="Int32" Nullable="false" />
-          <Property Name="SellPrice5" Type="Int64" Nullable="false" />
-          <Property Name="SellCount5" Type="Int32" Nullable="false" />
-          <Property Name="SpeedUp" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="Activity" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="LimitUpPrice" Type="Int64" Nullable="false" />
-          <Property Name="LimitDownPrice" Type="Int64" Nullable="false" />
-          <Property Name="PriceType" Type="Int32" Nullable="false" />
-          <Property Name="TriPriceType" Type="Int32" Nullable="false" />
-          <Property Name="TriNearLimitType" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_transactiondata">
           <Key>
@@ -779,6 +822,94 @@
           <Property Name="TotalCount" Type="Int32" Nullable="false" />
           <Property Name="TriNearLimitType" Type="Int32" Nullable="false" />
         </EntityType>
+        <EntityType Name="v_shares_quotes_last">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="Market" />
+            <PropertyRef Name="SharesCode" />
+            <PropertyRef Name="PresentPrice" />
+            <PropertyRef Name="ClosedPrice" />
+            <PropertyRef Name="OpenedPrice" />
+            <PropertyRef Name="MaxPrice" />
+            <PropertyRef Name="MinPrice" />
+            <PropertyRef Name="TotalCount" />
+            <PropertyRef Name="PresentCount" />
+            <PropertyRef Name="TotalAmount" />
+            <PropertyRef Name="InvolCount" />
+            <PropertyRef Name="OuterCount" />
+            <PropertyRef Name="BuyPrice1" />
+            <PropertyRef Name="BuyCount1" />
+            <PropertyRef Name="BuyPrice2" />
+            <PropertyRef Name="BuyCount2" />
+            <PropertyRef Name="BuyPrice3" />
+            <PropertyRef Name="BuyCount3" />
+            <PropertyRef Name="BuyPrice4" />
+            <PropertyRef Name="BuyCount4" />
+            <PropertyRef Name="BuyPrice5" />
+            <PropertyRef Name="BuyCount5" />
+            <PropertyRef Name="SellPrice1" />
+            <PropertyRef Name="SellCount1" />
+            <PropertyRef Name="SellPrice2" />
+            <PropertyRef Name="SellCount2" />
+            <PropertyRef Name="SellPrice3" />
+            <PropertyRef Name="SellCount3" />
+            <PropertyRef Name="SellPrice4" />
+            <PropertyRef Name="SellCount4" />
+            <PropertyRef Name="SellPrice5" />
+            <PropertyRef Name="SellCount5" />
+            <PropertyRef Name="SpeedUp" />
+            <PropertyRef Name="Activity" />
+            <PropertyRef Name="LastModified" />
+            <PropertyRef Name="LimitUpPrice" />
+            <PropertyRef Name="LimitDownPrice" />
+            <PropertyRef Name="PriceType" />
+            <PropertyRef Name="TriPriceType" />
+            <PropertyRef Name="TriNearLimitType" />
+            <PropertyRef Name="DataType" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PresentPrice" Type="Int64" Nullable="false" />
+          <Property Name="ClosedPrice" Type="Int64" Nullable="false" />
+          <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
+          <Property Name="MaxPrice" Type="Int64" Nullable="false" />
+          <Property Name="MinPrice" Type="Int64" Nullable="false" />
+          <Property Name="TotalCount" Type="Int32" Nullable="false" />
+          <Property Name="PresentCount" Type="Int32" Nullable="false" />
+          <Property Name="TotalAmount" Type="Int64" Nullable="false" />
+          <Property Name="InvolCount" Type="Int32" Nullable="false" />
+          <Property Name="OuterCount" Type="Int32" Nullable="false" />
+          <Property Name="BuyPrice1" Type="Int64" Nullable="false" />
+          <Property Name="BuyCount1" Type="Int32" Nullable="false" />
+          <Property Name="BuyPrice2" Type="Int64" Nullable="false" />
+          <Property Name="BuyCount2" Type="Int32" Nullable="false" />
+          <Property Name="BuyPrice3" Type="Int64" Nullable="false" />
+          <Property Name="BuyCount3" Type="Int32" Nullable="false" />
+          <Property Name="BuyPrice4" Type="Int64" Nullable="false" />
+          <Property Name="BuyCount4" Type="Int32" Nullable="false" />
+          <Property Name="BuyPrice5" Type="Int64" Nullable="false" />
+          <Property Name="BuyCount5" Type="Int32" Nullable="false" />
+          <Property Name="SellPrice1" Type="Int64" Nullable="false" />
+          <Property Name="SellCount1" Type="Int32" Nullable="false" />
+          <Property Name="SellPrice2" Type="Int64" Nullable="false" />
+          <Property Name="SellCount2" Type="Int32" Nullable="false" />
+          <Property Name="SellPrice3" Type="Int64" Nullable="false" />
+          <Property Name="SellCount3" Type="Int32" Nullable="false" />
+          <Property Name="SellPrice4" Type="Int64" Nullable="false" />
+          <Property Name="SellCount4" Type="Int32" Nullable="false" />
+          <Property Name="SellPrice5" Type="Int64" Nullable="false" />
+          <Property Name="SellCount5" Type="Int32" Nullable="false" />
+          <Property Name="SpeedUp" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Activity" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LimitUpPrice" Type="Int64" Nullable="false" />
+          <Property Name="LimitDownPrice" Type="Int64" Nullable="false" />
+          <Property Name="PriceType" Type="Int32" Nullable="false" />
+          <Property Name="TriPriceType" Type="Int32" Nullable="false" />
+          <Property Name="TriNearLimitType" Type="Int32" Nullable="false" />
+          <Property Name="DataType" Type="Int32" Nullable="false" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -888,53 +1019,6 @@
                 <ScalarProperty Name="Volume" ColumnName="Volume" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
                 <ScalarProperty Name="Time" ColumnName="Time" />
-                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
-                <ScalarProperty Name="Market" ColumnName="Market" />
-                <ScalarProperty Name="Id" ColumnName="Id" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="t_shares_quotes">
-            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes">
-              <MappingFragment StoreEntitySet="t_shares_quotes">
-                <ScalarProperty Name="TriNearLimitType" ColumnName="TriNearLimitType" />
-                <ScalarProperty Name="TriPriceType" ColumnName="TriPriceType" />
-                <ScalarProperty Name="PriceType" ColumnName="PriceType" />
-                <ScalarProperty Name="LimitDownPrice" ColumnName="LimitDownPrice" />
-                <ScalarProperty Name="LimitUpPrice" ColumnName="LimitUpPrice" />
-                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
-                <ScalarProperty Name="Activity" ColumnName="Activity" />
-                <ScalarProperty Name="SpeedUp" ColumnName="SpeedUp" />
-                <ScalarProperty Name="SellCount5" ColumnName="SellCount5" />
-                <ScalarProperty Name="SellPrice5" ColumnName="SellPrice5" />
-                <ScalarProperty Name="SellCount4" ColumnName="SellCount4" />
-                <ScalarProperty Name="SellPrice4" ColumnName="SellPrice4" />
-                <ScalarProperty Name="SellCount3" ColumnName="SellCount3" />
-                <ScalarProperty Name="SellPrice3" ColumnName="SellPrice3" />
-                <ScalarProperty Name="SellCount2" ColumnName="SellCount2" />
-                <ScalarProperty Name="SellPrice2" ColumnName="SellPrice2" />
-                <ScalarProperty Name="SellCount1" ColumnName="SellCount1" />
-                <ScalarProperty Name="SellPrice1" ColumnName="SellPrice1" />
-                <ScalarProperty Name="BuyCount5" ColumnName="BuyCount5" />
-                <ScalarProperty Name="BuyPrice5" ColumnName="BuyPrice5" />
-                <ScalarProperty Name="BuyCount4" ColumnName="BuyCount4" />
-                <ScalarProperty Name="BuyPrice4" ColumnName="BuyPrice4" />
-                <ScalarProperty Name="BuyCount3" ColumnName="BuyCount3" />
-                <ScalarProperty Name="BuyPrice3" ColumnName="BuyPrice3" />
-                <ScalarProperty Name="BuyCount2" ColumnName="BuyCount2" />
-                <ScalarProperty Name="BuyPrice2" ColumnName="BuyPrice2" />
-                <ScalarProperty Name="BuyCount1" ColumnName="BuyCount1" />
-                <ScalarProperty Name="BuyPrice1" ColumnName="BuyPrice1" />
-                <ScalarProperty Name="OuterCount" ColumnName="OuterCount" />
-                <ScalarProperty Name="InvolCount" ColumnName="InvolCount" />
-                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
-                <ScalarProperty Name="PresentCount" ColumnName="PresentCount" />
-                <ScalarProperty Name="TotalCount" ColumnName="TotalCount" />
-                <ScalarProperty Name="MinPrice" ColumnName="MinPrice" />
-                <ScalarProperty Name="MaxPrice" ColumnName="MaxPrice" />
-                <ScalarProperty Name="OpenedPrice" ColumnName="OpenedPrice" />
-                <ScalarProperty Name="ClosedPrice" ColumnName="ClosedPrice" />
-                <ScalarProperty Name="PresentPrice" ColumnName="PresentPrice" />
                 <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
                 <ScalarProperty Name="Market" ColumnName="Market" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -1157,6 +1241,54 @@
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
                 <ScalarProperty Name="LimitDownPrice" ColumnName="LimitDownPrice" />
                 <ScalarProperty Name="LimitUpPrice" ColumnName="LimitUpPrice" />
+                <ScalarProperty Name="MinPrice" ColumnName="MinPrice" />
+                <ScalarProperty Name="MaxPrice" ColumnName="MaxPrice" />
+                <ScalarProperty Name="OpenedPrice" ColumnName="OpenedPrice" />
+                <ScalarProperty Name="ClosedPrice" ColumnName="ClosedPrice" />
+                <ScalarProperty Name="PresentPrice" ColumnName="PresentPrice" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="v_shares_quotes_last">
+            <EntityTypeMapping TypeName="meal_ticketModel.v_shares_quotes_last">
+              <MappingFragment StoreEntitySet="v_shares_quotes_last">
+                <ScalarProperty Name="DataType" ColumnName="DataType" />
+                <ScalarProperty Name="TriNearLimitType" ColumnName="TriNearLimitType" />
+                <ScalarProperty Name="TriPriceType" ColumnName="TriPriceType" />
+                <ScalarProperty Name="PriceType" ColumnName="PriceType" />
+                <ScalarProperty Name="LimitDownPrice" ColumnName="LimitDownPrice" />
+                <ScalarProperty Name="LimitUpPrice" ColumnName="LimitUpPrice" />
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="Activity" ColumnName="Activity" />
+                <ScalarProperty Name="SpeedUp" ColumnName="SpeedUp" />
+                <ScalarProperty Name="SellCount5" ColumnName="SellCount5" />
+                <ScalarProperty Name="SellPrice5" ColumnName="SellPrice5" />
+                <ScalarProperty Name="SellCount4" ColumnName="SellCount4" />
+                <ScalarProperty Name="SellPrice4" ColumnName="SellPrice4" />
+                <ScalarProperty Name="SellCount3" ColumnName="SellCount3" />
+                <ScalarProperty Name="SellPrice3" ColumnName="SellPrice3" />
+                <ScalarProperty Name="SellCount2" ColumnName="SellCount2" />
+                <ScalarProperty Name="SellPrice2" ColumnName="SellPrice2" />
+                <ScalarProperty Name="SellCount1" ColumnName="SellCount1" />
+                <ScalarProperty Name="SellPrice1" ColumnName="SellPrice1" />
+                <ScalarProperty Name="BuyCount5" ColumnName="BuyCount5" />
+                <ScalarProperty Name="BuyPrice5" ColumnName="BuyPrice5" />
+                <ScalarProperty Name="BuyCount4" ColumnName="BuyCount4" />
+                <ScalarProperty Name="BuyPrice4" ColumnName="BuyPrice4" />
+                <ScalarProperty Name="BuyCount3" ColumnName="BuyCount3" />
+                <ScalarProperty Name="BuyPrice3" ColumnName="BuyPrice3" />
+                <ScalarProperty Name="BuyCount2" ColumnName="BuyCount2" />
+                <ScalarProperty Name="BuyPrice2" ColumnName="BuyPrice2" />
+                <ScalarProperty Name="BuyCount1" ColumnName="BuyCount1" />
+                <ScalarProperty Name="BuyPrice1" ColumnName="BuyPrice1" />
+                <ScalarProperty Name="OuterCount" ColumnName="OuterCount" />
+                <ScalarProperty Name="InvolCount" ColumnName="InvolCount" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+                <ScalarProperty Name="PresentCount" ColumnName="PresentCount" />
+                <ScalarProperty Name="TotalCount" ColumnName="TotalCount" />
                 <ScalarProperty Name="MinPrice" ColumnName="MinPrice" />
                 <ScalarProperty Name="MaxPrice" ColumnName="MaxPrice" />
                 <ScalarProperty Name="OpenedPrice" ColumnName="OpenedPrice" />

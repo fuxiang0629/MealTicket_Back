@@ -419,7 +419,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 {
                     using (SqlCommand comm = conn.CreateCommand())
                     {
-                        string sql = string.Format("select top 1 PresentPrice,ClosedPrice from t_shares_quotes with(nolock) where Market={0} and SharesCode='{1}'", market, sharesCode);
+                        string sql = string.Format("select top 1 PresentPrice,ClosedPrice from v_shares_quotes_last with(nolock) where Market={0} and SharesCode='{1}'", market, sharesCode);
                         comm.CommandType = CommandType.Text;
                         comm.CommandText = sql;
                         SqlDataReader reader = comm.ExecuteReader();

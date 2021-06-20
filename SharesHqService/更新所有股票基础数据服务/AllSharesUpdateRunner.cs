@@ -31,7 +31,7 @@ namespace SharesHqService
                     //每天凌晨1-4点执行
                     if (DateTime.Now.Hour < Singleton.Instance.AllSharesStartHour || DateTime.Now.Hour > Singleton.Instance.AllSharesEndHour)
                     {
-                        //return false;
+                        return false;
                     }
                     var checkDate = Helper.CheckTradeDate();
                     if (!checkDate)

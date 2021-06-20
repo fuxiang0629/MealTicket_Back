@@ -9,7 +9,6 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_authority_account_visitlog" Width="1.5" PointX="3.375" PointY="3.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_api" Width="1.5" PointX="5.375" PointY="0.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_verifyCode" Width="1.5" PointX="5.375" PointY="3.75" />
-        <EntityTypeShape EntityType="meal_ticketModel.t_shares_quotes" Width="1.5" PointX="3.375" PointY="7.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_baseinfo" Width="1.5" PointX="11.375" PointY="0.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_message" Width="1.5" PointX="11.75" PointY="12.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_message_group" Width="1.5" PointX="13.75" PointY="0.75" />
@@ -87,6 +86,7 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy" Width="1.5" PointX="28.375" PointY="7.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_wallet" Width="1.5" PointX="7.375" PointY="0.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_buy_setting" Width="1.5" PointX="28.375" PointY="11.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.v_shares_quotes_last" Width="1.5" PointX="19.375" PointY="28.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

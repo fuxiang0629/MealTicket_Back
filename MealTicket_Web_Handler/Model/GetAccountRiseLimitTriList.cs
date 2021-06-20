@@ -10,6 +10,11 @@ namespace MealTicket_Web_Handler.Model
     {
     }
 
+    public class GetAccountRiseLimitTriListRequest
+    {
+        public DateTime? LastDataTime { get; set; }
+    }
+
     public class AccountRiseLimitTriInfo
     {
         /// <summary>
@@ -109,5 +114,17 @@ namespace MealTicket_Web_Handler.Model
         /// 类型-1涨停池 -2跌停池 -3即将涨停池 -4即将跌停池 -5炸板池 -6翘板池
         /// </summary>
         public int Type { get; set; }
+
+        /// <summary>
+        /// 最大涨跌幅
+        /// </summary>
+        public long Range { get; set; }
+
+        public int Fundmultiple { get; set; }
+
+        /// <summary>
+        /// 所属自定义分组
+        /// </summary>
+        public List<long> GroupList { get; set; }
     }
 }

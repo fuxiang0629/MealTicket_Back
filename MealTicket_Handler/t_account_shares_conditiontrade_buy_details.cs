@@ -40,5 +40,7 @@ namespace MealTicket_Handler
         public bool LimitUp { get; set; }
         public int OtherConditionRelative { get; set; }
         public bool IsHold { get; set; }
+        public int FollowType { get; set; }
+        public string EntrustErrorDes { get; set; }
     }
 }

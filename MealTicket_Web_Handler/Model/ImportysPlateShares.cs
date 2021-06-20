@@ -33,6 +33,11 @@ namespace MealTicket_Web_Handler.Model
         public List<long> GroupList { get; set; }
 
         /// <summary>
+        /// 需要创建的同名分组名称
+        /// </summary>
+        public string NewGroupName { get; set; }
+
+        /// <summary>
         /// 排除其他分组存在的股票
         /// </summary>
         public bool RemoveOtherGroup { get; set; }

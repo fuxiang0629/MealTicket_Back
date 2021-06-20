@@ -1234,6 +1234,12 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                                          RiseRate=item2.RiseRate,
                                          PlateType=item3.Type,
                                      }).ToList();
+                    List<long> AllPlateId = plateRate.Select(e => e.PlateId).ToList();
+
+                    var plateBase = (from item in db.t_shares_plate
+                                     where item.BaseStatus == 1 && AllPlateId.Contains(item.Id)
+                                     select item).ToList();
+
 
                     List<long> PlateList1 = new List<long>();
                     List<long> PlateList2 = new List<long>();
@@ -1241,25 +1247,35 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                     foreach (var p in par)
                     {
                         var temp = JsonConvert.DeserializeObject<dynamic>(p);
-                        long groupId = 0;
+                        long groupId = -1;
                         int dataType = 1;
                         int compare = 0;
                         double rate = 0;
                         try
                         {
                             groupId = temp.GroupId;
+                        }
+                        catch (Exception ex){}
+                        try
+                        {
                             compare = temp.Compare;
+                        }
+                        catch (Exception ex) { }
+                        try
+                        {
                             rate = temp.Rate;
+                        }
+                        catch (Exception ex) { }
+                        try
+                        {
                             dataType = temp.DataType;
                         }
-                        catch (Exception ex)
-                        {
-                        }
+                        catch (Exception ex) { }
+
                         if (groupId == 0)
                         {
                             AllSetPar.Add(p);
                         }
-
                         var plate = plateRate.Where(e => e.PlateId == groupId).FirstOrDefault();
                         if (plate == null)
                         {
@@ -1279,9 +1295,25 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         }
                         else
                         {
-                            PlateList1.Add(plate.PlateId);
+                            if (groupId == -1)//行业基础版块
+                            {
+                                PlateList1.AddRange(plateBase.Where(e=>e.Type==1).Select(e=>e.Id).ToList());
+                            }
+                            else if (groupId == -2)//地区基础版块
+                            {
+                                PlateList1.AddRange(plateBase.Where(e => e.Type == 2).Select(e => e.Id).ToList());
+                            }
+                            else if (groupId == -3)//概念基础版块
+                            {
+                                PlateList1.AddRange(plateBase.Where(e => e.Type == 3).Select(e => e.Id).ToList());
+                            }
+                            else
+                            {
+                                PlateList1.Add(plate.PlateId);
+                            }
                         }
                     }
+                    PlateList1 = PlateList1.Distinct().ToList();
 
                     foreach (var p in AllSetPar)
                     {
@@ -1296,6 +1328,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         }
                         PlateList2.AddRange(plate);
                     }
+                    PlateList2 = PlateList2.Distinct().ToList();
 
                     var newList = PlateList1.Intersect(PlateList2);
                     if (newList.Count() > 0)
@@ -1368,7 +1401,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 DateTime timeNow = DateTime.Now;
                 using (var db = new meal_ticketEntities())
                 {
-                    var quotes = (from item in db.t_shares_quotes
+                    var quotes = (from item in db.v_shares_quotes_last
                                   where item.Market == market && item.SharesCode == sharesCode && SqlFunctions.DateAdd("MI", 1, item.LastModified) > timeNow
                                   select item).FirstOrDefault();
                     if (quotes == null)
@@ -1635,6 +1668,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 try
                 {
                     day2 = Convert.ToInt32(temp.Day2);
+                    day2 = day2 + 1;//多取一天
                     upOrDown = Convert.ToInt32(temp.UpOrDown);
                 }
                 catch (Exception)
@@ -1802,18 +1836,14 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
             {
                 var quotes = (from item in db.t_shares_quotes
                               where item.Market == market && item.SharesCode == sharesCode && SqlFunctions.DateAdd("MI", 1, item.LastModified) > timeNow
-                              select item).FirstOrDefault();
-                if (quotes == null)
+                              select item).ToList();
+                var quotesLast = quotes.Where(e => e.DataType == 0).FirstOrDefault();
+                var quotesPre = quotes.Where(e => e.DataType == 1).FirstOrDefault();
+                if (quotesLast == null || quotesPre == null)
                 {
                     return -1;
                 }
-                var lastquotes = (from item in db.t_shares_quotes_last
-                                  where item.Market == market && item.SharesCode == sharesCode && SqlFunctions.DateAdd("MI", 1, item.LastModified) > timeNow
-                                  select item).FirstOrDefault();
-                if (lastquotes == null)
-                {
-                    return -1;
-                }
+               
                 int disCount = 0;
                 long disPrice = 0;
                 int lastCount = 0;
@@ -1823,73 +1853,73 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 switch (type)
                 {
                     case 1:
-                        disCount = quotes.BuyCount1;
-                        disPrice = quotes.BuyPrice1;
-                        lastCount = lastquotes.BuyCount1;
-                        lastPrice = lastquotes.BuyPrice1;
+                        disCount = quotesLast.BuyCount1;
+                        disPrice = quotesLast.BuyPrice1;
+                        lastCount = quotesPre.BuyCount1;
+                        lastPrice = quotesPre.BuyPrice1;
                         tradetype = 1;
                         break;
                     case 2:
-                        disCount = quotes.BuyCount2;
-                        disPrice = quotes.BuyPrice2;
-                        lastCount = lastquotes.BuyCount2;
-                        lastPrice = lastquotes.BuyPrice2;
+                        disCount = quotesLast.BuyCount2;
+                        disPrice = quotesLast.BuyPrice2;
+                        lastCount = quotesPre.BuyCount2;
+                        lastPrice = quotesPre.BuyPrice2;
                         tradetype = 1;
                         break;
                     case 3:
-                        disCount = quotes.BuyCount3;
-                        disPrice = quotes.BuyPrice3;
-                        lastCount = lastquotes.BuyCount3;
-                        lastPrice = lastquotes.BuyPrice3;
+                        disCount = quotesLast.BuyCount3;
+                        disPrice = quotesLast.BuyPrice3;
+                        lastCount = quotesPre.BuyCount3;
+                        lastPrice = quotesPre.BuyPrice3;
                         tradetype = 1;
                         break;
                     case 4:
-                        disCount = quotes.BuyCount4;
-                        disPrice = quotes.BuyPrice4;
-                        lastCount = lastquotes.BuyCount4;
-                        lastPrice = lastquotes.BuyPrice4;
+                        disCount = quotesLast.BuyCount4;
+                        disPrice = quotesLast.BuyPrice4;
+                        lastCount = quotesPre.BuyCount4;
+                        lastPrice = quotesPre.BuyPrice4;
                         tradetype = 1;
                         break;
                     case 5:
-                        disCount = quotes.BuyCount5;
-                        disPrice = quotes.BuyPrice5;
-                        lastCount = lastquotes.BuyCount5;
-                        lastPrice = lastquotes.BuyPrice5;
+                        disCount = quotesLast.BuyCount5;
+                        disPrice = quotesLast.BuyPrice5;
+                        lastCount = quotesPre.BuyCount5;
+                        lastPrice = quotesPre.BuyPrice5;
                         tradetype = 1;
                         break;
                     case 6:
-                        disCount = quotes.SellCount1;
-                        disPrice = quotes.SellPrice1;
-                        lastCount = lastquotes.SellCount1;
-                        lastPrice = lastquotes.SellPrice1;
+                        disCount = quotesLast.SellCount1;
+                        disPrice = quotesLast.SellPrice1;
+                        lastCount = quotesPre.SellCount1;
+                        lastPrice = quotesPre.SellPrice1;
                         tradetype = 2;
                         break;
                     case 7:
-                        disCount = quotes.SellCount2;
-                        disPrice = quotes.SellPrice2;
-                        lastCount = lastquotes.SellCount2;
-                        lastPrice = lastquotes.SellPrice2;
+                        disCount = quotesLast.SellCount2;
+                        disPrice = quotesLast.SellPrice2;
+                        lastCount = quotesPre.SellCount2;
+                        lastPrice = quotesPre.SellPrice2;
                         tradetype = 2;
                         break;
                     case 8:
-                        disCount = quotes.SellCount3;
-                        disPrice = quotes.SellPrice3;
-                        lastCount = lastquotes.SellCount3;
-                        lastPrice = lastquotes.SellPrice3;
+                        disCount = quotesLast.SellCount3;
+                        disPrice = quotesLast.SellPrice3;
+                        lastCount = quotesPre.SellCount3;
+                        lastPrice = quotesPre.SellPrice3;
                         tradetype = 2;
                         break;
                     case 9:
-                        disCount = quotes.SellCount4;
-                        disPrice = quotes.SellPrice4;
-                        lastCount = lastquotes.SellCount4;
-                        lastPrice = lastquotes.SellPrice4;
+                        disCount = quotesLast.SellCount4;
+                        disPrice = quotesLast.SellPrice4;
+                        lastCount = quotesPre.SellCount4;
+                        lastPrice = quotesPre.SellPrice4;
                         tradetype = 2;
                         break;
                     case 10:
-                        disCount = quotes.SellCount5;
-                        disPrice = quotes.SellPrice5;
-                        lastCount = lastquotes.SellCount5;
-                        lastPrice = lastquotes.SellPrice5;
+                        disCount = quotesLast.SellCount5;
+                        disPrice = quotesLast.SellPrice5;
+                        lastCount = quotesPre.SellCount5;
+                        lastPrice = quotesPre.SellPrice5;
                         tradetype = 2;
                         break;
                     default:
@@ -2015,7 +2045,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
             using (var db = new meal_ticketEntities())
             {
                 //当前价格
-                var quotes = (from item in db.t_shares_quotes
+                var quotes = (from item in db.v_shares_quotes_last
                               where item.Market == market && item.SharesCode == sharesCode && SqlFunctions.DateAdd("MI", 1, item.LastModified) > timeNow
                               select item).FirstOrDefault();
                 if (quotes == null)
@@ -2136,7 +2166,7 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                 {
                     using (SqlCommand comm = conn.CreateCommand())
                     {
-                        string sql = string.Format("select top 1 PresentPrice,ClosedPrice from t_shares_quotes with(nolock) where Market={0} and SharesCode='{1}'", market, sharesCode);
+                        string sql = string.Format("select top 1 PresentPrice,ClosedPrice from v_shares_quotes_last with(nolock) where Market={0} and SharesCode='{1}'", market, sharesCode);
                         comm.CommandType = CommandType.Text;
                         comm.CommandText = sql;
                         SqlDataReader reader = comm.ExecuteReader();

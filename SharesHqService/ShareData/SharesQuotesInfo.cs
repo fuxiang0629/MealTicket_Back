@@ -212,5 +212,10 @@ namespace SharesHqService
         /// 0普通 1接近停板 2接近停板
         /// </summary>
         public int TriNearLimitType { get; set; }
+
+        /// <summary>
+        /// 数据时间
+        /// </summary>
+        public DateTime LastModified { get; set; }
     }
 }

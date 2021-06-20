@@ -59,6 +59,23 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 获取股票涨跌幅
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取股票涨跌幅")]
+        [Route("shares/list/quotes"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<SharesListQuotesInfo> GetSharesListQuotes(List<SharesListQuotesInfo> request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesListQuotes(request, basedata);
+        }
+
+        /// <summary>
         /// 用户登入
         /// </summary>
         /// <returns></returns>
@@ -700,10 +717,10 @@ namespace MealTicket_Web_APIService.controller
         [Route("account/trend/tri/list"), HttpPost]
         [Description("查询今日触发股票数据")]
         [CheckUserLoginFilter]
-        public List<AccountTrendTriInfo> GetAccountTrendTriList()
+        public List<AccountTrendTriInfo> GetAccountTrendTriList(GetAccountTrendTriListRequest request)
         {
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
-            return trendHandler.GetAccountTrendTriList(basedata);
+            return trendHandler.GetAccountTrendTriList(request,basedata);
         }
 
         /// <summary>
@@ -732,10 +749,10 @@ namespace MealTicket_Web_APIService.controller
         [Route("account/riselimit/tri/list"), HttpPost]
         [Description("查询今日触发涨跌停股票数据")]
         [CheckUserLoginFilter]
-        public List<AccountRiseLimitTriInfo> GetAccountRiseLimitTriList()
+        public List<AccountRiseLimitTriInfo> GetAccountRiseLimitTriList(GetAccountRiseLimitTriListRequest request)
         {
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
-            return trendHandler.GetAccountRiseLimitTriList(basedata);
+            return trendHandler.GetAccountRiseLimitTriList(request,basedata);
         }
 
         /// <summary>
@@ -1235,7 +1252,7 @@ namespace MealTicket_Web_APIService.controller
         [Route("account/conditiontrade/buy/shares/list"), HttpPost]
         [Description("获取买入条件单股票列表")]
         [CheckUserLoginFilter]
-        public PageRes<AccountBuyConditionTradeSharesInfo> GetAccountBuyConditionTradeSharesList(GetAccountBuyConditionTradeSharesListRequest request)
+        public object GetAccountBuyConditionTradeSharesList(GetAccountBuyConditionTradeSharesListRequest request)
         {
             if (request == null)
             {

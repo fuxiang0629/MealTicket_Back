@@ -83,5 +83,10 @@ namespace MealTicket_Web_Handler.Model
         public int Fundmultiple { get; set; }
 
         public long MonitorId { get; set; }
+
+        /// <summary>
+        /// 所属自定义分组
+        /// </summary>
+        public List<long> GroupList { get; set; }
     }
 }

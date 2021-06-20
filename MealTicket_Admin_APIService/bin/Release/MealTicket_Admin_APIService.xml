@@ -2131,6 +2131,18 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetSharesPlateTypeCount">
+            <summary>
+            获取各类型板块数量
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifySharesPlateTypeIsBasePlate(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改类型板块是否包含基础板块
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetSharesPlateList(MealTicket_Admin_Handler.Model.GetSharesPlateListRequest)">
             <summary>
             获取板块管理列表
@@ -2165,6 +2177,13 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifySharesPlateBaseStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改板块管理基础版块状态
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifySharesPlateChooseStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
             <summary>
             修改板块管理挑选状态
@@ -2178,9 +2197,22 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.BatchDeleteSharesPlateChooseStatus">
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.BatchDeleteSharesPlateChooseStatus(MealTicket_Admin_Handler.Model.DetailsRequest)">
             <summary>
             批量修改板块管理挑选状态(删除)
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifySharesPlateBaseStatusBatch">
+            <summary>
+            批量修改板块管理基础版块状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.BatchDeleteSharesPlateBaseStatus(MealTicket_Admin_Handler.Model.DetailsRequest)">
+            <summary>
+            批量修改板块管理基础版块状态(删除)
             </summary>
             <param name="request"></param>
             <returns></returns>

@@ -49,7 +49,6 @@ namespace MealTicket_Admin_Handler
         public virtual DbSet<t_broker_department> t_broker_department { get; set; }
         public virtual DbSet<t_broker_host> t_broker_host { get; set; }
         public virtual DbSet<t_shares_today> t_shares_today { get; set; }
-        public virtual DbSet<t_shares_quotes> t_shares_quotes { get; set; }
         public virtual DbSet<t_shares_search> t_shares_search { get; set; }
         public virtual DbSet<t_account_bank_card> t_account_bank_card { get; set; }
         public virtual DbSet<t_account_baseinfo> t_account_baseinfo { get; set; }
@@ -176,6 +175,9 @@ namespace MealTicket_Admin_Handler
         public virtual DbSet<t_shares_plate_shares_limit> t_shares_plate_shares_limit { get; set; }
         public virtual DbSet<t_broker_account_info_frontaccount_rel> t_broker_account_info_frontaccount_rel { get; set; }
         public virtual DbSet<v_plate> v_plate { get; set; }
+        public virtual DbSet<v_shares_quotes_last> v_shares_quotes_last { get; set; }
+        public virtual DbSet<t_shares_plate_riserate_last> t_shares_plate_riserate_last { get; set; }
+        public virtual DbSet<t_shares_plate_type_business> t_shares_plate_type_business { get; set; }
     
         public virtual int P_Admin_CheckLogin(string token, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter accountId, ObjectParameter loginLogId)
         {

@@ -172,9 +172,10 @@ namespace MealTicket_Web_Handler.Runner
             {
                 var condition = (from item in db.t_account_shares_hold_conditiontrade
                                  join item2 in db.t_account_shares_hold on item.HoldId equals item2.Id
-                                 join item3 in db.t_shares_quotes on new { item2.Market, item2.SharesCode } equals new { item3.Market, item3.SharesCode }
+                                 join item4 in db.t_shares_all on new { item2.Market, item2.SharesCode } equals new { item4.Market,item4.SharesCode}
+                                 join item3 in db.v_shares_quotes_last on new { item2.Market, item2.SharesCode } equals new { item3.Market, item3.SharesCode }
                                  where item.TradeType == 2 && item.TriggerTime == null && item2.Status == 1 && SqlFunctions.DateAdd("MI", 1, item3.LastModified) > timeNow && item3.PresentPrice > 0 && item3.ClosedPrice>0 && item.Status == 1
-                                 group new { item, item2, item3 } by new { item.HoldId, item.Type,item2,item3 } into g
+                                 group new { item, item2, item3, item4 } by new { item.HoldId, item.Type,item2,item3,item4 } into g
                                  select g).ToList();
                 foreach (var item in condition)
                 {
@@ -198,8 +199,13 @@ namespace MealTicket_Web_Handler.Runner
                     }
                     else
                     {
-                        maxPrice = ((long)Math.Round((item.Key.item3.ClosedPrice + item.Key.item3.ClosedPrice * (rules.Range * 1.0 / 10000)) / 100)) * 100;
-                        minPrice = ((long)Math.Round((item.Key.item3.ClosedPrice - item.Key.item3.ClosedPrice * (rules.Range * 1.0 / 10000)) / 100)) * 100;
+                        int limitRange = rules.Range;
+                        if (item.Key.item4.SharesName.Contains("ST"))
+                        {
+                            limitRange = limitRange / 2;
+                        }
+                        maxPrice = ((long)Math.Round((item.Key.item3.ClosedPrice + item.Key.item3.ClosedPrice * (limitRange * 1.0 / 10000)) / 100)) * 100;
+                        minPrice = ((long)Math.Round((item.Key.item3.ClosedPrice - item.Key.item3.ClosedPrice * (limitRange * 1.0 / 10000)) / 100)) * 100;
                     }
                     var holdList = item.ToList();
                     if (item.Key.Type == 1)
@@ -384,7 +390,7 @@ t2.SellPrice4,t2.SellPrice5,t.ConditionPrice,t.ConditionType,t.ConditionRelative
 t.BusinessStatus,t.TriggerTime,t.ExecStatus,t.BuyAuto,t.EntrustPriceGear,t.EntrustType,t.EntrustAmount,t.IsHold,t.FollowType
 from t_account_shares_conditiontrade_buy_details t with(nolock)
 inner join t_account_shares_conditiontrade_buy t1 with(nolock) on t.ConditionId=t1.Id
-inner join t_shares_quotes t2 with(nolock) on t1.Market=t2.Market and t1.SharesCode=t2.SharesCode
+inner join v_shares_quotes_last t2 with(nolock) on t1.Market=t2.Market and t1.SharesCode=t2.SharesCode
 where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                 disResult=db.Database.SqlQuery<TradeAutoBuyCondition>(sql).ToList();
 

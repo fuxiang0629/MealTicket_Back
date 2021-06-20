@@ -180,7 +180,7 @@ namespace MealTicket_Admin_Handler
             {
                 var result = (from item in db.t_shares_today
                               join item2 in db.t_shares_all on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
-                              join item3 in db.t_shares_quotes on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into a
+                              join item3 in db.v_shares_quotes_last on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into a
                               from ai in a.DefaultIfEmpty()
                               where item.Status == 1
                               orderby item.OrderIndex
@@ -216,7 +216,7 @@ namespace MealTicket_Admin_Handler
                               }).OrderByDescending(e => e.SearchCount).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                 foreach (var item in search)
                 {
-                    var temp = (from x in db.t_shares_quotes
+                    var temp = (from x in db.v_shares_quotes_last
                                 where x.Market == item.Market && x.SharesCode == item.SharesCode
                                 select x).FirstOrDefault();
                     if (temp == null)
@@ -318,7 +318,7 @@ namespace MealTicket_Admin_Handler
                 if (request.ShowSharesQuotes)
                 {
                     result = (from x in result
-                              join x2 in db.t_shares_quotes on new { x.Market, x.SharesCode } equals new { x2.Market, x2.SharesCode } into b
+                              join x2 in db.v_shares_quotes_last on new { x.Market, x.SharesCode } equals new { x2.Market, x2.SharesCode } into b
                               from bi in b.DefaultIfEmpty()
                               select new SharesInfo
                               {
@@ -807,6 +807,55 @@ namespace MealTicket_Admin_Handler
         }
 
         /// <summary>
+        /// 获取各类型板块数量
+        /// </summary>
+        /// <returns></returns>
+        public List<SharesPlateTypeCount> GetSharesPlateTypeCount() 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var plate = from item in db.t_shares_plate
+                            where item.Status == 1 && item.ChooseStatus == 1
+                            select item;
+
+                var plateType = (from item in db.t_shares_plate_type_business
+                                 join item2 in plate on item.Id equals item2.Type into a from ai in a.DefaultIfEmpty()
+                                 group new { item,ai} by item into g
+                                 orderby g.Key.Id
+                                 select new SharesPlateTypeCount
+                                 {
+                                     CreateTime = g.Key.LastModified,
+                                     Id = g.Key.Id,
+                                     IsBasePlate = g.Key.IsBasePlate,
+                                     Name = g.Key.Name,
+                                     PlateCount=g.Where(e=>e.ai!=null).Count()
+                                 }).ToList();
+                return plateType;
+            }
+        }
+
+        /// <summary>
+        /// 修改类型板块是否包含基础板块
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifySharesPlateTypeIsBasePlate(ModifyStatusRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var plateType = (from item in db.t_shares_plate_type_business
+                                where item.Id==request.Id
+                                 select item).FirstOrDefault();
+                if (plateType == null)
+                {
+                    throw new WebApiException(400,"数据不存在");
+                }
+                plateType.IsBasePlate = request.Status;
+                plateType.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
         /// 获取板块管理列表
         /// </summary>
         /// <param name="request"></param>
@@ -815,31 +864,26 @@ namespace MealTicket_Admin_Handler
         {
             using (var db = new meal_ticketEntities())
             {
-                var list = from item in db.v_plate
-                           select item;
+                var list = from item2 in db.t_shares_plate 
+                           join item in db.t_shares_plate_riserate_last on item2.Id equals item.PlateId into a from ai in a.DefaultIfEmpty()
+                           select new { ai, item2 };
 
                 if (request.Type != 0)
                 {
                     list = from item in list
-                           where item.PlateType == request.Type
-                           select item;
-                }
-                else
-                {
-                    list = from item in list
-                           where item.PlateType == 1 || item.PlateType == 2 || item.PlateType == 3
+                           where item.item2.Type == request.Type
                            select item;
                 }
                 if (request.ChooseStatus != 0)
                 {
                     list = from item in list
-                           where item.ChooseStatus == request.ChooseStatus
+                           where item.item2.ChooseStatus == request.ChooseStatus && item.item2.Status==1
                            select item;
                 }
                 if (!string.IsNullOrEmpty(request.Name))
                 {
                     list = from item in list
-                           where item.PlateName.Contains(request.Name)
+                           where item.item2.Name.Contains(request.Name)
                            select item;
                 }
 
@@ -851,96 +895,103 @@ namespace MealTicket_Admin_Handler
                     if (request.OrderMethod == "ascending")
                     {
                         result = (from item in list
-                                  join item2 in db.t_shares_all on new { Market = item.WeightMarket, SharesCode = item.WeightSharesCode } equals new { item2.Market, item2.SharesCode } into a from ai in a.DefaultIfEmpty()
-                                  join item3 in db.t_shares_all on new { Market = item.NoWeightMarket, SharesCode = item.NoWeightSharesCode } equals new { item3.Market, item3.SharesCode } into b from bi in b.DefaultIfEmpty()
-                                  orderby item.RiseRate
+                                  join item2 in db.t_shares_all on new { Market = item.item2.WeightMarket, SharesCode = item.item2.WeightSharesCode } equals new { item2.Market, item2.SharesCode } into a
+                                  from ai in a.DefaultIfEmpty()
+                                  join item3 in db.t_shares_all on new { Market = item.item2.NoWeightMarket, SharesCode = item.item2.NoWeightSharesCode } equals new { item3.Market, item3.SharesCode } into b
+                                  from bi in b.DefaultIfEmpty()
+                                  let riseRate = item.ai == null ? 0 : item.ai.RiseRate
+                                  orderby riseRate
                                   select new SharesPlateInfo
                                   {
-                                      Status = item.Status,
-                                      CreateTime = item.CreateTime,
-                                      Id = item.PlateId,
-                                      Type=item.PlateType,
-                                      SharesCount = item.SharesCount ?? 0,
-                                      Name = item.PlateName,
-                                      SharesCode = item.LimitSharesCode,
-                                      SharesMarket = item.LimitSharesMarket,
-                                      SharesType = item.SharesType,
-                                      WeightSharesCode = item.WeightSharesCode,
-                                      NoWeightSharesCode = item.NoWeightSharesCode,
-                                      NoWeightMarket = item.NoWeightMarket,
-                                      WeightMarket = item.WeightMarket,
+                                      Status = item.item2.Status,
+                                      CreateTime = item.item2.CreateTime,
+                                      Id = item.item2.Id,
+                                      Type = item.item2.Type,
+                                      SharesCount = item.ai == null ? 0 : item.ai.SharesCount,
+                                      Name = item.item2.Name,
+                                      SharesCode = item.item2.SharesCode,
+                                      SharesMarket = item.item2.SharesMarket,
+                                      SharesType = item.item2.SharesType,
+                                      WeightSharesCode = item.item2.WeightSharesCode,
+                                      NoWeightSharesCode = item.item2.NoWeightSharesCode,
+                                      NoWeightMarket = item.item2.NoWeightMarket,
+                                      WeightMarket = item.item2.WeightMarket,
                                       WeightSharesName = ai == null ? "" : ai.SharesName,
                                       NoWeightSharesName = bi == null ? "" : bi.SharesName,
-                                      RiseRate = item.RiseRate,
-                                      RiseIndex = item.RiseIndex,
-                                      WeightRiseIndex = item.WeightRiseIndex,
-                                      WeightRiseRate = item.WeightRiseRate,
-                                      CalType=item.CalType
+                                      RiseRate = item.ai == null ? 0 : item.ai.RiseRate,
+                                      BaseStatus = item.item2.BaseStatus,
+                                      RiseIndex = item.ai == null ? 0 : item.ai.RiseIndex,
+                                      WeightRiseIndex = item.ai == null ? 0 : item.ai.WeightRiseIndex,
+                                      WeightRiseRate = item.ai == null ? 0 : item.ai.WeightRiseRate,
+                                      CalType = item.item2.CalType
                                   }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                     }
                     else
                     {
                         result = (from item in list
-                                  join item2 in db.t_shares_all on new { Market = item.WeightMarket, SharesCode = item.WeightSharesCode } equals new { item2.Market, item2.SharesCode } into a
+                                  join item2 in db.t_shares_all on new { Market = item.item2.WeightMarket, SharesCode = item.item2.WeightSharesCode } equals new { item2.Market, item2.SharesCode } into a
                                   from ai in a.DefaultIfEmpty()
-                                  join item3 in db.t_shares_all on new { Market = item.NoWeightMarket, SharesCode = item.NoWeightSharesCode } equals new { item3.Market, item3.SharesCode } into b
+                                  join item3 in db.t_shares_all on new { Market = item.item2.NoWeightMarket, SharesCode = item.item2.NoWeightSharesCode } equals new { item3.Market, item3.SharesCode } into b
                                   from bi in b.DefaultIfEmpty()
-                                  orderby item.RiseRate descending
+                                  let riseRate = item.ai == null ? 0 : item.ai.RiseRate
+                                  orderby riseRate descending
                                   select new SharesPlateInfo
                                   {
-                                      Status = item.Status,
-                                      CreateTime = item.CreateTime,
-                                      Id = item.PlateId,
-                                      Type = item.PlateType,
-                                      SharesCount = item.SharesCount ?? 0,
-                                      Name = item.PlateName,
-                                      SharesCode = item.LimitSharesCode,
-                                      SharesMarket = item.LimitSharesMarket,
-                                      WeightSharesCode = item.WeightSharesCode,
-                                      NoWeightSharesCode = item.NoWeightSharesCode,
-                                      NoWeightMarket = item.NoWeightMarket,
-                                      WeightMarket = item.WeightMarket,
-                                      SharesType = item.SharesType,
+                                      Status = item.item2.Status,
+                                      CreateTime = item.item2.CreateTime,
+                                      Id = item.item2.Id,
+                                      Type = item.item2.Type,
+                                      SharesCount = item.ai == null ? 0 : item.ai.SharesCount,
+                                      Name = item.item2.Name,
+                                      SharesCode = item.item2.SharesCode,
+                                      SharesMarket = item.item2.SharesMarket,
+                                      SharesType = item.item2.SharesType,
+                                      WeightSharesCode = item.item2.WeightSharesCode,
+                                      NoWeightSharesCode = item.item2.NoWeightSharesCode,
+                                      NoWeightMarket = item.item2.NoWeightMarket,
+                                      WeightMarket = item.item2.WeightMarket,
                                       WeightSharesName = ai == null ? "" : ai.SharesName,
                                       NoWeightSharesName = bi == null ? "" : bi.SharesName,
-                                      RiseRate = item.RiseRate,
-                                      RiseIndex = item.RiseIndex,
-                                      WeightRiseIndex = item.WeightRiseIndex,
-                                      WeightRiseRate = item.WeightRiseRate,
-                                      CalType = item.CalType
+                                      RiseRate = item.ai == null ? 0 : item.ai.RiseRate,
+                                      BaseStatus = item.item2.BaseStatus,
+                                      RiseIndex = item.ai == null ? 0 : item.ai.RiseIndex,
+                                      WeightRiseIndex = item.ai == null ? 0 : item.ai.WeightRiseIndex,
+                                      WeightRiseRate = item.ai == null ? 0 : item.ai.WeightRiseRate,
+                                      CalType = item.item2.CalType
                                   }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                     }
                 }
                 else
                 {
                     result = (from item in list
-                              join item2 in db.t_shares_all on new { Market = item.WeightMarket, SharesCode = item.WeightSharesCode } equals new { item2.Market, item2.SharesCode } into a
+                              join item2 in db.t_shares_all on new { Market = item.item2.WeightMarket, SharesCode = item.item2.WeightSharesCode } equals new { item2.Market, item2.SharesCode } into a
                               from ai in a.DefaultIfEmpty()
-                              join item3 in db.t_shares_all on new { Market = item.NoWeightMarket, SharesCode = item.NoWeightSharesCode } equals new { item3.Market, item3.SharesCode } into b
+                              join item3 in db.t_shares_all on new { Market = item.item2.NoWeightMarket, SharesCode = item.item2.NoWeightSharesCode } equals new { item3.Market, item3.SharesCode } into b
                               from bi in b.DefaultIfEmpty()
-                              orderby item.CreateTime descending, item.PlateId descending
+                              orderby item.item2.CreateTime descending, item.item2.Id descending
                               select new SharesPlateInfo
                               {
-                                  Status = item.Status,
-                                  CreateTime = item.CreateTime,
-                                  Id = item.PlateId,
-                                  Type = item.PlateType,
-                                  SharesCount = item.SharesCount ?? 0,
-                                  Name = item.PlateName,
-                                  SharesCode = item.LimitSharesCode,
-                                  SharesMarket = item.LimitSharesMarket,
-                                  WeightSharesCode = item.WeightSharesCode,
-                                  NoWeightSharesCode = item.NoWeightSharesCode,
-                                  NoWeightMarket = item.NoWeightMarket,
-                                  WeightMarket = item.WeightMarket,
-                                  SharesType = item.SharesType,
+                                  Status = item.item2.Status,
+                                  CreateTime = item.item2.CreateTime,
+                                  Id = item.item2.Id,
+                                  Type = item.item2.Type,
+                                  SharesCount = item.ai == null ? 0 : item.ai.SharesCount,
+                                  Name = item.item2.Name,
+                                  SharesCode = item.item2.SharesCode,
+                                  SharesMarket = item.item2.SharesMarket,
+                                  SharesType = item.item2.SharesType,
+                                  WeightSharesCode = item.item2.WeightSharesCode,
+                                  NoWeightSharesCode = item.item2.NoWeightSharesCode,
+                                  NoWeightMarket = item.item2.NoWeightMarket,
+                                  WeightMarket = item.item2.WeightMarket,
                                   WeightSharesName = ai == null ? "" : ai.SharesName,
                                   NoWeightSharesName = bi == null ? "" : bi.SharesName,
-                                  RiseRate = item.RiseRate,
-                                  RiseIndex = item.RiseIndex,
-                                  WeightRiseIndex = item.WeightRiseIndex,
-                                  WeightRiseRate = item.WeightRiseRate,
-                                  CalType = item.CalType
+                                  RiseRate = item.ai == null ? 0 : item.ai.RiseRate,
+                                  BaseStatus = item.item2.BaseStatus,
+                                  RiseIndex = item.ai == null ? 0 : item.ai.RiseIndex,
+                                  WeightRiseIndex = item.ai == null ? 0 : item.ai.WeightRiseIndex,
+                                  WeightRiseRate = item.ai == null ? 0 : item.ai.WeightRiseRate,
+                                  CalType = item.item2.CalType
                               }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                 }
 
@@ -1090,6 +1141,28 @@ namespace MealTicket_Admin_Handler
         /// 修改板块管理状态
         /// </summary>
         /// <param name="request"></param>
+        public void ModifySharesPlateBaseStatus(ModifyStatusRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var plate = (from item in db.t_shares_plate
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (plate == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+
+                plate.BaseStatus = request.Status;
+                plate.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改板块管理状态
+        /// </summary>
+        /// <param name="request"></param>
         public void ModifySharesPlateChooseStatus(ModifyStatusRequest request)
         {
             using (var db = new meal_ticketEntities())
@@ -1113,7 +1186,7 @@ namespace MealTicket_Admin_Handler
         /// </summary>
         /// <param name="list"></param>
         /// <returns></returns>
-        public int ModifySharesPlateChooseStatusBatch(List<AddSharesPlateRequest> list)
+        public int ModifySharesPlateChooseStatusBatch(List<string> list,int plateType)
         {
             using (var db = new meal_ticketEntities())
             using (var tran = db.Database.BeginTransaction())
@@ -1126,7 +1199,7 @@ namespace MealTicket_Admin_Handler
                     int i = 0;
                     foreach (var item in list)
                     {
-                        var tempplate = plate.Where(e => e.Name == item.Name && e.Type == item.Type).FirstOrDefault();
+                        var tempplate = plate.Where(e => e.Name == item && e.Type == plateType).FirstOrDefault();
                         if (tempplate == null)
                         {
                             continue;
@@ -1150,7 +1223,7 @@ namespace MealTicket_Admin_Handler
         /// <summary>
         /// 批量修改板块管理挑选状态(删除)
         /// </summary>
-        public void BatchDeleteSharesPlateChooseStatus()
+        public void BatchDeleteSharesPlateChooseStatus(DetailsRequest request)
         {
             using (var db = new meal_ticketEntities())
             using (var tran = db.Database.BeginTransaction())
@@ -1159,11 +1232,81 @@ namespace MealTicket_Admin_Handler
                 {
                     //查询板块
                     var plate = (from item in db.t_shares_plate
-                                 where item.ChooseStatus==1
+                                 where item.ChooseStatus== 1 && item.Type == request.Id
                                  select item).ToList();
                     foreach (var item in plate)
                     {
-                        item.ChooseStatus = 0;
+                        item.ChooseStatus = 2;
+                    }
+                    db.SaveChanges();
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 批量修改板块管理基础版块状态
+        /// </summary>
+        /// <param name="list"></param>
+        /// <param name="plateType"></param>
+        /// <returns></returns>
+        public int ModifySharesPlateBaseStatusBatch(List<string> list, int plateType)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //查询板块
+                    var plate = (from item in db.t_shares_plate
+                                 select item).ToList();
+                    int i = 0;
+                    foreach (var item in list)
+                    {
+                        var tempplate = plate.Where(e => e.Name == item && e.Type == plateType).FirstOrDefault();
+                        if (tempplate == null)
+                        {
+                            continue;
+                        }
+                        tempplate.BaseStatus = 1;
+                        tempplate.LastModified = DateTime.Now;
+                        db.SaveChanges();
+                        i++;
+                    }
+                    tran.Commit();
+                    return i;
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 批量修改板块管理基础版块状态(删除)
+        /// </summary>
+        /// <param name="request"></param>
+        public void BatchDeleteSharesPlateBaseStatus(DetailsRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //查询板块
+                    var plate = (from item in db.t_shares_plate
+                                 where item.BaseStatus == 1 && item.Type== request.Id
+                                 select item).ToList();
+                    foreach (var item in plate)
+                    {
+                        item.BaseStatus = 0;
                     }
                     db.SaveChanges();
                     tran.Commit();
@@ -5005,6 +5148,38 @@ namespace MealTicket_Admin_Handler
                 }
                 else
                 {
+                    if (request.TrendId == 7)
+                    {
+                        var source = JsonConvert.DeserializeObject<dynamic>(request.ParamsInfo);
+                        long sourcegroupId = source.GroupId;
+                        int sourcegroupType = source.GroupType;
+                        int sourcedataType = source.DataType;
+                        //判断分组是否存在
+                        var tempLit = (from item in db.t_sys_conditiontrade_template_buy_other_trend_par
+                                       where item.OtherTrendId == request.RelId
+                                       select item).ToList();
+                        foreach (var item in tempLit)
+                        {
+                            var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                            long groupId = 0;
+                            int groupType = 0;
+                            int dataType = 0;
+                            try
+                            {
+                                groupId = temp.GroupId;
+                                groupType = temp.GroupType;
+                                dataType = temp.DataType;
+                            }
+                            catch (Exception ex)
+                            {
+                                continue;
+                            }
+                            if (sourcegroupId == groupId && sourcegroupType == groupType && sourcedataType == dataType)
+                            {
+                                throw new WebApiException(400, "该分组已添加");
+                            }
+                        }
+                    }
                     db.t_sys_conditiontrade_template_buy_other_trend_par.Add(new t_sys_conditiontrade_template_buy_other_trend_par
                     {
                         CreateTime = DateTime.Now,
@@ -5032,6 +5207,35 @@ namespace MealTicket_Admin_Handler
                 var plate = (from item in db.t_shares_plate
                              where item.Type == Type && list.Contains(item.Name)
                              select item).ToList();
+                //判断分组是否存在
+                var tempLit = (from item in db.t_sys_conditiontrade_template_buy_other_trend_par
+                               where item.OtherTrendId == RelId
+                               select item).ToList();
+                List<long> groupIdList = plate.Select(e => e.Id).ToList();
+                foreach (var item in tempLit)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    long groupId = 0;
+                    int groupType = 0;
+                    int dataType = 0;
+                    try
+                    {
+                        groupId = temp.GroupId;
+                        groupType = temp.GroupType;
+                        dataType = temp.DataType;
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
+                    if (groupIdList.Contains(groupId) && groupType == Type && dataType == 1)
+                    {
+                        groupIdList.Remove(groupId);
+                    }
+                }
+                plate = (from item in plate
+                         where groupIdList.Contains(item.Id)
+                         select item).ToList();
                 var result = (from item in plate
                               select new t_sys_conditiontrade_template_buy_other_trend_par
                               {
@@ -5282,6 +5486,38 @@ namespace MealTicket_Admin_Handler
                 }
                 else
                 {
+                    if (request.TrendId == 7)
+                    {
+                        var source = JsonConvert.DeserializeObject<dynamic>(request.ParamsInfo);
+                        long sourcegroupId = source.GroupId;
+                        int sourcegroupType = source.GroupType;
+                        int sourcedataType = source.DataType;
+                        //判断分组是否存在
+                        var tempLit = (from item in db.t_sys_conditiontrade_template_buy_auto_trend_par
+                                       where item.AutoTrendId == request.RelId
+                                       select item).ToList();
+                        foreach (var item in tempLit)
+                        {
+                            var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                            long groupId = 0;
+                            int groupType = 0;
+                            int dataType = 0;
+                            try
+                            {
+                                groupId = temp.GroupId;
+                                groupType = temp.GroupType;
+                                dataType = temp.DataType;
+                            }
+                            catch (Exception ex)
+                            {
+                                continue;
+                            }
+                            if (sourcegroupId == groupId && sourcegroupType == groupType && sourcedataType == dataType)
+                            {
+                                throw new WebApiException(400, "该分组已添加");
+                            }
+                        }
+                    }
                     db.t_sys_conditiontrade_template_buy_auto_trend_par.Add(new t_sys_conditiontrade_template_buy_auto_trend_par
                     {
                         CreateTime = DateTime.Now,
@@ -5309,6 +5545,35 @@ namespace MealTicket_Admin_Handler
                 var plate = (from item in db.t_shares_plate
                              where item.Type == Type && list.Contains(item.Name)
                              select item).ToList();
+                //判断分组是否存在
+                var tempLit = (from item in db.t_sys_conditiontrade_template_buy_auto_trend_par
+                               where item.AutoTrendId == RelId
+                               select item).ToList();
+                List<long> groupIdList = plate.Select(e => e.Id).ToList();
+                foreach (var item in tempLit)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    long groupId = 0;
+                    int groupType = 0;
+                    int dataType = 0;
+                    try
+                    {
+                        groupId = temp.GroupId;
+                        groupType = temp.GroupType;
+                        dataType = temp.DataType;
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
+                    if (groupIdList.Contains(groupId) && groupType == Type && dataType == 1)
+                    {
+                        groupIdList.Remove(groupId);
+                    }
+                }
+                plate = (from item in plate
+                         where groupIdList.Contains(item.Id)
+                         select item).ToList();
                 var result = (from item in plate
                               select new t_sys_conditiontrade_template_buy_auto_trend_par
                               {
@@ -5855,6 +6120,38 @@ namespace MealTicket_Admin_Handler
                 }
                 else
                 {
+                    if (request.TrendId == 7)
+                    {
+                        var source = JsonConvert.DeserializeObject<dynamic>(request.ParamsInfo);
+                        long sourcegroupId = source.GroupId;
+                        int sourcegroupType = source.GroupType;
+                        int sourcedataType = source.DataType;
+                        //判断分组是否存在
+                        var tempLit = (from item in db.t_sys_conditiontrade_template_buy_other_trend_other_par
+                                       where item.OtherTrendOtherId == request.RelId
+                                       select item).ToList();
+                        foreach (var item in tempLit)
+                        {
+                            var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                            long groupId = 0;
+                            int groupType = 0;
+                            int dataType = 0;
+                            try
+                            {
+                                groupId = temp.GroupId;
+                                groupType = temp.GroupType;
+                                dataType = temp.DataType;
+                            }
+                            catch (Exception ex)
+                            {
+                                continue;
+                            }
+                            if (sourcegroupId == groupId && sourcegroupType == groupType && sourcedataType == dataType)
+                            {
+                                throw new WebApiException(400, "该分组已添加");
+                            }
+                        }
+                    }
                     db.t_sys_conditiontrade_template_buy_other_trend_other_par.Add(new t_sys_conditiontrade_template_buy_other_trend_other_par
                     {
                         CreateTime = DateTime.Now,
@@ -5882,6 +6179,35 @@ namespace MealTicket_Admin_Handler
                 var plate = (from item in db.t_shares_plate
                              where item.Type == Type && list.Contains(item.Name)
                              select item).ToList();
+                //判断分组是否存在
+                var tempLit = (from item in db.t_sys_conditiontrade_template_buy_other_trend_other_par
+                               where item.OtherTrendOtherId == RelId
+                               select item).ToList();
+                List<long> groupIdList = plate.Select(e => e.Id).ToList();
+                foreach (var item in tempLit)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    long groupId = 0;
+                    int groupType = 0;
+                    int dataType = 0;
+                    try
+                    {
+                        groupId = temp.GroupId;
+                        groupType = temp.GroupType;
+                        dataType = temp.DataType;
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
+                    if (groupIdList.Contains(groupId) && groupType == Type && dataType == 1)
+                    {
+                        groupIdList.Remove(groupId);
+                    }
+                }
+                plate = (from item in plate
+                         where groupIdList.Contains(item.Id)
+                         select item).ToList();
                 var result = (from item in plate
                               select new t_sys_conditiontrade_template_buy_other_trend_other_par
                               {
@@ -6132,6 +6458,38 @@ namespace MealTicket_Admin_Handler
                 }
                 else
                 {
+                    if (request.TrendId == 7)
+                    {
+                        var source = JsonConvert.DeserializeObject<dynamic>(request.ParamsInfo);
+                        long sourcegroupId = source.GroupId;
+                        int sourcegroupType = source.GroupType;
+                        int sourcedataType = source.DataType;
+                        //判断分组是否存在
+                        var tempLit = (from item in db.t_sys_conditiontrade_template_buy_auto_trend_other_par
+                                       where item.AutoTrendOtherId == request.RelId
+                                       select item).ToList();
+                        foreach (var item in tempLit)
+                        {
+                            var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                            long groupId = 0;
+                            int groupType = 0;
+                            int dataType = 0;
+                            try
+                            {
+                                groupId = temp.GroupId;
+                                groupType = temp.GroupType;
+                                dataType = temp.DataType;
+                            }
+                            catch (Exception ex)
+                            {
+                                continue;
+                            }
+                            if (sourcegroupId == groupId && sourcegroupType == groupType && sourcedataType == dataType)
+                            {
+                                throw new WebApiException(400, "该分组已添加");
+                            }
+                        }
+                    }
                     db.t_sys_conditiontrade_template_buy_auto_trend_other_par.Add(new t_sys_conditiontrade_template_buy_auto_trend_other_par
                     {
                         CreateTime = DateTime.Now,
@@ -6159,6 +6517,35 @@ namespace MealTicket_Admin_Handler
                 var plate = (from item in db.t_shares_plate
                              where item.Type == Type && list.Contains(item.Name)
                              select item).ToList();
+                //判断分组是否存在
+                var tempLit = (from item in db.t_sys_conditiontrade_template_buy_auto_trend_other_par
+                               where item.AutoTrendOtherId == RelId
+                               select item).ToList();
+                List<long> groupIdList = plate.Select(e => e.Id).ToList();
+                foreach (var item in tempLit)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    long groupId = 0;
+                    int groupType = 0;
+                    int dataType = 0;
+                    try
+                    {
+                        groupId = temp.GroupId;
+                        groupType = temp.GroupType;
+                        dataType = temp.DataType;
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
+                    if (groupIdList.Contains(groupId) && groupType == Type && dataType == 1)
+                    {
+                        groupIdList.Remove(groupId);
+                    }
+                }
+                plate = (from item in plate
+                         where groupIdList.Contains(item.Id)
+                         select item).ToList();
                 var result = (from item in plate
                               select new t_sys_conditiontrade_template_buy_auto_trend_other_par
                               {
@@ -6528,6 +6915,38 @@ namespace MealTicket_Admin_Handler
                 }
                 else
                 {
+                    if (request.TrendId == 7)
+                    {
+                        var source = JsonConvert.DeserializeObject<dynamic>(request.ParamsInfo);
+                        long sourcegroupId = source.GroupId;
+                        int sourcegroupType = source.GroupType;
+                        int sourcedataType = source.DataType;
+                        //判断分组是否存在
+                        var tempLit = (from item in db.t_account_shares_conditiontrade_buy_trend_par_template
+                                       where item.TrendId == request.TrendId
+                                       select item).ToList();
+                        foreach (var item in tempLit)
+                        {
+                            var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                            long groupId = 0;
+                            int groupType = 0;
+                            int dataType = 0;
+                            try
+                            {
+                                groupId = temp.GroupId;
+                                groupType = temp.GroupType;
+                                dataType = temp.DataType;
+                            }
+                            catch (Exception ex)
+                            {
+                                continue;
+                            }
+                            if (sourcegroupId == groupId && sourcegroupType == groupType && sourcedataType == dataType)
+                            {
+                                throw new WebApiException(400, "该分组已添加");
+                            }
+                        }
+                    }
                     db.t_account_shares_conditiontrade_buy_trend_par_template.Add(new t_account_shares_conditiontrade_buy_trend_par_template
                     {
                         CreateTime = DateTime.Now,
@@ -6543,7 +6962,6 @@ namespace MealTicket_Admin_Handler
         /// <summary>
         /// 批量条件单走势模板参数(板块涨跌幅)
         /// </summary>
-        /// <param name="TrendId"></param>
         /// <param name="Type"></param>
         /// <param name="list"></param>
         /// <returns></returns>
@@ -6555,6 +6973,35 @@ namespace MealTicket_Admin_Handler
                 var plate = (from item in db.t_shares_plate
                              where item.Type == Type && list.Contains(item.Name)
                              select item).ToList();
+                //判断分组是否存在
+                var tempLit = (from item in db.t_account_shares_conditiontrade_buy_trend_par_template
+                               where item.TrendId == 7
+                               select item).ToList();
+                List<long> groupIdList = plate.Select(e => e.Id).ToList(); 
+                foreach (var item in tempLit)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    long groupId = 0;
+                    int groupType = 0;
+                    int dataType = 0;
+                    try
+                    {
+                        groupId = temp.GroupId;
+                        groupType = temp.GroupType;
+                        dataType = temp.DataType;
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
+                    if (groupIdList.Contains(groupId) && groupType == Type && dataType == 1)
+                    {
+                        groupIdList.Remove(groupId);
+                    }
+                }
+                plate = (from item in plate
+                         where groupIdList.Contains(item.Id)
+                         select item).ToList();
                 var result = (from item in plate
                               select new t_account_shares_conditiontrade_buy_trend_par_template
                               {

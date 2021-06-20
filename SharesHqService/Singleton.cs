@@ -23,8 +23,6 @@ namespace SharesHqService
         /// </summary>
         Thread SysparUpdateThread;
 
-        object quotesLock = new object();
-
         /// <summary>
         /// 系统参数更新线程等待队列
         /// </summary>
@@ -149,6 +147,7 @@ namespace SharesHqService
         public List<SharesBaseInfo> SharesList = new List<SharesBaseInfo>();
 
         //是否可以进入行情更新
+        object quotesLock = new object();
         public bool QuotesCanEnter = true;
 
         public bool TryQuotesCanEnter()
@@ -174,6 +173,60 @@ namespace SharesHqService
 
             return true;
         }
+
+        //行情是否在运行
+        object isRunLock = new object();
+        public bool IsRun = false;
+
+        public bool TryToSetIsRun(bool isRun)
+        {
+            lock (isRunLock)
+            {
+                if (IsRun == isRun)
+                {
+                    return false;
+                }
+                IsRun = isRun;
+            }
+            return true;
+        }
+
+        public bool GetIsRun()
+        {
+            lock (isRunLock)
+            {
+                return IsRun;
+            }
+        }
+
+        //是否可以进入行情业务更新
+        object quotesBusinessLock = new object();
+        public bool QuotesBusinessCanEnter = true;
+
+        public bool TryQuotesBusinessCanEnter()
+        {
+            lock (quotesBusinessLock)
+            {
+                if (!QuotesBusinessCanEnter) { return false; }
+
+                QuotesBusinessCanEnter = false;
+            }
+
+            return true;
+        }
+
+        public bool TryQuotesBusinessCanLeave()
+        {
+            lock (quotesBusinessLock)
+            {
+                if (QuotesBusinessCanEnter) { return false; }
+
+                QuotesBusinessCanEnter = true;
+            }
+
+            return true;
+        }
+
 
         #region====暂未使用====
         /// <summary>
@@ -206,6 +259,11 @@ namespace SharesHqService
         /// 运行时间比交易时间滞后秒数
         /// </summary>
         public int RunEndTime = 180;
+
+        /// <summary>
+        /// 行情业务定时器（毫秒）
+        /// </summary>
+        public int BusinessRunTime = 3000;
 
         public ThreadMsgTemplate<int> cltData = new ThreadMsgTemplate<int>();
         public ThreadMsgTemplate<int> retryData = new ThreadMsgTemplate<int>();
@@ -356,7 +414,7 @@ namespace SharesHqService
             DateTime dateNow = DateTime.Now.Date;
             using (var db = new meal_ticketEntities())
             {
-                var result = (from item in db.t_shares_quotes
+                var result = (from item in db.v_shares_quotes_last
                               where item.LastModified > dateNow
                               select new SharesQuotesInfo
                               {
@@ -399,6 +457,7 @@ namespace SharesHqService
                                   TotalCount=item.TotalCount,
                                   TriNearLimitType=item.TriNearLimitType,
                                   TriPriceType=item.TriPriceType,
+                                  LastModified=item.LastModified,
                                   BackSharesCode=item.SharesCode
                               }).ToDictionary(e => e.Market+""+e.SharesCode, e => e);
                 LastSharesQuotesList = result;
@@ -632,6 +691,7 @@ namespace SharesHqService
                             this.QuotesCount = sysValue.QuotesCount;
                             this.AllSharesStartHour = sysValue.AllSharesStartHour;
                             this.AllSharesEndHour = sysValue.AllSharesEndHour;
+                            this.BusinessRunTime = sysValue.BusinessRunTime;
                         }
                     }
                     catch { }

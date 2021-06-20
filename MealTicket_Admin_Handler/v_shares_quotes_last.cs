@@ -7,12 +7,12 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MealTicket_Web_Handler
+namespace MealTicket_Admin_Handler
 {
     using System;
     using System.Collections.Generic;
     
-    public partial class t_shares_quotes_last
+    public partial class v_shares_quotes_last
     {
         public long Id { get; set; }
         public int Market { get; set; }
@@ -54,5 +54,7 @@ namespace MealTicket_Web_Handler
         public long LimitDownPrice { get; set; }
         public int PriceType { get; set; }
         public int TriPriceType { get; set; }
+        public int TriNearLimitType { get; set; }
+        public int DataType { get; set; }
     }
 }

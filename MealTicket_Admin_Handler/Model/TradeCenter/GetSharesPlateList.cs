@@ -18,7 +18,7 @@ namespace MealTicket_Admin_Handler.Model
         public string Name { get; set; }
 
         /// <summary>
-        /// 0 所有 1.行业管理 2.地区管理 3.概念管理
+        /// 0 所有 1.行业管理 2.地区管理 3.概念管理 4.指数管理
         /// </summary>
         public int Type { get; set; }
 
@@ -59,6 +59,11 @@ namespace MealTicket_Admin_Handler.Model
         /// 状态
         /// </summary>
         public int Status { get; set; }
+
+        /// <summary>
+        /// 是否基础板块1是 2否
+        /// </summary>
+        public int BaseStatus { get; set; }
 
         /// <summary>
         /// 股票数量

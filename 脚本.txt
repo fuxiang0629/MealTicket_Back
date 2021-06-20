@@ -1,19 +1,5 @@
-t_shares_quotes_date触发器
-t_shares_quotes触发器
-v_plate
-
-t_shares_plate_riserate_last
-
-
-
-  alter table t_shares_plate_riserate add RiseIndex bigint not null default 0;
-  alter table t_shares_plate_riserate add WeightRiseRate bigint not null default 0;
-  alter table t_shares_plate_riserate add WeightRiseIndex bigint not null default 0;
-  alter table t_shares_plate_riserate add RiseLimitCount int not null default 0;
-  alter table t_shares_plate_riserate add DownLimitCount int not null default 0;
-
-  use meal_ticket
-  update t_shares_plate set CalType=1 where [Type]<4
+删除t_shares_quotes触发器
+  alter table t_shares_quotes_last_temp add TriNearLimitType int not null default 0;
 
 t_shares_info_fund_group
 t_shares_info_fund_group_details
