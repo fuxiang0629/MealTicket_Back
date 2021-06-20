@@ -4143,6 +4143,232 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
         }
 
         /// <summary>
+        /// 获取系统买入条件单股票列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public object GetSysBuyConditionTradeSharesList(GetAccountBuyConditionTradeSharesListRequest request, HeadBase basedata)
+        {
+            if (request.Id == 0)
+            {
+                request.Id = basedata.AccountId;
+            }
+            List<AccountBuyConditionTradeSharesInfo> list = new List<AccountBuyConditionTradeSharesInfo>();
+            using (var db = new meal_ticketEntities())
+            {
+                var tempResult = from item in db.t_shares_plate
+                                 join item2 in db.t_shares_plate_rel on item.Id equals item2.PlateId
+                                 where item.Status == 1
+                                 select item2;
+
+                if (request.GroupId1 > 0)
+                {
+                    tempResult = from item in tempResult
+                                 where item.PlateId == request.GroupId1
+                                 select item;
+
+                }
+                if (request.GroupId2 > 0)
+                {
+                    tempResult = from item in tempResult
+                                 where item.PlateId == request.GroupId2
+                                 select item;
+                }
+                if (request.GroupId3 > 0)
+                {
+                    tempResult = from item in tempResult
+                                 where item.PlateId == request.GroupId3
+                                 select item;
+                }
+
+                var result = from item in tempResult
+                             join item2 in db.t_shares_all on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
+                             from ai in a.DefaultIfEmpty()
+                             join item3 in db.v_shares_quotes_last on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into b
+                             from bi in b.DefaultIfEmpty()
+                             select new { item, ai, bi };
+                if (!string.IsNullOrEmpty(request.SharesInfo))
+                {
+                    result = from item in result
+                             where item.ai != null && (item.ai.SharesCode.Contains(request.SharesInfo) || item.ai.SharesName.Contains(request.SharesInfo) || item.ai.SharesPyjc.StartsWith(request.SharesInfo))
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                if (request.OrderType == 2)
+                {
+                    if (request.OrderMethod == "descending")
+                    {
+                        list = (from item in result
+                                let currPrice = item.bi == null ? 0 : item.bi.PresentPrice
+                                let riseRate = (item.bi == null || item.bi.ClosedPrice <= 0) ? 0 : (int)((currPrice - item.bi.ClosedPrice) * 1.0 / item.bi.ClosedPrice * 10000)
+                                orderby riseRate descending
+                                select new AccountBuyConditionTradeSharesInfo
+                                {
+                                    SharesCode = item.item.SharesCode,
+                                    SharesName = item.ai == null ? "" : item.ai.SharesName,
+                                    CreateTime = item.item.CreateTime,
+                                    CurrPrice = currPrice,
+                                    ClosedPrice = item.bi == null ? 0 : item.bi.ClosedPrice,
+                                    MarketStatus = item.ai == null ? 0 : item.ai.MarketStatus,
+                                    Market = item.item.Market,
+                                    RisePrice = item.bi == null ? 0 : (currPrice - item.bi.ClosedPrice),
+                                    RiseRate = riseRate,
+                                }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+                    }
+                    else
+                    {
+                        list = (from item in result
+                                let currPrice = item.bi == null ? 0 : item.bi.PresentPrice
+                                let riseRate = (item.bi == null || item.bi.ClosedPrice <= 0) ? 0 : (int)((currPrice - item.bi.ClosedPrice) * 1.0 / item.bi.ClosedPrice * 10000)
+                                orderby riseRate
+                                select new AccountBuyConditionTradeSharesInfo
+                                {
+                                    SharesCode = item.item.SharesCode,
+                                    SharesName = item.ai == null ? "" : item.ai.SharesName,
+                                    CreateTime = item.item.CreateTime,
+                                    CurrPrice = currPrice,
+                                    ClosedPrice = item.bi == null ? 0 : item.bi.ClosedPrice,
+                                    MarketStatus = item.ai == null ? 0 : item.ai.MarketStatus,
+                                    Market = item.item.Market,
+                                    RisePrice = item.bi == null ? 0 : (currPrice - item.bi.ClosedPrice),
+                                    RiseRate = riseRate,
+                                }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+                    }
+                }
+                else
+                {
+                    if (request.OrderMethod == "descending")
+                    {
+                        list = (from item in result
+                                let currPrice = item.bi == null ? 0 : item.bi.PresentPrice
+                                let riseRate = (item.bi == null || item.bi.ClosedPrice <= 0) ? 0 : (int)((currPrice - item.bi.ClosedPrice) * 1.0 / item.bi.ClosedPrice * 10000)
+                                orderby item.item.CreateTime descending
+                                select new AccountBuyConditionTradeSharesInfo
+                                {
+                                    SharesCode = item.item.SharesCode,
+                                    SharesName = item.ai == null ? "" : item.ai.SharesName,
+                                    CreateTime = item.item.CreateTime,
+                                    CurrPrice = currPrice,
+                                    ClosedPrice = item.bi == null ? 0 : item.bi.ClosedPrice,
+                                    MarketStatus = item.ai == null ? 0 : item.ai.MarketStatus,
+                                    Market = item.item.Market,
+                                    RisePrice = item.bi == null ? 0 : (currPrice - item.bi.ClosedPrice),
+                                    RiseRate = riseRate,
+                                }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+                    }
+                    else
+                    {
+                        list = (from item in result
+                                let currPrice = item.bi == null ? 0 : item.bi.PresentPrice
+                                let riseRate = (item.bi == null || item.bi.ClosedPrice <= 0) ? 0 : (int)((currPrice - item.bi.ClosedPrice) * 1.0 / item.bi.ClosedPrice * 10000)
+                                orderby item.item.CreateTime
+                                select new AccountBuyConditionTradeSharesInfo
+                                {
+                                    SharesCode = item.item.SharesCode,
+                                    SharesName = item.ai == null ? "" : item.ai.SharesName,
+                                    CreateTime = item.item.CreateTime,
+                                    CurrPrice = currPrice,
+                                    ClosedPrice = item.bi == null ? 0 : item.bi.ClosedPrice,
+                                    MarketStatus = item.ai == null ? 0 : item.ai.MarketStatus,
+                                    Market = item.item.Market,
+                                    RisePrice = item.bi == null ? 0 : (currPrice - item.bi.ClosedPrice),
+                                    RiseRate = riseRate,
+                                }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+                    }
+                }
+                List<long> detailsIdList = list.Select(e => e.Id).ToList();
+                var groupRelList = from x in db.t_account_shares_conditiontrade_buy_group_rel
+                                   join x2 in db.t_account_shares_conditiontrade_buy_group on x.GroupId equals x2.Id
+                                   where x2.AccountId == request.Id
+                                   select x;
+                var totalGroupList = (from x in db.t_account_shares_conditiontrade_buy
+                                      join x2 in groupRelList on new { x.Market, x.SharesCode } equals new { x2.Market, x2.SharesCode } into a
+                                      from ai in a.DefaultIfEmpty()
+                                      where x.AccountId == request.Id
+                                      select new { x, ai }).ToList();
+
+                //计算杠杆倍数
+                var accountRules = (from x in db.t_shares_limit_fundmultiple_account
+                                    where x.AccountId == request.Id
+                                    select x).ToList();
+                var fundmultiple = (from x in db.t_shares_limit_fundmultiple
+                                    select x).ToList();
+
+                var sharesList = list.Select(e => e.Market + "" + e.SharesCode).ToList();
+                var plateList = (from x in db.t_shares_plate_rel
+                                 join x2 in db.t_shares_plate on x.PlateId equals x2.Id
+                                 join x3 in db.t_shares_plate_riserate_last on x.PlateId equals x3.PlateId into a
+                                 from ai in a.DefaultIfEmpty()
+                                 join x4 in db.t_shares_plate_type_business on x2.Type equals x4.Id
+                                 where sharesList.Contains(x.Market + "" + x.SharesCode) && x2.Status == 1 && (x2.ChooseStatus == 1 || (x4.IsBasePlate == 1 && x2.BaseStatus == 1))
+                                 select new SharesPlateInfo
+                                 {
+                                     Id = x2.Id,
+                                     SharesCode = x.SharesCode,
+                                     Market = x.Market,
+                                     Type = x2.Type,
+                                     Name = x2.Name,
+                                     SharesCount = ai == null ? 0 : ai.SharesCount,
+                                     RiseRate = ai == null ? 0 : ai.RiseRate,
+                                     DownLimitCount = ai == null ? 0 : ai.DownLimitCount,
+                                     RiseLimitCount = ai == null ? 0 : ai.RiseLimitCount
+                                 }).ToList();
+                foreach (var item in list)
+                {
+                    var rules = (from x in fundmultiple
+                                 join x2 in accountRules on x.Id equals x2.FundmultipleId into a
+                                 from ai in a.DefaultIfEmpty()
+                                 where (x.LimitMarket == item.Market || x.LimitMarket == -1) && (item.SharesCode.StartsWith(x.LimitKey))
+                                 orderby x.Priority descending, x.FundMultiple
+                                 select new { x, ai }).FirstOrDefault();
+                    if (rules == null)
+                    {
+                        item.Fundmultiple = 0;
+                        item.Range = 0;
+                    }
+                    else
+                    {
+                        item.Fundmultiple = (rules.ai == null || rules.x.FundMultiple < rules.ai.FundMultiple) ? rules.x.FundMultiple : rules.ai.FundMultiple;
+                        item.Range = rules.x.Range;
+                        if (item.SharesName.ToUpper().Contains("ST"))
+                        {
+                            item.Range = item.Range / 2;
+                        }
+                    }
+                    var groupRel = (from x in totalGroupList
+                                    where x.x.Market == item.Market && x.x.SharesCode == item.SharesCode
+                                    select x).ToList();
+                    if (groupRel.Count()<=0)
+                    {
+                        item.IsExists = false;
+                        item.Id = 0;
+                    }
+                    else 
+                    {
+                        item.IsExists = true;
+                        item.Id = groupRel.Select(e => e.x.Id).FirstOrDefault();
+                    }
+
+                    item.GroupList = groupRel.Where(e=>e.ai!=null).Select(e => e.ai.GroupId).Distinct().ToList();
+
+                    //查询股票属于哪个板块
+                    item.PlateList = (from x in plateList
+                                      where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                      orderby x.RiseRate descending
+                                      select x).ToList();
+                }
+                return new PageRes<AccountBuyConditionTradeSharesInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = list
+                };
+            }
+        }
+
+        /// <summary>
         /// 添加买入条件单股票
         /// </summary>
         /// <param name="request"></param>
@@ -6200,14 +6426,16 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                     var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
                     int dataType = 0;
                     int groupType = 0;
+                    long groupId = 0;
                     try
                     {
                         dataType = temp.DataType;
                         groupType = temp.GroupType;
+                        groupId = temp.GroupId;
                     }
                     catch (Exception ex)
                     { }
-                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0))
+                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0) && groupId >= 0)
                     {
                         list.Add(item);
                     }
@@ -6541,14 +6769,16 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                     var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
                     int dataType = 0;
                     int groupType = 0;
+                    long groupId = 0;
                     try
                     {
                         dataType = temp.DataType;
                         groupType = temp.GroupType;
+                        groupId = temp.GroupId;
                     }
                     catch (Exception ex)
                     { }
-                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0))
+                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0) && groupId >= 0)
                     {
                         list.Add(item);
                     }
@@ -7180,14 +7410,16 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                     var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
                     int dataType = 0;
                     int groupType = 0;
+                    long groupId = 0;
                     try
                     {
                         dataType = temp.DataType;
                         groupType = temp.GroupType;
+                        groupId = temp.GroupId;
                     }
                     catch (Exception ex)
                     { }
-                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0))
+                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0) && groupId >= 0)
                     {
                         list.Add(item);
                     }
@@ -7520,14 +7752,16 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                     var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
                     int dataType = 0;
                     int groupType = 0;
+                    long groupId = 0;
                     try
                     {
                         dataType = temp.DataType;
                         groupType = temp.GroupType;
+                        groupId = temp.GroupId;
                     }
                     catch (Exception ex)
                     { }
-                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0))
+                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0) && groupId >= 0)
                     {
                         list.Add(item);
                     }
@@ -9843,14 +10077,16 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                     var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
                     int dataType = 0;
                     int groupType = 0;
+                    long groupId = 0;
                     try
                     {
                         dataType = temp.DataType;
                         groupType = temp.GroupType;
+                        groupId = temp.GroupId;
                     }
                     catch (Exception ex)
                     { }
-                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0))
+                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0) && groupId >= 0)
                     {
                         list.Add(item);
                     }
@@ -10182,14 +10418,16 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                     var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
                     int dataType = 0;
                     int groupType = 0;
+                    long groupId = 0;
                     try
                     {
                         dataType = temp.DataType;
                         groupType = temp.GroupType;
+                        groupId = temp.GroupId;
                     }
                     catch (Exception ex)
                     { }
-                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0))
+                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0) && groupId >= 0)
                     {
                         list.Add(item);
                     }
@@ -10818,14 +11056,16 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                     var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
                     int dataType = 0;
                     int groupType = 0;
+                    long groupId = 0;
                     try
                     {
                         dataType = temp.DataType;
                         groupType = temp.GroupType;
+                        groupId = temp.GroupId;
                     }
                     catch (Exception ex)
                     { }
-                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0))
+                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0) && groupId >= 0)
                     {
                         list.Add(item);
                     }
@@ -11158,14 +11398,16 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                     var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
                     int dataType = 0;
                     int groupType = 0;
+                    long groupId = 0;
                     try
                     {
                         dataType = temp.DataType;
                         groupType = temp.GroupType;
+                        groupId = temp.GroupId;
                     }
                     catch (Exception ex)
                     { }
-                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0))
+                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0) && groupId >= 0)
                     {
                         list.Add(item);
                     }

@@ -5320,14 +5320,16 @@ namespace MealTicket_Admin_Handler
                     var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
                     int dataType = 0;
                     int groupType = 0;
+                    long groupId = 0;
                     try
                     {
                         dataType = temp.DataType;
                         groupType = temp.GroupType;
+                        groupId = temp.GroupId;
                     }
                     catch (Exception ex)
                     { }
-                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id% 10 || groupType == 0))
+                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0) && groupId >= 0)
                     {
                         list.Add(item);
                     }
@@ -5658,14 +5660,16 @@ namespace MealTicket_Admin_Handler
                     var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
                     int dataType = 0;
                     int groupType = 0;
+                    long groupId = 0;
                     try
                     {
                         dataType = temp.DataType;
                         groupType = temp.GroupType;
+                        groupId = temp.GroupId;
                     }
                     catch (Exception ex)
                     { }
-                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0))
+                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0) && groupId >= 0)
                     {
                         list.Add(item);
                     }
@@ -6292,14 +6296,16 @@ namespace MealTicket_Admin_Handler
                     var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
                     int dataType = 0;
                     int groupType = 0;
+                    long groupId = 0;
                     try
                     {
                         dataType = temp.DataType;
                         groupType = temp.GroupType;
+                        groupId = temp.GroupId;
                     }
                     catch (Exception ex)
                     { }
-                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0))
+                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0) && groupId >= 0)
                     {
                         list.Add(item);
                     }
@@ -6630,14 +6636,16 @@ namespace MealTicket_Admin_Handler
                     var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
                     int dataType = 0;
                     int groupType = 0;
+                    long groupId = 0;
                     try
                     {
                         dataType = temp.DataType;
                         groupType = temp.GroupType;
+                        groupId = temp.GroupId;
                     }
                     catch (Exception ex)
                     { }
-                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0))
+                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0) && groupId >= 0)
                     {
                         list.Add(item);
                     }
@@ -7038,14 +7046,16 @@ namespace MealTicket_Admin_Handler
                     var temp=JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
                     int dataType = 0;
                     int groupType = 0;
+                    long groupId = 0;
                     try
                     {
                         dataType = temp.DataType;
                         groupType = temp.GroupType;
+                        groupId = temp.GroupId;
                     }
                     catch (Exception ex)
                     { }
-                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0))
+                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0) && groupId>=0)
                     {
                         list.Add(item);
                     }

@@ -1263,6 +1263,23 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 获取系统买入条件单股票列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("sys/conditiontrade/buy/shares/list"), HttpPost]
+        [Description("获取系统买入条件单股票列表")]
+        [CheckUserLoginFilter]
+        public object GetSysBuyConditionTradeSharesList(GetAccountBuyConditionTradeSharesListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSysBuyConditionTradeSharesList(request, basedata);
+        }
+
+        /// <summary>
         /// 添加买入条件单股票
         /// </summary>
         /// <returns></returns>

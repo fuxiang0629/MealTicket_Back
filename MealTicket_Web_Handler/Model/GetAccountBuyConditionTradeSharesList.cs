@@ -159,5 +159,10 @@ namespace MealTicket_Web_Handler.Model
         /// 板块列表
         /// </summary>
         public List<SharesPlateInfo> PlateList { get; set; }
+
+        /// <summary>
+        /// 是否存在股票监控列表
+        /// </summary>
+        public bool IsExists { get; set; }
     }
 }
