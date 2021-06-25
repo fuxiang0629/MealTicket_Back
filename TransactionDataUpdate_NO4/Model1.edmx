@@ -1,0 +1,339 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="meal_ticketModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="t_dim_time">
+          <Key>
+            <PropertyRef Name="the_date" />
+          </Key>
+          <Property Name="the_date" Type="int" Nullable="false" />
+          <Property Name="date_name" Type="nvarchar" MaxLength="30" />
+          <Property Name="the_year" Type="int" />
+          <Property Name="year_name" Type="nvarchar" MaxLength="30" />
+          <Property Name="the_quarter" Type="int" />
+          <Property Name="quarter_name" Type="nvarchar" MaxLength="30" />
+          <Property Name="the_month" Type="int" />
+          <Property Name="month_name" Type="nvarchar" MaxLength="30" />
+          <Property Name="the_week" Type="int" />
+          <Property Name="week_name" Type="nvarchar" MaxLength="30" />
+          <Property Name="week_day" Type="int" />
+          <Property Name="week_day_name" Type="nvarchar" MaxLength="30" />
+        </EntityType>
+        <EntityType Name="t_shares_hq_host">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IpAddress" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Port" Type="int" Nullable="false" />
+          <Property Name="BrokerName" Type="nvarchar" MaxLength="50" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_limit">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="LimitMarket" Type="int" Nullable="false" />
+          <Property Name="LimitKey" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LimitType" Type="int" Nullable="false" />
+          <Property Name="ForbidType" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_limit_date">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GroupId" Type="bigint" Nullable="false" />
+          <Property Name="BeginDate" Type="date" Nullable="false" />
+          <Property Name="EndDate" Type="date" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_limit_date_group">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="GroupName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_limit_time">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MarketName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="LimitMarket" Type="int" Nullable="false" />
+          <Property Name="LimitKey" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Time1" Type="nvarchar(max)" />
+          <Property Name="Time2" Type="nvarchar(max)" />
+          <Property Name="Time3" Type="nvarchar(max)" />
+          <Property Name="Time4" Type="nvarchar(max)" />
+          <Property Name="Time5" Type="nvarchar(max)" />
+          <Property Name="Time6" Type="nvarchar(max)" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_system_param">
+          <Key>
+            <PropertyRef Name="ParamName" />
+          </Key>
+          <Property Name="ParamName" Type="varchar" MaxLength="64" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="1024" />
+          <Property Name="ParamValue" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="IsJson" Type="bit" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityContainer Name="meal_ticketModelStoreContainer">
+          <EntitySet Name="t_dim_time" EntityType="Self.t_dim_time" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_hq_host" EntityType="Self.t_shares_hq_host" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_limit" EntityType="Self.t_shares_limit" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_limit_date" EntityType="Self.t_shares_limit_date" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_limit_date_group" EntityType="Self.t_shares_limit_date_group" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_limit_time" EntityType="Self.t_shares_limit_time" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_system_param" EntityType="Self.t_system_param" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="meal_ticketModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="meal_ticketEntities" annotation:LazyLoadingEnabled="true" >
+          <EntitySet Name="t_system_param" EntityType="meal_ticketModel.t_system_param" />
+          <EntitySet Name="t_shares_hq_host" EntityType="meal_ticketModel.t_shares_hq_host" />
+          <EntitySet Name="t_dim_time" EntityType="meal_ticketModel.t_dim_time" />
+          <EntitySet Name="t_shares_limit_date" EntityType="meal_ticketModel.t_shares_limit_date" />
+          <EntitySet Name="t_shares_limit_date_group" EntityType="meal_ticketModel.t_shares_limit_date_group" />
+          <EntitySet Name="t_shares_limit" EntityType="meal_ticketModel.t_shares_limit" />
+          <EntitySet Name="t_shares_limit_time" EntityType="meal_ticketModel.t_shares_limit_time" />
+        </EntityContainer>
+        <EntityType Name="t_system_param">
+          <Key>
+            <PropertyRef Name="ParamName" />
+          </Key>
+          <Property Name="ParamName" Type="String" Nullable="false" MaxLength="64" FixedLength="false" Unicode="false" />
+          <Property Name="Description" Type="String" MaxLength="1024" FixedLength="false" Unicode="true" />
+          <Property Name="ParamValue" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="IsJson" Type="Boolean" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_hq_host">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IpAddress" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="Port" Type="Int32" Nullable="false" />
+          <Property Name="BrokerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_dim_time">
+          <Key>
+            <PropertyRef Name="the_date" />
+          </Key>
+          <Property Name="the_date" Type="Int32" Nullable="false" />
+          <Property Name="date_name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="the_year" Type="Int32" />
+          <Property Name="year_name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="the_quarter" Type="Int32" />
+          <Property Name="quarter_name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="the_month" Type="Int32" />
+          <Property Name="month_name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="the_week" Type="Int32" />
+          <Property Name="week_name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+          <Property Name="week_day" Type="Int32" />
+          <Property Name="week_day_name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="t_shares_limit_date">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GroupId" Type="Int64" Nullable="false" />
+          <Property Name="BeginDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_limit_date_group">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="GroupName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_limit">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="LimitMarket" Type="Int32" Nullable="false" />
+          <Property Name="LimitKey" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LimitType" Type="Int32" Nullable="false" />
+          <Property Name="ForbidType" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_limit_time">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MarketName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LimitMarket" Type="Int32" Nullable="false" />
+          <Property Name="LimitKey" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Time1" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Time2" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Time3" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Time4" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Time5" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Time6" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="meal_ticketModelStoreContainer" CdmEntityContainer="meal_ticketEntities" >
+          <EntitySetMapping Name="t_system_param">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_system_param">
+              <MappingFragment StoreEntitySet="t_system_param">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="IsJson" ColumnName="IsJson" />
+                <ScalarProperty Name="ParamValue" ColumnName="ParamValue" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="ParamName" ColumnName="ParamName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_hq_host">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_hq_host">
+              <MappingFragment StoreEntitySet="t_shares_hq_host">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="BrokerName" ColumnName="BrokerName" />
+                <ScalarProperty Name="Port" ColumnName="Port" />
+                <ScalarProperty Name="IpAddress" ColumnName="IpAddress" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_dim_time">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_dim_time">
+              <MappingFragment StoreEntitySet="t_dim_time">
+                <ScalarProperty Name="week_day_name" ColumnName="week_day_name" />
+                <ScalarProperty Name="week_day" ColumnName="week_day" />
+                <ScalarProperty Name="week_name" ColumnName="week_name" />
+                <ScalarProperty Name="the_week" ColumnName="the_week" />
+                <ScalarProperty Name="month_name" ColumnName="month_name" />
+                <ScalarProperty Name="the_month" ColumnName="the_month" />
+                <ScalarProperty Name="quarter_name" ColumnName="quarter_name" />
+                <ScalarProperty Name="the_quarter" ColumnName="the_quarter" />
+                <ScalarProperty Name="year_name" ColumnName="year_name" />
+                <ScalarProperty Name="the_year" ColumnName="the_year" />
+                <ScalarProperty Name="date_name" ColumnName="date_name" />
+                <ScalarProperty Name="the_date" ColumnName="the_date" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_limit_date">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_limit_date">
+              <MappingFragment StoreEntitySet="t_shares_limit_date">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="BeginDate" ColumnName="BeginDate" />
+                <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_limit_date_group">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_limit_date_group">
+              <MappingFragment StoreEntitySet="t_shares_limit_date_group">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_limit">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_limit">
+              <MappingFragment StoreEntitySet="t_shares_limit">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="ForbidType" ColumnName="ForbidType" />
+                <ScalarProperty Name="LimitType" ColumnName="LimitType" />
+                <ScalarProperty Name="LimitKey" ColumnName="LimitKey" />
+                <ScalarProperty Name="LimitMarket" ColumnName="LimitMarket" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_limit_time">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_limit_time">
+              <MappingFragment StoreEntitySet="t_shares_limit_time">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Time6" ColumnName="Time6" />
+                <ScalarProperty Name="Time5" ColumnName="Time5" />
+                <ScalarProperty Name="Time4" ColumnName="Time4" />
+                <ScalarProperty Name="Time3" ColumnName="Time3" />
+                <ScalarProperty Name="Time2" ColumnName="Time2" />
+                <ScalarProperty Name="Time1" ColumnName="Time1" />
+                <ScalarProperty Name="LimitKey" ColumnName="LimitKey" />
+                <ScalarProperty Name="LimitMarket" ColumnName="LimitMarket" />
+                <ScalarProperty Name="MarketName" ColumnName="MarketName" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="无" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

@@ -1,0 +1,103 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="meal_ticketModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="t_dim_time">
+    <Key>
+      <PropertyRef Name="the_date" />
+    </Key>
+    <Property Name="the_date" Type="int" Nullable="false" />
+    <Property Name="date_name" Type="nvarchar" MaxLength="30" />
+    <Property Name="the_year" Type="int" />
+    <Property Name="year_name" Type="nvarchar" MaxLength="30" />
+    <Property Name="the_quarter" Type="int" />
+    <Property Name="quarter_name" Type="nvarchar" MaxLength="30" />
+    <Property Name="the_month" Type="int" />
+    <Property Name="month_name" Type="nvarchar" MaxLength="30" />
+    <Property Name="the_week" Type="int" />
+    <Property Name="week_name" Type="nvarchar" MaxLength="30" />
+    <Property Name="week_day" Type="int" />
+    <Property Name="week_day_name" Type="nvarchar" MaxLength="30" />
+  </EntityType>
+  <EntityType Name="t_shares_hq_host">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="IpAddress" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Port" Type="int" Nullable="false" />
+    <Property Name="BrokerName" Type="nvarchar" MaxLength="50" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_limit">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="LimitMarket" Type="int" Nullable="false" />
+    <Property Name="LimitKey" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="LimitType" Type="int" Nullable="false" />
+    <Property Name="ForbidType" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_limit_date">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="GroupId" Type="bigint" Nullable="false" />
+    <Property Name="BeginDate" Type="date" Nullable="false" />
+    <Property Name="EndDate" Type="date" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_limit_date_group">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="GroupName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_limit_time">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MarketName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="LimitMarket" Type="int" Nullable="false" />
+    <Property Name="LimitKey" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Time1" Type="nvarchar(max)" />
+    <Property Name="Time2" Type="nvarchar(max)" />
+    <Property Name="Time3" Type="nvarchar(max)" />
+    <Property Name="Time4" Type="nvarchar(max)" />
+    <Property Name="Time5" Type="nvarchar(max)" />
+    <Property Name="Time6" Type="nvarchar(max)" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_system_param">
+    <Key>
+      <PropertyRef Name="ParamName" />
+    </Key>
+    <Property Name="ParamName" Type="varchar" MaxLength="64" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="1024" />
+    <Property Name="ParamValue" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="IsJson" Type="bit" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityContainer Name="meal_ticketModelStoreContainer">
+    <EntitySet Name="t_dim_time" EntityType="Self.t_dim_time" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_hq_host" EntityType="Self.t_shares_hq_host" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_limit" EntityType="Self.t_shares_limit" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_limit_date" EntityType="Self.t_shares_limit_date" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_limit_date_group" EntityType="Self.t_shares_limit_date_group" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_limit_time" EntityType="Self.t_shares_limit_time" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_system_param" EntityType="Self.t_system_param" Schema="dbo" store:Type="Tables" />
+  </EntityContainer>
+</Schema>

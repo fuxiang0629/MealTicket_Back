@@ -1166,11 +1166,33 @@ namespace stock_db_core
             string sqlQuery = "";
             if (iPriceOrAmount == 1)
             {
-                sqlQuery = string.Format("select SharesCode,Market,[Time],Price2,num,num2,num3,num4 from(select SharesCode,Market,[Time],Price2,ROW_NUMBER()OVER(partition by SharesCode,Market order by Price,[Time]) num,ROW_NUMBER()OVER(partition by SharesCode,Market order by Price desc,[Time]) num2,ROW_NUMBER()OVER(partition by SharesCode,Market order by Price3,[Time]) num3,ROW_NUMBER()OVER(partition by SharesCode,Market order by Price2 desc,[Time]) num4 from(select SharesCode,Market,[Time],Price,case when num=1 then Price else -1 end Price2,case when num=1 then Price else 9999999999999 end Price3 from(select ROW_NUMBER()OVER(partition by SharesCode,Market,[Time] order by OrderIndex desc,[Time]) num,SharesCode,Market,[Time],Price from {3} with(nolock) where SharesInfoNum in {0} and [Time] <= '{1}' and [Time]>'{2}')t)m)t where t.num=1 or t.num2=1 or t.num3=1 or t.num4=1", strStockCode, dataTime.ToString("yyyy-MM-dd HH:mm:00"), dataTime.ToString("yyyy-MM-dd"), tableName);
+                sqlQuery = string.Format(@"select SharesCode,Market,[Time],Price,num,num2,num3,num4
+from
+(
+    select SharesCode, Market,[Time], Price,
+    row_number()over(partition by SharesCode, Market order by Price,[Time]) num,
+    row_number()over(partition by SharesCode, Market order by Price desc,[Time]) num2,
+    row_number()over(partition by SharesCode, Market order by IsTimeLast desc, Price,[Time]) num3,
+    row_number()over(partition by SharesCode, Market order by IsTimeLast desc, Price desc,[Time]) num4
+    from {3} with(nolock)
+    where SharesInfoNum in {0} and [Time] <= '{1}' and [Time] > '{2}'
+)t
+where t.num = 1 or t.num2 = 1 or t.num3 = 1 or t.num4 = 1", strStockCode.ToString(), dataTime.ToString("yyyy-MM-dd HH:mm:00"), dataTime.ToString("yyyy-MM-dd"), tableName);
             }
             else
             {
-                sqlQuery = string.Format("select SharesCode,Market,[Time],Stock2,num,num2,num3,num4 from(select SharesCode,Market,[Time],Stock2,ROW_NUMBER()OVER(partition by SharesCode,Market order by Stock,[Time]) num,ROW_NUMBER()OVER(partition by SharesCode,Market order by Stock desc,[Time]) num2,ROW_NUMBER()OVER(partition by SharesCode,Market order by Stock3,[Time]) num3,ROW_NUMBER()OVER(partition by SharesCode,Market order by Stock2 desc,[Time]) num4 from(select SharesCode,Market,[Time],Stock,case when num=1 then Stock else -1 end Stock2,case when num=1 then Stock else 9999999999999 end Stock3 from(select ROW_NUMBER()OVER(partition by SharesCode,Market,[Time] order by OrderIndex desc,[Time]) num,SharesCode,Market,[Time],Stock from {3} with(nolock) where SharesInfoNum in {0} and [Time] <= '{1}' and [Time]>'{2}')t)m)t where t.num=1 or t.num2=1 or t.num3=1 or t.num4=1", strStockCode, dataTime.ToString("yyyy-MM-dd HH:mm:00"), dataTime.ToString("yyyy-MM-dd"), tableName);
+                sqlQuery = string.Format(@"select SharesCode,Market,[Time],Stock,num,num2,num3,num4
+from
+(
+    select SharesCode, Market,[Time], Stock,
+    row_number()over(partition by SharesCode, Market order by Stock,[Time]) num,
+    row_number()over(partition by SharesCode, Market order by Stock desc,[Time]) num2,
+    row_number()over(partition by SharesCode, Market order by IsTimeLast desc, Stock,[Time]) num3,
+    row_number()over(partition by SharesCode, Market order by IsTimeLast desc, Stock desc,[Time]) num4
+    from {3} with(nolock)
+    where SharesInfoNum in {0} and [Time] <= '{1}' and [Time] > '{2}'
+)t
+where t.num = 1 or t.num2 = 1 or t.num3 = 1 or t.num4 = 1", strStockCode.ToString(), dataTime.ToString("yyyy -MM-dd HH:mm:00"), dataTime.ToString("yyyy-MM-dd"), tableName);
             }
 
             using (SqlConnection conn = new SqlConnection(_strConnString2))

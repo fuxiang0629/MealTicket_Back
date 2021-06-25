@@ -1,5 +1,6 @@
 ﻿using FXCommon.Common;
 using FXCommon.Database;
+using MealTicket_Web_Handler.Runner;
 using Newtonsoft.Json;
 using StockTrendMonitor.Models;
 using System;
@@ -15,6 +16,16 @@ namespace MealTicket_Web_Handler
 {
     public sealed class Singleton
     {
+        /// <summary>
+        /// 同步交易锁
+        /// </summary>
+        private object SyncroLockObj = new object();
+
+        /// <summary>
+        /// 同步数据列表
+        /// </summary>
+        private List<TradeAutoBuyCondition> SyncroList = new List<TradeAutoBuyCondition>();
+
         /// <summary>
         /// 单例对象
         /// </summary>
@@ -40,16 +51,28 @@ namespace MealTicket_Web_Handler
         /// </summary>
         public string SharesCodeMatch1 = "(^6.*)";
 
-        /// <summary>
-        /// 再触发设置
-        /// </summary>
+        #region===再触发设置===
         public int MinPushTimeInterval = 180;
         public int MinPushRateInterval = 60;
+        #endregion
 
-        //清理分笔数据参数
+        #region===清理分笔数据参数===
         public int ClearTransactiondataSleepTime = 1800000;
         public int ClearTransactiondataStartHour = 3;
         public int ClearTransactiondataEndHour = 8;
+        #endregion
+
+        #region====新分笔成交数据====
+        public int NewTransactionDataCount = 50;
+        public int NewTransactionDataSendPeriodTime = 0;//更新间隔
+        public int NewTransactionDataRunStartTime = -180;//运行时间比交易时间提前秒数
+        public int NewTransactionDataRunEndTime = 180;//运行时间比交易时间滞后秒数
+        public int NewTransactiondataSleepTime = 10000;//每天执行时的间隔时间
+        public int NewTransactiondataStartHour = 0;//每天执行开始时间
+        public int NewTransactiondataEndHour = 0;//每天执行结束时间
+        #endregion
+
+
 
         /// <summary>
         /// 自动买入最大任务数量
@@ -72,6 +95,16 @@ namespace MealTicket_Web_Handler
         private ThreadMsgTemplate<int> UpdateWait = new ThreadMsgTemplate<int>();
 
         #region====走势分析====
+        /// <summary>
+        /// 走势分析间隔时间
+        /// </summary>
+        public int TrendAnalyseSleepTime = 3000;
+
+        /// <summary>
+        /// 每批次分析股票数量
+        /// </summary>
+        public int NewTransactionDataTrendHandlerCount = 10;
+
         /// <summary>
         /// 处理线程数量
         /// </summary>
@@ -161,7 +194,7 @@ namespace MealTicket_Web_Handler
             }
             if (mqHandler != null)
             {
-                mqHandler.Dispose();
+                mqHandler.Dispose(true);
             }
         }
 
@@ -226,19 +259,19 @@ namespace MealTicket_Web_Handler
                         var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
                         if (sysValue.MinPushTimeInterval > 0 || sysValue.MinPushTimeInterval == -1)
                         {
-                            this.MinPushTimeInterval = sysValue.MinPushTimeInterval;
+                            MinPushTimeInterval = sysValue.MinPushTimeInterval;
                         }
                         if (sysValue.MinPushRateInterval > 0 || sysValue.MinPushRateInterval == -1)
                         {
-                            this.MinPushRateInterval = sysValue.MinPushRateInterval;
+                            MinPushRateInterval = sysValue.MinPushRateInterval;
                         }
                         if (sysValue.HandlerThreadCount > 0 && sysValue.HandlerThreadCount <= 100)
                         {
-                            this.handlerThreadCount = sysValue.HandlerThreadCount;
+                            handlerThreadCount = sysValue.HandlerThreadCount;
                         }
                         if (sysValue.HeartOverSecond > 3)
                         {
-                            this.HeartSecond = sysValue.HeartOverSecond;
+                            HeartSecond = sysValue.HeartOverSecond;
                         }
                     }
                 }
@@ -277,6 +310,85 @@ namespace MealTicket_Web_Handler
                     }
                 }
                 catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "NewTransactiondataPar"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                        if (sysValue.TransactionDataCount != null && sysValue.TransactionDataCount <= 2000 && sysValue.TransactionDataCount >= 1)
+                        {
+                            NewTransactionDataCount = sysValue.TransactionDataCount;
+                        }
+                        if (sysValue.SendPeriodTime != null)
+                        {
+                            NewTransactionDataSendPeriodTime = sysValue.SendPeriodTime;
+                        }
+                        if (sysValue.TransactiondataSleepTime != null && sysValue.TransactiondataSleepTime > 0)
+                        {
+                            NewTransactiondataSleepTime = sysValue.TransactiondataSleepTime;
+                        }
+                        if (sysValue.TransactiondataStartHour != null && sysValue.TransactiondataStartHour >= 16 && sysValue.TransactiondataStartHour <= 23)
+                        {
+                            NewTransactiondataStartHour = sysValue.TransactiondataStartHour;
+                        }
+                        if (sysValue.TransactiondataEndHour != null && sysValue.TransactiondataEndHour >= 16 && sysValue.TransactiondataEndHour <= 23)
+                        {
+                            NewTransactiondataEndHour = sysValue.TransactiondataEndHour;
+                        }
+                        if (sysValue.NewTransactionDataTrendHandlerCount != null && sysValue.NewTransactionDataTrendHandlerCount >= 0)
+                        {
+                            NewTransactionDataTrendHandlerCount = sysValue.NewTransactionDataTrendHandlerCount;
+                        }
+                        if (sysValue.TrendAnalyseSleepTime != null && sysValue.TrendAnalyseSleepTime > 100)
+                        {
+                            TrendAnalyseSleepTime = sysValue.TrendAnalyseSleepTime;
+                        }
+                    }
+                }
+                catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "HqServerPar"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                        NewTransactionDataRunStartTime = sysValue.RunStartTime;
+                        NewTransactionDataRunEndTime = sysValue.RunEndTime;
+                    }
+                }
+                catch { }
+            }
+        }
+
+        /// <summary>
+        /// 获取同步交易数据
+        /// </summary>
+        /// <returns></returns>
+        public List<TradeAutoBuyCondition> GetSyncroList()
+        {
+            lock (SyncroLockObj)
+            {
+                List<TradeAutoBuyCondition> temp = new List<TradeAutoBuyCondition>();
+                temp.AddRange(SyncroList);
+                SyncroList.Clear();
+                return temp;
+            }
+        }
+
+        /// <summary>
+        /// 添加同步交易数据
+        /// </summary>
+        /// <returns></returns>
+        public void AddSyncro(TradeAutoBuyCondition item)
+        {
+            lock (SyncroLockObj)
+            {
+                SyncroList.Add(item);
             }
         }
     }

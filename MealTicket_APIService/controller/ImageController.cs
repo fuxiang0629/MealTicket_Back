@@ -72,45 +72,50 @@ namespace Rocket_Client_API.controller
                             var resJson = JsonConvert.DeserializeObject<dynamic>(res);
                             string access_token = resJson.access_token;
 
-                            if (!string.IsNullOrEmpty(access_token))
+                            if (string.IsNullOrEmpty(access_token))
                             {
-                                uri = string.Format("https://aip.baidubce.com/rest/2.0/ocr/v1/idcard?access_token={0}", access_token);
-                                string content = string.Format("id_card_side={0}&image={1}", id_card_side, HttpUtility.UrlEncode(Convert.ToBase64String(data)));
-                                res = HtmlSender.Request(content, uri, "application/x-www-form-urlencoded", Encoding.UTF8, "POST");
-                                resJson = JsonConvert.DeserializeObject<dynamic>(res);
-                                if (resJson != null && resJson.words_result != null)
+                                throw new Exception();
+                            }
+                            uri = string.Format("https://aip.baidubce.com/rest/2.0/ocr/v1/idcard?access_token={0}", access_token);
+                            string content = string.Format("id_card_side={0}&image={1}", id_card_side, HttpUtility.UrlEncode(Convert.ToBase64String(data)));
+                            res = HtmlSender.Request(content, uri, "application/x-www-form-urlencoded", Encoding.UTF8, "POST");
+                            resJson = JsonConvert.DeserializeObject<dynamic>(res);
+                            if (resJson != null && resJson.words_result != null)
+                            {
+                                if (name == "RealNameF")
                                 {
-                                    if (name == "RealNameF")
+                                    string RealName = resJson.words_result.姓名.words;
+                                    if (string.IsNullOrEmpty(RealName))
                                     {
-                                        string RealName = resJson.words_result.姓名.words;
-                                        if (string.IsNullOrEmpty(RealName))
-                                        {
-                                            throw new Exception();
-                                        }
-                                        DataInfo = new
-                                        {
-                                            RealName = RealName,
-                                            Sex = resJson.words_result.性别.words == "男" ? 1 : resJson.words_result.性别.words == "女" ? 2 : 0,
-                                            BirthDay = resJson.words_result.出生.words,
-                                            CardNo = resJson.words_result.公民身份号码.words,
-                                            Address = resJson.words_result.住址.words
-                                        };
+                                        throw new Exception();
                                     }
-                                    else
+                                    DataInfo = new
                                     {
-                                        string CheckOrg = resJson.words_result.签发机关.words;
-                                        if (string.IsNullOrEmpty(CheckOrg))
-                                        {
-                                            throw new Exception();
-                                        }
-                                        DataInfo = new
-                                        {
-                                            CheckOrg = CheckOrg,
-                                            ValidDateFrom = resJson.words_result.签发日期.words,
-                                            ValidDateTo = resJson.words_result.失效日期.words
-                                        };
-                                    }
+                                        RealName = RealName,
+                                        Sex = resJson.words_result.性别.words == "男" ? 1 : resJson.words_result.性别.words == "女" ? 2 : 0,
+                                        BirthDay = resJson.words_result.出生.words,
+                                        CardNo = resJson.words_result.公民身份号码.words,
+                                        Address = resJson.words_result.住址.words
+                                    };
                                 }
+                                else
+                                {
+                                    string CheckOrg = resJson.words_result.签发机关.words;
+                                    if (string.IsNullOrEmpty(CheckOrg))
+                                    {
+                                        throw new Exception();
+                                    }
+                                    DataInfo = new
+                                    {
+                                        CheckOrg = CheckOrg,
+                                        ValidDateFrom = resJson.words_result.签发日期.words,
+                                        ValidDateTo = resJson.words_result.失效日期.words
+                                    };
+                                }
+                            }
+                            else
+                            {
+                                throw new Exception();
                             }
                         }
                         catch (Exception ex)

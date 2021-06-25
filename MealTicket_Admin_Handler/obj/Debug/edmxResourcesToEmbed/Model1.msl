@@ -2273,5 +2273,16 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="t_shares_plate_type_business">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_shares_plate_type_business">
+        <MappingFragment StoreEntitySet="t_shares_plate_type_business">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="IsBasePlate" ColumnName="IsBasePlate" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

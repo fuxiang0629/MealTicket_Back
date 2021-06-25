@@ -221,6 +221,10 @@
         <EntityTypeShape EntityType="meal_ticketModel.v_shares_quotes_last" Width="1.5" PointX="43.375" PointY="3.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_quotes" Width="1.5" PointX="3.375" PointY="43.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_type_business" Width="1.5" PointX="5.375" PointY="43.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_buy_synchro_setting" Width="1.5" PointX="7.375" PointY="43.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_buy_synchro_setting_follow" Width="1.5" PointX="43.375" PointY="13.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_buy_synchro_setting_group" Width="1.5" PointX="43.375" PointY="16.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_group_syncro_account" Width="1.5" PointX="43.375" PointY="19.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -42,16 +42,16 @@ namespace MealTicket_Web_APIService
             {
                 Kernel.Dispose();
             }
-            if (session != null)
-            {
-                session.Dispose();
-            }
             if (runners != null)
             {
                 foreach (var item in runners)
                 {
                     item.Dispose();
                 }
+            }
+            if (session != null)
+            {
+                session.Dispose();
             }
         }
 

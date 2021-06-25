@@ -27,10 +27,10 @@ namespace MealTicket_APIService.runner
                 try
                 {
                     //每天1-8点执行
-                    //if (DateTime.Now.Hour < Singleton.Instance.HoldServiceCalcuStartHour || DateTime.Now.Hour >= Singleton.Instance.HoldServiceCalcuEndHour)
-                    //{
-                    //    return false;
-                    //}
+                    if (DateTime.Now.Hour < Singleton.Instance.HoldServiceCalcuStartHour || DateTime.Now.Hour >= Singleton.Instance.HoldServiceCalcuEndHour)
+                    {
+                        return false;
+                    }
                     return true;
                 }
                 catch (Exception ex)
@@ -44,9 +44,9 @@ namespace MealTicket_APIService.runner
         {
             try
             {
-                //RunnerHelper.HoldClose();//关闭持仓
-                //RunnerHelper.JoinService();//加入计算服务费金额
-                //RunnerHelper.ServiceFeeRecharge();//计算服务费
+                RunnerHelper.HoldClose();//关闭持仓
+                RunnerHelper.JoinService();//加入计算服务费金额
+                RunnerHelper.ServiceFeeRecharge();//计算服务费
                 RunnerHelper.SharesAllot();//执行派息
             }
             catch (Exception ex)

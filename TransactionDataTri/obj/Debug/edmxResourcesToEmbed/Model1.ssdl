@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="meal_ticketModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="t_system_param">
+    <Key>
+      <PropertyRef Name="ParamName" />
+    </Key>
+    <Property Name="ParamName" Type="varchar" MaxLength="64" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="1024" />
+    <Property Name="ParamValue" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="IsJson" Type="bit" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityContainer Name="meal_ticketModelStoreContainer">
+    <EntitySet Name="t_system_param" EntityType="Self.t_system_param" Schema="dbo" store:Type="Tables" />
+  </EntityContainer>
+</Schema>

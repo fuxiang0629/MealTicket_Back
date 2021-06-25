@@ -109,6 +109,7 @@
     <Compile Include="ShareData\SharesQuotesHistory.cs" />
     <Compile Include="ShareData\SharesQuotesInfo.cs" />
     <Compile Include="ShareData\SharesTransactionDataInfo.cs" />
+    <Compile Include="ShareData\TdxHq_Result.cs" />
     <Compile Include="ShareHelper.cs" />
     <Compile Include="Singleton.cs" />
     <Compile Include="TradeX_M.cs" />

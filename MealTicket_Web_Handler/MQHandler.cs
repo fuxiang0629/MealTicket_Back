@@ -38,7 +38,7 @@ namespace MealTicket_Web_Handler
         /// <summary>
         /// 更新协议对象
         /// </summary>
-        List<IModel> modelList = new List<IModel>();
+        IModel model;
 
         public MQHandler()
         {
@@ -58,14 +58,24 @@ namespace MealTicket_Web_Handler
             {
                 lock (_lock)
                 {
-                    if (_connection != null)
-                    {
-                        _connection.Dispose();
-                    }
-                    _connection = null;
                     if (isDispose)
                     {
                         isConnect = false;
+                    }
+                    if (_connection != null)
+                    {
+                        _connection.Dispose();
+                        _connection = null;
+                    }
+                    if (_sendModel != null)
+                    {
+                        _sendModel.Dispose();
+                        _sendModel = null;
+                    }
+                    if (model != null)
+                    {
+                        model.Dispose();
+                        model = null;
                     }
                 }
             }
@@ -84,33 +94,25 @@ namespace MealTicket_Web_Handler
             {
                 lock (_lock)
                 {
-                    Dispose();
                     if (isConnect)
                     {
+                        Dispose();
                         if (_connection == null)
                         {
                             _connection = _factory.CreateConnection();
                             _sendModel = _connection.CreateModel();
-                            modelList = new List<IModel>();
-
-                            for (int i = 0; i < Singleton.Instance.handlerThreadCount; i++)
-                            {
-                                var _model = _connection.CreateModel();
-                                var consumerUpdate = new EventingBasicConsumer(_model);
-                                consumerUpdate.Received += Consumer_Received;
-                                consumerUpdate.Shutdown += Consumer_Shutdown;
-                                _model.BasicQos(0, 1, false);
-                                _model.BasicConsume("TransactionDataTrendAnalyse", false, consumerUpdate);
-                                modelList.Add(_model);
-                            }
+                            model = _connection.CreateModel();
+                            var consumerUpdate = new EventingBasicConsumer(model);
+                            consumerUpdate.Received += Consumer_Received;
+                            consumerUpdate.Shutdown += Consumer_Shutdown;
+                            model.BasicQos(0, 1, false);
+                            model.BasicConsume("TransactionDataTrendAnalyse", false, consumerUpdate);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Thread.Sleep(5000);
-                Reconnect();
                 Logger.WriteFileLog("MQ链接异常", ex);
             }
         }
@@ -122,15 +124,7 @@ namespace MealTicket_Web_Handler
         /// <param name="e"></param>
         private void Consumer_Shutdown(object sender, ShutdownEventArgs e)
         {
-            lock (_lock)
-            {
-                if (_connection != null && !_connection.IsOpen)
-                {
-                    Dispose();
-                }
-                _connection = null;
-                Reconnect();
-            }
+            Reconnect();
             Logger.WriteFileLog("队列链接断开重连", null);
         }
 
@@ -139,17 +133,32 @@ namespace MealTicket_Web_Handler
         /// </summary>
         public bool SendMessage(byte[] data, string exchange, string routekey)
         {
+            if (_SendMessage(data, exchange, routekey))
+            {
+                return true;
+            }
+
+            Reconnect();
+            return false;
+        }
+
+        private bool _SendMessage(byte[] data, string exchange, string routekey)
+        {
             try
             {
-                lock (this)
+                lock (_lock)
                 {
+                    if (_sendModel == null)
+                    {
+                        return false;
+                    }
+
                     _sendModel.BasicPublish(exchange, routekey, null, data);
                 }
                 return true;
             }
             catch (Exception ex)
             {
-                Reconnect();
                 return false;
             }
         }
