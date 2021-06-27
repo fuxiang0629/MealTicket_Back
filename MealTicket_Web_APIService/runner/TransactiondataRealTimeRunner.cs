@@ -22,7 +22,6 @@ namespace MealTicket_Web_APIService
         {
             get
             {
-                return true;
                 DateTime timeNow = DateTime.Now;
                 try
                 {

@@ -70,3 +70,4 @@ F:\项目\饭票后端\TransactionDataUpdate\obj\Release\TransactionDataUpdate.c
 F:\项目\饭票后端\TransactionDataUpdate\obj\Release\TransactionDataUpdate.csproj.CopyComplete
 F:\项目\饭票后端\TransactionDataUpdate\obj\Release\TransactionDataUpdate.exe
 F:\项目\饭票后端\TransactionDataUpdate\obj\Release\TransactionDataUpdate.pdb
+D:\项目\饭票\后端\TransactionDataUpdate\obj\Release\TransactionDataUpdate.csprojAssemblyReference.cache

@@ -24,3 +24,4 @@ D:\项目\饭票\后端\FXCommon\obj\Release\FXCommon.csproj.CoreCompileInputs.c
 D:\项目\饭票\后端\FXCommon\obj\Release\FXCommon.csproj.CopyComplete
 D:\项目\饭票\后端\FXCommon\obj\Release\FXCommon.dll
 D:\项目\饭票\后端\FXCommon\obj\Release\FXCommon.pdb
+D:\项目\饭票\后端\FXCommon\obj\Release\FXCommon.csprojAssemblyReference.cache

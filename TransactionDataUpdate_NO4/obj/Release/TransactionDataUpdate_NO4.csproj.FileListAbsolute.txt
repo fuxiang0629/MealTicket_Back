@@ -74,3 +74,4 @@ D:\项目\饭票\后端\TransactionDataUpdate_NO4\obj\Release\TransactionDataUpd
 D:\项目\饭票\后端\TransactionDataUpdate_NO4\obj\Release\TransactionDataUpdate_NO4.csproj.CopyComplete
 D:\项目\饭票\后端\TransactionDataUpdate_NO4\obj\Release\TransactionDataUpdate_NO4.exe
 D:\项目\饭票\后端\TransactionDataUpdate_NO4\obj\Release\TransactionDataUpdate_NO4.pdb
+D:\项目\饭票\后端\TransactionDataUpdate_NO4\obj\Release\TransactionDataUpdate_NO4.csprojAssemblyReference.cache
