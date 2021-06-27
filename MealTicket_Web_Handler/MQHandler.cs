@@ -38,17 +38,28 @@ namespace MealTicket_Web_Handler
         /// <summary>
         /// 更新协议对象
         /// </summary>
-        List<IModel> modelList = new List<IModel>();
+        IModel model;
+
+        string _HostName;
+        int _Port;
+        string _UserName;
+        string _Password;
+        string _VirtualHost;
 
         public MQHandler()
         {
+            _HostName = ConfigurationManager.AppSettings["MQ_HostName"];
+            _Port = int.Parse(ConfigurationManager.AppSettings["MQ_Port"]);
+            _UserName = ConfigurationManager.AppSettings["MQ_UserName"];
+            _Password = ConfigurationManager.AppSettings["MQ_Password"];
+            _VirtualHost = ConfigurationManager.AppSettings["MQ_VirtualHost"];
             _factory = new ConnectionFactory
             {
-                HostName = ConfigurationManager.AppSettings["MQ_HostName"],
-                Port = int.Parse(ConfigurationManager.AppSettings["MQ_Port"]),
-                UserName = ConfigurationManager.AppSettings["MQ_UserName"],
-                Password = ConfigurationManager.AppSettings["MQ_Password"],
-                VirtualHost = ConfigurationManager.AppSettings["MQ_VirtualHost"]
+                HostName = _HostName,
+                Port = _Port,
+                UserName = _UserName,
+                Password = _Password,
+                VirtualHost = _VirtualHost
             };
         }
 
@@ -58,14 +69,24 @@ namespace MealTicket_Web_Handler
             {
                 lock (_lock)
                 {
-                    if (_connection != null)
-                    {
-                        _connection.Dispose();
-                    }
-                    _connection = null;
                     if (isDispose)
                     {
                         isConnect = false;
+                    }
+                    if (_connection != null)
+                    {
+                        _connection.Dispose();
+                        _connection = null;
+                    }
+                    if (_sendModel != null)
+                    {
+                        _sendModel.Dispose();
+                        _sendModel = null;
+                    }
+                    if (model != null)
+                    {
+                        model.Dispose();
+                        model = null;
                     }
                 }
             }
@@ -84,33 +105,25 @@ namespace MealTicket_Web_Handler
             {
                 lock (_lock)
                 {
-                    Dispose();
                     if (isConnect)
                     {
+                        Dispose();
                         if (_connection == null)
                         {
                             _connection = _factory.CreateConnection();
                             _sendModel = _connection.CreateModel();
-                            modelList = new List<IModel>();
-
-                            for (int i = 0; i < Singleton.Instance.handlerThreadCount; i++)
-                            {
-                                var _model = _connection.CreateModel();
-                                var consumerUpdate = new EventingBasicConsumer(_model);
-                                consumerUpdate.Received += Consumer_Received;
-                                consumerUpdate.Shutdown += Consumer_Shutdown;
-                                _model.BasicQos(0, 1, false);
-                                _model.BasicConsume("TransactionDataTrendAnalyse", false, consumerUpdate);
-                                modelList.Add(_model);
-                            }
+                            model = _connection.CreateModel();
+                            var consumerUpdate = new EventingBasicConsumer(model);
+                            consumerUpdate.Received += Consumer_Received;
+                            consumerUpdate.Shutdown += Consumer_Shutdown;
+                            model.BasicQos(0, 1, false);
+                            model.BasicConsume("TransactionDataTrendAnalyse", false, consumerUpdate);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                Thread.Sleep(5000);
-                Reconnect();
                 Logger.WriteFileLog("MQ链接异常", ex);
             }
         }
@@ -122,15 +135,7 @@ namespace MealTicket_Web_Handler
         /// <param name="e"></param>
         private void Consumer_Shutdown(object sender, ShutdownEventArgs e)
         {
-            lock (_lock)
-            {
-                if (_connection != null && !_connection.IsOpen)
-                {
-                    Dispose();
-                }
-                _connection = null;
-                Reconnect();
-            }
+            Reconnect();
             Logger.WriteFileLog("队列链接断开重连", null);
         }
 
@@ -139,19 +144,71 @@ namespace MealTicket_Web_Handler
         /// </summary>
         public bool SendMessage(byte[] data, string exchange, string routekey)
         {
+            if (_SendMessage(data, exchange, routekey))
+            {
+                return true;
+            }
+
+            Reconnect();
+            return false;
+        }
+
+        private bool _SendMessage(byte[] data, string exchange, string routekey)
+        {
             try
             {
-                lock (this)
+                lock (_lock)
                 {
+                    if (_sendModel == null)
+                    {
+                        return false;
+                    }
+
                     _sendModel.BasicPublish(exchange, routekey, null, data);
                 }
                 return true;
             }
             catch (Exception ex)
             {
-                Reconnect();
                 return false;
             }
+        }
+
+        /// <summary>
+        /// 判断队列是否为空
+        /// </summary>
+        /// <returns></returns>
+        public bool IsEmpty(string queryName) 
+        {
+            var res=_GetMessage(queryName);
+            if (res.Count() > 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 获取队列数据
+        /// </summary>
+        /// <returns></returns>
+        private List<dynamic> _GetMessage(string queryName) 
+        {
+            string url = string.Format("http://{0}:15672/api/queues/MealTicket/{1}/get", _HostName, queryName);
+            var content = new
+            {
+                vhost= _VirtualHost,
+                name= queryName,
+                truncate =50000,
+                ackmode= "ack_requeue_true",
+                encoding= "auto",
+                count=1
+            };
+            string auth_str = _UserName + ":" + _Password;
+            string auth= Convert.ToBase64String(Encoding.Default.GetBytes(auth_str));
+
+            string res=HtmlSender.Post_BasicAuth(JsonConvert.SerializeObject(content), url, auth);
+            return JsonConvert.DeserializeObject<List<dynamic>>(res);
         }
 
         /// <summary>

@@ -243,6 +243,10 @@ namespace MealTicket_Web_Handler
         public virtual DbSet<v_shares_quotes_last> v_shares_quotes_last { get; set; }
         public virtual DbSet<t_shares_quotes> t_shares_quotes { get; set; }
         public virtual DbSet<t_shares_plate_type_business> t_shares_plate_type_business { get; set; }
+        public virtual DbSet<t_account_shares_buy_synchro_setting> t_account_shares_buy_synchro_setting { get; set; }
+        public virtual DbSet<t_account_shares_buy_synchro_setting_follow> t_account_shares_buy_synchro_setting_follow { get; set; }
+        public virtual DbSet<t_account_shares_buy_synchro_setting_group> t_account_shares_buy_synchro_setting_group { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_buy_group_syncro_account> t_account_shares_conditiontrade_buy_group_syncro_account { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)

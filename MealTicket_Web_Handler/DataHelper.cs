@@ -9,6 +9,7 @@ using System.Data.Entity.SqlServer;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using System.Transactions;
 using static StockTrendMonitor.Define.StockMonitorDefine;
 
@@ -1277,12 +1278,12 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                             AllSetPar.Add(p);
                         }
                         var plate = plateRate.Where(e => e.PlateId == groupId).FirstOrDefault();
-                        if (plate == null)
-                        {
-                            continue;
-                        }
                         if (dataType == 2)
                         {
+                            if (plate == null)
+                            {
+                                continue;
+                            }
                             if (compare == 1 && plate.RiseRate < rate * 100)
                             {
                                 continue;
@@ -1309,6 +1310,10 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                             }
                             else
                             {
+                                if (plate == null)
+                                {
+                                    continue;
+                                }
                                 PlateList1.Add(plate.PlateId);
                             }
                         }

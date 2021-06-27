@@ -140,7 +140,8 @@ namespace SharesHqService
         {
             List<SharesBaseInfo> list = new List<SharesBaseInfo>();
             //拼接所有股票
-            List<SharesBaseInfo> tempList = new List<SharesBaseInfo>(); 
+            List<SharesBaseInfo> tempList = new List<SharesBaseInfo>();
+            object resultLock = new object();
             List<SharesQuotesInfo> resultlist = new List<SharesQuotesInfo>();
             if (Singleton.Instance.SharesBaseInfoList.TryGetValue(0, out tempList))
             {
@@ -170,72 +171,69 @@ namespace SharesHqService
             {
                 pageSize = totalCount / QuotesCount + 1;
             }
-            list = list.OrderBy(e => e.ShareCode).ToList();
 
-            Thread[] arrayThread = new Thread[pageSize];
-            AutoResetEvent eventObj = new AutoResetEvent(true);
-
+            ThreadMsgTemplate<List<SharesBaseInfo>> data = new ThreadMsgTemplate<List<SharesBaseInfo>>();
+            data.Init();
             for (int size = 0; size < pageSize; size++)
             {
                 var batchList = list.Skip(size * QuotesCount).Take(QuotesCount).ToList();
-                arrayThread[size] = new Thread(() =>
+                data.AddMessage(batchList);
+            }
+            int taskCount = Singleton.Instance.hqClientCount<= pageSize? Singleton.Instance.hqClientCount: pageSize;
+            Task[] tArr = new Task[taskCount];
+
+            for(int i=0;i< taskCount;i++)
+            {
+                tArr[i] = new Task((tdx_result) =>
                 {
+                    int hqClient = Singleton.Instance.GetHqClient();
                     try
                     {
-                        var temp = batchList;
-                        short nCount = (short)temp.Count();
-                        byte[] nMarketArr = new byte[nCount];
-                        string[] pszZqdmArr = new string[nCount];
-                        for (int j = 0; j < nCount; j++)
+                        do
                         {
-                            nMarketArr[j] = (byte)temp[j].Market;
-                            pszZqdmArr[j] = temp[j].ShareCode;
-                        }
-                        int hqClient = Singleton.Instance.GetHqClient();
-                        try
-                        {
-                            StringBuilder sErrInfo = new StringBuilder(256);
-                            StringBuilder sResult = new StringBuilder(1024 * 2048);
-                            int failCount = 0;//失败次数
-                            do
+                            List<SharesBaseInfo> tempData = new List<SharesBaseInfo>();
+                            if (!data.GetMessage(ref tempData, true))
                             {
-                                int tempClient = hqClient;
-                                bool bRet = TradeX_M.TdxHq_GetSecurityQuotes(tempClient, nMarketArr, pszZqdmArr, ref nCount, sResult, sErrInfo);
-                                if (!bRet)
-                                {
-                                    failCount++;
-                                    Singleton.Instance.AddRetryClient(hqClient);
-                                    hqClient = -1;
-                                    string errDes = string.Format("获取所有股票的五档报价数据出错，原因：{0}", sErrInfo.ToString());
-                                    Console.WriteLine(errDes);
-                                    if (failCount > 3)
-                                    {
-                                        return;
-                                    }
+                                break;
+                            }
+                            var temp_tdx_result = tdx_result as TdxHq_Result;
+                            StringBuilder sErrInfo = temp_tdx_result.sErrInfo;
+                            StringBuilder sResult = temp_tdx_result.sResult;
+                            sErrInfo.Clear();
+                            sResult.Clear();
 
-                                    hqClient = Singleton.Instance.GetHqClient();
-                                }
-                                else
-                                {
-                                    failCount = 999;
-                                }
-                            } while (failCount <= 3);
+                            short nCount = (short)tempData.Count();
+                            byte[] nMarketArr = new byte[nCount];
+                            string[] pszZqdmArr = new string[nCount];
+                            for (int j = 0; j < nCount; j++)
+                            {
+                                nMarketArr[j] = (byte)tempData[j].Market;
+                                pszZqdmArr[j] = tempData[j].ShareCode;
+                            }
+                            bool bRet = TradeX_M.TdxHq_GetSecurityQuotes(hqClient, nMarketArr, pszZqdmArr, ref nCount, sResult, sErrInfo);
+                            if (!bRet)
+                            {
+                                Singleton.Instance.AddRetryClient(hqClient);
+                                hqClient = Singleton.Instance.GetHqClient();
+                                string errDes = string.Format("获取所有股票的五档报价数据出错，原因：{0}", sErrInfo.ToString());
+                                Console.WriteLine(errDes);
+                                continue;
+                            }
                             string result = sResult.ToString();
                             string[] rows = result.Split('\n');
-                            for (int i = 0; i < rows.Length; i++)
+                            for (int j = 0; j < rows.Length; j++)
                             {
-                                if (i == 0)
+                                if (j == 0)
                                 {
                                     continue;
                                 }
-                                string[] column = rows[i].Split('\t');
+                                string[] column = rows[j].Split('\t');
                                 if (column.Length < 43)
                                 {
-                                    string errDes = "获取所有股票的五档报价数据结构有误";
                                     break;
                                 }
 
-                                string SharesCode = temp[i - 1].ShareCode;//原股票代码
+                                string SharesCode = tempData[j - 1].ShareCode;//原股票代码
                                 int Market = int.Parse(column[0]);//市场代码
                                 string BackSharesCode = column[1];//返回股票代码
                                 long PresentPrice = (long)(Math.Round(float.Parse(column[3]) * Singleton.Instance.PriceFormat, 0));//现价
@@ -275,14 +273,7 @@ namespace SharesHqService
                                 {
                                     continue;
                                 }
-                                //var tempClosedPrice = Singleton.Instance.SharesList.Where(e => e.ShareCode == SharesCode && e.Market == Market).Select(e => e.ShareClosedPrice).FirstOrDefault();
-                                //if (ClosedPrice <= 0 || (tempClosedPrice != ClosedPrice && tempClosedPrice>0))
-                                //{
-                                //    continue;
-                                //}
-
-                                eventObj.WaitOne();
-                                try
+                                lock (resultLock)
                                 {
                                     resultlist.Add(new SharesQuotesInfo
                                     {
@@ -321,38 +312,26 @@ namespace SharesHqService
                                         TotalAmount = TotalAmount,
                                         TotalCount = TotalCount,
                                         BackSharesCode = BackSharesCode,
-                                        LastModified=DateTime.Now
+                                        LastModified = DateTime.Now
                                     });
                                 }
-                                catch (Exception)
-                                { }
-
-                                eventObj.Set();
                             }
-                        }
-                        catch (Exception ex)
-                        { }
-
-                        if (hqClient != -1)
-                        {
-                            //归还行情链接
-                            Singleton.Instance.AddHqClient(hqClient);
-                        }
+                        } while (true);
                     }
                     catch (Exception ex)
                     {
+                        Logger.WriteFileLog("获取行情数据业务出错", ex);
                     }
-                });
-                arrayThread[size].Start();
+                    finally 
+                    {
+                        Singleton.Instance.AddHqClient(hqClient);
+                    }
+                },Singleton.Instance.tdxHq_Result[i],TaskCreationOptions.LongRunning);
+                tArr[i].Start();
             }
 
-            for (int size = 0; size < pageSize; size++)
-            {
-                arrayThread[size].Join();
-                arrayThread[size] = null;
-            }
-
-            eventObj.Close();
+            Task.WaitAll(tArr);
+            data.Release();
             return resultlist;
         }
 

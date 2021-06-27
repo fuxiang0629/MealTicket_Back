@@ -10,6 +10,34 @@ namespace MealTicket_Web_APIService.runner
 {
     public class TradeAutoBuyRunner : Runner
     {
+        object finishLock = new object();
+
+        bool IsFinish = true;
+
+        public bool TryToEnter()
+        {
+            lock (finishLock)
+            {
+                if (!IsFinish) { return false; }
+
+                IsFinish = false;
+            }
+
+            return true;
+        }
+
+        public bool TryToLeave()
+        {
+            lock (finishLock)
+            {
+                if (IsFinish) { return false; }
+
+                IsFinish = true;
+            }
+
+            return true;
+        }
+
         public TradeAutoBuyRunner()
         {
             Name = "TradeAutoBuyRunner";
@@ -41,14 +69,26 @@ namespace MealTicket_Web_APIService.runner
 
         public override void Execute()
         {
-            try
+            if (!TryToEnter())
             {
-                RunnerHelper.TradeAutoBuy();
+                return;
             }
-            catch (Exception ex)
+            Task task = new Task(() =>
             {
-                Logger.WriteFileLog("自动买入交易出错", ex);
-            }
+                try
+                {
+                    RunnerHelper.TradeAutoBuy();
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteFileLog("自动买入交易出错", ex);
+                }
+                finally
+                {
+                    TryToLeave();
+                }
+            });
+            task.Start();
         }
     }
 }

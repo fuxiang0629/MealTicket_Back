@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.ServiceProcess;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MealTicket_Web_APIService
@@ -31,6 +32,8 @@ namespace MealTicket_Web_APIService
             var _manager = new WebApiManager();
             _manager.Start<Startup>("http://localhost:8800/");
             Console.WriteLine("程序已启动,按任意键退出");
+            Console.ReadLine();
+            _manager.Dispose();
             Console.ReadLine();
         }
     }

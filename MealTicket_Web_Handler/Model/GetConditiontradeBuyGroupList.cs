@@ -76,6 +76,11 @@ namespace MealTicket_Web_Handler.Model
         public int SharesAccountCount { get; set; }
 
         /// <summary>
+        /// 同步用户数量
+        /// </summary>
+        public int SyncroAccountCount { get; set; }
+
+        /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }

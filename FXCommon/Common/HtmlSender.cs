@@ -94,6 +94,29 @@ namespace FXCommon.Common
         }
 
         /// <summary>
+        /// Web请求(Http Basic认证)
+        /// </summary>
+        /// <returns></returns>
+        public static string Post_BasicAuth(string content, string url, string auth)
+        {
+            HttpWebRequest myRequest = (HttpWebRequest)WebRequest.Create(url);
+            byte[] buf = UnicodeEncoding.UTF8.GetBytes(content);
+            myRequest.Method = "POST";
+            myRequest.ContentLength = buf.Length;
+            myRequest.ContentType = "application/json";
+            myRequest.Headers.Add("Authorization", "Basic " + auth);
+            using (Stream newStream = myRequest.GetRequestStream())
+            {
+                newStream.Write(buf, 0, buf.Length);
+            }
+            using (HttpWebResponse myResponse = (HttpWebResponse)myRequest.GetResponse())
+            using (StreamReader reader = new StreamReader(myResponse.GetResponseStream(), Encoding.UTF8))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        /// <summary>
         /// Get xml方法
         /// </summary>
         /// <param name="url">地址</param>

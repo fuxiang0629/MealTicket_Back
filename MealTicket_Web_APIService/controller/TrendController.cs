@@ -5424,6 +5424,62 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 查询条件买入自定义分组同步用户列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/buy/group/syncroaccount/list"), HttpPost]
+        [Description("查询条件买入自定义分组同步用户列表")]
+        [CheckUserLoginFilter]
+        public List<ConditiontradeBuyGroupSharesAccount> GetConditiontradeBuyGroupSyncroAccountList(DetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeBuyGroupSyncroAccountList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加条件买入自定义分组同步用户
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/buy/group/syncroaccount/add"), HttpPost]
+        [Description("添加条件买入自定义分组同步用户")]
+        [CheckUserLoginFilter]
+        public object AddConditiontradeBuyGroupSyncroAccount(AddConditiontradeBuyGroupSharesAccountRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddConditiontradeBuyGroupSyncroAccount(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除条件买入自定义分组同步用户
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/buy/group/syncroaccount/delete"), HttpPost]
+        [Description("删除条件买入自定义分组同步用户")]
+        [CheckUserLoginFilter]
+        public object DeleteConditiontradeBuyGroupSyncroAccount(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteConditiontradeBuyGroupSyncroAccount(request, basedata);
+            return null;
+        }
+
+        /// <summary>
         /// 获取用户买入条件设置
         /// </summary>
         /// <returns></returns>
@@ -5734,6 +5790,112 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             trendHandler.DeleteAccountFollowGroupFollowAccount(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取自动买入同步设置列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取自动买入同步设置列表")]
+        [Route("account/auto/buy/synchro/setting/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public PageRes<AccountAutoBuySyncroSettingInfo> GetAccountAutoBuySyncroSettingList(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountAutoBuySyncroSettingList(request,basedata);
+        }
+
+        /// <summary>
+        /// 根据手机号匹配用户信息
+        /// </summary>
+        /// <returns></returns>
+        [Description("根据手机号匹配用户信息")]
+        [Route("bymobile/account/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<AccountInfo> GetAccountListByMobile(GetAccountListByMobileRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountListByMobile(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加自动买入同步设置
+        /// </summary>
+        /// <returns></returns>
+        [Description("添加自动买入同步设置")]
+        [Route("account/auto/buy/synchro/setting/add"), HttpPost]
+        [CheckUserLoginFilter]
+        public object AddAccountAutoBuySyncroSetting(AddAccountAutoBuySyncroSettingRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountAutoBuySyncroSetting(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑自动买入同步设置
+        /// </summary>
+        /// <returns></returns>
+        [Description("编辑自动买入同步设置")]
+        [Route("account/auto/buy/synchro/setting/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifyAccountAutoBuySyncroSetting(ModifyAccountAutoBuySyncroSettingRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountAutoBuySyncroSetting(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改自动买入同步设置状态
+        /// </summary>
+        /// <returns></returns>
+        [Description("修改自动买入同步设置状态")]
+        [Route("account/auto/buy/synchro/setting/status/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifyAccountAutoBuySyncroSettingStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountAutoBuySyncroSettingStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除自动买入同步设置
+        /// </summary>
+        /// <returns></returns>
+        [Description("删除自动买入同步设置")]
+        [Route("account/auto/buy/synchro/setting/delete"), HttpPost]
+        [CheckUserLoginFilter]
+        public object DeleteAccountAutoBuySyncroSetting(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountAutoBuySyncroSetting(request, basedata);
             return null;
         }
     }

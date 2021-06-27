@@ -313,6 +313,7 @@
     <EntitySet Name="v_plate" EntityType="meal_ticketModel.v_plate" />
     <EntitySet Name="v_shares_quotes_last" EntityType="meal_ticketModel.v_shares_quotes_last" />
     <EntitySet Name="t_shares_plate_riserate_last" EntityType="meal_ticketModel.t_shares_plate_riserate_last" />
+    <EntitySet Name="t_shares_plate_type_business" EntityType="meal_ticketModel.t_shares_plate_type_business" />
   </EntityContainer>
   <EntityType Name="t_admin_department">
     <Key>
@@ -2476,6 +2477,16 @@
     <Property Name="WeightRiseIndex" Type="Int64" Nullable="false" />
     <Property Name="RiseLimitCount" Type="Int32" Nullable="false" />
     <Property Name="DownLimitCount" Type="Int32" Nullable="false" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_type_business">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="IsBasePlate" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
 </Schema>

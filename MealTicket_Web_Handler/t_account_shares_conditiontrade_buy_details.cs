@@ -42,5 +42,6 @@ namespace MealTicket_Web_Handler
         public bool IsHold { get; set; }
         public int FollowType { get; set; }
         public string EntrustErrorDes { get; set; }
+        public long FatherId { get; set; }
     }
 }

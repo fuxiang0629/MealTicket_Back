@@ -91,7 +91,7 @@ namespace SharesHqService
         /// <summary>
         /// 行情连接数量
         /// </summary>
-        private readonly int hqClientCount = 32;
+        public readonly int hqClientCount = 32;
 
         /// <summary>
         /// 心跳线程
@@ -306,6 +306,16 @@ namespace SharesHqService
         private void Init()
         {
             Dispose();
+            //申请行情内存空间数组
+            tdxHq_Result = new TdxHq_Result[hqClientCount];
+            for (int i = 0; i < hqClientCount; i++)
+            {
+                tdxHq_Result[i] = new TdxHq_Result
+                {
+                    sErrInfo = new StringBuilder(256),
+                    sResult = new StringBuilder(1024 * QuotesCount)
+                };
+            }
 
             retryWait.Init();
             retryData.Init();
@@ -743,5 +753,9 @@ namespace SharesHqService
             { }
 
         }
+
+        #region====五档行情数据结构====
+        public TdxHq_Result[] tdxHq_Result;//行情内存空间
+        #endregion
     }
 }

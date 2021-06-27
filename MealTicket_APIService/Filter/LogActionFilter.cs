@@ -33,7 +33,7 @@ namespace MealTicket_APIService.Filter
         {
             _authorityHandler = WebApiManager.Kernel.Get<AuthorityHandler>();
         }
-
+        
         public override void OnActionExecuted(HttpActionExecutedContext context)
         {
             try

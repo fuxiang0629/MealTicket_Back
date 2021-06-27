@@ -1,6 +1,12 @@
 F:\项目\饭票后端\Stock_db_core\bin\Debug\stock_db_core.dll
 F:\项目\饭票后端\Stock_db_core\bin\Debug\stock_db_core.pdb
-F:\项目\饭票后端\Stock_db_core\obj\Debug\stock_db_core.csprojAssemblyReference.cache
 F:\项目\饭票后端\Stock_db_core\obj\Debug\stock_db_core.csproj.CoreCompileInputs.cache
 F:\项目\饭票后端\Stock_db_core\obj\Debug\stock_db_core.dll
 F:\项目\饭票后端\Stock_db_core\obj\Debug\stock_db_core.pdb
+F:\项目\饭票后端\Stock_db_core\obj\Debug\stock_db_core.csprojAssemblyReference.cache
+D:\项目\饭票\后端\Stock_db_core\bin\Debug\stock_db_core.dll
+D:\项目\饭票\后端\Stock_db_core\bin\Debug\stock_db_core.pdb
+D:\项目\饭票\后端\Stock_db_core\obj\Debug\stock_db_core.csprojAssemblyReference.cache
+D:\项目\饭票\后端\Stock_db_core\obj\Debug\stock_db_core.csproj.CoreCompileInputs.cache
+D:\项目\饭票\后端\Stock_db_core\obj\Debug\stock_db_core.dll
+D:\项目\饭票\后端\Stock_db_core\obj\Debug\stock_db_core.pdb

@@ -113,6 +113,7 @@
     <Compile Include="Model\AccountGetWalletInfo.cs" />
     <Compile Include="Model\AccountLogin.cs" />
     <Compile Include="Model\AccountMakeupDeposit.cs" />
+    <Compile Include="Model\AddAccountAutoBuySyncroSetting.cs" />
     <Compile Include="Model\AddAccountBuyCondition.cs" />
     <Compile Include="Model\AddAccountBuyConditionAuto.cs" />
     <Compile Include="Model\AddAccountBuyConditionAutoGroup.cs" />
@@ -156,6 +157,7 @@
     <Compile Include="Model\BatchSetConditiontradeBuySharesFollow.cs" />
     <Compile Include="Model\BindAccountOptionalSeat.cs" />
     <Compile Include="Model\DeleteConditiontradeBuyGroup.cs" />
+    <Compile Include="Model\GetAccountAutoBuySyncroSettingList.cs" />
     <Compile Include="Model\GetAccountBuyConditionAutoGroupList.cs" />
     <Compile Include="Model\GetAccountBuyConditionAutoList.cs" />
     <Compile Include="Model\GetAccountBuyConditionAutoPar.cs" />
@@ -168,6 +170,7 @@
     <Compile Include="Model\GetAccountBuySettingParList.cs" />
     <Compile Include="Model\GetAccountFollowGroupFollowAccountList.cs" />
     <Compile Include="Model\GetAccountFollowGroupList.cs" />
+    <Compile Include="Model\GetAccountListByMobile.cs" />
     <Compile Include="Model\GetAccountRiseLimitTriList.cs" />
     <Compile Include="Model\GetAccountSharesPlateSharesList.cs" />
     <Compile Include="Model\GetConditiontradeBuyGroupList.cs" />
@@ -216,6 +219,7 @@
     <Compile Include="Model\ImportConditiontradeTemplateBuy.cs" />
     <Compile Include="Model\ImportConditiontradeTemplateSell.cs" />
     <Compile Include="Model\ImportysPlateShares.cs" />
+    <Compile Include="Model\ModifyAccountAutoBuySyncroSetting.cs" />
     <Compile Include="Model\ModifyAccountBuyCondition.cs" />
     <Compile Include="Model\ModifyAccountBuyConditionAuto.cs" />
     <Compile Include="Model\ModifyAccountBuyConditionAutoGroup.cs" />
@@ -316,6 +320,15 @@
     <Compile Include="t_account_shares_buy_setting_par.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="t_account_shares_buy_synchro_setting.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_buy_synchro_setting_follow.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_buy_synchro_setting_group.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="t_account_shares_conditiontrade_buy.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -365,6 +378,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_account_shares_conditiontrade_buy_group_share_account.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_conditiontrade_buy_group_syncro_account.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_account_shares_conditiontrade_buy_plate.cs">
