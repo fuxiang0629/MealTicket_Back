@@ -741,5 +741,51 @@ namespace MealTicket_Handler
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_FollowCancel", accountIdParameter, errorCode, errorMessage);
         }
+    
+        public virtual int P_Calculate_DepositChange_Hold_Temp(Nullable<long> holdId, Nullable<long> changeAmount, string description, Nullable<System.DateTime> currTime)
+        {
+            var holdIdParameter = holdId.HasValue ?
+                new ObjectParameter("holdId", holdId) :
+                new ObjectParameter("holdId", typeof(long));
+    
+            var changeAmountParameter = changeAmount.HasValue ?
+                new ObjectParameter("changeAmount", changeAmount) :
+                new ObjectParameter("changeAmount", typeof(long));
+    
+            var descriptionParameter = description != null ?
+                new ObjectParameter("description", description) :
+                new ObjectParameter("description", typeof(string));
+    
+            var currTimeParameter = currTime.HasValue ?
+                new ObjectParameter("currTime", currTime) :
+                new ObjectParameter("currTime", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Calculate_DepositChange_Hold_Temp", holdIdParameter, changeAmountParameter, descriptionParameter, currTimeParameter);
+        }
+    
+        public virtual int P_Calculate_WalletChange_Platform_Temp(string typeCode, Nullable<long> inComeAmount, Nullable<long> confirmDeposit, Nullable<long> context, Nullable<System.DateTime> currTime)
+        {
+            var typeCodeParameter = typeCode != null ?
+                new ObjectParameter("typeCode", typeCode) :
+                new ObjectParameter("typeCode", typeof(string));
+    
+            var inComeAmountParameter = inComeAmount.HasValue ?
+                new ObjectParameter("inComeAmount", inComeAmount) :
+                new ObjectParameter("inComeAmount", typeof(long));
+    
+            var confirmDepositParameter = confirmDeposit.HasValue ?
+                new ObjectParameter("confirmDeposit", confirmDeposit) :
+                new ObjectParameter("confirmDeposit", typeof(long));
+    
+            var contextParameter = context.HasValue ?
+                new ObjectParameter("context", context) :
+                new ObjectParameter("context", typeof(long));
+    
+            var currTimeParameter = currTime.HasValue ?
+                new ObjectParameter("currTime", currTime) :
+                new ObjectParameter("currTime", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Calculate_WalletChange_Platform_Temp", typeCodeParameter, inComeAmountParameter, confirmDepositParameter, contextParameter, currTimeParameter);
+        }
     }
 }

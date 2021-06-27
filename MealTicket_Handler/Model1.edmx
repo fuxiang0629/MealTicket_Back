@@ -1414,6 +1414,12 @@
           <Parameter Name="changeAmount" Type="bigint" Mode="In" />
           <Parameter Name="description" Type="nvarchar" Mode="In" />
         </Function>
+        <Function Name="P_Calculate_DepositChange_Hold_Temp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="holdId" Type="bigint" Mode="In" />
+          <Parameter Name="changeAmount" Type="bigint" Mode="In" />
+          <Parameter Name="description" Type="nvarchar" Mode="In" />
+          <Parameter Name="currTime" Type="datetime" Mode="In" />
+        </Function>
         <Function Name="P_Calculate_Recommend_Prize" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="accountId" Type="bigint" Mode="In" />
           <Parameter Name="prizeType" Type="int" Mode="In" />
@@ -1427,6 +1433,13 @@
           <Parameter Name="inComeAmount" Type="bigint" Mode="In" />
           <Parameter Name="confirmDeposit" Type="bigint" Mode="In" />
           <Parameter Name="context" Type="bigint" Mode="In" />
+        </Function>
+        <Function Name="P_Calculate_WalletChange_Platform_Temp" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="typeCode" Type="varchar" Mode="In" />
+          <Parameter Name="inComeAmount" Type="bigint" Mode="In" />
+          <Parameter Name="confirmDeposit" Type="bigint" Mode="In" />
+          <Parameter Name="context" Type="bigint" Mode="In" />
+          <Parameter Name="currTime" Type="datetime" Mode="In" />
         </Function>
         <Function Name="P_CashApply" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
           <Parameter Name="accountId" Type="bigint" Mode="In" />
@@ -1989,6 +2002,19 @@
           <EntitySet Name="t_account_wallet" EntityType="meal_ticketModel.t_account_wallet" />
           <EntitySet Name="t_account_shares_buy_setting" EntityType="meal_ticketModel.t_account_shares_buy_setting" />
           <EntitySet Name="v_shares_quotes_last" EntityType="meal_ticketModel.v_shares_quotes_last" />
+          <FunctionImport Name="P_Calculate_DepositChange_Hold_Temp">
+            <Parameter Name="holdId" Mode="In" Type="Int64" />
+            <Parameter Name="changeAmount" Mode="In" Type="Int64" />
+            <Parameter Name="description" Mode="In" Type="String" />
+            <Parameter Name="currTime" Mode="In" Type="DateTime" />
+          </FunctionImport>
+          <FunctionImport Name="P_Calculate_WalletChange_Platform_Temp">
+            <Parameter Name="typeCode" Mode="In" Type="String" />
+            <Parameter Name="inComeAmount" Mode="In" Type="Int64" />
+            <Parameter Name="confirmDeposit" Mode="In" Type="Int64" />
+            <Parameter Name="context" Mode="In" Type="Int64" />
+            <Parameter Name="currTime" Mode="In" Type="DateTime" />
+          </FunctionImport>
         </EntityContainer>
         <EntityType Name="t_authority_account_visitlog">
           <Key>
@@ -4605,6 +4631,8 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="P_Calculate_DepositChange_Hold_Temp" FunctionName="meal_ticketModel.Store.P_Calculate_DepositChange_Hold_Temp" />
+          <FunctionImportMapping FunctionImportName="P_Calculate_WalletChange_Platform_Temp" FunctionName="meal_ticketModel.Store.P_Calculate_WalletChange_Platform_Temp" />
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

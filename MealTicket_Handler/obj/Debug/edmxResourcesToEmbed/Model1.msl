@@ -70,52 +70,6 @@
     <FunctionImportMapping FunctionImportName="P_AccountModifyMobile" FunctionName="meal_ticketModel.Store.P_AccountModifyMobile" />
     <FunctionImportMapping FunctionImportName="P_AccountModifyPassword" FunctionName="meal_ticketModel.Store.P_AccountModifyPassword" />
     <FunctionImportMapping FunctionImportName="P_AccountSetRefer" FunctionName="meal_ticketModel.Store.P_AccountSetRefer" />
-    <EntitySetMapping Name="t_shares_quotes">
-      <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes">
-        <MappingFragment StoreEntitySet="t_shares_quotes">
-          <ScalarProperty Name="TriPriceType" ColumnName="TriPriceType" />
-          <ScalarProperty Name="PriceType" ColumnName="PriceType" />
-          <ScalarProperty Name="LimitDownPrice" ColumnName="LimitDownPrice" />
-          <ScalarProperty Name="LimitUpPrice" ColumnName="LimitUpPrice" />
-          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
-          <ScalarProperty Name="Activity" ColumnName="Activity" />
-          <ScalarProperty Name="SpeedUp" ColumnName="SpeedUp" />
-          <ScalarProperty Name="SellCount5" ColumnName="SellCount5" />
-          <ScalarProperty Name="SellPrice5" ColumnName="SellPrice5" />
-          <ScalarProperty Name="SellCount4" ColumnName="SellCount4" />
-          <ScalarProperty Name="SellPrice4" ColumnName="SellPrice4" />
-          <ScalarProperty Name="SellCount3" ColumnName="SellCount3" />
-          <ScalarProperty Name="SellPrice3" ColumnName="SellPrice3" />
-          <ScalarProperty Name="SellCount2" ColumnName="SellCount2" />
-          <ScalarProperty Name="SellPrice2" ColumnName="SellPrice2" />
-          <ScalarProperty Name="SellCount1" ColumnName="SellCount1" />
-          <ScalarProperty Name="SellPrice1" ColumnName="SellPrice1" />
-          <ScalarProperty Name="BuyCount5" ColumnName="BuyCount5" />
-          <ScalarProperty Name="BuyPrice5" ColumnName="BuyPrice5" />
-          <ScalarProperty Name="BuyCount4" ColumnName="BuyCount4" />
-          <ScalarProperty Name="BuyPrice4" ColumnName="BuyPrice4" />
-          <ScalarProperty Name="BuyCount3" ColumnName="BuyCount3" />
-          <ScalarProperty Name="BuyPrice3" ColumnName="BuyPrice3" />
-          <ScalarProperty Name="BuyCount2" ColumnName="BuyCount2" />
-          <ScalarProperty Name="BuyPrice2" ColumnName="BuyPrice2" />
-          <ScalarProperty Name="BuyCount1" ColumnName="BuyCount1" />
-          <ScalarProperty Name="BuyPrice1" ColumnName="BuyPrice1" />
-          <ScalarProperty Name="OuterCount" ColumnName="OuterCount" />
-          <ScalarProperty Name="InvolCount" ColumnName="InvolCount" />
-          <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
-          <ScalarProperty Name="PresentCount" ColumnName="PresentCount" />
-          <ScalarProperty Name="TotalCount" ColumnName="TotalCount" />
-          <ScalarProperty Name="MinPrice" ColumnName="MinPrice" />
-          <ScalarProperty Name="MaxPrice" ColumnName="MaxPrice" />
-          <ScalarProperty Name="OpenedPrice" ColumnName="OpenedPrice" />
-          <ScalarProperty Name="ClosedPrice" ColumnName="ClosedPrice" />
-          <ScalarProperty Name="PresentPrice" ColumnName="PresentPrice" />
-          <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
-          <ScalarProperty Name="Market" ColumnName="Market" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <FunctionImportMapping FunctionImportName="P_SetTradeClosingTime" FunctionName="meal_ticketModel.Store.P_SetTradeClosingTime" />
     <FunctionImportMapping FunctionImportName="P_MakeupDeposit" FunctionName="meal_ticketModel.Store.P_MakeupDeposit" />
     <EntitySetMapping Name="t_account_baseinfo">
@@ -751,6 +705,7 @@
     <EntitySetMapping Name="t_shares_limit_fundmultiple">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_limit_fundmultiple">
         <MappingFragment StoreEntitySet="t_shares_limit_fundmultiple">
+          <ScalarProperty Name="NearLimitRange" ColumnName="NearLimitRange" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="FundMultiple" ColumnName="FundMultiple" />
@@ -1148,6 +1103,7 @@
     <EntitySetMapping Name="t_account_follow_rel">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_follow_rel">
         <MappingFragment StoreEntitySet="t_account_follow_rel">
+          <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="FollowAccountId" ColumnName="FollowAccountId" />
           <ScalarProperty Name="AccountId" ColumnName="AccountId" />
@@ -1199,6 +1155,8 @@
     <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details">
         <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details">
+          <ScalarProperty Name="EntrustErrorDes" ColumnName="EntrustErrorDes" />
+          <ScalarProperty Name="FollowType" ColumnName="FollowType" />
           <ScalarProperty Name="IsHold" ColumnName="IsHold" />
           <ScalarProperty Name="OtherConditionRelative" ColumnName="OtherConditionRelative" />
           <ScalarProperty Name="LimitUp" ColumnName="LimitUp" />
@@ -1340,5 +1298,55 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="v_shares_quotes_last">
+      <EntityTypeMapping TypeName="meal_ticketModel.v_shares_quotes_last">
+        <MappingFragment StoreEntitySet="v_shares_quotes_last">
+          <ScalarProperty Name="DataType" ColumnName="DataType" />
+          <ScalarProperty Name="TriNearLimitType" ColumnName="TriNearLimitType" />
+          <ScalarProperty Name="TriPriceType" ColumnName="TriPriceType" />
+          <ScalarProperty Name="PriceType" ColumnName="PriceType" />
+          <ScalarProperty Name="LimitDownPrice" ColumnName="LimitDownPrice" />
+          <ScalarProperty Name="LimitUpPrice" ColumnName="LimitUpPrice" />
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="Activity" ColumnName="Activity" />
+          <ScalarProperty Name="SpeedUp" ColumnName="SpeedUp" />
+          <ScalarProperty Name="SellCount5" ColumnName="SellCount5" />
+          <ScalarProperty Name="SellPrice5" ColumnName="SellPrice5" />
+          <ScalarProperty Name="SellCount4" ColumnName="SellCount4" />
+          <ScalarProperty Name="SellPrice4" ColumnName="SellPrice4" />
+          <ScalarProperty Name="SellCount3" ColumnName="SellCount3" />
+          <ScalarProperty Name="SellPrice3" ColumnName="SellPrice3" />
+          <ScalarProperty Name="SellCount2" ColumnName="SellCount2" />
+          <ScalarProperty Name="SellPrice2" ColumnName="SellPrice2" />
+          <ScalarProperty Name="SellCount1" ColumnName="SellCount1" />
+          <ScalarProperty Name="SellPrice1" ColumnName="SellPrice1" />
+          <ScalarProperty Name="BuyCount5" ColumnName="BuyCount5" />
+          <ScalarProperty Name="BuyPrice5" ColumnName="BuyPrice5" />
+          <ScalarProperty Name="BuyCount4" ColumnName="BuyCount4" />
+          <ScalarProperty Name="BuyPrice4" ColumnName="BuyPrice4" />
+          <ScalarProperty Name="BuyCount3" ColumnName="BuyCount3" />
+          <ScalarProperty Name="BuyPrice3" ColumnName="BuyPrice3" />
+          <ScalarProperty Name="BuyCount2" ColumnName="BuyCount2" />
+          <ScalarProperty Name="BuyPrice2" ColumnName="BuyPrice2" />
+          <ScalarProperty Name="BuyCount1" ColumnName="BuyCount1" />
+          <ScalarProperty Name="BuyPrice1" ColumnName="BuyPrice1" />
+          <ScalarProperty Name="OuterCount" ColumnName="OuterCount" />
+          <ScalarProperty Name="InvolCount" ColumnName="InvolCount" />
+          <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+          <ScalarProperty Name="PresentCount" ColumnName="PresentCount" />
+          <ScalarProperty Name="TotalCount" ColumnName="TotalCount" />
+          <ScalarProperty Name="MinPrice" ColumnName="MinPrice" />
+          <ScalarProperty Name="MaxPrice" ColumnName="MaxPrice" />
+          <ScalarProperty Name="OpenedPrice" ColumnName="OpenedPrice" />
+          <ScalarProperty Name="ClosedPrice" ColumnName="ClosedPrice" />
+          <ScalarProperty Name="PresentPrice" ColumnName="PresentPrice" />
+          <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+          <ScalarProperty Name="Market" ColumnName="Market" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <FunctionImportMapping FunctionImportName="P_Calculate_DepositChange_Hold_Temp" FunctionName="meal_ticketModel.Store.P_Calculate_DepositChange_Hold_Temp" />
+    <FunctionImportMapping FunctionImportName="P_Calculate_WalletChange_Platform_Temp" FunctionName="meal_ticketModel.Store.P_Calculate_WalletChange_Platform_Temp" />
   </EntityContainerMapping>
 </Mapping>

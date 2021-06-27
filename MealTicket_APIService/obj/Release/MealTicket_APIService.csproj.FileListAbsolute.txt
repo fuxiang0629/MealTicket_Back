@@ -351,6 +351,7 @@ D:\项目\饭票\后端\MealTicket_APIService\bin\Release\System.Web.Razor.xml
 D:\项目\饭票\后端\MealTicket_APIService\bin\Release\RabbitMQ.Client.pdb
 D:\项目\饭票\后端\MealTicket_APIService\bin\Release\RabbitMQ.Client.xml
 D:\项目\饭票\后端\MealTicket_APIService\bin\Release\System.Memory.xml
+D:\项目\饭票\后端\MealTicket_APIService\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
 D:\项目\饭票\后端\MealTicket_APIService\bin\Release\System.Threading.Channels.xml
 D:\项目\饭票\后端\MealTicket_APIService\bin\Release\System.Buffers.xml
 D:\项目\饭票\后端\MealTicket_APIService\bin\Release\System.Numerics.Vectors.xml
@@ -359,4 +360,3 @@ D:\项目\饭票\后端\MealTicket_APIService\obj\Release\MealTicket_APIService.
 D:\项目\饭票\后端\MealTicket_APIService\obj\Release\MealTicket_APIService.csproj.CopyComplete
 D:\项目\饭票\后端\MealTicket_APIService\obj\Release\MealTicket_APIService.exe
 D:\项目\饭票\后端\MealTicket_APIService\obj\Release\MealTicket_APIService.pdb
-D:\项目\饭票\后端\MealTicket_APIService\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
