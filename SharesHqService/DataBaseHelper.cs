@@ -630,7 +630,17 @@ then insert(Market,SharesCode,PresentPrice,ClosedPrice,OpenedPrice,MaxPrice,MinP
             }
             stopwatch.Stop();
             Console.WriteLine("\t=====任务执行结束:" + stopwatch.ElapsedMilliseconds + "============");
-            Singleton.Instance.LastSharesQuotesList = list.ToDictionary(e => e.Market + "" + e.SharesCode, e => e);
+            foreach (var item in list)
+            {
+                if (Singleton.Instance.LastSharesQuotesList.ContainsKey(item.Market + "" + item.SharesCode))
+                {
+                    Singleton.Instance.LastSharesQuotesList[item.Market + "" + item.SharesCode] = item;
+                }
+                else 
+                {
+                    Singleton.Instance.LastSharesQuotesList.Add(item.Market + "" + item.SharesCode,item);
+                }
+            }
         }
 
         /// <summary>

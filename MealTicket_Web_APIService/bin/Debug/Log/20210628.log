@@ -1,0 +1,22 @@
+2021/6/28 15:01:07
+自动交易出错
+System.ComponentModel.Win32Exception (0x80004005): 等待的操作过时。
+
+2021/6/28 15:01:07
+实时更新股票分笔数据出错
+System.Net.WebException: 远程服务器返回错误: (500) 内部服务器错误。
+   在 System.Net.HttpWebRequest.GetResponse()
+   在 FXCommon.Common.HtmlSender.Post_BasicAuth(String content, String url, String auth) 位置 D:\项目\饭票\后端\FXCommon\Common\HtmlSender.cs:行号 112
+   在 MealTicket_Web_Handler.MQHandler._GetMessage(String queryName) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\MQHandler.cs:行号 210
+   在 MealTicket_Web_Handler.MQHandler.IsEmpty(String queryName) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\MQHandler.cs:行号 183
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.SendTransactionShares() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 2547
+   在 MealTicket_Web_APIService.TransactiondataRealTimeRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\TransactiondataRealTimeRunner.cs:行号 46
+
+2021/6/28 19:15:23
+链接字符串错误
+
+
+2021/6/28 19:24:01
+队列链接断开重连
+
+

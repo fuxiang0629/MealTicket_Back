@@ -334,7 +334,6 @@
     <EntitySet Name="t_account_wallet" EntityType="meal_ticketModel.t_account_wallet" />
     <EntitySet Name="t_account_shares_buy_setting" EntityType="meal_ticketModel.t_account_shares_buy_setting" />
     <EntitySet Name="v_shares_quotes_last" EntityType="meal_ticketModel.v_shares_quotes_last" />
-<<<<<<< HEAD
     <FunctionImport Name="P_Calculate_DepositChange_Hold_Temp">
       <Parameter Name="holdId" Mode="In" Type="Int64" />
       <Parameter Name="changeAmount" Mode="In" Type="Int64" />
@@ -348,8 +347,6 @@
       <Parameter Name="context" Mode="In" Type="Int64" />
       <Parameter Name="currTime" Mode="In" Type="DateTime" />
     </FunctionImport>
-=======
->>>>>>> c4b5639568cc955cd153cf6981f69b08d65f3efa
   </EntityContainer>
   <EntityType Name="t_authority_account_visitlog">
     <Key>

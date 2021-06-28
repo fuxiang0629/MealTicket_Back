@@ -423,6 +423,8 @@ where t.num=1", SharesInfoNumArr, dateStart, dateEnd);
                     int tempOrder = 0;//临时排序值
                     string result = sResult.ToString();
                     string[] rows = result.Split('\n');
+
+                    List<SharesTransactionDataInfo> tempResultlist = new List<SharesTransactionDataInfo>();
                     for (int i = 0; i < rows.Length; i++)
                     {
                         if (i == 0)
@@ -457,7 +459,7 @@ where t.num=1", SharesInfoNumArr, dateStart, dateEnd);
                         }
                         else
                         {
-                            resultlist.Add(new SharesTransactionDataInfo
+                            tempResultlist.Add(new SharesTransactionDataInfo
                             {
                                 SharesCode = sharesCode,
                                 Market = market,
@@ -472,6 +474,7 @@ where t.num=1", SharesInfoNumArr, dateStart, dateEnd);
                             tempOrder++;
                         }
                     }
+                    resultlist=tempResultlist.Concat(resultlist).ToList();
                     nStart = (short)(nStart + nCount);
                     totalCount += nCount;
                 }
@@ -480,13 +483,21 @@ where t.num=1", SharesInfoNumArr, dateStart, dateEnd);
             DateTime? FirstTime=null;
             for (int i=0;i<resultlist.Count();i++)
             {
+                if(resultlist[i].SharesCode=="000001")
+                {
+
+                }
                 resultlist[i].IsTimeLast = false;
                 if (FirstTime == null || resultlist[i].Time > FirstTime.Value)
                 {
                     resultlist[i].IsTimeFirst = true;
                     if (i > 0)
                     {
-                        resultlist[i-1].IsTimeLast = true;
+                        resultlist[i - 1].IsTimeLast = true;
+                    }
+                    else if (resultlist[i].Time.Hour == 15)
+                    {
+                        resultlist[i].IsTimeLast = true;
                     }
                 }
                 else
@@ -602,6 +613,8 @@ where t.num=1", SharesInfoNumArr, dateStart, dateEnd);
                                 sql = string.Format(@"merge into t_shares_transactiondata as t
 using (select * from {0}) as t1
 ON t.Market = t1.Market and t.SharesCode = t1.SharesCode and t.Time=t1.Time and t.OrderIndex=t1.OrderIndex
+when matched
+then update set t.IsTimeFirst=t1.IsTimeFirst,t.IsTimeLast=t1.IsTimeLast
 when not matched by target
 then insert(Market,SharesCode,Time,TimeStr,Price,Volume,Stock,Type,OrderIndex,LastModified,SharesInfo,SharesInfoNum,IsTimeFirst,IsTimeLast) values(t1.Market,t1.SharesCode,t1.Time,t1.TimeStr,t1.Price,t1.Volume,t1.Stock,t1.Type,t1.OrderIndex,t1.LastModified,t1.SharesInfo,t1.SharesInfoNum,t1.IsTimeFirst,t1.IsTimeLast);", Singleton.Instance.TempTableName);
                                 cmd.CommandText = sql;

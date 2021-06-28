@@ -126,5 +126,10 @@ namespace MealTicket_Web_Handler.Model
         /// 所属自定义分组
         /// </summary>
         public List<long> GroupList { get; set; }
+
+        /// <summary>
+        /// 条件买入状态1不存在 2未开启 3已开启
+        /// </summary>
+        public int ConditionStatus { get; set; }
     }
 }

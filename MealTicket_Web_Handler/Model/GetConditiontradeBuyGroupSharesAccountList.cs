@@ -31,5 +31,10 @@ namespace MealTicket_Web_Handler.Model
         /// 绑定时间
         /// </summary>
         public DateTime CreateTime { get; set; }
+
+        /// <summary>
+        /// 状态 1可用 2不可用
+        /// </summary>
+        public int Status { get; set; }
     }
 }

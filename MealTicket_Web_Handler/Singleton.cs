@@ -158,7 +158,7 @@ namespace MealTicket_Web_Handler
 
 
             m_stockMonitor = new StockMonitorCore();
-            int error=m_stockMonitor.InitCore(ConnectionString_meal_ticket + "|" + ConnectionString_meal_ticket_shares_transactiondata, 0,"");
+            int error=m_stockMonitor.InitCore(ConnectionString_meal_ticket + "|" + ConnectionString_meal_ticket_shares_transactiondata, -1, "");
             if (error != 0)
             {
                 Logger.WriteFileLog("链接字符串错误",null);
@@ -234,7 +234,7 @@ namespace MealTicket_Web_Handler
                                   select item).FirstOrDefault();
                     if (sysPar != null)
                     {
-                        this.SharesCodeMatch0 = sysPar.ParamValue;
+                        SharesCodeMatch0 = sysPar.ParamValue;
                     }
                 }
                 catch { }
@@ -245,7 +245,7 @@ namespace MealTicket_Web_Handler
                                   select item).FirstOrDefault();
                     if (sysPar != null)
                     {
-                        this.SharesCodeMatch1 = sysPar.ParamValue;
+                        SharesCodeMatch1 = sysPar.ParamValue;
                     }
                 }
                 catch { }
@@ -257,21 +257,25 @@ namespace MealTicket_Web_Handler
                     if (sysPar != null)
                     {
                         var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
-                        if (sysValue.MinPushTimeInterval > 0 || sysValue.MinPushTimeInterval == -1)
+                        int tempMinPushTimeInterval = sysValue.MinPushTimeInterval;
+                        if (tempMinPushTimeInterval > 0 || tempMinPushTimeInterval == -1)
                         {
-                            MinPushTimeInterval = sysValue.MinPushTimeInterval;
+                            MinPushTimeInterval = tempMinPushTimeInterval;
                         }
-                        if (sysValue.MinPushRateInterval > 0 || sysValue.MinPushRateInterval == -1)
+                        int tempMinPushRateInterval = sysValue.MinPushRateInterval;
+                        if (tempMinPushRateInterval > 0 || tempMinPushRateInterval == -1)
                         {
-                            MinPushRateInterval = sysValue.MinPushRateInterval;
+                            MinPushRateInterval = tempMinPushRateInterval;
                         }
-                        if (sysValue.HandlerThreadCount > 0 && sysValue.HandlerThreadCount <= 100)
+                        int tempHandlerThreadCount = sysValue.HandlerThreadCount;
+                        if (tempHandlerThreadCount > 0 && tempHandlerThreadCount <= 100)
                         {
-                            handlerThreadCount = sysValue.HandlerThreadCount;
+                            handlerThreadCount = tempHandlerThreadCount;
                         }
-                        if (sysValue.HeartOverSecond > 3)
+                        int tempHeartSecond = sysValue.HeartOverSecond;
+                        if (tempHeartSecond > 3)
                         {
-                            HeartSecond = sysValue.HeartOverSecond;
+                            HeartSecond = tempHeartSecond;
                         }
                     }
                 }
@@ -284,17 +288,20 @@ namespace MealTicket_Web_Handler
                     if (sysPar != null)
                     {
                         var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
-                        if (sysValue.ClearTransactiondataSleepTime>=1800000)
+                        int tempClearTransactiondataSleepTime= sysValue.ClearTransactiondataSleepTime;
+                        if (tempClearTransactiondataSleepTime >= 1800000)
                         {
-                            this.ClearTransactiondataSleepTime = sysValue.ClearTransactiondataSleepTime;
+                            ClearTransactiondataSleepTime = tempClearTransactiondataSleepTime;
                         }
-                        if (sysValue.ClearTransactiondataStartHour > 0 && sysValue.ClearTransactiondataStartHour<6)
+                        int tempClearTransactiondataStartHour = sysValue.ClearTransactiondataStartHour;
+                        if (tempClearTransactiondataStartHour > 0 && tempClearTransactiondataStartHour < 6)
                         {
-                            this.ClearTransactiondataStartHour = sysValue.ClearTransactiondataStartHour;
+                            ClearTransactiondataStartHour = tempClearTransactiondataStartHour;
                         }
-                        if (sysValue.ClearTransactiondataEndHour > 3 && sysValue.ClearTransactiondataEndHour < 9)
+                        int tempClearTransactiondataEndHour = sysValue.ClearTransactiondataEndHour;
+                        if (tempClearTransactiondataEndHour > 3 && tempClearTransactiondataEndHour < 9)
                         {
-                            this.ClearTransactiondataEndHour = sysValue.ClearTransactiondataEndHour;
+                            ClearTransactiondataEndHour = tempClearTransactiondataEndHour;
                         }
                     }
                 }
@@ -306,7 +313,7 @@ namespace MealTicket_Web_Handler
                                   select item).FirstOrDefault();
                     if (sysPar != null)
                     {
-                        this.AutoBuyTaskMaxCount = int.Parse(sysPar.ParamValue);
+                        AutoBuyTaskMaxCount = int.Parse(sysPar.ParamValue);
                     }
                 }
                 catch { }
@@ -318,33 +325,40 @@ namespace MealTicket_Web_Handler
                     if (sysPar != null)
                     {
                         var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
-                        if (sysValue.TransactionDataCount != null && sysValue.TransactionDataCount <= 2000 && sysValue.TransactionDataCount >= 1)
+                        int tempTransactionDataCount= sysValue.TransactionDataCount;
+                        if (tempTransactionDataCount != null && tempTransactionDataCount <= 2000 && tempTransactionDataCount >= 1)
                         {
-                            NewTransactionDataCount = sysValue.TransactionDataCount;
+                            NewTransactionDataCount = tempTransactionDataCount;
                         }
-                        if (sysValue.SendPeriodTime != null)
+                        int tempSendPeriodTime = sysValue.SendPeriodTime;
+                        if (tempSendPeriodTime != null)
                         {
-                            NewTransactionDataSendPeriodTime = sysValue.SendPeriodTime;
+                            NewTransactionDataSendPeriodTime = tempSendPeriodTime;
                         }
-                        if (sysValue.TransactiondataSleepTime != null && sysValue.TransactiondataSleepTime > 0)
+                        int tempTransactiondataSleepTime = sysValue.TransactiondataSleepTime;
+                        if (tempTransactiondataSleepTime != null && tempTransactiondataSleepTime > 0)
                         {
-                            NewTransactiondataSleepTime = sysValue.TransactiondataSleepTime;
+                            NewTransactiondataSleepTime = tempTransactiondataSleepTime;
                         }
-                        if (sysValue.TransactiondataStartHour != null && sysValue.TransactiondataStartHour >= 16 && sysValue.TransactiondataStartHour <= 23)
+                        int tempTransactiondataStartHour = sysValue.TransactiondataStartHour;
+                        if (tempTransactiondataStartHour != null && tempTransactiondataStartHour >= 16 && tempTransactiondataStartHour <= 23)
                         {
-                            NewTransactiondataStartHour = sysValue.TransactiondataStartHour;
+                            NewTransactiondataStartHour = tempTransactiondataStartHour;
                         }
-                        if (sysValue.TransactiondataEndHour != null && sysValue.TransactiondataEndHour >= 16 && sysValue.TransactiondataEndHour <= 23)
+                        int tempTransactiondataEndHour = sysValue.TransactiondataEndHour;
+                        if (tempTransactiondataEndHour != null && tempTransactiondataEndHour >= 16 && tempTransactiondataEndHour <= 23)
                         {
-                            NewTransactiondataEndHour = sysValue.TransactiondataEndHour;
+                            NewTransactiondataEndHour = tempTransactiondataEndHour;
                         }
-                        if (sysValue.NewTransactionDataTrendHandlerCount != null && sysValue.NewTransactionDataTrendHandlerCount >= 0)
+                        int tempNewTransactionDataTrendHandlerCount = sysValue.NewTransactionDataTrendHandlerCount;
+                        if (tempNewTransactionDataTrendHandlerCount != null && tempNewTransactionDataTrendHandlerCount >= 0)
                         {
-                            NewTransactionDataTrendHandlerCount = sysValue.NewTransactionDataTrendHandlerCount;
+                            NewTransactionDataTrendHandlerCount = tempNewTransactionDataTrendHandlerCount;
                         }
-                        if (sysValue.TrendAnalyseSleepTime != null && sysValue.TrendAnalyseSleepTime > 100)
+                        int tempTrendAnalyseSleepTime = sysValue.TrendAnalyseSleepTime;
+                        if (tempTrendAnalyseSleepTime != null && tempTrendAnalyseSleepTime > 100)
                         {
-                            TrendAnalyseSleepTime = sysValue.TrendAnalyseSleepTime;
+                            TrendAnalyseSleepTime = tempTrendAnalyseSleepTime;
                         }
                     }
                 }

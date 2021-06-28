@@ -1637,10 +1637,6 @@ inner
                         int i = 0;
                         foreach (var buy in buyList)
                         {
-                            if (buy.BuyAmount <= 0)
-                            {
-                                continue;
-                            }
                             long buyId = 0;
                             using (var tran = db.Database.BeginTransaction())
                             {

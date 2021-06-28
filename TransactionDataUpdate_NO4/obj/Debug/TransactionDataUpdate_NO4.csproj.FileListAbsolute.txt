@@ -21,7 +21,6 @@ F:\项目\饭票后端\TransactionDataUpdate_NO4\obj\Debug\TransactionDataUpdate
 F:\项目\饭票后端\TransactionDataUpdate_NO4\obj\Debug\TransactionDataUpdate_NO4.csproj.CopyComplete
 F:\项目\饭票后端\TransactionDataUpdate_NO4\obj\Debug\TransactionDataUpdate_NO4.exe
 F:\项目\饭票后端\TransactionDataUpdate_NO4\obj\Debug\TransactionDataUpdate_NO4.pdb
-F:\项目\饭票后端\TransactionDataUpdate_NO4\obj\Debug\TransactionDataUpdate_NO4.csprojAssemblyReference.cache
 F:\项目\饭票后端\TransactionDataUpdate_NO4\bin\Debug\RabbitMQ.Client.dll
 F:\项目\饭票后端\TransactionDataUpdate_NO4\bin\Debug\System.Buffers.dll
 F:\项目\饭票后端\TransactionDataUpdate_NO4\bin\Debug\System.Memory.dll

@@ -116,7 +116,7 @@ namespace MealTicket_Web_Handler
                             var consumerUpdate = new EventingBasicConsumer(model);
                             consumerUpdate.Received += Consumer_Received;
                             consumerUpdate.Shutdown += Consumer_Shutdown;
-                            model.BasicQos(0, 1, false);
+                            model.BasicQos(0, (ushort)Singleton.Instance.handlerThreadCount, false);
                             model.BasicConsume("TransactionDataTrendAnalyse", false, consumerUpdate);
                         }
                     }
