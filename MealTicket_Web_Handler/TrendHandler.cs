@@ -1541,18 +1541,22 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                             where x.Type==1 && x.Status==1
                             select new { x, x2 };
 
+                var conditionBuy = from item in db.t_account_shares_conditiontrade_buy
+                                   where item.AccountId == basedata.AccountId
+                                   select item;
                 var accountTrend = (from item in result
                                     join item2 in groupList on item.OptionalId equals item2.OptionalId into a
                                     from ai in a.DefaultIfEmpty()
                                     join item3 in plate on new { item.Market,item.SharesCode} equals new { item3.x2.Market,item3.x2.SharesCode} into b from bi in b.DefaultIfEmpty()
-                                    group new { item, ai, bi } by item into g
-                                    orderby g.Key.PushTime descending
+                                    join item4 in conditionBuy on new { item.Market,item.SharesCode} equals new { item4.Market,item4.SharesCode} into c from ci in c.DefaultIfEmpty()
+                                    group new { item, ai, bi ,ci} by new { item, ci } into g
+                                    orderby g.Key.item.PushTime descending
                                     select new AccountTrendTriInfo
                                     {
-                                        SharesCode = g.Key.SharesCode,
-                                        SharesName = g.Key.SharesName,
-                                        Business = g.Key.Business,
-                                        ClosedPrice = g.Key.ClosedPrice,
+                                        SharesCode = g.Key.item.SharesCode,
+                                        SharesName = g.Key.item.SharesName,
+                                        Business = g.Key.item.Business,
+                                        ClosedPrice = g.Key.item.ClosedPrice,
                                         GroupList = (from x in g
                                                      where x.ai != null
                                                      select new AccountTrendTriInfoGroup
@@ -1562,15 +1566,16 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                                                          ValidStartTime = x.ai.ValidStartTime,
                                                          ValidEndTime = x.ai.ValidEndTime
                                                      }).ToList(),
-                                        Industry = g.Key.Industry,
-                                        Market = g.Key.Market,
-                                        OptionalId = g.Key.OptionalId,
-                                        PresentPrice = g.Key.PresentPrice,
-                                        PushTime = g.Key.PushTime,
-                                        RelId = g.Key.RelId,
-                                        TrendId = g.Key.TrendId,
-                                        TriCountToday = g.Key.TriCountToday,
-                                        TriDesc = g.Key.TriDesc,
+                                        Industry = g.Key.item.Industry,
+                                        Market = g.Key.item.Market,
+                                        OptionalId = g.Key.item.OptionalId,
+                                        PresentPrice = g.Key.item.PresentPrice,
+                                        PushTime = g.Key.item.PushTime,
+                                        RelId = g.Key.item.RelId,
+                                        TrendId = g.Key.item.TrendId,
+                                        TriCountToday = g.Key.item.TriCountToday,
+                                        TriDesc = g.Key.item.TriDesc,
+                                        ConditionStatus= g.Key.ci==null?1:g.Key.ci.Status==1?3:2
                                     }).ToList();
                 ts.Complete();
                 return accountTrend;
@@ -13082,13 +13087,20 @@ select @buyId;";
                 var syncroAccount = (from item in db.t_account_shares_conditiontrade_buy_group_syncro_account
                                      join item2 in db.t_account_baseinfo on item.SyncroAccountId equals item2.Id into a
                                      from ai in a.DefaultIfEmpty()
+                                     join item3 in db.t_account_shares_buy_synchro_setting on new { followAccountId = item.SyncroAccountId, MainAccountId = item.AccountId } equals new
+                                     {
+                                         followAccountId = item3.AccountId,
+                                         MainAccountId = item3.MainAccountId
+                                     } into b
+                                     from bi in b.DefaultIfEmpty()
                                      where item.GroupId == request.Id
                                      select new ConditiontradeBuyGroupSharesAccount
                                      {
                                          CreateTime = item.CreateTime,
                                          Id = item.Id,
                                          Mobile = ai == null ? "" : ai.Mobile,
-                                         NickName = ai == null ? "" : ai.NickName
+                                         NickName = ai == null ? "" : ai.NickName,
+                                         Status = (bi == null || bi.Status != 1) ? 2 : 1
                                      }).ToList();
                 return syncroAccount;
             }
@@ -13426,13 +13438,18 @@ select @buyId;";
         {
             using (var db = new meal_ticketEntities())
             {
+                var triDetails = from item in db.t_account_shares_conditiontrade_buy_details
+                                 join item2 in db.t_account_shares_conditiontrade_buy on item.ConditionId equals item2.Id
+                                 join item3 in db.t_account_baseinfo on item2.AccountId equals item3.Id
+                                 select new { item, item3 };
                 var result = from item in db.t_account_shares_conditiontrade_buy_details
                              join item2 in db.t_account_shares_conditiontrade_buy on item.ConditionId equals item2.Id
                              join item3 in db.t_account_baseinfo on item2.AccountId equals item3.Id
                              join item4 in db.t_shares_all on new { item2.Market, item2.SharesCode } equals new { item4.Market, item4.SharesCode }
                              join item5 in db.t_account_shares_entrust on item.EntrustId equals item5.Id into a from ai in a.DefaultIfEmpty()
+                             join item6 in triDetails on item.FatherId equals item6.item.Id into b from bi in b.DefaultIfEmpty()
                              where item.CreateAccountId == basedata.AccountId && item.TriggerTime != null
-                             select new { item, item2, item3, item4, ai };
+                             select new { item, item2, item3, item4, ai, bi };
                 if (request.BusinessStatus == 1)
                 {
                     result = from item in result
@@ -13513,8 +13530,8 @@ select @buyId;";
                                 EntrustStatus = item.ai == null ? 6 : item.ai.Status,
                                 EntrustStatusDes = item.ai == null ? item.item.EntrustErrorDes : item.ai.StatusDes,
                                 AccountId = item.item2.AccountId,
-                                AccountMobile = item.item3.Mobile,
-                                AccountNickName = item.item3.NickName,
+                                AccountMobile = item.bi ==null?"本账户": item.bi.item3.Mobile,
+                                AccountNickName = item.bi == null ? "" : item.bi.item3.NickName,
                                 DealCount = item.ai == null ? 0 : item.ai.DealCount,
                                 EntrustCount = item.ai == null ? 0 : item.ai.EntrustCount,
                                 EntrustPrice = item.ai == null ? 0 : item.ai.EntrustPrice,

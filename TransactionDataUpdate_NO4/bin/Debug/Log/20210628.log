@@ -1,0 +1,540 @@
+2021/6/28 15:23:57
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 489
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:24:04
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 489
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:53
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:53
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:53
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:53
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:53
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:53
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:53
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:53
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:54
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:54
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:54
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:54
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:54
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:54
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:54
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:54
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:54
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:54
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:54
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:54
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:54
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:54
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:54
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:54
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:54
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:54
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:54
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:54
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 15:42:54
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 493
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:23
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:24
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:25
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:25
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+
+2021/6/28 16:18:25
+更新分笔数据数据库连接出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 TransactionDataUpdate_NO4.DataHelper.TdxHq_GetTransactionData_byShares(Int32 hqClient, Int32 market, String sharesCode, Int32 orderIndex, Nullable`1 lastTime, SqlConnection conn, SqlCommand cmd, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 496
+   在 TransactionDataUpdate_NO4.DataHelper.<>c__DisplayClass4_0.<TdxHq_GetTransactionData>b__0(Object ref_string) 位置 F:\项目\饭票后端\TransactionDataUpdate_NO4\DataHelper.cs:行号 348
+

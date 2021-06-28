@@ -90,8 +90,8 @@ namespace ShareData_Service
 
             List<string> strStock = new List<string>();
             strStock.Add("002920,0");
-            result = hqAnalyse.GetTradePriceInfoBatch(strStock, DateTime.Parse(DB_Model.MAX_DATE_TIME),true,ref ref_priceInfoDic, ref ref_lstTimeOfUsePriceDic,ref error);
-            List<int> list = new List<int>();
+            //result = hqAnalyse.GetTradePriceInfoBatch(strStock, DateTime.Parse(DB_Model.MAX_DATE_TIME),true,ref ref_priceInfoDic, ref ref_lstTimeOfUsePriceDic,ref error);
+            //List<int> list = new List<int>();
             //list.Add(2);
             //while (true)
             //{

@@ -34,3 +34,4 @@ F:\项目\饭票后端\TransactionDataTri\obj\Debug\TransactionDataTri.csproj.Co
 F:\项目\饭票后端\TransactionDataTri\obj\Debug\TransactionDataTri.csproj.CopyComplete
 F:\项目\饭票后端\TransactionDataTri\obj\Debug\TransactionDataTri.exe
 F:\项目\饭票后端\TransactionDataTri\obj\Debug\TransactionDataTri.pdb
+F:\项目\饭票后端\TransactionDataTri\obj\Debug\TransactionDataTri.csprojAssemblyReference.cache
