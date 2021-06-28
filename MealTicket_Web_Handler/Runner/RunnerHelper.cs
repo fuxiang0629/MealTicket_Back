@@ -2544,26 +2544,29 @@ inner
                 var batchList = sharesList.Skip(size * HandlerCount).Take(HandlerCount).ToList();
                 data.AddMessage(batchList);
             }
-
-            int taskCount = batchSize >= 32 ? 32 : batchSize;
-            Task[] tArr = new Task[taskCount];
-            for (int i = 0; i < taskCount; i++)
+            if(Singleton.Instance.mqHandler.IsEmpty("TransactionDataUpdateNew"))
             {
-                tArr[i] = new Task(() =>
+                int taskCount = batchSize >= 32 ? 32 : batchSize;
+                Task[] tArr = new Task[taskCount];
+                for (int i = 0; i < taskCount; i++)
                 {
-                    do
+                    tArr[i] = new Task(() =>
                     {
-                        List<TradeSharesInfo> tempData = new List<TradeSharesInfo>();
-                        if (!data.GetMessage(ref tempData, true))
+                        do
                         {
-                            break;
-                        }
-                        Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(tempData)), "TransactionData", "UpdateNew");
-                    } while (true);
-                }, TaskCreationOptions.LongRunning);
-                tArr[i].Start();
+                            List<TradeSharesInfo> tempData = new List<TradeSharesInfo>();
+                            if (!data.GetMessage(ref tempData, true))
+                            {
+                                break;
+                            }
+                            Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(tempData)), "TransactionData", "UpdateNew");
+                        } while (true);
+                    }, TaskCreationOptions.LongRunning);
+                    tArr[i].Start();
+                }
+                Task.WaitAll(tArr);
             }
-            Task.WaitAll(tArr);
+            
             data.Release();
         }
     }

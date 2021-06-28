@@ -40,15 +40,26 @@ namespace MealTicket_Web_Handler
         /// </summary>
         IModel model;
 
+        string _HostName;
+        int _Port;
+        string _UserName;
+        string _Password;
+        string _VirtualHost;
+
         public MQHandler()
         {
+            _HostName = ConfigurationManager.AppSettings["MQ_HostName"];
+            _Port = int.Parse(ConfigurationManager.AppSettings["MQ_Port"]);
+            _UserName = ConfigurationManager.AppSettings["MQ_UserName"];
+            _Password = ConfigurationManager.AppSettings["MQ_Password"];
+            _VirtualHost = ConfigurationManager.AppSettings["MQ_VirtualHost"];
             _factory = new ConnectionFactory
             {
-                HostName = ConfigurationManager.AppSettings["MQ_HostName"],
-                Port = int.Parse(ConfigurationManager.AppSettings["MQ_Port"]),
-                UserName = ConfigurationManager.AppSettings["MQ_UserName"],
-                Password = ConfigurationManager.AppSettings["MQ_Password"],
-                VirtualHost = ConfigurationManager.AppSettings["MQ_VirtualHost"]
+                HostName = _HostName,
+                Port = _Port,
+                UserName = _UserName,
+                Password = _Password,
+                VirtualHost = _VirtualHost
             };
         }
 
@@ -161,6 +172,43 @@ namespace MealTicket_Web_Handler
             {
                 return false;
             }
+        }
+
+        /// <summary>
+        /// 判断队列是否为空
+        /// </summary>
+        /// <returns></returns>
+        public bool IsEmpty(string queryName) 
+        {
+            var res=_GetMessage(queryName);
+            if (res.Count() > 0)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// 获取队列数据
+        /// </summary>
+        /// <returns></returns>
+        private List<dynamic> _GetMessage(string queryName) 
+        {
+            string url = string.Format("http://{0}:15672/api/queues/MealTicket/{1}/get", _HostName, queryName);
+            var content = new
+            {
+                vhost= _VirtualHost,
+                name= queryName,
+                truncate =50000,
+                ackmode= "ack_requeue_true",
+                encoding= "auto",
+                count=1
+            };
+            string auth_str = _UserName + ":" + _Password;
+            string auth= Convert.ToBase64String(Encoding.Default.GetBytes(auth_str));
+
+            string res=HtmlSender.Post_BasicAuth(JsonConvert.SerializeObject(content), url, auth);
+            return JsonConvert.DeserializeObject<List<dynamic>>(res);
         }
 
         /// <summary>

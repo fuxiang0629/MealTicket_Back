@@ -177,6 +177,7 @@
     <Compile Include="runner\SmsSendRunner.cs" />
     <Compile Include="runner\TradeCleanRunner.cs" />
     <Compile Include="runner\UpdateTransactiondataRunner.cs" />
+    <Compile Include="Test\ServiceFeeRechargeRunner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

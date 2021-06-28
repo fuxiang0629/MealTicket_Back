@@ -688,6 +688,11 @@
             每天更新股票分笔数据
             </summary>
         </member>
+        <member name="M:MealTicket_APIService.ServiceFeeRechargeRunner.ServiceFeeRecharge(System.DateTime)">
+            <summary>
+            收取服务费
+            </summary>
+        </member>
         <member name="M:WebAPI.HelpPage.ApiDescriptionExtensions.GetFriendlyId(System.Web.Http.Description.ApiDescription)">
             <summary>
             Generates an URI-friendly ID for the <see cref="T:System.Web.Http.Description.ApiDescription"/>. E.g. "Get-Values-id_name" instead of "GetValues/{id}?name={name}"

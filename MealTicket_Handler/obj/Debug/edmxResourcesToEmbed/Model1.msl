@@ -1346,5 +1346,10 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+<<<<<<< HEAD
+    <FunctionImportMapping FunctionImportName="P_Calculate_DepositChange_Hold_Temp" FunctionName="meal_ticketModel.Store.P_Calculate_DepositChange_Hold_Temp" />
+    <FunctionImportMapping FunctionImportName="P_Calculate_WalletChange_Platform_Temp" FunctionName="meal_ticketModel.Store.P_Calculate_WalletChange_Platform_Temp" />
+=======
+>>>>>>> c4b5639568cc955cd153cf6981f69b08d65f3efa
   </EntityContainerMapping>
 </Mapping>
