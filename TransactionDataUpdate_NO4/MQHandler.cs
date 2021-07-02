@@ -63,16 +63,15 @@ namespace TransactionDataUpdate_NO4
         {
             try
             {
-                Dispose();
                 lock (_lock)
                 {
                     if (isConnect)
                     {
+                        Dispose();
                         if (_connection == null)
                         {
                             _connection = _factory.CreateConnection();
                             _sendModel = _connection.CreateModel();
-
                             model = _connection.CreateModel();
                             var consumerUpdate = new EventingBasicConsumer(model);
                             consumerUpdate.Received += Consumer_Received;
@@ -85,8 +84,6 @@ namespace TransactionDataUpdate_NO4
             }
             catch (Exception ex)
             {
-                Thread.Sleep(5000);
-                Reconnect();
                 Logger.WriteFileLog("MQ链接异常", ex);
             }
         }
@@ -96,17 +93,32 @@ namespace TransactionDataUpdate_NO4
         /// </summary>
         public bool SendMessage(byte[] data, string exchange, string routekey)
         {
+            if (_SendMessage(data, exchange, routekey))
+            {
+                return true;
+            }
+
+            Reconnect();
+            return false;
+        }
+
+        private bool _SendMessage(byte[] data, string exchange, string routekey)
+        {
             try
             {
-                lock (this)
+                lock (_lock)
                 {
+                    if (_sendModel == null)
+                    {
+                        return false;
+                    }
+
                     _sendModel.BasicPublish(exchange, routekey, null, data);
                 }
                 return true;
             }
             catch (Exception ex)
             {
-                Reconnect();
                 return false;
             }
         }
@@ -131,26 +143,31 @@ namespace TransactionDataUpdate_NO4
             {
                 lock (_lock)
                 {
-                    if (model != null)
-                    {
-                        model.Dispose();
-                    }
-                    if (_sendModel != null)
-                    {
-                        _sendModel.Dispose();
-                    }
-                    if (_connection != null)
-                    {
-                        _connection.Dispose();
-                    }
-                    _connection = null;
                     if (isDispose)
                     {
                         isConnect = false;
                     }
+                    if (_connection != null)
+                    {
+                        _connection.Dispose();
+                        _connection = null;
+                    }
+                    if (_sendModel != null)
+                    {
+                        _sendModel.Dispose();
+                        _sendModel = null;
+                    }
+                    if (model != null)
+                    {
+                        model.Dispose();
+                        model = null;
+                    }
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("这里出错来了", ex);
+            }
         }
 
         /// <summary>
@@ -165,10 +182,10 @@ namespace TransactionDataUpdate_NO4
                 var body = Encoding.UTF8.GetString(e.Body.ToArray());
 
                 //解析队列数据
-                var dataJson = JsonConvert.DeserializeObject<List<dynamic>>(body);
+                var dataJson = JsonConvert.DeserializeObject<TransactiondataTaskQueueInfo>(body);
 
                 List<SharesInfo> sharesList = new List<SharesInfo>();
-                foreach (var item in dataJson)
+                foreach (var item in dataJson.DataList)
                 {
                     string sharesCode = item.SharesCode;
                     int market = item.Market;
@@ -185,22 +202,15 @@ namespace TransactionDataUpdate_NO4
                 var list = DataHelper.TdxHq_GetTransactionData(sharesList);
                 stopwatch.Stop();
                 Console.WriteLine("=====获取分笔数据结束:" + stopwatch.ElapsedMilliseconds + "============");
-                Console.WriteLine("==========开始更新分笔数据=================");
-                stopwatch.Restart();
-                bool isUpdateSuccess = false;
-                if (list.Count() > 0)
-                {
-                    isUpdateSuccess = DataHelper.UpdateTransactionData(list);
-                }
-                stopwatch.Stop();
-                Console.WriteLine("=====分笔数据更新结束:" + stopwatch.ElapsedMilliseconds + "============");
                 Console.WriteLine("");
                 Console.WriteLine("");
 
-                if (isUpdateSuccess)
+                SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new TransactiondataTaskQueueInfo
                 {
-                    SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sharesList)), "TransactionData", "TrendAnalyse");
-                }
+                    DataList = list,
+                    TaskGuid = dataJson.TaskGuid
+
+                })), "TransactionData", "TrendAnalyse");
             }
             catch (Exception ex)
             {

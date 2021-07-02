@@ -22,7 +22,6 @@ namespace MealTicket_Web_APIService
             Bind<Runner>().To<ClearTransactiondataRunner>();
             Bind<Runner>().To<TradeAutoRunner>();
             Bind<Runner>().To<TradeAutoBuyRunner>();
-            Bind<Runner>().To<TransactiondataRealTimeRunner>();
         }
     }
 }

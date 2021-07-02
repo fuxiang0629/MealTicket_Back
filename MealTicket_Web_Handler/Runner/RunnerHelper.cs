@@ -550,7 +550,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
 
         private static void doAutoBuyTask(TradeAutoBuyCondition item, bool isSyncro = false)
         {
-            DateTime timeNow = DateTime.Now;
+               DateTime timeNow = DateTime.Now;
             using (var db = new meal_ticketEntities())
             {
                 string sql = "";
@@ -739,7 +739,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 JArray timeList = temp.Times;
                                 if (timeNow >= DateTime.Parse(timeList[0].ToString()) && timeNow < DateTime.Parse(timeList[1].ToString()))
                                 {
-                                    tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                    tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market,item.PresentPrice, logRecord);
                                     if (tempTri)
                                     {
                                         logRecord.AppendLine("\t结果：达到要求");
@@ -760,7 +760,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 int errorCode_Trend12 = DataHelper.Analysis_CurrentPrice(item.SharesCode, item.Market, par);
                                 if (errorCode_Trend12 == 0)
                                 {
-                                    tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                    tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                     if (tempTri)
                                     {
                                         logRecord.AppendLine("\t结果：达到要求");
@@ -781,7 +781,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 int errorCode_Trend5 = DataHelper.Analysis_HisRiseRate(item.SharesCode, item.Market, par);
                                 if (errorCode_Trend5 == 0)
                                 {
-                                    tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                    tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                     if (tempTri)
                                     {
                                         logRecord.AppendLine("\t结果：达到要求");
@@ -802,7 +802,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(item.SharesCode, item.Market, par);
                                 if (errorCode_Trend6 == 0)
                                 {
-                                    tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                    tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                     if (tempTri)
                                     {
                                         logRecord.AppendLine("\t结果：达到要求");
@@ -823,7 +823,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 int errorCode_Trend7 = DataHelper.Analysis_PlateRiseRate(item.SharesCode, item.Market, par);
                                 if (errorCode_Trend7 == 0)
                                 {
-                                    tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                    tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                     if (tempTri)
                                     {
                                         logRecord.AppendLine("\t结果：达到要求");
@@ -844,7 +844,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 int errorCode_Trend8 = DataHelper.Analysis_BuyOrSellCount(item.SharesCode, item.Market, par);
                                 if (errorCode_Trend8 == 0)
                                 {
-                                    tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                    tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                     if (tempTri)
                                     {
                                         logRecord.AppendLine("\t结果：达到要求");
@@ -865,7 +865,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 int errorCode_Trend9 = DataHelper.Analysis_ReferPrice(item.SharesCode, item.Market, par);
                                 if (errorCode_Trend9 == 0)
                                 {
-                                    tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                    tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                     if (tempTri)
                                     {
                                         logRecord.AppendLine("\t结果：达到要求");
@@ -886,7 +886,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 int errorCode_Trend10 = DataHelper.Analysis_ReferAverage(item.SharesCode, item.Market, par);
                                 if (errorCode_Trend10 == 0)
                                 {
-                                    tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                    tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                     if (tempTri)
                                     {
                                         logRecord.AppendLine("\t结果：达到要求");
@@ -904,10 +904,10 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("股票：" + item.SharesCode + "五档变化速度判断-额外参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(item.SharesCode, item.Market, par);
+                                int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(item.SharesCode, item.Market, item.PresentPrice, par);
                                 if (errorCode_Trend11 == 0)
                                 {
-                                    tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                    tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                     if (tempTri)
                                     {
                                         logRecord.AppendLine("\t结果：达到要求");
@@ -946,7 +946,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                         resultPushTime = pushTime;
                                         if (pushTime >= DateTime.Parse(timeNow.ToString("yyyy-MM-dd HH:mm:00")))
                                         {
-                                            tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                            tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                             if (tempTri)
                                             {
                                                 logRecord.AppendLine("\t结果：达到要求");
@@ -986,7 +986,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                         resultPushTime = pushTime;
                                         if (pushTime >= DateTime.Parse(timeNow.ToString("yyyy-MM-dd HH:mm:00")))
                                         {
-                                            tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                            tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                             if (tempTri)
                                             {
                                                 logRecord.AppendLine("\t结果：达到要求");
@@ -1026,7 +1026,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                         resultPushTime = pushTime;
                                         if (pushTime >= DateTime.Parse(timeNow.ToString("yyyy-MM-dd HH:mm:00")))
                                         {
-                                            tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                            tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                             if (tempTri)
                                             {
                                                 logRecord.AppendLine("\t结果：达到要求");
@@ -1086,7 +1086,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 JArray timeList = temp.Times;
                                 if (timeNow >= DateTime.Parse(timeList[0].ToString()) && timeNow < DateTime.Parse(timeList[1].ToString()))
                                 {
-                                    tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                    tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                     if (tempTri)
                                     {
                                         logRecord.AppendLine("\t结果：达到要求");
@@ -1107,7 +1107,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 int errorCode_Trend12 = DataHelper.Analysis_CurrentPrice(item.SharesCode, item.Market, par);
                                 if (errorCode_Trend12 == 0)
                                 {
-                                    tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                    tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                     if (tempTri)
                                     {
                                         logRecord.AppendLine("\t结果：达到要求");
@@ -1128,7 +1128,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 int errorCode_Trend5 = DataHelper.Analysis_HisRiseRate(item.SharesCode, item.Market, par);
                                 if (errorCode_Trend5 == 0)
                                 {
-                                    tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                    tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                     if (tempTri)
                                     {
                                         logRecord.AppendLine("\t结果：达到要求");
@@ -1149,7 +1149,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(item.SharesCode, item.Market, par);
                                 if (errorCode_Trend6 == 0)
                                 {
-                                    tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                    tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                     if (tempTri)
                                     {
                                         logRecord.AppendLine("\t结果：达到要求");
@@ -1170,7 +1170,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 int errorCode_Trend7 = DataHelper.Analysis_PlateRiseRate(item.SharesCode, item.Market, par);
                                 if (errorCode_Trend7 == 0)
                                 {
-                                    tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                    tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                     if (tempTri)
                                     {
                                         logRecord.AppendLine("\t结果：达到要求");
@@ -1191,7 +1191,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 int errorCode_Trend8 = DataHelper.Analysis_BuyOrSellCount(item.SharesCode, item.Market, par);
                                 if (errorCode_Trend8 == 0)
                                 {
-                                    tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                    tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                     if (tempTri)
                                     {
                                         logRecord.AppendLine("\t结果：达到要求");
@@ -1212,7 +1212,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 int errorCode_Trend9 = DataHelper.Analysis_ReferPrice(item.SharesCode, item.Market, par);
                                 if (errorCode_Trend9 == 0)
                                 {
-                                    tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                    tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                     if (tempTri)
                                     {
                                         logRecord.AppendLine("\t结果：达到要求");
@@ -1233,7 +1233,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 int errorCode_Trend10 = DataHelper.Analysis_ReferAverage(item.SharesCode, item.Market, par);
                                 if (errorCode_Trend10 == 0)
                                 {
-                                    tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                    tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                     if (tempTri)
                                     {
                                         logRecord.AppendLine("\t结果：达到要求");
@@ -1251,10 +1251,10 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("股票：" + item.SharesCode + "五档变化速度判断-转自动参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(item.SharesCode, item.Market, par);
+                                int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(item.SharesCode, item.Market, item.PresentPrice, par);
                                 if (errorCode_Trend11 == 0)
                                 {
-                                    tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                    tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                     if (tempTri)
                                     {
                                         logRecord.AppendLine("\t结果：达到要求");
@@ -1293,7 +1293,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                         resultPushTime = pushTime;
                                         if (pushTime >= DateTime.Parse(timeNow.ToString("yyyy-MM-dd HH:mm:00")))
                                         {
-                                            tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                            tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                             if (tempTri)
                                             {
                                                 logRecord.AppendLine("\t结果：达到要求");
@@ -1333,7 +1333,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                         resultPushTime = pushTime;
                                         if (pushTime >= DateTime.Parse(timeNow.ToString("yyyy-MM-dd HH:mm:00")))
                                         {
-                                            tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                            tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                             if (tempTri)
                                             {
                                                 logRecord.AppendLine("\t结果：达到要求");
@@ -1373,7 +1373,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                         resultPushTime = pushTime;
                                         if (pushTime >= DateTime.Parse(timeNow.ToString("yyyy-MM-dd HH:mm:00")))
                                         {
-                                            tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, logRecord);
+                                            tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                             if (tempTri)
                                             {
                                                 logRecord.AppendLine("\t结果：达到要求");
@@ -2059,7 +2059,7 @@ inner
             }
         }
 
-        private static bool IsGetOther(meal_ticketEntities db, long otherTrendId, string sharesCode, int market, StringBuilder logRecord)
+        private static bool IsGetOther(meal_ticketEntities db, long otherTrendId, string sharesCode, int market, long currPrice, StringBuilder logRecord)
         {
             var timeNow = DateTime.Now;
             var trend = (from x in db.t_account_shares_conditiontrade_buy_details_other_trend_other
@@ -2163,7 +2163,7 @@ inner
                 if (tr.TrendId == 11)
                 {
                     trendName = "五档变化速度";
-                    int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(sharesCode, market, par);
+                    int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(sharesCode, market, currPrice, par);
                     if (errorCode_Trend11 == 0)
                     {
                         tempTri = true;
@@ -2267,7 +2267,7 @@ inner
             return tempTri;
         }
 
-        private static bool IsGetAuto(meal_ticketEntities db, long autoTrendId, string sharesCode, int market, StringBuilder logRecord)
+        private static bool IsGetAuto(meal_ticketEntities db, long autoTrendId, string sharesCode, int market, long currPrice, StringBuilder logRecord)
         {
             var timeNow = DateTime.Now;
             var trend = (from x in db.t_account_shares_conditiontrade_buy_details_auto_trend_other
@@ -2371,7 +2371,7 @@ inner
                 if (tr.TrendId == 11)
                 {
                     trendName = "五档变化速度";
-                    int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(sharesCode, market, par);
+                    int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(sharesCode, market, currPrice, par);
                     if (errorCode_Trend11 == 0)
                     {
                         tempTri = true;
@@ -2479,7 +2479,7 @@ inner
         /// 推送股票分笔数据
         /// </summary>
         /// <returns></returns>
-        public static void SendTransactionShares()
+        public static int SendTransactionShares(string taskGuid)
         {
             DateTime timeDate = DateTime.Now.Date;
             List<TradeSharesInfo> sharesList = new List<TradeSharesInfo>();
@@ -2540,30 +2540,35 @@ inner
                 var batchList = sharesList.Skip(size * HandlerCount).Take(HandlerCount).ToList();
                 data.AddMessage(batchList);
             }
-            if(Singleton.Instance.mqHandler.IsEmpty("TransactionDataUpdateNew"))
+            int taskCount = batchSize >= 32 ? 32 : batchSize;
+
+
+            Singleton.Instance.mqHandler.clearQueueData("TransactionDataUpdateNew");
+            Task[] tArr = new Task[taskCount];
+            for (int i = 0; i < taskCount; i++)
             {
-                int taskCount = batchSize >= 32 ? 32 : batchSize;
-                Task[] tArr = new Task[taskCount];
-                for (int i = 0; i < taskCount; i++)
+                tArr[i] = new Task(() =>
                 {
-                    tArr[i] = new Task(() =>
+                    do
                     {
-                        do
+                        List<TradeSharesInfo> tempData = new List<TradeSharesInfo>();
+                        if (!data.GetMessage(ref tempData, true))
                         {
-                            List<TradeSharesInfo> tempData = new List<TradeSharesInfo>();
-                            if (!data.GetMessage(ref tempData, true))
-                            {
-                                break;
-                            }
-                            Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(tempData)), "TransactionData", "UpdateNew");
-                        } while (true);
-                    }, TaskCreationOptions.LongRunning);
-                    tArr[i].Start();
-                }
-                Task.WaitAll(tArr);
+                            break;
+                        }
+                        Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new
+                        {
+                            TaskGuid = taskGuid,
+                            DataList = tempData
+                        })), "TransactionData", "UpdateNew");
+                    } while (true);
+                }, TaskCreationOptions.LongRunning);
+                tArr[i].Start();
             }
-            
+            Task.WaitAll(tArr);
+
             data.Release();
+            return batchSize;
         }
     }
 

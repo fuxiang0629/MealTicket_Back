@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity.SqlServer;
 using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +16,24 @@ using static StockTrendMonitor.Define.StockMonitorDefine;
 
 namespace MealTicket_Web_Handler
 {
+    public class SharesTrendPar 
+    {
+        public int Market { get; set; }
+        public string SharesCode { get; set; }
+        public long TrendId { get; set; }
+        public string ParamsInfo { get; set; }
+        public List<string> ParamsList { get; set; }
+    }
+
+    public class TrendAnalyseResult
+    {
+        public int Market { get; set; }
+        public string SharesCode { get; set; }
+        public DateTime PushTime { get; set; }
+        public string PushDesc { get; set; }
+        public long TrendId { get; set; }
+    }
+
     public class DataHelper
     {
         /// <summary>
@@ -148,67 +167,98 @@ namespace MealTicket_Web_Handler
             {
                 return;
             }
-            string sqlQuery = CreateSql(sharesList);
-            var dataList = GetTrendPar(sqlQuery);
+            var dataList = GetTrendPar();//查询需要分析的股票及参数
 
-            var accountDataList = (from item in dataList
-                                   group item by item.AccountId into g
-                                   select g).ToList();
-            foreach (var data in accountDataList)
+
+            var List_Trend1 = (from item in dataList
+                               where item.TrendId == 1
+                               select new OptionalTrend
+                               {
+                                   SharesCode = item.SharesCode,
+                                   Market = item.Market,
+                                   TrendId = item.TrendId,
+                                   ParList = item.ParamsList
+                               }).ToList();
+            var List_Trend2 = (from item in dataList
+                               where item.TrendId == 2
+                               select new OptionalTrend
+                               {
+                                   SharesCode = item.SharesCode,
+                                   Market = item.Market,
+                                   TrendId = item.TrendId,
+                                   ParList = item.ParamsList
+                               }).ToList();
+            var List_Trend3 = (from item in dataList
+                               where item.TrendId == 3
+                               select new OptionalTrend
+                               {
+                                   SharesCode = item.SharesCode,
+                                   Market = item.Market,
+                                   TrendId = item.TrendId,
+                                   ParList = item.ParamsList
+                               }).ToList();
+
+            List<TrendAnalyseResult> trendResult = new List<TrendAnalyseResult>();
+            List<TREND_RESULT_RAPID_UP> resultInfo_Trend1 = new List<TREND_RESULT_RAPID_UP>();
+            int errorCode_Trend1 = Analysis_Trend1(List_Trend1, ref resultInfo_Trend1);
+            foreach (var item in List_Trend1)
             {
-                var List_Trend1 = data.Where(e => e.TrendId == 1).ToList();
-                var List_Trend2 = data.Where(e => e.TrendId == 2).ToList();
-                var List_Trend3 = data.Where(e => e.TrendId == 3).ToList();
-
-                List<TREND_RESULT_RAPID_UP> resultInfo_Trend1 = new List<TREND_RESULT_RAPID_UP>();
-                int errorCode_Trend1 = Analysis_Trend1(List_Trend1, ref resultInfo_Trend1);
-                if (errorCode_Trend1 == 0)
+                var temp = resultInfo_Trend1.Where(e => e.strStockCode == (item.SharesCode + "," + item.Market)).FirstOrDefault();
+                if (!string.IsNullOrEmpty(temp.strStockCode) && temp.dicUpOrDownInfo.Count() > 0)
                 {
-                    foreach (var item in List_Trend1)
+                    var tempModel = temp.dicUpOrDownInfo.FirstOrDefault();
+                    var pushTime = tempModel.Value.lastestInfo.dtTradeTime;
+                    var pushDesc = tempModel.Key + "分钟上涨" + (tempModel.Value.iLastestPercent * 1.0 / 100).ToString("N2") + "%";
+                    trendResult.Add(new TrendAnalyseResult
                     {
-                        var temp = resultInfo_Trend1.Where(e => e.strStockCode == (item.SharesCode + "," + item.Market)).FirstOrDefault();
-                        if (!string.IsNullOrEmpty(temp.strStockCode) && temp.dicUpOrDownInfo.Count() > 0)
-                        {
-                            var tempModel = temp.dicUpOrDownInfo.FirstOrDefault();
-                            var pushTime = tempModel.Value.lastestInfo.dtTradeTime;
-                            var pushDesc = tempModel.Key + "分钟上涨" + (tempModel.Value.iLastestPercent * 1.0 / 100).ToString("N2") + "%";
-                            TrendTri(item.RelId, item.Market, item.SharesCode, data.Key, item.TrendId, item.SharesName, item.TrendName, item.TrendDescription, item.OptionalId, pushTime, pushDesc);
-                        }
-                    }
-                }
-
-                List<TREND_RESULT_LINE_UP> resultInfo_Trend2 = new List<TREND_RESULT_LINE_UP>();
-                int errorCode_Trend2 = Analysis_Trend2(List_Trend2, ref resultInfo_Trend2);
-                if (errorCode_Trend2 == 0)
-                {
-                    foreach (var item in List_Trend2)
-                    {
-                        var temp = resultInfo_Trend2.Where(e => e.strStockCode == (item.SharesCode + "," + item.Market)).FirstOrDefault();
-                        if (!string.IsNullOrEmpty(temp.strStockCode))
-                        {
-                            var pushTime = temp.upOrDownInfo.lastestInfo.dtTradeTime;
-                            var pushDesc = (temp.upOrDownInfo.iLastestPercent * 1.0 / 100).ToString("N2") + "%";
-                            TrendTri(item.RelId, item.Market, item.SharesCode, data.Key, item.TrendId, item.SharesName, item.TrendName, item.TrendDescription, item.OptionalId, pushTime, pushDesc);
-                        }
-                    }
-                }
-
-                List<TREND_RESULT_BOX_BREACH> resultInfo_Trend3 = new List<TREND_RESULT_BOX_BREACH>();
-                int errorCode_Trend3 = Analysis_Trend3(List_Trend3, ref resultInfo_Trend3);
-                if (errorCode_Trend3 == 0)
-                {
-                    foreach (var item in List_Trend3)
-                    {
-                        var temp = resultInfo_Trend3.Where(e => e.strStockCode == (item.SharesCode + "," + item.Market)).FirstOrDefault();
-                        if (!string.IsNullOrEmpty(temp.strStockCode))
-                        {
-                            var pushTime = temp.upOrDownInfo.lastestInfo.dtTradeTime;
-                            var pushDesc = (temp.upOrDownInfo.iLastestPercent * 1.0 / 100).ToString("N2") + "%";
-                            TrendTri(item.RelId, item.Market, item.SharesCode, data.Key, item.TrendId, item.SharesName, item.TrendName, item.TrendDescription, item.OptionalId, pushTime, pushDesc);
-                        }
-                    }
+                        SharesCode = item.SharesCode,
+                        Market = item.Market,
+                        PushDesc = pushDesc,
+                        PushTime = pushTime,
+                        TrendId = item.TrendId
+                    });
                 }
             }
+            List<TREND_RESULT_LINE_UP> resultInfo_Trend2 = new List<TREND_RESULT_LINE_UP>();
+            int errorCode_Trend2 = Analysis_Trend2(List_Trend2, ref resultInfo_Trend2);
+            foreach (var item in List_Trend2)
+            {
+                var temp = resultInfo_Trend2.Where(e => e.strStockCode == (item.SharesCode + "," + item.Market)).FirstOrDefault();
+                if (!string.IsNullOrEmpty(temp.strStockCode))
+                {
+                    var pushTime = temp.upOrDownInfo.lastestInfo.dtTradeTime;
+                    var pushDesc = (temp.upOrDownInfo.iLastestPercent * 1.0 / 100).ToString("N2") + "%";
+                    trendResult.Add(new TrendAnalyseResult
+                    {
+                        SharesCode = item.SharesCode,
+                        Market = item.Market,
+                        PushDesc = pushDesc,
+                        PushTime = pushTime,
+                        TrendId = item.TrendId
+                    });
+                }
+            }
+            List<TREND_RESULT_BOX_BREACH> resultInfo_Trend3 = new List<TREND_RESULT_BOX_BREACH>();
+            int errorCode_Trend3 = Analysis_Trend3(List_Trend3, ref resultInfo_Trend3);
+            foreach (var item in List_Trend3)
+            {
+                var temp = resultInfo_Trend3.Where(e => e.strStockCode == (item.SharesCode + "," + item.Market)).FirstOrDefault();
+                if (!string.IsNullOrEmpty(temp.strStockCode))
+                {
+                    var pushTime = temp.upOrDownInfo.lastestInfo.dtTradeTime;
+                    var pushDesc = (temp.upOrDownInfo.iLastestPercent * 1.0 / 100).ToString("N2") + "%";
+                    trendResult.Add(new TrendAnalyseResult
+                    {
+                        SharesCode = item.SharesCode,
+                        Market = item.Market,
+                        PushDesc = pushDesc,
+                        PushTime = pushTime,
+                        TrendId = item.TrendId
+                    });
+                }
+            }
+            TrendTri(trendResult);
+
         }
 
         /// <summary>
@@ -245,7 +295,7 @@ inner join t_shares_all t5 with(nolock) on t.SharesCode=t5.SharesCode and t.Mark
 inner join t_account_shares_optional_trend_rel_par t6 with(nolock) on t3.Id=t6.RelId
 inner join t_account_login_token_web t7 with(nolock) on t.AccountId=t7.AccountId
 where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and datediff(SS,t7.HeartTime,'{0}')<{2} and t2.ValidEndTime>'{0}' and 
-(t.SharesCode+','+convert(varchar(10),t.Market)) in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToString(), Singleton.Instance.HeartSecond);
+t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToString(), Singleton.Instance.HeartSecond);
             return sql;
         }
 
@@ -254,71 +304,27 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
         /// </summary>
         /// <param name="sql"></param>
         /// <returns></returns>
-        private static List<OptionalTrend> GetTrendPar(string sql)
+        private static List<SharesTrendPar> GetTrendPar()
         {
-            List<OptionalTrend> list = new List<OptionalTrend>();
-            using (SqlConnection conn = new SqlConnection(Singleton.Instance.connString_meal_ticket))
+            string sql = @"select Market,SharesCode,TrendId,ParamsInfo
+  from t_shares_monitor t with(nolock)
+  inner join t_shares_monitor_trend_rel t1 with(nolock) on t.Id=t1.MonitorId
+  inner join t_shares_monitor_trend_rel_par t2 with(nolock) on t1.Id=t2.RelId
+  where t.[Status]=1 and t1.[Status]=1";
+            using (var db = new meal_ticketEntities())
             {
-                conn.Open();
-                try
-                {
-                    using (var cmd = conn.CreateCommand())
-                    {
-                        cmd.CommandType = CommandType.Text;
-                        cmd.CommandText = sql;   //sql语句
-                        SqlDataReader reader = cmd.ExecuteReader();
-                        while (reader.Read())
-                        {
-                            long AccountId = Convert.ToInt64(reader["AccountId"]);
-                            int Market = Convert.ToInt32(reader["Market"]);
-                            string SharesCode = Convert.ToString(reader["SharesCode"]);
-                            string SharesName = Convert.ToString(reader["SharesName"]);
-                            long TrendId = Convert.ToInt64(reader["TrendId"]);
-                            string TrendName = Convert.ToString(reader["TrendName"]);
-                            string TrendDescription = Convert.ToString(reader["TrendDescription"]);
-                            long RelId = Convert.ToInt64(reader["RelId"]);
-                            long OptionalId = Convert.ToInt64(reader["OptionalId"]);
-                            string ParamsInfo = Convert.ToString(reader["ParamsInfo"]);
-
-                            var temp = list.Where(e => e.AccountId == AccountId && e.Market == Market && e.SharesCode == SharesCode && e.TrendId == TrendId && e.RelId == RelId && e.OptionalId == OptionalId).FirstOrDefault();
-                            if (temp == null)
-                            {
-                                list.Add(new OptionalTrend
-                                {
-                                    AccountId = AccountId,
-                                    Market = Market,
-                                    SharesCode = SharesCode,
-                                    SharesName = SharesName,
-                                    TrendId = TrendId,
-                                    TrendName = TrendName,
-                                    TrendDescription = TrendDescription,
-                                    RelId = RelId,
-                                    OptionalId = OptionalId,
-                                    ParList = new List<string>
-                                    {
-                                        ParamsInfo
-                                    }
-                                });
-                            }
-                            else
-                            {
-                                temp.ParList.Add(ParamsInfo);
-                            }
-                        }
-                        reader.Close();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-                finally
-                {
-                    conn.Close();
-                }
+                var sqlResult = db.Database.SqlQuery<SharesTrendPar>(sql).ToList();
+                var result = (from item in sqlResult
+                              group item by new { item.Market, item.SharesCode, item.TrendId } into g
+                              select new SharesTrendPar
+                              {
+                                  SharesCode = g.Key.SharesCode,
+                                  Market = g.Key.Market,
+                                  TrendId = g.Key.TrendId,
+                                  ParamsList = g.Select(e => e.ParamsInfo).ToList()
+                              }).ToList();
+                return result;
             }
-
-            return list;
         }
 
         /// <summary>
@@ -1819,12 +1825,13 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
         }
 
         //分析五档变化速度
-        public static int Analysis_QuotesChangeRate(string sharesCode, int market, List<string> par)
+        public static int Analysis_QuotesChangeRate(string sharesCode, int market,long currPrice ,List<string> par)
         {
             var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
             int compare = 0;
             int type = 0;
             double count = 0;
+            int othercompare = 0;
             try
             {
                 compare = Convert.ToInt32(temp.Compare);
@@ -1834,6 +1841,13 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
             catch (Exception)
             {
                 return -1;
+            }
+            try
+            {
+                othercompare = Convert.ToInt32(temp.Compare);
+            }
+            catch (Exception)
+            {
             }
 
             DateTime timeNow = DateTime.Now;
@@ -1931,6 +1945,10 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
                         return -1;
                 }
 
+                if ((othercompare == 1 && disPrice < currPrice) || (othercompare == 2 && disPrice > currPrice))
+                {
+                    return -1;
+                }
                 if (lastCount <= 0 || lastPrice <= 0)
                 {
                     return -1;
@@ -2155,137 +2173,40 @@ where t2.[Status]=1 and t3.[Status]=1 and t4.[Status]=1 and t7.[Status]=1 and da
         /// <summary>
         /// 触发
         /// </summary>
-        private static void TrendTri(long relId, int market, string sharesCode, long accountId, long trendId, string sharesName, string trendName, string trendDescription, long optionalId, DateTime pushTime, string pushDesc)
+        private static void TrendTri(List<TrendAnalyseResult> trendResult)
         {
-            bool IsPush = false;
-            bool IsFirst = false;
-
-            DateTime timeNow = DateTime.Now;
-            long currPrice = 0;
-            long closePrice = 0;
-            int riseRate = 0;
             using (SqlConnection conn = new SqlConnection(Singleton.Instance.connString_meal_ticket))
             {
                 conn.Open();
                 try
                 {
-                    using (SqlCommand comm = conn.CreateCommand())
+                    using (SqlCommand comm = new SqlCommand("exec P_TradeAnalyseResult_Update @analyseResult", conn))
                     {
-                        string sql = string.Format("select top 1 PresentPrice,ClosedPrice from v_shares_quotes_last with(nolock) where Market={0} and SharesCode='{1}'", market, sharesCode);
-                        comm.CommandType = CommandType.Text;
-                        comm.CommandText = sql;
-                        SqlDataReader reader = comm.ExecuteReader();
-                        if (reader.Read())
+                        using (var table = new DataTable())
                         {
-                            currPrice = Convert.ToInt64(reader["PresentPrice"]);
-                            closePrice = Convert.ToInt64(reader["ClosedPrice"]);
-                        }
-                        reader.Close();
-                    }
+                            table.Columns.Add("Market", typeof(int));
+                            table.Columns.Add("SharesCode", typeof(string));
+                            table.Columns.Add("PushTime", typeof(DateTime));
+                            table.Columns.Add("PushDesc", typeof(string));
+                            table.Columns.Add("TrendId", typeof(long));
 
-                    if (currPrice <= 0)
-                    {
-                        return;
-                    }
-                    if (closePrice <= 0)
-                    {
-                        return;
-                    }
-                    riseRate = (int)((currPrice - closePrice) * 1.0 / closePrice * 10000);
-
-                    using (SqlTransaction tran = conn.BeginTransaction())
-                    {
-                        try
-                        {
-                            string sql = string.Format("select top 1 LastPushTime,LastPushRiseRate,LastPushPrice,MinPushTimeInterval,MinPushRateInterval,MinTodayPrice,LastModified from t_account_shares_optional_trend_rel_tri with(xlock) where RelId={0}", relId);
-
-                            using (SqlCommand comm = conn.CreateCommand())
+                            foreach (var item in trendResult)
                             {
-                                comm.Transaction = tran;
-                                comm.CommandType = System.Data.CommandType.Text;
-
-                                comm.CommandText = sql;
-                                SqlDataReader reader = comm.ExecuteReader();
-                                if (reader.Read())
-                                {
-                                    DateTime LastModified = Convert.ToDateTime(reader["LastModified"]);
-
-                                    if (reader["LastPushTime"] == DBNull.Value || reader["LastPushRiseRate"] == DBNull.Value || reader["LastPushPrice"] == DBNull.Value)
-                                    {
-                                        IsPush = true;
-                                        IsFirst = true;
-                                    }
-                                    else if (Convert.ToDateTime(reader["LastPushTime"]).Date < pushTime.Date)
-                                    {
-                                        IsPush = true;
-                                        IsFirst = true;
-                                    }
-                                    else
-                                    {
-                                        DateTime LastPushTime = Convert.ToDateTime(reader["LastPushTime"]);
-                                        int MinPushTimeInterval = Convert.ToInt32(reader["MinPushTimeInterval"]);
-                                        int LastPushRiseRate = Convert.ToInt32(reader["LastPushRiseRate"]);
-                                        int MinPushRateInterval = Convert.ToInt32(reader["MinPushRateInterval"]);
-                                        long LastPushPrice = Convert.ToInt64(reader["LastPushPrice"]);
-                                        long MinTodayPrice = Convert.ToInt64(reader["MinTodayPrice"]);
-
-                                        if ((MinTodayPrice != -1 && currPrice > MinTodayPrice) || (MinPushTimeInterval != -1 && (pushTime - LastPushTime).TotalSeconds >= MinPushTimeInterval) || (MinPushRateInterval != -1 && (riseRate - LastPushRiseRate) >= MinPushRateInterval))
-                                        {
-                                            IsPush = true;
-                                        }
-                                    }
-
-                                    reader.Close();
-                                    if (IsPush)
-                                    {
-                                        sql = string.Format("update t_account_shares_optional_trend_rel_tri set LastPushTime='{0}',LastPushRiseRate={1},LastPushPrice={2},LastPushDesc='{4}',TriCountToday=TriCountToday+1 where RelId={3}", pushTime.ToString("yyyy-MM-dd HH:mm:ss"), riseRate, currPrice, relId, pushDesc);
-                                        comm.CommandText = sql;
-                                        comm.ExecuteNonQuery();
-                                    }
-                                }
-                                else
-                                {
-                                    IsPush = true;
-                                    IsFirst = true;
-                                    reader.Close();
-                                    sql = string.Format("insert into t_account_shares_optional_trend_rel_tri(RelId,LastPushTime,LastPushRiseRate,LastPushPrice,LastPushDesc,TriCountToday,MinPushTimeInterval,MinPushRateInterval,MinTodayPrice,CreateTime,LastModified) values({0},'{1}',{2},{3},'{8}',{4},{5},{6},{7},'{1}','{1}')", relId, pushTime.ToString("yyyy-MM-dd HH:mm:ss"), riseRate, currPrice, 1, 0, 0, -1, pushDesc);
-                                    comm.CommandText = sql;
-                                    comm.ExecuteNonQuery();
-                                }
-
-
-                                if (IsPush)
-                                {
-                                    if (IsFirst)
-                                    {
-                                        sql = string.Format("update t_account_shares_optional set TriCountToday=1 where Id={0}", optionalId);
-                                        comm.CommandText = sql;
-                                        comm.ExecuteNonQuery();
-                                    }
-                                    else
-                                    {
-                                        sql = string.Format("update t_account_shares_optional set TriCountToday=TriCountToday+1 where Id={0}", optionalId);
-                                        comm.CommandText = sql;
-                                        comm.ExecuteNonQuery();
-                                    }
-
-                                    sql = string.Format("update t_account_shares_optional set IsTrendClose=0 where Id={0} and IsTrendClose=1", optionalId);
-                                    comm.CommandText = sql;
-                                    comm.ExecuteNonQuery();
-                                }
-
-
-                                sql = string.Format("insert into t_account_shares_optional_trend_rel_tri_record(RelId,AccountId,Market,SharesCode,SharesName,TrendId,TrendName,TrendDescription,TriPrice,IsPush,CreateTime,OptionalId,TriDesc) values({0},{1},{2},'{3}','{4}',{5},'{6}','{7}',{8},{9},'{10}',{11},'{12}')", relId, accountId, market, sharesCode, sharesName, trendId, trendName, trendDescription, currPrice, IsPush ? 1 : 0, timeNow.ToString("yyyy-MM-dd HH:mm:ss"), optionalId, pushDesc);
-                                comm.CommandText = sql;
-                                comm.ExecuteNonQuery();
+                                DataRow row = table.NewRow();
+                                row["Market"] = item.Market;
+                                row["SharesCode"] = item.SharesCode;
+                                row["PushTime"] = item.PushTime;
+                                row["PushDesc"] = item.PushDesc;
+                                row["TrendId"] = item.TrendId;
+                                table.Rows.Add(row);
                             }
 
-                            tran.Commit();
-                        }
-                        catch (Exception ex)
-                        {
-                            tran.Rollback();
-                            throw ex;
+                            var pList = new SqlParameter("@analyseResult", SqlDbType.Structured);
+                            pList.TypeName = "dbo.TrendAnalyseResult";
+                            pList.Value = table;
+
+                            comm.Parameters.Add(pList);
+                            comm.ExecuteNonQuery();
                         }
                     }
                 }

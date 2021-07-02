@@ -1575,7 +1575,8 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                                         TrendId = g.Key.item.TrendId,
                                         TriCountToday = g.Key.item.TriCountToday,
                                         TriDesc = g.Key.item.TriDesc,
-                                        ConditionStatus= g.Key.ci==null?1:g.Key.ci.Status==1?3:2
+                                        ConditionStatus= g.Key.ci==null?1:g.Key.ci.Status==1?3:2,
+                                        ConditionId=g.Key.ci==null?0:g.Key.ci.Id
                                     }).ToList();
                 ts.Complete();
                 return accountTrend;
@@ -1626,7 +1627,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
             }
             using (var db = new meal_ticketEntities())
             {
-                string sql = string.Format(@"select t.SharesCode RelId,t.Market,t.SharesCode,t1.SharesName,t.ClosedPrice,t.PresentPrice,t.[Type],t1.Business,t1.Industry,t2.PushTime,t2.TriCountToday
+                string sql = string.Format(@"select t.SharesCode RelId,t.Market,t.SharesCode,t1.SharesName,t.ClosedPrice,t.PresentPrice,t.[Type],t1.Business,t1.Industry,t2.PushTime,t2.TriCountToday,t4.Status ConditionStatus,t4.Id ConditionId
   from
   (
   select Market,SharesCode,ClosedPrice,PresentPrice,-1 [Type]
@@ -1666,8 +1667,13 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
 	where [Date]='{0}'
 	group by Market,SharesCode,[Type],BusinessType
   )t2 on t.Market=t2.Market and t.SharesCode=t2.SharesCode and t.[Type]=t2.[Type] 
+  left join 
+  (
+    select * from t_account_shares_conditiontrade_buy
+    where AccountId={2}
+  )t4 on t.Market=t4.Market and t.SharesCode=t4.SharesCode
   where convert(varchar(20),t2.PushTime,120)>'{1}' and t3.Id is null
-  order by t2.PushTime desc,t.SharesCode", dateNow.ToString("yyyy-MM-dd"), request.LastDataTime.Value.ToString("yyyy-MM-dd HH:mm:ss"));
+  order by t2.PushTime desc,t.SharesCode", dateNow.ToString("yyyy-MM-dd"), request.LastDataTime.Value.ToString("yyyy-MM-dd HH:mm:ss"), basedata.AccountId);
 
                 var list = db.Database.SqlQuery<AccountRiseLimitTriInfo>(sql).ToList();
 
@@ -1685,6 +1691,18 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                                     select x).ToList();
                 foreach (var item in list)
                 {
+                    if (item.ConditionStatus == null) 
+                    {
+                        item.ConditionStatus = 1;
+                    }
+                    else if (item.ConditionStatus == 1)
+                    {
+                        item.ConditionStatus = 3;
+                    }
+                    else if (item.ConditionStatus == 2)
+                    {
+                        item.ConditionStatus = 2;
+                    }
                     var rules = (from x in fundmultiple
                                  join x2 in accountRules on x.Id equals x2.FundmultipleId into a
                                  from ai in a.DefaultIfEmpty()
@@ -7841,6 +7859,10 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
             using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
             using (var db = new meal_ticketEntities())
             {
+                var triDetails = from item in db.t_account_shares_conditiontrade_buy_details
+                                 join item2 in db.t_account_shares_conditiontrade_buy on item.ConditionId equals item2.Id
+                                 join item3 in db.t_account_baseinfo on item2.AccountId equals item3.Id
+                                 select new { item, item3 };
                 var result = (from item in db.t_account_shares_conditiontrade_buy_details
                               join item2 in db.t_account_shares_conditiontrade_buy on item.ConditionId equals item2.Id
                               join item3 in db.v_shares_quotes_last on new { item2.Market, item2.SharesCode } equals new { item3.Market, item3.SharesCode }
@@ -7848,6 +7870,8 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                               join item5 in db.t_shares_all on new { item2.Market, item2.SharesCode } equals new { item5.Market, item5.SharesCode }
                               join item6 in db.t_account_shares_entrust on item.EntrustId equals item6.Id into a
                               from ai in a.DefaultIfEmpty()
+                              join item7 in triDetails on item.FatherId equals item7.item.Id into b
+                              from bi in b.DefaultIfEmpty()
                               where item.Status == 1 && (item.BusinessStatus == 1 || item.BusinessStatus == 3 || item.BusinessStatus == 4) && item2.Status == 1 && item3.PresentPrice > 0 && item3.ClosedPrice > 0 && item.CreateAccountId == basedata.AccountId
                               orderby item.TriggerTime
                               select new BuyTipInfo
@@ -7870,7 +7894,9 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                                   Status = item.BusinessStatus == 1 ? 1 : ai == null ? 2 : ai.Status != 3 ? 3 : ai.DealCount <= 0 ? 5 : ai.DealCount >= ai.EntrustCount ? 6 : 4,
                                   FollowAccountList = (from x in db.t_account_shares_conditiontrade_buy_details_follow
                                                        where x.DetailsId == item.Id
-                                                       select x.FollowAccountId).ToList()
+                                                       select x.FollowAccountId).ToList(),
+                                  SyncroAccountMobile= bi==null?"本账户":bi.item3.Mobile,
+                                  SyncroAccountName=bi==null?"":bi.item3.NickName
                               }).ToList();
                 var sharesList = result.Select(e => e.Market + "" + e.SharesCode).ToList();
                 var plateList = (from x in db.t_shares_plate_rel
@@ -14214,6 +14240,26 @@ select @buyId;";
                 }
                 db.t_account_shares_buy_synchro_setting.Remove(setting);
                 db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 查询交易时间分组列表
+        /// </summary>
+        /// <returns></returns>
+        public List<SharesTradeTimeGroupInfo> GetSharesTradeTimeGroupList()
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var timeList = (from item in db.t_shares_limit_time
+                                select new SharesTradeTimeGroupInfo
+                                {
+                                    Id = item.Id,
+                                    LimitKey = item.LimitKey,
+                                    LimitMarket = item.LimitMarket,
+                                    MarketName = item.MarketName
+                                }).ToList();
+                return timeList;
             }
         }
     }

@@ -97,11 +97,11 @@ namespace FXCommon.Common
         /// Web请求(Http Basic认证)
         /// </summary>
         /// <returns></returns>
-        public static string Post_BasicAuth(string content, string url, string auth)
+        public static string Post_BasicAuth(string content, string url, string auth, string method="POST")
         {
             HttpWebRequest myRequest = (HttpWebRequest)WebRequest.Create(url);
             byte[] buf = UnicodeEncoding.UTF8.GetBytes(content);
-            myRequest.Method = "POST";
+            myRequest.Method = method;
             myRequest.ContentLength = buf.Length;
             myRequest.ContentType = "application/json";
             myRequest.Headers.Add("Authorization", "Basic " + auth);

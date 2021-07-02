@@ -113,5 +113,15 @@ namespace MealTicket_Web_Handler.Model
         /// 所属自定义分组
         /// </summary>
         public List<long> GroupList { get; set; }
+
+        /// <summary>
+        /// 同步账户手机号
+        /// </summary>
+        public string SyncroAccountMobile { get; set; }
+
+        /// <summary>
+        /// 同步账户昵称
+        /// </summary>
+        public string SyncroAccountName { get; set; }
     }
 }

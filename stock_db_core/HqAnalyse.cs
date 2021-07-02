@@ -74,6 +74,8 @@ namespace stock_db_core
         /// 一分钟内最高价
         /// </summary>
         public int iTopPrice;
+
+        public int iBalancePriceOfDay;
     };
 
     public class DB_TRADE_PRICE_INFO
@@ -687,74 +689,10 @@ namespace stock_db_core
         /// <param name="ref_priceInfoDic"></param>
         /// <param name="ref_lstTimeOfUsePriceDic"></param>
         /// <returns></returns>
-        public int GetTradePriceInfoBatchOld(List<string> strStockCodeList, DateTime dtTime, bool bPriceOrAmount, ref Dictionary<string, DB_TRADE_PRICE_INFO> ref_priceInfoDic, ref Dictionary<string, List<DB_TIME_OF_USE_PRICE>> ref_lstTimeOfUsePriceDic, ref Dictionary<string, int> error)
-        {
-            strStockCodeList = strStockCodeList.Distinct().ToList();
-            Dictionary<string, int> thisError = new Dictionary<string, int>();
-            Dictionary<string, DB_TRADE_PRICE_INFO> this_ref_priceInfoDic = new Dictionary<string, DB_TRADE_PRICE_INFO>();
-            Dictionary<string, List<DB_TIME_OF_USE_PRICE>> this_ref_lstTimeOfUsePriceDic = new Dictionary<string, List<DB_TIME_OF_USE_PRICE>>();
-            List<Task> taskList = new List<Task>();
-            object _lock = new object();
-            foreach (var strStockCode in strStockCodeList)
-            {
-                var tempCode = strStockCode.Split(',');
-                if (tempCode.Count() != 2)
-                {
-                    thisError.Add(strStockCode, (int)DB_Error.STOCKPARERROR);
-                    continue;
-                }
-                int market;
-                if (!int.TryParse(tempCode[1], out market))
-                {
-                    thisError.Add(strStockCode, (int)DB_Error.STOCKPARERROR);
-                    continue;
-                }
-                string sharesCode = tempCode[0];
-
-                Task t = new Task(() =>
-                {
-                    DB_TRADE_PRICE_INFO ref_priceInfo = new DB_TRADE_PRICE_INFO();
-                    List<DB_TIME_OF_USE_PRICE> ref_lstTimeOfUsePrice = new List<DB_TIME_OF_USE_PRICE>();
-                    int tempError=GetTradePriceInfo(strStockCode, dtTime, bPriceOrAmount,ref ref_priceInfo,ref ref_lstTimeOfUsePrice);
-                    lock (_lock)
-                    {
-                        if (tempError == 0)
-                        {
-                            this_ref_priceInfoDic.Add(strStockCode, ref_priceInfo);
-                            this_ref_lstTimeOfUsePriceDic.Add(strStockCode, ref_lstTimeOfUsePrice);
-                        }
-                        else
-                        {
-                            thisError.Add(strStockCode, tempError);
-                        }
-                    }
-                });
-                taskList.Add(t);
-                t.Start();
-            }
-            Task.WaitAll(taskList.ToArray());
-
-            error = thisError;
-            ref_priceInfoDic = this_ref_priceInfoDic;
-            ref_lstTimeOfUsePriceDic = this_ref_lstTimeOfUsePriceDic;
-            return (int)DB_Error.SUCCESS;
-        }
-
-
-        /// <summary>
-        /// 批量获取指定股票分笔价格信息
-        /// </summary>
-        /// <param name="strStockCode"></param>
-        /// <param name="dtTime"></param>
-        /// <param name="bPriceOrAmount"></param>
-        /// <param name="ref_priceInfoDic"></param>
-        /// <param name="ref_lstTimeOfUsePriceDic"></param>
-        /// <returns></returns>
-        public int GetTradePriceInfoBatch(List<string> strStockCodeList,DateTime bgTime, DateTime dtTime, bool bPriceOrAmount, ref Dictionary<string, DB_TRADE_PRICE_INFO> ref_priceInfoDic, ref Dictionary<string, List<DB_TIME_OF_USE_PRICE>> ref_lstTimeOfUsePriceDic, ref Dictionary<string, int> error)
+        public int GetTradePriceInfoBatch(List<string> strStockCodeList,DateTime bgTime, DateTime dtTime, ref Dictionary<string, DB_TRADE_PRICE_INFO> ref_priceInfoDic, ref Dictionary<string, List<DB_TIME_OF_USE_PRICE>> ref_lstTimeOfUsePriceDic, ref Dictionary<string, int> error)
         {
             ref_lstTimeOfUsePriceDic = new Dictionary<string, List<DB_TIME_OF_USE_PRICE>>();
                strStockCodeList = strStockCodeList.Distinct().ToList();
-            int iPriceOrAmount = bPriceOrAmount ? 1 : 2;
 
             error = new Dictionary<string, int>();
             List<StockBase> stockList = new List<StockBase>();
@@ -784,7 +722,7 @@ namespace stock_db_core
 
             if (bgTime.ToString("yyyy-MM-dd HH:mm:ss") == DB_Model.MIN_DATE_TIME)
             {
-                bgTime = DateTime.Parse(bgTime.ToString("yyyy-MM-dd 09:25:00"));
+                bgTime = DateTime.Parse(dtTime.ToString("yyyy-MM-dd 09:25:00"));
             }
 
             if (dtTime.ToString("yyyy-MM-dd HH:mm:ss") == DB_Model.MAX_DATE_TIME)
@@ -812,81 +750,20 @@ namespace stock_db_core
                 //查询股票当天开盘价和收盘价
                 var priceDic = GetStockPriceBatch(stockList, dtTime);
 
-                var stockMinTime= GetStockMinTimeBatch(stockList,iPriceOrAmount, bgTime, dtTime);
-
-                //查询最高价格分钟数
-                var stockMinTime_MaxDic1 = new Dictionary<string, DateTime?>();
-                var stockMinTime_MaxDic2 = new Dictionary<string, DateTime?>();
-                //查询最低价格分钟数
-                var stockMinTime_MinDic1 = new Dictionary<string, DateTime?>();
-                var stockMinTime_MinDic2 = new Dictionary<string, DateTime?>();
-                foreach (var item in stockMinTime)
-                {
-                    string[] temp = item.Key.Split('|');
-                    if (int.Parse(temp[0]) == 1)
-                    {
-                        stockMinTime_MinDic2.Add(temp[1],item.Value);
-                    }
-                    if (int.Parse(temp[0]) == 2)
-                    {
-                        stockMinTime_MaxDic2.Add(temp[1], item.Value);
-                    }
-                    if (int.Parse(temp[0]) == 3)
-                    {
-                        stockMinTime_MinDic1.Add(temp[1], item.Value);
-                    }
-                    if (int.Parse(temp[0]) == 4)
-                    {
-                        stockMinTime_MaxDic1.Add(temp[1], item.Value);
-                    }
-                }
-
                 var TradeDateMinDic = GetTradeDateMinBatch(stockList, DateTime.Parse(bgTime.ToString("yyyy-MM-dd HH:mm:00")), DateTime.Parse(dtTime.ToString("yyyy-MM-dd HH:mm:00")));
 
-                //查询指定分钟分笔数据
-                foreach (var item in TradeDateMinDic)
+                foreach (var item in priceDic)
                 {
-                    //查询第30分钟分笔数据
-                    priceDic[item.Key].openingInfo = item.Value.Where(e => e.dtTradeTime == DateTime.Parse(dtTime.ToString("yyyy-MM-dd 09:30:00"))).FirstOrDefault();
-                    //查询指定分钟分笔数据
-                    priceDic[item.Key].lastestInfo = item.Value.Where(e => e.dtTradeTime == DateTime.Parse(dtTime.ToString("yyyy-MM-dd HH:mm:00"))).FirstOrDefault();
-                    //查询最高价格分钟分笔数据
-                    if (stockMinTime_MaxDic1[item.Key] == null)
-                    {
-                        priceDic[item.Key].topInfo = new DB_TIME_OF_USE_PRICE();
-                    }
-                    else
-                    {
-                        priceDic[item.Key].topInfo = item.Value.Where(e => e.dtTradeTime == stockMinTime_MaxDic1[item.Key].Value).FirstOrDefault();
-                    }
-                    if (stockMinTime_MaxDic2[item.Key] == null)
-                    {
-                        priceDic[item.Key].topInfo2 = new DB_TIME_OF_USE_PRICE();
-                    }
-                    else
-                    {
-                        priceDic[item.Key].topInfo2 = item.Value.Where(e => e.dtTradeTime == stockMinTime_MaxDic2[item.Key].Value).FirstOrDefault();
-                    }
-                    //查询最低价格分钟分笔数据
-                    if (stockMinTime_MinDic1[item.Key] == null)
-                    {
-                        priceDic[item.Key].lowestInfo = new DB_TIME_OF_USE_PRICE();
-                    }
-                    else
-                    {
-                        priceDic[item.Key].lowestInfo = item.Value.Where(e => e.dtTradeTime == stockMinTime_MinDic1[item.Key].Value).FirstOrDefault();
-                    }
-                    if (stockMinTime_MinDic2[item.Key] == null)
-                    {
-                        priceDic[item.Key].lowestInfo2 = new DB_TIME_OF_USE_PRICE();
-                    }
-                    else
-                    {
-                        priceDic[item.Key].lowestInfo2 = item.Value.Where(e => e.dtTradeTime == stockMinTime_MinDic2[item.Key].Value).FirstOrDefault();
-                    }
-
-                    ref_lstTimeOfUsePriceDic.Add(item.Key,item.Value.OrderBy(e => e.dtTradeTime).ToList());
+                    item.Value.openingInfo = TradeDateMinDic[item.Key].Where(e => e.dtTradeTime == DateTime.Parse(dtTime.ToString("yyyy-MM-dd 09:25:00"))).FirstOrDefault();
+                    item.Value.lastestInfo = TradeDateMinDic[item.Key].OrderByDescending(e=>e.dtTradeTime).FirstOrDefault();
+                    item.Value.topInfo = TradeDateMinDic[item.Key].OrderByDescending(e=>e.iTopPrice).ThenBy(e=>e.dtTradeTime).FirstOrDefault();
+                    item.Value.lowestInfo = TradeDateMinDic[item.Key].OrderBy(e => e.iLowestPrice).ThenBy(e => e.dtTradeTime).FirstOrDefault();
+                    item.Value.topInfo2 = TradeDateMinDic[item.Key].OrderByDescending(e=>e.iLastestPrice).ThenBy(e => e.dtTradeTime).FirstOrDefault();
+                    item.Value.lowestInfo2 = TradeDateMinDic[item.Key].OrderBy(e => e.iLastestPrice).ThenBy(e => e.dtTradeTime).FirstOrDefault();
                 }
+
+                //查询指定分钟分笔数据
+                ref_lstTimeOfUsePriceDic = TradeDateMinDic;
                 //查询所有分笔数据
                 ref_priceInfoDic = priceDic;
                 return (int)DB_Error.SUCCESS;
@@ -912,13 +789,13 @@ namespace stock_db_core
         }
 
         /// <summary>
-        /// 批量获取股票指定分钟数分笔数据
+        /// 批量获取股票指定分钟数分笔数据（增量）
         /// </summary>
         /// <param name="market">市场0深圳 1上海</param>
         /// <param name="sharesCode">股票代码</param>
         /// <param name="dataTime">时间</param>
         /// <returns></returns>
-        private Dictionary<string, List<DB_TIME_OF_USE_PRICE>> GetTradeDateMinBatch(List<StockBase> stockList, DateTime bgTime, DateTime dataTime)
+        private Dictionary<string, List<DB_TIME_OF_USE_PRICE>> GetTradeDateMinBatchBack(List<StockBase> stockList, DateTime bgTime, DateTime dataTime)
         {
             DateTime dateNow = DateTime.Now.Date;
             Dictionary<string, List<DB_TIME_OF_USE_PRICE>> resultDic = new Dictionary<string, List<DB_TIME_OF_USE_PRICE>>();
@@ -942,7 +819,7 @@ namespace stock_db_core
             string sqlQuery = string.Format(@"select SharesCode,Market,[Time],iTradeStock,lTradeAmount,iOpeningPrice,iLastestPrice,iMinPrice minPrice,iMaxPrice maxPrice
 from t_shares_transactiondata_time_analyse with(nolock)
 where SharesInfoNum in {0}
-            and [Time] >= '{1}' and [Time] <= '{2}' and [Date] = '{1}'", strStockCode, bgTime.ToString("yyyy-MM-dd HH:mm:00"), dataTime.ToString("yyyy-MM-dd HH:mm:00"));
+            and [Time] >= '{1}' and [Time] <= '{2}' and [Date] = '{3}'", strStockCode, bgTime.ToString("yyyy-MM-dd HH:mm:00"), dataTime.ToString("yyyy-MM-dd HH:mm:00"), dataTime.ToString("yyyy-MM-dd"));
 
             using (SqlConnection conn = new SqlConnection(_strConnString2))
             {
@@ -994,17 +871,19 @@ where SharesInfoNum in {0}
                     foreach (var result in resultDic)
                     {
                         var tempTime = DateTime.Parse(dataTime.ToString("yyyy-MM-dd HH:mm:00"));
-                        var startTime = DateTime.Parse(dataTime.ToString("yyyy-MM-dd 09:25:00"));
+                        var startTime = DateTime.Parse(bgTime.ToString("yyyy-MM-dd HH:mm:00"));
                         DB_TIME_OF_USE_PRICE lastest = null;
                         while (startTime <= tempTime)
                         {
                             if (startTime == DateTime.Parse(dataTime.ToString("yyyy-MM-dd 09:26:00")))
                             {
                                 startTime = DateTime.Parse(dataTime.ToString("yyyy-MM-dd 09:30:00"));
+                                continue;
                             }
                             if (startTime == DateTime.Parse(dataTime.ToString("yyyy-MM-dd 11:31:00")))
                             {
                                 startTime = DateTime.Parse(dataTime.ToString("yyyy-MM-dd 13:00:00"));
+                                continue;
                             }
                             if (dic.ContainsKey(result.Key))
                             {
@@ -1044,6 +923,316 @@ where SharesInfoNum in {0}
                                 });
                             }
                             startTime = startTime.AddMinutes(1);
+                        }
+                    }
+                    return resultDic;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 批量获取股票指定分钟数分笔数据（增量）
+        /// </summary>
+        /// <param name="market">市场0深圳 1上海</param>
+        /// <param name="sharesCode">股票代码</param>
+        /// <param name="dataTime">时间</param>
+        /// <returns></returns>
+        private Dictionary<string, List<DB_TIME_OF_USE_PRICE>> GetTradeDateMinBatch(List<StockBase> stockList, DateTime bgTime, DateTime dataTime)
+        {
+            DateTime dateNow = DateTime.Now.Date;
+            Dictionary<string, List<DB_TIME_OF_USE_PRICE>> resultDic = new Dictionary<string, List<DB_TIME_OF_USE_PRICE>>();
+            if (stockList.Count() <= 0)
+            {
+                return resultDic;
+            }
+            StringBuilder strStockCode = new StringBuilder();
+            strStockCode.Append("(");
+            for (int i = 0; i < stockList.Count(); i++)
+            {
+                resultDic.Add(stockList[i].SharesCode + "," + stockList[i].Market, new List<DB_TIME_OF_USE_PRICE>());
+                strStockCode.Append(int.Parse(stockList[i].SharesCode) * 10 + stockList[i].Market);
+                if (i < stockList.Count() - 1)
+                {
+                    strStockCode.Append(",");
+                }
+            }
+            strStockCode.Append(")");
+
+            string sqlQuery = string.Format(@"select SharesCode,Market,[Time],iTradeStock,iOpeningPrice,iLastestPrice,lTradeAmount,iMinPrice,iMaxPrice
+from t_shares_transactiondata_time_analyse with(nolock)
+where SharesInfoNum in {0} and Time <= '{1}' and Time>='{2}'
+order by SharesInfoNum,[Time]", strStockCode, dataTime.ToString("yyyy-MM-dd HH:mm:00"), bgTime.ToString("yyyy-MM-dd HH:mm:00"));
+
+            using (SqlConnection conn = new SqlConnection(_strConnString2))
+            {
+                conn.Open();
+
+                Dictionary<string, List<DB_TIME_OF_USE_PRICE>> dic = new Dictionary<string, List<DB_TIME_OF_USE_PRICE>>();
+                try
+                {
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = sqlQuery;   //sql语句
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            int market = int.Parse(reader["Market"].ToString());
+                            string sharesCode = reader["SharesCode"].ToString();
+                            DB_TIME_OF_USE_PRICE result = new DB_TIME_OF_USE_PRICE();
+                            result.dtTradeTime = DateTime.Parse(reader["Time"].ToString());
+                            result.iTradeAmount = int.Parse(reader["iTradeStock"].ToString());
+                            result.iOpeningPrice = int.Parse(reader["iOpeningPrice"].ToString());
+                            result.iLastestPrice = int.Parse(reader["iLastestPrice"].ToString());
+                            result.lTradePrice = long.Parse(reader["lTradeAmount"].ToString());
+                            result.iLowestPrice = int.Parse(reader["iMinPrice"].ToString());
+                            result.iTopPrice = int.Parse(reader["iMaxPrice"].ToString());
+                            result.iBalancePrice = result.iTradeAmount == 0 ? 0 : (int)(result.lTradePrice / result.iTradeAmount);
+                            if (dic.ContainsKey(sharesCode + "," + market))
+                            {
+                                dic[sharesCode + "," + market].Add(result);
+                            }
+                            else
+                            {
+                                dic.Add(sharesCode + "," + market, new List<DB_TIME_OF_USE_PRICE> { result });
+                            }
+                        }
+                        reader.Close();
+                    }
+                    foreach (var result in resultDic)
+                    {
+                        var tempTime = DateTime.Parse(dataTime.ToString("yyyy-MM-dd HH:mm:00"));
+                        var startTime = DateTime.Parse(bgTime.ToString("yyyy-MM-dd HH:mm:00"));
+                        DB_TIME_OF_USE_PRICE lastest = null;
+                        while (startTime <= tempTime)
+                        {
+                            if (startTime == DateTime.Parse(dataTime.ToString("yyyy-MM-dd 09:26:00")))
+                            {
+                                startTime = DateTime.Parse(dataTime.ToString("yyyy-MM-dd 09:30:00"));
+                                continue;
+                            }
+                            if (startTime == DateTime.Parse(dataTime.ToString("yyyy-MM-dd 11:31:00")))
+                            {
+                                startTime = DateTime.Parse(dataTime.ToString("yyyy-MM-dd 13:00:00"));
+                                continue;
+                            }
+                            if (dic.ContainsKey(result.Key))
+                            {
+                                var sourceItem = dic[result.Key].Where(e => e.dtTradeTime == startTime).FirstOrDefault();
+                                if (sourceItem != null)
+                                {
+                                    result.Value.Add(sourceItem);
+                                    lastest = sourceItem;
+                                }
+                                else
+                                {
+                                    result.Value.Add(new DB_TIME_OF_USE_PRICE
+                                    {
+                                        iTradeAmount = 0,
+                                        dtTradeTime = startTime,
+                                        iBalancePrice = lastest == null ? 0 : lastest.iBalancePrice,
+                                        iLastestPrice = lastest == null ? 0 : lastest.iLastestPrice,
+                                        iOpeningPrice = lastest == null ? 0 : lastest.iLastestPrice,
+                                        lTradePrice = 0,
+                                        iLowestPrice = lastest == null ? 0 : lastest.iLastestPrice,
+                                        iTopPrice = lastest == null ? 0 : lastest.iLastestPrice,
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                result.Value.Add(new DB_TIME_OF_USE_PRICE
+                                {
+                                    iTradeAmount = 0,
+                                    dtTradeTime = startTime,
+                                    iBalancePrice = 0,
+                                    iLastestPrice = 0,
+                                    iOpeningPrice = 0,
+                                    lTradePrice = 0,
+                                    iLowestPrice = 0,
+                                    iTopPrice = 0
+                                });
+                            }
+                            startTime = startTime.AddMinutes(1);
+                        }
+                    }
+                    return resultDic;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 批量获取股票指定分钟数分笔数据（全局）
+        /// </summary>
+        /// <param name="market">市场0深圳 1上海</param>
+        /// <param name="sharesCode">股票代码</param>
+        /// <param name="dataTime">时间</param>
+        /// <returns></returns>
+        private Dictionary<string, List<DB_TIME_OF_USE_PRICE>> GetTradeDateMinBatch_Day(List<StockBase> stockList, DateTime dataTime,int type)
+        {
+            DateTime dateNow = DateTime.Now.Date;
+            Dictionary<string, List<DB_TIME_OF_USE_PRICE>> resultDic = new Dictionary<string, List<DB_TIME_OF_USE_PRICE>>();
+            if (stockList.Count() <= 0)
+            {
+                return resultDic;
+            }
+            StringBuilder strStockCode = new StringBuilder();
+            strStockCode.Append("(");
+            for (int i = 0; i < stockList.Count(); i++)
+            {
+                resultDic.Add(stockList[i].SharesCode + "," + stockList[i].Market, new List<DB_TIME_OF_USE_PRICE>());
+                strStockCode.Append(int.Parse(stockList[i].SharesCode) * 10 + stockList[i].Market);
+                if (i < stockList.Count() - 1)
+                {
+                    strStockCode.Append(",");
+                }
+            }
+            strStockCode.Append(")");
+
+            string sqlQuery = string.Empty;
+            if (type == 1)//30分钟的
+            {
+                sqlQuery = string.Format(@"select SharesCode,Market,[Time],iTradeStock,lTradeAmount,iOpeningPrice,iLastestPrice,iMinPrice minPrice,iMaxPrice maxPrice
+from t_shares_transactiondata_time_analyse with(nolock)
+where SharesInfoNum in {0}
+            and [Time] >= '{1}' and [Time] <= '{1}' and [Date] = '{2}'", strStockCode, dataTime.ToString("yyyy-MM-dd 09:30:00"), dataTime.ToString("yyyy-MM-dd"));
+            }
+            if (type == 2)//当前分钟的
+            {
+                sqlQuery = string.Format(@"select SharesCode,Market,[Time],iTradeStock,lTradeAmount,iOpeningPrice,iLastestPrice,minPrice,maxPrice
+from
+(
+	select SharesCode,Market,[Time],iTradeStock,lTradeAmount,iOpeningPrice,iLastestPrice,iMinPrice minPrice,iMaxPrice maxPrice,
+	row_number()over(partition by SharesCode,Market order by [Time] desc) num
+	from t_shares_transactiondata_time_analyse with(nolock)
+	where SharesInfoNum in {0} and [Date] = '{1}' and [Time]<='{2}'
+)t
+where t.num=1", strStockCode, dataTime.ToString("yyyy-MM-dd"), dataTime.ToString("yyyy-MM-dd HH:mm:00"));
+            }
+            if (type == 3)//最高价分钟的
+            {
+                sqlQuery = string.Format(@"select SharesCode,Market,[Time],iTradeStock,lTradeAmount,iOpeningPrice,iLastestPrice,minPrice,maxPrice
+from(
+select SharesCode,Market,[Time],iTradeStock,lTradeAmount,iOpeningPrice,iLastestPrice,iMinPrice minPrice,iMaxPrice maxPrice,
+row_number() over(partition by SharesCode,Market order by iMaxPrice desc)num
+from t_shares_transactiondata_time_analyse with(nolock)
+where SharesInfoNum in {0} and [Date] = '{1}' and [Time]<='{2}'
+)t
+where t.num=1", strStockCode, dataTime.ToString("yyyy-MM-dd"), dataTime.ToString("yyyy-MM-dd HH:mm:00"));
+            }
+            if (type == 4)//最低价
+            {
+                sqlQuery = string.Format(@"select SharesCode,Market,[Time],iTradeStock,lTradeAmount,iOpeningPrice,iLastestPrice,minPrice,maxPrice
+from(
+select SharesCode,Market,[Time],iTradeStock,lTradeAmount,iOpeningPrice,iLastestPrice,iMinPrice minPrice,iMaxPrice maxPrice,
+row_number() over(partition by SharesCode,Market order by iMinPrice)num
+from t_shares_transactiondata_time_analyse with(nolock)
+where SharesInfoNum in {0} and [Date] = '{1}' and [Time]<='{2}'
+)t
+where t.num=1", strStockCode, dataTime.ToString("yyyy-MM-dd"), dataTime.ToString("yyyy-MM-dd HH:mm:00"));
+            }
+            if (type == 5)//最后一笔最高价
+            {
+                sqlQuery = string.Format(@"select SharesCode,Market,[Time],iTradeStock,lTradeAmount,iOpeningPrice,iLastestPrice,minPrice,maxPrice
+from(
+select SharesCode,Market,[Time],iTradeStock,lTradeAmount,iOpeningPrice,iLastestPrice,iMinPrice minPrice,iMaxPrice maxPrice,
+row_number() over(partition by SharesCode,Market order by iLastestPrice desc)num
+from t_shares_transactiondata_time_analyse with(nolock)
+where SharesInfoNum in {0} and [Date] = '{1}' and [Time]<='{2}'
+)t
+where t.num=1", strStockCode, dataTime.ToString("yyyy-MM-dd"), dataTime.ToString("yyyy-MM-dd HH:mm:00"));
+            }
+            if (type == 6)//最后一笔最低价
+            {
+                sqlQuery = string.Format(@"select SharesCode,Market,[Time],iTradeStock,lTradeAmount,iOpeningPrice,iLastestPrice,minPrice,maxPrice
+from(
+select SharesCode,Market,[Time],iTradeStock,lTradeAmount,iOpeningPrice,iLastestPrice,iMinPrice minPrice,iMaxPrice maxPrice,
+row_number() over(partition by SharesCode,Market order by iLastestPrice)num
+from t_shares_transactiondata_time_analyse with(nolock)
+where SharesInfoNum in {0} and [Date] = '{1}' and [Time]<='{2}'
+)t
+where t.num=1", strStockCode, dataTime.ToString("yyyy-MM-dd"), dataTime.ToString("yyyy-MM-dd HH:mm:00"));
+            }
+            using (SqlConnection conn = new SqlConnection(_strConnString2))
+            {
+                conn.Open();
+
+                Dictionary<string, List<DB_TIME_OF_USE_PRICE>> dic = new Dictionary<string, List<DB_TIME_OF_USE_PRICE>>();
+                try
+                {
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = sqlQuery;   //sql语句
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            int market = int.Parse(reader["Market"].ToString());
+                            string sharesCode = reader["SharesCode"].ToString();
+                            DB_TIME_OF_USE_PRICE result = new DB_TIME_OF_USE_PRICE();
+                            result.dtTradeTime = DateTime.Parse(reader["Time"].ToString());
+                            result.iTradeAmount = int.Parse(reader["iTradeStock"].ToString());
+                            result.iOpeningPrice = int.Parse(reader["iOpeningPrice"].ToString());
+                            result.iLastestPrice = int.Parse(reader["iLastestPrice"].ToString());
+                            result.lTradePrice = long.Parse(reader["lTradeAmount"].ToString());
+                            result.iLowestPrice = int.Parse(reader["minPrice"].ToString());
+                            result.iTopPrice = int.Parse(reader["maxPrice"].ToString());
+                            if (dic.ContainsKey(sharesCode + "," + market))
+                            {
+                                dic[sharesCode + "," + market].Add(result);
+                            }
+                            else
+                            {
+                                dic.Add(sharesCode + "," + market, new List<DB_TIME_OF_USE_PRICE> { result });
+                            }
+                        }
+                        reader.Close();
+                    }
+
+                    int totalStock = 0;
+                    long totalAmount = 0;
+                    foreach (var item in dic)
+                    {
+                        foreach (var item2 in item.Value)
+                        {
+                            totalAmount += item2.lTradePrice;
+                            totalStock += item2.iTradeAmount;
+                            item2.iBalancePrice = (totalStock == 0 ? 0 : (int)(totalAmount * 1.0 / totalStock));
+                        }
+                    }
+                    foreach (var result in resultDic)
+                    {
+                        if (dic.ContainsKey(result.Key))
+                        {
+                            var sourceItem = dic[result.Key].FirstOrDefault();
+                            if (sourceItem != null)
+                            {
+                                result.Value.Add(sourceItem);
+                            }
+                            else
+                            {
+                                result.Value.Add(new DB_TIME_OF_USE_PRICE());
+                            }
+                        }
+                        else
+                        {
+                            result.Value.Add(new DB_TIME_OF_USE_PRICE());
                         }
                     }
                     return resultDic;
@@ -1136,7 +1325,7 @@ where SharesInfoNum in {0}
         /// <param name="iPriceOrAmount">排序(1价格排序 2成交量排序)</param>
         /// <param name="dataTime">时间</param>
         /// <returns></returns>
-        private Dictionary<string, DateTime?> GetStockMinTimeBatch(List<StockBase> stockList, int iPriceOrAmount, DateTime bgTime,DateTime dataTime)
+        private Dictionary<string, DateTime?> GetStockMinTimeBatchBack(List<StockBase> stockList, DateTime bgTime,DateTime dataTime)
         {
             DateTime dateNow = DateTime.Now.Date;
 
@@ -1161,20 +1350,10 @@ where SharesInfoNum in {0}
             }
             strStockCode.Append(")");
 
-            string sqlQuery = "";
-            if (iPriceOrAmount == 1)
-            {
-                sqlQuery = string.Format(@"select SharesCode,Market,[Time],Price,[Type]
+            string sqlQuery = string.Format(@"select SharesCode,Market,[Time],Price,[Type]
   from t_shares_transactiondata_date_analyse with(nolock)
-  where SharesInfoNum in {0} and [Time] <= '{1}' and [Time] >= '{2}' and [Date]='{2}' and [Type]<=4", strStockCode.ToString(), dataTime.ToString("yyyy-MM-dd HH:mm:00"), bgTime.ToString("yyyy-MM-dd HH:mm:00"));
-            }
-            else
-            {
-                sqlQuery = string.Format(@"select SharesCode,Market,[Time],Price,[Type]
-  from t_shares_transactiondata_date_analyse with(nolock)
-  where SharesInfoNum in {0} and [Time] <= '{1}' and [Time] >= '{2}' and [Date]='{2}' and [Type]>=5", strStockCode.ToString(), dataTime.ToString("yyyy -MM-dd HH:mm:00"), bgTime.ToString("yyyy-MM-dd HH:mm:00"));
-            }
-
+  where SharesInfoNum in {0} and [Time] <= '{1}' and [Time] >= '{2}' and [Date]='{3}' and [Type]<=4", strStockCode.ToString(), dataTime.ToString("yyyy-MM-dd HH:mm:00"), bgTime.ToString("yyyy-MM-dd HH:mm:00"), dataTime.ToString("yyyy -MM-dd"));
+         
             using (SqlConnection conn = new SqlConnection(_strConnString2))
             {
                 conn.Open();
@@ -1213,6 +1392,114 @@ where SharesInfoNum in {0}
                                 }
                             }
                             if (type == 4 || type == 8)
+                            {
+                                if (resultDic.ContainsKey("4|" + sharesCode + "," + market))
+                                {
+                                    resultDic["4|" + sharesCode + "," + market] = time;
+                                }
+                            }
+                        }
+                        reader.Close();
+                    }
+                    return resultDic;
+                }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                finally
+                {
+                    conn.Close();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 批量获取股票最高价/最低价分钟时间
+        /// </summary>
+        /// <param name="type">1.最高价 2.最低价</param>
+        /// <param name="iPriceOrAmount">排序(1价格排序 2成交量排序)</param>
+        /// <param name="dataTime">时间</param>
+        /// <returns></returns>
+        private Dictionary<string, DateTime?> GetStockMinTimeBatch(List<StockBase> stockList, DateTime bgTime, DateTime dataTime)
+        {
+            DateTime dateNow = DateTime.Now.Date;
+
+            Dictionary<string, DateTime?> resultDic = new Dictionary<string, DateTime?>();
+            if (stockList.Count() <= 0)
+            {
+                return resultDic;
+            }
+            StringBuilder strStockCode = new StringBuilder();
+            strStockCode.Append("(");
+            for (int i = 0; i < stockList.Count(); i++)
+            {
+                resultDic.Add(1 + "|" + stockList[i].SharesCode + "," + stockList[i].Market, null);
+                resultDic.Add(2 + "|" + stockList[i].SharesCode + "," + stockList[i].Market, null);
+                resultDic.Add(3 + "|" + stockList[i].SharesCode + "," + stockList[i].Market, null);
+                resultDic.Add(4 + "|" + stockList[i].SharesCode + "," + stockList[i].Market, null);
+                strStockCode.Append(int.Parse(stockList[i].SharesCode) * 10 + stockList[i].Market);
+                if (i < stockList.Count() - 1)
+                {
+                    strStockCode.Append(",");
+                }
+            }
+            strStockCode.Append(")");
+
+            string sqlQuery = string.Format(@"select SharesCode,Market,[Time],Price,num,num2,num3,num4
+from
+(
+  select SharesCode,Market,Time,Price,
+  row_number()over(partition by SharesCode,Market order by Price,Time) num,
+  row_number()over(partition by SharesCode,Market order by Price desc,Time) num2,
+  row_number()over(partition by SharesCode,Market order by IsTimeLast desc,Price,Time) num3,
+  row_number()over(partition by SharesCode,Market order by IsTimeLast desc,Price desc,Time) num4
+  from t_shares_transactiondata with(nolock)
+  where SharesInfoNum in {0} and Time <= '{1}' and Time>='{2}'
+)t
+where t.num=1 or t.num2=1 or t.num3=1 or t.num4=1", strStockCode.ToString(), dataTime.ToString("yyyy-MM-dd HH:mm:00"), bgTime.ToString("yyyy-MM-dd HH:mm:00"));
+
+            using (SqlConnection conn = new SqlConnection(_strConnString2))
+            {
+                conn.Open();
+                try
+                {
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = sqlQuery;   //sql语句
+                        SqlDataReader reader = cmd.ExecuteReader();
+                        while (reader.Read())
+                        {
+                            int market = int.Parse(reader["Market"].ToString());
+                            string sharesCode = reader["SharesCode"].ToString();
+                            int num = int.Parse(reader["num"].ToString());
+                            int num2 = int.Parse(reader["num2"].ToString());
+                            int num3 = int.Parse(reader["num3"].ToString());
+                            int num4 = int.Parse(reader["num4"].ToString());
+                            DateTime time = DateTime.Parse(reader["Time"].ToString());
+                            if (num==1)
+                            {
+                                if (resultDic.ContainsKey("1|" + sharesCode + "," + market))
+                                {
+                                    resultDic["1|" + sharesCode + "," + market] = time;
+                                }
+                            }
+                            if (num2 == 1)
+                            {
+                                if (resultDic.ContainsKey("2|" + sharesCode + "," + market))
+                                {
+                                    resultDic["2|" + sharesCode + "," + market] = time;
+                                }
+                            }
+                            if (num3 == 1)
+                            {
+                                if (resultDic.ContainsKey("3|" + sharesCode + "," + market))
+                                {
+                                    resultDic["3|" + sharesCode + "," + market] = time;
+                                }
+                            }
+                            if (num4 == 1)
                             {
                                 if (resultDic.ContainsKey("4|" + sharesCode + "," + market))
                                 {

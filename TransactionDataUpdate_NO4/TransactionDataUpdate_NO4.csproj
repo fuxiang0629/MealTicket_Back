@@ -106,6 +106,7 @@
     <Compile Include="SharesInfo.cs" />
     <Compile Include="SharesTransactionDataInfo.cs" />
     <Compile Include="Singleton.cs" />
+    <Compile Include="TransactiondataAnalyseInfo.cs" />
     <Compile Include="t_dim_time.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

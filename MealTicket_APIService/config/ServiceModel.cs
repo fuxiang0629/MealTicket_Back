@@ -28,8 +28,6 @@ namespace MealTicket_APIService
             Bind<Runner>().To<RechargeRefundQueryRunner>();
             Bind<Runner>().To<UpdateTransactiondataRunner>();
             Bind<Runner>().To<SmsSendRunner>();
-            //Bind<Runner>().To<TransactiondataRealTimeRunner>();
-            //Bind<Runner>().To<TransactiondataDateRunner>();
         }
     }
 }

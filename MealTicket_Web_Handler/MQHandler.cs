@@ -1,5 +1,6 @@
 ﻿using FXCommon.Common;
 using MealTicket_Web_Handler.Model;
+using MealTicket_Web_Handler.Transactiondata;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -7,6 +8,7 @@ using stock_db_core;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -38,7 +40,7 @@ namespace MealTicket_Web_Handler
         /// <summary>
         /// 更新协议对象
         /// </summary>
-        IModel model;
+        IModel _model;
 
         string _HostName;
         int _Port;
@@ -83,10 +85,10 @@ namespace MealTicket_Web_Handler
                         _sendModel.Dispose();
                         _sendModel = null;
                     }
-                    if (model != null)
+                    if (_model != null)
                     {
-                        model.Dispose();
-                        model = null;
+                        _model.Dispose();
+                        _model = null;
                     }
                 }
             }
@@ -112,12 +114,12 @@ namespace MealTicket_Web_Handler
                         {
                             _connection = _factory.CreateConnection();
                             _sendModel = _connection.CreateModel();
-                            model = _connection.CreateModel();
-                            var consumerUpdate = new EventingBasicConsumer(model);
+                            _model = _connection.CreateModel();
+                            var consumerUpdate = new EventingBasicConsumer(_model);
                             consumerUpdate.Received += Consumer_Received;
                             consumerUpdate.Shutdown += Consumer_Shutdown;
-                            model.BasicQos(0, (ushort)Singleton.Instance.handlerThreadCount, false);
-                            model.BasicConsume("TransactionDataTrendAnalyse", false, consumerUpdate);
+                            _model.BasicQos(0, 1, false);
+                            _model.BasicConsume("TransactionDataTrendAnalyse", false, consumerUpdate);
                         }
                     }
                 }
@@ -201,7 +203,8 @@ namespace MealTicket_Web_Handler
                 name= queryName,
                 truncate =50000,
                 ackmode= "ack_requeue_true",
-                encoding= "auto",
+                requeue="true",
+                encoding = "auto",
                 count=1
             };
             string auth_str = _UserName + ":" + _Password;
@@ -209,6 +212,24 @@ namespace MealTicket_Web_Handler
 
             string res=HtmlSender.Post_BasicAuth(JsonConvert.SerializeObject(content), url, auth);
             return JsonConvert.DeserializeObject<List<dynamic>>(res);
+        }
+
+        /// <summary>
+        /// 清空队列数据
+        /// </summary>
+        public void clearQueueData(string queryName)
+        {
+            string url = string.Format("http://{0}:15672/api/queues/MealTicket/{1}/contents", _HostName, queryName);
+            var content = new
+            {
+                vhost = "MealTicket",
+                name = "TransactionDataUpdateNew",
+                mode = "purge"
+            };
+            string auth_str = _UserName + ":" + _Password;
+            string auth = Convert.ToBase64String(Encoding.Default.GetBytes(auth_str));
+
+            string res = HtmlSender.Post_BasicAuth(JsonConvert.SerializeObject(content), url, auth,"DELETE");
         }
 
         /// <summary>
@@ -221,41 +242,9 @@ namespace MealTicket_Web_Handler
             var body = Encoding.UTF8.GetString(e.Body.ToArray());
             try
             {
-                if (!DataHelper.CheckHandlerTime())
-                {
-                    return;
-                }
                 //解析队列数据
-                var dataJson = JsonConvert.DeserializeObject<List<SharesInfo>>(body);
-
-                List<STOCK_CODE_PARAM> resetList = new List<STOCK_CODE_PARAM>();
-                foreach (var sharesInfo in dataJson)
-                {
-                    resetList.Add(new STOCK_CODE_PARAM
-                    {
-                        strStockCode = sharesInfo.SharesCode + "," + sharesInfo.Market
-                    });
-                }
-                //刷新数据
-                int error = Singleton.Instance.m_stockMonitor.RefreshTradePriceInfoBat(DateTime.Parse(DB_Model.MAX_DATE_TIME), ref resetList);
-                if (error != 0)
-                {
-                    return;
-                }
-                resetList = resetList.Where(x => x.iErrorCode == 0).ToList();
-
-                List<SharesInfo> successList = new List<SharesInfo>();
-                foreach (var item in resetList)
-                {
-                    var temp = item.strStockCode.Split(',');
-                    successList.Add(new SharesInfo
-                    {
-                        SharesCode = temp[0],
-                        Market = int.Parse(temp[1])
-                    });
-                }
-                //分析数据
-                DataHelper.ToAnalyse(dataJson);
+                var dataJson = JsonConvert.DeserializeObject<TransactiondataTaskQueueInfo>(body);
+                Singleton.Instance._transactionDataTask.TransactiondataQueue.AddMessage(dataJson);
             }
             catch (Exception ex)
             {

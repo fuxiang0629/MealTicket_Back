@@ -1,6 +1,7 @@
 ﻿using FXCommon.Common;
 using FXCommon.Database;
 using MealTicket_Web_Handler.Runner;
+using MealTicket_Web_Handler.Transactiondata;
 using Newtonsoft.Json;
 using StockTrendMonitor.Models;
 using System;
@@ -14,6 +15,22 @@ using System.Threading.Tasks;
 
 namespace MealTicket_Web_Handler
 {
+    /// <summary>
+    /// 交易时间结构体
+    /// </summary>
+    public struct TradeTime 
+    {
+        /// <summary>
+        /// 最小时间
+        /// </summary>
+        public TimeSpan MinTime { get; set; }
+
+        /// <summary>
+        /// 最大时间
+        /// </summary>
+        public TimeSpan MaxTime { get; set; }
+    }
+
     public sealed class Singleton
     {
         /// <summary>
@@ -70,6 +87,7 @@ namespace MealTicket_Web_Handler
         public int NewTransactiondataSleepTime = 10000;//每天执行时的间隔时间
         public int NewTransactiondataStartHour = 0;//每天执行开始时间
         public int NewTransactiondataEndHour = 0;//每天执行结束时间
+        public int NewTransactiondataTaskTimeOut = 15000;//任务超时时间
         #endregion
 
 
@@ -93,6 +111,11 @@ namespace MealTicket_Web_Handler
         /// 系统参数更新线程等待队列
         /// </summary>
         private ThreadMsgTemplate<int> UpdateWait = new ThreadMsgTemplate<int>();
+
+        /// <summary>
+        /// 分笔数据处理任务
+        /// </summary>
+        public TransactionDataTask _transactionDataTask;
 
         #region====走势分析====
         /// <summary>
@@ -195,6 +218,10 @@ namespace MealTicket_Web_Handler
             if (mqHandler != null)
             {
                 mqHandler.Dispose(true);
+            }
+            if (_transactionDataTask != null)
+            {
+                _transactionDataTask.Dispose();
             }
         }
 
@@ -360,6 +387,12 @@ namespace MealTicket_Web_Handler
                         {
                             TrendAnalyseSleepTime = tempTrendAnalyseSleepTime;
                         }
+                        int tempNewTransactiondataTaskTimeOut = sysValue.NewTransactiondataTaskTimeOut;
+                        if (tempNewTransactiondataTaskTimeOut != null && tempNewTransactiondataTaskTimeOut > 0 && tempNewTransactiondataTaskTimeOut < 300000)
+                        {
+                            NewTransactiondataTaskTimeOut = tempNewTransactiondataTaskTimeOut;
+                        }
+                        
                     }
                 }
                 catch { }
@@ -377,6 +410,8 @@ namespace MealTicket_Web_Handler
                 }
                 catch { }
             }
+
+            _tradeTime = GetTradeCloseTime();
         }
 
         /// <summary>
@@ -405,5 +440,62 @@ namespace MealTicket_Web_Handler
                 SyncroList.Add(item);
             }
         }
+
+
+
+        public TradeTime _tradeTime;//闭市时间
+
+        /// <summary>
+        /// 获取交易闭市时间
+        /// </summary>
+        private TradeTime GetTradeCloseTime() 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var tradeTime = (from item in db.t_shares_limit_time
+                                 select item).FirstOrDefault();
+                if (tradeTime == null)
+                {
+                    return GetDefaultTradeCloseTime();
+                }
+                string[] timeArr=tradeTime.Time2.Split(',');
+                TimeSpan? result_maxTime = null;
+                TimeSpan? result_minTime = null;
+                for (int i = 0; i < timeArr.Length; i++)
+                {
+                    string[] spanArr=timeArr[i].Split('-');
+                    TimeSpan _minTime = TimeSpan.Parse(spanArr[0]);
+                    TimeSpan _maxTime = TimeSpan.Parse(spanArr[1]);
+                    if (result_maxTime == null || result_maxTime.Value < _maxTime)
+                    {
+                        result_maxTime = _maxTime;
+                    }
+                    if (result_minTime == null || result_minTime.Value > _minTime)
+                    {
+                        result_minTime = _minTime;
+                    }
+                }
+                if (result_maxTime == null || result_minTime == null)
+                {
+                    return GetDefaultTradeCloseTime();
+                }
+                return new TradeTime
+                {
+                    MaxTime = result_maxTime.Value,
+                    MinTime = result_minTime.Value
+                };
+            }
+        }
+
+        private TradeTime GetDefaultTradeCloseTime()
+        {
+            return new TradeTime
+            {
+                MaxTime = TimeSpan.Parse("09:30:00"),
+                MinTime = TimeSpan.Parse("09:25:00")
+            };
+        }
+
+
     }
 }

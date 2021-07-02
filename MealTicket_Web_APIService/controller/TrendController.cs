@@ -5898,5 +5898,17 @@ namespace MealTicket_Web_APIService.controller
             trendHandler.DeleteAccountAutoBuySyncroSetting(request, basedata);
             return null;
         }
+
+        /// <summary>
+        /// 查询交易时间分组列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("查询交易时间分组列表")]
+        [Route("shares/tradetime/group/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<SharesTradeTimeGroupInfo> GetSharesTradeTimeGroupList()
+        {
+            return trendHandler.GetSharesTradeTimeGroupList();
+        }
     }
 }

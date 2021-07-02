@@ -51,6 +51,7 @@ namespace SharesHqService
 
         public override void Execute()
         {
+            Console.WriteLine("SleepTime:"+SleepTime);
             if (!Singleton.Instance.TryQuotesCanEnter())
             {
                 return;

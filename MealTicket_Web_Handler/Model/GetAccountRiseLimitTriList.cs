@@ -130,6 +130,8 @@ namespace MealTicket_Web_Handler.Model
         /// <summary>
         /// 条件买入状态1不存在 2未开启 3已开启
         /// </summary>
-        public int ConditionStatus { get; set; }
+        public int? ConditionStatus { get; set; }
+
+        public long? ConditionId { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using FXCommon.Common;
 using MealTicket_Web_Handler;
+using MealTicket_Web_Handler.Transactiondata;
 using Microsoft.Owin.Hosting;
 using Ninject;
 using System;
@@ -79,6 +80,7 @@ namespace MealTicket_Web_APIService
         {
             //框架内部缓存信息
             session = Singleton.Instance;
+            session._transactionDataTask = new TransactionDataTask();
             if (session.mqHandler != null)
             {
                 session.mqHandler.Reconnect();

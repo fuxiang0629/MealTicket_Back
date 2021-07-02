@@ -36,3 +36,4 @@ F:\项目\饭票后端\TransactionDataUpdate_NO4\bin\Debug\System.Numerics.Vecto
 F:\项目\饭票后端\TransactionDataUpdate_NO4\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 F:\项目\饭票后端\TransactionDataUpdate_NO4\bin\Debug\System.Threading.Channels.xml
 F:\项目\饭票后端\TransactionDataUpdate_NO4\bin\Debug\System.Threading.Tasks.Extensions.xml
+F:\项目\饭票后端\TransactionDataUpdate_NO4\obj\Debug\TransactionDataUpdate_NO4.csprojAssemblyReference.cache

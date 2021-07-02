@@ -212,6 +212,7 @@
     <Compile Include="Model\GetPaymentList.cs" />
     <Compile Include="Model\GetSharesList.cs" />
     <Compile Include="Model\GetSharesQuotesToday.cs" />
+    <Compile Include="Model\GetSharesTradeTimeGroupList.cs" />
     <Compile Include="Model\GetTradeSharesList.cs" />
     <Compile Include="Model\GetTradeSharesQuotesInfo.cs" />
     <Compile Include="Model\GetTradeTimeMarketList.cs" />
@@ -262,6 +263,8 @@
     <Compile Include="test.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Transactiondata\TransactiondataAnalyseInfo.cs" />
+    <Compile Include="Transactiondata\TransactionDataTask.cs" />
     <Compile Include="TrendHandler.cs" />
     <Compile Include="t_account_api.cs">
       <DependentUpon>Model1.tt</DependentUpon>
