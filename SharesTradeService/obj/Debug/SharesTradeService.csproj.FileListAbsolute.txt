@@ -199,3 +199,6 @@ D:\项目\饭票\后端\SharesTradeService\obj\Debug\SharesTradeService.csproj.C
 D:\项目\饭票\后端\SharesTradeService\obj\Debug\SharesTradeService.csproj.CopyComplete
 D:\项目\饭票\后端\SharesTradeService\obj\Debug\SharesTradeService.exe
 D:\项目\饭票\后端\SharesTradeService\obj\Debug\SharesTradeService.pdb
+F:\项目\饭票后端\SharesTradeService\bin\Debug\MealTicket_DBCommon.dll
+F:\项目\饭票后端\SharesTradeService\bin\Debug\MealTicket_DBCommon.pdb
+F:\项目\饭票后端\SharesTradeService\bin\Debug\MealTicket_DBCommon.dll.config

@@ -1,7 +1,9 @@
 ﻿using FXCommon.Common;
+using MealTicket_DBCommon;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -48,6 +50,7 @@ namespace TransactionDataTri
             SendPeriodTime = 3000;
             StopPeriodTime = 15000;
             UpdateWait.Init();
+            SysparUpdate();
             StartSysparUpdateThread();
         }
 
@@ -137,7 +140,7 @@ namespace TransactionDataTri
                     Market = data.Market,
                     SharesCode = data.SharesCode
                 };
-                bool isSendSuccess = MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "TransactionData", "Update");
+                bool isSendSuccess = mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "TransactionData", "Update");
                 if (isSendSuccess)
                 {
                     updateWaitQuery(new WaitQueryModel 
@@ -174,6 +177,11 @@ namespace TransactionDataTri
                 SysparUpdateThread.Join();
                 UpdateWait.Release();
             }
+
+            if (mqHandler != null)
+            {
+                mqHandler.Dispose();
+            }
         }
 
         /// <summary>
@@ -185,42 +193,64 @@ namespace TransactionDataTri
             {
                 do
                 {
-                    try
-                    {
-                        using (var db = new meal_ticketEntities())
-                        {
-                            try
-                            {
-                                var sysPar1 = (from item in db.t_system_param
-                                               where item.ParamName == "TransactiondataPar"
-                                               select item).FirstOrDefault();
-                                if (sysPar1 != null)
-                                {
-                                    var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar1.ParamValue);
-                                    if (sysValue.SendPeriodTime != null && sysValue.SendPeriodTime >= 3000 && sysValue.SendPeriodTime <= 10000)
-                                    {
-                                        this.SendPeriodTime = sysValue.SendPeriodTime;
-                                    }
-                                    if (sysValue.StopPeriodTime != null && sysValue.StopPeriodTime >= 15000 && sysValue.StopPeriodTime <= 60000)
-                                    {
-                                        this.StopPeriodTime = sysValue.StopPeriodTime;
-                                    }
-                                }
-                            }
-                            catch { }
-                        }
-                    }
-                    catch (Exception ex)
-                    { }
-
                     int msgId = 0;
                     if (UpdateWait.WaitMessage(ref msgId, 600000))
                     {
                         break;
                     }
+                    SysparUpdate();
                 } while (true);
             });
             SysparUpdateThread.Start();
+        }
+
+        private void SysparUpdate()
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                try
+                {
+                    var sysPar1 = (from item in db.t_system_param
+                                   where item.ParamName == "TransactiondataPar"
+                                   select item).FirstOrDefault();
+                    if (sysPar1 != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar1.ParamValue);
+                        int tempSendPeriodTime = sysValue.SendPeriodTime;
+                        if (tempSendPeriodTime >= 3000 && tempSendPeriodTime <= 10000)
+                        {
+                            SendPeriodTime = tempSendPeriodTime;
+                        }
+                        int tempStopPeriodTime = sysValue.StopPeriodTime;
+                        if (tempStopPeriodTime >= 15000 && tempStopPeriodTime <= 60000)
+                        {
+                            StopPeriodTime = tempStopPeriodTime;
+                        }
+                    }
+                }
+                catch { }
+            }
+        }
+
+
+
+        /// <summary>
+        /// 队列对象
+        /// </summary>
+        public MQHandler mqHandler;
+        /// <summary>
+        /// 启动Mq队列
+        /// </summary>
+        public MQHandler StartMqHandler(string listenQueueName)
+        {
+            string hostName = ConfigurationManager.AppSettings["MQ_HostName"];
+            int port = int.Parse(ConfigurationManager.AppSettings["MQ_Port"]);
+            string userName = ConfigurationManager.AppSettings["MQ_UserName"];
+            string password = ConfigurationManager.AppSettings["MQ_Password"];
+            string virtualHost = ConfigurationManager.AppSettings["MQ_VirtualHost"];
+            mqHandler = new MQHandler(hostName, port, userName, password, virtualHost);
+            mqHandler.ListenQueueName = listenQueueName;//设置监听队列
+            return mqHandler;
         }
     }
 }

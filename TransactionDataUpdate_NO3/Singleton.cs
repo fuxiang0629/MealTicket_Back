@@ -347,9 +347,9 @@ namespace TransactionDataUpdate_NO3
                     {
                         break;
                     }
+                    SysparUpdate();
                 } while (true);
 
-                SysparUpdate();
             });
             SysparUpdateThread.Start();
         }

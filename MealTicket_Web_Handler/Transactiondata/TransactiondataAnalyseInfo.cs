@@ -74,6 +74,36 @@ namespace MealTicket_Web_Handler.Transactiondata
         public string TaskGuid { get; set; }
 
         /// <summary>
+        /// 数据类型
+        /// </summary>
+        public int DataType { get; set; }
+
+        /// <summary>
+        /// 总包数量
+        /// </summary>
+        public int TotalPacketCount { get; set; }
+
+        /// <summary>
+        /// 回调包数量
+        /// </summary>
+        public int CallBackPacketCount { get; set; }
+
+        /// <summary>
+        /// 数据包扔出时间
+        /// </summary>
+        public DateTime? StartTime { get; set; }
+
+        /// <summary>
+        /// 超时时间
+        /// </summary>
+        public int TaskTimeOut { get; set; }
+
+        /// <summary>
+        /// 数据列表最大下标
+        /// </summary>
+        public int DataIndex { get; set; }
+
+        /// <summary>
         /// 数据列表
         /// </summary>
         public List<TransactiondataAnalyseInfo> DataList { get; set; }

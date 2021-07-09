@@ -1,4 +1,5 @@
 ﻿using FXCommon.Common;
+using MealTicket_DBCommon;
 using MealTicket_Handler.Model;
 using MealTicket_Handler.RunnerHandler;
 using Newtonsoft.Json;
@@ -369,7 +370,7 @@ namespace MealTicket_Handler
                             Market = request.Market,
                             SharesCode = request.SharesCode
                         };
-                        MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "TransactionData", "Tri");
+                        Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "TransactionData", "Tri");
                     }
                     catch (Exception)
                     { }
@@ -549,22 +550,32 @@ namespace MealTicket_Handler
                                 orderby item.item.CreateTime descending
                                 select item).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                 List<TradeHoldInfo> list = new List<TradeHoldInfo>();
+
+                var traderulesList = DbHelper.GetTraderules(basedata.AccountId);
+                var otherCostInfo = (from item in tempList
+                                     select new OtherCostInfo
+                                     {
+                                         Id = item.item.Id,
+                                         Cost = 0
+                                     }).ToList();
+                long totalOtherCost = DbHelper.CalculateOtherCost(1, ref otherCostInfo);
                 foreach (var item in tempList)
                 {
+                    long otherCost = otherCostInfo.Where(e => e.Id == item.item.Id).Select(e => e.Cost).FirstOrDefault();
+
                     long PresentPrice = item.item3.PresentPrice <= 0 ? item.item3.ClosedPrice : item.item3.PresentPrice;
                     long MarketValue = item.item.RemainCount * PresentPrice;
-                    long ProfitAmount = MarketValue - (item.item.BuyTotalAmount - item.item.SoldAmount) - DBUtils.CalculateOtherCost(new List<long> { item.item.Id }, 1);
+                    long ProfitAmount = MarketValue - (item.item.BuyTotalAmount - item.item.SoldAmount) - otherCost;
 
                     List<ClosingLineInfo> closingList = new List<ClosingLineInfo>();
-                    var traderules = (from x in db.t_shares_limit_traderules
-                                      where (x.LimitMarket == -1 || x.LimitMarket == item.item.Market) && ((x.LimitType == 1 && item.item.SharesCode.StartsWith(x.LimitKey)) || (x.LimitType == 2 && item.item2.SharesName.StartsWith(x.LimitKey))) && x.Status == 1
-                                      select x).ToList();
+
+                    traderulesList = DbHelper.GetSharesTotalRules(item.item.SharesCode, item.item2.SharesName, item.item.Market, traderulesList);
                     long closingPrice = 0;
                     long cordonPrice = 0;
                     long addDepositAmount = 0;
-                    foreach (var y in traderules)
+                    foreach (var y in traderulesList)
                     {
-                        CalculateClosingInfo(PresentPrice, item.item.RemainCount, item.item.RemainDeposit, item.item.FundAmount, y.Cordon, y.ClosingLine, out closingPrice, out addDepositAmount, out cordonPrice);
+                        DbHelper.CalculateClosingInfo(PresentPrice, item.item.RemainCount, item.item.RemainDeposit, item.item.FundAmount, y.Cordon, y.ClosingLine, out closingPrice, out addDepositAmount, out cordonPrice);
 
                         closingList.Add(new ClosingLineInfo
                         {
@@ -573,14 +584,8 @@ namespace MealTicket_Handler
                             ClosingPrice = closingPrice,
                             AddDepositAmount = addDepositAmount,
                             ColorType = PresentPrice <= closingPrice ? 2 : PresentPrice <= cordonPrice ? 3 : 1
-                        });
-
-                        //判断额外平仓规则
-                        var rulesOther = (from z in db.t_shares_limit_traderules_other
-                                          where z.Status == 1 && z.RulesId == y.Id
-                                          orderby z.Times descending
-                                          select z).ToList();
-                        foreach (var other in rulesOther)
+                        }); 
+                        foreach (var other in y.OtherList)
                         {
                             try
                             {
@@ -588,7 +593,7 @@ namespace MealTicket_Handler
                                 TimeSpan endTime = TimeSpan.Parse(other.Times.Split('-')[1]);
                                 if (timeSpanNow < endTime)
                                 {
-                                    CalculateClosingInfo(PresentPrice, item.item.RemainCount, item.item.RemainDeposit, item.item.FundAmount, other.Cordon, other.ClosingLine, out closingPrice, out addDepositAmount, out cordonPrice);
+                                    DbHelper.CalculateClosingInfo(PresentPrice, item.item.RemainCount, item.item.RemainDeposit, item.item.FundAmount, other.Cordon, other.ClosingLine, out closingPrice, out addDepositAmount, out cordonPrice);
 
                                     closingList.Add(new ClosingLineInfo
                                     {
@@ -618,7 +623,7 @@ namespace MealTicket_Handler
                         FundAmount = item.item.FundAmount / 100 * 100,
                         PresentPrice = PresentPrice,
                         BuyTotalAmount = item.item.BuyTotalAmount,
-                        CostPrice = item.item.RemainCount > 0 ? (long)(Math.Round((item.item.BuyTotalAmount - item.item.SoldAmount + DBUtils.CalculateOtherCost(new List<long> { item.item.Id }, 1)) * 1.0 / item.item.RemainCount, 0)) : (long)(Math.Round((item.item.BuyTotalAmount + DBUtils.CalculateOtherCost(new List<long> { item.item.Id }, 1)) * 1.0 / item.item.BuyTotalCount, 0)),
+                        CostPrice = item.item.RemainCount > 0 ? (long)(Math.Round((item.item.BuyTotalAmount - item.item.SoldAmount + otherCost) * 1.0 / item.item.RemainCount, 0)) : (long)(Math.Round((item.item.BuyTotalAmount + otherCost) * 1.0 / item.item.BuyTotalCount, 0)),
                         RemainCount = item.item.RemainCount,
                         MarketValue = MarketValue / 100 * 100,
                         CanSellCount = item.item.CanSoldCount,
@@ -636,19 +641,6 @@ namespace MealTicket_Handler
                     List = list
                 };
             }
-        }
-
-        /// <summary>
-        /// 计算平仓信息
-        /// </summary>
-        private void CalculateClosingInfo(long CurrPrice, int RemainCount, long RemainDeposit, long RemainFundAmount, int Cordon, int ClosingLine, out long ClosingPrice, out long AddDepositAmount, out long CordonPrice)
-        {
-            //计算平仓信息
-            //（市值+保证金-借钱）/借钱=价格线
-            ClosingPrice = RemainCount <= 0 ? 0 : (long)(ClosingLine * 1.0 / 10000 * RemainFundAmount + RemainFundAmount - RemainDeposit) / RemainCount;
-            CordonPrice = RemainCount <= 0 ? 0 : (long)(Cordon * 1.0 / 10000 * RemainFundAmount + RemainFundAmount - RemainDeposit) / RemainCount;
-            long needDepositAmount = (long)(Cordon * 1.0 / 10000 * RemainFundAmount + RemainFundAmount - CurrPrice * RemainCount);
-            AddDepositAmount = needDepositAmount - RemainDeposit < 0 ? 0 : needDepositAmount - RemainDeposit;
         }
 
         /// <summary>
@@ -891,44 +883,17 @@ namespace MealTicket_Handler
 
                         //查询强制平仓线
                         int cordon = 0;
-                        var traderulesList = (from x in db.t_shares_limit_traderules
-                                              where (x.LimitMarket == -1 || x.LimitMarket == hold.Market) && ((x.LimitType == 1 && hold.SharesCode.StartsWith(x.LimitKey)) || (x.LimitType == 2 && shares.SharesName.StartsWith(x.LimitKey))) && x.Status == 1
-                                              select x).ToList();
-                        foreach (var traderules in traderulesList)
-                        {
-                            int tempCordon = traderules.Cordon;
-                            //查询额外强制平仓线
-                            var traderulesOther = (from x in db.t_shares_limit_traderules_other
-                                                   where x.RulesId == traderules.Id && x.Status == 1
-                                                   select x).ToList();
-                            foreach (var other in traderulesOther)
-                            {
-                                try
-                                {
-                                    TimeSpan startTime = TimeSpan.Parse(other.Times.Split('-')[0]);
-                                    TimeSpan endTime = TimeSpan.Parse(other.Times.Split('-')[1]);
-                                    if (timeSpanNow >= startTime && timeSpanNow < endTime)
-                                    {
-                                        tempCordon = other.Cordon;
-                                        break;
-                                    }
-                                }
-                                catch (Exception ex)
-                                {
-                                    continue;
-                                }
-                            }
-
-                            if (cordon < tempCordon)
-                            {
-                                cordon = tempCordon;
-                            }
-                        }
-
+                        int closingLine = 0;
+                        TimeSpan? startTime=null;
+                        TimeSpan? endTime = null;
+                        long rulesId = 0;
+                        var traderulesList = DbHelper.GetTraderules(basedata.AccountId);
+                        DbHelper.GetSharesCurrRule(hold.SharesCode, shares.SharesName, hold.Market, traderulesList,ref cordon,ref closingLine,ref startTime,ref endTime,ref rulesId);
+                       
                         long closingPrice = 0;
                         long cordonPrice = 0;
                         long addDepositAmount = 0;
-                        CalculateClosingInfo(PresentPrice, hold.RemainCount, hold.RemainDeposit, hold.FundAmount, cordon, 0, out closingPrice, out addDepositAmount, out cordonPrice);
+                        DbHelper.CalculateClosingInfo(PresentPrice, hold.RemainCount, hold.RemainDeposit, hold.FundAmount, cordon, 0, out closingPrice, out addDepositAmount, out cordonPrice);
                         if (PresentPrice >= cordonPrice)
                         {
                             if (noticeHold1 != null)
@@ -986,7 +951,7 @@ namespace MealTicket_Handler
                         BuyCount = entrust.EntrustCount,
                         BuyTime = DateTime.Now.ToString("yyyy-MM-dd")
                     };
-                    bool isSendSuccess = MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesBuy", "s1");
+                    bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesBuy", "s1");
                     if (!isSendSuccess)
                     {
                         throw new WebApiException(400, "买入失败,请重试");
@@ -1048,7 +1013,7 @@ namespace MealTicket_Handler
                             throw new WebApiException(400, "服务器配置有误");
                         }
 
-                        bool isSendSuccess = MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesSell", server.ServerId);
+                        bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesSell", server.ServerId);
                         if (!isSendSuccess)
                         {
                             throw new WebApiException(400, "卖出失败,请重试");
@@ -1098,7 +1063,7 @@ namespace MealTicket_Handler
                             EntrustId = request.Id,
                             CancelTime = DateTime.Now.ToString("yyyy-MM-dd")
                         };
-                        bool isSendSuccess = MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesCancel", "s1");
+                        bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesCancel", "s1");
                     }
                     else
                     {
@@ -1120,7 +1085,7 @@ namespace MealTicket_Handler
                                 throw new WebApiException(400, "服务器配置有误");
                             }
 
-                            bool isSendSuccess = MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesCancel", server.ServerId);
+                            bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesCancel", server.ServerId);
                             if (!isSendSuccess)
                             {
                                 throw new WebApiException(400, "撤销失败,请重试");

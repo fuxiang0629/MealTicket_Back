@@ -1,5 +1,6 @@
 ﻿using FXCommon.Common;
 using MealTicket_Admin_Handler.Model;
+using MealTicket_DBCommon;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -686,7 +687,7 @@ namespace MealTicket_Admin_Handler
                         Type = 2,
                         Date = startTime.ToString("yyyy-MM-dd")
                     };
-                    MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "TransactionData", "Update");
+                    Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "TransactionData", "Update");
                 }
                 catch (Exception)
                 { }
@@ -888,6 +889,8 @@ namespace MealTicket_Admin_Handler
                 }
 
                 int totalCount = list.Count();
+                int validCount = list.Where(e => e.item2.Status == 1).Count();
+                int baseCount= list.Where(e => e.item2.Status == 1 && e.item2.BaseStatus==1).Count();
 
                 List<SharesPlateInfo> result = new List<SharesPlateInfo>();
                 if (request.OrderType == 1)
@@ -999,6 +1002,8 @@ namespace MealTicket_Admin_Handler
                 return new PageRes<SharesPlateInfo>
                 {
                     MaxId = 0,
+                    BaseCount=baseCount,
+                    ValidCount=validCount,
                     TotalCount = totalCount,
                     List = result
                 };
@@ -2472,12 +2477,12 @@ namespace MealTicket_Admin_Handler
         /// 查询交易规则额外平仓线列表
         /// </summary>
         /// <returns></returns>
-        public PageRes<SharesTradeRulesOtherInfo> GetSharesTradeRulesOtherList(DetailsPageRequest request)
+        public PageRes<SharesTradeRulesOtherInfo> GetSharesTradeRulesOtherList(GetSharesTradeRulesOtherListRequest request)
         {
             using (var db = new meal_ticketEntities())
             {
                 var rulesOther = from item in db.t_shares_limit_traderules_other
-                                 where item.RulesId == request.Id
+                                 where item.RulesId == request.Id && item.Type==request.Type
                                  select item;
                 if (request.MaxId > 0)
                 {
@@ -2518,16 +2523,9 @@ namespace MealTicket_Admin_Handler
         {
             using (var db = new meal_ticketEntities())
             {
-                //判断rulesId是否存在
-                var rules = (from item in db.t_shares_limit_traderules
-                             where item.Id == request.RulesId
-                             select item).FirstOrDefault();
-                if (rules == null)
-                {
-                    throw new WebApiException(400, "交易规则不存在");
-                }
                 db.t_shares_limit_traderules_other.Add(new t_shares_limit_traderules_other
                 {
+                    Type=request.Type,
                     Status = 2,
                     ClosingLine = request.ClosingLine,
                     Cordon = request.Cordon,
@@ -3175,7 +3173,7 @@ namespace MealTicket_Admin_Handler
                                       }).ToList();
                     trendPar.AddRange(tempRelPar);
                 }
-                string sql = string.Format("insert into t_shares_monitor ([Market],[SharesCode],[Status],[CreateTime],[LastModified]) values({0},'{1}',1,'{2}','{3}');select @@IDENTITY", item.Market, item.SharesCode, DateTime.Now, DateTime.Now);
+                string sql = string.Format("insert into t_shares_monitor ([Market],[SharesCode],[Status],[CreateTime],[LastModified],DataType) values({0},'{1}',1,'{2}','{3}',1);select @@IDENTITY", item.Market, item.SharesCode, DateTime.Now, DateTime.Now);
 
                 cmd.CommandText = sql;   //sql语句
                 long monitorId = Convert.ToInt64(cmd.ExecuteScalar());
@@ -3801,7 +3799,7 @@ namespace MealTicket_Admin_Handler
                         Type = 2,
                         Date = startTime.ToString("yyyy-MM-dd")
                     };
-                    MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "TransactionData", "UpdateNew");
+                    Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "TransactionData", "UpdateNew");
                 }
                 catch (Exception)
                 { }
@@ -3897,6 +3895,331 @@ namespace MealTicket_Admin_Handler
                                 Name = item.Name
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
                 };
+            }
+        }
+
+        /// <summary>
+        /// 复制条件模板
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void CopyConditiontradeTemplate(DetailsRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var template = (from item in db.t_sys_conditiontrade_template
+                                    where item.Id == request.Id
+                                    select item).FirstOrDefault();
+                    if (template == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    t_sys_conditiontrade_template newTemplate = new t_sys_conditiontrade_template
+                    {
+                        Status = template.Status,
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        Name = template.Name,
+                        Type = template.Type
+                    };
+                    db.t_sys_conditiontrade_template.Add(newTemplate);
+                    db.SaveChanges();
+
+                    if (template.Type == 1)//买入模板复制
+                    {
+                        CopyConditiontradeTemplate_Buy(request.Id, newTemplate.Id, db);
+                    }
+                    else if (template.Type == 2)//卖出模板复制
+                    {
+                        CopyConditiontradeTemplate_Sell(request.Id, newTemplate.Id, db);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "数据有误");
+                    }
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        private void CopyConditiontradeTemplate_Buy(long templateId, long newTemplateId, meal_ticketEntities db) 
+        {
+            var template_buy = (from item in db.t_sys_conditiontrade_template_buy
+                                where item.TemplateId == templateId
+                                select item).ToList();
+            Dictionary<long, long> idDic = new Dictionary<long, long>();
+            foreach (var item in template_buy)
+            {
+                t_sys_conditiontrade_template_buy new_template_buy = new t_sys_conditiontrade_template_buy 
+                {
+                    Status=item.Status,
+                    BuyAuto=item.BuyAuto,
+                    ConditionPriceBase=item.ConditionPriceBase,
+                    ConditionPriceRate=item.ConditionPriceRate,
+                    ConditionPriceType=item.ConditionPriceType,
+                    ConditionType=item.ConditionType,
+                    CreateTime=DateTime.Now,
+                    EntrustAmount=item.EntrustAmount,
+                    EntrustAmountType=item.EntrustAmountType,
+                    EntrustPriceGear=item.EntrustPriceGear,
+                    EntrustType=item.EntrustType,
+                    ForbidType=item.ForbidType,
+                    IsGreater=item.IsGreater,
+                    IsHold=item.IsHold,
+                    LastModified=DateTime.Now,
+                    LimitUp=item.LimitUp,
+                    Name=item.Name,
+                    OtherConditionRelative=item.OtherConditionRelative,
+                    TemplateId= newTemplateId
+                };
+                db.t_sys_conditiontrade_template_buy.Add(new_template_buy);
+                db.SaveChanges();
+                idDic.Add(item.Id, new_template_buy.Id);
+
+                var buy_other = (from x in db.t_sys_conditiontrade_template_buy_other
+                                 where x.TemplateBuyId == item.Id
+                                 select x).ToList();
+                foreach (var other in buy_other)
+                {
+                    t_sys_conditiontrade_template_buy_other new_buy_other = new t_sys_conditiontrade_template_buy_other
+                    {
+                        Status = other.Status,
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        Name = other.Name,
+                        TemplateBuyId = new_template_buy.Id
+                    };
+                    db.t_sys_conditiontrade_template_buy_other.Add(new_buy_other);
+                    db.SaveChanges();
+
+                    var buy_other_trend = (from x in db.t_sys_conditiontrade_template_buy_other_trend
+                                           where x.OtherId == other.Id
+                                           select x).ToList();
+                    foreach (var other_trend in buy_other_trend)
+                    {
+                        t_sys_conditiontrade_template_buy_other_trend new_other_trend = new t_sys_conditiontrade_template_buy_other_trend
+                        {
+                            Status = other_trend.Status,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            OtherId = new_buy_other.Id,
+                            TrendDescription = other_trend.TrendDescription,
+                            TrendId = other_trend.TrendId,
+                            TrendName = other_trend.TrendName
+                        };
+                        db.t_sys_conditiontrade_template_buy_other_trend.Add(new_other_trend);
+                        db.SaveChanges();
+
+                        var buy_other_trend_par = (from x in db.t_sys_conditiontrade_template_buy_other_trend_par
+                                                   where x.OtherTrendId == other_trend.Id
+                                                   select x).ToList();
+                        foreach (var other_trend_par in buy_other_trend_par)
+                        {
+                            db.t_sys_conditiontrade_template_buy_other_trend_par.Add(new t_sys_conditiontrade_template_buy_other_trend_par
+                            {
+                                CreateTime = DateTime.Now,
+                                LastModified = DateTime.Now,
+                                OtherTrendId = new_other_trend.Id,
+                                ParamsInfo = other_trend_par.ParamsInfo
+                            });
+                        }
+                        db.SaveChanges();
+
+                        var buy_other_trend_other = (from x in db.t_sys_conditiontrade_template_buy_other_trend_other
+                                                     where x.OtherTrendId == other_trend.Id
+                                                     select x).ToList();
+                        foreach (var other_trend_other in buy_other_trend_other)
+                        {
+                            t_sys_conditiontrade_template_buy_other_trend_other new_other_trend_other = new t_sys_conditiontrade_template_buy_other_trend_other
+                            {
+                                Status = other_trend_other.Status,
+                                CreateTime = DateTime.Now,
+                                LastModified = DateTime.Now,
+                                OtherTrendId = other_trend_other.OtherTrendId,
+                                TrendDescription = other_trend_other.TrendDescription,
+                                TrendId = other_trend_other.TrendId,
+                                TrendName = other_trend_other.TrendName
+                            };
+                            db.t_sys_conditiontrade_template_buy_other_trend_other.Add(new_other_trend_other);
+                            db.SaveChanges();
+
+                            var buy_other_trend_other_par = (from x in db.t_sys_conditiontrade_template_buy_other_trend_other_par
+                                                             where x.OtherTrendOtherId == other_trend_other.Id
+                                                             select x).ToList();
+                            foreach (var other_trend_other_par in buy_other_trend_other_par)
+                            {
+                                db.t_sys_conditiontrade_template_buy_other_trend_other_par.Add(new t_sys_conditiontrade_template_buy_other_trend_other_par
+                                {
+                                    CreateTime = DateTime.Now,
+                                    LastModified = DateTime.Now,
+                                    OtherTrendOtherId = new_other_trend_other.Id,
+                                    ParamsInfo = other_trend_other_par.ParamsInfo
+                                });
+                            }
+                            db.SaveChanges();
+                        }
+                    }
+                }
+
+                var buy_auto = (from x in db.t_sys_conditiontrade_template_buy_auto
+                                where x.TemplateBuyId == item.Id
+                                 select x).ToList();
+                foreach (var auto in buy_auto)
+                {
+                    t_sys_conditiontrade_template_buy_auto new_buy_auto = new t_sys_conditiontrade_template_buy_auto
+                    {
+                        Status = auto.Status,
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        Name = auto.Name,
+                        TemplateBuyId = new_template_buy.Id
+                    };
+                    db.t_sys_conditiontrade_template_buy_auto.Add(new_buy_auto);
+                    db.SaveChanges();
+
+                    var buy_auto_trend = (from x in db.t_sys_conditiontrade_template_buy_auto_trend
+                                           where x.AutoId == auto.Id
+                                           select x).ToList();
+                    foreach (var auto_trend in buy_auto_trend)
+                    {
+                        t_sys_conditiontrade_template_buy_auto_trend new_auto_trend = new t_sys_conditiontrade_template_buy_auto_trend
+                        {
+                            Status = auto_trend.Status,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            AutoId = new_buy_auto.Id,
+                            TrendDescription = auto_trend.TrendDescription,
+                            TrendId = auto_trend.TrendId,
+                            TrendName = auto_trend.TrendName
+                        };
+                        db.t_sys_conditiontrade_template_buy_auto_trend.Add(new_auto_trend);
+                        db.SaveChanges();
+
+                        var buy_auto_trend_par = (from x in db.t_sys_conditiontrade_template_buy_auto_trend_par
+                                                   where x.AutoTrendId == auto_trend.Id
+                                                   select x).ToList();
+                        foreach (var auto_trend_par in buy_auto_trend_par)
+                        {
+                            db.t_sys_conditiontrade_template_buy_auto_trend_par.Add(new t_sys_conditiontrade_template_buy_auto_trend_par
+                            {
+                                CreateTime = DateTime.Now,
+                                LastModified = DateTime.Now,
+                                AutoTrendId = new_auto_trend.Id,
+                                ParamsInfo = auto_trend_par.ParamsInfo
+                            });
+                        }
+                        db.SaveChanges();
+
+                        var buy_auto_trend_other = (from x in db.t_sys_conditiontrade_template_buy_auto_trend_other
+                                                     where x.AutoTrendId == auto_trend.Id
+                                                     select x).ToList();
+                        foreach (var auto_trend_other in buy_auto_trend_other)
+                        {
+                            t_sys_conditiontrade_template_buy_auto_trend_other new_auto_trend_other = new t_sys_conditiontrade_template_buy_auto_trend_other
+                            {
+                                Status = auto_trend_other.Status,
+                                CreateTime = DateTime.Now,
+                                LastModified = DateTime.Now,
+                                AutoTrendId = auto_trend_other.AutoTrendId,
+                                TrendDescription = auto_trend_other.TrendDescription,
+                                TrendId = auto_trend_other.TrendId,
+                                TrendName = auto_trend_other.TrendName
+                            };
+                            db.t_sys_conditiontrade_template_buy_auto_trend_other.Add(new_auto_trend_other);
+                            db.SaveChanges();
+
+                            var buy_auto_trend_other_par = (from x in db.t_sys_conditiontrade_template_buy_auto_trend_other_par
+                                                           where x.AutoTrendOtherId == auto_trend_other.Id
+                                                             select x).ToList();
+                            foreach (var auto_trend_other_par in buy_auto_trend_other_par)
+                            {
+                                db.t_sys_conditiontrade_template_buy_auto_trend_other_par.Add(new t_sys_conditiontrade_template_buy_auto_trend_other_par
+                                {
+                                    CreateTime = DateTime.Now,
+                                    LastModified = DateTime.Now,
+                                    AutoTrendOtherId = new_auto_trend_other.Id,
+                                    ParamsInfo = auto_trend_other_par.ParamsInfo
+                                });
+                            }
+                            db.SaveChanges();
+                        }
+                    }
+                }
+            }
+            foreach (var item in idDic)
+            {
+                var buy_child = (from x in db.t_sys_conditiontrade_template_buy_child
+                                 where x.FatherId == item.Key
+                                 select x).ToList();
+                foreach (var child in buy_child)
+                {
+                    db.t_sys_conditiontrade_template_buy_child.Add(new t_sys_conditiontrade_template_buy_child
+                    {
+                        Status = child.Status,
+                        FatherId = item.Value,
+                        ChildId = idDic[child.ChildId]
+                    });
+                }
+                db.SaveChanges();
+            }
+        }
+        private void CopyConditiontradeTemplate_Sell(long templateId,long newTemplateId, meal_ticketEntities db) 
+        {
+            var template_sell = (from item in db.t_sys_conditiontrade_template_sell
+                                 where item.TemplateId == templateId
+                                 select item).ToList();
+
+            Dictionary<long, long> idDic = new Dictionary<long, long>();
+            foreach (var item in template_sell)
+            {
+                t_sys_conditiontrade_template_sell new_template_sell = new t_sys_conditiontrade_template_sell
+                {
+                    Status = item.Status,
+                    ConditionDay = item.ConditionDay,
+                    ConditionPriceBase = item.ConditionPriceBase,
+                    ConditionPriceRate = item.ConditionPriceRate,
+                    ConditionPriceType = item.ConditionPriceType,
+                    ConditionTime = item.ConditionTime,
+                    ConditionType = item.ConditionType,
+                    CreateTime = DateTime.Now,
+                    EntrustCount = item.EntrustCount,
+                    EntrustPriceGear = item.EntrustPriceGear,
+                    EntrustType = item.EntrustType,
+                    ForbidType = item.ForbidType,
+                    LastModified = DateTime.Now,
+                    Name = item.Name,
+                    OtherConditionRelative = item.OtherConditionRelative,
+                    TemplateId = newTemplateId,
+                    Type = item.Type
+                };
+                db.t_sys_conditiontrade_template_sell.Add(new_template_sell);
+                db.SaveChanges();
+                idDic.Add(item.Id, new_template_sell.Id);
+            }
+
+            foreach (var item in idDic)
+            {
+                var sell_child = (from x in db.t_sys_conditiontrade_template_sell_child
+                                  where x.FatherId == item.Key
+                                  select x).ToList();
+                foreach (var child in sell_child)
+                {
+                    db.t_sys_conditiontrade_template_sell_child.Add(new t_sys_conditiontrade_template_sell_child
+                    {
+                        Status = child.Status,
+                        FatherId = item.Value,
+                        ChildId = idDic[child.ChildId]
+                    });
+                }
+                db.SaveChanges();
             }
         }
 
@@ -4286,6 +4609,7 @@ namespace MealTicket_Admin_Handler
                                 ForbidType = item.ForbidType,
                                 EntrustPriceGear = item.EntrustPriceGear,
                                 EntrustAmount = item.EntrustAmount,
+                                EntrustAmountType=item.EntrustAmountType,
                                 Name = item.Name,
                                 BuyAuto = item.BuyAuto,
                                 LimitUp = item.LimitUp,
@@ -4335,6 +4659,7 @@ namespace MealTicket_Admin_Handler
                         BuyAuto = request.BuyAuto,
                         CreateTime = DateTime.Now,
                         EntrustAmount = request.EntrustAmount,
+                        EntrustAmountType=request.EntrustAmountType,
                         EntrustPriceGear = request.EntrustPriceGear,
                         EntrustType = request.EntrustType,
                         LimitUp = request.LimitUp,
@@ -4402,6 +4727,7 @@ namespace MealTicket_Admin_Handler
                     }
                     conditiontrade.BuyAuto = request.BuyAuto;
                     conditiontrade.EntrustAmount = request.EntrustAmount;
+                    conditiontrade.EntrustAmountType = request.EntrustAmountType;
                     conditiontrade.EntrustPriceGear = request.EntrustPriceGear;
                     conditiontrade.EntrustType = request.EntrustType;
                     conditiontrade.ForbidType = request.ForbidType;

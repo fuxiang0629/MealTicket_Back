@@ -59,7 +59,6 @@ namespace TransactionDataUpdate_NO4
             SharesInfoNumArr = SharesInfoNumArr.TrimEnd(',');
 
             List<LastData> lastList = new List<LastData>();
-            Console.WriteLine("=======开始查询数据库最后一条数据==" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
             #region=================查询股票最后index数据=======================
             string sqlquery = string.Format(@"select SharesInfoNum,Max([Time]) [Time]
 from t_shares_transactiondata_time_analyse with(nolock)
@@ -99,7 +98,6 @@ group by SharesInfoNum", SharesInfoNumArr, dateNow.ToString("yyyy-MM-dd"));
                 }
             }
             #endregion
-            Console.WriteLine("=======查询数据库最后一条数据结束==" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
 
             List<TransactiondataAnalyseInfo> resultList = new List<TransactiondataAnalyseInfo>();
             object resultLock = new object();

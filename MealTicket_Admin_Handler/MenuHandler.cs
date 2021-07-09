@@ -1,4 +1,5 @@
 ﻿using MealTicket_Admin_Handler.Model;
+using MealTicket_DBCommon;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity.Core.Metadata.Edm;

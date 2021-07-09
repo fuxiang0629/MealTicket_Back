@@ -75,3 +75,6 @@ D:\项目\饭票\后端\TransactionDataUpdate_NO4\obj\Release\TransactionDataUpd
 D:\项目\饭票\后端\TransactionDataUpdate_NO4\obj\Release\TransactionDataUpdate_NO4.exe
 D:\项目\饭票\后端\TransactionDataUpdate_NO4\obj\Release\TransactionDataUpdate_NO4.pdb
 D:\项目\饭票\后端\TransactionDataUpdate_NO4\obj\Release\TransactionDataUpdate_NO4.csprojAssemblyReference.cache
+F:\项目\饭票后端\TransactionDataUpdate_NO4\bin\Release\MealTicket_DBCommon.dll
+F:\项目\饭票后端\TransactionDataUpdate_NO4\bin\Release\MealTicket_DBCommon.pdb
+F:\项目\饭票后端\TransactionDataUpdate_NO4\bin\Release\MealTicket_DBCommon.dll.config

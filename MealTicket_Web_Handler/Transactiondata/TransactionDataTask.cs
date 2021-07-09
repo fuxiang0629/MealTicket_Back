@@ -1,5 +1,5 @@
 ﻿using FXCommon.Common;
-using FXCommon.Database;
+using MealTicket_DBCommon;
 using MealTicket_Web_Handler.Model;
 using MealTicket_Web_Handler.Runner;
 using Newtonsoft.Json;
@@ -16,10 +16,7 @@ using System.Threading.Tasks;
 using static StockTrendMonitor.Define.StockMonitorDefine;
 
 namespace MealTicket_Web_Handler.Transactiondata
-{
-    /// <summary>
-    /// 开盘收盘价
-    /// </summary>
+{    
     public struct BASE_STOCK_TRADE_INFO
     {
         public int iBiddingTradePrice;
@@ -27,8 +24,27 @@ namespace MealTicket_Web_Handler.Transactiondata
         public DateTime dtRefreshTime;
     }
 
+    public class QueueMsgObj
+    {
+        /// <summary>
+        /// 消息Id
+        /// </summary>
+        public int MsgId { get; set; }
+
+        /// <summary>
+        /// 消息内容
+        /// </summary>
+        public object MsgObj { get; set; }
+    }
+
     public class TransactionDataTask
     {
+        [Conditional("DEBUG")]
+        public void ConsoleLog(string msg)
+        {
+            Console.WriteLine(msg);
+        }
+
         /// <summary>
         /// 开盘收盘价格缓存
         /// </summary>
@@ -40,58 +56,51 @@ namespace MealTicket_Web_Handler.Transactiondata
         Thread TaskThread;
 
         /// <summary>
-        /// task唯一Id
-        /// </summary>
-        public string TaskGuid;
-
-        /// <summary>
-        /// 任务开始时间
-        /// </summary>
-        public DateTime? StartTime;
-
-        /// <summary>
-        /// 股票分包数量
-        /// </summary>
-        public int TotalPacketCount;
-
-        /// <summary>
-        /// 目前回调包数量
-        /// </summary>
-        public int CallBackPacketCount;
-
-        /// <summary>
-        /// 目前收到所有数据包列表
-        /// </summary>
-        public List<TransactiondataAnalyseInfo> DataList;
-
-        /// <summary>
         /// 分笔数据回调队列
         /// </summary>
-        public ThreadMsgTemplate<TransactiondataTaskQueueInfo> TransactiondataQueue;
+        public ThreadMsgTemplate<QueueMsgObj> TransactiondataQueue;
 
-        /// <summary>
-        /// 构造函数
-        /// </summary>
-        public TransactionDataTask()
+        private TransactiondataTaskQueueInfo dataObj0;
+        private TransactiondataTaskQueueInfo dataObj1;
+
+        public void Init()
         {
-            TransactiondataQueue = new ThreadMsgTemplate<TransactiondataTaskQueueInfo>();
+            TransactiondataQueue = new ThreadMsgTemplate<QueueMsgObj>();
             TransactiondataQueue.Init();
+            dataObj0 = new TransactiondataTaskQueueInfo
+            {
+                StartTime = null,
+                DataIndex = 0,
+                TotalPacketCount = 0,
+                CallBackPacketCount = 0,
+                DataList = new List<TransactiondataAnalyseInfo>(),
+                DataType = 0,
+                TaskGuid = null,
+                TaskTimeOut = Singleton.Instance.NewTransactiondataTaskTimeOut
+            };
+            dataObj1 = new TransactiondataTaskQueueInfo
+            {
+                StartTime = null,
+                DataIndex = 0,
+                TotalPacketCount = 0,
+                CallBackPacketCount = 0,
+                DataList = new List<TransactiondataAnalyseInfo>(),
+                DataType = 1,
+                TaskGuid = null,
+                TaskTimeOut = Singleton.Instance.NewTransactiondataTaskTimeOut2
+            };
             InitLoadToMonitor();
-            ClearTaskInfo();
-            DoTask();
         }
 
-        /// <summary>
-        /// 销毁对象资源
-        /// </summary>
         public void Dispose()
         {
             if (TaskThread != null)
             {
-                TransactiondataQueue.AddMessage(new TransactiondataTaskQueueInfo
+                TransactiondataQueue.AddMessage(new QueueMsgObj
                 {
-                    TaskGuid = "-1"
-                });
+                    MsgId = -1,
+                    MsgObj = null
+                }, true, 0);
                 TaskThread.Join();
             }
             if (TransactiondataQueue != null)
@@ -100,22 +109,43 @@ namespace MealTicket_Web_Handler.Transactiondata
             }
         }
 
-        /// <summary>
-        /// 清除task信息
-        /// </summary>
-        public void ClearTaskInfo() 
+        private bool CheckTaskTimeout(TransactiondataTaskQueueInfo dataObj)
         {
-            TaskGuid = null;
-            StartTime = null;
-            TotalPacketCount = 0;
-            CallBackPacketCount = 0;
-            DataList = new List<TransactiondataAnalyseInfo>();
+            if (!string.IsNullOrEmpty(dataObj.TaskGuid))
+            {
+                if ((DateTime.Now - dataObj.StartTime.Value).TotalMilliseconds < dataObj.TaskTimeOut || dataObj.TaskTimeOut == -1)//未超时
+                {
+                    return false;
+                }
+                dataObj.TaskTimeOut = dataObj.TaskTimeOut * 2;
+            }
+            return true;
+        }
+
+        public void ClearTaskInfo(TransactiondataTaskQueueInfo dataObj)
+        {
+            dataObj.TaskGuid = null;
+            dataObj.StartTime = null;
+            dataObj.TotalPacketCount = 0;
+            dataObj.CallBackPacketCount = 0;
+            dataObj.DataIndex = 0;
+            dataObj.DataList = new List<TransactiondataAnalyseInfo>();
+        }
+
+        private int CalcElapsedWaitTime(DateTime? dtTime, int timeout)
+        {
+            if (dtTime == null)
+            {
+                return Singleton.Instance.NewTransactionDataSendPeriodTime;
+            }
+            long elapsedTime = (long)(DateTime.Now - dtTime.Value).TotalMilliseconds;
+            return (elapsedTime >= timeout ? 0 : timeout - (int)elapsedTime);
         }
 
         /// <summary>
         /// 需要更新分笔的股票数据扔到队列
         /// </summary>
-        public bool PushToDataUpDate() 
+        private bool PushToDataUpDate(TransactiondataTaskQueueInfo dataObj)
         {
             try
             {
@@ -125,9 +155,13 @@ namespace MealTicket_Web_Handler.Transactiondata
                     return false;
                 }
                 var tempGuid = Guid.NewGuid().ToString("N");
-                TotalPacketCount =RunnerHelper.SendTransactionShares(tempGuid);
-                TaskGuid = tempGuid;
-                StartTime = DateTime.Now;
+                dataObj.TotalPacketCount = RunnerHelper.SendTransactionShares(tempGuid, dataObj.DataType);
+                if (dataObj.TotalPacketCount > 0)
+                {
+                    ConsoleLog("数据发送数据时间:"+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")+"==="+ tempGuid + "===,类型"+ dataObj.DataType);
+                }
+                dataObj.TaskGuid = tempGuid;
+                dataObj.StartTime = DateTime.Now;
                 return true;
             }
             catch (Exception ex)
@@ -138,86 +172,113 @@ namespace MealTicket_Web_Handler.Transactiondata
         }
 
         /// <summary>
-        /// 执行任务
+        /// 执行业务
         /// </summary>
-        private void DoTask() 
+        /// <param name="dataObj"></param>
+        /// <returns></returns>
+        private void DoBusiness(TransactiondataTaskQueueInfo receivedObj,int msgType)
         {
-            TaskThread = new Thread(()=> 
+            TransactiondataTaskQueueInfo dataObj = receivedObj.DataType == 0 ? dataObj0 : receivedObj.DataType == 1 ? dataObj1 : null;
+            if (dataObj == null)
             {
-                int timeout = Singleton.Instance.NewTransactionDataSendPeriodTime;
-                int taskTimeOut = Singleton.Instance.NewTransactiondataTaskTimeOut;
-                do 
+                return;
+            }
+
+            if (msgType == 1)
+            {
+                if (dataObj.TaskGuid != receivedObj.TaskGuid)
                 {
-                    DateTime waitTime = DateTime.Now;
-                    TransactiondataTaskQueueInfo temp = new TransactiondataTaskQueueInfo();
-                    if (!TransactiondataQueue.WaitMessage(ref temp, timeout))
+                    return;
+                }
+
+                if (LoadToMonitor(receivedObj.DataList))
+                {
+                    DataAnalyse(receivedObj.DataList);
+                }
+
+                dataObj.DataList.AddRange(receivedObj.DataList);
+                dataObj.CallBackPacketCount++;
+                if (dataObj.CallBackPacketCount < dataObj.TotalPacketCount)//接受包数量不正确
+                {
+                    return;
+                }
+            }
+
+            bool isFinish = false;
+            if (UpdateToDataBase(dataObj, ref isFinish))
+            {
+                if (isFinish)
+                {
+                    UpdateSharesStatus(dataObj);
+                }
+                else
+                {
+                    TransactiondataQueue.AddMessage(new QueueMsgObj
                     {
-                        timeout = Singleton.Instance.NewTransactionDataSendPeriodTime;
+                        MsgId = 2,
+                        MsgObj = dataObj
+                    });
+                    dataObj.TaskTimeOut = -1;
+                }
+            }
 
-                        if (TaskGuid != null)//存在正在执行的任务
-                        {
-                            //判断当前任务是否超时
-                            if ((DateTime.Now - StartTime.Value).TotalMilliseconds < taskTimeOut)//未超时
-                            {
-                                continue;
-                            }
-                            taskTimeOut = taskTimeOut * 2;
-                            ClearTaskInfo();//超时则清空任务
-                        }
-
-                        PushToDataUpDate();
-                        continue;
-                    }
-
-
-
-                    if (temp.TaskGuid == "-1")
-                    {
-                        break;
-                    }
-
-                    if (temp.TaskGuid != TaskGuid)
-                    {
-                        timeout = CalcElapsedTime(waitTime, timeout);
-                        continue;
-                    }
-
-                    DataList.AddRange(temp.DataList);
-                    CallBackPacketCount++;
-                    if (CallBackPacketCount < TotalPacketCount)//接受包数量不正确
-                    {
-                        timeout = CalcElapsedTime(waitTime, timeout);
-                        continue;
-                    }
-                    if (UpdateToDataBase())
-                    {
-                        taskTimeOut = Singleton.Instance.NewTransactiondataTaskTimeOut;
-                        if (LoadToMonitor())
-                        {
-                            DataAnalyse();
-                        }
-                    }
-
-                    ClearTaskInfo();
-                    timeout = CalcElapsedTime(waitTime, timeout);
-                } while (true);
-            });
-            TaskThread.Start();
-        }
-
-        private int CalcElapsedTime(DateTime dtTime, int timeout)
-        {
-            long elapsedTime = (long)(DateTime.Now - dtTime).TotalMilliseconds;
-            return (elapsedTime >= timeout ? 0 : timeout - (int)elapsedTime);
+            if(isFinish)
+            {
+                ClearTaskInfo(dataObj);//超时则清空任务
+                dataObj.TaskTimeOut = dataObj.DataType == 0 ? Singleton.Instance.NewTransactiondataTaskTimeOut : Singleton.Instance.NewTransactiondataTaskTimeOut2;
+            }
         }
 
         /// <summary>
         /// 数据更新到数据库
         /// </summary>
-        private bool UpdateToDataBase() 
+        /// <returns></returns>
+        private bool UpdateToDataBase(TransactiondataTaskQueueInfo dataObj,ref bool isFinish)
         {
+            isFinish = false;
+            var disList = dataObj.DataList.Skip(dataObj.DataIndex).Take(Singleton.Instance.NewTransactiondataTaskUpdateCountOnce).ToList();
+            int disCount = disList.Count();
+            int totalCount = dataObj.DataList.Count();
+            if (disCount <= 0)
+            {
+                isFinish = true;
+                return true;
+            }
+
+            bool isSuccess = false;
             try
             {
+                DataTable table = new DataTable();
+                table.Columns.Add("Market", typeof(int));
+                table.Columns.Add("SharesCode", typeof(string));
+                table.Columns.Add("SharesInfoNum", typeof(int));
+                table.Columns.Add("Date", typeof(DateTime));
+                table.Columns.Add("Time", typeof(DateTime));
+                table.Columns.Add("iTradeStock", typeof(int));
+                table.Columns.Add("lTradeAmount", typeof(long));
+                table.Columns.Add("iOpeningPrice", typeof(long));
+                table.Columns.Add("iLastestPrice", typeof(long));
+                table.Columns.Add("iMinPrice", typeof(long));
+                table.Columns.Add("iMaxPrice", typeof(long));
+                table.Columns.Add("LastModified", typeof(DateTime));
+                foreach (var item in disList)
+                {
+                    DataRow row = table.NewRow();
+                    row["Market"] = item.Market;
+                    row["SharesCode"] = item.SharesCode;
+                    row["SharesInfoNum"] = item.SharesInfoNum;
+                    row["Date"] = item.Date;
+                    row["Time"] = item.Time;
+                    row["iTradeStock"] = item.iTradeStock;
+                    row["lTradeAmount"] = item.lTradeAmount;
+                    row["iOpeningPrice"] = item.iOpeningPrice;
+                    row["iLastestPrice"] = item.iLastestPrice;
+                    row["iMinPrice"] = item.iMinPrice;
+                    row["iMaxPrice"] = item.iMaxPrice;
+                    row["LastModified"] = DateTime.Now;
+                    table.Rows.Add(row);
+                }
+
                 string connectionString = Singleton.Instance.ConnectionString_meal_ticket_shares_transactiondata;
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
@@ -225,144 +286,109 @@ namespace MealTicket_Web_Handler.Transactiondata
                     {
                         conn.Open();
                     }
-                    try
+                    using (var tran = conn.BeginTransaction())
                     {
-                        using (var cmd = conn.CreateCommand())
+                        try
                         {
-                            cmd.CommandType = CommandType.Text;
-                            string sql = string.Format("truncate table t_shares_transactiondata_time_analyse_temp");
-                            cmd.CommandText = sql;
-                            cmd.ExecuteNonQuery();
-                            using (SqlTransaction tran = conn.BeginTransaction())
+                            using (SqlCommand cmd = new SqlCommand("P_Transactiondata_Time_Analyse_Update", conn))
                             {
                                 cmd.Transaction = tran;
-                                try
-                                {
-                                    var bulk = BulkFactory.CreateBulkCopy(DatabaseType.SqlServer);
-                                    using (DataTable table = new DataTable())
-                                    {
-                                        #region====定义表字段数据类型====
-                                        table.Columns.Add("Id", typeof(long));
-                                        table.Columns.Add("Market", typeof(int));
-                                        table.Columns.Add("SharesCode", typeof(string));
-                                        table.Columns.Add("SharesInfoNum", typeof(int));
-                                        table.Columns.Add("Date", typeof(DateTime)); 
-                                        table.Columns.Add("Time", typeof(DateTime));
-                                        table.Columns.Add("iTradeStock", typeof(int));
-                                        table.Columns.Add("lTradeAmount", typeof(long));
-                                        table.Columns.Add("iOpeningPrice", typeof(long));
-                                        table.Columns.Add("iLastestPrice", typeof(long));
-                                        table.Columns.Add("iMinPrice", typeof(long));
-                                        table.Columns.Add("iMaxPrice", typeof(long));
-                                        table.Columns.Add("LastModified", typeof(DateTime));
-                                        #endregion
-
-                                        #region====绑定数据====
-                                        foreach (var item in DataList)
-                                        {
-                                            DataRow row = table.NewRow();
-                                            row["Id"] = 0;
-                                            row["Market"] = item.Market;
-                                            row["SharesCode"] = item.SharesCode;
-                                            row["SharesInfoNum"] = item.SharesInfoNum;
-                                            row["Date"] = item.Date;
-                                            row["Time"] = item.Time;
-                                            row["iTradeStock"] = item.iTradeStock;
-                                            row["lTradeAmount"] = item.lTradeAmount;
-                                            row["iOpeningPrice"] = item.iOpeningPrice;
-                                            row["iLastestPrice"] = item.iLastestPrice;
-                                            row["iMinPrice"] = item.iMinPrice;
-                                            row["iMaxPrice"] = item.iMaxPrice;
-                                            row["LastModified"] = DateTime.Now;
-                                            table.Rows.Add(row);
-                                        }
-                                        #endregion
-
-                                        #region====绑定结构字段====
-                                        Dictionary<string, string> dic = new Dictionary<string, string>();
-                                        dic.Add("Id", "Id");
-                                        dic.Add("Market", "Market");
-                                        dic.Add("SharesCode", "SharesCode");
-                                        dic.Add("SharesInfoNum", "SharesInfoNum");
-                                        dic.Add("Date", "Date");
-                                        dic.Add("Time", "Time");
-                                        dic.Add("iTradeStock", "iTradeStock");
-                                        dic.Add("lTradeAmount", "lTradeAmount");
-                                        dic.Add("iOpeningPrice", "iOpeningPrice");
-                                        dic.Add("iLastestPrice", "iLastestPrice");
-                                        dic.Add("iMinPrice", "iMinPrice");
-                                        dic.Add("iMaxPrice", "iMaxPrice");
-                                        dic.Add("LastModified", "LastModified");
-                                        #endregion
-
-                                        bulk.BulkCopyTimeout = 600;
-                                        bulk.ColumnMappings = dic;
-                                        bulk.BatchSize = 10000;
-
-                                        bulk.BulkWriteToServer(conn, table, "t_shares_transactiondata_time_analyse_temp", tran);
-                                    }
-
-
-                                    //更新数据到分笔统计表
-                                    sql = string.Format(@"merge into t_shares_transactiondata_time_analyse as t
-using (select * from t_shares_transactiondata_time_analyse_temp) as t1
-ON t.SharesInfoNum = t1.SharesInfoNum and t.[Time]=t1.[Time]
-when matched
-then update set t.iTradeStock=t1.iTradeStock,t.lTradeAmount=t1.lTradeAmount,t.iOpeningPrice=t1.iOpeningPrice,
-t.iLastestPrice=t1.iLastestPrice,t.iMinPrice=t1.iMinPrice,t.iMaxPrice=t1.iMaxPrice,t.LastModified=t1.LastModified
-when not matched by target
-then insert(Market,SharesCode,SharesInfoNum,[Date],[Time],iTradeStock,lTradeAmount,iOpeningPrice,iLastestPrice,iMinPrice,iMaxPrice,LastModified) 
-values(t1.Market,t1.SharesCode,t1.SharesInfoNum,t1.[Date],t1.[Time],t1.iTradeStock,t1.lTradeAmount,t1.iOpeningPrice,t1.iLastestPrice,t1.iMinPrice,t1.iMaxPrice,t1.LastModified);");
-                                    cmd.CommandText = sql;
-                                    cmd.CommandTimeout = 600;
-                                    cmd.ExecuteNonQuery();
-
-                                    tran.Commit();
-                                    return true;
-                                }
-                                catch (Exception ex)
-                                {
-                                    Logger.WriteFileLog("更新分笔统计数据意外出错", ex);
-                                    tran.Rollback();
-                                }
+                                cmd.CommandType = CommandType.StoredProcedure;
+                                //关键是类型
+                                SqlParameter parameter = new SqlParameter("@analyseData", SqlDbType.Structured);
+                                //必须指定表类型名
+                                parameter.TypeName = "dbo.TransactiondataTimeAnalyse";
+                                //赋值
+                                parameter.Value = table;
+                                cmd.Parameters.Add(parameter);
+                                cmd.ExecuteNonQuery();
+                                tran.Commit();
+                                isSuccess = true;
                             }
                         }
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.WriteFileLog("更新分笔统计数据数据库连接出错", ex);
-                    }
-                    finally
-                    {
-                        conn.Close();
+                        catch (Exception ex)
+                        {
+                            Logger.WriteFileLog("更新分笔统计数据数据库连接出错", ex);
+                            tran.Rollback();
+                        }
+                        finally
+                        {
+                            conn.Close();
+                        }
                     }
                 }
+
             }
             catch (Exception ex)
             {
                 Logger.WriteFileLog("更新分笔统计数据库失败", ex);
             }
-            return false;
+
+            if (isSuccess)
+            {
+                dataObj.DataIndex = dataObj.DataIndex + disCount;
+                if (totalCount <= dataObj.DataIndex)
+                {
+                    isFinish = true;
+                }
+            }
+            else
+            {
+                isFinish = true;
+            }
+            return isSuccess;
+        }
+
+        /// <summary>
+        /// 更新股票状态
+        /// </summary>
+        /// <returns></returns>
+        private bool UpdateSharesStatus(TransactiondataTaskQueueInfo dataObj)
+        {
+            if (dataObj.DataList.Count() == 0)
+            {
+                return false;
+            }
+
+            try
+            {
+                string sharesInfo = string.Empty;
+                var dataGroup = (from item in dataObj.DataList
+                                 group item by new { item.Market, item.SharesCode } into g
+                                 select new
+                                 {
+                                     Market = g.Key.Market,
+                                     SharesCode = g.Key.SharesCode
+                                 }).ToList();
+                foreach (var item in dataGroup)
+                {
+                    sharesInfo = sharesInfo + "'" + item.SharesCode + "," + item.Market + "'" + ",";
+                }
+                sharesInfo = sharesInfo.TrimEnd(',');
+                using (var db = new meal_ticketEntities())
+                {
+                    string sql = string.Format(@"update t_account_shares_conditiontrade_buy set DataType=0 where DataType=1 and SharesInfo in ({0});
+update t_shares_monitor set DataType=0 where DataType=1 and SharesInfo in ({0});", sharesInfo);
+                    db.Database.ExecuteSqlCommand(sql);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("更新数据标记出错", ex);
+                return false;
+            }
         }
 
         /// <summary>
         /// 走势分笔数据内存加载
         /// </summary>
         /// <returns></returns>
-        private bool LoadToMonitor(List<TransactiondataAnalyseInfo> list=null)
+        private bool LoadToMonitor(List<TransactiondataAnalyseInfo> list)
         {
             try
             {
-                var parList = new List<TransactiondataAnalyseInfo>();
-                if (list == null)
-                {
-                    parList = JsonConvert.DeserializeObject<List<TransactiondataAnalyseInfo>>(JsonConvert.SerializeObject(DataList));
-                }
-                else
-                {
-                    parList = JsonConvert.DeserializeObject<List<TransactiondataAnalyseInfo>>(JsonConvert.SerializeObject(list));
-                }
-                var sharesList = (from item in parList
+                var sharesList = (from item in list
                                   group item by new { item.Market, item.SharesCode } into g
                                   select new SharesInfo
                                   {
@@ -374,7 +400,8 @@ values(t1.Market,t1.SharesCode,t1.SharesInfoNum,t1.[Date],t1.[Time],t1.iTradeSto
                 {
                     return false;
                 }
-                var parDataList = (from item in parList
+
+                var parDataList = (from item in list
                                    group item by new { item.Market, item.SharesCode } into g
                                    select g).ToDictionary(e => e.Key.SharesCode + "," + e.Key.Market, x => x.Select(t => new DB_TIME_OF_USE_PRICE
                                    {
@@ -396,7 +423,7 @@ values(t1.Market,t1.SharesCode,t1.SharesInfoNum,t1.[Date],t1.[Time],t1.iTradeSto
                 foreach (var result in parDataList)
                 {
                     var tempTime = DateTime.Parse(lastTime.ToString("yyyy-MM-dd HH:mm:00"));
-                    var startTime = DateTime.Parse(result.Value.Min(e=>e.dtTradeTime).ToString("yyyy-MM-dd HH:mm:00"));
+                    var startTime = DateTime.Parse(result.Value.Min(e => e.dtTradeTime).ToString("yyyy-MM-dd HH:mm:00"));
                     DB_TIME_OF_USE_PRICE lastest = null;
                     while (startTime <= tempTime)
                     {
@@ -502,7 +529,7 @@ order by SharesInfoNum,[Time]", DateTime.Now.ToString("yyyy-MM-dd"));
                             result.SharesInfoNum = int.Parse(sharesCode) * 10 + market;
                             result.Market = market;
                             result.SharesCode = sharesCode;
-                            result.Date = DateTime.Now.Date; 
+                            result.Date = DateTime.Now.Date;
                             result.iBalancePrice = result.iTradeStock == 0 ? 0 : (int)(result.lTradeAmount / result.iTradeStock);
                             resultList.Add(result);
                         }
@@ -525,9 +552,9 @@ order by SharesInfoNum,[Time]", DateTime.Now.ToString("yyyy-MM-dd"));
         /// 走势分析
         /// </summary>
         /// <returns></returns>
-        private void DataAnalyse()
+        private void DataAnalyse(List<TransactiondataAnalyseInfo> list)
         {
-            var sharesList = (from item in DataList
+            var sharesList = (from item in list
                               group item by new { item.Market, item.SharesCode } into g
                               select new SharesInfo
                               {
@@ -555,7 +582,7 @@ order by SharesInfoNum,[Time]", DateTime.Now.ToString("yyyy-MM-dd"));
                     throw new Exception("加载五档行情出错");
                 }
 
-                dicBaseInfo=dicBaseInfo.Concat(dicNewInfo).ToDictionary(k => k.Key, v => v.Value);
+                dicBaseInfo = dicBaseInfo.Concat(dicNewInfo).ToDictionary(k => k.Key, v => v.Value);
             }
 
             Dictionary<string, DB_TRADE_PRICE_INFO> resultDic = new Dictionary<string, DB_TRADE_PRICE_INFO>();
@@ -580,7 +607,7 @@ order by SharesInfoNum,[Time]", DateTime.Now.ToString("yyyy-MM-dd"));
                 if (m_dicBaseInfo.ContainsKey(key))
                 {
                     TimeSpan timeNowTime = TimeSpan.Parse(timeNow.ToString("HH:mm:ss"));
-                    TimeSpan oldTime= TimeSpan.Parse(m_dicBaseInfo[key].dtRefreshTime.ToString("HH:mm:ss"));
+                    TimeSpan oldTime = TimeSpan.Parse(m_dicBaseInfo[key].dtRefreshTime.ToString("HH:mm:ss"));
                     if (timeNowTime < Singleton.Instance._tradeTime.MinTime)
                     {
                         result.Add(key, m_dicBaseInfo[key]);
@@ -602,9 +629,9 @@ order by SharesInfoNum,[Time]", DateTime.Now.ToString("yyyy-MM-dd"));
             return result;
         }
 
-        private Dictionary<string, BASE_STOCK_TRADE_INFO>  GetBaseStockTradeInfoFromDb(List<string> lstStockCode)
+        private Dictionary<string, BASE_STOCK_TRADE_INFO> GetBaseStockTradeInfoFromDb(List<string> lstStockCode)
         {
-            StringBuilder strStockCode = new StringBuilder(); 
+            StringBuilder strStockCode = new StringBuilder();
             Dictionary<string, BASE_STOCK_TRADE_INFO> resultDic = new Dictionary<string, BASE_STOCK_TRADE_INFO>();
             strStockCode.Append("(");
             for (int i = 0; i < lstStockCode.Count(); i++)
@@ -643,11 +670,11 @@ order by SharesInfoNum,[Time]", DateTime.Now.ToString("yyyy-MM-dd"));
                             int closedPrice = int.Parse(reader["ClosedPrice"].ToString());
                             int openedPrice = int.Parse(reader["OpenedPrice"].ToString());
 
-                            BASE_STOCK_TRADE_INFO temp = new BASE_STOCK_TRADE_INFO 
+                            BASE_STOCK_TRADE_INFO temp = new BASE_STOCK_TRADE_INFO
                             {
-                                iBiddingTradePrice= openedPrice,
-                                iPreDayTradePrice= closedPrice,
-                                dtRefreshTime=DateTime.Now
+                                iBiddingTradePrice = openedPrice,
+                                iPreDayTradePrice = closedPrice,
+                                dtRefreshTime = DateTime.Now
                             };
                             resultDic[sharesCode + "," + market] = temp;
                             m_dicBaseInfo.Add(sharesCode + "," + market, temp);
@@ -665,6 +692,57 @@ order by SharesInfoNum,[Time]", DateTime.Now.ToString("yyyy-MM-dd"));
                     conn.Close();
                 }
             }
+        }
+
+        /// <summary>
+        /// 执行任务
+        /// </summary>
+        public void DoTask()
+        {
+            TaskThread = new Thread(() =>
+            {
+                int waitTimeout = CalcElapsedWaitTime(null, 0);
+                do
+                {
+                    DateTime waitTime = DateTime.Now;
+                    QueueMsgObj msgObj = new QueueMsgObj();
+                    if (!TransactiondataQueue.WaitMessage(ref msgObj, waitTimeout))
+                    {
+                        waitTimeout = CalcElapsedWaitTime(null, 0);
+                        if (CheckTaskTimeout(dataObj0))
+                        {
+                            ClearTaskInfo(dataObj0);//超时则清空任务
+                            PushToDataUpDate(dataObj0);
+                        }
+
+                        if (CheckTaskTimeout(dataObj1))
+                        {
+                            ClearTaskInfo(dataObj1);//超时则清空任务
+                            PushToDataUpDate(dataObj1);
+                        }
+                        continue;
+                    }
+
+                    if (msgObj.MsgId == -1)
+                    {
+                        break;
+                    }
+                    
+                    if (msgObj.MsgId == 1)//执行队列接受数据包
+                    {
+                        var resultData = msgObj.MsgObj as TransactiondataTaskQueueInfo;
+                        DoBusiness(resultData,1);
+                    }
+                    else if (msgObj.MsgId == 2)//执行大数据包分割导入
+                    {
+                        var resultData = msgObj.MsgObj as TransactiondataTaskQueueInfo;
+                        DoBusiness(resultData,2);
+                    }
+
+                    waitTimeout = CalcElapsedWaitTime(waitTime, waitTimeout);
+                } while (true);
+            });
+            TaskThread.Start();
         }
     }
 }

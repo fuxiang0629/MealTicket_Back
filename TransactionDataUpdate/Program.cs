@@ -18,8 +18,8 @@ namespace TransactionDataUpdate
                 var serviceRun = Console.ReadLine();
                 if (serviceRun.ToUpper() == "Y" || serviceRun.ToUpper() == "YES")
                 {
-                    var MQHandlerInstance = MQHandler.instance;
-                    MQHandlerInstance.Reconnect();
+                    var mqHandler = SingletonInstance.StartMqHandler("TransactionDataUpdate");
+                    mqHandler.StartListen();
                     break;
                 }
             }

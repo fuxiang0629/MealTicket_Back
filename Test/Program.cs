@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -10,21 +12,63 @@ namespace Test
 {
     class Program
     {
+        static long accountId = 10000;
         static void Main(string[] args)
         {
-            //ParseHelper helper = new ParseHelper();
-            //string update_date = string.Empty;
-            //Dictionary<string, string> base_info_dic = new Dictionary<string, string>();
-            //Dictionary<string, string> issue_dic = new Dictionary<string, string>();
+            for (int j = 0; j < 100; j++)
+            {
+                Task[] tArr = new Task[5];
+                for (int i = 0; i < 5; i++)
+                {
+                    tArr[i] = new Task(doTask);
+                    tArr[i].Start();
+                }
+                Task.WaitAll(tArr);
+                accountId++;
+            }
+            Console.ReadLine();
+        }
 
-            //string text = File.ReadAllText("C:\\Users\\fuxiang\\Desktop\\000002\\公司概况.txt");
-            //helper.ParseCompanyGeneral(text, out update_date, out base_info_dic, out issue_dic);
+        static void doTask() 
+        {
+            using (SqlConnection conn = new SqlConnection("Data Source=106.54.124.235;Initial Catalog=meal_ticket;user id=sa;password=Gudi!qaz2wsx"))
+            {
+                conn.Open();
+                using (var tran = conn.BeginTransaction())
+                {
+                    try
+                    {
+                        string sql = string.Format(@"if(not exists(select top 1 1 from t_account_shares_buy_setting with(xlock) where AccountId={0} and [Type]=3)) 
+begin  
+    insert into t_account_shares_buy_setting(AccountId,[Type],Name,[Description],ParValue,CreateTime,LastModified)
+    values({0},3,'跟投分组轮序位置','跟投分组轮序位置',0,getdate(),getdate())
+end
+select top 1 ParValue from t_account_shares_buy_setting with(xlock) where AccountId={0} and [Type]=3", accountId);
+                        using (SqlCommand camm = conn.CreateCommand())
+                        {
+                            camm.Transaction = tran;
+                            camm.CommandType = CommandType.Text;
+                            camm.CommandText = sql;
+                            camm.ExecuteNonQuery();
 
 
-            //List<CompanyManagerInfo> manager_list = new List<CompanyManagerInfo>();
-            //List<CompanyManagerHoldChangeInfo> change_list = new List<CompanyManagerHoldChangeInfo>();
-            //text = File.ReadAllText("C:\\Users\\fuxiang\\Desktop\\000002\\高管动向.txt");
-            //helper.ParseCompanyManager(text, out update_date,out manager_list,out change_list);
+                            sql = string.Format(@"update t_account_shares_buy_setting set ParValue=ParValue+1  where AccountId={0} and [Type]=3", accountId);
+                            camm.CommandText = sql;
+                            camm.ExecuteNonQuery();
+                        }
+                        tran.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        tran.Rollback();
+                        Console.WriteLine(ex.Message);
+                    }
+                    finally
+                    {
+                        conn.Close();
+                    }
+                }
+            }
         }
     }
 }

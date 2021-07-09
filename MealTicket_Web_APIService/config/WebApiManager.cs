@@ -5,6 +5,7 @@ using Microsoft.Owin.Hosting;
 using Ninject;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 
 namespace MealTicket_Web_APIService
@@ -80,11 +81,13 @@ namespace MealTicket_Web_APIService
         {
             //框架内部缓存信息
             session = Singleton.Instance;
-            session._transactionDataTask = new TransactionDataTask();
-            if (session.mqHandler != null)
-            {
-                session.mqHandler.Reconnect();
-            }
+            var mqHandler=session.StartMqHandler();//生成Mq队列对象
+
+            var transactionDataTask=session.StartTransactionDataTask();
+            transactionDataTask.DoTask();
+
+            mqHandler.StartListen();//启动队列监听
+
             //加载依赖注入
             Kernel = LoadKernel();   
             //加载循环任务

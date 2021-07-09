@@ -157,3 +157,6 @@ D:\项目\饭票\后端\MealTicket_Web_APIService\obj\Debug\MealTicket_Web_APISe
 D:\项目\饭票\后端\MealTicket_Web_APIService\obj\Debug\MealTicket_Web_APIService.csproj.CopyComplete
 D:\项目\饭票\后端\MealTicket_Web_APIService\obj\Debug\MealTicket_Web_APIService.exe
 D:\项目\饭票\后端\MealTicket_Web_APIService\obj\Debug\MealTicket_Web_APIService.pdb
+F:\项目\饭票后端\MealTicket_Web_APIService\bin\Debug\MealTicket_DBCommon.dll
+F:\项目\饭票后端\MealTicket_Web_APIService\bin\Debug\MealTicket_DBCommon.pdb
+F:\项目\饭票后端\MealTicket_Web_APIService\bin\Debug\MealTicket_DBCommon.dll.config

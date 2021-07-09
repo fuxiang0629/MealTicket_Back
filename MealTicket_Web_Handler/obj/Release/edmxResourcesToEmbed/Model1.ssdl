@@ -315,6 +315,8 @@
     <Property Name="AccountId" Type="bigint" Nullable="false" />
     <Property Name="Market" Type="int" Nullable="false" />
     <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="SharesInfo" Type="varchar" MaxLength="31" StoreGeneratedPattern="Computed" />
+    <Property Name="DataType" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
@@ -591,6 +593,7 @@
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="LimitUp" Type="bit" Nullable="false" />
     <Property Name="IsHold" Type="bit" Nullable="false" />
+    <Property Name="EntrustAmountType" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_template_buy_auto">
     <Key>
@@ -972,6 +975,7 @@
     <Property Name="AccountId" Type="bigint" Nullable="false" />
     <Property Name="Market" Type="int" Nullable="false" />
     <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="SharesInfo" Type="varchar" MaxLength="31" StoreGeneratedPattern="Computed" />
     <Property Name="IsTrendClose" Type="bit" Nullable="false" />
     <Property Name="TriCountToday" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
@@ -1343,7 +1347,7 @@
     <Property Name="Time" Type="datetime" Nullable="false" />
     <Property Name="Url" Type="varchar" MaxLength="1024" Nullable="false" />
     <Property Name="UserAgent" Type="varchar" MaxLength="500" Nullable="false" />
-    <Property Name="Request" Type="nvarchar" MaxLength="2000" />
+    <Property Name="Request" Type="nvarchar(max)" />
     <Property Name="Method" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="AppVersion" Type="varchar" MaxLength="50" />
     <Property Name="UserToken" Type="varchar" MaxLength="64" />
@@ -1360,7 +1364,7 @@
     <Property Name="Time" Type="datetime" Nullable="false" />
     <Property Name="Url" Type="varchar" MaxLength="1024" Nullable="false" />
     <Property Name="UserAgent" Type="varchar" MaxLength="500" Nullable="false" />
-    <Property Name="Request" Type="nvarchar" MaxLength="2000" />
+    <Property Name="Request" Type="nvarchar(max)" />
     <Property Name="Method" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="UserToken" Type="varchar" MaxLength="64" />
   </EntityType>
@@ -1999,6 +2003,7 @@
     <Property Name="SharesHandCount" Type="int" Nullable="false" />
     <Property Name="ShareClosedPrice" Type="bigint" Nullable="false" />
     <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesInfo" Type="varchar" MaxLength="31" StoreGeneratedPattern="Computed" />
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="MarketStatus" Type="int" Nullable="false" />
     <Property Name="ForbidStatus" Type="int" Nullable="false" />
@@ -2332,6 +2337,7 @@
     <Property Name="Cordon" Type="int" Nullable="false" />
     <Property Name="ClosingLine" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="Type" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
@@ -2382,6 +2388,8 @@
     <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Market" Type="int" Nullable="false" />
     <Property Name="SharesCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="SharesInfo" Type="nvarchar" MaxLength="61" StoreGeneratedPattern="Computed" />
+    <Property Name="DataType" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
@@ -2546,6 +2554,7 @@
     <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Market" Type="int" Nullable="false" />
     <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="SharesInfo" Type="varchar" MaxLength="31" StoreGeneratedPattern="Computed" />
     <Property Name="PresentPrice" Type="bigint" Nullable="false" />
     <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
     <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
@@ -2779,6 +2788,7 @@
     <Property Name="OtherConditionRelative" Type="int" Nullable="false" />
     <Property Name="IsGreater" Type="bit" Nullable="false" />
     <Property Name="EntrustAmount" Type="int" Nullable="false" />
+    <Property Name="EntrustAmountType" Type="int" Nullable="false" />
     <Property Name="EntrustType" Type="int" Nullable="false" />
     <Property Name="EntrustPriceGear" Type="int" Nullable="false" />
     <Property Name="ForbidType" Type="int" Nullable="false" />

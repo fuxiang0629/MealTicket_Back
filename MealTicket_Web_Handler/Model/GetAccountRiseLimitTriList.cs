@@ -133,5 +133,10 @@ namespace MealTicket_Web_Handler.Model
         public int? ConditionStatus { get; set; }
 
         public long? ConditionId { get; set; }
+
+        /// <summary>
+        /// 板块列表
+        /// </summary>
+        public List<SharesPlateInfo> PlateList { get; set; }
     }
 }

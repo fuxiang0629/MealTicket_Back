@@ -1,4 +1,5 @@
 ﻿using FXCommon.Common;
+using MealTicket_DBCommon;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -55,13 +56,6 @@ namespace TransactionDataUpdate_NO4
 
         #region====新分笔成交数据====
         public int NewTransactionDataCount = 50;// 获取分笔成交数据每批次数量
-        public int NewTransactionDataSendPeriodTime = 3000;//更新间隔
-        public int NewTransactionDataRunStartTime = -180;//运行时间比交易时间提前秒数
-        public int NewTransactionDataRunEndTime = 180;//运行时间比交易时间滞后秒数
-        public int NewTransactiondataSleepTime = 10000;//每天执行时的间隔时间
-        public int NewTransactiondataStartHour = 16;//每天执行开始时间
-        public int NewTransactiondataEndHour = 23;//每天执行结束时间
-        public int NewTransactionDataTrendHandlerCount = 10;
         #endregion
 
         public string connString_transactiondata= string.Empty;
@@ -232,6 +226,11 @@ namespace TransactionDataUpdate_NO4
                 SysparUpdateThread.Join();
                 UpdateWait.Release();
             }
+
+            if (mqHandler != null)
+            {
+                mqHandler.Dispose();
+            }
         }
 
         /// <summary>
@@ -342,9 +341,8 @@ namespace TransactionDataUpdate_NO4
                     {
                         break;
                     }
+                    SysparUpdate();
                 } while (true);
-
-                SysparUpdate();
             });
             SysparUpdateThread.Start();
         }
@@ -361,47 +359,34 @@ namespace TransactionDataUpdate_NO4
                     if (sysPar != null)
                     {
                         var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
-                        if (sysValue.TransactionDataCount != null && sysValue.TransactionDataCount <= 2000 && sysValue.TransactionDataCount >= 1)
+                        int tempNewTransactionDataCount = sysValue.TransactionDataCount;
+                        if (tempNewTransactionDataCount <= 2000 && tempNewTransactionDataCount >= 1)
                         {
-                            NewTransactionDataCount = sysValue.TransactionDataCount;
+                            NewTransactionDataCount = tempNewTransactionDataCount;
                         }
-                        if (sysValue.SendPeriodTime != null)
-                        {
-                            NewTransactionDataSendPeriodTime = sysValue.SendPeriodTime;
-                        }
-                        if (sysValue.TransactiondataSleepTime != null && sysValue.TransactiondataSleepTime > 0)
-                        {
-                            NewTransactiondataSleepTime = sysValue.TransactiondataSleepTime;
-                        }
-                        if (sysValue.TransactiondataStartHour != null && sysValue.TransactiondataStartHour >= 16 && sysValue.TransactiondataStartHour <= 23)
-                        {
-                            NewTransactiondataStartHour = sysValue.TransactiondataStartHour;
-                        }
-                        if (sysValue.TransactiondataEndHour != null && sysValue.TransactiondataEndHour >= 16 && sysValue.TransactiondataEndHour <= 23)
-                        {
-                            NewTransactiondataEndHour = sysValue.TransactiondataEndHour;
-                        }
-                        if (sysValue.NewTransactionDataTrendHandlerCount != null && sysValue.NewTransactionDataTrendHandlerCount >= 0)
-                        {
-                            NewTransactionDataTrendHandlerCount = sysValue.NewTransactionDataTrendHandlerCount;
-                        }
-                    }
-                }
-                catch { }
-                try
-                {
-                    var sysPar = (from item in db.t_system_param
-                                  where item.ParamName == "HqServerPar"
-                                  select item).FirstOrDefault();
-                    if (sysPar != null)
-                    {
-                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
-                        NewTransactionDataRunStartTime = sysValue.RunStartTime;
-                        NewTransactionDataRunEndTime = sysValue.RunEndTime;
                     }
                 }
                 catch { }
             }
+        }
+
+        /// <summary>
+        /// 队列对象
+        /// </summary>
+        public MQHandler mqHandler;
+        /// <summary>
+        /// 启动Mq队列
+        /// </summary>
+        public MQHandler StartMqHandler(string listenQueueName)
+        {
+            string hostName = ConfigurationManager.AppSettings["MQ_HostName"];
+            int port = int.Parse(ConfigurationManager.AppSettings["MQ_Port"]);
+            string userName = ConfigurationManager.AppSettings["MQ_UserName"];
+            string password = ConfigurationManager.AppSettings["MQ_Password"];
+            string virtualHost = ConfigurationManager.AppSettings["MQ_VirtualHost"];
+            mqHandler = new MQHandler(hostName, port, userName, password, virtualHost);
+            mqHandler.ListenQueueName = listenQueueName;//设置监听队列
+            return mqHandler;
         }
     }
 }

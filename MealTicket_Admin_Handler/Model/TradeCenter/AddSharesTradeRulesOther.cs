@@ -18,6 +18,11 @@ namespace MealTicket_Admin_Handler.Model
         public long RulesId { get; set; }
 
         /// <summary>
+        /// 类型 0系统级 1账户级
+        /// </summary>
+        public int Type { get; set; }
+
+        /// <summary>
         /// 时间段
         /// </summary>
         public string Times { get; set; }

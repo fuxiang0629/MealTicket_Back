@@ -2450,7 +2450,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetSharesTradeRulesOtherList(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetSharesTradeRulesOtherList(MealTicket_Admin_Handler.Model.GetSharesTradeRulesOtherListRequest)">
             <summary>
             查询额外平仓规则列表
             </summary>
@@ -2741,6 +2741,13 @@
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetConditiontradeTemplateList(MealTicket_Admin_Handler.Model.GetConditiontradeTemplateListRequest)">
             <summary>
             获取条件模板列表
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.CopyConditiontradeTemplate(MealTicket_Admin_Handler.Model.DetailsRequest)">
+            <summary>
+            复制条件模板
             </summary>
             <param name="request"></param>
             <returns></returns>

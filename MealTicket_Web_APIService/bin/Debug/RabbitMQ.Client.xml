@@ -323,51 +323,6 @@
             Retrieve the routing key with which this message was published.
             </summary>
         </member>
-        <member name="T:RabbitMQ.Client.BinaryTableValue">
-             <summary>Wrapper for a byte[]. May appear as values read from
-            and written to AMQP field tables.</summary>
-             <remarks>
-             <para>
-             The sole reason for the existence of this class is to permit
-             encoding of byte[] as 'x' in AMQP field tables, an extension
-             to the specification that is part of the tentative JMS mapping
-             implemented by QPid.
-             </para>
-             <para>
-             Instances of this object may be found as values held in
-             IDictionary instances returned from
-             RabbitMQ.Client.Impl.WireFormatting.ReadTable, e.g. as part of
-             IBasicProperties.Headers tables. Likewise, instances may be
-             set as values in an IDictionary table to be encoded by
-             RabbitMQ.Client.Impl.WireFormatting.WriteTable.
-             </para>
-             <para>
-             When an instance of this class is encoded/decoded, the type
-             tag 'x' is used in the on-the-wire representation. The AMQP
-             standard type tag 'S' is decoded to a raw byte[], and a raw
-             byte[] is encoded as 'S'. Instances of System.String are
-             converted to a UTF-8 binary representation, and then encoded
-             using tag 'S'. In order to force the use of tag 'x', instances
-             of this class must be used.
-             </para>
-             </remarks>
-        </member>
-        <member name="M:RabbitMQ.Client.BinaryTableValue.#ctor">
-            <summary>
-            Creates a new instance of the <see cref="T:RabbitMQ.Client.BinaryTableValue"/> with null for its Bytes property.
-            </summary>
-        </member>
-        <member name="M:RabbitMQ.Client.BinaryTableValue.#ctor(System.Byte[])">
-            <summary>
-            Creates a new instance of the <see cref="T:RabbitMQ.Client.BinaryTableValue"/>.
-            </summary>
-            <param name="bytes">The wrapped byte array, as decoded or as to be encoded.</param>
-        </member>
-        <member name="P:RabbitMQ.Client.BinaryTableValue.Bytes">
-            <summary>
-            The wrapped byte array, as decoded or as to be encoded.
-            </summary>
-        </member>
         <member name="T:RabbitMQ.Client.ConnectionFactory">
              <summary>Main entry point to the RabbitMQ .NET AMQP client
             API. Constructs <see cref="T:RabbitMQ.Client.IConnection"/> instances.</summary>
@@ -489,16 +444,6 @@
             Set to true will enable a asynchronous consumer dispatcher which is compatible with <see cref="T:RabbitMQ.Client.IAsyncBasicConsumer"/>.
             Defaults to false.
             </summary>
-        </member>
-        <member name="P:RabbitMQ.Client.ConnectionFactory.ConsumerDispatchConcurrency">
-            <summary>
-            Set to a value greater than one to enable concurrent processing. For a concurrency greater than one <see cref="T:RabbitMQ.Client.IBasicConsumer"/>
-            will be offloaded to the worker thread pool so it is important to choose the value for the concurrency wisely to avoid thread pool overloading.
-            <see cref="T:RabbitMQ.Client.IAsyncBasicConsumer"/> can handle concurrency much more efficiently due to the non-blocking nature of the consumer.
-            Defaults to 1.
-            </summary>
-            <remarks>For concurrency greater than one this removes the guarantee that consumers handle messages in the order they receive them.
-            In addition to that consumers need to be thread/concurrency safe.</remarks>
         </member>
         <member name="P:RabbitMQ.Client.ConnectionFactory.HostName">
             <summary>The host to connect to.</summary>
@@ -3515,7 +3460,7 @@
             Schedule a background Task to signal the command queue when the retry duration has elapsed.
             </summary>
         </member>
-        <member name="F:RabbitMQ.Client.Framing.Impl.Connection._appContinuation">
+        <member name="F:RabbitMQ.Client.Framing.Impl.Connection._heartbeatFrame">
             <summary>Heartbeat frame for transmission. Reusable across connections.</summary>
         </member>
         <member name="P:RabbitMQ.Client.Framing.Impl.Connection.Protocol">
@@ -4240,6 +4185,51 @@
             Returns true if the <see cref="P:RabbitMQ.Client.Impl.BasicProperties.UserId"/> UserId property is present.
             </summary>
         </member>
+        <member name="T:RabbitMQ.Client.Impl.BinaryTableValue">
+             <summary>Wrapper for a byte[]. May appear as values read from
+            and written to AMQP field tables.</summary>
+             <remarks>
+             <para>
+             The sole reason for the existence of this class is to permit
+             encoding of byte[] as 'x' in AMQP field tables, an extension
+             to the specification that is part of the tentative JMS mapping
+             implemented by QPid.
+             </para>
+             <para>
+             Instances of this object may be found as values held in
+             IDictionary instances returned from
+             RabbitMQ.Client.Impl.WireFormatting.ReadTable, e.g. as part of
+             IBasicProperties.Headers tables. Likewise, instances may be
+             set as values in an IDictionary table to be encoded by
+             RabbitMQ.Client.Impl.WireFormatting.WriteTable.
+             </para>
+             <para>
+             When an instance of this class is encoded/decoded, the type
+             tag 'x' is used in the on-the-wire representation. The AMQP
+             standard type tag 'S' is decoded to a raw byte[], and a raw
+             byte[] is encoded as 'S'. Instances of System.String are
+             converted to a UTF-8 binary representation, and then encoded
+             using tag 'S'. In order to force the use of tag 'x', instances
+             of this class must be used.
+             </para>
+             </remarks>
+        </member>
+        <member name="M:RabbitMQ.Client.Impl.BinaryTableValue.#ctor">
+            <summary>
+            Creates a new instance of the <see cref="T:RabbitMQ.Client.Impl.BinaryTableValue"/> with null for its Bytes property.
+            </summary>
+        </member>
+        <member name="M:RabbitMQ.Client.Impl.BinaryTableValue.#ctor(System.Byte[])">
+            <summary>
+            Creates a new instance of the <see cref="T:RabbitMQ.Client.Impl.BinaryTableValue"/>.
+            </summary>
+            <param name="bytes">The wrapped byte array, as decoded or as to be encoded.</param>
+        </member>
+        <member name="P:RabbitMQ.Client.Impl.BinaryTableValue.Bytes">
+            <summary>
+            The wrapped byte array, as decoded or as to be encoded.
+            </summary>
+        </member>
         <member name="P:RabbitMQ.Client.Impl.ContentHeaderBase.ProtocolClassId">
             <summary>
              Retrieve the AMQP class ID of this content header.
@@ -4250,7 +4240,7 @@
              Retrieve the AMQP class name of this content header.
             </summary>
         </member>
-        <member name="M:RabbitMQ.Client.Impl.ContentHeaderBase.ReadFrom(System.ReadOnlySpan{System.Byte})">
+        <member name="M:RabbitMQ.Client.Impl.ContentHeaderBase.ReadFrom(System.ReadOnlyMemory{System.Byte})">
             <summary>
              Fill this instance from the given byte buffer stream.
             </summary>
@@ -4258,10 +4248,13 @@
         <member name="M:RabbitMQ.Client.Impl.ContentHeaderPropertyReader.ReadTable">
             <returns>A type of <seealso cref="T:System.Collections.Generic.IDictionary`2"/>.</returns>
         </member>
-        <member name="P:RabbitMQ.Client.Impl.Framing.Heartbeat.Payload">
+        <member name="M:RabbitMQ.Client.Impl.ExtensionMethods.RandomItem``1(System.Collections.Generic.IList{``0})">
             <summary>
-            Compiler trick to directly refer to static data in the assembly, see here: https://github.com/dotnet/roslyn/pull/24621
+            Returns a random item from the list.
             </summary>
+            <typeparam name="T">Element item type</typeparam>
+            <param name="list">Input list</param>
+            <returns></returns>
         </member>
         <member name="P:RabbitMQ.Client.Impl.IFrameHandler.ReadTimeout">
             <summary>Socket read timeout. System.Threading.Timeout.InfiniteTimeSpan signals "infinity".</summary>
@@ -4657,7 +4650,7 @@
             Simple wrapper around TcpClient.
             </summary>
         </member>
-        <member name="M:RabbitMQ.Client.Impl.WireFormatting.ReadTable(System.ReadOnlySpan{System.Byte},System.Int32@)">
+        <member name="M:RabbitMQ.Client.Impl.WireFormatting.ReadTable(System.ReadOnlyMemory{System.Byte},System.Int32@)">
             <summary>Reads an AMQP "table" definition from the reader.</summary>
             <remarks>
              Supports the AMQP 0-8/0-9 standard entry types S, I, D, T

@@ -61,6 +61,11 @@ namespace MealTicket_Admin_Handler.Model
         public int EntrustAmount { get; set; }
 
         /// <summary>
+        /// 0相对金额 1绝对金额
+        /// </summary>
+        public int EntrustAmountType { get; set; }
+
+        /// <summary>
         /// 委托类型1市价 2限价
         /// </summary>
         public int EntrustType { get; set; }

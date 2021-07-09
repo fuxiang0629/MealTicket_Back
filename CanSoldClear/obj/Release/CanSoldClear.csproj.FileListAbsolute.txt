@@ -86,3 +86,6 @@ D:\项目\饭票\后端\CanSoldClear\obj\Release\CanSoldClear.csproj.CoreCompile
 D:\项目\饭票\后端\CanSoldClear\obj\Release\CanSoldClear.csproj.CopyComplete
 D:\项目\饭票\后端\CanSoldClear\obj\Release\CanSoldClear.exe
 D:\项目\饭票\后端\CanSoldClear\obj\Release\CanSoldClear.pdb
+F:\项目\饭票后端\CanSoldClear\bin\Release\MealTicket_DBCommon.dll
+F:\项目\饭票后端\CanSoldClear\bin\Release\MealTicket_DBCommon.pdb
+F:\项目\饭票后端\CanSoldClear\bin\Release\MealTicket_DBCommon.dll.config

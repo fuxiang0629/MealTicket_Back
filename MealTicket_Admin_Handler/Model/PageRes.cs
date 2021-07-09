@@ -14,6 +14,16 @@ namespace MealTicket_Admin_Handler.Model
         public long MaxId { get; set; }
 
         /// <summary>
+        /// 有效数量
+        /// </summary>
+        public int ValidCount { get; set; }
+
+        /// <summary>
+        /// 基础数量
+        /// </summary>
+        public int BaseCount { get; set; }
+
+        /// <summary>
         /// 总数量
         /// </summary>
         public int TotalCount { get; set; }

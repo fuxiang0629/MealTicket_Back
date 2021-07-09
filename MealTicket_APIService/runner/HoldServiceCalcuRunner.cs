@@ -17,7 +17,7 @@ namespace MealTicket_APIService.runner
         public HoldServiceCalcuRunner()
         {
             Name = "HoldServiceCalcuRunner";
-            SleepTime = Singleton.Instance.HoldServiceCalcuSleepTime;
+            SleepTime = 600000;
         }
 
         public override bool Check
@@ -27,7 +27,8 @@ namespace MealTicket_APIService.runner
                 try
                 {
                     //每天1-8点执行
-                    if (DateTime.Now.Hour < Singleton.Instance.HoldServiceCalcuStartHour || DateTime.Now.Hour >= Singleton.Instance.HoldServiceCalcuEndHour)
+                    TimeSpan tpNow = TimeSpan.Parse(DateTime.Now.ToString("HH:mm:ss"));
+                    if (tpNow  < Singleton.Instance.HoldServiceCalcuStartHour || tpNow > Singleton.Instance.HoldServiceCalcuEndHour)
                     {
                         return false;
                     }

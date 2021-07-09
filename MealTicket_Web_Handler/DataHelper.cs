@@ -1,4 +1,5 @@
 ﻿using FXCommon.Common;
+using MealTicket_DBCommon;
 using MealTicket_Web_Handler.Model;
 using Newtonsoft.Json;
 using stock_db_core;
@@ -167,8 +168,7 @@ namespace MealTicket_Web_Handler
             {
                 return;
             }
-            var dataList = GetTrendPar();//查询需要分析的股票及参数
-
+            var dataList = Singleton.Instance.SharesTrendParSession;
 
             var List_Trend1 = (from item in dataList
                                where item.TrendId == 1
@@ -424,6 +424,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                     _element.strStockCode = item.SharesCode + "," + item.Market;
                     lstElement.Add(_element);
                 }
+               
                 int iErrorCode = Singleton.Instance.m_stockMonitor.AnalysisTrend_BoxBreach(lstElement, ref resultInfo);
                 return iErrorCode;
             }
@@ -1824,7 +1825,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
             }
         }
 
-        //分析五档变化速度
+        //分析买卖变化速度
         public static int Analysis_QuotesChangeRate(string sharesCode, int market,long currPrice ,List<string> par)
         {
             var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
@@ -2034,6 +2035,196 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
             }
         }
 
+        //分析五档变化速度
+        public static int Analysis_QuotesTypeChangeRate(string sharesCode, int market, long currPrice, List<string> par)
+        {
+            var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
+            int compare = 0;
+            int type = 0;
+            double count = 0;
+            int priceType = 1;
+            try
+            {
+                compare = Convert.ToInt32(temp.Compare);
+                type = Convert.ToInt32(temp.Type);
+                count = Convert.ToDouble(temp.Count);
+                priceType= Convert.ToInt32(temp.priceType);
+            }
+            catch (Exception)
+            {
+            }
+            if (type == 0)
+            {
+                return -1;
+            }
+
+            DateTime timeNow = DateTime.Now;
+            using (var db = new meal_ticketEntities())
+            {
+                var quotes = (from item in db.t_shares_quotes
+                              where item.Market == market && item.SharesCode == sharesCode && SqlFunctions.DateAdd("MI", 1, item.LastModified) > timeNow
+                              select item).ToList();
+                var quotesLast = quotes.Where(e => e.DataType == 0).FirstOrDefault();
+                var quotesPre = quotes.Where(e => e.DataType == 1).FirstOrDefault();
+                if (quotesLast == null || quotesPre == null)
+                {
+                    return -1;
+                }
+
+                if (priceType == 2)
+                {
+                    currPrice = quotesLast.LimitUpPrice;
+                }
+                else if (priceType == 3)
+                {
+                    currPrice = quotesLast.LimitDownPrice;
+                }
+
+                int disCount = 0;
+                int lastCount = 0;
+
+                double rate = 0;
+                switch (type)
+                {
+                    case 1:
+                        if (quotesPre.BuyPrice1 == currPrice)
+                        {
+                            lastCount = quotesPre.BuyCount1;
+                        }
+                        else if (quotesPre.BuyPrice2 == currPrice)
+                        {
+                            lastCount = quotesPre.BuyCount2;
+                        }
+                        else if (quotesPre.BuyPrice3 == currPrice)
+                        {
+                            lastCount = quotesPre.BuyCount3;
+                        }
+                        else if (quotesPre.BuyPrice4 == currPrice)
+                        {
+                            lastCount = quotesPre.BuyCount4;
+                        }
+                        else if (quotesPre.BuyPrice5 == currPrice)
+                        {
+                            lastCount = quotesPre.BuyCount5;
+                        }
+                        else
+                        {
+                            return -1;
+                        }
+                        if (quotesLast.BuyPrice1 == currPrice)
+                        {
+                            disCount = quotesLast.BuyCount1;
+                        }
+                        else if (quotesLast.BuyPrice2 == currPrice)
+                        {
+                            disCount = quotesLast.BuyCount2;
+                        }
+                        else if (quotesLast.BuyPrice3 == currPrice)
+                        {
+                            disCount = quotesLast.BuyCount3;
+                        }
+                        else if (quotesLast.BuyPrice4 == currPrice)
+                        {
+                            disCount = quotesLast.BuyCount4;
+                        }
+                        else if (quotesLast.BuyPrice5 == currPrice)
+                        {
+                            disCount = quotesLast.BuyCount5;
+                        }
+                        else
+                        {
+                            if (quotesLast.BuyPrice1 > currPrice)
+                            {
+                                rate = 0x0FFFFFFF;
+                            }
+                            else
+                            {
+                                rate = -100;
+                            }
+                        }
+                        break;
+                    case 2:
+                        if (quotesPre.SellPrice1 == currPrice)
+                        {
+                            lastCount = quotesPre.SellCount1;
+                        }
+                        else if (quotesPre.SellPrice2 == currPrice)
+                        {
+                            lastCount = quotesPre.SellCount2;
+                        }
+                        else if (quotesPre.SellPrice3 == currPrice)
+                        {
+                            lastCount = quotesPre.SellCount3;
+                        }
+                        else if (quotesPre.SellPrice4 == currPrice)
+                        {
+                            lastCount = quotesPre.SellCount4;
+                        }
+                        else if (quotesPre.SellPrice5 == currPrice)
+                        {
+                            lastCount = quotesPre.SellCount5;
+                        }
+                        else
+                        {
+                            return -1;
+                        }
+                        if (quotesLast.SellPrice1 == currPrice)
+                        {
+                            disCount = quotesLast.SellCount1;
+                        }
+                        else if (quotesLast.SellPrice2 == currPrice)
+                        {
+                            disCount = quotesLast.SellCount2;
+                        }
+                        else if (quotesLast.SellPrice3 == currPrice)
+                        {
+                            disCount = quotesLast.SellCount3;
+                        }
+                        else if (quotesLast.SellPrice4 == currPrice)
+                        {
+                            disCount = quotesLast.SellCount4;
+                        }
+                        else if (quotesLast.SellPrice5 == currPrice)
+                        {
+                            disCount = quotesLast.SellCount5;
+                        }
+                        else
+                        {
+                            if (quotesLast.SellPrice1 > currPrice)
+                            {
+                                rate = -100;
+                            }
+                            else
+                            {
+                                rate = 0x0FFFFFFF;
+                            }
+                        }
+                        break;
+                    default:
+                        return -1;
+                }
+
+                if (rate == 0)
+                {
+                    if (lastCount == 0)
+                    {
+                        return -1;
+                    }
+                    rate = (disCount - lastCount) * 1.0 / lastCount * 100;
+                }
+
+                if (compare == 1 && rate >= count)
+                {
+                    return 0;
+                }
+                if (compare == 2 && rate <= count)
+                {
+                    return 0;
+                }
+                return -1;
+            }
+        }
+
         //分析按当前价格
         public static int Analysis_CurrentPrice(string sharesCode, int market, List<string> par)
         {
@@ -2175,39 +2366,38 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
         /// </summary>
         private static void TrendTri(List<TrendAnalyseResult> trendResult)
         {
+            DataTable dataTable = new DataTable();
+            dataTable.Columns.Add("Market", typeof(int));
+            dataTable.Columns.Add("SharesCode", typeof(string));
+            dataTable.Columns.Add("PushTime", typeof(DateTime));
+            dataTable.Columns.Add("PushDesc", typeof(string));
+            dataTable.Columns.Add("TrendId", typeof(long));
+            foreach (var item in trendResult)
+            {
+                DataRow row = dataTable.NewRow();
+                row["Market"] = item.Market;
+                row["SharesCode"] = item.SharesCode;
+                row["PushTime"] = item.PushTime;
+                row["PushDesc"] = item.PushDesc;
+                row["TrendId"] = item.TrendId;
+                dataTable.Rows.Add(row);
+            }
             using (SqlConnection conn = new SqlConnection(Singleton.Instance.connString_meal_ticket))
             {
                 conn.Open();
                 try
                 {
-                    using (SqlCommand comm = new SqlCommand("exec P_TradeAnalyseResult_Update @analyseResult", conn))
+                    using (SqlCommand cmd = new SqlCommand("P_TradeAnalyseResult_Update", conn))
                     {
-                        using (var table = new DataTable())
-                        {
-                            table.Columns.Add("Market", typeof(int));
-                            table.Columns.Add("SharesCode", typeof(string));
-                            table.Columns.Add("PushTime", typeof(DateTime));
-                            table.Columns.Add("PushDesc", typeof(string));
-                            table.Columns.Add("TrendId", typeof(long));
-
-                            foreach (var item in trendResult)
-                            {
-                                DataRow row = table.NewRow();
-                                row["Market"] = item.Market;
-                                row["SharesCode"] = item.SharesCode;
-                                row["PushTime"] = item.PushTime;
-                                row["PushDesc"] = item.PushDesc;
-                                row["TrendId"] = item.TrendId;
-                                table.Rows.Add(row);
-                            }
-
-                            var pList = new SqlParameter("@analyseResult", SqlDbType.Structured);
-                            pList.TypeName = "dbo.TrendAnalyseResult";
-                            pList.Value = table;
-
-                            comm.Parameters.Add(pList);
-                            comm.ExecuteNonQuery();
-                        }
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        //关键是类型
+                        SqlParameter parameter = new SqlParameter("@analyseResult", SqlDbType.Structured);
+                        //必须指定表类型名
+                        parameter.TypeName = "dbo.TrendAnalyseResult";
+                        //赋值
+                        parameter.Value = dataTable;
+                        cmd.Parameters.Add(parameter);
+                        cmd.ExecuteNonQuery();
                     }
                 }
                 catch (Exception ex)

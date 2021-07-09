@@ -99,3 +99,6 @@ D:\项目\饭票\后端\MealTicket_Web_Handler\obj\Debug\MealTicket_Web_Handler.
 D:\项目\饭票\后端\MealTicket_Web_Handler\obj\Debug\MealTicket_Web_Handler.csproj.CopyComplete
 D:\项目\饭票\后端\MealTicket_Web_Handler\obj\Debug\MealTicket_Web_Handler.dll
 D:\项目\饭票\后端\MealTicket_Web_Handler\obj\Debug\MealTicket_Web_Handler.pdb
+F:\项目\饭票后端\MealTicket_Web_Handler\bin\Debug\MealTicket_DBCommon.dll
+F:\项目\饭票后端\MealTicket_Web_Handler\bin\Debug\MealTicket_DBCommon.pdb
+F:\项目\饭票后端\MealTicket_Web_Handler\bin\Debug\MealTicket_DBCommon.dll.config

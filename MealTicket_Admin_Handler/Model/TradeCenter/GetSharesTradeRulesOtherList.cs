@@ -10,6 +10,13 @@ namespace MealTicket_Admin_Handler.Model
     {
     }
 
+    public class GetSharesTradeRulesOtherListRequest : DetailsPageRequest
+    {
+        /// <summary>
+        /// 类型 0系统级 1账户级
+        /// </summary>
+        public int Type { get; set; }
+    }
     public class SharesTradeRulesOtherInfo
     {
         /// <summary>

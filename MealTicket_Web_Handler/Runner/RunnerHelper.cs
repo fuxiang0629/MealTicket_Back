@@ -1,4 +1,5 @@
 ﻿using FXCommon.Common;
+using MealTicket_DBCommon;
 using MealTicket_Web_Handler.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -897,11 +898,11 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend10);
                                 logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                             }
-                            //五档变化速度
+                            //买卖变化速度
                             if (tr.TrendId == 11)
                             {
                                 logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
-                                logRecord.AppendLine("股票：" + item.SharesCode + "五档变化速度判断-额外参数：");
+                                logRecord.AppendLine("股票：" + item.SharesCode + "买卖变化速度判断-额外参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
                                 int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(item.SharesCode, item.Market, item.PresentPrice, par);
@@ -1037,6 +1038,27 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                     }
                                 }
                                 logRecord.AppendLine("\t结果：未满足，返回code" + errorCode_Trend3);
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                            }
+                            //五档变化速度
+                            if (tr.TrendId == 13)
+                            {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                logRecord.AppendLine("股票：" + item.SharesCode + "五档变化速度判断-额外参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                int errorCode_Trend13 = DataHelper.Analysis_QuotesTypeChangeRate(item.SharesCode, item.Market, item.PresentPrice, par);
+                                if (errorCode_Trend13 == 0)
+                                {
+                                    tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend13);
                                 logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                             }
                         }
@@ -1386,6 +1408,27 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("\t结果：未满足，返回code" + errorCode_Trend3);
                                 logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                             }
+                            //五档变化速度
+                            if (tr.TrendId == 13)
+                            {
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                logRecord.AppendLine("股票：" + item.SharesCode + "五档变化速度判断-转自动参数：");
+                                logRecord.AppendLine("\t分组名称：" + th.Name);
+                                logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
+                                int errorCode_Trend13 = DataHelper.Analysis_QuotesTypeChangeRate(item.SharesCode, item.Market, item.PresentPrice, par);
+                                if (errorCode_Trend13 == 0)
+                                {
+                                    tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
+                                    if (tempTri)
+                                    {
+                                        logRecord.AppendLine("\t结果：达到要求");
+                                        logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                                        break;
+                                    }
+                                }
+                                logRecord.AppendLine("\t结果：未满足，返回code：" + errorCode_Trend13);
+                                logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+                            }
                         }
                         if (!tempTri)
                         {
@@ -1505,19 +1548,24 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                             {
                                 try
                                 {
-                                    sql = string.Format(@"if(not exists(select top 1 1 from t_account_shares_buy_setting with(xlock) where AccountId={0} and [Type]=3)) 
-begin  
+                                    sql = string.Format(@"declare @parValue bigint,@id bigint;
+select @id=Id,@parValue=ParValue from t_account_shares_buy_setting with(xlock) where AccountId={0} and [Type]=3
+if(@parValue is null) 
+begin 
     insert into t_account_shares_buy_setting(AccountId,[Type],Name,[Description],ParValue,CreateTime,LastModified)
-    values({0},3,'跟投分组轮序位置','跟投分组轮序位置',0,getdate(),getdate())
-end", item.AccountId);
-                                    db.Database.ExecuteSqlCommand(sql);
-
-                                    sql = string.Format("select top 1 ParValue from t_account_shares_buy_setting where AccountId={0} and [Type]=3", item.AccountId);
+    values({0},3,'跟投分组轮序位置','跟投分组轮序位置',1,getdate(),getdate());
+	set @parValue=0;
+end
+else
+begin
+	update t_account_shares_buy_setting set ParValue=ParValue+1 where Id=@id;
+end
+select @parValue", item.AccountId);
                                     var turn = db.Database.SqlQuery<long>(sql).FirstOrDefault();
 
                                     //查询跟投分组信息
                                     sql = string.Format(@"select Id
-  from t_account_follow_group
+  from t_account_follow_group with(nolock)
   where AccountId = {0} and[Status] = 1
   order by OrderIndex", item.AccountId);
                                     var groupList = db.Database.SqlQuery<long>(sql).ToList();
@@ -1532,25 +1580,22 @@ end", item.AccountId);
                                         long thisId = groupList[thisIndex];
 
                                         sql = string.Format(@"select t2.FollowAccountId AccountId,t1.BuyAmount
-  from t_account_follow_group t
+  from t_account_follow_group t with(nolock)
   inner
-  join t_account_follow_group_rel t1 on t.Id = t1.GroupId
+  join t_account_follow_group_rel t1 with(nolock) on t.Id = t1.GroupId
 
 inner
-  join t_account_follow_rel t2 on t1.RelId = t2.Id
+  join t_account_follow_rel t2 with(nolock) on t1.RelId = t2.Id
   where t.Id = {0} and t.AccountId = {1} and t.[Status]= 1 and t2.AccountId = {1}", thisId, item.AccountId);
                                         FollowList = db.Database.SqlQuery<FollowAccountInfo>(sql).ToList();
                                     }
-
-                                    sql = string.Format("update t_account_shares_buy_setting set ParValue=ParValue+1 where AccountId={0} and [Type]=3", item.AccountId);
-                                    db.Database.ExecuteSqlCommand(sql);
 
                                     tran.Commit();
                                 }
                                 catch (Exception ex)
                                 {
+                                    Logger.WriteFileLog("更新跟投分组出错",ex);
                                     tran.Rollback();
-                                    throw new WebApiException(400, "跟投分组查询出错");
                                 }
                             }
                         }
@@ -2257,6 +2302,16 @@ inner
                         }
                     }
                 }
+                //五档变化速度
+                if (tr.TrendId == 13)
+                {
+                    trendName = "五档变化速度";
+                    int errorCode_Trend13 = DataHelper.Analysis_QuotesTypeChangeRate(sharesCode, market, currPrice, par);
+                    if (errorCode_Trend13 == 0)
+                    {
+                        tempTri = true;
+                    }
+                }
 
                 if (!tempTri)
                 {
@@ -2465,6 +2520,16 @@ inner
                         }
                     }
                 }
+                //五档变化速度
+                if (tr.TrendId == 13)
+                {
+                    trendName = "五档变化速度";
+                    int errorCode_Trend13 = DataHelper.Analysis_QuotesTypeChangeRate(sharesCode, market, currPrice, par);
+                    if (errorCode_Trend13 == 0)
+                    {
+                        tempTri = true;
+                    }
+                }
 
                 if (!tempTri)
                 {
@@ -2479,95 +2544,75 @@ inner
         /// 推送股票分笔数据
         /// </summary>
         /// <returns></returns>
-        public static int SendTransactionShares(string taskGuid)
+        public static int SendTransactionShares(string taskGuid,int dataType)
         {
             DateTime timeDate = DateTime.Now.Date;
             List<TradeSharesInfo> sharesList = new List<TradeSharesInfo>();
             using (var db = new meal_ticketEntities())
             {
-                string sql = string.Format(@"select Market,SharesCode
+                string sql = string.Empty;
+                if (dataType == 0)
+                {
+                    sql = @"select Market,SharesCode
   from
   (
-  select t.Market, t.SharesCode
-  from v_shares_quotes_last t
-  inner
-  join t_shares_all t1 on t.Market = t1.Market and t.SharesCode = t1.SharesCode
-  inner join t_shares_monitor t2 on t.Market = t2.Market and t.SharesCode = t2.SharesCode
-  where t.LastModified > '{0}' and t2.[Status] = 1
-  union all
-  select t3.Market, t3.SharesCode
-  from t_account_shares_conditiontrade_buy_details_other_trend t
-  inner
-  join t_account_shares_conditiontrade_buy_details_other t1 on t.OtherId = t1.Id
-
-            inner
-              join t_account_shares_conditiontrade_buy_details t2 on t1.DetailsId = t2.Id
-
-            inner
-              join t_account_shares_conditiontrade_buy t3 on t2.ConditionId = t3.Id
-              where t.[Status] = 1 and t1.[Status] = 1 and t2.[Status] = 1 and t3.[Status] = 1 and(t.TrendId = 1 or t.TrendId = 2 or t.TrendId = 3 or t.TrendId = 6)
-              group by t3.Market, t3.SharesCode
-              union all
-              select t3.Market, t3.SharesCode
-              from t_account_shares_conditiontrade_buy_details_auto_trend t
-              inner
-              join t_account_shares_conditiontrade_buy_details_auto t1 on t.AutoId = t1.Id
-
-            inner
-              join t_account_shares_conditiontrade_buy_details t2 on t1.DetailsId = t2.Id
-
-            inner
-              join t_account_shares_conditiontrade_buy t3 on t2.ConditionId = t3.Id
-              where t.[Status] = 1 and t1.[Status] = 1 and t2.[Status] = 1 and t3.[Status] = 1 and(t.TrendId = 1 or t.TrendId = 2 or t.TrendId = 3 or t.TrendId = 6)
-              group by t3.Market, t3.SharesCode
-              )t
-              group by Market, SharesCode", timeDate.ToString("yyyy-MM-dd"));
+	  select Market, SharesCode
+	  from t_shares_monitor
+	  where [Status] = 1 and DataType=0
+	  union all
+	  select Market, SharesCode
+	  from t_account_shares_conditiontrade_buy
+	  where [Status] = 1
+	  group by Market,SharesCode
+	  having count(case when DataType=0 then 1 else null end)>0
+  )t
+  group by Market, SharesCode";
+                }
+                else
+                {
+                    sql = @"select Market,SharesCode
+  from
+  (
+      select Market, SharesCode
+      from t_shares_monitor
+      where [Status] = 1 and DataType = 1
+      union all
+      select Market, SharesCode
+      from t_account_shares_conditiontrade_buy
+      where [Status] = 1
+      group by Market, SharesCode
+      having count(case when DataType = 0 then 1 else null end)=0
+  )t
+  group by Market, SharesCode";
+                }
                 sharesList = db.Database.SqlQuery<TradeSharesInfo>(sql).ToList();
             }
             int totalCount = sharesList.Count();
             //批次数
-            int HandlerCount = Singleton.Instance.NewTransactionDataTrendHandlerCount;
+            int HandlerCount = dataType == 0 ? Singleton.Instance.NewTransactionDataTrendHandlerCount : Singleton.Instance.NewTransactionDataTrendHandlerCount2;
             int batchSize = totalCount / HandlerCount;
             if (totalCount % HandlerCount != 0)
             {
                 batchSize = batchSize + 1;
             }
-
-            ThreadMsgTemplate<List<TradeSharesInfo>> data = new ThreadMsgTemplate<List<TradeSharesInfo>>();
-            data.Init();
+            if (dataType == 0)
+            {
+                Singleton.Instance.mqHandler.ClearQueueData("TransactionDataUpdateNew");
+            }
+            else
+            {
+                Singleton.Instance.mqHandler.ClearQueueData("TransactionDataUpdateNew2");
+            }
             for (int size = 0; size < batchSize; size++)
             {
                 var batchList = sharesList.Skip(size * HandlerCount).Take(HandlerCount).ToList();
-                data.AddMessage(batchList);
-            }
-            int taskCount = batchSize >= 32 ? 32 : batchSize;
-
-
-            Singleton.Instance.mqHandler.clearQueueData("TransactionDataUpdateNew");
-            Task[] tArr = new Task[taskCount];
-            for (int i = 0; i < taskCount; i++)
-            {
-                tArr[i] = new Task(() =>
+                Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new
                 {
-                    do
-                    {
-                        List<TradeSharesInfo> tempData = new List<TradeSharesInfo>();
-                        if (!data.GetMessage(ref tempData, true))
-                        {
-                            break;
-                        }
-                        Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new
-                        {
-                            TaskGuid = taskGuid,
-                            DataList = tempData
-                        })), "TransactionData", "UpdateNew");
-                    } while (true);
-                }, TaskCreationOptions.LongRunning);
-                tArr[i].Start();
+                    TaskGuid = taskGuid,
+                    DataType = dataType,
+                    DataList = batchList
+                })), "TransactionData", dataType == 0 ? "UpdateNew" : "UpdateNew2");
             }
-            Task.WaitAll(tArr);
-
-            data.Release();
             return batchSize;
         }
     }

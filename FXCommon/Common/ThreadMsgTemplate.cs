@@ -62,9 +62,9 @@ namespace FXCommon.Common
         }
         #endregion
 
-        public bool AddMessage(T obj, bool bWaitCnter = true)
+        public bool AddMessage(T obj, bool bWaitCnter = true,int index=-1)
         {
-            if (!AddData(obj))
+            if (!AddData(obj, index))
             {
                 return false;
             }
@@ -76,23 +76,29 @@ namespace FXCommon.Common
             return true;
         }
 
-        private bool AddData(T obj)
+        private bool AddData(T obj,int index= -1)
         {
             m_event.WaitOne();
-            bool bResult = _AddData(obj);
+            bool bResult = _AddData(obj, index);
             m_event.Set();
 
             return bResult;
         }
 
-        private bool _AddData(T obj)
+        private bool _AddData(T obj, int index = -1)
         {
             if (m_iMaxMsgCnt != -1 && m_msgQueue.Count() >= m_iMaxMsgCnt)
             {
                 return false;
             }
-                
-            m_msgQueue.Add(obj);
+            if (index == -1)
+            {
+                m_msgQueue.Add(obj);
+            }
+            else
+            {
+                m_msgQueue.Insert(index, obj);
+            }
             return true;
         }
 
