@@ -158,3 +158,6 @@ F:\项目\饭票后端\MealTicket_Admin_Handler\bin\Release\MealTicket_DBCommon.
 F:\项目\饭票后端\MealTicket_Admin_Handler\bin\Release\MealTicket_DBCommon.pdb
 F:\项目\饭票后端\MealTicket_Admin_Handler\bin\Release\MealTicket_DBCommon.dll.config
 F:\项目\饭票后端\MealTicket_Admin_Handler\obj\Release\MealTicket_Admin_Handler.csprojAssemblyReference.cache
+D:\项目\饭票\后端\MealTicket_Admin_Handler\bin\Release\MealTicket_DBCommon.dll
+D:\项目\饭票\后端\MealTicket_Admin_Handler\bin\Release\MealTicket_DBCommon.pdb
+D:\项目\饭票\后端\MealTicket_Admin_Handler\bin\Release\MealTicket_DBCommon.dll.config

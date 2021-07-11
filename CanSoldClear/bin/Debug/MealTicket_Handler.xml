@@ -2880,11 +2880,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MealTicket_Handler.TradeHandler.CalculateClosingInfo(System.Int64,System.Int32,System.Int64,System.Int64,System.Int32,System.Int32,System.Int64@,System.Int64@,System.Int64@)">
-            <summary>
-            计算平仓信息
-            </summary>
-        </member>
         <member name="M:MealTicket_Handler.TradeHandler.GetTradeEntrustList(MealTicket_Handler.Model.GetTradeEntrustListRequest,MealTicket_Handler.Model.HeadBase)">
             <summary>
             获取交易委托列表
@@ -2989,31 +2984,6 @@
             </summary>
             <param name="request"></param>
         </member>
-        <member name="F:MealTicket_Handler.MQHandler._factory">
-            <summary>
-            连接工厂
-            </summary>
-        </member>
-        <member name="F:MealTicket_Handler.MQHandler._connection">
-            <summary>
-            消息队列连接
-            </summary>
-        </member>
-        <member name="F:MealTicket_Handler.MQHandler._sendModel">
-            <summary>
-            协议对象
-            </summary>
-        </member>
-        <member name="F:MealTicket_Handler.MQHandler.instance">
-            <summary>
-            单例模式
-            </summary>
-        </member>
-        <member name="M:MealTicket_Handler.MQHandler.SendMessage(System.Byte[],System.String,System.String)">
-            <summary>
-            发送消息
-            </summary>
-        </member>
         <member name="M:MealTicket_Handler.RunnerHandler.RunnerHelper.JoinCanSold">
             <summary>
             更新股票可卖出数量
@@ -3067,16 +3037,6 @@
         <member name="M:MealTicket_Handler.RunnerHandler.RunnerHelper.ClosingForce">
             <summary>
             强制平仓
-            </summary>
-        </member>
-        <member name="M:MealTicket_Handler.RunnerHandler.RunnerHelper.GetCurrTimeClosingLine(System.Int32,System.String,System.String,System.Int64@,System.Int32@,System.Int32@,System.Nullable{System.TimeSpan}@,System.Nullable{System.TimeSpan}@,System.Int32@,System.Int32@)">
-            <summary>
-            获取当前时段平仓线信息
-            </summary>
-        </member>
-        <member name="M:MealTicket_Handler.RunnerHandler.RunnerHelper.GetNextTimeClosingLine(System.Int32,System.String,System.String,System.Int64@,System.Int32@,System.Int32@,System.Nullable{System.TimeSpan}@)">
-            <summary>
-            获取下个时段额外平仓线信息
             </summary>
         </member>
         <member name="M:MealTicket_Handler.RunnerHandler.RunnerHelper.HoldClose">
@@ -3139,24 +3099,9 @@
             自动平仓定时器间隔时间（交易日）
             </summary>
         </member>
-        <member name="F:MealTicket_Handler.Singleton.ClosingAutoSleepTime_NoTradeDate">
-            <summary>
-            自动平仓定时器间隔时间（非交易日）
-            </summary>
-        </member>
         <member name="F:MealTicket_Handler.Singleton.ClosingForceSleepTime_TradeDate">
             <summary>
             强制平仓定时器间隔时间（交易日）
-            </summary>
-        </member>
-        <member name="F:MealTicket_Handler.Singleton.ClosingForceSleepTime_NoTradeDate">
-            <summary>
-            强制平仓定时器间隔时间（非交易日）
-            </summary>
-        </member>
-        <member name="F:MealTicket_Handler.Singleton.TradeCleanSleepTime">
-            <summary>
-            委托每日清除定时器间隔时间（交易日）
             </summary>
         </member>
         <member name="F:MealTicket_Handler.Singleton.TradeCleanStartHour">
@@ -3169,11 +3114,6 @@
             委托每日清除定时器执行截止小时
             </summary>
         </member>
-        <member name="F:MealTicket_Handler.Singleton.HoldServiceCalcuSleepTime">
-            <summary>
-            服务费计算定时器间隔时间（交易日）
-            </summary>
-        </member>
         <member name="F:MealTicket_Handler.Singleton.HoldServiceCalcuStartHour">
             <summary>
             服务费计算定时器执行起始小时
@@ -3182,11 +3122,6 @@
         <member name="F:MealTicket_Handler.Singleton.HoldServiceCalcuEndHour">
             <summary>
             服务费计算定时器执行截止小时
-            </summary>
-        </member>
-        <member name="F:MealTicket_Handler.Singleton.TransactiondataSleepTime">
-            <summary>
-            分笔数据更新定时器间隔时间
             </summary>
         </member>
         <member name="F:MealTicket_Handler.Singleton.TransactiondataStartHour">
@@ -3222,6 +3157,16 @@
         <member name="M:MealTicket_Handler.Singleton.StartSysparUpdateThread">
             <summary>
             启动系统参数更新线程
+            </summary>
+        </member>
+        <member name="F:MealTicket_Handler.Singleton.mqHandler">
+            <summary>
+            队列对象
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.Singleton.StartMqHandler(System.String)">
+            <summary>
+            启动Mq队列
             </summary>
         </member>
         <member name="M:MealTicket_Handler.DBUtils.CalculateOtherCost(System.Collections.Generic.List{System.Int64},System.Int32)">

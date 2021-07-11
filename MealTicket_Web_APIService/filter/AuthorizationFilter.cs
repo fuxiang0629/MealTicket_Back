@@ -48,6 +48,8 @@ namespace MealTicket_Web_APIService.Filter
                 string controller = actionContext.ControllerContext.ControllerDescriptor.ControllerName;
                 //action
                 string action = actionContext.ActionDescriptor.ActionName;
+                //是否需要压缩数据
+                string isZip = httpcontext.Request.Headers["isZip"] ?? "";
                 //IP地址
                 string ip;
                 ip = httpcontext.Request.Headers["X-Real-IP"]??string.Empty;
@@ -77,7 +79,8 @@ namespace MealTicket_Web_APIService.Filter
                     Controller = controller,
                     Action = action,
                     Ip = ip,
-                    Method = method
+                    Method = method,
+                    IsZip= isZip
                 };
                 actionContext.ActionArguments.Add("basedata", baseInfo);
             }

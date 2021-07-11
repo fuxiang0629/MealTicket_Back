@@ -22,6 +22,11 @@ namespace MealTicket_Web_Handler.Model
         public string ErrorMessage { get; set; }
 
         /// <summary>
+        /// 是否压缩
+        /// </summary>
+        public bool IsZip { get; set; }
+
+        /// <summary>
         /// 数据时间
         /// </summary>
         public DateTime DataTime

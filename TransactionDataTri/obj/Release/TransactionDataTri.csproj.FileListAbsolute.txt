@@ -74,3 +74,7 @@ F:\项目\饭票后端\TransactionDataTri\obj\Release\TransactionDataTri.csprojA
 F:\项目\饭票后端\TransactionDataTri\bin\Release\MealTicket_DBCommon.dll
 F:\项目\饭票后端\TransactionDataTri\bin\Release\MealTicket_DBCommon.pdb
 F:\项目\饭票后端\TransactionDataTri\bin\Release\MealTicket_DBCommon.dll.config
+D:\项目\饭票\后端\TransactionDataTri\bin\Release\MealTicket_DBCommon.dll
+D:\项目\饭票\后端\TransactionDataTri\bin\Release\MealTicket_DBCommon.pdb
+D:\项目\饭票\后端\TransactionDataTri\bin\Release\MealTicket_DBCommon.dll.config
+D:\项目\饭票\后端\TransactionDataTri\obj\Release\TransactionDataTri.csprojAssemblyReference.cache

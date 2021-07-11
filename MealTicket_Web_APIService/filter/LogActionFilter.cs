@@ -7,6 +7,8 @@ using Ninject;
 using FXCommon.Common;
 using MealTicket_Web_Handler;
 using MealTicket_Web_Handler.Model;
+using System.Text;
+using System.Web;
 
 namespace MealTicket_Web_APIService.Filter
 {
@@ -89,6 +91,11 @@ namespace MealTicket_Web_APIService.Filter
                     else
                     {
                         resResult.Data = context.Response.Content.ReadAsAsync<object>().Result;
+                        if (!string.IsNullOrEmpty(baseInfo.IsZip))
+                        {
+                            resResult.Data = Utils.Compress(HttpUtility.UrlEncode(JsonConvert.SerializeObject(resResult.Data),Encoding.UTF8));
+                            resResult.IsZip = true;
+                        }
                         resResult.ErrorMessage = resultMessage;
                         resResult.ErrorCode = resultCode;
 

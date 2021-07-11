@@ -50,5 +50,10 @@ namespace MealTicket_Web_Handler.Model
         /// 用户Id
         /// </summary>
         public long AccountId { get;set; }
+
+        /// <summary>
+        /// 是否压缩
+        /// </summary>
+        public string IsZip { get; set; }
     }
 }

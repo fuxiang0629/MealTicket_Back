@@ -4043,7 +4043,7 @@ namespace MealTicket_Admin_Handler
                                 Status = other_trend_other.Status,
                                 CreateTime = DateTime.Now,
                                 LastModified = DateTime.Now,
-                                OtherTrendId = other_trend_other.OtherTrendId,
+                                OtherTrendId = new_other_trend.Id,
                                 TrendDescription = other_trend_other.TrendDescription,
                                 TrendId = other_trend_other.TrendId,
                                 TrendName = other_trend_other.TrendName
@@ -4128,7 +4128,7 @@ namespace MealTicket_Admin_Handler
                                 Status = auto_trend_other.Status,
                                 CreateTime = DateTime.Now,
                                 LastModified = DateTime.Now,
-                                AutoTrendId = auto_trend_other.AutoTrendId,
+                                AutoTrendId = new_auto_trend.Id,
                                 TrendDescription = auto_trend_other.TrendDescription,
                                 TrendId = auto_trend_other.TrendId,
                                 TrendName = auto_trend_other.TrendName
