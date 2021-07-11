@@ -1,5 +1,6 @@
 ﻿using Aop.Api.Util;
 using FXCommon.Common;
+using MealTicket_DBCommon;
 using MealTicket_Handler.Model.PayCallBack;
 using Newtonsoft.Json;
 using System;

@@ -798,6 +798,7 @@
     <EntitySetMapping Name="t_shares_all">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_all">
         <MappingFragment StoreEntitySet="t_shares_all">
+          <ScalarProperty Name="SharesInfo" ColumnName="SharesInfo" />
           <ScalarProperty Name="MarketStatus" ColumnName="MarketStatus" />
           <ScalarProperty Name="SharesPyjc" ColumnName="SharesPyjc" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
@@ -1595,6 +1596,7 @@
     <EntitySetMapping Name="t_account_shares_optional">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_optional">
         <MappingFragment StoreEntitySet="t_account_shares_optional">
+          <ScalarProperty Name="SharesInfo" ColumnName="SharesInfo" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="TriCountToday" ColumnName="TriCountToday" />
           <ScalarProperty Name="IsTrendClose" ColumnName="IsTrendClose" />
@@ -1608,6 +1610,8 @@
     <EntitySetMapping Name="t_shares_monitor">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_monitor">
         <MappingFragment StoreEntitySet="t_shares_monitor">
+          <ScalarProperty Name="DataType" ColumnName="DataType" />
+          <ScalarProperty Name="SharesInfo" ColumnName="SharesInfo" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="Status" ColumnName="Status" />
@@ -1964,6 +1968,7 @@
     <EntitySetMapping Name="t_sys_conditiontrade_template_buy">
       <EntityTypeMapping TypeName="meal_ticketModel.t_sys_conditiontrade_template_buy">
         <MappingFragment StoreEntitySet="t_sys_conditiontrade_template_buy">
+          <ScalarProperty Name="EntrustAmountType" ColumnName="EntrustAmountType" />
           <ScalarProperty Name="IsHold" ColumnName="IsHold" />
           <ScalarProperty Name="OtherConditionRelative" ColumnName="OtherConditionRelative" />
           <ScalarProperty Name="LimitUp" ColumnName="LimitUp" />

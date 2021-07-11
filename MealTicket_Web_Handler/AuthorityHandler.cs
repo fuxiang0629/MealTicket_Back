@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MealTicket_DBCommon;
 using MealTicket_Web_Handler.Model;
 
 namespace MealTicket_Web_Handler

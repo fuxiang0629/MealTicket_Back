@@ -19,7 +19,7 @@ namespace MealTicket_APIService.runner
         public TradeCleanRunner()
         {
             Name = "TradeCleanRunner";
-            SleepTime = Singleton.Instance.TradeCleanSleepTime;
+            SleepTime = 600000;
         }
 
         public override bool Check
@@ -34,7 +34,8 @@ namespace MealTicket_APIService.runner
                         return false;
                     }
                     //每天21-23点执行
-                    if (DateTime.Now.Hour < Singleton.Instance.TradeCleanStartHour || DateTime.Now.Hour >= Singleton.Instance.TradeCleanEndHour)
+                    TimeSpan tpNow = TimeSpan.Parse(DateTime.Now.ToString("HH:mm:ss"));
+                    if (tpNow < Singleton.Instance.TradeCleanStartHour || tpNow > Singleton.Instance.TradeCleanEndHour)
                     {
                         return false;
                     }

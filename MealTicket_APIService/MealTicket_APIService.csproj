@@ -168,16 +168,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="runner\ClosingAutoRunner.cs" />
     <Compile Include="runner\ClosingForceRunner.cs" />
-    <Compile Include="runner\TransactiondataDateRunner.cs" />
     <Compile Include="runner\HoldServiceCalcuRunner.cs" />
-    <Compile Include="runner\TransactiondataRealTimeRunner.cs" />
     <Compile Include="runner\RechargeCloseRunner.cs" />
     <Compile Include="runner\RechargeRefundQueryRunner.cs" />
     <Compile Include="runner\RechargeRefundRunner.cs" />
     <Compile Include="runner\SmsSendRunner.cs" />
     <Compile Include="runner\TradeCleanRunner.cs" />
     <Compile Include="runner\UpdateTransactiondataRunner.cs" />
-    <Compile Include="Test\ServiceFeeRechargeRunner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

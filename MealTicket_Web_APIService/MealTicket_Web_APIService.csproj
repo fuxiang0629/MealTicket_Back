@@ -108,7 +108,6 @@
     <Compile Include="runner\ClearTransactiondataRunner.cs" />
     <Compile Include="runner\TradeAutoBuyRunner.cs" />
     <Compile Include="runner\TradeAutoRunner.cs" />
-    <Compile Include="runner\TransactiondataRealTimeRunner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

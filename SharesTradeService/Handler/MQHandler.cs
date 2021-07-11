@@ -156,17 +156,35 @@ namespace SharesTradeService.Handler
         /// </summary>
         public bool SendMessage(byte[] data, string exchange, string routekey)
         {
+            if (_SendMessage(data, exchange, routekey))
+            {
+                return true;
+            }
+
+            Reconnect();
+            return false;
+        }
+
+        private bool _SendMessage(byte[] originalData, string exchange, string routekey)
+        {
             try
             {
-                lock (this)
+                lock (_lock)
                 {
-                    _sendModel.BasicPublish(exchange, routekey, null, data);
+                    if (_sendModel == null)
+                    {
+                        return false;
+                    }
+
+                    bool isCompressed = (originalData.Length > 16 * 1024);
+                    byte[] newData = (isCompressed ? Utils.Compress(originalData) : originalData);
+                    byte[] sendData = Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new { isCompressed = isCompressed, data = newData }));
+                    _sendModel.BasicPublish(exchange, routekey, null, sendData);
                 }
                 return true;
             }
             catch (Exception ex)
             {
-                Reconnect();
                 return false;
             }
         }
@@ -197,17 +215,15 @@ namespace SharesTradeService.Handler
         /// <param name="e"></param>
         private void BuyConsumer_Received(object sender, BasicDeliverEventArgs e)
         {
+            byte[] recvedData = e.Body.ToArray();
+            var resultParse = JsonConvert.DeserializeObject<dynamic>(Encoding.UTF8.GetString(recvedData));
+            byte[] newData = ((bool)resultParse.isCompressed ? Utils.Decompress((byte[])resultParse.data) : resultParse.data);
             try
             {
                 DateTime timeDate = DateTime.Now.Date;
-                var body = Encoding.UTF8.GetString(e.Body.ToArray());
-
-                Logger.WriteFileLog(body, "BuyConsumer_Received", null);
-
-
                 List<dynamic> buyList = new List<dynamic>();
                 //解析队列数据
-                var dataJson = JsonConvert.DeserializeObject<dynamic>(body);
+                var dataJson = JsonConvert.DeserializeObject<dynamic>(Encoding.UTF8.GetString(newData));
                 if (dataJson.type == 1)
                 {
                     foreach (var item in dataJson.data)
@@ -260,15 +276,15 @@ namespace SharesTradeService.Handler
         /// <param name="e"></param>
         private void SellConsumer_Received(object sender, BasicDeliverEventArgs e)
         {
+            byte[] recvedData = e.Body.ToArray();
+            var resultParse = JsonConvert.DeserializeObject<dynamic>(Encoding.UTF8.GetString(recvedData));
+            byte[] newData = ((bool)resultParse.isCompressed ? Utils.Decompress((byte[])resultParse.data) : resultParse.data);
             try
             {
                 DateTime timeDate = DateTime.Now.Date;
-                var body = Encoding.UTF8.GetString(e.Body.ToArray());
-                Logger.WriteFileLog(body, "SellConsumer_Received", null);
-
                 List<long> sellManagerIdList = new List<long>();
                 //解析队列数据
-                var dataJson = JsonConvert.DeserializeObject<dynamic>(body);
+                var dataJson = JsonConvert.DeserializeObject<dynamic>(Encoding.UTF8.GetString(newData));
 
                 if (dataJson.type == 1)
                 {
@@ -315,14 +331,14 @@ namespace SharesTradeService.Handler
         /// <param name="e"></param>
         private void CancelConsumer_Received(object sender, BasicDeliverEventArgs e)
         {
+            byte[] recvedData = e.Body.ToArray();
+            var resultParse = JsonConvert.DeserializeObject<dynamic>(Encoding.UTF8.GetString(recvedData));
+            byte[] newData = ((bool)resultParse.isCompressed ? Utils.Decompress((byte[])resultParse.data) : resultParse.data);
             try
             {
                 DateTime timeDate = DateTime.Now.Date;
-                var body = Encoding.UTF8.GetString(e.Body.ToArray());
-                Logger.WriteFileLog(body, "CancelConsumer_Received", null);
-
                 //解析队列数据
-                var dataJson = JsonConvert.DeserializeObject<dynamic>(body);
+                var dataJson = JsonConvert.DeserializeObject<dynamic>(Encoding.UTF8.GetString(newData));
                 long tradeManagerId = dataJson.TradeManagerId;
                 long entrustId = dataJson.EntrustId;
                 string cancelTime = dataJson.CancelTime;
@@ -350,13 +366,13 @@ namespace SharesTradeService.Handler
         /// <param name="e"></param>
         private void QueryConsumer_Received(object sender, BasicDeliverEventArgs e)
         {
+            byte[] recvedData = e.Body.ToArray();
+            var resultParse = JsonConvert.DeserializeObject<dynamic>(Encoding.UTF8.GetString(recvedData));
+            byte[] newData = ((bool)resultParse.isCompressed ? Utils.Decompress((byte[])resultParse.data) : resultParse.data);
             try
             {
-                var body = Encoding.UTF8.GetString(e.Body.ToArray());
-                Logger.WriteFileLog(body, "QueryConsumer_Received", null);
-
                 //解析队列数据
-                var dataJson = JsonConvert.DeserializeObject<dynamic>(body);
+                var dataJson = JsonConvert.DeserializeObject<dynamic>(Encoding.UTF8.GetString(newData));
                 string tradeAccountCode = dataJson.TradeAccountCode;
                 //查询动作
                 SharesTradeBusiness.QueryTrade(tradeAccountCode);

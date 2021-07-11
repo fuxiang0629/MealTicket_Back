@@ -1,7 +1,9 @@
 ﻿using FXCommon.Common;
+using MealTicket_DBCommon;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -239,6 +241,11 @@ namespace TransactionDataUpdate
                 SysparUpdateThread.Join();
                 UpdateWait.Release();
             }
+
+            if (mqHandler != null)
+            {
+                mqHandler.Dispose();
+            }
         }
 
         /// <summary>
@@ -349,8 +356,8 @@ namespace TransactionDataUpdate
                     {
                         break;
                     }
+                    SysparUpdate();
                 } while (true);
-                SysparUpdate();
             });
             SysparUpdateThread.Start();
         }
@@ -369,9 +376,10 @@ namespace TransactionDataUpdate
                         if (sysPar1 != null)
                         {
                             var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar1.ParamValue);
-                            if (sysValue.TransactionDataCount != null && sysValue.TransactionDataCount <= 2000 && sysValue.TransactionDataCount >= 100)
+                            int tempTransactionDataCount = sysValue.TransactionDataCount;
+                            if (tempTransactionDataCount <= 2000 && tempTransactionDataCount >= 100)
                             {
-                                this.TransactionDataCount = sysValue.TransactionDataCount;
+                                TransactionDataCount = tempTransactionDataCount;
                             }
                         }
                     }
@@ -380,6 +388,25 @@ namespace TransactionDataUpdate
             }
             catch (Exception ex)
             { }
+        }
+
+        /// <summary>
+        /// 队列对象
+        /// </summary>
+        public MQHandler mqHandler;
+        /// <summary>
+        /// 启动Mq队列
+        /// </summary>
+        public MQHandler StartMqHandler(string listenQueueName)
+        {
+            string hostName = ConfigurationManager.AppSettings["MQ_HostName"];
+            int port = int.Parse(ConfigurationManager.AppSettings["MQ_Port"]);
+            string userName = ConfigurationManager.AppSettings["MQ_UserName"];
+            string password = ConfigurationManager.AppSettings["MQ_Password"];
+            string virtualHost = ConfigurationManager.AppSettings["MQ_VirtualHost"];
+            mqHandler = new MQHandler(hostName, port, userName, password, virtualHost);
+            mqHandler.ListenQueueName = listenQueueName;//设置监听队列
+            return mqHandler;
         }
     }
 }

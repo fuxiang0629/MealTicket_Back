@@ -28,15 +28,12 @@ namespace MealTicket_APIService.runner
                 {
                     if (!RunnerHelper.CheckTradeDate())
                     {
-                        SleepTime = Singleton.Instance.ClosingAutoSleepTime_NoTradeDate;
                         return false;
                     }
                     if (!RunnerHelper.CheckTradeTime2())
                     {
-                        SleepTime = Singleton.Instance.ClosingAutoSleepTime_TradeDate;
                         return false;
                     }
-                    SleepTime = Singleton.Instance.ClosingAutoSleepTime_TradeDate;
                     return true;
                 }
                 catch (Exception ex)

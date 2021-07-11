@@ -67,13 +67,15 @@ namespace MealTicket_APIService
         /// <param name="urls">其他扩展地址</param>
         public void Start<TStartup>(string url, params string[] urls)
         {
+            //框架内部缓存信息
+            session = Singleton.Instance;
+            var mqHandler = session.StartMqHandler("");
+
             //加载依赖注入
             Kernel = LoadKernel();   
             //加载循环任务
             var runners = Kernel.GetAll<Runner>().ToList();
             runners.ForEach(e => e.Run());
-            //框架内部缓存信息
-            session = Singleton.Instance;
             StartOptions options = new StartOptions();
             options.Urls.Add(url);
             foreach (var item in urls)

@@ -69,5 +69,10 @@ namespace MealTicket_Web_Handler.Model
                 }
             }
         }
+
+        /// <summary>
+        /// 板块列表
+        /// </summary>
+        public List<SharesPlateInfo> PlateList { get; set; }
     }
 }

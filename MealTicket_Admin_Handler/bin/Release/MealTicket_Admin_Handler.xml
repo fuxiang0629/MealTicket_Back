@@ -1109,16 +1109,6 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MealTicket_Admin_Handler.FrontAccountHandler.GetCurrTimeClosingLine(System.Int32,System.String,System.String,System.Int32@,System.Int32@)">
-            <summary>
-            获取当前时段平仓线信息
-            </summary>
-        </member>
-        <member name="M:MealTicket_Admin_Handler.FrontAccountHandler.CalculateClosingInfo(System.Int64,System.Int32,System.Int64,System.Int64,System.Int32,System.Int32,System.Int64@,System.Int64@,System.Int64@)">
-            <summary>
-            计算平仓信息
-            </summary>
-        </member>
         <member name="M:MealTicket_Admin_Handler.FrontAccountHandler.SellFrontAccountSharesHold(MealTicket_Admin_Handler.Model.SellFrontAccountSharesHoldRequest)">
             <summary>
             前端账户持仓卖出
@@ -6190,6 +6180,16 @@
             当前最大Id
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.PageRes`1.ValidCount">
+            <summary>
+            有效数量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.PageRes`1.BaseCount">
+            <summary>
+            基础数量
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.PageRes`1.TotalCount">
             <summary>
             总数量
@@ -8470,6 +8470,11 @@
             委托金额
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateBuyDetailsRequest.EntrustAmountType">
+            <summary>
+            0相对金额 1绝对金额
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateBuyDetailsRequest.EntrustType">
             <summary>
             委托类型1市价 2限价
@@ -9058,6 +9063,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateBuyDetailsInfo.EntrustAmount">
             <summary>
             委托金额
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateBuyDetailsInfo.EntrustAmountType">
+            <summary>
+            0相对金额 1绝对金额
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateBuyDetailsInfo.EntrustType">
@@ -9870,6 +9880,11 @@
             委托金额
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyDetailsRequest.EntrustAmountType">
+            <summary>
+            0相对金额 1绝对金额
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyDetailsRequest.EntrustType">
             <summary>
             委托类型1市价 2限价
@@ -10228,6 +10243,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.AddSharesTradeRulesOtherRequest.RulesId">
             <summary>
             交易规则Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesTradeRulesOtherRequest.Type">
+            <summary>
+            类型 0系统级 1账户级
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.AddSharesTradeRulesOtherRequest.Times">
@@ -10813,6 +10833,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.SharesTradeRulesInfo.CreateTime">
             <summary>
             数据创建时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetSharesTradeRulesOtherListRequest.Type">
+            <summary>
+            类型 0系统级 1账户级
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.SharesTradeRulesOtherInfo.Id">
@@ -11450,37 +11475,6 @@
             权限列表（仅非超级管理员有效）
             </summary>
         </member>
-        <member name="F:MealTicket_Admin_Handler.MQHandler._factory">
-            <summary>
-            连接工厂
-            </summary>
-        </member>
-        <member name="F:MealTicket_Admin_Handler.MQHandler._connection">
-            <summary>
-            消息队列连接
-            </summary>
-        </member>
-        <member name="F:MealTicket_Admin_Handler.MQHandler._sendModel">
-            <summary>
-            协议对象
-            </summary>
-        </member>
-        <member name="F:MealTicket_Admin_Handler.MQHandler.instance">
-            <summary>
-            单例模式
-            </summary>
-        </member>
-        <member name="M:MealTicket_Admin_Handler.MQHandler.GetMessage(System.String)">
-            <summary>
-            获取消息
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:MealTicket_Admin_Handler.MQHandler.SendMessage(System.Byte[],System.String,System.String)">
-            <summary>
-            发送消息
-            </summary>
-        </member>
         <member name="M:MealTicket_Admin_Handler.ServiceHandler.CashRefundResultQuery">
             <summary>
             提现退款结果查询
@@ -11529,6 +11523,16 @@
         <member name="M:MealTicket_Admin_Handler.Singleton.StartSysparUpdateThread">
             <summary>
             启动系统参数更新线程
+            </summary>
+        </member>
+        <member name="F:MealTicket_Admin_Handler.Singleton.mqHandler">
+            <summary>
+            队列对象
+            </summary>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.Singleton.StartMqHandler(System.String)">
+            <summary>
+            启动Mq队列
             </summary>
         </member>
         <member name="M:MealTicket_Admin_Handler.SysSettingHandler.GetSysParList(MealTicket_Admin_Handler.Model.GetSysParListRequest)">
@@ -12501,7 +12505,7 @@
             删除交易规则
             </summary>
         </member>
-        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetSharesTradeRulesOtherList(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetSharesTradeRulesOtherList(MealTicket_Admin_Handler.Model.GetSharesTradeRulesOtherListRequest)">
             <summary>
             查询交易规则额外平仓线列表
             </summary>
@@ -12777,6 +12781,13 @@
             <param name="request"></param>
             <param name="basedata"></param>
             <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.CopyConditiontradeTemplate(MealTicket_Admin_Handler.Model.DetailsRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            复制条件模板
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
         </member>
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.AddConditiontradeTemplate(MealTicket_Admin_Handler.Model.AddConditiontradeTemplateRequest,MealTicket_Admin_Handler.Model.HeadBase)">
             <summary>

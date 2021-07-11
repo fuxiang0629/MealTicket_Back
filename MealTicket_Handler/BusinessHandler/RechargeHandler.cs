@@ -2,6 +2,7 @@
 using Aop.Api.Domain;
 using Aop.Api.Request;
 using Aop.Api.Response;
+using MealTicket_DBCommon;
 using MealTicket_Handler.Model;
 using Newtonsoft.Json;
 using System;

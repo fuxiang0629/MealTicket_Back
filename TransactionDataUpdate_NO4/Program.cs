@@ -2,6 +2,7 @@
 using Ninject;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,13 +24,9 @@ namespace TransactionDataUpdate_NO4
                     break;
                 }
             }
-
-            var mq=MQHandler.Instance;
-            mq.Reconnect();
-            var Kernel = new StandardKernel(new ServiceModel());
-            //加载循环任务
-            var runners = Kernel.GetAll<Runner>().ToList();
-            runners.ForEach(e => e.Run());
+            var mqHandler = session.StartMqHandler(ConfigurationManager.AppSettings["listenQueueName"]);
+            mqHandler.StartListen();
+           
             Console.WriteLine("程序已启动,按任意键退出");
             Console.ReadLine();
         }

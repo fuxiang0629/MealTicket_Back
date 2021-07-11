@@ -1,4 +1,5 @@
 ﻿using FXCommon.Common;
+using MealTicket_DBCommon;
 using MealTicket_Web_Handler.Model;
 using Newtonsoft.Json;
 using System;
@@ -190,6 +191,32 @@ namespace MealTicket_Web_Handler
                                   RisePrice = item.PresentPrice - item.ClosedPrice,
                                   RiseRate = (int)Math.Round(((item.PresentPrice - item.ClosedPrice) * 1.0 / item.ClosedPrice) * 10000, 0),
                               }).ToList();
+                var plateList = (from x in db.t_shares_plate_rel
+                                 join x2 in db.t_shares_plate on x.PlateId equals x2.Id
+                                 join x3 in db.t_shares_plate_riserate_last on x.PlateId equals x3.PlateId into a
+                                 from ai in a.DefaultIfEmpty()
+                                 join x4 in db.t_shares_plate_type_business on x2.Type equals x4.Id
+                                 where sharesInfoList.Contains(x.Market + "" + x.SharesCode) && x2.Status == 1 && (x2.ChooseStatus == 1 || (x4.IsBasePlate == 1 && x2.BaseStatus == 1))
+                                 select new SharesPlateInfo
+                                 {
+                                     Id = x2.Id,
+                                     SharesCode = x.SharesCode,
+                                     Market = x.Market,
+                                     Type = x2.Type,
+                                     Name = x2.Name,
+                                     SharesCount = ai == null ? 0 : ai.SharesCount,
+                                     RiseRate = ai == null ? 0 : ai.RiseRate,
+                                     DownLimitCount = ai == null ? 0 : ai.DownLimitCount,
+                                     RiseLimitCount = ai == null ? 0 : ai.RiseLimitCount
+                                 }).ToList();
+                foreach (var item in quotes)
+                {
+                    //查询股票属于哪个板块
+                    item.PlateList = (from x in plateList
+                                      where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                      orderby x.RiseRate descending
+                                      select x).ToList();
+                }
                 return quotes;
             }
         }
@@ -787,8 +814,9 @@ namespace MealTicket_Web_Handler
                 var optionalTrend = from item in db.t_account_shares_optional_trend_rel
                                     join item2 in db.t_shares_monitor_trend on item.TrendId equals item2.Id
                                     join item3 in db.t_account_shares_optional on item.OptionalId equals item3.Id
+
                                     where item2.Status == 1 && item.OptionalId == request.Id && item3.AccountId == basedata.AccountId
-                                    select new { item, item2 };
+                                    select new { item, item2,item3 };
                 int totalCount = optionalTrend.Count();
 
                 return new PageRes<AccountOptionalTrendInfo>
@@ -804,7 +832,9 @@ namespace MealTicket_Web_Handler
                                 RelId = item.item.Id,
                                 TrendDescription = item.item2.Description,
                                 TrendId = item.item.TrendId,
-                                TrendName = item.item2.Name
+                                TrendName = item.item2.Name,
+                                Market=item.item3.Market,
+                                SharesCode=item.item3.SharesCode
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
                 };
             }
@@ -829,6 +859,33 @@ namespace MealTicket_Web_Handler
                 optionalTrend.Status = request.Status;
                 optionalTrend.LastModified = DateTime.Now;
                 db.SaveChanges();
+            }
+        }
+
+        public PageRes<AccountOptionalTrendParInfo> GetAccountOptionalTrendSysPar(GetAccountOptionalTrendSysParRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = from item in db.t_shares_monitor
+                               join item2 in db.t_shares_monitor_trend_rel on item.Id equals item2.MonitorId
+                               join item3 in db.t_shares_monitor_trend_rel_par on item2.Id equals item3.RelId
+                               where item.Market == request.Market && item.SharesCode==request.SharesCode && item2.TrendId == request.TrendId
+                               select item3;
+                int totalCount = trendPar.Count();
+
+                return new PageRes<AccountOptionalTrendParInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trendPar
+                            orderby item.CreateTime descending
+                            select new AccountOptionalTrendParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                ParamsInfo = item.ParamsInfo
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
             }
         }
 
@@ -1536,10 +1593,13 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                 var groupList = (from x in db.t_account_shares_optional_group_rel
                                  where x.GroupIsContinue || (x.ValidStartTime <= dateNow && x.ValidEndTime >= dateNow)
                                  select x).ToList();
-                var plate = from x in db.t_shares_plate
-                            join x2 in db.t_shares_plate_rel on x.Id equals x2.PlateId
-                            where x.Type==1 && x.Status==1
-                            select new { x, x2 };
+                var plate = from x in db.t_shares_plate_rel
+                            join x2 in db.t_shares_plate on x.PlateId equals x2.Id
+                            join x3 in db.t_shares_plate_riserate_last on x.PlateId equals x3.PlateId into a
+                            from ai in a.DefaultIfEmpty()
+                            join x4 in db.t_shares_plate_type_business on x2.Type equals x4.Id
+                            where x2.Status == 1 && (x2.ChooseStatus == 1 || (x4.IsBasePlate == 1 && x2.BaseStatus == 1))
+                            select new {x,x2,ai,x4 };
 
                 var conditionBuy = from item in db.t_account_shares_conditiontrade_buy
                                    where item.AccountId == basedata.AccountId
@@ -1547,7 +1607,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                 var accountTrend = (from item in result
                                     join item2 in groupList on item.OptionalId equals item2.OptionalId into a
                                     from ai in a.DefaultIfEmpty()
-                                    join item3 in plate on new { item.Market,item.SharesCode} equals new { item3.x2.Market,item3.x2.SharesCode} into b from bi in b.DefaultIfEmpty()
+                                    join item3 in plate on new { item.Market,item.SharesCode} equals new { item3.x.Market,item3.x.SharesCode} into b from bi in b.DefaultIfEmpty()
                                     join item4 in conditionBuy on new { item.Market,item.SharesCode} equals new { item4.Market,item4.SharesCode} into c from ci in c.DefaultIfEmpty()
                                     group new { item, ai, bi ,ci} by new { item, ci } into g
                                     orderby g.Key.item.PushTime descending
@@ -1575,7 +1635,22 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                                         TrendId = g.Key.item.TrendId,
                                         TriCountToday = g.Key.item.TriCountToday,
                                         TriDesc = g.Key.item.TriDesc,
-                                        ConditionStatus= g.Key.ci==null?1:g.Key.ci.Status==1?3:2
+                                        ConditionStatus= g.Key.ci==null?1:g.Key.ci.Status==1?3:2,
+                                        ConditionId=g.Key.ci==null?0:g.Key.ci.Id,
+                                        PlateList=(from x in g
+                                                  where x.bi!=null
+                                                  select new SharesPlateInfo
+                                                  {
+                                                      Id = x.bi.x2.Id,
+                                                      SharesCode = x.bi.x.SharesCode,
+                                                      Market = x.bi.x.Market,
+                                                      Type = x.bi.x2.Type,
+                                                      Name = x.bi.x2.Name,
+                                                      SharesCount = x.bi.ai == null ? 0 : x.bi.ai.SharesCount,
+                                                      RiseRate = x.bi.ai == null ? 0 : x.bi.ai.RiseRate,
+                                                      DownLimitCount = x.bi.ai == null ? 0 : x.bi.ai.DownLimitCount,
+                                                      RiseLimitCount = x.bi.ai == null ? 0 : x.bi.ai.RiseLimitCount
+                                                  }).OrderByDescending(e=>e.RiseRate).ToList()
                                     }).ToList();
                 ts.Complete();
                 return accountTrend;
@@ -1626,7 +1701,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
             }
             using (var db = new meal_ticketEntities())
             {
-                string sql = string.Format(@"select t.SharesCode RelId,t.Market,t.SharesCode,t1.SharesName,t.ClosedPrice,t.PresentPrice,t.[Type],t1.Business,t1.Industry,t2.PushTime,t2.TriCountToday
+                string sql = string.Format(@"select t.SharesCode RelId,t.Market,t.SharesCode,t1.SharesName,t.ClosedPrice,t.PresentPrice,t.[Type],t1.Business,t1.Industry,t2.PushTime,t2.TriCountToday,t4.Status ConditionStatus,t4.Id ConditionId
   from
   (
   select Market,SharesCode,ClosedPrice,PresentPrice,-1 [Type]
@@ -1666,8 +1741,13 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
 	where [Date]='{0}'
 	group by Market,SharesCode,[Type],BusinessType
   )t2 on t.Market=t2.Market and t.SharesCode=t2.SharesCode and t.[Type]=t2.[Type] 
+  left join 
+  (
+    select * from t_account_shares_conditiontrade_buy
+    where AccountId={2}
+  )t4 on t.Market=t4.Market and t.SharesCode=t4.SharesCode
   where convert(varchar(20),t2.PushTime,120)>'{1}' and t3.Id is null
-  order by t2.PushTime desc,t.SharesCode", dateNow.ToString("yyyy-MM-dd"), request.LastDataTime.Value.ToString("yyyy-MM-dd HH:mm:ss"));
+  order by t2.PushTime desc,t.SharesCode", dateNow.ToString("yyyy-MM-dd"), request.LastDataTime.Value.ToString("yyyy-MM-dd HH:mm:ss"), basedata.AccountId);
 
                 var list = db.Database.SqlQuery<AccountRiseLimitTriInfo>(sql).ToList();
 
@@ -1677,6 +1757,26 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                                     where x2.AccountId == basedata.AccountId
                                     select x).ToList();
 
+                List<string> sharesList = list.Select(e => e.Market + "" + e.SharesCode).ToList();
+                var plateList = (from x in db.t_shares_plate_rel
+                                 join x2 in db.t_shares_plate on x.PlateId equals x2.Id
+                                 join x3 in db.t_shares_plate_riserate_last on x.PlateId equals x3.PlateId into a
+                                 from ai in a.DefaultIfEmpty()
+                                 join x4 in db.t_shares_plate_type_business on x2.Type equals x4.Id
+                                 where sharesList.Contains(x.Market + "" + x.SharesCode) && x2.Status == 1 && (x2.ChooseStatus == 1 || (x4.IsBasePlate == 1 && x2.BaseStatus == 1))
+                                 select new SharesPlateInfo
+                                 {
+                                     Id = x2.Id,
+                                     SharesCode = x.SharesCode,
+                                     Market = x.Market,
+                                     Type = x2.Type,
+                                     Name = x2.Name,
+                                     SharesCount = ai == null ? 0 : ai.SharesCount,
+                                     RiseRate = ai == null ? 0 : ai.RiseRate,
+                                     DownLimitCount = ai == null ? 0 : ai.DownLimitCount,
+                                     RiseLimitCount = ai == null ? 0 : ai.RiseLimitCount
+                                 }).ToList();
+
                 //计算杠杆倍数
                 var accountRules = (from x in db.t_shares_limit_fundmultiple_account
                                     where x.AccountId == basedata.AccountId
@@ -1685,6 +1785,18 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                                     select x).ToList();
                 foreach (var item in list)
                 {
+                    if (item.ConditionStatus == null) 
+                    {
+                        item.ConditionStatus = 1;
+                    }
+                    else if (item.ConditionStatus == 1)
+                    {
+                        item.ConditionStatus = 3;
+                    }
+                    else if (item.ConditionStatus == 2)
+                    {
+                        item.ConditionStatus = 2;
+                    }
                     var rules = (from x in fundmultiple
                                  join x2 in accountRules on x.Id equals x2.FundmultipleId into a
                                  from ai in a.DefaultIfEmpty()
@@ -1711,6 +1823,12 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                                     select x).ToList();
 
                     item.GroupList = groupRel.Select(e => e.GroupId).ToList();
+
+                    //查询股票属于哪个板块
+                    item.PlateList = (from x in plateList
+                                      where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                      orderby x.RiseRate descending
+                                      select x).ToList();
                 }
 
                 return list;
@@ -2281,17 +2399,6 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                 {
                     request.Id = basedata.AccountId;
                 }
-                else
-                {
-                    //判断是否跟投人
-                    var follow = (from item in db.t_account_follow_rel
-                                  where item.AccountId == basedata.AccountId && item.FollowAccountId == request.Id
-                                  select item).FirstOrDefault();
-                    if (follow == null)
-                    {
-                        return new PageRes<AccountTradeHoldInfo>();
-                    }
-                }
                 var sharesHold = from item in db.t_account_shares_hold
                                  join item2 in db.t_shares_all on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
                                  join item3 in db.v_shares_quotes_last on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode }
@@ -2305,18 +2412,31 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                                 select item).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                 List<AccountTradeHoldInfo> list = new List<AccountTradeHoldInfo>();
 
-                var traderulesList = (from x in db.t_shares_limit_traderules
-                                      where x.Status == 1
-                                      select x).ToList();
-                var rulesOtherList = (from z in db.t_shares_limit_traderules_other
-                                      where z.Status == 1
-                                      select z).ToList();
                 List<long> holdIdList = tempList.Select(e => e.item.Id).ToList();
                 var condition_sellList = (from x in db.t_account_shares_hold_conditiontrade
                                           where holdIdList.Contains(x.HoldId)
                                           select x).ToList();
 
                 var sharesList = tempList.Select(e => e.item.Market + "" + e.item.SharesCode).ToList();
+                var ttt = from x in db.t_shares_plate_rel
+                          join x2 in db.t_shares_plate on x.PlateId equals x2.Id
+                          join x3 in db.t_shares_plate_riserate_last on x.PlateId equals x3.PlateId into a
+                          from ai in a.DefaultIfEmpty()
+                          join x4 in db.t_shares_plate_type_business on x2.Type equals x4.Id
+                          where sharesList.Contains(x.Market + "" + x.SharesCode) && x2.Status == 1 && (x2.ChooseStatus == 1 || (x4.IsBasePlate == 1 && x2.BaseStatus == 1))
+                          select new SharesPlateInfo
+                          {
+                              SharesCode = x.SharesCode,
+                              Market = x.Market,
+                              Type = x2.Type,
+                              Name = x2.Name,
+                              Id = x2.Id,
+                              SharesCount = ai == null ? 0 : ai.SharesCount,
+                              RiseRate = ai == null ? 0 : ai.RiseRate,
+                              DownLimitCount = ai == null ? 0 : ai.DownLimitCount,
+                              RiseLimitCount = ai == null ? 0 : ai.RiseLimitCount
+                          };
+                string sql = ttt.ToString();
                 var plateList = (from x in db.t_shares_plate_rel
                                  join x2 in db.t_shares_plate on x.PlateId equals x2.Id
                                  join x3 in db.t_shares_plate_riserate_last on x.PlateId equals x3.PlateId into a
@@ -2335,23 +2455,33 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                                      DownLimitCount = ai == null ? 0 : ai.DownLimitCount,
                                      RiseLimitCount = ai == null ? 0 : ai.RiseLimitCount
                                  }).ToList();
+
+                var traderulesList = DbHelper.GetTraderules(request.Id);
+                var otherCostInfo = (from item in tempList
+                                     select new OtherCostInfo
+                                     {
+                                         Id = item.item.Id,
+                                         Cost = 0
+                                     }).ToList();
+                long totalOtherCost=DbHelper.CalculateOtherCost(1,ref otherCostInfo);
                 foreach (var item in tempList)
                 {
+                    long otherCost = otherCostInfo.Where(e => e.Id == item.item.Id).Select(e => e.Cost).FirstOrDefault();
+
                     long ClosedPrice = item.item3.ClosedPrice;
                     long PresentPrice = item.item3.PresentPrice <= 0 ? item.item3.ClosedPrice : item.item3.PresentPrice;
                     long MarketValue = item.item.RemainCount * PresentPrice;
-                    long ProfitAmount = MarketValue - (item.item.BuyTotalAmount - item.item.SoldAmount) - Helper.CalculateOtherCost(new List<long> { item.item.Id }, 1);
+                    long ProfitAmount = MarketValue - (item.item.BuyTotalAmount - item.item.SoldAmount) - otherCost;
 
                     List<ClosingLineInfo> closingList = new List<ClosingLineInfo>();
-                    var traderules = (from x in traderulesList
-                                      where (x.LimitMarket == -1 || x.LimitMarket == item.item.Market) && ((x.LimitType == 1 && item.item.SharesCode.StartsWith(x.LimitKey)) || (x.LimitType == 2 && item.item2.SharesName.StartsWith(x.LimitKey)))
-                                      select x).ToList();
+
+                    traderulesList=DbHelper.GetSharesTotalRules(item.item.SharesCode, item.item2.SharesName, item.item.Market, traderulesList);
                     long closingPrice = 0;
                     long cordonPrice = 0;
                     long addDepositAmount = 0;
-                    foreach (var y in traderules)
+                    foreach (var y in traderulesList)
                     {
-                        CalculateClosingInfo(PresentPrice, item.item.RemainCount, item.item.RemainDeposit, item.item.FundAmount, y.Cordon, y.ClosingLine, out closingPrice, out addDepositAmount, out cordonPrice);
+                        DbHelper.CalculateClosingInfo(PresentPrice, item.item.RemainCount, item.item.RemainDeposit, item.item.FundAmount, y.Cordon, y.ClosingLine, out closingPrice, out addDepositAmount, out cordonPrice);
 
                         closingList.Add(new ClosingLineInfo
                         {
@@ -2361,13 +2491,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                             AddDepositAmount = addDepositAmount,
                             ColorType = PresentPrice <= closingPrice ? 2 : PresentPrice <= cordonPrice ? 3 : 1
                         });
-
-                        //判断额外平仓规则
-                        var rulesOther = (from z in rulesOtherList
-                                          where z.RulesId == y.Id
-                                          orderby z.Times descending
-                                          select z).ToList();
-                        foreach (var other in rulesOther)
+                        foreach (var other in y.OtherList)
                         {
                             try
                             {
@@ -2375,7 +2499,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                                 TimeSpan endTime = TimeSpan.Parse(other.Times.Split('-')[1]);
                                 if (timeSpanNow < endTime)
                                 {
-                                    CalculateClosingInfo(PresentPrice, item.item.RemainCount, item.item.RemainDeposit, item.item.FundAmount, other.Cordon, other.ClosingLine, out closingPrice, out addDepositAmount, out cordonPrice);
+                                    DbHelper.CalculateClosingInfo(PresentPrice, item.item.RemainCount, item.item.RemainDeposit, item.item.FundAmount, other.Cordon, other.ClosingLine, out closingPrice, out addDepositAmount, out cordonPrice);
 
                                     closingList.Add(new ClosingLineInfo
                                     {
@@ -2413,7 +2537,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                         RemainDeposit = item.item.RemainDeposit / 100 * 100,
                         PresentPrice = PresentPrice,
                         BuyTotalAmount = item.item.BuyTotalAmount,
-                        CostPrice = item.item.RemainCount > 0 ? (long)(Math.Round((item.item.BuyTotalAmount - item.item.SoldAmount + Helper.CalculateOtherCost(new List<long> { item.item.Id }, 1)) * 1.0 / item.item.RemainCount, 0)) : (long)(Math.Round((item.item.BuyTotalAmount + Helper.CalculateOtherCost(new List<long> { item.item.Id }, 1)) * 1.0 / item.item.BuyTotalCount, 0)),
+                        CostPrice = item.item.RemainCount > 0 ? (long)(Math.Round((item.item.BuyTotalAmount - item.item.SoldAmount + otherCost) * 1.0 / item.item.RemainCount, 0)) : (long)(Math.Round((item.item.BuyTotalAmount + otherCost) * 1.0 / item.item.BuyTotalCount, 0)),
                         RemainCount = item.item.RemainCount,
                         MarketValue = MarketValue / 100 * 100,
                         CanSellCount = item.item.CanSoldCount,
@@ -2439,19 +2563,6 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                     List = list
                 };
             }
-        }
-
-        /// <summary>
-        /// 计算平仓信息
-        /// </summary>
-        private void CalculateClosingInfo(long CurrPrice, int RemainCount, long RemainDeposit, long RemainFundAmount, int Cordon, int ClosingLine, out long ClosingPrice, out long AddDepositAmount, out long CordonPrice)
-        {
-            //计算平仓信息
-            //（市值+保证金-借钱）/借钱=价格线
-            ClosingPrice = RemainCount <= 0 ? 0 : (long)(ClosingLine * 1.0 / 10000 * RemainFundAmount + RemainFundAmount - RemainDeposit) / RemainCount;
-            CordonPrice = RemainCount <= 0 ? 0 : (long)(Cordon * 1.0 / 10000 * RemainFundAmount + RemainFundAmount - RemainDeposit) / RemainCount;
-            long needDepositAmount = (long)(Cordon * 1.0 / 10000 * RemainFundAmount + RemainFundAmount - CurrPrice * RemainCount);
-            AddDepositAmount = needDepositAmount - RemainDeposit < 0 ? 0 : needDepositAmount - RemainDeposit;
         }
 
         /// <summary>
@@ -3955,6 +4066,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                     var templist = (from item in tempResult
                                     select new AccountBuyConditionTradeSharesInfo
                                     {
+                                        Id=item.Id,
                                         SharesCode = item.SharesCode,
                                         Market = item.Market
                                     }).ToList();
@@ -4415,6 +4527,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                         Status = 1,
                         AccountId = request.AccountId,
                         CreateTime = DateTime.Now,
+                        DataType=1,
                         LastModified = DateTime.Now,
                         Market = request.Market
                     });
@@ -4489,6 +4602,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                                     SharesCode = item.SharesCode,
                                     AccountId = accountId,
                                     CreateTime = DateTime.Now,
+                                    DataType=1,
                                     LastModified = DateTime.Now,
                                     Market = item.Market,
                                     Status = 1
@@ -7841,6 +7955,10 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
             using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
             using (var db = new meal_ticketEntities())
             {
+                var triDetails = from item in db.t_account_shares_conditiontrade_buy_details
+                                 join item2 in db.t_account_shares_conditiontrade_buy on item.ConditionId equals item2.Id
+                                 join item3 in db.t_account_baseinfo on item2.AccountId equals item3.Id
+                                 select new { item, item3 };
                 var result = (from item in db.t_account_shares_conditiontrade_buy_details
                               join item2 in db.t_account_shares_conditiontrade_buy on item.ConditionId equals item2.Id
                               join item3 in db.v_shares_quotes_last on new { item2.Market, item2.SharesCode } equals new { item3.Market, item3.SharesCode }
@@ -7848,6 +7966,8 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                               join item5 in db.t_shares_all on new { item2.Market, item2.SharesCode } equals new { item5.Market, item5.SharesCode }
                               join item6 in db.t_account_shares_entrust on item.EntrustId equals item6.Id into a
                               from ai in a.DefaultIfEmpty()
+                              join item7 in triDetails on item.FatherId equals item7.item.Id into b
+                              from bi in b.DefaultIfEmpty()
                               where item.Status == 1 && (item.BusinessStatus == 1 || item.BusinessStatus == 3 || item.BusinessStatus == 4) && item2.Status == 1 && item3.PresentPrice > 0 && item3.ClosedPrice > 0 && item.CreateAccountId == basedata.AccountId
                               orderby item.TriggerTime
                               select new BuyTipInfo
@@ -7870,7 +7990,9 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                                   Status = item.BusinessStatus == 1 ? 1 : ai == null ? 2 : ai.Status != 3 ? 3 : ai.DealCount <= 0 ? 5 : ai.DealCount >= ai.EntrustCount ? 6 : 4,
                                   FollowAccountList = (from x in db.t_account_shares_conditiontrade_buy_details_follow
                                                        where x.DetailsId == item.Id
-                                                       select x.FollowAccountId).ToList()
+                                                       select x.FollowAccountId).ToList(),
+                                  SyncroAccountMobile= bi==null?"本账户":bi.item3.Mobile,
+                                  SyncroAccountName=bi==null?"":bi.item3.NickName
                               }).ToList();
                 var sharesList = result.Select(e => e.Market + "" + e.SharesCode).ToList();
                 var plateList = (from x in db.t_shares_plate_rel
@@ -8008,6 +8130,335 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                 };
             }
         }
+
+
+
+        /// <summary>
+        /// 复制条件模板
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void CopyConditiontradeTemplate(DetailsRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var template = (from item in db.t_account_shares_conditiontrade_template
+                                    where item.Id == request.Id
+                                    select item).FirstOrDefault();
+                    if (template == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    t_account_shares_conditiontrade_template newTemplate = new t_account_shares_conditiontrade_template
+                    {
+                        AccountId= basedata.AccountId,
+                        Status = template.Status,
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        Name = template.Name,
+                        Type = template.Type
+                    };
+                    db.t_account_shares_conditiontrade_template.Add(newTemplate);
+                    db.SaveChanges();
+
+                    if (template.Type == 1)//买入模板复制
+                    {
+                        CopyConditiontradeTemplate_Buy(request.Id, newTemplate.Id, db);
+                    }
+                    else if (template.Type == 2)//卖出模板复制
+                    {
+                        CopyConditiontradeTemplate_Sell(request.Id, newTemplate.Id, db);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "数据有误");
+                    }
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        private void CopyConditiontradeTemplate_Buy(long templateId, long newTemplateId, meal_ticketEntities db)
+        {
+            var template_buy = (from item in db.t_account_shares_conditiontrade_template_buy
+                                where item.TemplateId == templateId
+                                select item).ToList();
+            Dictionary<long, long> idDic = new Dictionary<long, long>();
+            foreach (var item in template_buy)
+            {
+                t_account_shares_conditiontrade_template_buy new_template_buy = new t_account_shares_conditiontrade_template_buy
+                {
+                    Status = item.Status,
+                    BuyAuto = item.BuyAuto,
+                    ConditionPriceBase = item.ConditionPriceBase,
+                    ConditionPriceRate = item.ConditionPriceRate,
+                    ConditionPriceType = item.ConditionPriceType,
+                    ConditionType = item.ConditionType,
+                    CreateTime = DateTime.Now,
+                    EntrustAmount = item.EntrustAmount,
+                    EntrustAmountType = item.EntrustAmountType,
+                    EntrustPriceGear = item.EntrustPriceGear,
+                    EntrustType = item.EntrustType,
+                    ForbidType = item.ForbidType,
+                    IsGreater = item.IsGreater,
+                    IsHold = item.IsHold,
+                    LastModified = DateTime.Now,
+                    LimitUp = item.LimitUp,
+                    Name = item.Name,
+                    OtherConditionRelative = item.OtherConditionRelative,
+                    TemplateId = newTemplateId
+                };
+                db.t_account_shares_conditiontrade_template_buy.Add(new_template_buy);
+                db.SaveChanges();
+                idDic.Add(item.Id, new_template_buy.Id);
+
+                var buy_other = (from x in db.t_account_shares_conditiontrade_template_buy_other
+                                 where x.TemplateBuyId == item.Id
+                                 select x).ToList();
+                foreach (var other in buy_other)
+                {
+                    t_account_shares_conditiontrade_template_buy_other new_buy_other = new t_account_shares_conditiontrade_template_buy_other
+                    {
+                        Status = other.Status,
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        Name = other.Name,
+                        TemplateBuyId = new_template_buy.Id
+                    };
+                    db.t_account_shares_conditiontrade_template_buy_other.Add(new_buy_other);
+                    db.SaveChanges();
+
+                    var buy_other_trend = (from x in db.t_account_shares_conditiontrade_template_buy_other_trend
+                                           where x.OtherId == other.Id
+                                           select x).ToList();
+                    foreach (var other_trend in buy_other_trend)
+                    {
+                        t_account_shares_conditiontrade_template_buy_other_trend new_other_trend = new t_account_shares_conditiontrade_template_buy_other_trend
+                        {
+                            Status = other_trend.Status,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            OtherId = new_buy_other.Id,
+                            TrendDescription = other_trend.TrendDescription,
+                            TrendId = other_trend.TrendId,
+                            TrendName = other_trend.TrendName
+                        };
+                        db.t_account_shares_conditiontrade_template_buy_other_trend.Add(new_other_trend);
+                        db.SaveChanges();
+
+                        var buy_other_trend_par = (from x in db.t_account_shares_conditiontrade_template_buy_other_trend_par
+                                                   where x.OtherTrendId == other_trend.Id
+                                                   select x).ToList();
+                        foreach (var other_trend_par in buy_other_trend_par)
+                        {
+                            db.t_account_shares_conditiontrade_template_buy_other_trend_par.Add(new t_account_shares_conditiontrade_template_buy_other_trend_par
+                            {
+                                CreateTime = DateTime.Now,
+                                LastModified = DateTime.Now,
+                                OtherTrendId = new_other_trend.Id,
+                                ParamsInfo = other_trend_par.ParamsInfo
+                            });
+                        }
+                        db.SaveChanges();
+
+                        var buy_other_trend_other = (from x in db.t_account_shares_conditiontrade_template_buy_other_trend_other
+                                                     where x.OtherTrendId == other_trend.Id
+                                                     select x).ToList();
+                        foreach (var other_trend_other in buy_other_trend_other)
+                        {
+                            t_account_shares_conditiontrade_template_buy_other_trend_other new_other_trend_other = new t_account_shares_conditiontrade_template_buy_other_trend_other
+                            {
+                                Status = other_trend_other.Status,
+                                CreateTime = DateTime.Now,
+                                LastModified = DateTime.Now,
+                                OtherTrendId = other_trend_other.OtherTrendId,
+                                TrendDescription = other_trend_other.TrendDescription,
+                                TrendId = other_trend_other.TrendId,
+                                TrendName = other_trend_other.TrendName
+                            };
+                            db.t_account_shares_conditiontrade_template_buy_other_trend_other.Add(new_other_trend_other);
+                            db.SaveChanges();
+
+                            var buy_other_trend_other_par = (from x in db.t_account_shares_conditiontrade_template_buy_other_trend_other_par
+                                                             where x.OtherTrendOtherId == other_trend_other.Id
+                                                             select x).ToList();
+                            foreach (var other_trend_other_par in buy_other_trend_other_par)
+                            {
+                                db.t_account_shares_conditiontrade_template_buy_other_trend_other_par.Add(new t_account_shares_conditiontrade_template_buy_other_trend_other_par
+                                {
+                                    CreateTime = DateTime.Now,
+                                    LastModified = DateTime.Now,
+                                    OtherTrendOtherId = new_other_trend_other.Id,
+                                    ParamsInfo = other_trend_other_par.ParamsInfo
+                                });
+                            }
+                            db.SaveChanges();
+                        }
+                    }
+                }
+
+                var buy_auto = (from x in db.t_account_shares_conditiontrade_template_buy_auto
+                                where x.TemplateBuyId == item.Id
+                                select x).ToList();
+                foreach (var auto in buy_auto)
+                {
+                    t_account_shares_conditiontrade_template_buy_auto new_buy_auto = new t_account_shares_conditiontrade_template_buy_auto
+                    {
+                        Status = auto.Status,
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        Name = auto.Name,
+                        TemplateBuyId = new_template_buy.Id
+                    };
+                    db.t_account_shares_conditiontrade_template_buy_auto.Add(new_buy_auto);
+                    db.SaveChanges();
+
+                    var buy_auto_trend = (from x in db.t_account_shares_conditiontrade_template_buy_auto_trend
+                                          where x.AutoId == auto.Id
+                                          select x).ToList();
+                    foreach (var auto_trend in buy_auto_trend)
+                    {
+                        t_account_shares_conditiontrade_template_buy_auto_trend new_auto_trend = new t_account_shares_conditiontrade_template_buy_auto_trend
+                        {
+                            Status = auto_trend.Status,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            AutoId = new_buy_auto.Id,
+                            TrendDescription = auto_trend.TrendDescription,
+                            TrendId = auto_trend.TrendId,
+                            TrendName = auto_trend.TrendName
+                        };
+                        db.t_account_shares_conditiontrade_template_buy_auto_trend.Add(new_auto_trend);
+                        db.SaveChanges();
+
+                        var buy_auto_trend_par = (from x in db.t_account_shares_conditiontrade_template_buy_auto_trend_par
+                                                  where x.AutoTrendId == auto_trend.Id
+                                                  select x).ToList();
+                        foreach (var auto_trend_par in buy_auto_trend_par)
+                        {
+                            db.t_account_shares_conditiontrade_template_buy_auto_trend_par.Add(new t_account_shares_conditiontrade_template_buy_auto_trend_par
+                            {
+                                CreateTime = DateTime.Now,
+                                LastModified = DateTime.Now,
+                                AutoTrendId = new_auto_trend.Id,
+                                ParamsInfo = auto_trend_par.ParamsInfo
+                            });
+                        }
+                        db.SaveChanges();
+
+                        var buy_auto_trend_other = (from x in db.t_account_shares_conditiontrade_template_buy_auto_trend_other
+                                                    where x.AutoTrendId == auto_trend.Id
+                                                    select x).ToList();
+                        foreach (var auto_trend_other in buy_auto_trend_other)
+                        {
+                            t_account_shares_conditiontrade_template_buy_auto_trend_other new_auto_trend_other = new t_account_shares_conditiontrade_template_buy_auto_trend_other
+                            {
+                                Status = auto_trend_other.Status,
+                                CreateTime = DateTime.Now,
+                                LastModified = DateTime.Now,
+                                AutoTrendId = auto_trend_other.AutoTrendId,
+                                TrendDescription = auto_trend_other.TrendDescription,
+                                TrendId = auto_trend_other.TrendId,
+                                TrendName = auto_trend_other.TrendName
+                            };
+                            db.t_account_shares_conditiontrade_template_buy_auto_trend_other.Add(new_auto_trend_other);
+                            db.SaveChanges();
+
+                            var buy_auto_trend_other_par = (from x in db.t_account_shares_conditiontrade_template_buy_auto_trend_other_par
+                                                            where x.AutoTrendOtherId == auto_trend_other.Id
+                                                            select x).ToList();
+                            foreach (var auto_trend_other_par in buy_auto_trend_other_par)
+                            {
+                                db.t_account_shares_conditiontrade_template_buy_auto_trend_other_par.Add(new t_account_shares_conditiontrade_template_buy_auto_trend_other_par
+                                {
+                                    CreateTime = DateTime.Now,
+                                    LastModified = DateTime.Now,
+                                    AutoTrendOtherId = new_auto_trend_other.Id,
+                                    ParamsInfo = auto_trend_other_par.ParamsInfo
+                                });
+                            }
+                            db.SaveChanges();
+                        }
+                    }
+                }
+            }
+            foreach (var item in idDic)
+            {
+                var buy_child = (from x in db.t_sys_conditiontrade_template_buy_child
+                                 where x.FatherId == item.Key
+                                 select x).ToList();
+                foreach (var child in buy_child)
+                {
+                    db.t_sys_conditiontrade_template_buy_child.Add(new t_sys_conditiontrade_template_buy_child
+                    {
+                        Status = child.Status,
+                        FatherId = item.Value,
+                        ChildId = idDic[child.ChildId]
+                    });
+                }
+                db.SaveChanges();
+            }
+        }
+        private void CopyConditiontradeTemplate_Sell(long templateId, long newTemplateId, meal_ticketEntities db)
+        {
+            var template_sell = (from item in db.t_account_shares_conditiontrade_template_sell
+                                 where item.TemplateId == templateId
+                                 select item).ToList();
+
+            Dictionary<long, long> idDic = new Dictionary<long, long>();
+            foreach (var item in template_sell)
+            {
+                t_account_shares_conditiontrade_template_sell new_template_sell = new t_account_shares_conditiontrade_template_sell
+                {
+                    Status = item.Status,
+                    ConditionDay = item.ConditionDay,
+                    ConditionPriceBase = item.ConditionPriceBase,
+                    ConditionPriceRate = item.ConditionPriceRate,
+                    ConditionPriceType = item.ConditionPriceType,
+                    ConditionTime = item.ConditionTime,
+                    ConditionType = item.ConditionType,
+                    CreateTime = DateTime.Now,
+                    EntrustCount = item.EntrustCount,
+                    EntrustPriceGear = item.EntrustPriceGear,
+                    EntrustType = item.EntrustType,
+                    ForbidType = item.ForbidType,
+                    LastModified = DateTime.Now,
+                    Name = item.Name,
+                    OtherConditionRelative = item.OtherConditionRelative,
+                    TemplateId = newTemplateId,
+                    Type = item.Type
+                };
+                db.t_account_shares_conditiontrade_template_sell.Add(new_template_sell);
+                db.SaveChanges();
+                idDic.Add(item.Id, new_template_sell.Id);
+            }
+
+            foreach (var item in idDic)
+            {
+                var sell_child = (from x in db.t_account_shares_conditiontrade_template_sell_child
+                                  where x.FatherId == item.Key
+                                  select x).ToList();
+                foreach (var child in sell_child)
+                {
+                    db.t_account_shares_conditiontrade_template_sell_child.Add(new t_account_shares_conditiontrade_template_sell_child
+                    {
+                        Status = child.Status,
+                        FatherId = item.Value,
+                        ChildId = idDic[child.ChildId]
+                    });
+                }
+                db.SaveChanges();
+            }
+        }
+
 
         /// <summary>
         /// 添加条件模板
@@ -8855,6 +9306,112 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
         }
 
         /// <summary>
+        /// 批量设置股票自定义分组
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void BatchSetConditiontradeBuySharesGroup(BatchSetConditiontradeBuySharesGroupRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_account_shares_conditiontrade_buy
+                             join item2 in db.t_shares_all on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
+                             from ai in a.DefaultIfEmpty()
+                             join item3 in db.v_shares_quotes_last on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into b
+                             from bi in b.DefaultIfEmpty()
+                             where item.AccountId == basedata.AccountId
+                             select new { item, ai, bi };
+                if (!string.IsNullOrEmpty(request.SharesInfo))
+                {
+                    result = from item in result
+                             where item.ai != null && (item.ai.SharesCode.Contains(request.SharesInfo) || item.ai.SharesName.Contains(request.SharesInfo) || item.ai.SharesPyjc.StartsWith(request.SharesInfo))
+                             select item;
+                }
+                if (request.ExecStatus != 0)
+                {
+                    result = from item in result
+                             join item2 in db.t_account_shares_conditiontrade_buy_details on item.item.Id equals item2.ConditionId
+                             group new { item, item2 } by item into g
+                             let ParExecuteCount = g.Where(e => e.item2.TriggerTime != null).Count()
+                             let ParValidCount = g.Where(e => e.item2.Status == 1 && e.item2.TriggerTime == null).Count()
+                             where (request.ExecStatus == 1 && ParExecuteCount > 0) || (request.ExecStatus == 2 && ParValidCount > 0)
+                             select g.Key;
+
+                }
+                if (request.GroupId1 > 0)
+                {
+                    result = from item in result
+                             join item2 in db.t_shares_plate_rel on new { item.item.Market, item.item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                             where item2.PlateId == request.GroupId1
+                             select item;
+
+                }
+                if (request.GroupId2 > 0)
+                {
+                    result = from item in result
+                             join item2 in db.t_shares_plate_rel on new { item.item.Market, item.item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                             where item2.PlateId == request.GroupId2
+                             select item;
+                }
+                if (request.GroupId3 > 0)
+                {
+                    result = from item in result
+                             join item2 in db.t_shares_plate_rel on new { item.item.Market, item.item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                             where item2.PlateId == request.GroupId3
+                             select item;
+                }
+                if (request.GroupId4 > 0)
+                {
+                    result = from item in result
+                             join item2 in db.t_account_shares_conditiontrade_buy_group_rel on new { item.item.Market, item.item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                             where item2.GroupId == request.GroupId4
+                             select item;
+                }
+                var list = result.ToList();
+                using (var tran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var groupRel = (from item in db.t_account_shares_conditiontrade_buy_group_rel
+                                        join item3 in db.t_account_shares_conditiontrade_buy_group on item.GroupId equals item3.Id
+                                        join item2 in result on new { item.Market, item.SharesCode } equals new { item2.item.Market, item2.item.SharesCode }
+                                        where item3.AccountId == basedata.AccountId
+                                        select item).ToList();
+                        db.t_account_shares_conditiontrade_buy_group_rel.RemoveRange(groupRel);
+                        db.SaveChanges();
+                        foreach (var groupId in request.GroupList)
+                        {
+                            //判断分组Id是否存在
+                            var groupInfo = (from item in db.t_account_shares_conditiontrade_buy_group
+                                             where item.AccountId == basedata.AccountId && item.Id == groupId
+                                             select item).FirstOrDefault();
+                            if (groupInfo == null)
+                            {
+                                continue;
+                            }
+                            //查询分组中不存在的股票
+                            var addSharesInfo = (from item in list
+                                                 select new t_account_shares_conditiontrade_buy_group_rel
+                                                 {
+                                                     SharesCode = item.item.SharesCode,
+                                                     Market = item.item.Market,
+                                                     GroupId = groupId
+                                                 }).ToList();
+                            db.t_account_shares_conditiontrade_buy_group_rel.AddRange(addSharesInfo);
+                            db.SaveChanges();
+                        }
+                        tran.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        tran.Rollback();
+                        throw ex; 
+                    }
+                }
+            }
+        }
+
+        /// <summary>
         /// 批量设置股票跟投
         /// </summary>
         /// <param name="request"></param>
@@ -8994,6 +9551,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                                 ForbidType = item.ForbidType,
                                 EntrustPriceGear = item.EntrustPriceGear,
                                 EntrustAmount = item.EntrustAmount,
+                                EntrustAmountType=item.EntrustAmountType,
                                 Name = item.Name,
                                 BuyAuto = item.BuyAuto,
                                 OtherConditionRelative=item.OtherConditionRelative,
@@ -9053,6 +9611,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                                 ForbidType = item.ForbidType,
                                 EntrustPriceGear = item.EntrustPriceGear,
                                 EntrustAmount = item.EntrustAmount,
+                                EntrustAmountType = item.EntrustAmountType,
                                 Name = item.Name,
                                 BuyAuto = item.BuyAuto,
                                 OtherConditionRelative=item.OtherConditionRelative,
@@ -9087,6 +9646,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                         BuyAuto = request.BuyAuto,
                         CreateTime = DateTime.Now,
                         EntrustAmount = request.EntrustAmount,
+                        EntrustAmountType=request.EntrustAmountType,
                         EntrustPriceGear = request.EntrustPriceGear,
                         EntrustType = request.EntrustType,
                         ForbidType = request.ForbidType,
@@ -9154,6 +9714,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                     }
                     conditiontrade.BuyAuto = request.BuyAuto;
                     conditiontrade.EntrustAmount = request.EntrustAmount;
+                    conditiontrade.EntrustAmountType = request.EntrustAmountType;
                     conditiontrade.EntrustPriceGear = request.EntrustPriceGear;
                     conditiontrade.EntrustType = request.EntrustType;
                     conditiontrade.ForbidType = request.ForbidType;
@@ -11530,6 +12091,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                                         ConditionType = item.ConditionType,
                                         CreateTime = item.CreateTime,
                                         EntrustAmount = item.EntrustAmount,
+                                        EntrustAmountType = item.EntrustAmountType,
                                         EntrustPriceGear = item.EntrustPriceGear,
                                         EntrustType = item.EntrustType,
                                         ForbidType = item.ForbidType,
@@ -11705,6 +12267,7 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                                         ConditionType = item.ConditionType,
                                         CreateTime = item.CreateTime,
                                         EntrustAmount = item.EntrustAmount,
+                                        EntrustAmountType=item.EntrustAmountType,
                                         EntrustPriceGear = item.EntrustPriceGear,
                                         EntrustType = item.EntrustType,
                                         ForbidType = item.ForbidType,
@@ -11904,8 +12467,8 @@ select top 1 @buyId=Id from t_account_shares_conditiontrade_buy with(xlock) wher
 if(@buyId is null)
 begin
 	insert into t_account_shares_conditiontrade_buy
-	(AccountId,Market,SharesCode,[Status],CreateTime,LastModified)
-	values({0},{1},'{2}',1,@timeNow,@timeNow);
+	(AccountId,Market,SharesCode,[Status],CreateTime,LastModified,DataType)
+	values({0},{1},'{2}',1,@timeNow,@timeNow,1);
 	set @buyId=@@IDENTITY;
 end
 select @buyId;";
@@ -12291,6 +12854,7 @@ select @buyId;";
                                     SharesCode = condition_buy.SharesCode,
                                     Status = 1,
                                     AccountId = request.AccountId,
+                                    DataType=1,
                                     CreateTime = DateTime.Now,
                                     LastModified = DateTime.Now,
                                     Market = condition_buy.Market
@@ -12303,16 +12867,19 @@ select @buyId;";
                             {
                                 shares_buy_id = shares_buy.Id;
                             }
-                            //是否清除原来数据
-                            if (request.IsClear)
+                            if (request.ParChecked)
                             {
-                                var buy_details = (from item in db.t_account_shares_conditiontrade_buy_details
-                                                   where item.ConditionId == shares_buy_id && item.TriggerTime == null
-                                                   select item).ToList();
-                                db.t_account_shares_conditiontrade_buy_details.RemoveRange(buy_details);
-                                db.SaveChanges();
+                                //是否清除原来数据
+                                if (request.IsClear)
+                                {
+                                    var buy_details = (from item in db.t_account_shares_conditiontrade_buy_details
+                                                       where item.ConditionId == shares_buy_id && item.TriggerTime == null
+                                                       select item).ToList();
+                                    db.t_account_shares_conditiontrade_buy_details.RemoveRange(buy_details);
+                                    db.SaveChanges();
+                                }
+                                ImportShare(db, request, conditionId, shares_buy_id, basedata.AccountId);
                             }
-                            ImportShare(db,request, conditionId,shares_buy_id, basedata.AccountId);
 
                             //添加股票分组关系
                             //判断股票分组关系是否存在
@@ -12389,7 +12956,8 @@ select @buyId;";
                     ConditionId = conditionId,
                     BusinessStatus = 0,
                     EntrustAmount = request.BuyAmount,
-                    ConditionPrice = item.Key.ConditionPrice
+                    ConditionPrice = item.Key.ConditionPrice,
+                    FollowType= request.FollowType
                 };
                 db.t_account_shares_conditiontrade_buy_details.Add(temp);
                 db.SaveChanges();
@@ -14214,6 +14782,26 @@ select @buyId;";
                 }
                 db.t_account_shares_buy_synchro_setting.Remove(setting);
                 db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 查询交易时间分组列表
+        /// </summary>
+        /// <returns></returns>
+        public List<SharesTradeTimeGroupInfo> GetSharesTradeTimeGroupList()
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var timeList = (from item in db.t_shares_limit_time
+                                select new SharesTradeTimeGroupInfo
+                                {
+                                    Id = item.Id,
+                                    LimitKey = item.LimitKey,
+                                    LimitMarket = item.LimitMarket,
+                                    MarketName = item.MarketName
+                                }).ToList();
+                return timeList;
             }
         }
     }

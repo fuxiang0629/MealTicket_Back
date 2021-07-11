@@ -1,5 +1,6 @@
 ﻿using FXCommon.Common;
 using MealTicket_Admin_Handler.Model;
+using MealTicket_DBCommon;
 using System;
 using System.CodeDom;
 using System.Collections.Generic;

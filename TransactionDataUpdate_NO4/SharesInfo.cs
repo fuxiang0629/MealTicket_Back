@@ -28,8 +28,6 @@ namespace TransactionDataUpdate_NO4
     {
         public DateTime Time { get; set; }
 
-        public int OrderIndex { get; set; }
-
         /// <summary>
         /// 股票数字
         /// </summary>

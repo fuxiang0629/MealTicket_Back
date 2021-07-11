@@ -1,4 +1,5 @@
 ﻿using FXCommon.Common;
+using MealTicket_DBCommon;
 using Newtonsoft.Json;
 using NoticeHandler;
 using SharesTradeService.Handler;
@@ -48,17 +49,13 @@ namespace SharesTradeService
                 {
                     if (!Helper.CheckTradeDate())
                     {
-                        SleepTime = Singleton.instance.QueryTradeResultSleepTime_NoTradeDate;
                         return false;
                     }
 
                     if (!Helper.CheckTradeTime(startTime) && !Helper.CheckTradeTime(endTime))
                     {
-                        SleepTime = Singleton.instance.QueryTradeResultSleepTime_TradeDate;
                         return false;
                     }
-
-                    SleepTime = Singleton.instance.QueryTradeResultSleepTime_TradeDate;
                     return true;
                 }
                 catch (Exception ex)
@@ -145,7 +142,6 @@ namespace SharesTradeService
                                         string EntrustId = column[9];
                                         long DealPrice = (long)(Math.Round(float.Parse(column[10]) * Singleton.instance.PriceFormat, 0));//成交价格
                                         int DealCount = (int)(float.Parse(column[11]));//成交数量
-
                                         //判断上一次获取数据时间
                                         DateTime lastTime = timeNow;
 

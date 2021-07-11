@@ -52,7 +52,7 @@ namespace MealTicket_Handler.Model
         /// <summary>
         /// 提现申请金额
         /// </summary>
-        public int ApplyAmount { get; set; }
+        public long ApplyAmount { get; set; }
 
         /// <summary>
         /// 提现服务费率
@@ -62,12 +62,12 @@ namespace MealTicket_Handler.Model
         /// <summary>
         /// 提现服务费
         /// </summary>
-        public int ServiceFee { get; set; }
+        public long ServiceFee { get; set; }
 
         /// <summary>
         /// 实际到账金额
         /// </summary>
-        public int Amount { get; set; }
+        public long Amount { get; set; }
 
         /// <summary>
         /// 描述

@@ -246,6 +246,8 @@
     <EntitySetMapping Name="t_account_shares_conditiontrade_buy">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy">
         <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy">
+          <ScalarProperty Name="DataType" ColumnName="DataType" />
+          <ScalarProperty Name="SharesInfo" ColumnName="SharesInfo" />
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="AccountId" ColumnName="AccountId" />
           <ScalarProperty Name="Market" ColumnName="Market" />
@@ -607,6 +609,7 @@
     <EntitySetMapping Name="t_account_shares_optional">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_optional">
         <MappingFragment StoreEntitySet="t_account_shares_optional">
+          <ScalarProperty Name="SharesInfo" ColumnName="SharesInfo" />
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="AccountId" ColumnName="AccountId" />
           <ScalarProperty Name="Market" ColumnName="Market" />
@@ -1693,6 +1696,7 @@
     <EntitySetMapping Name="t_shares_all">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_all">
         <MappingFragment StoreEntitySet="t_shares_all">
+          <ScalarProperty Name="SharesInfo" ColumnName="SharesInfo" />
           <ScalarProperty Name="MarketStatus" ColumnName="MarketStatus" />
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
@@ -2037,6 +2041,7 @@
     <EntitySetMapping Name="t_shares_limit_traderules_other">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_limit_traderules_other">
         <MappingFragment StoreEntitySet="t_shares_limit_traderules_other">
+          <ScalarProperty Name="Type" ColumnName="Type" />
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="RulesId" ColumnName="RulesId" />
           <ScalarProperty Name="Times" ColumnName="Times" />
@@ -2094,6 +2099,8 @@
     <EntitySetMapping Name="t_shares_monitor">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_monitor">
         <MappingFragment StoreEntitySet="t_shares_monitor">
+          <ScalarProperty Name="DataType" ColumnName="DataType" />
+          <ScalarProperty Name="SharesInfo" ColumnName="SharesInfo" />
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Market" ColumnName="Market" />
           <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
@@ -2162,6 +2169,7 @@
     <EntitySetMapping Name="t_shares_quotes_date">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes_date">
         <MappingFragment StoreEntitySet="t_shares_quotes_date">
+          <ScalarProperty Name="SharesInfo" ColumnName="SharesInfo" />
           <ScalarProperty Name="TriNearLimitType" ColumnName="TriNearLimitType" />
           <ScalarProperty Name="TotalCount" ColumnName="TotalCount" />
           <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
@@ -2629,6 +2637,7 @@
     <EntitySetMapping Name="t_sys_conditiontrade_template_buy">
       <EntityTypeMapping TypeName="meal_ticketModel.t_sys_conditiontrade_template_buy">
         <MappingFragment StoreEntitySet="t_sys_conditiontrade_template_buy">
+          <ScalarProperty Name="EntrustAmountType" ColumnName="EntrustAmountType" />
           <ScalarProperty Name="IsHold" ColumnName="IsHold" />
           <ScalarProperty Name="OtherConditionRelative" ColumnName="OtherConditionRelative" />
           <ScalarProperty Name="LimitUp" ColumnName="LimitUp" />
@@ -2738,6 +2747,7 @@
     <EntitySetMapping Name="t_account_shares_conditiontrade_template_buy">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_template_buy">
         <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_template_buy">
+          <ScalarProperty Name="EntrustAmountType" ColumnName="EntrustAmountType" />
           <ScalarProperty Name="IsHold" ColumnName="IsHold" />
           <ScalarProperty Name="OtherConditionRelative" ColumnName="OtherConditionRelative" />
           <ScalarProperty Name="LimitUp" ColumnName="LimitUp" />

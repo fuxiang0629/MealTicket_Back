@@ -69,6 +69,7 @@ namespace MealTicket_Web_Handler.Model
         public Nullable<int> ConditionPriceRate { get; set; }
         public bool IsGreater { get; set; }
         public int EntrustAmount { get; set; }
+        public int EntrustAmountType { get; set; }
         public int EntrustType { get; set; }
         public int EntrustPriceGear { get; set; }
         public int ForbidType { get; set; }

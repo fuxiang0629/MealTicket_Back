@@ -5,6 +5,7 @@ using Aop.Api.Response;
 using FXCommon.Common;
 using FXCommon.Database;
 using Jiguang.JPush;
+using MealTicket_DBCommon;
 using MealTicket_Handler.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -547,7 +548,7 @@ namespace MealTicket_Handler.RunnerHandler
                                 {
                                     throw new WebApiException(400, "服务器配置有误");
                                 }
-                                bool isSendSuccess = MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesSell", server.ServerId);
+                                bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesSell", server.ServerId);
                                 if (!isSendSuccess)
                                 {
                                     throw new Exception("操作超时，请重新操作");
@@ -592,16 +593,20 @@ namespace MealTicket_Handler.RunnerHandler
                         continue;
                     }
 
+
+
+                    var tradeRulesList=DbHelper.GetTraderules(item.AccountId);
+
                     long traderulesId = 0;
                     int closingLine = 0;
                     int cordon = 0;
-                    int allDayClosingLine = 0;
-                    int allDayCordon = 0;
+                    //int allDayClosingLine = 0;
+                    //int allDayCordon = 0;
                     TimeSpan? currStartTime = null;//当前起始时段
                     TimeSpan? currEndTime = null;//当前终止时段
                     try
                     {
-                        GetCurrTimeClosingLine(item.Market, item.SharesCode, shares.SharesName, out traderulesId, out closingLine, out cordon, out currStartTime, out currEndTime, out allDayClosingLine, out allDayCordon);
+                        DbHelper.GetSharesCurrRule(item.SharesCode, shares.SharesName, item.Market, tradeRulesList, ref cordon, ref closingLine, ref currStartTime, ref currEndTime, ref traderulesId);
                     }
                     catch (Exception) { }
 
@@ -609,25 +614,12 @@ namespace MealTicket_Handler.RunnerHandler
                     int nextClosingLine = 0;//下一时段额外平仓线
                     int nextCordon = 0;//下一时段额外警戒线
                     TimeSpan? nextStartTime = null;//下一时段额外起始时段
+                    TimeSpan? nextEndTime = null;//当前终止时段
                     try
                     {
-                        GetNextTimeClosingLine(item.Market, item.SharesCode, shares.SharesName, out nextTraderulesId, out nextClosingLine, out nextCordon, out nextStartTime);
+                        DbHelper.GetSharesNextRule(item.SharesCode, shares.SharesName, item.Market, tradeRulesList, currEndTime, ref nextCordon, ref nextClosingLine, ref nextStartTime, ref nextEndTime, ref nextTraderulesId);
                     }
                     catch (Exception) { }
-
-
-
-                    if (traderulesId > 0)//当前属于额外时段
-                    {
-                        //判断下一时段是否存在额外时段
-                        if (nextStartTime == null || nextStartTime > currEndTime)
-                        {
-                            nextTraderulesId = 0;
-                            nextClosingLine = allDayClosingLine;
-                            nextCordon = allDayCordon;
-                            nextStartTime = currEndTime;
-                        }
-                    }
 
 
                     //警戒线低于平仓线，设置警戒线=平仓线加一个点
@@ -839,7 +831,7 @@ namespace MealTicket_Handler.RunnerHandler
                                         {
                                             throw new WebApiException(400, "服务器配置有误");
                                         }
-                                        bool isSendSuccess = MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesCancel", server.ServerId);
+                                        bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesCancel", server.ServerId);
                                         if (!isSendSuccess)
                                         {
                                             throw new Exception("队列操作失败");
@@ -944,7 +936,7 @@ namespace MealTicket_Handler.RunnerHandler
                                     {
                                         throw new WebApiException(400, "服务器配置有误");
                                     }
-                                    bool isSendSuccess = MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesSell", server.ServerId);
+                                    bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesSell", server.ServerId);
                                     if (!isSendSuccess)
                                     {
                                         throw new Exception("操作超时，请重新操作");
@@ -959,158 +951,6 @@ namespace MealTicket_Handler.RunnerHandler
                                 tran.Rollback();
                             }
                         }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// 获取当前时段平仓线信息
-        /// </summary>
-        private static void GetCurrTimeClosingLine(int market, string sharesCode, string sharesName, out long currId, out int currClosingLine, out int currCordon, out TimeSpan? currStartTime, out TimeSpan? currEndTime, out int allDayClosingLine, out int allDayCordon)
-        {
-            TimeSpan timeSpan = TimeSpan.Parse(DateTime.Now.ToString("HH:mm:ss"));
-
-            currId = 0;
-            currClosingLine = 0;
-            currCordon = 0;
-            currStartTime = null;
-            currEndTime = null;
-            allDayCordon = 0;
-            allDayClosingLine = 0;
-
-            using (var db = new meal_ticketEntities())
-            {
-                var traderulesList = (from x in db.t_shares_limit_traderules
-                                      where (x.LimitMarket == -1 || x.LimitMarket == market) && ((x.LimitType == 1 && sharesCode.StartsWith(x.LimitKey)) || (x.LimitType == 2 && sharesName.StartsWith(x.LimitKey))) && x.Status == 1
-                                      select x).ToList();
-                foreach (var item in traderulesList)
-                {
-                    if (allDayClosingLine < item.ClosingLine)
-                    {
-                        allDayClosingLine = item.ClosingLine;
-                        allDayCordon = item.Cordon;
-                    }
-                    //查询额外强制平仓线
-                    var traderulesOther = (from x in db.t_shares_limit_traderules_other
-                                           where x.RulesId == item.Id && x.Status == 1
-                                           select x).ToList();
-                    TimeSpan? tempCurrStartTime = null;
-                    TimeSpan? tempCurrEndTime = null;
-                    long tempCurrId = 0;
-                    int tempCurrClosingLine = 0;
-                    int tempCurrCordon = 0;
-                    foreach (var other in traderulesOther)
-                    {
-                        try
-                        {
-                            TimeSpan startTime = TimeSpan.Parse(other.Times.Split('-')[0]);
-                            TimeSpan endTime = TimeSpan.Parse(other.Times.Split('-')[1]);
-                            if (timeSpan >= startTime && timeSpan < endTime)
-                            {
-                                if (tempCurrClosingLine < other.ClosingLine)
-                                {
-                                    tempCurrStartTime = startTime;
-                                    tempCurrEndTime = endTime;
-                                    tempCurrClosingLine = other.ClosingLine;
-                                    tempCurrCordon = other.Cordon;
-                                    tempCurrId = other.Id;
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            continue;
-                        }
-                    }
-                    if (currClosingLine < tempCurrClosingLine)
-                    {
-                        currId = tempCurrId;
-                        currClosingLine = tempCurrClosingLine;
-                        currCordon = tempCurrCordon;
-                        currStartTime = tempCurrStartTime;
-                        currEndTime = tempCurrEndTime;
-                    }
-                }
-                if (currId == 0)
-                {
-                    currClosingLine = allDayClosingLine;
-                    currCordon = allDayCordon;
-                }
-            }
-        }
-
-        /// <summary>
-        /// 获取下个时段额外平仓线信息
-        /// </summary>
-        private static void GetNextTimeClosingLine(int market, string sharesCode, string sharesName, out long nextId, out int nextClosingLine, out int nextCordon, out TimeSpan? nextStartTime)
-        {
-            TimeSpan timeSpan = TimeSpan.Parse(DateTime.Now.ToString("HH:mm:ss"));
-
-            nextId = 0;
-            nextClosingLine = 0;
-            nextCordon = 0;
-            nextStartTime = null;
-
-            using (var db = new meal_ticketEntities())
-            {
-                var traderulesList = (from x in db.t_shares_limit_traderules
-                                      where (x.LimitMarket == -1 || x.LimitMarket == market) && ((x.LimitType == 1 && sharesCode.StartsWith(x.LimitKey)) || (x.LimitType == 2 && sharesName.StartsWith(x.LimitKey))) && x.Status == 1
-                                      select x).ToList();
-                foreach (var item in traderulesList)
-                {
-                    //查询额外强制平仓线
-                    var traderulesOther = (from x in db.t_shares_limit_traderules_other
-                                           where x.RulesId == item.Id && x.Status == 1
-                                           select x).ToList();
-                    TimeSpan? tempStartTime = null;
-                    long tempNextId = 0;
-                    int tempNextClosingLine = 0;
-                    int tempNextCordon = 0;
-                    foreach (var other in traderulesOther)
-                    {
-                        try
-                        {
-                            TimeSpan startTime = TimeSpan.Parse(other.Times.Split('-')[0]);
-                            TimeSpan endTime = TimeSpan.Parse(other.Times.Split('-')[1]);
-                            if (startTime <= timeSpan)
-                            {
-                                continue;
-                            }
-                            if (tempStartTime == null || tempStartTime > startTime)
-                            {
-                                tempStartTime = startTime;
-                                tempNextId = other.Id;
-                                tempNextClosingLine = other.ClosingLine;
-                                tempNextCordon = other.Cordon;
-                            }
-                            else if (tempStartTime == startTime && tempNextClosingLine < other.ClosingLine)
-                            {
-                                tempStartTime = startTime;
-                                tempNextId = other.Id;
-                                tempNextClosingLine = other.ClosingLine;
-                                tempNextCordon = other.Cordon;
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            continue;
-                        }
-                    }
-
-                    if (nextStartTime == null || nextStartTime > tempStartTime)
-                    {
-                        nextStartTime = tempStartTime;
-                        nextId = tempNextId;
-                        nextClosingLine = tempNextClosingLine;
-                        nextCordon = tempNextCordon;
-                    }
-                    else if (nextStartTime == tempStartTime && nextClosingLine < tempNextClosingLine)
-                    {
-                        nextStartTime = tempStartTime;
-                        nextId = tempNextId;
-                        nextClosingLine = tempNextClosingLine;
-                        nextCordon = tempNextCordon;
                     }
                 }
             }
@@ -1871,143 +1711,10 @@ namespace MealTicket_Handler.RunnerHandler
                             Date = timeDate.ToString("yyyy-MM-dd"),
                             Type = 1
                         };
-                        MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "TransactionData", "Update");
+                        Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "TransactionData", "Update");
                     }
                     catch (Exception)
                     { }
-                }
-            }
-        }
-
-        /// <summary>
-        /// 推送股票分笔数据
-        /// </summary>
-        /// <returns></returns>
-        public static void SendTransactionShares()
-        {
-            using (var db = new meal_ticketEntities())
-            {
-                DateTime timeDate = DateTime.Now.Date;
-                string sql = string.Format(@"select Market,SharesCode
-  from
-  (
-  select t.Market, t.SharesCode
-  from v_shares_quotes_last t
-  inner
-  join t_shares_all t1 on t.Market = t1.Market and t.SharesCode = t1.SharesCode
-  inner join t_shares_monitor t2 on t.Market = t2.Market and t.SharesCode = t2.SharesCode
-  where t.LastModified > '{0}' and t2.[Status] = 1
-  union all
-  select t3.Market, t3.SharesCode
-  from t_account_shares_conditiontrade_buy_details_other_trend t
-  inner
-  join t_account_shares_conditiontrade_buy_details_other t1 on t.OtherId = t1.Id
-
-inner
-  join t_account_shares_conditiontrade_buy_details t2 on t1.DetailsId = t2.Id
-
-inner
-  join t_account_shares_conditiontrade_buy t3 on t2.ConditionId = t3.Id
-  where t.[Status] = 1 and t1.[Status] = 1 and t2.[Status] = 1 and t3.[Status] = 1 and(t.TrendId = 1 or t.TrendId = 2 or t.TrendId = 3 or t.TrendId = 6)
-  group by t3.Market, t3.SharesCode
-  union all
-  select t3.Market, t3.SharesCode
-  from t_account_shares_conditiontrade_buy_details_auto_trend t
-  inner
-  join t_account_shares_conditiontrade_buy_details_auto t1 on t.AutoId = t1.Id
-
-inner
-  join t_account_shares_conditiontrade_buy_details t2 on t1.DetailsId = t2.Id
-
-inner
-  join t_account_shares_conditiontrade_buy t3 on t2.ConditionId = t3.Id
-  where t.[Status] = 1 and t1.[Status] = 1 and t2.[Status] = 1 and t3.[Status] = 1 and(t.TrendId = 1 or t.TrendId = 2 or t.TrendId = 3 or t.TrendId = 6)
-  group by t3.Market, t3.SharesCode
-  )t
-  group by Market, SharesCode", timeDate.ToString("yyyy-MM-dd"));
-                var shares = db.Database.SqlQuery<TradeSharesInfo>(sql);
-
-                DateTime tempTime = DateTime.Now.AddMinutes(-10);
-                var monitorDetails = db.t_shares_monitor_details.Where(e => e.SendTime > tempTime).ToList();
-                List<t_shares_monitor_details> list = new List<t_shares_monitor_details>();
-
-                List<dynamic> pushList = new List<dynamic>();
-                foreach (var item in shares)
-                {
-                    if (monitorDetails.Where(e => e.Market == item.Market && e.SharesCode == item.SharesCode).FirstOrDefault() != null)
-                    {
-                        continue;
-                    }
-                    list.Add(new t_shares_monitor_details
-                    {
-                        SendTime = DateTime.Now,
-                        SharesCode = item.SharesCode,
-                        Market = item.Market
-                    });
-                }
-
-                var bulk = BulkFactory.CreateBulkCopy(DatabaseType.SqlServer);
-                using (DataTable table = new DataTable())
-                {
-                    table.Columns.Add("Id", typeof(long));
-                    table.Columns.Add("Market", typeof(int));
-                    table.Columns.Add("SharesCode", typeof(string));
-                    table.Columns.Add("SendTime", typeof(DateTime));
-
-                    foreach (var item in list)
-                    {
-                        DataRow row = table.NewRow();
-                        row["Id"] = 0;
-                        row["Market"] = item.Market;
-                        row["SharesCode"] = item.SharesCode;
-                        row["SendTime"] = item.SendTime;
-                        table.Rows.Add(row);
-                    }
-                    Dictionary<string, string> dic = new Dictionary<string, string>();
-                    dic.Add("Id", "Id");
-                    dic.Add("Market", "Market");
-                    dic.Add("SharesCode", "SharesCode");
-                    dic.Add("SendTime", "SendTime");
-                    bulk.ColumnMappings = dic;
-                    bulk.BatchSize = 10000;
-
-
-                    bulk.BulkWriteToServer(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString, table, "t_shares_monitor_details");
-
-                }
-
-                int i = 0;
-                foreach (var item in list)
-                {
-                    i++;
-                    var sendData = new
-                    {
-                        Market = item.Market,
-                        SharesCode = item.SharesCode,
-                        Date = timeDate.ToString("yyyy-MM-dd"),
-                        Type = 0
-                    };
-                    MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "TransactionData", "UpdateNew");
-
-                    pushList.Add(new
-                    {
-                        Market = item.Market,
-                        SharesCode = item.SharesCode
-                    });
-
-                    try
-                    {
-                        if (pushList.Count() > 0 && (pushList.Count() % Singleton.Instance.NewTransactionDataTrendHandlerCount == 0 || i >= shares.Count()))
-                        {
-                            var sendData2 = pushList;
-                            MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData2)), "TransactionData", "TrendAnalyse");
-                            pushList = new List<dynamic>();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
                 }
             }
         }

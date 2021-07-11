@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FXCommon.Common;
+using MealTicket_DBCommon;
 using Microsoft.International.Converters.PinYinConverter;
 
 namespace SharesHqService

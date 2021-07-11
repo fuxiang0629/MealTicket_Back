@@ -1,4 +1,5 @@
 ﻿using FXCommon.Common;
+using MealTicket_DBCommon;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -121,7 +122,7 @@ namespace SharesHqService
         /// <summary>
         /// 实时行情更新频率（毫秒）
         /// </summary>
-        public int SshqUpdateRate = 1000;
+        public int SshqUpdateRate = 3000;
 
         /// <summary>
         /// 获取实时行情每批次数量（最大80）
@@ -131,12 +132,12 @@ namespace SharesHqService
         /// <summary>
         /// 股票基础数据起始时间
         /// </summary>
-        public int AllSharesStartHour = 1;
+        public TimeSpan AllSharesStartHour = TimeSpan.Parse("01:00:00");
 
         /// <summary>
         /// 股票基础数据截止时间
         /// </summary>
-        public int AllSharesEndHour = 4;
+        public TimeSpan AllSharesEndHour = TimeSpan.Parse("04:00:00");
 
         /// <summary>
         /// 股票涨幅列表
@@ -671,12 +672,12 @@ namespace SharesHqService
                 do
                 {
                     int msgId = 0;
-                    if (UpdateWait.WaitMessage(ref msgId, 600000))
+                    if (UpdateWait.WaitMessage(ref msgId, 60000))
                     {
                         break;
                     }
+                    SysparUpdate();
                 } while (true);
-                SysparUpdate();
             });
             SysparUpdateThread.Start();
         }
@@ -695,13 +696,41 @@ namespace SharesHqService
                         if (sysPar1 != null)
                         {
                             var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar1.ParamValue);
-                            this.RunStartTime = sysValue.RunStartTime;
-                            this.RunEndTime = sysValue.RunEndTime;
-                            this.SshqUpdateRate = sysValue.SshqUpdateRate;
-                            this.QuotesCount = sysValue.QuotesCount;
-                            this.AllSharesStartHour = sysValue.AllSharesStartHour;
-                            this.AllSharesEndHour = sysValue.AllSharesEndHour;
-                            this.BusinessRunTime = sysValue.BusinessRunTime;
+                            int tempRunStartTime= sysValue.RunStartTime;
+                            if (tempRunStartTime < 1800)
+                            {
+                                RunStartTime = tempRunStartTime;
+                            }
+                            int tempRunEndTime = sysValue.RunEndTime;
+                            if (tempRunEndTime < 1800)
+                            {
+                                RunEndTime = tempRunEndTime;
+                            }
+                            int tempSshqUpdateRate = sysValue.SshqUpdateRate;
+                            if (tempSshqUpdateRate >0 && tempSshqUpdateRate<60000)
+                            {
+                                SshqUpdateRate = tempSshqUpdateRate;
+                            }
+                            int tempQuotesCount = sysValue.QuotesCount;
+                            if (tempQuotesCount > 0 && tempQuotesCount <= 80)
+                            {
+                                QuotesCount = tempQuotesCount;
+                            }
+                            string tempAllSharesStartHour = sysValue.AllSharesStartHour;
+                            if (!TimeSpan.TryParse(tempAllSharesStartHour, out AllSharesStartHour))
+                            {
+                                AllSharesStartHour = TimeSpan.Parse("01:00:00");
+                            }
+                            string tempAllSharesEndHour = sysValue.AllSharesEndHour;
+                            if (!TimeSpan.TryParse(tempAllSharesEndHour, out AllSharesEndHour))
+                            {
+                                AllSharesEndHour = TimeSpan.Parse("04:00:00");
+                            }
+                            int tempBusinessRunTime = sysValue.BusinessRunTime;
+                            if (tempBusinessRunTime > 0 && tempBusinessRunTime <1800000)
+                            {
+                                BusinessRunTime = tempBusinessRunTime;
+                            }
                         }
                     }
                     catch { }
@@ -712,7 +741,7 @@ namespace SharesHqService
                                        select item).FirstOrDefault();
                         if (sysPar2 != null)
                         {
-                            this.SharesCodeMatch0 = sysPar2.ParamValue;
+                            SharesCodeMatch0 = sysPar2.ParamValue;
                         }
                     }
                     catch { }
@@ -723,7 +752,7 @@ namespace SharesHqService
                                        select item).FirstOrDefault();
                         if (sysPar3 != null)
                         {
-                            this.SharesCodeMatch1 = sysPar3.ParamValue;
+                            SharesCodeMatch1 = sysPar3.ParamValue;
                         }
                     }
                     catch { }
@@ -733,20 +762,6 @@ namespace SharesHqService
                                        select item).ToList();
                     }
                     catch { }
-                    //try
-                    //{
-                    //    DateTime timeDate = DateTime.Now.Date;
-                    //    SharesList = (from item in db.t_shares_quotes_date
-                    //                  where item.LastModified < timeDate
-                    //                  group item by new { item.Market, item.SharesCode } into g
-                    //                  select new SharesBaseInfo
-                    //                  {
-                    //                      ShareCode=g.Key.SharesCode,
-                    //                      Market=g.Key.Market,
-                    //                      ShareClosedPrice=g.OrderByDescending(e=>e.Date).Select(e=>e.PresentPrice).FirstOrDefault()
-                    //                  }).ToList();
-                    //}
-                    //catch { }
                 }
             }
             catch (Exception ex)

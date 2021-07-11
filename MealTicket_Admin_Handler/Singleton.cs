@@ -1,7 +1,9 @@
 ﻿using FXCommon.Common;
+using MealTicket_DBCommon;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -122,7 +124,7 @@ namespace MealTicket_Admin_Handler
                                    select item).FirstOrDefault();
                     if (sysPar8 != null)
                     {
-                        this.SharesCodeMatch0 = sysPar8.ParamValue;
+                        SharesCodeMatch0 = sysPar8.ParamValue;
                     }
                 }
                 catch { }
@@ -133,7 +135,7 @@ namespace MealTicket_Admin_Handler
                                    select item).FirstOrDefault();
                     if (sysPar9 != null)
                     {
-                        this.SharesCodeMatch1 = sysPar9.ParamValue;
+                        SharesCodeMatch1 = sysPar9.ParamValue;
                     }
                 }
                 catch { }
@@ -145,18 +147,38 @@ namespace MealTicket_Admin_Handler
                     if (sysPar != null)
                     {
                         var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
-                        if (sysValue.MinPushTimeInterval > 0 || sysValue.MinPushTimeInterval == -1)
+                        int tempMinPushTimeInterval = sysValue.MinPushTimeInterval;
+                        if (tempMinPushTimeInterval > 0 || tempMinPushTimeInterval == -1)
                         {
-                            this.MinPushTimeInterval = sysValue.MinPushTimeInterval;
+                            MinPushTimeInterval = tempMinPushTimeInterval;
                         }
-                        if (sysValue.MinPushRateInterval > 0 || sysValue.MinPushRateInterval == -1)
+                        int tempMinPushRateInterval = sysValue.MinPushRateInterval;
+                        if (tempMinPushRateInterval > 0 || tempMinPushRateInterval == -1)
                         {
-                            this.MinPushRateInterval = sysValue.MinPushRateInterval;
+                            MinPushRateInterval = tempMinPushRateInterval;
                         }
                     }
                 }
                 catch { }
             }
+        }
+
+        /// <summary>
+        /// 队列对象
+        /// </summary>
+        public MQHandler mqHandler;
+        /// <summary>
+        /// 启动Mq队列
+        /// </summary>
+        public MQHandler StartMqHandler(string listenQueueName)
+        {
+            string hostName = ConfigurationManager.AppSettings["MQ_HostName"];
+            int port = int.Parse(ConfigurationManager.AppSettings["MQ_Port"]);
+            string userName = ConfigurationManager.AppSettings["MQ_UserName"];
+            string password = ConfigurationManager.AppSettings["MQ_Password"];
+            string virtualHost = ConfigurationManager.AppSettings["MQ_VirtualHost"];
+            mqHandler = new MQHandler(hostName, port, userName, password, virtualHost);
+            return mqHandler;
         }
     }
 }

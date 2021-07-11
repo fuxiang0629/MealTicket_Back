@@ -1,5 +1,6 @@
 ﻿using FXCommon.Common;
 using MealTicket_Admin_Handler.Model;
+using MealTicket_DBCommon;
 using Newtonsoft.Json;
 using SMS_SendHandler;
 using System;
@@ -911,7 +912,7 @@ namespace MealTicket_Admin_Handler
                     throw new WebApiException(400, "服务器配置有误");
                 }
 
-                bool isSendSuccess = MQHandler.instance.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesQuery", server.ServerId);
+                bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesQuery", server.ServerId);
                 if (!isSendSuccess)
                 {
                     throw new WebApiException(400, "操作超时，请重新操作");

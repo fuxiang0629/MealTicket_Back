@@ -1,6 +1,8 @@
 ﻿using FXCommon.Common;
 using FXCommon.Database;
+using MealTicket_DBCommon;
 using MealTicket_Web_Handler.Runner;
+using MealTicket_Web_Handler.Transactiondata;
 using Newtonsoft.Json;
 using StockTrendMonitor.Models;
 using System;
@@ -14,6 +16,22 @@ using System.Threading.Tasks;
 
 namespace MealTicket_Web_Handler
 {
+    /// <summary>
+    /// 交易时间结构体
+    /// </summary>
+    public struct TradeTime 
+    {
+        /// <summary>
+        /// 最小时间
+        /// </summary>
+        public TimeSpan MinTime { get; set; }
+
+        /// <summary>
+        /// 最大时间
+        /// </summary>
+        public TimeSpan MaxTime { get; set; }
+    }
+
     public sealed class Singleton
     {
         /// <summary>
@@ -57,19 +75,17 @@ namespace MealTicket_Web_Handler
         #endregion
 
         #region===清理分笔数据参数===
-        public int ClearTransactiondataSleepTime = 1800000;
-        public int ClearTransactiondataStartHour = 3;
-        public int ClearTransactiondataEndHour = 8;
+        public TimeSpan ClearTransactiondataStartHour = TimeSpan.Parse("03:00:00");
+        public TimeSpan ClearTransactiondataEndHour = TimeSpan.Parse("08:00:00");
         #endregion
 
         #region====新分笔成交数据====
-        public int NewTransactionDataCount = 50;
         public int NewTransactionDataSendPeriodTime = 0;//更新间隔
         public int NewTransactionDataRunStartTime = -180;//运行时间比交易时间提前秒数
         public int NewTransactionDataRunEndTime = 180;//运行时间比交易时间滞后秒数
-        public int NewTransactiondataSleepTime = 10000;//每天执行时的间隔时间
-        public int NewTransactiondataStartHour = 0;//每天执行开始时间
-        public int NewTransactiondataEndHour = 0;//每天执行结束时间
+        public int NewTransactiondataTaskTimeOut = 15000;//任务超时时间
+        public int NewTransactiondataTaskTimeOut2 = 45000;//任务超时时间2
+        public int NewTransactiondataTaskUpdateCountOnce = 4000;//单次写分时数据数量
         #endregion
 
 
@@ -103,7 +119,12 @@ namespace MealTicket_Web_Handler
         /// <summary>
         /// 每批次分析股票数量
         /// </summary>
-        public int NewTransactionDataTrendHandlerCount = 10;
+        public int NewTransactionDataTrendHandlerCount = 200;
+
+        /// <summary>
+        /// 每批次分析股票数量
+        /// </summary>
+        public int NewTransactionDataTrendHandlerCount2 = 50;
 
         /// <summary>
         /// 处理线程数量
@@ -129,11 +150,6 @@ namespace MealTicket_Web_Handler
         /// 走势分析对象
         /// </summary>
         public StockMonitorCore m_stockMonitor;
-
-        /// <summary>
-        /// 队列对象
-        /// </summary>
-        public MQHandler mqHandler;
         #endregion
 
         // 显式静态构造函数告诉C＃编译器
@@ -163,7 +179,6 @@ namespace MealTicket_Web_Handler
             {
                 Logger.WriteFileLog("链接字符串错误",null);
             }
-            mqHandler = new MQHandler();
 
             UpdateWait.Init();
             StartSysparUpdateThread();
@@ -194,7 +209,11 @@ namespace MealTicket_Web_Handler
             }
             if (mqHandler != null)
             {
-                mqHandler.Dispose(true);
+                mqHandler.Dispose();
+            }
+            if (_transactionDataTask != null)
+            {
+                _transactionDataTask.Dispose();
             }
         }
 
@@ -288,20 +307,15 @@ namespace MealTicket_Web_Handler
                     if (sysPar != null)
                     {
                         var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
-                        int tempClearTransactiondataSleepTime= sysValue.ClearTransactiondataSleepTime;
-                        if (tempClearTransactiondataSleepTime >= 1800000)
+                        string tempClearTransactiondataStartHour = sysValue.ClearTransactiondataStartHour;
+                        if (!TimeSpan.TryParse(tempClearTransactiondataStartHour,out ClearTransactiondataStartHour))
                         {
-                            ClearTransactiondataSleepTime = tempClearTransactiondataSleepTime;
+                            ClearTransactiondataStartHour = TimeSpan.Parse("03:00:00"); ;
                         }
-                        int tempClearTransactiondataStartHour = sysValue.ClearTransactiondataStartHour;
-                        if (tempClearTransactiondataStartHour > 0 && tempClearTransactiondataStartHour < 6)
+                        string tempClearTransactiondataEndHour = sysValue.ClearTransactiondataEndHour;
+                        if (!TimeSpan.TryParse(tempClearTransactiondataEndHour, out ClearTransactiondataEndHour))
                         {
-                            ClearTransactiondataStartHour = tempClearTransactiondataStartHour;
-                        }
-                        int tempClearTransactiondataEndHour = sysValue.ClearTransactiondataEndHour;
-                        if (tempClearTransactiondataEndHour > 3 && tempClearTransactiondataEndHour < 9)
-                        {
-                            ClearTransactiondataEndHour = tempClearTransactiondataEndHour;
+                            ClearTransactiondataEndHour = TimeSpan.Parse("08:00:00"); ;
                         }
                     }
                 }
@@ -325,40 +339,40 @@ namespace MealTicket_Web_Handler
                     if (sysPar != null)
                     {
                         var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
-                        int tempTransactionDataCount= sysValue.TransactionDataCount;
-                        if (tempTransactionDataCount != null && tempTransactionDataCount <= 2000 && tempTransactionDataCount >= 1)
-                        {
-                            NewTransactionDataCount = tempTransactionDataCount;
-                        }
                         int tempSendPeriodTime = sysValue.SendPeriodTime;
                         if (tempSendPeriodTime != null)
                         {
                             NewTransactionDataSendPeriodTime = tempSendPeriodTime;
-                        }
-                        int tempTransactiondataSleepTime = sysValue.TransactiondataSleepTime;
-                        if (tempTransactiondataSleepTime != null && tempTransactiondataSleepTime > 0)
-                        {
-                            NewTransactiondataSleepTime = tempTransactiondataSleepTime;
-                        }
-                        int tempTransactiondataStartHour = sysValue.TransactiondataStartHour;
-                        if (tempTransactiondataStartHour != null && tempTransactiondataStartHour >= 16 && tempTransactiondataStartHour <= 23)
-                        {
-                            NewTransactiondataStartHour = tempTransactiondataStartHour;
-                        }
-                        int tempTransactiondataEndHour = sysValue.TransactiondataEndHour;
-                        if (tempTransactiondataEndHour != null && tempTransactiondataEndHour >= 16 && tempTransactiondataEndHour <= 23)
-                        {
-                            NewTransactiondataEndHour = tempTransactiondataEndHour;
                         }
                         int tempNewTransactionDataTrendHandlerCount = sysValue.NewTransactionDataTrendHandlerCount;
                         if (tempNewTransactionDataTrendHandlerCount != null && tempNewTransactionDataTrendHandlerCount >= 0)
                         {
                             NewTransactionDataTrendHandlerCount = tempNewTransactionDataTrendHandlerCount;
                         }
+                        int tempNewTransactionDataTrendHandlerCount2 = sysValue.NewTransactionDataTrendHandlerCount2;
+                        if (tempNewTransactionDataTrendHandlerCount2 != null && tempNewTransactionDataTrendHandlerCount2 >= 0)
+                        {
+                            NewTransactionDataTrendHandlerCount2 = tempNewTransactionDataTrendHandlerCount2;
+                        }
                         int tempTrendAnalyseSleepTime = sysValue.TrendAnalyseSleepTime;
                         if (tempTrendAnalyseSleepTime != null && tempTrendAnalyseSleepTime > 100)
                         {
                             TrendAnalyseSleepTime = tempTrendAnalyseSleepTime;
+                        }
+                        int tempNewTransactiondataTaskTimeOut = sysValue.NewTransactiondataTaskTimeOut;
+                        if (tempNewTransactiondataTaskTimeOut != null && tempNewTransactiondataTaskTimeOut > 0 && tempNewTransactiondataTaskTimeOut < 300000)
+                        {
+                            NewTransactiondataTaskTimeOut = tempNewTransactiondataTaskTimeOut;
+                        }
+                        int tempNewTransactiondataTaskTimeOut2 = sysValue.tempNewTransactiondataTaskTimeOut2;
+                        if (tempNewTransactiondataTaskTimeOut2 != null && tempNewTransactiondataTaskTimeOut2 > 0 && tempNewTransactiondataTaskTimeOut2 < 600000)
+                        {
+                            NewTransactiondataTaskTimeOut2 = tempNewTransactiondataTaskTimeOut2;
+                        }
+                        int tempNewTransactiondataTaskUpdateCountOnce = sysValue.tempNewTransactiondataTaskUpdateCountOnce;
+                        if (tempNewTransactiondataTaskUpdateCountOnce != null && tempNewTransactiondataTaskUpdateCountOnce > 0)
+                        {
+                            NewTransactiondataTaskUpdateCountOnce = tempNewTransactiondataTaskUpdateCountOnce;
                         }
                     }
                 }
@@ -377,6 +391,9 @@ namespace MealTicket_Web_Handler
                 }
                 catch { }
             }
+
+            _tradeTime = GetTradeCloseTime();
+            SharesTrendParSession = GetSharesTrendParSession();
         }
 
         /// <summary>
@@ -404,6 +421,119 @@ namespace MealTicket_Web_Handler
             {
                 SyncroList.Add(item);
             }
+        }
+
+
+
+        public TradeTime _tradeTime;//闭市时间
+
+        /// <summary>
+        /// 获取交易闭市时间
+        /// </summary>
+        private TradeTime GetTradeCloseTime() 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var tradeTime = (from item in db.t_shares_limit_time
+                                 select item).FirstOrDefault();
+                if (tradeTime == null)
+                {
+                    return GetDefaultTradeCloseTime();
+                }
+                string[] timeArr=tradeTime.Time2.Split(',');
+                TimeSpan? result_maxTime = null;
+                TimeSpan? result_minTime = null;
+                for (int i = 0; i < timeArr.Length; i++)
+                {
+                    string[] spanArr=timeArr[i].Split('-');
+                    TimeSpan _minTime = TimeSpan.Parse(spanArr[0]);
+                    TimeSpan _maxTime = TimeSpan.Parse(spanArr[1]);
+                    if (result_maxTime == null || result_maxTime.Value < _maxTime)
+                    {
+                        result_maxTime = _maxTime;
+                    }
+                    if (result_minTime == null || result_minTime.Value > _minTime)
+                    {
+                        result_minTime = _minTime;
+                    }
+                }
+                if (result_maxTime == null || result_minTime == null)
+                {
+                    return GetDefaultTradeCloseTime();
+                }
+                return new TradeTime
+                {
+                    MaxTime = result_maxTime.Value,
+                    MinTime = result_minTime.Value
+                };
+            }
+        }
+
+        private TradeTime GetDefaultTradeCloseTime()
+        {
+            return new TradeTime
+            {
+                MaxTime = TimeSpan.Parse("09:30:00"),
+                MinTime = TimeSpan.Parse("09:25:00")
+            };
+        }
+
+
+        public List<SharesTrendPar> SharesTrendParSession;
+        private List<SharesTrendPar> GetSharesTrendParSession()
+        {
+            string sql = @"select Market,SharesCode,TrendId,ParamsInfo
+  from t_shares_monitor t with(nolock)
+  inner join t_shares_monitor_trend_rel t1 with(nolock) on t.Id=t1.MonitorId
+  inner join t_shares_monitor_trend_rel_par t2 with(nolock) on t1.Id=t2.RelId
+  where t.[Status]=1 and t1.[Status]=1";
+            using (var db = new meal_ticketEntities())
+            {
+                var sqlResult = db.Database.SqlQuery<SharesTrendPar>(sql).ToList();
+                var result = (from item in sqlResult
+                              group item by new { item.Market, item.SharesCode, item.TrendId } into g
+                              select new SharesTrendPar
+                              {
+                                  SharesCode = g.Key.SharesCode,
+                                  Market = g.Key.Market,
+                                  TrendId = g.Key.TrendId,
+                                  ParamsList = g.Select(e => e.ParamsInfo).ToList()
+                              }).ToList();
+                return result;
+            }
+        }
+
+
+
+        /// <summary>
+        /// 队列对象
+        /// </summary>
+        public MQHandler mqHandler;
+        /// <summary>
+        /// 启动Mq队列
+        /// </summary>
+        public MQHandler StartMqHandler()
+        {
+            string hostName = ConfigurationManager.AppSettings["MQ_HostName"];
+            int port = int.Parse(ConfigurationManager.AppSettings["MQ_Port"]);
+            string userName = ConfigurationManager.AppSettings["MQ_UserName"];
+            string password = ConfigurationManager.AppSettings["MQ_Password"];
+            string virtualHost = ConfigurationManager.AppSettings["MQ_VirtualHost"];
+            mqHandler = new MQHandler(hostName, port, userName, password, virtualHost);
+            mqHandler.ListenQueueName = "TransactionDataTrendAnalyse";//设置监听队列
+            return mqHandler;
+        }
+
+        /// <summary>
+        /// 分笔数据处理任务
+        /// </summary>
+        public TransactionDataTask _transactionDataTask;
+
+        public TransactionDataTask StartTransactionDataTask() 
+        {
+            _transactionDataTask = new TransactionDataTask();
+            _transactionDataTask.Init();
+            return _transactionDataTask;
         }
     }
 }

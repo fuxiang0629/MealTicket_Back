@@ -124,7 +124,6 @@ F:\项目\饭票后端\MealTicket_Handler\obj\Release\MealTicket_Handler.csproj.
 F:\项目\饭票后端\MealTicket_Handler\obj\Release\MealTicket_Handler.csproj.CopyComplete
 F:\项目\饭票后端\MealTicket_Handler\obj\Release\MealTicket_Handler.dll
 F:\项目\饭票后端\MealTicket_Handler\obj\Release\MealTicket_Handler.pdb
-F:\项目\饭票后端\MealTicket_Handler\obj\Release\MealTicket_Handler.csprojAssemblyReference.cache
 F:\项目\饭票后端\MealTicket_Handler\bin\Release\NoticeHandler.dll
 F:\项目\饭票后端\MealTicket_Handler\bin\Release\NoticeHandler.pdb
 F:\项目\饭票后端\MealTicket_Handler\bin\Release\NoticeHandler.dll.config
@@ -206,3 +205,7 @@ D:\项目\饭票\后端\MealTicket_Handler\obj\Release\MealTicket_Handler.csproj
 D:\项目\饭票\后端\MealTicket_Handler\obj\Release\MealTicket_Handler.csproj.CopyComplete
 D:\项目\饭票\后端\MealTicket_Handler\obj\Release\MealTicket_Handler.dll
 D:\项目\饭票\后端\MealTicket_Handler\obj\Release\MealTicket_Handler.pdb
+F:\项目\饭票后端\MealTicket_Handler\bin\Release\MealTicket_DBCommon.dll
+F:\项目\饭票后端\MealTicket_Handler\bin\Release\MealTicket_DBCommon.pdb
+F:\项目\饭票后端\MealTicket_Handler\bin\Release\MealTicket_DBCommon.dll.config
+F:\项目\饭票后端\MealTicket_Handler\obj\Release\MealTicket_Handler.csprojAssemblyReference.cache

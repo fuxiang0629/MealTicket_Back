@@ -180,6 +180,8 @@
     <Property Name="AccountId" Type="bigint" Nullable="false" />
     <Property Name="Market" Type="int" Nullable="false" />
     <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="SharesInfo" Type="varchar" MaxLength="31" StoreGeneratedPattern="Computed" />
+    <Property Name="DataType" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
@@ -189,6 +191,7 @@
       <PropertyRef Name="Id" />
     </Key>
     <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FatherId" Type="bigint" Nullable="false" />
     <Property Name="ConditionId" Type="bigint" Nullable="false" />
     <Property Name="Name" Type="nvarchar" MaxLength="50" />
     <Property Name="ConditionType" Type="int" Nullable="false" />
@@ -514,7 +517,7 @@
     <Property Name="Time" Type="datetime" Nullable="false" />
     <Property Name="Url" Type="varchar" MaxLength="1024" Nullable="false" />
     <Property Name="UserAgent" Type="varchar" MaxLength="500" Nullable="false" />
-    <Property Name="Request" Type="nvarchar" MaxLength="2000" />
+    <Property Name="Request" Type="nvarchar(max)" />
     <Property Name="Method" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="AppVersion" Type="varchar" MaxLength="50" />
     <Property Name="UserToken" Type="varchar" MaxLength="64" />
@@ -918,6 +921,7 @@
     <Property Name="SharesHandCount" Type="int" Nullable="false" />
     <Property Name="ShareClosedPrice" Type="bigint" Nullable="false" />
     <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesInfo" Type="varchar" MaxLength="31" StoreGeneratedPattern="Computed" />
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="MarketStatus" Type="int" Nullable="false" />
     <Property Name="ForbidStatus" Type="int" Nullable="false" />
@@ -1027,6 +1031,7 @@
     <Property Name="Cordon" Type="int" Nullable="false" />
     <Property Name="ClosingLine" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="Type" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
@@ -1037,6 +1042,8 @@
     <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Market" Type="int" Nullable="false" />
     <Property Name="SharesCode" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="SharesInfo" Type="nvarchar" MaxLength="61" StoreGeneratedPattern="Computed" />
+    <Property Name="DataType" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />

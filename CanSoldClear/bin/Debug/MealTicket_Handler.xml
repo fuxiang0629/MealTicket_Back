@@ -3119,12 +3119,6 @@
             更新股票分笔数据
             </summary>
         </member>
-        <member name="M:MealTicket_Handler.RunnerHandler.RunnerHelper.SendTransactionShares">
-            <summary>
-            推送股票分笔数据
-            </summary>
-            <returns></returns>
-        </member>
         <member name="F:MealTicket_Handler.Singleton.instance">
             <summary>
             单例对象

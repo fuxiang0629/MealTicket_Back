@@ -13,7 +13,7 @@ namespace SharesHqService
 
         public AllSharesUpdateRunner()
         {
-            SleepTime = 1800000;
+            SleepTime = 600000;
             Name = "AllSharesUpdateRunner";
         }
 
@@ -29,7 +29,8 @@ namespace SharesHqService
                         return false;
                     }
                     //每天凌晨1-4点执行
-                    if (DateTime.Now.Hour < Singleton.Instance.AllSharesStartHour || DateTime.Now.Hour > Singleton.Instance.AllSharesEndHour)
+                    TimeSpan tpNow = TimeSpan.Parse(DateTime.Now.ToString("HH:mm:ss"));
+                    if (tpNow < Singleton.Instance.AllSharesStartHour || tpNow > Singleton.Instance.AllSharesEndHour)
                     {
                         return false;
                     }

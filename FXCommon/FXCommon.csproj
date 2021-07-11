@@ -91,6 +91,7 @@
     <Compile Include="Database\OracleBulk.cs" />
     <Compile Include="Database\SqlHelper.cs" />
     <Compile Include="Database\SqlServerBulk.cs" />
+    <Compile Include="MqQueue\MQTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FileUpload\QiNiuHelper.cs" />
     <Compile Include="TradeX\TradeX_M.cs" />

@@ -1,4 +1,5 @@
 ﻿using FXCommon.Common;
+using MealTicket_DBCommon;
 using Newtonsoft.Json;
 using SharesTradeService.Model;
 using System;

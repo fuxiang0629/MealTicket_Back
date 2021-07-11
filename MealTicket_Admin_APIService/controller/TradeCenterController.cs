@@ -1639,7 +1639,7 @@ namespace MealTicket_Admin_APIService.controller
         [CheckUserPowerFilter]
         [Route("shares/traderules/other/list"), HttpPost]
         [Description("查询额外平仓规则列表")]
-        public PageRes<SharesTradeRulesOtherInfo> GetSharesTradeRulesOtherList(DetailsPageRequest request)
+        public PageRes<SharesTradeRulesOtherInfo> GetSharesTradeRulesOtherList(GetSharesTradeRulesOtherListRequest request)
         {
             if (request == null)
             {
@@ -2467,6 +2467,25 @@ namespace MealTicket_Admin_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return tradeCenterHandler.GetConditiontradeTemplateList(request, basedata);
+        }
+
+        /// <summary>
+        /// 复制条件模板
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("conditiontrade/template/copy"), HttpPost]
+        [Description("复制条件模板")]
+        public object CopyConditiontradeTemplate(DetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.CopyConditiontradeTemplate(request, basedata);
+            return null;
         }
 
         /// <summary>

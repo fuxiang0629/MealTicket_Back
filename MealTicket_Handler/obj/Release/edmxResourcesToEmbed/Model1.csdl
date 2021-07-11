@@ -360,7 +360,7 @@
     <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="Url" Type="String" Nullable="false" MaxLength="1024" FixedLength="false" Unicode="false" />
     <Property Name="UserAgent" Type="String" Nullable="false" MaxLength="500" FixedLength="false" Unicode="false" />
-    <Property Name="Request" Type="String" MaxLength="2000" FixedLength="false" Unicode="true" />
+    <Property Name="Request" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="Method" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="AppVersion" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
     <Property Name="UserToken" Type="String" MaxLength="64" FixedLength="false" Unicode="false" />
@@ -872,6 +872,7 @@
     <Property Name="Status" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_entrust_manager_dealdetails">
     <Key>
@@ -929,6 +930,7 @@
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="SharesPyjc" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="MarketStatus" Type="Int32" Nullable="false" />
+    <Property Name="SharesInfo" Type="String" MaxLength="31" FixedLength="false" Unicode="false" annotation:StoreGeneratedPattern="Computed" />
   </EntityType>
   <EntityType Name="t_shares_suspension">
     <Key>
@@ -1288,6 +1290,8 @@
     <Property Name="Status" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="SharesInfo" Type="String" MaxLength="61" FixedLength="false" Unicode="true" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="DataType" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_payment_channel_group">
     <Key>
@@ -1420,6 +1424,7 @@
     <Property Name="IsHold" Type="Boolean" Nullable="false" />
     <Property Name="FollowType" Type="Int32" Nullable="false" />
     <Property Name="EntrustErrorDes" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="FatherId" Type="Int64" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_buy_details_auto">
     <Key>
@@ -1500,6 +1505,8 @@
     <Property Name="Status" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="SharesInfo" Type="String" MaxLength="31" FixedLength="false" Unicode="false" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="DataType" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_wallet">
     <Key>

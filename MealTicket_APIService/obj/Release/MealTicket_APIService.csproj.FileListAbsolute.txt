@@ -360,3 +360,6 @@ D:\项目\饭票\后端\MealTicket_APIService\obj\Release\MealTicket_APIService.
 D:\项目\饭票\后端\MealTicket_APIService\obj\Release\MealTicket_APIService.csproj.CopyComplete
 D:\项目\饭票\后端\MealTicket_APIService\obj\Release\MealTicket_APIService.exe
 D:\项目\饭票\后端\MealTicket_APIService\obj\Release\MealTicket_APIService.pdb
+F:\项目\饭票后端\MealTicket_APIService\bin\Release\MealTicket_DBCommon.dll
+F:\项目\饭票后端\MealTicket_APIService\bin\Release\MealTicket_DBCommon.pdb
+F:\项目\饭票后端\MealTicket_APIService\bin\Release\MealTicket_DBCommon.dll.config

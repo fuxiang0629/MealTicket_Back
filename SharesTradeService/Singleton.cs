@@ -1,4 +1,5 @@
 ﻿using FXCommon.Common;
+using MealTicket_DBCommon;
 using Newtonsoft.Json;
 using SharesTradeService.Handler;
 using SharesTradeService.Model;
@@ -72,11 +73,6 @@ namespace SharesTradeService
         /// 查询交易结果间隔时间（交易日）
         /// </summary>
         public int QueryTradeResultSleepTime_TradeDate = 2000;
-
-        /// <summary>
-        /// 查询交易结果间隔时间（非交易日）
-        /// </summary>
-        public int QueryTradeResultSleepTime_NoTradeDate = 3600000;
 
         /// <summary>
         /// 查询交易结果起始时间(提前秒数)
@@ -264,36 +260,37 @@ namespace SharesTradeService
                     if (sysPar != null)
                     {
                         var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
-                        if (sysValue.QueryTradeResultSleepTime_TradeDate != null)
+                        int tempQueryTradeResultSleepTime_TradeDate= sysValue.QueryTradeResultSleepTime_TradeDate;
+                        if (tempQueryTradeResultSleepTime_TradeDate > 0)
                         {
-                            this.QueryTradeResultSleepTime_TradeDate = sysValue.QueryTradeResultSleepTime_TradeDate;
+                            QueryTradeResultSleepTime_TradeDate = tempQueryTradeResultSleepTime_TradeDate;
                         }
-                        if (sysValue.QueryTradeResultSleepTime_NoTradeDate != null)
+                        int tempQueryTradeResultStartTime= sysValue.QueryTradeResultStartTime;
+                        if (tempQueryTradeResultStartTime<1800)
                         {
-                            this.QueryTradeResultSleepTime_NoTradeDate = sysValue.QueryTradeResultSleepTime_NoTradeDate;
+                            QueryTradeResultStartTime = tempQueryTradeResultStartTime;
                         }
-                        if (sysValue.QueryTradeResultStartTime != null)
+                        int tempQueryTradeResultEndTime = sysValue.QueryTradeResultEndTime;
+                        if (tempQueryTradeResultEndTime < 1800)
                         {
-                            this.QueryTradeResultStartTime = sysValue.QueryTradeResultStartTime;
+                            QueryTradeResultEndTime = tempQueryTradeResultEndTime;
                         }
-                        if (sysValue.QueryTradeResultEndTime != null)
+                        int tempCancelOverTimeSecond = sysValue.CancelOverTimeSecond;
+                        if (tempCancelOverTimeSecond>=0)
                         {
-                            this.QueryTradeResultEndTime = sysValue.QueryTradeResultEndTime;
+                            CancelOverTimeSecond = tempCancelOverTimeSecond;
                         }
-                        if (sysValue.CancelOverTimeSecond != null)
+                        int tempOverSecond = sysValue.OverSecond;
+                        if (tempOverSecond != null)
                         {
-                            this.CancelOverTimeSecond = sysValue.CancelOverTimeSecond;
-                        }
-                        if (sysValue.OverSecond != null)
-                        {
-                            this.OverSecond = sysValue.OverSecond;
-                            if (this.OverSecond > 60)
+                            OverSecond = sysValue.OverSecond;
+                            if (OverSecond > 60)
                             {
-                                this.OverSecond = 60;
+                                OverSecond = 60;
                             }
-                            if (this.OverSecond < 1)
+                            if (OverSecond < 1)
                             {
-                                this.OverSecond = 1;
+                                OverSecond = 1;
                             }
                         }
                     }
@@ -308,7 +305,7 @@ namespace SharesTradeService
                                   select item).FirstOrDefault();
                     if (sysPar != null)
                     {
-                        this.TradeClientParallel = sysPar.ParamValue;
+                        TradeClientParallel = sysPar.ParamValue;
                     }
                 }
                 catch (Exception) { }

@@ -580,6 +580,7 @@
     <EntitySetMapping Name="t_shares_limit_traderules_other">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_limit_traderules_other">
         <MappingFragment StoreEntitySet="t_shares_limit_traderules_other">
+          <ScalarProperty Name="Type" ColumnName="Type" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="Status" ColumnName="Status" />
@@ -638,6 +639,7 @@
     <EntitySetMapping Name="t_shares_all">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_all">
         <MappingFragment StoreEntitySet="t_shares_all">
+          <ScalarProperty Name="SharesInfo" ColumnName="SharesInfo" />
           <ScalarProperty Name="MarketStatus" ColumnName="MarketStatus" />
           <ScalarProperty Name="SharesPyjc" ColumnName="SharesPyjc" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
@@ -1035,6 +1037,8 @@
     <EntitySetMapping Name="t_shares_monitor">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_monitor">
         <MappingFragment StoreEntitySet="t_shares_monitor">
+          <ScalarProperty Name="DataType" ColumnName="DataType" />
+          <ScalarProperty Name="SharesInfo" ColumnName="SharesInfo" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="Status" ColumnName="Status" />
@@ -1155,6 +1159,7 @@
     <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details">
         <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details">
+          <ScalarProperty Name="FatherId" ColumnName="FatherId" />
           <ScalarProperty Name="EntrustErrorDes" ColumnName="EntrustErrorDes" />
           <ScalarProperty Name="FollowType" ColumnName="FollowType" />
           <ScalarProperty Name="IsHold" ColumnName="IsHold" />
@@ -1263,6 +1268,8 @@
     <EntitySetMapping Name="t_account_shares_conditiontrade_buy">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy">
         <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy">
+          <ScalarProperty Name="DataType" ColumnName="DataType" />
+          <ScalarProperty Name="SharesInfo" ColumnName="SharesInfo" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="Status" ColumnName="Status" />

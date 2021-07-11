@@ -4,6 +4,7 @@ using Aop.Api.Request;
 using Aop.Api.Response;
 using FXCommon.Common;
 using MealTicket_Admin_Handler.Model;
+using MealTicket_DBCommon;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

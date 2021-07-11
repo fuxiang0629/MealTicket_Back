@@ -189,3 +189,6 @@ D:\项目\饭票\后端\MealTicket_Handler\obj\Debug\MealTicket_Handler.csproj.C
 D:\项目\饭票\后端\MealTicket_Handler\obj\Debug\MealTicket_Handler.csproj.CopyComplete
 D:\项目\饭票\后端\MealTicket_Handler\obj\Debug\MealTicket_Handler.dll
 D:\项目\饭票\后端\MealTicket_Handler\obj\Debug\MealTicket_Handler.pdb
+F:\项目\饭票后端\MealTicket_Handler\bin\Debug\MealTicket_DBCommon.dll
+F:\项目\饭票后端\MealTicket_Handler\bin\Debug\MealTicket_DBCommon.pdb
+F:\项目\饭票后端\MealTicket_Handler\bin\Debug\MealTicket_DBCommon.dll.config

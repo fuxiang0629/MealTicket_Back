@@ -51,5 +51,9 @@ namespace MealTicket_Web_Handler.Model
         /// 新分组名称
         /// </summary>
         public string NewGroupName { get; set; }
+
+        public int FollowType { get; set; }
+
+        public bool ParChecked { get; set; }
     }
 }

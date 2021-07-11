@@ -59,7 +59,6 @@ F:\项目\饭票后端\NoticeHandler\bin\Release\EntityFramework.SqlServer.xml
 F:\项目\饭票后端\NoticeHandler\bin\Release\Newtonsoft.Json.xml
 F:\项目\饭票后端\NoticeHandler\bin\Release\zh-Hans\EntityFramework.resources.dll
 F:\项目\饭票后端\NoticeHandler\bin\Release\zh-Hans\EntityFramework.SqlServer.resources.dll
-F:\项目\饭票后端\NoticeHandler\obj\Release\NoticeHandler.csprojAssemblyReference.cache
 F:\项目\饭票后端\NoticeHandler\obj\Release\NoticeHandler.csproj.CoreCompileInputs.cache
 F:\项目\饭票后端\NoticeHandler\obj\Release\NoticeHandler.csproj.CopyComplete
 F:\项目\饭票后端\NoticeHandler\obj\Release\NoticeHandler.dll
@@ -86,3 +85,19 @@ D:\项目\饭票\后端\NoticeHandler\obj\Release\NoticeHandler.csproj.CoreCompi
 D:\项目\饭票\后端\NoticeHandler\obj\Release\NoticeHandler.csproj.CopyComplete
 D:\项目\饭票\后端\NoticeHandler\obj\Release\NoticeHandler.dll
 D:\项目\饭票\后端\NoticeHandler\obj\Release\NoticeHandler.pdb
+F:\项目\饭票后端\NoticeHandler\bin\Release\RabbitMQ.Client.dll
+F:\项目\饭票后端\NoticeHandler\bin\Release\System.Memory.dll
+F:\项目\饭票后端\NoticeHandler\bin\Release\System.Threading.Channels.dll
+F:\项目\饭票后端\NoticeHandler\bin\Release\System.Threading.Tasks.Extensions.dll
+F:\项目\饭票后端\NoticeHandler\bin\Release\System.Runtime.CompilerServices.Unsafe.dll
+F:\项目\饭票后端\NoticeHandler\bin\Release\System.Buffers.dll
+F:\项目\饭票后端\NoticeHandler\bin\Release\System.Numerics.Vectors.dll
+F:\项目\饭票后端\NoticeHandler\bin\Release\RabbitMQ.Client.pdb
+F:\项目\饭票后端\NoticeHandler\bin\Release\RabbitMQ.Client.xml
+F:\项目\饭票后端\NoticeHandler\bin\Release\System.Memory.xml
+F:\项目\饭票后端\NoticeHandler\bin\Release\System.Threading.Channels.xml
+F:\项目\饭票后端\NoticeHandler\bin\Release\System.Threading.Tasks.Extensions.xml
+F:\项目\饭票后端\NoticeHandler\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
+F:\项目\饭票后端\NoticeHandler\bin\Release\System.Buffers.xml
+F:\项目\饭票后端\NoticeHandler\bin\Release\System.Numerics.Vectors.xml
+F:\项目\饭票后端\NoticeHandler\obj\Release\NoticeHandler.csprojAssemblyReference.cache

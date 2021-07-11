@@ -1,5 +1,6 @@
 ﻿using FXCommon.Common;
 using FXCommon.Database;
+using MealTicket_DBCommon;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
