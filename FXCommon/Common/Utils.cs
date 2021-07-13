@@ -367,7 +367,6 @@ namespace FXCommon.Common
         /// <param name="str"></param>
         public static byte[] Decompress(byte[] inputBytes)
         {
-
             using (MemoryStream inputStream = new MemoryStream(inputBytes))
             {
                 using (MemoryStream outStream = new MemoryStream())

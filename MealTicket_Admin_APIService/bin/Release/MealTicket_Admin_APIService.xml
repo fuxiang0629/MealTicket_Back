@@ -1555,7 +1555,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MealTicket_Admin_APIService.controller.SysSettingController.GetBrokerAccountSysPositionInfo(MealTicket_Admin_Handler.Model.PageRequest)">
+        <member name="M:MealTicket_Admin_APIService.controller.SysSettingController.GetBrokerAccountSysPositionInfo(MealTicket_Admin_Handler.Model.GetBrokerAccountSysPositionInfoRequest)">
             <summary>
             查询券商账户系统持仓信息
             </summary>

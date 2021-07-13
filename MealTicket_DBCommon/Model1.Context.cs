@@ -27,12 +27,6 @@ namespace MealTicket_DBCommon
             throw new UnintentionalCodeFirstException();
         }
     
-        public virtual DbSet<t_account_par_setting> t_account_par_setting { get; set; }
-        public virtual DbSet<t_shares_limit_traderules> t_shares_limit_traderules { get; set; }
-        public virtual DbSet<t_shares_limit_traderules_other> t_shares_limit_traderules_other { get; set; }
-        public virtual DbSet<t_system_param> t_system_param { get; set; }
-        public virtual DbSet<t_account_shares_entrust> t_account_shares_entrust { get; set; }
-        public virtual DbSet<t_account_shares_hold> t_account_shares_hold { get; set; }
         public virtual DbSet<t_account_api> t_account_api { get; set; }
         public virtual DbSet<t_account_bank_card> t_account_bank_card { get; set; }
         public virtual DbSet<t_account_baseinfo> t_account_baseinfo { get; set; }
@@ -45,6 +39,7 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_account_login_token> t_account_login_token { get; set; }
         public virtual DbSet<t_account_login_token_web> t_account_login_token_web { get; set; }
         public virtual DbSet<t_account_loginlog> t_account_loginlog { get; set; }
+        public virtual DbSet<t_account_par_setting> t_account_par_setting { get; set; }
         public virtual DbSet<t_account_realname> t_account_realname { get; set; }
         public virtual DbSet<t_account_recommend_prize_type> t_account_recommend_prize_type { get; set; }
         public virtual DbSet<t_account_recommend_prize_type_level> t_account_recommend_prize_type_level { get; set; }
@@ -90,10 +85,12 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_account_shares_conditiontrade_template_buy_other_trend_par> t_account_shares_conditiontrade_template_buy_other_trend_par { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_template_sell> t_account_shares_conditiontrade_template_sell { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_template_sell_child> t_account_shares_conditiontrade_template_sell_child { get; set; }
+        public virtual DbSet<t_account_shares_entrust> t_account_shares_entrust { get; set; }
         public virtual DbSet<t_account_shares_entrust_follow> t_account_shares_entrust_follow { get; set; }
         public virtual DbSet<t_account_shares_entrust_manager> t_account_shares_entrust_manager { get; set; }
         public virtual DbSet<t_account_shares_entrust_manager_dealdetails> t_account_shares_entrust_manager_dealdetails { get; set; }
         public virtual DbSet<t_account_shares_entrust_manager_dealdetails_real> t_account_shares_entrust_manager_dealdetails_real { get; set; }
+        public virtual DbSet<t_account_shares_hold> t_account_shares_hold { get; set; }
         public virtual DbSet<t_account_shares_hold_conditiontrade> t_account_shares_hold_conditiontrade { get; set; }
         public virtual DbSet<t_account_shares_hold_conditiontrade_child> t_account_shares_hold_conditiontrade_child { get; set; }
         public virtual DbSet<t_account_shares_hold_conditiontrade_follow> t_account_shares_hold_conditiontrade_follow { get; set; }
@@ -202,6 +199,8 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_shares_limit_time> t_shares_limit_time { get; set; }
         public virtual DbSet<t_shares_limit_tradequota> t_shares_limit_tradequota { get; set; }
         public virtual DbSet<t_shares_limit_tradequota_other> t_shares_limit_tradequota_other { get; set; }
+        public virtual DbSet<t_shares_limit_traderules> t_shares_limit_traderules { get; set; }
+        public virtual DbSet<t_shares_limit_traderules_other> t_shares_limit_traderules_other { get; set; }
         public virtual DbSet<t_shares_markettime> t_shares_markettime { get; set; }
         public virtual DbSet<t_shares_minutetimedata> t_shares_minutetimedata { get; set; }
         public virtual DbSet<t_shares_minutetimedata_temp> t_shares_minutetimedata_temp { get; set; }
@@ -249,6 +248,7 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_sys_conditiontrade_template_buy_other_trend_par> t_sys_conditiontrade_template_buy_other_trend_par { get; set; }
         public virtual DbSet<t_sys_conditiontrade_template_sell> t_sys_conditiontrade_template_sell { get; set; }
         public virtual DbSet<t_sys_conditiontrade_template_sell_child> t_sys_conditiontrade_template_sell_child { get; set; }
+        public virtual DbSet<t_system_param> t_system_param { get; set; }
         public virtual DbSet<t_test> t_test { get; set; }
         public virtual DbSet<t_test_deal> t_test_deal { get; set; }
         public virtual DbSet<t_test_entrust> t_test_entrust { get; set; }
@@ -259,7 +259,7 @@ namespace MealTicket_DBCommon
         public virtual DbSet<v_shares_quotes_last> v_shares_quotes_last { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
-        public virtual IQueryable<string> fn_split(string p_str, string p_split)
+        public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)
         {
             var p_strParameter = p_str != null ?
                 new ObjectParameter("p_str", p_str) :
@@ -269,7 +269,17 @@ namespace MealTicket_DBCommon
                 new ObjectParameter("p_split", p_split) :
                 new ObjectParameter("p_split", typeof(string));
     
-            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<string>("[meal_ticketEntities].[fn_split](@p_str, @p_split)", p_strParameter, p_splitParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<fn_split_Result>("[meal_ticketEntities].[fn_split](@p_str, @p_split)", p_strParameter, p_splitParameter);
+        }
+    
+        [DbFunction("meal_ticketEntities", "parseJsonNew")]
+        public virtual IQueryable<parseJsonNew_Result> parseJsonNew(string jSON)
+        {
+            var jSONParameter = jSON != null ?
+                new ObjectParameter("JSON", jSON) :
+                new ObjectParameter("JSON", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<parseJsonNew_Result>("[meal_ticketEntities].[parseJsonNew](@JSON)", jSONParameter);
         }
     
         public virtual int P_AccountApplyRealName(Nullable<long> accountId, string imgUrlFront, string imgUrlBack, string realName, Nullable<int> sex, string birthDay, string cardNo, string address, string checkOrg, string validDateFrom, string validDateTo, ObjectParameter errorCode, ObjectParameter errorMessage)
@@ -1398,6 +1408,23 @@ namespace MealTicket_DBCommon
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_TradeAnalyseResult_Update");
         }
     
+        public virtual int P_TradeFinish(Nullable<long> entrustManagerId, Nullable<long> dealPrice, Nullable<int> dealCount)
+        {
+            var entrustManagerIdParameter = entrustManagerId.HasValue ?
+                new ObjectParameter("entrustManagerId", entrustManagerId) :
+                new ObjectParameter("entrustManagerId", typeof(long));
+    
+            var dealPriceParameter = dealPrice.HasValue ?
+                new ObjectParameter("dealPrice", dealPrice) :
+                new ObjectParameter("dealPrice", typeof(long));
+    
+            var dealCountParameter = dealCount.HasValue ?
+                new ObjectParameter("dealCount", dealCount) :
+                new ObjectParameter("dealCount", typeof(int));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_TradeFinish", entrustManagerIdParameter, dealPriceParameter, dealCountParameter);
+        }
+    
         public virtual int P_TradePar_Parse_BuyOrSellCount(string sharesCode, Nullable<int> market, ObjectParameter tempTri)
         {
             var sharesCodeParameter = sharesCode != null ?
@@ -1507,7 +1534,7 @@ namespace MealTicket_DBCommon
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_TradePar_Parse_TodayRiseRate", sharesCodeParameter, marketParameter, tempTri);
         }
     
-        public virtual ObjectResult<Nullable<int>> P_TradeRecovery(Nullable<long> holdId, string code, Nullable<int> count, Nullable<long> price, ObjectParameter errorCode, ObjectParameter errorMessage)
+        public virtual int P_TradeRecovery(Nullable<long> holdId, string code, Nullable<int> count, Nullable<long> price, ObjectParameter errorCode, ObjectParameter errorMessage)
         {
             var holdIdParameter = holdId.HasValue ?
                 new ObjectParameter("holdId", holdId) :
@@ -1525,7 +1552,7 @@ namespace MealTicket_DBCommon
                 new ObjectParameter("price", price) :
                 new ObjectParameter("price", typeof(long));
     
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<Nullable<int>>("P_TradeRecovery", holdIdParameter, codeParameter, countParameter, priceParameter, errorCode, errorMessage);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_TradeRecovery", holdIdParameter, codeParameter, countParameter, priceParameter, errorCode, errorMessage);
         }
     
         public virtual int P_TryToCancelEntrust(Nullable<long> entrustId)
@@ -1537,31 +1564,9 @@ namespace MealTicket_DBCommon
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_TryToCancelEntrust", entrustIdParameter);
         }
     
-        [DbFunction("meal_ticketEntities", "parseJsonNew")]
-        public virtual IQueryable<parseJsonNew_Result> parseJsonNew(string jSON)
+        public virtual int P_SharesQuotes_Update()
         {
-            var jSONParameter = jSON != null ?
-                new ObjectParameter("JSON", jSON) :
-                new ObjectParameter("JSON", typeof(string));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.CreateQuery<parseJsonNew_Result>("[meal_ticketEntities].[parseJsonNew](@JSON)", jSONParameter);
-        }
-    
-        public virtual int P_TradeFinish(Nullable<long> entrustManagerId, Nullable<long> dealPrice, Nullable<int> dealCount)
-        {
-            var entrustManagerIdParameter = entrustManagerId.HasValue ?
-                new ObjectParameter("entrustManagerId", entrustManagerId) :
-                new ObjectParameter("entrustManagerId", typeof(long));
-    
-            var dealPriceParameter = dealPrice.HasValue ?
-                new ObjectParameter("dealPrice", dealPrice) :
-                new ObjectParameter("dealPrice", typeof(long));
-    
-            var dealCountParameter = dealCount.HasValue ?
-                new ObjectParameter("dealCount", dealCount) :
-                new ObjectParameter("dealCount", typeof(int));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_TradeFinish", entrustManagerIdParameter, dealPriceParameter, dealCountParameter);
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_SharesQuotes_Update");
         }
     }
 }

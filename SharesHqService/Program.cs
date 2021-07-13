@@ -33,7 +33,6 @@ namespace SharesHqService
             // 启动 OWIN host
             var Instance = Singleton.Instance;
             var _kernel = new StandardKernel(new ServiceModule());
-            var runners = _kernel.GetAll<Runner>().ToList();
 
             while (true)
             {
@@ -43,6 +42,7 @@ namespace SharesHqService
                 {
                     Instance.GetLastSharesQuotesList();
                     Instance.StartSysPar();
+                    var runners = _kernel.GetAll<Runner>().ToList();
                     runners.ForEach((e) => e.Run());
                     break;
                 }

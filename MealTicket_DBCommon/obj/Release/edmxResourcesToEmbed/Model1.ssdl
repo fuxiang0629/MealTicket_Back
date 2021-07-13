@@ -2504,6 +2504,7 @@
     <Property Name="PlateId" Type="bigint" Nullable="false" />
     <Property Name="Market" Type="int" Nullable="false" />
     <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="SharesInfo" Type="varchar" MaxLength="30" StoreGeneratedPattern="Computed" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_plate_riserate">
@@ -3892,6 +3893,7 @@
     <Parameter Name="errorCode" Type="int" Mode="InOut" />
     <Parameter Name="errorMessage" Type="nvarchar" Mode="InOut" />
   </Function>
+  <Function Name="P_SharesQuotes_Update" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
   <Function Name="P_SharesSeatBuy_PayResultCallback" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="orderSN" Type="varchar" Mode="In" />
     <Parameter Name="totalAmount" Type="bigint" Mode="In" />

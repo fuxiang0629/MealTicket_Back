@@ -88,8 +88,21 @@ namespace MealTicket_Web_APIService
 
             mqHandler.StartListen();//启动队列监听
 
-            //加载依赖注入
-            Kernel = LoadKernel();   
+            session._BuyTipSession = new MealTicket_Web_Handler.session.BuyTipSession();
+            session._BuyTipSession.StartUpdate(1000);
+            session._SharesQuotesSession = new MealTicket_Web_Handler.session.SharesQuotesSession();
+            session._SharesQuotesSession.StartUpdate(3000);
+            session._PlateRateSession = new MealTicket_Web_Handler.session.PlateRateSession();
+            session._PlateRateSession.StartUpdate(3000);
+            session._SharesBaseSession = new MealTicket_Web_Handler.session.SharesBaseSession();
+            session._SharesBaseSession.StartUpdate(3600000);
+            session._AccountTrendTriSession = new MealTicket_Web_Handler.session.AccountTrendTriSession();
+            session._AccountTrendTriSession.StartUpdate(3000);
+            session._AccountRiseLimitTriSession = new MealTicket_Web_Handler.session.AccountRiseLimitTriSession();
+            session._AccountRiseLimitTriSession.StartUpdate(3000); 
+
+             //加载依赖注入
+             Kernel = LoadKernel();   
             //加载循环任务
             runners = Kernel.GetAll<Runner>().ToList();
             runners.ForEach(e => e.Run());

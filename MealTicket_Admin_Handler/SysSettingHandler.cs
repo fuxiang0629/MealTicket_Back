@@ -928,14 +928,22 @@ namespace MealTicket_Admin_Handler
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public PageRes<BrokerAccountSysPositionInfo> GetBrokerAccountSysPositionInfo(PageRequest request)
+        public PageRes<BrokerAccountSysPositionInfo> GetBrokerAccountSysPositionInfo(GetBrokerAccountSysPositionInfoRequest request)
         {
             using (var db = new meal_ticketEntities())
             {
                 var list = from item in db.t_broker_account_shares_rel
+                           join item2 in db.t_shares_all on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
+                           from ai in a.DefaultIfEmpty()
                            where item.TotalSharesCount > 0
-                           group item by new { item.Market, item.SharesCode } into g
+                           group item by new { item.Market, item.SharesCode,ai } into g
                            select g;
+                if (!string.IsNullOrEmpty(request.SharesInfo))
+                {
+                    list = from item in list
+                           where item.Key.ai != null && (item.Key.ai.SharesName.Contains(request.SharesInfo) || item.Key.ai.SharesCode.Contains(request.SharesInfo) || item.Key.ai.SharesPyjc.StartsWith(request.SharesInfo))
+                           select item;
+                }
                 int totalCount = list.Count();
 
                 return new PageRes<BrokerAccountSysPositionInfo>
@@ -943,14 +951,12 @@ namespace MealTicket_Admin_Handler
                     MaxId = 0,
                     TotalCount = totalCount,
                     List = (from item in list
-                            join item2 in db.t_shares_all on new { item.Key.Market, item.Key.SharesCode } equals new { item2.Market, item2.SharesCode } into a
-                            from ai in a.DefaultIfEmpty()
                             orderby item.Key.SharesCode
                             select new BrokerAccountSysPositionInfo
                             {
                                 SharesCode = item.Key.SharesCode,
                                 Market = item.Key.Market,
-                                SharesName = ai == null ? "" : ai.SharesName,
+                                SharesName = item.Key.ai == null ? "" : item.Key.ai.SharesName,
                                 CanSoldSharesCount = item.Sum(e => e.AccountCanSoldCount + e.SimulateCanSoldCount),
                                 TotalSharesCount = item.Sum(e => e.TotalSharesCount)
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()

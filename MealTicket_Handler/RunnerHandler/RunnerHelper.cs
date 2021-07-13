@@ -961,10 +961,11 @@ namespace MealTicket_Handler.RunnerHandler
         /// </summary>
         public static void HoldClose()
         {
+            DateTime dateNow = DateTime.Now.Date;
             using (var db = new meal_ticketEntities())
             {
                 var hold = (from item in db.t_account_shares_hold
-                            where item.Status == 1 && item.RemainCount <= 0
+                            where item.Status == 1 && item.RemainCount <= 0 && item.LastModified< dateNow
                             select item).ToList();
                 foreach (var item in hold)
                 {

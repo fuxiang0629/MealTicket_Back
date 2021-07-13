@@ -33,6 +33,11 @@ namespace MealTicket_Web_Handler.Model
         public string AccountName { get; set; }
 
         /// <summary>
+        /// 主导用户Id
+        /// </summary>
+        public long CreateAccountId { get; set; }
+
+        /// <summary>
         /// 股票名称
         /// </summary>
         public string SharesName { get; set; }

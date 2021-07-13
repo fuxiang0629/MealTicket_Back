@@ -706,7 +706,7 @@ namespace SharesHqService
                             {
                                 RunEndTime = tempRunEndTime;
                             }
-                            int tempSshqUpdateRate = sysValue.SshqUpdateRate;
+                            int tempSshqUpdateRate = sysValue.SshqUpdateRate; 
                             if (tempSshqUpdateRate >0 && tempSshqUpdateRate<60000)
                             {
                                 SshqUpdateRate = tempSshqUpdateRate;

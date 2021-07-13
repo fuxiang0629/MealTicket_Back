@@ -275,11 +275,9 @@ namespace SharesTradeService
                         {
                             QueryTradeResultEndTime = tempQueryTradeResultEndTime;
                         }
-                        int tempCancelOverTimeSecond = sysValue.CancelOverTimeSecond;
-                        if (tempCancelOverTimeSecond>=0)
-                        {
-                            CancelOverTimeSecond = tempCancelOverTimeSecond;
-                        }
+
+                        CancelOverTimeSecond = ((int)sysValue.CancelOverTimeSecond < 0 ? Timeout.Infinite : sysValue.CancelOverTimeSecond);
+
                         int tempOverSecond = sysValue.OverSecond;
                         if (tempOverSecond != null)
                         {

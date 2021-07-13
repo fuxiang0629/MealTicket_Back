@@ -9,6 +9,8 @@ using MealTicket_Web_Handler;
 using MealTicket_Web_Handler.Model;
 using System.Text;
 using System.Web;
+using Newtonsoft.Json.Converters;
+using System.Text.RegularExpressions;
 
 namespace MealTicket_Web_APIService.Filter
 {
@@ -91,15 +93,22 @@ namespace MealTicket_Web_APIService.Filter
                     else
                     {
                         resResult.Data = context.Response.Content.ReadAsAsync<object>().Result;
-                        if (!string.IsNullOrEmpty(baseInfo.IsZip))
-                        {
-                            resResult.Data = Utils.Compress(HttpUtility.UrlEncode(JsonConvert.SerializeObject(resResult.Data),Encoding.UTF8));
-                            resResult.IsZip = true;
-                        }
                         resResult.ErrorMessage = resultMessage;
                         resResult.ErrorCode = resultCode;
-
-                        context.Response = context.Request.CreateResponse(resResult);
+                        if (!string.IsNullOrEmpty(baseInfo.IsZip) && context.Request.Headers.AcceptEncoding.Contains(new System.Net.Http.Headers.StringWithQualityHeaderValue("gzip")))
+                        {
+                            resResult.IsZip = true;
+                            var iso = new IsoDateTimeConverter();
+                            iso.DateTimeFormat = "yyyy-MM-dd HH:mm:ss";
+                            resResult.Data = Utils.Compress(Regex.Replace(HttpUtility.UrlEncode(JsonConvert.SerializeObject(resResult.Data, iso), Encoding.UTF8), @"\+", "%20"));
+                            //resResult.Data = Utils.Compress(HttpUtility.UrlEncode(JsonConvert.SerializeObject(resResult.Data, iso), Encoding.UTF8));
+                            context.Response = context.Request.CreateResponse(resResult);
+                        }
+                        else
+                        {
+                            resResult.IsZip = false;
+                            context.Response = context.Request.CreateResponse(resResult);
+                        }
                     }
                 }
                 VisitLog log = new VisitLog

@@ -21,6 +21,11 @@ namespace MealTicket_Web_Handler.Model
     public class AccountTrendTriInfo
     {
         /// <summary>
+        /// 账户Id
+        /// </summary>
+        public long AccountId { get; set; }
+
+        /// <summary>
         /// RelId
         /// </summary>
         public long RelId { get; set; }

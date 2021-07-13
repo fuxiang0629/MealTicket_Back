@@ -120,6 +120,10 @@
       <Project>{0ecd9f97-e7b1-42dd-ab4f-ffbbf6216257}</Project>
       <Name>FXCommon</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MealTicket_DBCommon\MealTicket_DBCommon.csproj">
+      <Project>{100AABCB-BBBC-46DD-B494-57D56083590A}</Project>
+      <Name>MealTicket_DBCommon</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MealTicket_Web_Handler\MealTicket_Web_Handler.csproj">
       <Project>{209718ff-927c-4dda-b3dc-24b49fe643ae}</Project>
       <Name>MealTicket_Web_Handler</Name>

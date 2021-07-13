@@ -6910,6 +6910,11 @@
             数据最后更新时间
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetBrokerAccountSysPositionInfoRequest.SharesInfo">
+            <summary>
+            股票信息
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.BrokerAccountSysPositionInfo.Market">
             <summary>
             市场0深圳 1上海
@@ -11663,7 +11668,7 @@
             </summary>
             <param name="request"></param>
         </member>
-        <member name="M:MealTicket_Admin_Handler.SysSettingHandler.GetBrokerAccountSysPositionInfo(MealTicket_Admin_Handler.Model.PageRequest)">
+        <member name="M:MealTicket_Admin_Handler.SysSettingHandler.GetBrokerAccountSysPositionInfo(MealTicket_Admin_Handler.Model.GetBrokerAccountSysPositionInfoRequest)">
             <summary>
             查询券商账户系统持仓信息
             </summary>

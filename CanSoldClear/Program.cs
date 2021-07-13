@@ -11,6 +11,7 @@ namespace CanSoldClear
     {
         static void Main(string[] args)
         {
+            RunnerHelper.TradeClean();//清理
             RunnerHelper.JoinCanSold();//可售
         }
     }

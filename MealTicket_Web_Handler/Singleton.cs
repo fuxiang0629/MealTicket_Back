@@ -2,6 +2,7 @@
 using FXCommon.Database;
 using MealTicket_DBCommon;
 using MealTicket_Web_Handler.Runner;
+using MealTicket_Web_Handler.session;
 using MealTicket_Web_Handler.Transactiondata;
 using Newtonsoft.Json;
 using StockTrendMonitor.Models;
@@ -214,6 +215,30 @@ namespace MealTicket_Web_Handler
             if (_transactionDataTask != null)
             {
                 _transactionDataTask.Dispose();
+            }
+            if (_BuyTipSession != null)
+            {
+                _BuyTipSession.Dispose();
+            }
+            if (_SharesQuotesSession != null)
+            {
+                _SharesQuotesSession.Dispose();
+            }
+            if (_PlateRateSession != null)
+            {
+                _PlateRateSession.Dispose();
+            }
+            if (_AccountTrendTriSession != null)
+            {
+                _AccountTrendTriSession.Dispose();
+            }
+            if (_SharesBaseSession != null)
+            {
+                _SharesBaseSession.Dispose();
+            }
+            if (_AccountRiseLimitTriSession != null)
+            {
+                _AccountRiseLimitTriSession.Dispose();
             }
         }
 
@@ -535,5 +560,14 @@ namespace MealTicket_Web_Handler
             _transactionDataTask.Init();
             return _transactionDataTask;
         }
+
+        #region=========session缓存========
+        public BuyTipSession _BuyTipSession;
+        public SharesQuotesSession _SharesQuotesSession;
+        public SharesBaseSession _SharesBaseSession;
+        public PlateRateSession _PlateRateSession;
+        public AccountTrendTriSession _AccountTrendTriSession;
+        public AccountRiseLimitTriSession _AccountRiseLimitTriSession; 
+        #endregion
     }
 }

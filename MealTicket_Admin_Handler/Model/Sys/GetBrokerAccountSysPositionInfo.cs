@@ -10,6 +10,14 @@ namespace MealTicket_Admin_Handler.Model
     {
     }
 
+    public class GetBrokerAccountSysPositionInfoRequest:PageRequest
+    { 
+        /// <summary>
+        /// 股票信息
+        /// </summary>
+        public string SharesInfo { get; set; }
+    }
+
     public class BrokerAccountSysPositionInfo 
     {
         /// <summary>

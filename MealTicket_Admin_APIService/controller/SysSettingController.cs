@@ -400,7 +400,7 @@ namespace MealTicket_Admin_APIService.controller
         [CheckUserPowerFilter]
         [Route("broker/account/sys/position/info"), HttpPost]
         [Description("查询券商账户系统持仓信息")]
-        public PageRes<BrokerAccountSysPositionInfo> GetBrokerAccountSysPositionInfo(PageRequest request)
+        public PageRes<BrokerAccountSysPositionInfo> GetBrokerAccountSysPositionInfo(GetBrokerAccountSysPositionInfoRequest request)
         {
             if (request == null)
             {

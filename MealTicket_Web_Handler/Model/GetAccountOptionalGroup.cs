@@ -41,5 +41,13 @@ namespace MealTicket_Web_Handler.Model
         /// 数据创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }
+
+        public bool GroupIsContinue { get; set; }
+
+        public bool GroupChecked { get; set; }
+
+        public string ValidTime { get; set; }
+
+        public string lastPushTime { get; set; }
     }
 }

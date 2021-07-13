@@ -175,11 +175,7 @@ namespace MealTicket_Web_Handler
         {
             using (var db = new meal_ticketEntities())
             {
-                List<string> sharesInfoList = request.Select(e => e.Market + "" + e.SharesCode).ToList();
-                var shares_quotes_last = (from item in db.v_shares_quotes_last
-                                          where sharesInfoList.Contains(item.Market + "" + item.SharesCode)
-                                          select item).ToList();
-                var quotes = (from item in shares_quotes_last
+                var quotes = (from item in Singleton.Instance._SharesQuotesSession.GetSessionData()
                               join item2 in request on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
                               where item.ClosedPrice > 0 && item.PresentPrice > 0
                               select new SharesListQuotesInfo
@@ -191,24 +187,10 @@ namespace MealTicket_Web_Handler
                                   RisePrice = item.PresentPrice - item.ClosedPrice,
                                   RiseRate = (int)Math.Round(((item.PresentPrice - item.ClosedPrice) * 1.0 / item.ClosedPrice) * 10000, 0),
                               }).ToList();
-                var plateList = (from x in db.t_shares_plate_rel
-                                 join x2 in db.t_shares_plate on x.PlateId equals x2.Id
-                                 join x3 in db.t_shares_plate_riserate_last on x.PlateId equals x3.PlateId into a
-                                 from ai in a.DefaultIfEmpty()
-                                 join x4 in db.t_shares_plate_type_business on x2.Type equals x4.Id
-                                 where sharesInfoList.Contains(x.Market + "" + x.SharesCode) && x2.Status == 1 && (x2.ChooseStatus == 1 || (x4.IsBasePlate == 1 && x2.BaseStatus == 1))
-                                 select new SharesPlateInfo
-                                 {
-                                     Id = x2.Id,
-                                     SharesCode = x.SharesCode,
-                                     Market = x.Market,
-                                     Type = x2.Type,
-                                     Name = x2.Name,
-                                     SharesCount = ai == null ? 0 : ai.SharesCount,
-                                     RiseRate = ai == null ? 0 : ai.RiseRate,
-                                     DownLimitCount = ai == null ? 0 : ai.DownLimitCount,
-                                     RiseLimitCount = ai == null ? 0 : ai.RiseLimitCount
-                                 }).ToList();
+                List<string> sharesInfoList = request.Select(e => e.Market + "" + e.SharesCode).ToList();
+                var plateList = (from x in Singleton.Instance._PlateRateSession.GetSessionData()
+                                 where sharesInfoList.Contains(x.SharesInfo)
+                                 select x).ToList();
                 foreach (var item in quotes)
                 {
                     //查询股票属于哪个板块
@@ -1214,11 +1196,14 @@ namespace MealTicket_Web_Handler
             DateTime timeNow = DateTime.Now;
             using (var db = new meal_ticketEntities())
             {
-                var list = (from item in db.t_shares_today
-                            join item2 in db.t_shares_all on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
-                            join item3 in db.v_shares_quotes_last on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into a
+                var shares_today = (from item in db.t_shares_today
+                                    where item.Status == 1
+                                    select item).ToList();
+
+                var list = (from item in shares_today
+                            join item2 in Singleton.Instance._SharesBaseSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                            join item3 in Singleton.Instance._SharesQuotesSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into a
                             from ai in a.DefaultIfEmpty()
-                            where item.Status == 1
                             orderby item.OrderIndex
                             select new SharesQuotesTodayInfo
                             {
@@ -1569,54 +1554,53 @@ namespace MealTicket_Web_Handler
             {
                 request.LastDataTime = dateNow.Date;
             }
-            using (var ts = new TransactionScope(TransactionScopeOption.Required,
-                         new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
             using (var db = new meal_ticketEntities())
             {
-                string sql = string.Format(@"select t.Id OptionalId,t.Market,t.SharesCode,t.SharesName,t.Industry,t.Business,t.PresentPrice,t.ClosedPrice,t.TriPushCount TriCountToday,t.LastPushTime PushTime,t.TrendId,t.RelId,t.LastPushDesc TriDesc
-from
-(
-	select t.Id,t.Market,t.SharesCode,t3.SharesName,t3.Industry,t3.Business,t3.PresentPrice,t7.TriPushCount,t2.LastPushTime,t1.TrendId,
-	t1.Id RelId,t2.LastPushDesc,t3.ClosedPrice,
-	ROW_NUMBER()OVER(partition by t.Market,t.SharesCode order by t2.LastPushTime desc) num
-	from t_account_shares_optional t with(nolock)
-	inner join t_account_shares_optional_trend_rel t1 with(nolock) on t.Id=t1.OptionalId
-	inner join t_account_shares_optional_trend_rel_tri t2 with(nolock) on t1.Id=t2.RelId
-	left join v_shares_baseinfo t3 with(nolock) on t.Market=t3.Market and t.SharesCode=t3.SharesCode
-	inner join t_shares_monitor t6 with(nolock) on t.Market=t6.Market and t.SharesCode=t6.SharesCode 
-	inner join t_account_shares_optional_trend_rel_tri_record_statistic t7 with(nolock) on t.Market=t7.Market and t.SharesCode=t7.SharesCode 
-	and t.AccountId=t7.AccountId and t7.[Date]='{1}'
-	where t.AccountId={0} and t1.[Status]=1 and convert(varchar(20),t2.LastPushTime,120)>'{2}' and t.IsTrendClose=0 
-)t
-where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.LastDataTime.Value.ToString("yyyy-MM-dd HH:mm:ss"));
-                var result = db.Database.SqlQuery<AccountTrendTriInfo>(sql).ToList();
+                var result = (from item in Singleton.Instance._AccountTrendTriSession.GetSessionData()
+                              where item.AccountId == basedata.AccountId && item.PushTime > request.LastDataTime
+                              select new AccountTrendTriInfo 
+                              {
+                                  Market=item.Market,
+                                  SharesCode=item.SharesCode,
+                                  AccountId=item.AccountId,
+                                  OptionalId=item.OptionalId,
+                                  TriCountToday=item.TriCountToday,
+                                  PushTime=item.PushTime,
+                                  TrendId=item.TrendId,
+                                  RelId=item.RelId,
+                                  TriDesc=item.TriDesc
+                              }).ToList();
                 var groupList = (from x in db.t_account_shares_optional_group_rel
                                  where x.GroupIsContinue || (x.ValidStartTime <= dateNow && x.ValidEndTime >= dateNow)
                                  select x).ToList();
-                var plate = from x in db.t_shares_plate_rel
-                            join x2 in db.t_shares_plate on x.PlateId equals x2.Id
-                            join x3 in db.t_shares_plate_riserate_last on x.PlateId equals x3.PlateId into a
-                            from ai in a.DefaultIfEmpty()
-                            join x4 in db.t_shares_plate_type_business on x2.Type equals x4.Id
-                            where x2.Status == 1 && (x2.ChooseStatus == 1 || (x4.IsBasePlate == 1 && x2.BaseStatus == 1))
-                            select new {x,x2,ai,x4 };
 
-                var conditionBuy = from item in db.t_account_shares_conditiontrade_buy
-                                   where item.AccountId == basedata.AccountId
-                                   select item;
+                var sharesListPlate = result.Select(e => e.Market + "" + e.SharesCode).ToList();
+                var plateList = (from x in Singleton.Instance._PlateRateSession.GetSessionData()
+                                 where sharesListPlate.Contains(x.SharesInfo)
+                                 select x).ToList();
+
+
+                var sharesList = result.Select(e => e.SharesCode + "," + e.Market).ToList();
+                var conditionBuy = (from item in db.t_account_shares_conditiontrade_buy
+                                    where item.AccountId == basedata.AccountId && sharesList.Contains(item.SharesInfo)
+                                    select item).ToList();
+
+
                 var accountTrend = (from item in result
                                     join item2 in groupList on item.OptionalId equals item2.OptionalId into a
                                     from ai in a.DefaultIfEmpty()
-                                    join item3 in plate on new { item.Market,item.SharesCode} equals new { item3.x.Market,item3.x.SharesCode} into b from bi in b.DefaultIfEmpty()
-                                    join item4 in conditionBuy on new { item.Market,item.SharesCode} equals new { item4.Market,item4.SharesCode} into c from ci in c.DefaultIfEmpty()
-                                    group new { item, ai, bi ,ci} by new { item, ci } into g
+                                    join item3 in Singleton.Instance._SharesBaseSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode }
+                                    join item4 in conditionBuy on new { item.Market, item.SharesCode } equals new { item4.Market, item4.SharesCode } into c
+                                    from ci in c.DefaultIfEmpty()
+                                    join item6 in Singleton.Instance._SharesQuotesSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item6.Market, item6.SharesCode }
+                                    group new { item, item3, item6, ai, ci } by new { item, item3, item6, ci } into g
                                     orderby g.Key.item.PushTime descending
                                     select new AccountTrendTriInfo
                                     {
                                         SharesCode = g.Key.item.SharesCode,
-                                        SharesName = g.Key.item.SharesName,
-                                        Business = g.Key.item.Business,
-                                        ClosedPrice = g.Key.item.ClosedPrice,
+                                        SharesName = g.Key.item3.SharesName,
+                                        Business = g.Key.item3.Business,
+                                        ClosedPrice = g.Key.item6.ClosedPrice,
                                         GroupList = (from x in g
                                                      where x.ai != null
                                                      select new AccountTrendTriInfoGroup
@@ -1626,33 +1610,22 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                                                          ValidStartTime = x.ai.ValidStartTime,
                                                          ValidEndTime = x.ai.ValidEndTime
                                                      }).ToList(),
-                                        Industry = g.Key.item.Industry,
+                                        Industry = g.Key.item3.Industry,
                                         Market = g.Key.item.Market,
                                         OptionalId = g.Key.item.OptionalId,
-                                        PresentPrice = g.Key.item.PresentPrice,
+                                        PresentPrice = g.Key.item6.PresentPrice,
                                         PushTime = g.Key.item.PushTime,
                                         RelId = g.Key.item.RelId,
                                         TrendId = g.Key.item.TrendId,
                                         TriCountToday = g.Key.item.TriCountToday,
                                         TriDesc = g.Key.item.TriDesc,
-                                        ConditionStatus= g.Key.ci==null?1:g.Key.ci.Status==1?3:2,
-                                        ConditionId=g.Key.ci==null?0:g.Key.ci.Id,
-                                        PlateList=(from x in g
-                                                  where x.bi!=null
-                                                  select new SharesPlateInfo
-                                                  {
-                                                      Id = x.bi.x2.Id,
-                                                      SharesCode = x.bi.x.SharesCode,
-                                                      Market = x.bi.x.Market,
-                                                      Type = x.bi.x2.Type,
-                                                      Name = x.bi.x2.Name,
-                                                      SharesCount = x.bi.ai == null ? 0 : x.bi.ai.SharesCount,
-                                                      RiseRate = x.bi.ai == null ? 0 : x.bi.ai.RiseRate,
-                                                      DownLimitCount = x.bi.ai == null ? 0 : x.bi.ai.DownLimitCount,
-                                                      RiseLimitCount = x.bi.ai == null ? 0 : x.bi.ai.RiseLimitCount
-                                                  }).OrderByDescending(e=>e.RiseRate).ToList()
+                                        ConditionStatus = g.Key.ci == null ? 1 : g.Key.ci.Status == 1 ? 3 : 2,
+                                        ConditionId = g.Key.ci == null ? 0 : g.Key.ci.Id,
+                                        AccountId = g.Key.item.AccountId,
+                                        PlateList = (from x in plateList
+                                                     where x.Market == g.Key.item.Market && x.SharesCode == g.Key.item.SharesCode
+                                                     select x).ToList()
                                     }).ToList();
-                ts.Complete();
                 return accountTrend;
             }
         }
@@ -1701,81 +1674,18 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
             }
             using (var db = new meal_ticketEntities())
             {
-                string sql = string.Format(@"select t.SharesCode RelId,t.Market,t.SharesCode,t1.SharesName,t.ClosedPrice,t.PresentPrice,t.[Type],t1.Business,t1.Industry,t2.PushTime,t2.TriCountToday,t4.Status ConditionStatus,t4.Id ConditionId
-  from
-  (
-  select Market,SharesCode,ClosedPrice,PresentPrice,-1 [Type]
-  from t_shares_quotes_date with(nolock)
-  where [Date]='{0}' and PriceType=1--涨停池
-  union all
-  select Market,SharesCode,ClosedPrice,PresentPrice,-2 [Type]
-  from t_shares_quotes_date with(nolock)
-  where [Date]='{0}' and PriceType=2--跌停池
-  union all
-  select Market,SharesCode,ClosedPrice,PresentPrice,-3 [Type]
-  from t_shares_quotes_date with(nolock)
-  where [Date]='{0}' and PriceType=0 and LimitUpCount>0--炸板池
-  union all
-  select Market,SharesCode,ClosedPrice,PresentPrice,-4 [Type]
-  from t_shares_quotes_date with(nolock)
-  where [Date]='{0}' and PriceType=0 and LimitDownCount>0--翘板池
-  union all
-  select Market,SharesCode,ClosedPrice,PresentPrice,-5 [Type]
-  from t_shares_quotes_date with(nolock)
-  where [Date]='{0}' and TriNearLimitType=1 and LimitUpCount=0--即将涨停池
-  union all
-  select Market,SharesCode,ClosedPrice,PresentPrice,-6 [Type]
-  from t_shares_quotes_date with(nolock)
-  where [Date]='{0}' and TriNearLimitType=2 and LimitDownCount=0--即将跌停池
-  )t
-  inner join v_shares_baseinfo  t1 with(nolock)on t.Market=t1.Market and t.SharesCode=t1.SharesCode
-  left join t_shares_limit t3 on (t.Market=t3.LimitMarket or t3.LimitMarket=-1) and ((t3.LimitType=1 and t.SharesCode like t3.LimitKey+'%') or (t3.LimitType=2 and t1.SharesName like t3.LimitKey+'%'))
-  left join
-  (	
-	select Market,SharesCode,
-	case when [Type]=1 and BusinessType=1 then -1 when [Type]=2 and BusinessType=1 then -2 when [Type]=3 and BusinessType=1 then -3 
-	when [Type]=4 and BusinessType=1 then -4 when [Type]=5 and BusinessType=2 then -5 
-	when [Type]=6 and BusinessType=2 then -6 else 0 end [Type],
-	BusinessType,count(*) TriCountToday,Max(CreateTime) PushTime
-	from t_shares_quotes_history with(nolock)
-	where [Date]='{0}'
-	group by Market,SharesCode,[Type],BusinessType
-  )t2 on t.Market=t2.Market and t.SharesCode=t2.SharesCode and t.[Type]=t2.[Type] 
-  left join 
-  (
-    select * from t_account_shares_conditiontrade_buy
-    where AccountId={2}
-  )t4 on t.Market=t4.Market and t.SharesCode=t4.SharesCode
-  where convert(varchar(20),t2.PushTime,120)>'{1}' and t3.Id is null
-  order by t2.PushTime desc,t.SharesCode", dateNow.ToString("yyyy-MM-dd"), request.LastDataTime.Value.ToString("yyyy-MM-dd HH:mm:ss"), basedata.AccountId);
-
-                var list = db.Database.SqlQuery<AccountRiseLimitTriInfo>(sql).ToList();
-
-
+                var list = (from item in Singleton.Instance._AccountRiseLimitTriSession.GetSessionData()
+                            where item.PushTime > request.LastDataTime
+                            select item).ToList();
                 var groupRelList = (from x in db.t_account_shares_conditiontrade_buy_group_rel
                                     join x2 in db.t_account_shares_conditiontrade_buy_group on x.GroupId equals x2.Id
                                     where x2.AccountId == basedata.AccountId
                                     select x).ToList();
 
                 List<string> sharesList = list.Select(e => e.Market + "" + e.SharesCode).ToList();
-                var plateList = (from x in db.t_shares_plate_rel
-                                 join x2 in db.t_shares_plate on x.PlateId equals x2.Id
-                                 join x3 in db.t_shares_plate_riserate_last on x.PlateId equals x3.PlateId into a
-                                 from ai in a.DefaultIfEmpty()
-                                 join x4 in db.t_shares_plate_type_business on x2.Type equals x4.Id
-                                 where sharesList.Contains(x.Market + "" + x.SharesCode) && x2.Status == 1 && (x2.ChooseStatus == 1 || (x4.IsBasePlate == 1 && x2.BaseStatus == 1))
-                                 select new SharesPlateInfo
-                                 {
-                                     Id = x2.Id,
-                                     SharesCode = x.SharesCode,
-                                     Market = x.Market,
-                                     Type = x2.Type,
-                                     Name = x2.Name,
-                                     SharesCount = ai == null ? 0 : ai.SharesCount,
-                                     RiseRate = ai == null ? 0 : ai.RiseRate,
-                                     DownLimitCount = ai == null ? 0 : ai.DownLimitCount,
-                                     RiseLimitCount = ai == null ? 0 : ai.RiseLimitCount
-                                 }).ToList();
+                var plateList = (from x in Singleton.Instance._PlateRateSession.GetSessionData()
+                                 where sharesList.Contains(x.SharesInfo)
+                                 select x).ToList();
 
                 //计算杠杆倍数
                 var accountRules = (from x in db.t_shares_limit_fundmultiple_account
@@ -1783,9 +1693,35 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                                     select x).ToList();
                 var fundmultiple = (from x in db.t_shares_limit_fundmultiple
                                     select x).ToList();
+
+                var sharesList2 = list.Select(e => e.SharesCode + "," + e.Market).ToList();
+                var conditionBuy = (from item in db.t_account_shares_conditiontrade_buy
+                                    where item.AccountId == basedata.AccountId && sharesList2.Contains(item.SharesInfo)
+                                    select item).ToList();
+                list = (from item in list
+                        join item2 in conditionBuy on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
+                        from ai in a.DefaultIfEmpty()
+                        join item3 in Singleton.Instance._SharesBaseSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode }
+                        join item4 in Singleton.Instance._SharesQuotesSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item4.Market, item4.SharesCode }
+                        select new AccountRiseLimitTriInfo
+                        {
+                            SharesCode = item.SharesCode,
+                            SharesName = item3.SharesName,
+                            Business = item3.Business,
+                            Market = item.Market,
+                            Industry = item3.Industry,
+                            ClosedPrice = item4.ClosedPrice,
+                            PresentPrice = item4.PresentPrice,
+                            Type = item.Type,
+                            PushTime = item.PushTime,
+                            TriCountToday = item.TriCountToday,
+                            RelId = item.RelId,
+                            ConditionId = ai == null ? 0 : ai.Id,
+                            ConditionStatus = ai == null ? 0 : ai.Status
+                        }).ToList();
                 foreach (var item in list)
                 {
-                    if (item.ConditionStatus == null) 
+                    if (item.ConditionStatus == 0) 
                     {
                         item.ConditionStatus = 1;
                     }
@@ -2418,43 +2354,9 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                                           select x).ToList();
 
                 var sharesList = tempList.Select(e => e.item.Market + "" + e.item.SharesCode).ToList();
-                var ttt = from x in db.t_shares_plate_rel
-                          join x2 in db.t_shares_plate on x.PlateId equals x2.Id
-                          join x3 in db.t_shares_plate_riserate_last on x.PlateId equals x3.PlateId into a
-                          from ai in a.DefaultIfEmpty()
-                          join x4 in db.t_shares_plate_type_business on x2.Type equals x4.Id
-                          where sharesList.Contains(x.Market + "" + x.SharesCode) && x2.Status == 1 && (x2.ChooseStatus == 1 || (x4.IsBasePlate == 1 && x2.BaseStatus == 1))
-                          select new SharesPlateInfo
-                          {
-                              SharesCode = x.SharesCode,
-                              Market = x.Market,
-                              Type = x2.Type,
-                              Name = x2.Name,
-                              Id = x2.Id,
-                              SharesCount = ai == null ? 0 : ai.SharesCount,
-                              RiseRate = ai == null ? 0 : ai.RiseRate,
-                              DownLimitCount = ai == null ? 0 : ai.DownLimitCount,
-                              RiseLimitCount = ai == null ? 0 : ai.RiseLimitCount
-                          };
-                string sql = ttt.ToString();
-                var plateList = (from x in db.t_shares_plate_rel
-                                 join x2 in db.t_shares_plate on x.PlateId equals x2.Id
-                                 join x3 in db.t_shares_plate_riserate_last on x.PlateId equals x3.PlateId into a
-                                 from ai in a.DefaultIfEmpty()
-                                 join x4 in db.t_shares_plate_type_business on x2.Type equals x4.Id
-                                 where sharesList.Contains(x.Market + "" + x.SharesCode) && x2.Status == 1 && (x2.ChooseStatus == 1 || (x4.IsBasePlate == 1 && x2.BaseStatus == 1))
-                                 select new SharesPlateInfo
-                                 {
-                                     SharesCode = x.SharesCode,
-                                     Market = x.Market,
-                                     Type = x2.Type,
-                                     Name = x2.Name,
-                                     Id=x2.Id,
-                                     SharesCount = ai == null ? 0 : ai.SharesCount,
-                                     RiseRate = ai == null ? 0 : ai.RiseRate,
-                                     DownLimitCount = ai == null ? 0 : ai.DownLimitCount,
-                                     RiseLimitCount = ai == null ? 0 : ai.RiseLimitCount
-                                 }).ToList();
+                var plateList = (from x in Singleton.Instance._PlateRateSession.GetSessionData()
+                                 where sharesList.Contains(x.SharesInfo)
+                                 select x).ToList();
 
                 var traderulesList = DbHelper.GetTraderules(request.Id);
                 var otherCostInfo = (from item in tempList
@@ -4200,23 +4102,9 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                                     select x).ToList();
 
                 var sharesList = list.Select(e => e.Market + "" + e.SharesCode).ToList();
-                var plateList = (from x in db.t_shares_plate_rel
-                                     join x2 in db.t_shares_plate on x.PlateId equals x2.Id
-                                     join x3 in db.t_shares_plate_riserate_last on x.PlateId equals x3.PlateId into a from ai in a.DefaultIfEmpty()
-                                     join x4 in db.t_shares_plate_type_business on x2.Type equals x4.Id
-                                     where sharesList.Contains(x.Market + "" + x.SharesCode) && x2.Status == 1 && (x2.ChooseStatus == 1 || (x4.IsBasePlate==1 && x2.BaseStatus==1))
-                                     select new SharesPlateInfo
-                                     {
-                                         Id=x2.Id,
-                                         SharesCode=x.SharesCode,
-                                         Market=x.Market,
-                                         Type = x2.Type,
-                                         Name = x2.Name,
-                                         SharesCount = ai==null?0:ai.SharesCount,
-                                         RiseRate = ai == null ? 0 : ai.RiseRate,
-                                         DownLimitCount = ai == null ? 0 : ai.DownLimitCount,
-                                         RiseLimitCount = ai == null ? 0 : ai.RiseLimitCount
-                                     }).ToList();
+                var plateList = (from x in Singleton.Instance._PlateRateSession.GetSessionData()
+                                 where sharesList.Contains(x.SharesInfo)
+                                 select x).ToList();
                 foreach (var item in list)
                 {
                     var details = (from x in detailsList
@@ -4423,24 +4311,9 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
                                     select x).ToList();
 
                 var sharesList = list.Select(e => e.Market + "" + e.SharesCode).ToList();
-                var plateList = (from x in db.t_shares_plate_rel
-                                 join x2 in db.t_shares_plate on x.PlateId equals x2.Id
-                                 join x3 in db.t_shares_plate_riserate_last on x.PlateId equals x3.PlateId into a
-                                 from ai in a.DefaultIfEmpty()
-                                 join x4 in db.t_shares_plate_type_business on x2.Type equals x4.Id
-                                 where sharesList.Contains(x.Market + "" + x.SharesCode) && x2.Status == 1 && (x2.ChooseStatus == 1 || (x4.IsBasePlate == 1 && x2.BaseStatus == 1))
-                                 select new SharesPlateInfo
-                                 {
-                                     Id = x2.Id,
-                                     SharesCode = x.SharesCode,
-                                     Market = x.Market,
-                                     Type = x2.Type,
-                                     Name = x2.Name,
-                                     SharesCount = ai == null ? 0 : ai.SharesCount,
-                                     RiseRate = ai == null ? 0 : ai.RiseRate,
-                                     DownLimitCount = ai == null ? 0 : ai.DownLimitCount,
-                                     RiseLimitCount = ai == null ? 0 : ai.RiseLimitCount
-                                 }).ToList();
+                var plateList = (from x in Singleton.Instance._PlateRateSession.GetSessionData()
+                                 where sharesList.Contains(x.SharesInfo)
+                                 select x).ToList();
                 foreach (var item in list)
                 {
                     var rules = (from x in fundmultiple
@@ -7955,62 +7828,13 @@ where t.num=1", basedata.AccountId, dateNow.ToString("yyyy-MM-dd"), request.Last
             using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
             using (var db = new meal_ticketEntities())
             {
-                var triDetails = from item in db.t_account_shares_conditiontrade_buy_details
-                                 join item2 in db.t_account_shares_conditiontrade_buy on item.ConditionId equals item2.Id
-                                 join item3 in db.t_account_baseinfo on item2.AccountId equals item3.Id
-                                 select new { item, item3 };
-                var result = (from item in db.t_account_shares_conditiontrade_buy_details
-                              join item2 in db.t_account_shares_conditiontrade_buy on item.ConditionId equals item2.Id
-                              join item3 in db.v_shares_quotes_last on new { item2.Market, item2.SharesCode } equals new { item3.Market, item3.SharesCode }
-                              join item4 in db.t_account_baseinfo on item2.AccountId equals item4.Id
-                              join item5 in db.t_shares_all on new { item2.Market, item2.SharesCode } equals new { item5.Market, item5.SharesCode }
-                              join item6 in db.t_account_shares_entrust on item.EntrustId equals item6.Id into a
-                              from ai in a.DefaultIfEmpty()
-                              join item7 in triDetails on item.FatherId equals item7.item.Id into b
-                              from bi in b.DefaultIfEmpty()
-                              where item.Status == 1 && (item.BusinessStatus == 1 || item.BusinessStatus == 3 || item.BusinessStatus == 4) && item2.Status == 1 && item3.PresentPrice > 0 && item3.ClosedPrice > 0 && item.CreateAccountId == basedata.AccountId
-                              orderby item.TriggerTime
-                              select new BuyTipInfo
-                              {
-                                  SharesCode = item2.SharesCode,
-                                  Market=item2.Market,
-                                  SharesName = item5.SharesName,
-                                  AccountMobile = item4.Mobile,
-                                  AccountName = item4.NickName,
-                                  CurrPrice = item3.PresentPrice,
-                                  ClosedPrice=item3.ClosedPrice,
-                                  TriggerTime = item.TriggerTime,
-                                  EntrustPriceGear = item.EntrustPriceGear,
-                                  EntrustAmount = item.EntrustAmount,
-                                  Id = item.Id,
-                                  AccountId = item2.AccountId,
-                                  BuyAuto = item.BusinessStatus == 3 ? true : item.BusinessStatus == 4 ? false : item.BuyAuto,
-                                  RisePrice = item3.PresentPrice - item3.ClosedPrice,
-                                  RiseRate = (int)((item3.PresentPrice - item3.ClosedPrice) * 1.0 / item3.ClosedPrice * 10000),
-                                  Status = item.BusinessStatus == 1 ? 1 : ai == null ? 2 : ai.Status != 3 ? 3 : ai.DealCount <= 0 ? 5 : ai.DealCount >= ai.EntrustCount ? 6 : 4,
-                                  FollowAccountList = (from x in db.t_account_shares_conditiontrade_buy_details_follow
-                                                       where x.DetailsId == item.Id
-                                                       select x.FollowAccountId).ToList(),
-                                  SyncroAccountMobile= bi==null?"本账户":bi.item3.Mobile,
-                                  SyncroAccountName=bi==null?"":bi.item3.NickName
-                              }).ToList();
+                var result = (from item in Singleton.Instance._BuyTipSession.GetSessionData()
+                              where item.CreateAccountId == basedata.AccountId
+                              select item).ToList();
                 var sharesList = result.Select(e => e.Market + "" + e.SharesCode).ToList();
-                var plateList = (from x in db.t_shares_plate_rel
-                                 join x2 in db.t_shares_plate on x.PlateId equals x2.Id
-                                 join x3 in db.t_shares_plate_riserate_last on x.PlateId equals x3.PlateId into a from ai in a.DefaultIfEmpty()
-                                 join x4 in db.t_shares_plate_type_business on x2.Type equals x4.Id
-                                 where sharesList.Contains(x.Market + "" + x.SharesCode) && x2.Status == 1 && (x2.ChooseStatus == 1 ||(x4.IsBasePlate==1 && x2.BaseStatus==1))
-                                 select new SharesPlateInfo
-                                 {
-                                     SharesCode = x.SharesCode,
-                                     Market = x.Market,
-                                     Type = x2.Type,
-                                     Name = x2.Name,
-                                     SharesCount = ai==null?0: ai.SharesCount,
-                                     RiseRate = ai == null ? 0 : ai.RiseRate,
-                                     DownLimitCount = ai == null ? 0 : ai.DownLimitCount,
-                                     RiseLimitCount = ai == null ? 0 : ai.RiseLimitCount
-                                 }).ToList();
+                var plateList = (from x in Singleton.Instance._PlateRateSession.GetSessionData()
+                                 where sharesList.Contains(x.SharesInfo)
+                                 select x).ToList();
 
                 var groupRelList = (from x in db.t_account_shares_conditiontrade_buy_group_rel
                                     join x2 in db.t_account_shares_conditiontrade_buy_group on x.GroupId equals x2.Id
