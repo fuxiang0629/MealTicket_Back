@@ -44,6 +44,10 @@ where t.num=1", dateNow.ToString("yyyy-MM-dd"), lastDataTime.Value.ToString("yyy
                 if (list.Count() > 0)
                 {
                     lastDataTime = list.Max(e => e.PushTime);
+                    foreach (var item in list)
+                    {
+                        lastList.RemoveAll(e => e.Market == item.Market && e.SharesCode == item.SharesCode);
+                    }
                     lastList.AddRange(list);
                 }
                 return lastList;

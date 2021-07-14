@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace MealTicket_Web_Handler.session
 {
@@ -13,6 +14,7 @@ namespace MealTicket_Web_Handler.session
     {
         public override List<BuyTipInfo> UpdateSession()
         {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
             using (var db = new meal_ticketEntities())
             {
                 var triDetails = from item in db.t_account_shares_conditiontrade_buy_details
@@ -55,6 +57,7 @@ namespace MealTicket_Web_Handler.session
                                   SyncroAccountMobile = bi == null ? "本账户" : bi.item3.Mobile,
                                   SyncroAccountName = bi == null ? "" : bi.item3.NickName
                               }).ToList();
+                scope.Complete();
                 return result;
             }
         }

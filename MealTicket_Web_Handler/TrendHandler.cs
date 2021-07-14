@@ -1585,6 +1585,8 @@ namespace MealTicket_Web_Handler
                                     where item.AccountId == basedata.AccountId && sharesList.Contains(item.SharesInfo)
                                     select item).ToList();
 
+                var limit = (from item in db.t_shares_limit
+                             select item).ToList();
 
                 var accountTrend = (from item in result
                                     join item2 in groupList on item.OptionalId equals item2.OptionalId into a
@@ -1626,7 +1628,16 @@ namespace MealTicket_Web_Handler
                                                      where x.Market == g.Key.item.Market && x.SharesCode == g.Key.item.SharesCode
                                                      select x).ToList()
                                     }).ToList();
-                return accountTrend;
+                List<AccountTrendTriInfo> resultList = new List<AccountTrendTriInfo>();
+                foreach (var item in accountTrend)
+                {
+                    var temp = limit.Where(e => (item.Market == e.LimitMarket || e.LimitMarket == -1) && ((e.LimitType == 1 && item.SharesCode.StartsWith(e.LimitKey)) || (e.LimitType == 2 && item.SharesName.StartsWith(e.LimitKey)))).FirstOrDefault();
+                    if (temp == null)
+                    {
+                        resultList.Add(item);
+                    }
+                }
+                return resultList;
             }
         }
 
@@ -1698,11 +1709,14 @@ namespace MealTicket_Web_Handler
                 var conditionBuy = (from item in db.t_account_shares_conditiontrade_buy
                                     where item.AccountId == basedata.AccountId && sharesList2.Contains(item.SharesInfo)
                                     select item).ToList();
+                var limit = (from item in db.t_shares_limit
+                             select item).ToList();
                 list = (from item in list
                         join item2 in conditionBuy on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
                         from ai in a.DefaultIfEmpty()
                         join item3 in Singleton.Instance._SharesBaseSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode }
                         join item4 in Singleton.Instance._SharesQuotesSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item4.Market, item4.SharesCode }
+                        orderby item.PushTime descending
                         select new AccountRiseLimitTriInfo
                         {
                             SharesCode = item.SharesCode,
@@ -1719,8 +1733,16 @@ namespace MealTicket_Web_Handler
                             ConditionId = ai == null ? 0 : ai.Id,
                             ConditionStatus = ai == null ? 0 : ai.Status
                         }).ToList();
+
+                List<AccountRiseLimitTriInfo> resultList = new List<AccountRiseLimitTriInfo>();
                 foreach (var item in list)
                 {
+                    var temp = limit.Where(e => (item.Market == e.LimitMarket || e.LimitMarket == -1) && ((e.LimitType == 1 && item.SharesCode.StartsWith(e.LimitKey)) || (e.LimitType == 2 && item.SharesName.StartsWith(e.LimitKey)))).FirstOrDefault();
+                    if (temp != null)
+                    {
+                        continue;
+                    }
+
                     if (item.ConditionStatus == 0) 
                     {
                         item.ConditionStatus = 1;
@@ -1765,9 +1787,10 @@ namespace MealTicket_Web_Handler
                                       where x.Market == item.Market && x.SharesCode == item.SharesCode
                                       orderby x.RiseRate descending
                                       select x).ToList();
+                    resultList.Add(item);
                 }
 
-                return list;
+                return resultList;
             }
         }
 
@@ -7892,18 +7915,17 @@ namespace MealTicket_Web_Handler
         /// </summary>
         /// <param name="request"></param>
         /// <param name="basedata"></param>
-        public void ConfirmBuyTip(DetailsRequest request, HeadBase basedata)
+        public void ConfirmBuyTip(ConfirmBuyTipRequest request, HeadBase basedata)
         {
             using (var db = new meal_ticketEntities())
             {
                 var result = (from item in db.t_account_shares_conditiontrade_buy_details
-                              where item.Id == request.Id
-                              select item).FirstOrDefault();
-                if (result == null)
+                              where request.IdList.Contains(item.Id)
+                              select item).ToList();
+                foreach (var item in result)
                 {
-                    throw new WebApiException(400, "数据不存在");
+                    item.BusinessStatus = 2;
                 }
-                result.BusinessStatus = 2;
                 db.SaveChanges();
             }
         }

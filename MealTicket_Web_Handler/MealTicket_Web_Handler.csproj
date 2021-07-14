@@ -138,6 +138,7 @@
     <Compile Include="Model\BatchSetConditiontradeBuySharesFollow.cs" />
     <Compile Include="Model\BatchSetConditiontradeBuySharesGroup.cs" />
     <Compile Include="Model\BindAccountOptionalSeat.cs" />
+    <Compile Include="Model\ConfirmBuyTipRequest.cs" />
     <Compile Include="Model\DeleteConditiontradeBuyGroup.cs" />
     <Compile Include="Model\GetAccountAutoBuySyncroSettingList.cs" />
     <Compile Include="Model\GetAccountBuyConditionAutoGroupList.cs" />

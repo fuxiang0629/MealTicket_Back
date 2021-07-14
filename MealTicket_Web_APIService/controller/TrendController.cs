@@ -1364,6 +1364,13 @@ namespace MealTicket_Web_APIService.controller
                             {
                                 continue;
                             }
+                            int _market = stock[1] == "SZ" ? 0 : 1;
+                            string _sharesCode = int.Parse(stock[0]).ToString("000000");
+                            string _sharesName = datas[1];
+                            if (marketTimeList.Where(e => e.Market == _market && e.SharesCode == _sharesCode).FirstOrDefault()!=null)
+                            {
+                                continue;
+                            }
 
                             marketTimeList.Add(new SharesInfo
                             {
@@ -3211,7 +3218,7 @@ namespace MealTicket_Web_APIService.controller
         [Route("buy/tip/confirm"), HttpPost]
         [Description("确认买入提示")]
         [CheckUserLoginFilter]
-        public object ConfirmBuyTip(DetailsRequest request)
+        public object ConfirmBuyTip(ConfirmBuyTipRequest request)
         {
             if (request == null)
             {

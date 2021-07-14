@@ -72,6 +72,10 @@ namespace MealTicket_Web_Handler.session
                 if (list.Count() > 0)
                 {
                     lastDataTime = list.Max(e => e.PushTime);
+                    foreach (var item in list)
+                    {
+                        lastList.RemoveAll(e => e.Market == item.Market && e.SharesCode == item.SharesCode);
+                    }
                     lastList.AddRange(list);
                 }
                 return lastList;
