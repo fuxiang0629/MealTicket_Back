@@ -3504,7 +3504,7 @@ namespace MealTicket_Admin_Handler
                     ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                     ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
                     ObjectParameter sellIdDb = new ObjectParameter("sellId", 0);
-                    db.P_ApplyTradeSell(hold.AccountId, request.HoldId, request.SellCount, request.SellType, request.SellPrice, 3,false, errorCodeDb, errorMessageDb, sellIdDb);
+                    db.P_ApplyTradeSell(hold.AccountId, request.HoldId, request.SellCount, request.SellType, request.SellPrice, 3, hold.AccountId, errorCodeDb, errorMessageDb, sellIdDb);
                     int errorCode = (int)errorCodeDb.Value;
                     string errorMessage = errorMessageDb.Value.ToString();
                     if (errorCode != 0)
@@ -3688,7 +3688,7 @@ namespace MealTicket_Admin_Handler
                 {
                     ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                     ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
-                    db.P_ApplyTradeCancel(entrust.AccountId, request.Id, errorCodeDb, errorMessageDb);
+                    db.P_ApplyTradeCancel(entrust.AccountId, request.Id,0, errorCodeDb, errorMessageDb);
                     int errorCode = (int)errorCodeDb.Value;
                     string errorMessage = errorMessageDb.Value.ToString();
                     if (errorCode != 0)

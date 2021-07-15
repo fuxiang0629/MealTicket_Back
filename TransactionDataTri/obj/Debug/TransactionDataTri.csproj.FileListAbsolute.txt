@@ -75,3 +75,6 @@ D:\项目\饭票\后端\TransactionDataTri\obj\Debug\TransactionDataTri.csproj.C
 D:\项目\饭票\后端\TransactionDataTri\obj\Debug\TransactionDataTri.csproj.CopyComplete
 D:\项目\饭票\后端\TransactionDataTri\obj\Debug\TransactionDataTri.exe
 D:\项目\饭票\后端\TransactionDataTri\obj\Debug\TransactionDataTri.pdb
+F:\项目\饭票后端\TransactionDataTri\bin\Debug\MealTicket_DBCommon.dll
+F:\项目\饭票后端\TransactionDataTri\bin\Debug\MealTicket_DBCommon.pdb
+F:\项目\饭票后端\TransactionDataTri\bin\Debug\MealTicket_DBCommon.dll.config

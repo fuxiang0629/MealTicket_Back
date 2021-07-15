@@ -2445,7 +2445,7 @@ namespace MealTicket_Web_Handler
                     }
 
                     var condition_sell = (from x in condition_sellList
-                                          where x.HoldId == item.item.Id
+                                          where x.HoldId == item.item.Id && x.SourceFrom==1
                                           select x).ToList();
                     int ParTotalCount = condition_sell.Count();
                     int ParExecuteCount = condition_sell.Where(e => e.TriggerTime != null).Count();
@@ -2877,7 +2877,8 @@ namespace MealTicket_Web_Handler
                     buyList.Add(new
                     {
                         AccountId = request.AccountId,
-                        BuyAmount = request.BuyAmount
+                        BuyAmount = request.BuyAmount,
+                        IsFollow = false
                     });
 
                     var buyRate = request.BuyAmount * 1.0 / (Deposit - RemainDeposit);//仓位占比
@@ -2899,7 +2900,8 @@ namespace MealTicket_Web_Handler
                         buyList.Add(new
                         {
                             AccountId = account,
-                            BuyAmount = (long)((temp.Deposit - followRemainDeposit) * buyRate)
+                            BuyAmount = (long)((temp.Deposit - followRemainDeposit) * buyRate),
+                            IsFollow = true
                         });
                     }
                 }
@@ -2912,7 +2914,8 @@ namespace MealTicket_Web_Handler
                     buyList.Add(new
                     {
                         AccountId = request.AccountId,
-                        BuyAmount = request.BuyAmount
+                        BuyAmount = request.BuyAmount,
+                        IsFollow = false
                     });
                 }
 
@@ -2923,10 +2926,6 @@ namespace MealTicket_Web_Handler
                 int i = 0;
                 foreach (var buy in buyList)
                 {
-                    if (buy.BuyAmount <= 0)
-                    {
-                        continue;
-                    }
                     long buyId = 0;
                     using (var tran = db.Database.BeginTransaction())
                     {
@@ -2935,7 +2934,7 @@ namespace MealTicket_Web_Handler
                             ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                             ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
                             ObjectParameter buyIdDb = new ObjectParameter("buyId", 0);
-                            db.P_ApplyTradeBuy(buy.AccountId, request.Market, request.SharesCode, buy.BuyAmount, request.FundMultiple, request.BuyPrice, null, true, request.AccountId == basedata.AccountId ? request.AccountId:0, errorCodeDb, errorMessageDb, buyIdDb);
+                            db.P_ApplyTradeBuy(buy.AccountId, request.Market, request.SharesCode, buy.BuyAmount, request.FundMultiple, request.BuyPrice, null, buy.IsFollow, basedata.AccountId, errorCodeDb, errorMessageDb, buyIdDb);
                             int errorCode = (int)errorCodeDb.Value;
                             string errorMessage = errorMessageDb.Value.ToString();
                             if (errorCode != 0)
@@ -3022,6 +3021,10 @@ namespace MealTicket_Web_Handler
         /// <param name="request"></param>
         public long AccountApplyTradeSell(AccountApplyTradeSellRequest request, HeadBase basedata)
         {
+            if (request.MainAccountId == 0)
+            {
+                request.MainAccountId = basedata.AccountId;
+            }
             using (var db = new meal_ticketEntities())
             {
                 //查询跟投人员
@@ -3107,7 +3110,7 @@ namespace MealTicket_Web_Handler
                             ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                             ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
                             ObjectParameter sellIdDb = new ObjectParameter("sellId", 0);
-                            db.P_ApplyTradeSell(sell.AccountId, sell.HoldId, sell.SellCount, request.SellType, request.SellPrice, 0, true, errorCodeDb, errorMessageDb, sellIdDb);
+                            db.P_ApplyTradeSell(sell.AccountId, sell.HoldId, sell.SellCount, request.SellType, request.SellPrice, 0, request.MainAccountId, errorCodeDb, errorMessageDb, sellIdDb);
                             int errorCode = (int)errorCodeDb.Value;
                             string errorMessage = errorMessageDb.Value.ToString();
                             if (errorCode != 0)
@@ -3281,7 +3284,7 @@ namespace MealTicket_Web_Handler
                         {
                             ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                             ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
-                            db.P_ApplyTradeCancel(accountId, entrustId, errorCodeDb, errorMessageDb);
+                            db.P_ApplyTradeCancel(accountId, entrustId, basedata.AccountId, errorCodeDb, errorMessageDb);
                             int errorCode = (int)errorCodeDb.Value;
                             string errorMessage = errorMessageDb.Value.ToString();
                             if (errorCode != 0)
@@ -3608,7 +3611,7 @@ namespace MealTicket_Web_Handler
         /// </summary>
         /// <param name="request"></param>
         /// <param name="basedata"></param>
-        public void AddAccountHoldConditionTrade(AddAccountHoldConditionTradeRequest request)
+        public void AddAccountHoldConditionTrade(AddAccountHoldConditionTradeRequest request, HeadBase basedata)
         {
             using (var db = new meal_ticketEntities())
             using (var tran = db.Database.BeginTransaction())
@@ -3646,7 +3649,8 @@ namespace MealTicket_Web_Handler
                         ForbidType = request.ForbidType,
                         Name = string.IsNullOrEmpty(request.Name) ? Guid.NewGuid().ToString("N") : request.Name,
                         TriggerTime = null,
-                        Type = request.Type
+                        Type = request.Type,
+                        CreateAccountId= basedata.AccountId
                     };
                     db.t_account_shares_hold_conditiontrade.Add(temp);
                     db.SaveChanges();
@@ -3743,7 +3747,8 @@ namespace MealTicket_Web_Handler
                         Name = condition.Name,
                         TradeType = condition.TradeType,
                         TriggerTime = null,
-                        Type = condition.Type
+                        Type = condition.Type,
+                        CreateAccountId= basedata.AccountId
                     };
                     db.t_account_shares_hold_conditiontrade.Add(temp);
                     db.SaveChanges();
@@ -7846,7 +7851,7 @@ namespace MealTicket_Web_Handler
         /// 查询买入提示列表
         /// </summary>
         /// <returns></returns>
-        public List<BuyTipInfo> GetBuyTipList(HeadBase basedata)
+        public GetBuyTipListRes GetBuyTipList(GetBuyTipListRequest request,HeadBase basedata)
         {
             using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
             using (var db = new meal_ticketEntities())
@@ -7906,7 +7911,11 @@ namespace MealTicket_Web_Handler
                     }
                 }
                 scope.Complete();
-                return result;
+                return new GetBuyTipListRes
+                {
+                    DataGuid = request.DataGuid,
+                    List = result
+                };
             }
         }
 
@@ -7928,6 +7937,7 @@ namespace MealTicket_Web_Handler
                 }
                 db.SaveChanges();
             }
+            Singleton.Instance._BuyTipSession.UpdateSessionManual();
         }
 
         /// <summary>
@@ -8942,7 +8952,8 @@ namespace MealTicket_Web_Handler
                                         ConditionRelativeType = tempDetails.ConditionRelativeType ?? 0,
                                         ConditionRelativeRate = tempDetails.ConditionRelativeRate ?? 0,
                                         OtherConditionRelative= tempDetails.OtherConditionRelative,
-                                        ConditionPrice = conditionPrice
+                                        ConditionPrice = conditionPrice,
+                                        CreateAccountId= basedata.AccountId
                                     };
                                     db.t_account_shares_hold_conditiontrade.Add(temp);
                                     db.SaveChanges();
@@ -9063,7 +9074,8 @@ namespace MealTicket_Web_Handler
                                         ConditionRelativeType = tempDetails.ConditionRelativeType ?? 0,
                                         ConditionRelativeRate = tempDetails.ConditionRelativeRate ?? 0,
                                         OtherConditionRelative = tempDetails.OtherConditionRelative,
-                                        ConditionPrice = conditionPrice
+                                        ConditionPrice = conditionPrice,
+                                        CreateAccountId= basedata.AccountId
                                     };
                                     db.t_account_shares_hold_conditiontrade.Add(temp);
                                     db.SaveChanges();

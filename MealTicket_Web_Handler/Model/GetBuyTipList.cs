@@ -10,6 +10,27 @@ namespace MealTicket_Web_Handler.Model
     {
     }
 
+    public class GetBuyTipListRequest
+    {
+        /// <summary>
+        /// 数据唯一性
+        /// </summary>
+        public string DataGuid { get; set; }
+    }
+
+    public class GetBuyTipListRes
+    {
+        /// <summary>
+        /// 数据唯一性(前端传入)
+        /// </summary>
+        public string DataGuid { get; set; }  
+        
+        /// <summary>
+        /// 数据列表
+        /// </summary>
+        public List<BuyTipInfo> List { get; set; }
+    }
+
     public class BuyTipInfo
     {
         /// <summary>

@@ -437,7 +437,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
 
         //分析历史涨跌幅数据
 
-        public static int Analysis_HisRiseRate(string sharesCode, int market, List<string> par)
+        public static int Analysis_HisRiseRate(string sharesCode, int market, List<string> par,StringBuilder logRecord)
         {
             try
             {
@@ -499,6 +499,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
 
                 if (day <= 0)
                 {
+                    logRecord.Append("\t\t条件不成立(参数day错误)");
                     return -1;
                 }
                 DateTime dateNow = DateTime.Now.Date;
@@ -512,14 +513,13 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                     if (type == 1)
                     {
                         int tempCount = quotes_date.Where(e => e.PriceType != 1).Count();
-                        if (compare == 1 && tempCount >= count)
+                        string conditionDes = compare == 1 ? ("没涨停次数大于等于" + count) : ("没涨停次数小于等于" + count);
+                        if ((compare == 1 && tempCount >= count) || (compare == 2 && tempCount <= count))
                         {
+                            logRecord.Append("\t\t条件成立(当前没涨停次数:" + tempCount + ",条件:" + conditionDes + ")");
                             return 0;
                         }
-                        if (compare == 2 && tempCount <= count)
-                        {
-                            return 0;
-                        }
+                        logRecord.Append("\t\t条件不成立(当前没涨停次数:" + tempCount + ",条件:" + conditionDes + ")");
                         return -1;
                     }
                     //涨停次数
@@ -535,14 +535,13 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                             tempCount = quotes_date.Where(e => e.PriceType == 1).Count();
                         }
 
-                        if (compare == 1 && tempCount >= count)
+                        string conditionDes = compare == 1 ? ("涨停次数大于等于" + count) : ("涨停次数小于等于" + count);
+                        if ((compare == 1 && tempCount >= count) || (compare == 2 && tempCount <= count))
                         {
+                            logRecord.Append("\t\t条件成立(当前涨停次数:" + tempCount + ",条件:" + conditionDes + ")");
                             return 0;
                         }
-                        if (compare == 2 && tempCount <= count)
-                        {
-                            return 0;
-                        }
+                        logRecord.Append("\t\t条件不成立(当前涨停次数:" + tempCount + ",条件:" + conditionDes + ")");
                         return -1;
                     }
                     //跌停次数
@@ -557,108 +556,26 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                         {
                             tempCount = quotes_date.Where(e => e.PriceType == 2).Count();
                         }
-                        if (compare == 1 && tempCount >= count)
+                        string conditionDes = compare == 1 ? ("跌停次数大于等于" + count) : ("跌停次数小于等于" + count);
+                        if ((compare == 1 && tempCount >= count) || (compare == 2 && tempCount <= count))
                         {
+                            logRecord.Append("\t\t条件成立(当前跌停次数:" + tempCount + ",条件:" + conditionDes + ")");
                             return 0;
                         }
-                        if (compare == 2 && tempCount <= count)
-                        {
-                            return 0;
-                        }
+                        logRecord.Append("\t\t条件不成立(当前跌停次数:" + tempCount + ",条件:" + conditionDes + ")");
                         return -1;
                     }
                     //炸板次数
                     else if (type == 4)
                     {
                         int tempCount = quotes_date.Where(e => e.PriceType != 1 && e.LimitUpCount > 0).Count();
-                        if (compare == 1 && tempCount >= count)
+                        string conditionDes = compare == 1 ? ("炸板次数大于等于" + count) : ("炸板次数小于等于" + count);
+                        if ((compare == 1 && tempCount >= count) || (compare == 2 && tempCount <= count))
                         {
+                            logRecord.Append("\t\t条件成立(当前炸板次数:" + tempCount + ",条件:" + conditionDes + ")");
                             return 0;
                         }
-                        if (compare == 2 && tempCount <= count)
-                        {
-                            return 0;
-                        }
-                        return -1;
-                    }
-                    //每日涨幅
-                    else if (type == 5)
-                    {
-                        int i = 0;
-                        foreach (var quote in quotes_date)
-                        {
-                            if (quote.PresentPrice <= 0 || quote.ClosedPrice <= 0)
-                            {
-                                continue;
-                            }
-                            int rate = (int)((quote.PresentPrice - quote.ClosedPrice) * 1.0 / quote.ClosedPrice * 10000);
-                            if (rate < 0)
-                            {
-                                continue;
-                            }
-                            if (!flatRise && rate == 0)
-                            {
-                                continue;
-                            }
-                            if (rateCompare == 1 && rate >= rateCount)
-                            {
-                                i++;
-                                continue;
-                            }
-                            if (rateCompare == 2 && rate <= rateCount)
-                            {
-                                i++;
-                                continue;
-                            }
-                        }
-                        if (compare == 1 && i >= count)
-                        {
-                            return 0;
-                        }
-                        if (compare == 2 && i <= count)
-                        {
-                            return 0;
-                        }
-                        return -1;
-                    }
-                    //每日跌幅
-                    else if (type == 6)
-                    {
-                        int i = 0;
-                        foreach (var quote in quotes_date)
-                        {
-                            if (quote.PresentPrice <= 0 || quote.ClosedPrice <= 0)
-                            {
-                                continue;
-                            }
-                            int rate = (int)((quote.PresentPrice - quote.ClosedPrice) * 1.0 / quote.ClosedPrice * 10000);
-                            if (rate > 0)
-                            {
-                                continue;
-                            }
-                            if (!flatRise && rate == 0)
-                            {
-                                continue;
-                            }
-                            if (rateCompare == 1 && rate >= rateCount)
-                            {
-                                i++;
-                                continue;
-                            }
-                            if (rateCompare == 2 && rate <= rateCount)
-                            {
-                                i++;
-                                continue;
-                            }
-                        }
-                        if (compare == 1 && i >= count)
-                        {
-                            return 0;
-                        }
-                        if (compare == 2 && i <= count)
-                        {
-                            return 0;
-                        }
+                        logRecord.Append("\t\t条件不成立(当前炸板次数:" + tempCount + ",条件:" + conditionDes + ")");
                         return -1;
                     }
                     //每日涨跌幅
@@ -687,14 +604,14 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                                 continue;
                             }
                         }
-                        if (compare == 1 && i >= count)
+                        string rateDes = rateCompare == 1 ? ("大于等于" + rateCount) : ("小于等于" + rateCount);
+                        string conditionDes = compare == 1 ? ("每日涨跌幅" + rateDes + "的次数大于等于" + count) : ("每日涨跌幅" + rateDes + "的次数小于等于" + count);
+                        if ((compare == 1 && i >= count) || (compare == 2 && i <= count))
                         {
+                            logRecord.Append("\t\t条件成立(当前符合条件次数" + i + ", 条件:" + conditionDes + ")");
                             return 0;
                         }
-                        if (compare == 2 && i <= count)
-                        {
-                            return 0;
-                        }
+                        logRecord.Append("\t\t条件不成立(当前符合条件次数" + i + ", 条件:" + conditionDes + ")");
                         return -1;
                     }
                     //包含连续涨停
@@ -713,9 +630,11 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                             }
                             if (tempi >= limitDay)
                             {
+                                logRecord.Append("\t\t条件成立(符合连续涨停" + limitDay + "天)");
                                 return 0;
                             }
                         }
+                        logRecord.Append("\t\t条件不成立(不符合连续涨停" + limitDay + "天)");
                         return -1;
                     }
                     //排除连续涨停
@@ -734,9 +653,11 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                             }
                             if (tempi >= limitDay)
                             {
+                                logRecord.Append("\t\t条件不成立(不符合排除连续涨停" + limitDay + "天)");
                                 return -1;
                             }
                         }
+                        logRecord.Append("\t\t条件成立(符合排除连续涨停" + limitDay + "天)");
                         return 0;
                     }
                     //包含连续跌停
@@ -755,9 +676,11 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                             }
                             if (tempi >= limitDay)
                             {
+                                logRecord.Append("\t\t条件成立(符合连续跌停" + limitDay + "天)");
                                 return 0;
                             }
                         }
+                        logRecord.Append("\t\t条件不成立(不符合连续跌停" + limitDay + "天)");
                         return -1;
                     }
                     //排除连续跌停
@@ -776,88 +699,12 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                             }
                             if (tempi >= limitDay)
                             {
+                                logRecord.Append("\t\t条件不成立(不符合排除连续跌停" + limitDay + "天)");
                                 return -1;
                             }
                         }
+                        logRecord.Append("\t\t条件成立(符合排除连续跌停" + limitDay + "天)");
                         return 0;
-                    }
-                    //总涨幅
-                    else if (type == 11)
-                    {
-                        long closePrice = quotes_date.OrderBy(e => e.Date).Select(e => e.ClosedPrice).FirstOrDefault();
-                        long presentPrice = quotes_date.OrderByDescending(e => e.Date).Select(e => e.PresentPrice).FirstOrDefault();
-                        if (closePrice <= 0 || presentPrice <= 0)
-                        {
-                            return -1;
-                        }
-                        int rate = (int)((presentPrice - closePrice) * 1.0 / closePrice * 10000);
-                        if (rate < 0)
-                        {
-                            return -1;
-                        }
-                        if (!flatRise && rate == 0)
-                        {
-                            return -1;
-                        }
-                        if (compare == 1)
-                        {
-                            if (rate >= count)
-                            {
-                                return 0;
-                            }
-                            return -1;
-                        }
-                        else if (compare == 2)
-                        {
-                            if (rate <= count)
-                            {
-                                return 0;
-                            }
-                            return -1;
-                        }
-                        else
-                        {
-                            return -1;
-                        }
-                    }
-                    //总跌幅
-                    else if (type == 12)
-                    {
-                        long closePrice = quotes_date.OrderBy(e => e.Date).Select(e => e.ClosedPrice).FirstOrDefault();
-                        long presentPrice = quotes_date.OrderByDescending(e => e.Date).Select(e => e.PresentPrice).FirstOrDefault();
-                        if (closePrice <= 0 || presentPrice <= 0)
-                        {
-                            return -1;
-                        }
-                        int rate = (int)((presentPrice - closePrice) * 1.0 / closePrice * 10000);
-                        if (rate > 0)
-                        {
-                            return -1;
-                        }
-                        if (!flatRise && rate == 0)
-                        {
-                            return -1;
-                        }
-                        if (compare == 1)
-                        {
-                            if (rate >= count)
-                            {
-                                return 0;
-                            }
-                            return -1;
-                        }
-                        else if (compare == 2)
-                        {
-                            if (rate <= count)
-                            {
-                                return 0;
-                            }
-                            return -1;
-                        }
-                        else
-                        {
-                            return -1;
-                        }
                     }
                     //总涨跌幅
                     else if (type == 14)
@@ -866,36 +713,27 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                         long presentPrice = quotes_date.OrderByDescending(e => e.Date).Select(e => e.PresentPrice).FirstOrDefault();
                         if (closePrice <= 0 || presentPrice <= 0)
                         {
+                            logRecord.Append("\t\t条件不成立(五档数据有误)");
                             return -1;
                         }
                         int rate = (int)((presentPrice - closePrice) * 1.0 / closePrice * 10000);
                         if (!flatRise && rate == 0)
                         {
+                            logRecord.Append("\t\t条件不成立(当前为平盘，条件不包含平盘)");
                             return -1;
                         }
-                        if (compare == 1)
+                        string conditionDes = compare == 1 ? ("总涨跌幅大于等于" + count) : ("总涨跌幅小于等于" + count);
+                        if ((compare == 1 && rate >= count) || (compare == 2 && rate <= count))
                         {
-                            if (rate >= count)
-                            {
-                                return 0;
-                            }
-                            return -1;
+                            logRecord.Append("\t\t条件成立(当前总涨跌幅:" + rate + ",条件:" + conditionDes + ")");
+                            return 0;
                         }
-                        else if (compare == 2)
-                        {
-                            if (rate <= count)
-                            {
-                                return 0;
-                            }
-                            return -1;
-                        }
-                        else
-                        {
-                            return -1;
-                        }
+                        logRecord.Append("\t\t条件不成立(当前总涨跌幅:" + rate + ",条件:" + conditionDes + ")");
+                        return -1;
                     }
                     else
                     {
+                        logRecord.Append("\t\t条件不成立(参数type错误)");
                         return -1;
                     }
                 }
@@ -903,6 +741,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
             catch (Exception ex)
             {
                 Logger.WriteFileLog("分析历史涨跌幅数据出错了", ex);
+                logRecord.Append("\t\t条件不成立(异常报错)");
                 return -1;
             }
         }
@@ -940,7 +779,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
         }
 
         //分析今日涨跌幅
-        public static int Analysis_TodayRiseRate(string sharesCode, int market, List<string> par)
+        public static int Analysis_TodayRiseRate(string sharesCode, int market, List<string> par,StringBuilder logRecord)
         {
             string comeTime = string.Empty;
             string outTime = string.Empty;
@@ -1012,61 +851,45 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                     outTime = DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
                     if (quotes_date == null)
                     {
+                        logRecord.AppendLine("\t\t条件不成立(五档数据不实时)");
                         return -1;
                     }
                     //涨停次数
                     if (type == 1)
                     {
-                        if (compare == 1 && !triPrice && quotes_date.LimitUpCount >= count)
+                        int currCount = triPrice ? quotes_date.TriLimitUpCount : quotes_date.LimitUpCount;
+                        string conditionDes = compare == 1 ? ("涨停次数大于等于" + count) : ("涨停次数小于等于" + count);
+                        if ((compare == 1 && currCount >= count) || (compare == 2 && currCount <= count))
                         {
+                            logRecord.AppendLine("\t\t条件成立(当前涨停次数："+ currCount + ",条件:"+ conditionDes + ")");
                             return 0;
                         }
-                        if (compare == 2 && !triPrice && quotes_date.LimitUpCount <= count)
-                        {
-                            return 0;
-                        }
-                        if (compare == 1 && triPrice && quotes_date.TriLimitUpCount >= count)
-                        {
-                            return 0;
-                        }
-                        if (compare == 2 && triPrice && quotes_date.TriLimitUpCount <= count)
-                        {
-                            return 0;
-                        }
+                        logRecord.AppendLine("\t\t条件不成立(当前涨停次数：" + currCount + ",条件:" + conditionDes + ")");
                         return -1;
                     }
                     //跌停次数
                     if (type == 2)
                     {
-                        if (compare == 1 && !triPrice && quotes_date.LimitDownCount >= count)
+                        int currCount = triPrice ? quotes_date.TriLimitDownCount : quotes_date.LimitDownCount;
+                        string conditionDes = compare == 1 ? ("跌停次数大于等于" + count) : ("跌停次数小于等于" + count);
+                        if ((compare == 1 && currCount >= count) || (compare == 2 && currCount <= count))
                         {
+                            logRecord.AppendLine("\t\t条件成立(当前跌停次数：" + currCount + ",条件:" + conditionDes + ")");
                             return 0;
                         }
-                        if (compare == 2 && !triPrice && quotes_date.LimitDownCount <= count)
-                        {
-                            return 0;
-                        }
-                        if (compare == 1 && triPrice && quotes_date.TriLimitDownCount >= count)
-                        {
-                            return 0;
-                        }
-                        if (compare == 2 && triPrice && quotes_date.TriLimitDownCount <= count)
-                        {
-                            return 0;
-                        }
+                        logRecord.AppendLine("\t\t条件不成立(当前跌停次数：" + currCount + ",条件:" + conditionDes + ")");
                         return -1;
                     }
                     //炸板次数
                     else if (type == 3)
                     {
-                        if (compare == 1 && quotes_date.LimitUpBombCount >= count)
+                        string conditionDes = compare == 1 ? ("炸板次数大于等于" + count) : ("炸板次数小于等于" + count);
+                        if ((compare == 1 && quotes_date.LimitUpBombCount >= count) || (compare == 2 && quotes_date.LimitUpBombCount <= count))
                         {
+                            logRecord.AppendLine("\t\t条件成立(当前炸板次数：" + quotes_date.LimitUpBombCount + ",条件:" + conditionDes + ")");
                             return 0;
                         }
-                        if (compare == 2 && quotes_date.LimitUpBombCount <= count)
-                        {
-                            return 0;
-                        }
+                        logRecord.AppendLine("\t\t条件不成立(当前炸板次数：" + quotes_date.LimitUpBombCount + ",条件:" + conditionDes + ")");
                         return -1;
                     }
                     //盘中涨跌幅
@@ -1101,6 +924,14 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                                 break;
                             }
                         }
+                        if (i == 0)
+                        {
+                            logRecord.AppendLine("\t\t条件成立(符合盘中涨跌幅条件)");
+                        }
+                        else
+                        {
+                            logRecord.AppendLine("\t\t条件不成立(不符合盘中涨跌幅条件)");
+                        }
                         return i;
                     }
                     //开盘涨跌幅
@@ -1113,14 +944,13 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                             return -1;
                         }
                         int rate = (int)((openPrice - closePrice) * 1.0 / closePrice * 10000);
-                        if (compare == 1 && rate >= count)
+                        string conditionDes = compare == 1 ? ("开盘涨跌幅大于等于" + count) : ("开盘涨跌幅小于等于" + count);
+                        if ((compare == 1 && rate >= count) || (compare == 2 && rate <= count))
                         {
+                            logRecord.AppendLine("\t\t条件成立(当前开盘涨跌幅：" + rate + ",条件:" + conditionDes + ")");
                             return 0;
                         }
-                        if (compare == 2 && rate <= count)
-                        {
-                            return 0;
-                        }
+                        logRecord.AppendLine("\t\t条件不成立(当前开盘涨跌幅：" + rate + ",条件:" + conditionDes + ")");
                         return -1;
                     }
                     //振幅
@@ -1134,14 +964,13 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                             return -1;
                         }
                         int rate = (int)((maxPrice - minPrice) * 1.0 / closePrice * 10000);
-                        if (compare == 1 && rate >= count)
+                        string conditionDes = compare == 1 ? ("振幅大于等于" + count) : ("振幅小于等于" + count);
+                        if ((compare == 1 && rate >= count) || (compare == 2 && rate <= count))
                         {
+                            logRecord.AppendLine("\t\t条件成立(当前振幅：" + rate + ",条件:" + conditionDes + ")");
                             return 0;
                         }
-                        if (compare == 2 && rate <= count)
-                        {
-                            return 0;
-                        }
+                        logRecord.AppendLine("\t\t条件不成立(当前振幅：" + rate + ",条件:" + conditionDes + ")");
                         return -1;
                     }
                     //成交额
@@ -1152,10 +981,12 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                                            select item).Count();
                         if (dayShortageType == 2 && quotesCount < firstDay)
                         {
+                            logRecord.AppendLine("\t\t条件成立(符合成交额条件)");
                             return 0;
                         }
                         if (dayShortageType == 3 && quotesCount < firstDay)
                         {
+                            logRecord.AppendLine("\t\t条件不成立(不符合成交额条件)");
                             return -1;
                         }
                         //查询前几个交易日平均交易额
@@ -1172,9 +1003,11 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                         {
                             if ((compare2 == 1 && avgResult >= count * 10000) || (compare2 == 2 && avgResult <= count * 10000))
                             {
+                                logRecord.AppendLine("\t\t条件成立(符合成交额条件)");
                                 return 0;
                             }
                         }
+                        logRecord.AppendLine("\t\t条件不成立(不符合成交额条件)");
                         return -1;
                     }
                     //成交量
@@ -1185,10 +1018,12 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                                            select item).Count();
                         if (dayShortageType == 2 && quotesCount < firstDay)
                         {
+                            logRecord.AppendLine("\t\t条件成立(符合成交量条件)");
                             return 0;
                         }
                         if (dayShortageType == 3 && quotesCount < firstDay)
                         {
+                            logRecord.AppendLine("\t\t条件不成立(不符合成交量条件)");
                             return -1;
                         }
                         //查询前几个交易日平均成交量
@@ -1205,13 +1040,16 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                         {
                             if ((compare2 == 1 && avgResult * 100 >= count) || (compare2 == 2 && avgResult * 100 <= count))
                             {
+                                logRecord.AppendLine("\t\t条件成立(符合成交量条件)");
                                 return 0;
                             }
                         }
+                        logRecord.AppendLine("\t\t条件不成立(不符合成交量条件)");
                         return -1;
                     }
                     else
                     {
+                        logRecord.AppendLine("\t\t条件不成立(参数type错误)");
                         return -1;
                     }
                 }
@@ -1219,12 +1057,13 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
             catch (Exception ex)
             {
                 Logger.WriteFileLog(string.Format("分析今日涨跌幅出错了-{0}-{1}-{2}", sharesCode, comeTime, outTime), ex);
+                logRecord.AppendLine("\t\t条件不成立(异常错误)");
                 return -1;
             }
         }
 
         //分析板块涨跌幅
-        public static int Analysis_PlateRiseRate(string sharesCode, int market, List<string> par)
+        public static int Analysis_PlateRiseRate(string sharesCode, int market, List<string> par,StringBuilder logRecord)
         {
             try
             {
@@ -1345,14 +1184,17 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                     var newList = PlateList1.Intersect(PlateList2);
                     if (newList.Count() > 0)
                     {
+                        logRecord.AppendLine("\t\t条件成立(符合板块涨跌幅条件)");
                         return 0;
                     }
+                    logRecord.AppendLine("\t\t条件不成立(不符合板块涨跌幅条件)");
                     return -1;
                 }
             }
             catch (Exception ex)
             {
                 Logger.WriteFileLog("分析板块涨跌幅出错了", ex);
+                logRecord.AppendLine("\t\t条件成立(异常错误)");
                 return -1;
             }
         }
@@ -1390,7 +1232,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
         }
 
         //分析买卖单占比
-        public static int Analysis_BuyOrSellCount(string sharesCode, int market, List<string> par)
+        public static int Analysis_BuyOrSellCount(string sharesCode, int market, List<string> par,StringBuilder logRecord)
         {
             try
             {
@@ -1408,6 +1250,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                 }
                 catch (Exception)
                 {
+                    logRecord.AppendLine("\t\t条件不成立(参数错误)");
                     return -1;
                 }
                 DateTime timeNow = DateTime.Now;
@@ -1421,39 +1264,51 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                         return -1;
                     }
                     int realCount;
+                    string realCountDes;
                     switch (type)
                     {
                         case 1:
                             realCount = quotes.BuyCount1;
+                            realCountDes = "买一挂单";
                             break;
                         case 2:
                             realCount = quotes.BuyCount2;
+                            realCountDes = "买二挂单";
                             break;
                         case 3:
                             realCount = quotes.BuyCount3;
+                            realCountDes = "买三挂单";
                             break;
                         case 4:
                             realCount = quotes.BuyCount4;
+                            realCountDes = "买四挂单";
                             break;
                         case 5:
                             realCount = quotes.BuyCount5;
+                            realCountDes = "买五挂单";
                             break;
                         case 6:
                             realCount = quotes.SellCount1;
+                            realCountDes = "卖一挂单";
                             break;
                         case 7:
                             realCount = quotes.SellCount2;
+                            realCountDes = "卖二挂单";
                             break;
                         case 8:
                             realCount = quotes.SellCount3;
+                            realCountDes = "卖三挂单";
                             break;
                         case 9:
                             realCount = quotes.SellCount4;
+                            realCountDes = "卖四挂单";
                             break;
                         case 10:
                             realCount = quotes.SellCount5;
+                            realCountDes = "卖五挂单";
                             break;
                         default:
+                            logRecord.AppendLine("\t\t条件不成立(参数type错误)");
                             return -1;
                     }
                     realCount = realCount * 100;
@@ -1466,30 +1321,29 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                                           select item).FirstOrDefault();
                         if (sharesInfo == null)
                         {
+                            logRecord.AppendLine("\t\t条件不成立(流通股本数据不存在)");
                             return -1;
                         }
                         long circulatingCapital = sharesInfo.CirculatingCapital;
                         long setCount = (long)(circulatingCapital * (count / 100));
-                        if (compare == 1 && realCount >= setCount)
-                        {
-                            return 0;
-                        }
-                        if (compare == 2 && realCount <= setCount)
-                        {
-                            return 0;
-                        }
 
+                        string conditionDes = realCountDes + (compare == 1 ? ("大于等于" + setCount) : ("小于等于" + setCount));
+                        if ((compare == 1 && realCount >= setCount) || (compare == 2 && realCount <= setCount))
+                        {
+                            logRecord.AppendLine("\t\t条件成立(当前挂单:"+ realCount + ",条件:"+ conditionDes + ")");
+                            return 0;
+                        }
+                        logRecord.AppendLine("\t\t条件不成立(当前挂单:" + realCount + ",条件:" + conditionDes + ")");
                     }
                     else if (countType == 2)//股数
                     {
-                        if (compare == 1 && realCount >= count)
+                        string conditionDes = realCountDes + (compare == 1 ? ("大于等于" + count) : ("小于等于" + count));
+                        if ((compare == 1 && realCount >= count) || (compare == 2 && realCount <= count))
                         {
+                            logRecord.AppendLine("\t\t条件成立(当前挂单:" + realCount + ",条件:" + conditionDes + ")");
                             return 0;
                         }
-                        if (compare == 2 && realCount <= count)
-                        {
-                            return 0;
-                        }
+                        logRecord.AppendLine("\t\t条件不成立(当前挂单:" + realCount + ",条件:" + conditionDes + ")");
                     }
                     else if (countType == 3)//流通市值百分比
                     {
@@ -1501,6 +1355,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
             catch (Exception ex)
             {
                 Logger.WriteFileLog("分析买卖单占比出错了", ex);
+                logRecord.AppendLine("\t\t条件不成立(异常错误)");
                 return -1;
             }
         }
@@ -1538,7 +1393,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
         }
 
         //分析按参照价格
-        public static int Analysis_ReferPrice(string sharesCode, int market, List<string> par)
+        public static int Analysis_ReferPrice(string sharesCode, int market, List<string> par,StringBuilder logRecord)
         {
             try
             {
@@ -1556,10 +1411,11 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                 }
                 catch (Exception)
                 {
+                    logRecord.AppendLine("\t\t条件不成立(参数错误)");
                     return -1;
                 }
                 DateTime timeNow = DateTime.Now;
-                using (var db =new meal_ticketEntities())
+                using (var db = new meal_ticketEntities())
                 {
                     var quotes = (from item in db.t_shares_quotes_date
                                   where item.Market == market && item.SharesCode == sharesCode
@@ -1567,16 +1423,19 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                                   select item).Take(day + 1).ToList();
                     if (quotes.Count() <= 0)
                     {
+                        logRecord.AppendLine("\t\t条件不成立(五档行情有误)");
                         return -1;
                     }
                     var presentInfo = quotes.OrderByDescending(e => e.Date).FirstOrDefault();
                     if (presentInfo.LastModified < timeNow.AddMinutes(-1))
                     {
+                        logRecord.AppendLine("\t\t条件不成立(五档行情不实时)");
                         return -1;
                     }
                     long presentPrice = presentInfo.PresentPrice;
                     if (presentPrice <= 0)
                     {
+                        logRecord.AppendLine("\t\t条件不成立(五档行情价格有误)");
                         return -1;
                     }
 
@@ -1597,6 +1456,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                             realPrice = compare == 1 ? lastInfo.Max(e => e.MinPrice) : lastInfo.Min(e => e.MinPrice);
                             break;
                         default:
+                            logRecord.AppendLine("\t\t条件不成立(参数priceType错误)");
                             return -1;
                     }
 
@@ -1605,20 +1465,20 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                         realPrice = (long)(realPrice * (count / 100) + realPrice);
                     }
 
-                    if (compare == 1 && presentPrice >= realPrice)
+                    string conditionDes =compare == 1 ? ("当前价格大于等于" + realPrice) : ("当前价格小于等于" + realPrice);
+                    if ((compare == 1 && presentPrice >= realPrice) || (compare == 2 && presentPrice <= realPrice))
                     {
+                        logRecord.AppendLine("\t\t条件成立(当前价格:" + presentPrice + ",条件:" + conditionDes + ")");
                         return 0;
                     }
-                    if (compare == 2 && presentPrice <= realPrice)
-                    {
-                        return 0;
-                    }
+                    logRecord.AppendLine("\t\t条件不成立(当前价格:" + presentPrice + ",条件:" + conditionDes + ")");
                     return -1;
                 }
             }
             catch (Exception ex)
             {
                 Logger.WriteFileLog("分析按参照价格出错了", ex);
+                logRecord.AppendLine("\t\t条件不成立(异常错误)");
                 return -1;
             }
         }
@@ -1656,7 +1516,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
         }
 
         //分析按均线价格
-        public static int Analysis_ReferAverage(string sharesCode, int market, List<string> par)
+        public static int Analysis_ReferAverage(string sharesCode, int market, List<string> par,StringBuilder logRecord)
         {
             try
             {
@@ -1675,6 +1535,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                 }
                 catch (Exception)
                 {
+                    logRecord.AppendLine("\t\t条件不成立(参数错误)");
                     return -1;
                 }
                 try
@@ -1705,27 +1566,32 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                     var presentInfo = quotes.OrderByDescending(e => e.Date).FirstOrDefault();
                     if (presentInfo.LastModified < timeNow.AddMinutes(-1))
                     {
+                        logRecord.AppendLine("\t\t条件不成立(五档行情不实时)");
                         return -1;
                     }
                     long presentPrice = presentInfo.PresentPrice;
                     if (presentPrice <= 0)
                     {
+                        logRecord.AppendLine("\t\t条件不成立(五档行情价格有误)");
                         return -1;
                     }
                     //计算均线价格
                     var list1 = quotes.Take(day1).ToList();
                     if (list1.Count() <= 0)
                     {
+                        logRecord.AppendLine("\t\t条件不成立(暂无均线)");
                         return -1;
                     }
                     if (list1.Count() < day1)
                     {
                         if (dayShortageType == 2)
                         {
+                            logRecord.AppendLine("\t\t条件成立(均线不够返回true)");
                             return 0;
                         }
                         if (dayShortageType == 3)
                         {
+                            logRecord.AppendLine("\t\t条件不成立(均线不够返回false)");
                             return -1;
                         }
                     }
@@ -1735,6 +1601,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                         averagePrice = (long)(averagePrice * (count / 100) + averagePrice);
                     }
 
+                    string conditionDes = compare == 1 ? ("当前价格大于等于" + averagePrice) : ("当前价格小于等于" + averagePrice);
                     if ((compare == 1 && presentPrice >= averagePrice) || (compare == 2 && presentPrice <= averagePrice))
                     {
                         if (day2 >= 2)//计算每日均线
@@ -1757,6 +1624,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                                     //向上，则当前必须<=前一个数据
                                     if (tempAveragePrice > lastAveragePrice && lastAveragePrice != 0)
                                     {
+                                        logRecord.AppendLine("\t\t条件不成立(均线非连续向上)");
                                         return -1;
                                     }
                                     lastAveragePrice = tempAveragePrice;
@@ -1767,6 +1635,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                                     //向下，则当前必须>=前一个数据
                                     if (tempAveragePrice < lastAveragePrice && lastAveragePrice != 0)
                                     {
+                                        logRecord.AppendLine("\t\t条件不成立(均线非连续向下)");
                                         return -1;
                                     }
                                     lastAveragePrice = tempAveragePrice;
@@ -1774,21 +1643,21 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                                 }
                                 else
                                 {
-                                    return -1;
+                                    logRecord.AppendLine("\t\t条件不成立(参数upOrDown错误)");
                                 }
                             }
                         }
+                        logRecord.AppendLine("\t\t条件成立(当前价格:" + presentPrice + ",条件:" + conditionDes + ")");
                         return 0;
                     }
-                    else
-                    {
-                        return -1;
-                    }
+                    logRecord.AppendLine("\t\t条件不成立(当前价格:" + presentPrice + ",条件:" + conditionDes + ")");
+                    return -1;
                 }
             }
             catch (Exception ex)
             {
                 Logger.WriteFileLog("分析按均线价格出错了", ex);
+                logRecord.AppendLine("\t\t条件不成立(异常错误)");
                 return -1;
             }
         }
@@ -1826,7 +1695,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
         }
 
         //分析买卖变化速度
-        public static int Analysis_QuotesChangeRate(string sharesCode, int market,long currPrice ,List<string> par)
+        public static int Analysis_QuotesChangeRate(string sharesCode, int market,long currPrice ,List<string> par,StringBuilder logRecord)
         {
             var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
             int compare = 0;
@@ -1841,6 +1710,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
             }
             catch (Exception)
             {
+                logRecord.AppendLine("\t\t条件不成立(参数错误)");
                 return -1;
             }
             try
@@ -1861,6 +1731,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                 var quotesPre = quotes.Where(e => e.DataType == 1).FirstOrDefault();
                 if (quotesLast == null || quotesPre == null)
                 {
+                    logRecord.AppendLine("\t\t条件不成立(t五档数据有误)");
                     return -1;
                 }
                
@@ -2036,197 +1907,208 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
         }
 
         //分析五档变化速度
-        public static int Analysis_QuotesTypeChangeRate(string sharesCode, int market, long currPrice, List<string> par)
+        public static int Analysis_QuotesTypeChangeRate(string sharesCode, int market, long currPrice, List<string> par,StringBuilder logRecord)
         {
-            var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
-            int compare = 0;
-            int type = 0;
-            double count = 0;
-            int priceType = 1;
             try
             {
-                compare = Convert.ToInt32(temp.Compare);
-                type = Convert.ToInt32(temp.Type);
-                count = Convert.ToDouble(temp.Count);
-                priceType= Convert.ToInt32(temp.priceType);
-            }
-            catch (Exception)
-            {
-            }
-            if (type == 0)
-            {
-                return -1;
-            }
-
-            DateTime timeNow = DateTime.Now;
-            using (var db = new meal_ticketEntities())
-            {
-                var quotes = (from item in db.t_shares_quotes
-                              where item.Market == market && item.SharesCode == sharesCode && SqlFunctions.DateAdd("MI", 1, item.LastModified) > timeNow
-                              select item).ToList();
-                var quotesLast = quotes.Where(e => e.DataType == 0).FirstOrDefault();
-                var quotesPre = quotes.Where(e => e.DataType == 1).FirstOrDefault();
-                if (quotesLast == null || quotesPre == null)
+                var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
+                int compare = 0;
+                int type = 0;
+                double count = 0;
+                int priceType = 1;
+                try
                 {
+                    compare = Convert.ToInt32(temp.Compare);
+                    type = Convert.ToInt32(temp.Type);
+                    count = Convert.ToDouble(temp.Count);
+                    priceType = Convert.ToInt32(temp.priceType);
+                }
+                catch (Exception)
+                {
+                }
+                if (type == 0)
+                {
+                    logRecord.AppendLine("\t\t条件不成立(参数错误)");
                     return -1;
                 }
 
-                if (priceType == 2)
+                DateTime timeNow = DateTime.Now;
+                using (var db = new meal_ticketEntities())
                 {
-                    currPrice = quotesLast.LimitUpPrice;
-                }
-                else if (priceType == 3)
-                {
-                    currPrice = quotesLast.LimitDownPrice;
-                }
-
-                int disCount = 0;
-                int lastCount = 0;
-
-                double rate = 0;
-                switch (type)
-                {
-                    case 1:
-                        if (quotesPre.BuyPrice1 == currPrice)
-                        {
-                            lastCount = quotesPre.BuyCount1;
-                        }
-                        else if (quotesPre.BuyPrice2 == currPrice)
-                        {
-                            lastCount = quotesPre.BuyCount2;
-                        }
-                        else if (quotesPre.BuyPrice3 == currPrice)
-                        {
-                            lastCount = quotesPre.BuyCount3;
-                        }
-                        else if (quotesPre.BuyPrice4 == currPrice)
-                        {
-                            lastCount = quotesPre.BuyCount4;
-                        }
-                        else if (quotesPre.BuyPrice5 == currPrice)
-                        {
-                            lastCount = quotesPre.BuyCount5;
-                        }
-                        else
-                        {
-                            return -1;
-                        }
-                        if (quotesLast.BuyPrice1 == currPrice)
-                        {
-                            disCount = quotesLast.BuyCount1;
-                        }
-                        else if (quotesLast.BuyPrice2 == currPrice)
-                        {
-                            disCount = quotesLast.BuyCount2;
-                        }
-                        else if (quotesLast.BuyPrice3 == currPrice)
-                        {
-                            disCount = quotesLast.BuyCount3;
-                        }
-                        else if (quotesLast.BuyPrice4 == currPrice)
-                        {
-                            disCount = quotesLast.BuyCount4;
-                        }
-                        else if (quotesLast.BuyPrice5 == currPrice)
-                        {
-                            disCount = quotesLast.BuyCount5;
-                        }
-                        else
-                        {
-                            if (quotesLast.BuyPrice1 > currPrice)
-                            {
-                                rate = 0x0FFFFFFF;
-                            }
-                            else
-                            {
-                                rate = -100;
-                            }
-                        }
-                        break;
-                    case 2:
-                        if (quotesPre.SellPrice1 == currPrice)
-                        {
-                            lastCount = quotesPre.SellCount1;
-                        }
-                        else if (quotesPre.SellPrice2 == currPrice)
-                        {
-                            lastCount = quotesPre.SellCount2;
-                        }
-                        else if (quotesPre.SellPrice3 == currPrice)
-                        {
-                            lastCount = quotesPre.SellCount3;
-                        }
-                        else if (quotesPre.SellPrice4 == currPrice)
-                        {
-                            lastCount = quotesPre.SellCount4;
-                        }
-                        else if (quotesPre.SellPrice5 == currPrice)
-                        {
-                            lastCount = quotesPre.SellCount5;
-                        }
-                        else
-                        {
-                            return -1;
-                        }
-                        if (quotesLast.SellPrice1 == currPrice)
-                        {
-                            disCount = quotesLast.SellCount1;
-                        }
-                        else if (quotesLast.SellPrice2 == currPrice)
-                        {
-                            disCount = quotesLast.SellCount2;
-                        }
-                        else if (quotesLast.SellPrice3 == currPrice)
-                        {
-                            disCount = quotesLast.SellCount3;
-                        }
-                        else if (quotesLast.SellPrice4 == currPrice)
-                        {
-                            disCount = quotesLast.SellCount4;
-                        }
-                        else if (quotesLast.SellPrice5 == currPrice)
-                        {
-                            disCount = quotesLast.SellCount5;
-                        }
-                        else
-                        {
-                            if (quotesLast.SellPrice1 > currPrice)
-                            {
-                                rate = -100;
-                            }
-                            else
-                            {
-                                rate = 0x0FFFFFFF;
-                            }
-                        }
-                        break;
-                    default:
-                        return -1;
-                }
-
-                if (rate == 0)
-                {
-                    if (lastCount == 0)
+                    var quotes = (from item in db.t_shares_quotes
+                                  where item.Market == market && item.SharesCode == sharesCode && SqlFunctions.DateAdd("MI", 1, item.LastModified) > timeNow
+                                  select item).ToList();
+                    var quotesLast = quotes.Where(e => e.DataType == 0).FirstOrDefault();
+                    var quotesPre = quotes.Where(e => e.DataType == 1).FirstOrDefault();
+                    if (quotesLast == null || quotesPre == null)
                     {
+                        logRecord.AppendLine("\t\t条件不成立(五档行情数据有误)");
                         return -1;
                     }
-                    rate = (disCount - lastCount) * 1.0 / lastCount * 100;
-                }
 
-                if (compare == 1 && rate >= count)
-                {
-                    return 0;
+                    if (priceType == 2)
+                    {
+                        currPrice = quotesLast.LimitUpPrice;
+                    }
+                    else if (priceType == 3)
+                    {
+                        currPrice = quotesLast.LimitDownPrice;
+                    }
+
+                    int disCount = 0;
+                    int lastCount = 0;
+
+                    double rate = 0;
+                    switch (type)
+                    {
+                        case 1:
+                            if (quotesPre.BuyPrice1 == currPrice)
+                            {
+                                lastCount = quotesPre.BuyCount1;
+                            }
+                            else if (quotesPre.BuyPrice2 == currPrice)
+                            {
+                                lastCount = quotesPre.BuyCount2;
+                            }
+                            else if (quotesPre.BuyPrice3 == currPrice)
+                            {
+                                lastCount = quotesPre.BuyCount3;
+                            }
+                            else if (quotesPre.BuyPrice4 == currPrice)
+                            {
+                                lastCount = quotesPre.BuyCount4;
+                            }
+                            else if (quotesPre.BuyPrice5 == currPrice)
+                            {
+                                lastCount = quotesPre.BuyCount5;
+                            }
+                            else
+                            {
+                                return -1;
+                            }
+                            if (quotesLast.BuyPrice1 == currPrice)
+                            {
+                                disCount = quotesLast.BuyCount1;
+                            }
+                            else if (quotesLast.BuyPrice2 == currPrice)
+                            {
+                                disCount = quotesLast.BuyCount2;
+                            }
+                            else if (quotesLast.BuyPrice3 == currPrice)
+                            {
+                                disCount = quotesLast.BuyCount3;
+                            }
+                            else if (quotesLast.BuyPrice4 == currPrice)
+                            {
+                                disCount = quotesLast.BuyCount4;
+                            }
+                            else if (quotesLast.BuyPrice5 == currPrice)
+                            {
+                                disCount = quotesLast.BuyCount5;
+                            }
+                            else
+                            {
+                                if (quotesLast.BuyPrice1 > currPrice)
+                                {
+                                    rate = 0x0FFFFFFF;
+                                }
+                                else
+                                {
+                                    rate = -100;
+                                }
+                            }
+                            break;
+                        case 2:
+                            if (quotesPre.SellPrice1 == currPrice)
+                            {
+                                lastCount = quotesPre.SellCount1;
+                            }
+                            else if (quotesPre.SellPrice2 == currPrice)
+                            {
+                                lastCount = quotesPre.SellCount2;
+                            }
+                            else if (quotesPre.SellPrice3 == currPrice)
+                            {
+                                lastCount = quotesPre.SellCount3;
+                            }
+                            else if (quotesPre.SellPrice4 == currPrice)
+                            {
+                                lastCount = quotesPre.SellCount4;
+                            }
+                            else if (quotesPre.SellPrice5 == currPrice)
+                            {
+                                lastCount = quotesPre.SellCount5;
+                            }
+                            else
+                            {
+                                return -1;
+                            }
+                            if (quotesLast.SellPrice1 == currPrice)
+                            {
+                                disCount = quotesLast.SellCount1;
+                            }
+                            else if (quotesLast.SellPrice2 == currPrice)
+                            {
+                                disCount = quotesLast.SellCount2;
+                            }
+                            else if (quotesLast.SellPrice3 == currPrice)
+                            {
+                                disCount = quotesLast.SellCount3;
+                            }
+                            else if (quotesLast.SellPrice4 == currPrice)
+                            {
+                                disCount = quotesLast.SellCount4;
+                            }
+                            else if (quotesLast.SellPrice5 == currPrice)
+                            {
+                                disCount = quotesLast.SellCount5;
+                            }
+                            else
+                            {
+                                if (quotesLast.SellPrice1 > currPrice)
+                                {
+                                    rate = -100;
+                                }
+                                else
+                                {
+                                    rate = 0x0FFFFFFF;
+                                }
+                            }
+                            break;
+                        default:
+                            return -1;
+                    }
+
+                    if (rate == 0)
+                    {
+                        if (lastCount == 0)
+                        {
+                            logRecord.AppendLine("\t\t条件不成立(上一次五档找不到目标价格)");
+                            return -1;
+                        }
+                        rate = (disCount - lastCount) * 1.0 / lastCount * 100;
+                    }
+
+
+                    if ((compare == 1 && rate >= count) || (compare == 2 && rate <= count))
+                    {
+                        logRecord.AppendLine("\t\t条件成立(目标价在上一次五档挂单数量:" + lastCount + ",在本次五档挂单数量:" + disCount + ")");
+                        return 0;
+                    }
+                    logRecord.AppendLine("\t\t条件不成立(目标价在上一次五档挂单数量:" + lastCount + ",在本次五档挂单数量:" + disCount + ")");
+                    return -1;
                 }
-                if (compare == 2 && rate <= count)
-                {
-                    return 0;
-                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("分析五档变化速度出错了", ex);
+                logRecord.AppendLine("\t\t条件不成立(异常错误)");
                 return -1;
             }
         }
 
         //分析按当前价格
-        public static int Analysis_CurrentPrice(string sharesCode, int market, List<string> par)
+        public static int Analysis_CurrentPrice(string sharesCode, int market, List<string> par, StringBuilder logRecord)
         {
             var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
             int riseType = 0;
@@ -2238,6 +2120,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
             }
             catch (Exception)
             {
+                logRecord.Append("\t\t条件不成立(参数配置错误)");
                 return -1;
             }
             try
@@ -2264,34 +2147,42 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                               select item).FirstOrDefault();
                 if (quotes == null)
                 {
+                    logRecord.Append("\t\t条件不成立(五档行情不实时)");
                     return -1;
                 }
 
                 if (riseType == 1 && quotes.TriPriceType == 1)
                 {
+                    logRecord.Append("\t\t条件成立(当前触发涨停,条件触发涨停)");
                     return 0;
                 }
 
                 if (riseType == 2 && quotes.TriPriceType == 2)
                 {
+                    logRecord.Append("\t\t条件成立(当前触发跌停,条件触发跌停)");
                     return 0;
                 }
 
                 if (riseType == 3 && quotes.PriceType == 1)
                 {
+                    logRecord.Append("\t\t条件成立(当前涨停封板,条件涨停封板)");
                     return 0;
                 }
 
                 if (riseType == 4 && quotes.PriceType == 2)
                 {
+                    logRecord.Append("\t\t条件成立(当前跌停封板,条件跌停封板)");
                     return 0;
                 }
                 if (riseType == 5)
                 {
+                    string conditionDes = compare == 1 ? ("价格大于等于"+ count) : ("价格小于等于" + count);
                     if ((compare == 1 && quotes.PresentPrice >= count) || (compare == 2 && quotes.PresentPrice <= count))
                     {
+                        logRecord.Append("\t\t条件成立(当前价格:"+ quotes.PresentPrice + ",条件:"+ conditionDes + ")");
                         return 0;
                     }
+                    logRecord.Append("\t\t条件不成立(当前价格:" + quotes.PresentPrice + ",条件:" + conditionDes + ")");
                 }
                 if (riseType == 6)
                 {
@@ -2301,13 +2192,17 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                                       select item).FirstOrDefault();
                     if (sharesInfo == null)
                     {
+                        logRecord.Append("\t\t条件不成立(流通股本数据不存在)");
                         return -1;
                     }
                     long circulatingCapital = sharesInfo.CirculatingCapital;
+                    string conditionDes = compare==1? ("流通市值大于等于"+ count): ("流通市值小于等于" + count);
                     if ((compare == 1 && quotes.PresentPrice* circulatingCapital >= count) || (compare == 2 && quotes.PresentPrice * circulatingCapital <= count))
                     {
+                        logRecord.Append("\t\t条件成立(当前流通市值:"+ quotes.PresentPrice * circulatingCapital + ",条件:"+ conditionDes + ")");
                         return 0;
                     }
+                    logRecord.Append("\t\t条件不成立(当前流通市值:" + quotes.PresentPrice * circulatingCapital + ",条件:" + conditionDes + ")");
                 }
                 if (riseType == 7)
                 {
@@ -2317,13 +2212,17 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                                       select item).FirstOrDefault();
                     if (sharesInfo == null)
                     {
+                        logRecord.Append("\t\t条件不成立(总股本数据不存在)");
                         return -1;
                     }
                     long totalCapital = sharesInfo.TotalCapital;
+                    string conditionDes = compare == 1 ? ("总市值大于等于" + count) : ("总市值小于等于" + count);
                     if ((compare == 1 && quotes.PresentPrice * totalCapital >= count) || (compare == 2 && quotes.PresentPrice * totalCapital <= count))
                     {
+                        logRecord.Append("\t\t条件成立(当前总市值:" + quotes.PresentPrice * totalCapital + ",条件:" + conditionDes + ")");
                         return 0;
                     }
+                    logRecord.Append("\t\t条件不成立(当前总市值:" + quotes.PresentPrice * totalCapital + ",条件:" + conditionDes + ")");
                 }
                 return -1;
             }

@@ -37,5 +37,6 @@ namespace MealTicket_DBCommon
         public long EntrustId { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
+        public long CreateAccountId { get; set; }
     }
 }

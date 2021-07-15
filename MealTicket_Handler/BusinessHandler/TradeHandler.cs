@@ -928,7 +928,7 @@ namespace MealTicket_Handler
                     ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                     ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
                     ObjectParameter buyIdDb = new ObjectParameter("buyId", 0);
-                    db.P_ApplyTradeBuy(basedata.AccountId, request.Market, request.SharesCode, request.BuyAmount, request.FundMultiple, request.BuyPrice, request.ClosingTime, false,0, errorCodeDb, errorMessageDb, buyIdDb);
+                    db.P_ApplyTradeBuy(basedata.AccountId, request.Market, request.SharesCode, request.BuyAmount, request.FundMultiple, request.BuyPrice, request.ClosingTime, false, basedata.AccountId, errorCodeDb, errorMessageDb, buyIdDb);
                     int errorCode = (int)errorCodeDb.Value;
                     string errorMessage = errorMessageDb.Value.ToString();
                     if (errorCode != 0)
@@ -979,7 +979,7 @@ namespace MealTicket_Handler
                     ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                     ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
                     ObjectParameter sellIdDb = new ObjectParameter("sellId", 0);
-                    db.P_ApplyTradeSell(basedata.AccountId, request.HoldId, request.SellCount, request.SellType, request.SellPrice, 0, false, errorCodeDb, errorMessageDb, sellIdDb);
+                    db.P_ApplyTradeSell(basedata.AccountId, request.HoldId, request.SellCount, request.SellType, request.SellPrice, 0, basedata.AccountId, errorCodeDb, errorMessageDb, sellIdDb);
                     int errorCode = (int)errorCodeDb.Value;
                     string errorMessage = errorMessageDb.Value.ToString();
                     if (errorCode != 0)
@@ -1043,7 +1043,7 @@ namespace MealTicket_Handler
                 {
                     ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                     ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
-                    db.P_ApplyTradeCancel(basedata.AccountId, request.Id, errorCodeDb, errorMessageDb);
+                    db.P_ApplyTradeCancel(basedata.AccountId, request.Id, basedata.AccountId, errorCodeDb, errorMessageDb);
                     int errorCode = (int)errorCodeDb.Value;
                     string errorMessage = errorMessageDb.Value.ToString();
                     if (errorCode != 0)
@@ -1474,6 +1474,14 @@ namespace MealTicket_Handler
                 {
                     throw new WebApiException(400, "持仓不存在");
                 }
+                var entrust = (from item in db.t_account_shares_entrust
+                               join item2 in db.t_account_shares_entrust_follow on item.Id equals item2.FollowEntrustId
+                               where item.HoldId == hold.Id
+                               select item).FirstOrDefault();
+                if (entrust != null)
+                {
+                    throw new WebApiException(400,"该持仓无法添加条件单");
+                }
 
                 db.t_account_shares_hold_conditiontrade.Add(new t_account_shares_hold_conditiontrade
                 {
@@ -1488,12 +1496,14 @@ namespace MealTicket_Handler
                     LastModified = DateTime.Now,
                     TradeType = request.TradeType,
                     TriggerTime = null,
-                    SourceFrom=0,
-                    Status=1,
-                    FatherId=0,
-                    ForbidType=request.ForbidType,
-                    Name="",
-                    Type = request.Type
+                    ConditionType = 1,
+                    SourceFrom = 0,
+                    Status = 1,
+                    FatherId = 0,
+                    ForbidType = request.ForbidType,
+                    Name = "",
+                    Type = request.Type,
+                    CreateAccountId= basedata.AccountId
                 });
                 db.SaveChanges();
             }

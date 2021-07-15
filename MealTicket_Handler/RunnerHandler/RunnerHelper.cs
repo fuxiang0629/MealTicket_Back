@@ -516,7 +516,7 @@ namespace MealTicket_Handler.RunnerHandler
                             ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                             ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
                             ObjectParameter sellIdDb = new ObjectParameter("sellId", 0);
-                            db.P_ApplyTradeSell(item.AccountId, item.Id, item.CanSoldCount, 1, 0, 1, false, errorCodeDb, errorMessageDb, sellIdDb);
+                            db.P_ApplyTradeSell(item.AccountId, item.Id, item.CanSoldCount, 1, 0, 1, item.AccountId, errorCodeDb, errorMessageDb, sellIdDb);
                             int errorCode = (int)errorCodeDb.Value;
                             string errorMessage = errorMessageDb.Value.ToString();
                             if (errorCode != 0)
@@ -800,7 +800,7 @@ namespace MealTicket_Handler.RunnerHandler
                                 {
                                     ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                                     ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
-                                    db.P_ApplyTradeCancel(item.AccountId, entrust.Id, errorCodeDb, errorMessageDb);
+                                    db.P_ApplyTradeCancel(item.AccountId, entrust.Id,0, errorCodeDb, errorMessageDb);
                                     int errorCode = (int)errorCodeDb.Value;
                                     string errorMessage = errorMessageDb.Value.ToString();
                                     if (errorCode != 0)
@@ -904,7 +904,7 @@ namespace MealTicket_Handler.RunnerHandler
                                 ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                                 ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
                                 ObjectParameter sellIdDb = new ObjectParameter("sellId", 0);
-                                db.P_ApplyTradeSell(item.AccountId, item.Id, sellz, quotes.BuyCount1 <= 0 ? 2 : 1, quotes.BuyCount1 <= 0 ? quotes.PresentPrice : 0, 2, false, errorCodeDb, errorMessageDb, sellIdDb);
+                                db.P_ApplyTradeSell(item.AccountId, item.Id, sellz, quotes.BuyCount1 <= 0 ? 2 : 1, quotes.BuyCount1 <= 0 ? quotes.PresentPrice : 0, 2, item.AccountId, errorCodeDb, errorMessageDb, sellIdDb);
                                 int errorCode = (int)errorCodeDb.Value;
                                 string errorMessage = errorMessageDb.Value.ToString();
                                 if (errorCode != 0)

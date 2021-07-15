@@ -3631,7 +3631,6 @@
     <FunctionImportMapping FunctionImportName="P_Admin_ModifyBackAccountRole" FunctionName="meal_ticketModel.Store.P_Admin_ModifyBackAccountRole" />
     <FunctionImportMapping FunctionImportName="P_Admin_ModifyFrontAccountWallet" FunctionName="meal_ticketModel.Store.P_Admin_ModifyFrontAccountWallet" />
     <FunctionImportMapping FunctionImportName="P_Admin_ModifyPassword" FunctionName="meal_ticketModel.Store.P_Admin_ModifyPassword" />
-    <FunctionImportMapping FunctionImportName="P_ApplyTradeBuy" FunctionName="meal_ticketModel.Store.P_ApplyTradeBuy" />
     <FunctionImportMapping FunctionImportName="P_ApplyTradeCancel" FunctionName="meal_ticketModel.Store.P_ApplyTradeCancel" />
     <FunctionImportMapping FunctionImportName="P_ApplyTradeSell" FunctionName="meal_ticketModel.Store.P_ApplyTradeSell" />
     <FunctionImportMapping FunctionImportName="P_AutoBuy_OtherPar_Calculate" FunctionName="meal_ticketModel.Store.P_AutoBuy_OtherPar_Calculate" />
@@ -3679,5 +3678,6 @@
     <FunctionImportMapping FunctionImportName="P_TradeRecovery" FunctionName="meal_ticketModel.Store.P_TradeRecovery" />
     <FunctionImportMapping FunctionImportName="P_TryToCancelEntrust" FunctionName="meal_ticketModel.Store.P_TryToCancelEntrust" />
     <FunctionImportMapping FunctionImportName="P_SharesQuotes_Update" FunctionName="meal_ticketModel.Store.P_SharesQuotes_Update" />
+    <FunctionImportMapping FunctionImportName="P_ApplyTradeBuy" FunctionName="meal_ticketModel.Store.P_ApplyTradeBuy" />
   </EntityContainerMapping>
 </Mapping>

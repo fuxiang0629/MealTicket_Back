@@ -240,10 +240,10 @@ F:\项目\饭票后端\SharesTradeService\obj\Release\SharesTradeService.csproj.
 F:\项目\饭票后端\SharesTradeService\obj\Release\SharesTradeService.csproj.CopyComplete
 F:\项目\饭票后端\SharesTradeService\obj\Release\SharesTradeService.exe
 F:\项目\饭票后端\SharesTradeService\obj\Release\SharesTradeService.pdb
-F:\项目\饭票后端\SharesTradeService\obj\Release\SharesTradeService.csprojAssemblyReference.cache
 F:\项目\饭票后端\SharesTradeService\bin\Release\MealTicket_DBCommon.dll
 F:\项目\饭票后端\SharesTradeService\bin\Release\MealTicket_DBCommon.pdb
 F:\项目\饭票后端\SharesTradeService\bin\Release\MealTicket_DBCommon.dll.config
 D:\项目\饭票\后端\SharesTradeService\bin\Release\MealTicket_DBCommon.dll
 D:\项目\饭票\后端\SharesTradeService\bin\Release\MealTicket_DBCommon.pdb
 D:\项目\饭票\后端\SharesTradeService\bin\Release\MealTicket_DBCommon.dll.config
+F:\项目\饭票后端\SharesTradeService\obj\Release\SharesTradeService.csprojAssemblyReference.cache

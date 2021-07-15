@@ -3891,20 +3891,6 @@
       <Parameter Name="errorMessage" Mode="InOut" Type="String" />
       <Parameter Name="token" Mode="InOut" Type="String" />
     </FunctionImport>
-    <FunctionImport Name="P_ApplyTradeBuy">
-      <Parameter Name="accountId" Mode="In" Type="Int64" />
-      <Parameter Name="market" Mode="In" Type="Int32" />
-      <Parameter Name="sharesCode" Mode="In" Type="String" />
-      <Parameter Name="buyAmount" Mode="In" Type="Int64" />
-      <Parameter Name="fundMultiple" Mode="In" Type="Int32" />
-      <Parameter Name="entrustPrice" Mode="In" Type="Int64" />
-      <Parameter Name="closingTime" Mode="In" Type="DateTime" />
-      <Parameter Name="isFollow" Mode="In" Type="Boolean" />
-      <Parameter Name="mainAccountId" Mode="In" Type="Int64" />
-      <Parameter Name="errorCode" Mode="InOut" Type="Int32" />
-      <Parameter Name="errorMessage" Mode="InOut" Type="String" />
-      <Parameter Name="buyId" Mode="InOut" Type="Int64" />
-    </FunctionImport>
     <FunctionImport Name="P_ApplyTradeCancel">
       <Parameter Name="accountId" Mode="In" Type="Int64" />
       <Parameter Name="entrustId" Mode="In" Type="Int64" />
@@ -4176,5 +4162,19 @@
       <Parameter Name="entrustId" Mode="In" Type="Int64" />
     </FunctionImport>
     <FunctionImport Name="P_SharesQuotes_Update" />
+    <FunctionImport Name="P_ApplyTradeBuy">
+      <Parameter Name="accountId" Mode="In" Type="Int64" />
+      <Parameter Name="market" Mode="In" Type="Int32" />
+      <Parameter Name="sharesCode" Mode="In" Type="String" />
+      <Parameter Name="buyAmount" Mode="In" Type="Int64" />
+      <Parameter Name="fundMultiple" Mode="In" Type="Int32" />
+      <Parameter Name="entrustPrice" Mode="In" Type="Int64" />
+      <Parameter Name="closingTime" Mode="In" Type="DateTime" />
+      <Parameter Name="isFollow" Mode="In" Type="Boolean" />
+      <Parameter Name="mainAccountId" Mode="In" Type="Int64" />
+      <Parameter Name="errorCode" Mode="InOut" Type="Int32" />
+      <Parameter Name="errorMessage" Mode="InOut" Type="String" />
+      <Parameter Name="buyId" Mode="InOut" Type="Int64" />
+    </FunctionImport>
   </EntityContainer>
 </Schema>

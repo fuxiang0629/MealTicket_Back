@@ -355,7 +355,8 @@ namespace MealTicket_Web_Handler.Runner
                                 SellPrice = EntrustPrice,
                                 SellType = hold.item.EntrustType,
                                 HoldId = hold.item2.Id,
-                                FollowList = followList
+                                FollowList = followList,
+                                MainAccountId= hold.item.CreateAccountId
                             }, new HeadBase
                             {
                                 AccountId = hold.item.AccountId
@@ -385,7 +386,7 @@ namespace MealTicket_Web_Handler.Runner
             {
                 List<TradeAutoBuyCondition> disResult = new List<TradeAutoBuyCondition>();
                 //查询价格条件达标的数据
-                string sql = @"select t.Id,t1.AccountId,t1.SharesCode,t1.Market,t2.PresentPrice,t2.ClosedPrice,t2.LastModified,t.LimitUp,t2.LimitUpPrice,t2.LimitDownPrice,
+                string sql = @"select t.Id,t.CreateAccountId,t1.AccountId,t1.SharesCode,t1.Market,t2.PresentPrice,t2.ClosedPrice,t2.LastModified,t.LimitUp,t2.LimitUpPrice,t2.LimitDownPrice,
 t.ForbidType,t.FirstExecTime,t2.BuyPrice1,t2.BuyPrice2,t2.BuyPrice3,t2.BuyPrice4,t2.BuyPrice5,t2.SellPrice1,t2.SellPrice2,t2.SellPrice3,
 t2.SellPrice4,t2.SellPrice5,t.ConditionPrice,t.ConditionType,t.ConditionRelativeType,t.ConditionRelativeRate,t.IsGreater,t.OtherConditionRelative,
 t.BusinessStatus,t.TriggerTime,t.ExecStatus,t.BuyAuto,t.EntrustPriceGear,t.EntrustType,t.EntrustAmount,t.IsHold,t.FollowType
@@ -738,15 +739,21 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
                                 var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
                                 JArray timeList = temp.Times;
+                                string desMessage = "当前时间：" + timeNow.ToString("yyyy-MM-dd HH:mm:ss.fff") + ",条件时段：" + timeList[0].ToString() + "-" + timeList[1].ToString();
                                 if (timeNow >= DateTime.Parse(timeList[0].ToString()) && timeNow < DateTime.Parse(timeList[1].ToString()))
                                 {
-                                    tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market,item.PresentPrice, logRecord);
+                                    logRecord.AppendLine("\t\t条件成立("+ desMessage + ")");
+                                    tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                     if (tempTri)
                                     {
                                         logRecord.AppendLine("\t结果：达到要求");
                                         logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                                         break;
                                     }
+                                }
+                                else
+                                {
+                                    logRecord.AppendLine("\t\t条件不成立(" + desMessage + ")");
                                 }
                                 logRecord.AppendLine("\t结果：未满足");
                                 logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
@@ -758,7 +765,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("股票：" + item.SharesCode + "按当前价格判断-额外参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend12 = DataHelper.Analysis_CurrentPrice(item.SharesCode, item.Market, par);
+                                int errorCode_Trend12 = DataHelper.Analysis_CurrentPrice(item.SharesCode, item.Market, par, logRecord);
                                 if (errorCode_Trend12 == 0)
                                 {
                                     tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
@@ -779,7 +786,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("股票：" + item.SharesCode + "历史涨跌幅判断-额外参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend5 = DataHelper.Analysis_HisRiseRate(item.SharesCode, item.Market, par);
+                                int errorCode_Trend5 = DataHelper.Analysis_HisRiseRate(item.SharesCode, item.Market, par, logRecord);
                                 if (errorCode_Trend5 == 0)
                                 {
                                     tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
@@ -800,7 +807,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("股票：" + item.SharesCode + "当前涨跌幅判断-额外参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(item.SharesCode, item.Market, par);
+                                int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(item.SharesCode, item.Market, par, logRecord);
                                 if (errorCode_Trend6 == 0)
                                 {
                                     tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
@@ -821,7 +828,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("股票：" + item.SharesCode + "板块涨跌幅判断-额外参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend7 = DataHelper.Analysis_PlateRiseRate(item.SharesCode, item.Market, par);
+                                int errorCode_Trend7 = DataHelper.Analysis_PlateRiseRate(item.SharesCode, item.Market, par, logRecord);
                                 if (errorCode_Trend7 == 0)
                                 {
                                     tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
@@ -842,7 +849,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("股票：" + item.SharesCode + "买卖单占比判断-额外参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend8 = DataHelper.Analysis_BuyOrSellCount(item.SharesCode, item.Market, par);
+                                int errorCode_Trend8 = DataHelper.Analysis_BuyOrSellCount(item.SharesCode, item.Market, par, logRecord);
                                 if (errorCode_Trend8 == 0)
                                 {
                                     tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
@@ -863,7 +870,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("股票：" + item.SharesCode + "按参照价格判断-额外参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend9 = DataHelper.Analysis_ReferPrice(item.SharesCode, item.Market, par);
+                                int errorCode_Trend9 = DataHelper.Analysis_ReferPrice(item.SharesCode, item.Market, par, logRecord);
                                 if (errorCode_Trend9 == 0)
                                 {
                                     tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
@@ -884,7 +891,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("股票：" + item.SharesCode + "按均线价格判断-额外参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend10 = DataHelper.Analysis_ReferAverage(item.SharesCode, item.Market, par);
+                                int errorCode_Trend10 = DataHelper.Analysis_ReferAverage(item.SharesCode, item.Market, par, logRecord);
                                 if (errorCode_Trend10 == 0)
                                 {
                                     tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
@@ -905,7 +912,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("股票：" + item.SharesCode + "买卖变化速度判断-额外参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(item.SharesCode, item.Market, item.PresentPrice, par);
+                                int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(item.SharesCode, item.Market, item.PresentPrice, par, logRecord);
                                 if (errorCode_Trend11 == 0)
                                 {
                                     tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
@@ -1047,7 +1054,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("股票：" + item.SharesCode + "五档变化速度判断-额外参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend13 = DataHelper.Analysis_QuotesTypeChangeRate(item.SharesCode, item.Market, item.PresentPrice, par);
+                                int errorCode_Trend13 = DataHelper.Analysis_QuotesTypeChangeRate(item.SharesCode, item.Market, item.PresentPrice, par, logRecord);
                                 if (errorCode_Trend13 == 0)
                                 {
                                     tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
@@ -1105,9 +1112,11 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
                                 var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
-                                JArray timeList = temp.Times;
+                                JArray timeList = temp.Times; 
+                                string desMessage = "当前时间：" + timeNow.ToString("yyyy-MM-dd HH:mm:ss.fff") + ",条件时段：" + timeList[0].ToString() + "-" + timeList[1].ToString();
                                 if (timeNow >= DateTime.Parse(timeList[0].ToString()) && timeNow < DateTime.Parse(timeList[1].ToString()))
                                 {
+                                    logRecord.AppendLine("\t\t条件成立(" + desMessage + ")");
                                     tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                     if (tempTri)
                                     {
@@ -1115,6 +1124,10 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                         logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                                         break;
                                     }
+                                }
+                                else
+                                {
+                                    logRecord.AppendLine("\t\t条件不成立(" + desMessage + ")");
                                 }
                                 logRecord.AppendLine("\t结果：未满足");
                                 logRecord.AppendLine("===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
@@ -1126,7 +1139,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("股票：" + item.SharesCode + "按当前价格判断-转自动参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend12 = DataHelper.Analysis_CurrentPrice(item.SharesCode, item.Market, par);
+                                int errorCode_Trend12 = DataHelper.Analysis_CurrentPrice(item.SharesCode, item.Market, par, logRecord);
                                 if (errorCode_Trend12 == 0)
                                 {
                                     tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
@@ -1147,7 +1160,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("股票：" + item.SharesCode + "历史涨跌幅判断-转自动参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend5 = DataHelper.Analysis_HisRiseRate(item.SharesCode, item.Market, par);
+                                int errorCode_Trend5 = DataHelper.Analysis_HisRiseRate(item.SharesCode, item.Market, par, logRecord);
                                 if (errorCode_Trend5 == 0)
                                 {
                                     tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
@@ -1168,7 +1181,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("股票：" + item.SharesCode + "当前涨跌幅判断-转自动参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(item.SharesCode, item.Market, par);
+                                int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(item.SharesCode, item.Market, par, logRecord);
                                 if (errorCode_Trend6 == 0)
                                 {
                                     tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
@@ -1189,7 +1202,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("股票：" + item.SharesCode + "板块涨跌幅判断-转自动参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend7 = DataHelper.Analysis_PlateRiseRate(item.SharesCode, item.Market, par);
+                                int errorCode_Trend7 = DataHelper.Analysis_PlateRiseRate(item.SharesCode, item.Market, par, logRecord);
                                 if (errorCode_Trend7 == 0)
                                 {
                                     tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
@@ -1210,7 +1223,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("股票：" + item.SharesCode + "买卖单占比判断-转自动参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend8 = DataHelper.Analysis_BuyOrSellCount(item.SharesCode, item.Market, par);
+                                int errorCode_Trend8 = DataHelper.Analysis_BuyOrSellCount(item.SharesCode, item.Market, par, logRecord);
                                 if (errorCode_Trend8 == 0)
                                 {
                                     tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
@@ -1231,7 +1244,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("股票：" + item.SharesCode + "按参照价格判断-转自动参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend9 = DataHelper.Analysis_ReferPrice(item.SharesCode, item.Market, par);
+                                int errorCode_Trend9 = DataHelper.Analysis_ReferPrice(item.SharesCode, item.Market, par, logRecord);
                                 if (errorCode_Trend9 == 0)
                                 {
                                     tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
@@ -1252,7 +1265,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("股票：" + item.SharesCode + "按均线价格判断-转自动参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend10 = DataHelper.Analysis_ReferAverage(item.SharesCode, item.Market, par);
+                                int errorCode_Trend10 = DataHelper.Analysis_ReferAverage(item.SharesCode, item.Market, par, logRecord);
                                 if (errorCode_Trend10 == 0)
                                 {
                                     tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
@@ -1273,7 +1286,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("股票：" + item.SharesCode + "五档变化速度判断-转自动参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(item.SharesCode, item.Market, item.PresentPrice, par);
+                                int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(item.SharesCode, item.Market, item.PresentPrice, par, logRecord);
                                 if (errorCode_Trend11 == 0)
                                 {
                                     tempTri = IsGetAuto(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
@@ -1415,7 +1428,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                                 logRecord.AppendLine("股票：" + item.SharesCode + "五档变化速度判断-转自动参数：");
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
-                                int errorCode_Trend13 = DataHelper.Analysis_QuotesTypeChangeRate(item.SharesCode, item.Market, item.PresentPrice, par);
+                                int errorCode_Trend13 = DataHelper.Analysis_QuotesTypeChangeRate(item.SharesCode, item.Market, item.PresentPrice, par, logRecord);
                                 if (errorCode_Trend13 == 0)
                                 {
                                     tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
@@ -1648,7 +1661,8 @@ inner
                         buyList.Add(new
                         {
                             AccountId = item.AccountId,
-                            BuyAmount = EntrustAmount
+                            BuyAmount = EntrustAmount,
+                            IsFollow=false
                         });
 
                         var buyRate = EntrustAmount * 1.0 / (Deposit - RemainDeposit);//仓位占比
@@ -1671,7 +1685,8 @@ inner
                             buyList.Add(new
                             {
                                 AccountId = account.AccountId,
-                                BuyAmount = tempRate == -1 ? account.BuyAmount : (long)((temp.Deposit - followRemainDeposit) * tempRate)
+                                BuyAmount = tempRate == -1 ? account.BuyAmount : (long)((temp.Deposit - followRemainDeposit) * tempRate),
+                                IsFollow = true
                             });
                         }
 
@@ -1690,7 +1705,7 @@ inner
                                     ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                                     ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
                                     ObjectParameter buyIdDb = new ObjectParameter("buyId", 0);
-                                    db.P_ApplyTradeBuy(buy.AccountId, item.Market, item.SharesCode, buy.BuyAmount, -1, EntrustPrice, null, true, item.AccountId, errorCodeDb, errorMessageDb, buyIdDb);
+                                    db.P_ApplyTradeBuy(buy.AccountId, item.Market, item.SharesCode, buy.BuyAmount, -1, EntrustPrice, null, buy.IsFollow, item.CreateAccountId==0?item.AccountId:item.CreateAccountId, errorCodeDb, errorMessageDb, buyIdDb);
                                     int errorCode = (int)errorCodeDb.Value;
                                     string errorMessage = errorMessageDb.Value.ToString();
                                     if (errorCode != 0)
@@ -2138,7 +2153,7 @@ inner
                 if (tr.TrendId == 12)
                 {
                     trendName = "按当前价格";
-                    int errorCode_Trend12 = DataHelper.Analysis_CurrentPrice(sharesCode, market, par);
+                    int errorCode_Trend12 = DataHelper.Analysis_CurrentPrice(sharesCode, market, par, logRecord);
                     if (errorCode_Trend12 == 0)
                     {
                         tempTri = true;
@@ -2148,7 +2163,7 @@ inner
                 if (tr.TrendId == 5)
                 {
                     trendName = "历史涨跌幅";
-                    int errorCode_Trend5 = DataHelper.Analysis_HisRiseRate(sharesCode, market, par);
+                    int errorCode_Trend5 = DataHelper.Analysis_HisRiseRate(sharesCode, market, par, logRecord);
                     if (errorCode_Trend5 == 0)
                     {
                         tempTri = true;
@@ -2158,7 +2173,7 @@ inner
                 if (tr.TrendId == 6)
                 {
                     trendName = "当前涨跌幅";
-                    int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(sharesCode, market, par);
+                    int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(sharesCode, market, par, logRecord);
                     if (errorCode_Trend6 == 0)
                     {
                         tempTri = true;
@@ -2168,7 +2183,7 @@ inner
                 if (tr.TrendId == 7)
                 {
                     trendName = "板块涨跌幅";
-                    int errorCode_Trend7 = DataHelper.Analysis_PlateRiseRate(sharesCode, market, par);
+                    int errorCode_Trend7 = DataHelper.Analysis_PlateRiseRate(sharesCode, market, par, logRecord);
                     if (errorCode_Trend7 == 0)
                     {
                         tempTri = true;
@@ -2178,7 +2193,7 @@ inner
                 if (tr.TrendId == 8)
                 {
                     trendName = "买卖单占比";
-                    int errorCode_Trend8 = DataHelper.Analysis_BuyOrSellCount(sharesCode, market, par);
+                    int errorCode_Trend8 = DataHelper.Analysis_BuyOrSellCount(sharesCode, market, par, logRecord);
                     if (errorCode_Trend8 == 0)
                     {
                         tempTri = true;
@@ -2188,7 +2203,7 @@ inner
                 if (tr.TrendId == 9)
                 {
                     trendName = "按参照价格";
-                    int errorCode_Trend9 = DataHelper.Analysis_ReferPrice(sharesCode, market, par);
+                    int errorCode_Trend9 = DataHelper.Analysis_ReferPrice(sharesCode, market, par, logRecord);
                     if (errorCode_Trend9 == 0)
                     {
                         tempTri = true;
@@ -2198,7 +2213,7 @@ inner
                 if (tr.TrendId == 10)
                 {
                     trendName = "按均线价格";
-                    int errorCode_Trend10 = DataHelper.Analysis_ReferAverage(sharesCode, market, par);
+                    int errorCode_Trend10 = DataHelper.Analysis_ReferAverage(sharesCode, market, par, logRecord);
                     if (errorCode_Trend10 == 0)
                     {
                         tempTri = true;
@@ -2208,7 +2223,7 @@ inner
                 if (tr.TrendId == 11)
                 {
                     trendName = "五档变化速度";
-                    int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(sharesCode, market, currPrice, par);
+                    int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(sharesCode, market, currPrice, par, logRecord);
                     if (errorCode_Trend11 == 0)
                     {
                         tempTri = true;
@@ -2306,7 +2321,7 @@ inner
                 if (tr.TrendId == 13)
                 {
                     trendName = "五档变化速度";
-                    int errorCode_Trend13 = DataHelper.Analysis_QuotesTypeChangeRate(sharesCode, market, currPrice, par);
+                    int errorCode_Trend13 = DataHelper.Analysis_QuotesTypeChangeRate(sharesCode, market, currPrice, par, logRecord);
                     if (errorCode_Trend13 == 0)
                     {
                         tempTri = true;
@@ -2356,7 +2371,7 @@ inner
                 if (tr.TrendId == 12)
                 {
                     trendName = "按当前价格";
-                    int errorCode_Trend12 = DataHelper.Analysis_CurrentPrice(sharesCode, market, par);
+                    int errorCode_Trend12 = DataHelper.Analysis_CurrentPrice(sharesCode, market, par, logRecord);
                     if (errorCode_Trend12 == 0)
                     {
                         tempTri = true;
@@ -2366,7 +2381,7 @@ inner
                 if (tr.TrendId == 5)
                 {
                     trendName = "历史涨跌幅";
-                    int errorCode_Trend5 = DataHelper.Analysis_HisRiseRate(sharesCode, market, par);
+                    int errorCode_Trend5 = DataHelper.Analysis_HisRiseRate(sharesCode, market, par, logRecord);
                     if (errorCode_Trend5 == 0)
                     {
                         tempTri = true;
@@ -2376,7 +2391,7 @@ inner
                 if (tr.TrendId == 6)
                 {
                     trendName = "当前涨跌幅";
-                    int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(sharesCode, market, par);
+                    int errorCode_Trend6 = DataHelper.Analysis_TodayRiseRate(sharesCode, market, par, logRecord);
                     if (errorCode_Trend6 == 0)
                     {
                         tempTri = true;
@@ -2386,7 +2401,7 @@ inner
                 if (tr.TrendId == 7)
                 {
                     trendName = "板块涨跌幅";
-                    int errorCode_Trend7 = DataHelper.Analysis_PlateRiseRate(sharesCode, market, par);
+                    int errorCode_Trend7 = DataHelper.Analysis_PlateRiseRate(sharesCode, market, par, logRecord);
                     if (errorCode_Trend7 == 0)
                     {
                         tempTri = true;
@@ -2396,7 +2411,7 @@ inner
                 if (tr.TrendId == 8)
                 {
                     trendName = "买卖单占比";
-                    int errorCode_Trend8 = DataHelper.Analysis_BuyOrSellCount(sharesCode, market, par);
+                    int errorCode_Trend8 = DataHelper.Analysis_BuyOrSellCount(sharesCode, market, par, logRecord);
                     if (errorCode_Trend8 == 0)
                     {
                         tempTri = true;
@@ -2406,7 +2421,7 @@ inner
                 if (tr.TrendId == 9)
                 {
                     trendName = "按参照价格";
-                    int errorCode_Trend9 = DataHelper.Analysis_ReferPrice(sharesCode, market, par);
+                    int errorCode_Trend9 = DataHelper.Analysis_ReferPrice(sharesCode, market, par, logRecord);
                     if (errorCode_Trend9 == 0)
                     {
                         tempTri = true;
@@ -2416,7 +2431,7 @@ inner
                 if (tr.TrendId == 10)
                 {
                     trendName = "按均线价格";
-                    int errorCode_Trend10 = DataHelper.Analysis_ReferAverage(sharesCode, market, par);
+                    int errorCode_Trend10 = DataHelper.Analysis_ReferAverage(sharesCode, market, par, logRecord);
                     if (errorCode_Trend10 == 0)
                     {
                         tempTri = true;
@@ -2426,7 +2441,7 @@ inner
                 if (tr.TrendId == 11)
                 {
                     trendName = "五档变化速度";
-                    int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(sharesCode, market, currPrice, par);
+                    int errorCode_Trend11 = DataHelper.Analysis_QuotesChangeRate(sharesCode, market, currPrice, par, logRecord);
                     if (errorCode_Trend11 == 0)
                     {
                         tempTri = true;
@@ -2524,7 +2539,7 @@ inner
                 if (tr.TrendId == 13)
                 {
                     trendName = "五档变化速度";
-                    int errorCode_Trend13 = DataHelper.Analysis_QuotesTypeChangeRate(sharesCode, market, currPrice, par);
+                    int errorCode_Trend13 = DataHelper.Analysis_QuotesTypeChangeRate(sharesCode, market, currPrice, par, logRecord);
                     if (errorCode_Trend13 == 0)
                     {
                         tempTri = true;
@@ -2620,6 +2635,8 @@ inner
     public class TradeAutoBuyCondition
     {
         public long Id { get; set; }
+
+        public long CreateAccountId { get; set; }
 
         public long AccountId { get; set; }
 

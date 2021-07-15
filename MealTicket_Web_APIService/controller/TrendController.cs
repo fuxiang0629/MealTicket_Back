@@ -1187,7 +1187,7 @@ namespace MealTicket_Web_APIService.controller
                 throw new WebApiException(400, "参数错误");
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
-            trendHandler.AddAccountHoldConditionTrade(request);
+            trendHandler.AddAccountHoldConditionTrade(request, basedata);
             return null;
         }
 
@@ -3204,10 +3204,14 @@ namespace MealTicket_Web_APIService.controller
         [Route("buy/tip/list"), HttpPost]
         [Description("查询买入提示列表")]
         [CheckUserLoginFilter]
-        public List<BuyTipInfo> GetBuyTipList()
+        public GetBuyTipListRes GetBuyTipList(GetBuyTipListRequest request)
         {
+            if (request == null)
+            {
+                throw new WebApiException(400,"参数错误");
+            }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
-            return trendHandler.GetBuyTipList(basedata);
+            return trendHandler.GetBuyTipList(request,basedata);
         }
 
         /// <summary>

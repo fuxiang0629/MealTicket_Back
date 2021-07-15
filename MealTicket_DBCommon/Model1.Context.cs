@@ -789,93 +789,6 @@ namespace MealTicket_DBCommon
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Admin_ModifyPassword", accountIdParameter, oldPasswordParameter, newPasswordParameter, loginLogIdParameter, errorCode, errorMessage, token);
         }
     
-        public virtual int P_ApplyTradeBuy(Nullable<long> accountId, Nullable<int> market, string sharesCode, Nullable<long> buyAmount, Nullable<int> fundMultiple, Nullable<long> entrustPrice, Nullable<System.DateTime> closingTime, Nullable<bool> isFollow, Nullable<long> mainAccountId, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter buyId)
-        {
-            var accountIdParameter = accountId.HasValue ?
-                new ObjectParameter("accountId", accountId) :
-                new ObjectParameter("accountId", typeof(long));
-    
-            var marketParameter = market.HasValue ?
-                new ObjectParameter("market", market) :
-                new ObjectParameter("market", typeof(int));
-    
-            var sharesCodeParameter = sharesCode != null ?
-                new ObjectParameter("sharesCode", sharesCode) :
-                new ObjectParameter("sharesCode", typeof(string));
-    
-            var buyAmountParameter = buyAmount.HasValue ?
-                new ObjectParameter("buyAmount", buyAmount) :
-                new ObjectParameter("buyAmount", typeof(long));
-    
-            var fundMultipleParameter = fundMultiple.HasValue ?
-                new ObjectParameter("fundMultiple", fundMultiple) :
-                new ObjectParameter("fundMultiple", typeof(int));
-    
-            var entrustPriceParameter = entrustPrice.HasValue ?
-                new ObjectParameter("entrustPrice", entrustPrice) :
-                new ObjectParameter("entrustPrice", typeof(long));
-    
-            var closingTimeParameter = closingTime.HasValue ?
-                new ObjectParameter("closingTime", closingTime) :
-                new ObjectParameter("closingTime", typeof(System.DateTime));
-    
-            var isFollowParameter = isFollow.HasValue ?
-                new ObjectParameter("isFollow", isFollow) :
-                new ObjectParameter("isFollow", typeof(bool));
-    
-            var mainAccountIdParameter = mainAccountId.HasValue ?
-                new ObjectParameter("mainAccountId", mainAccountId) :
-                new ObjectParameter("mainAccountId", typeof(long));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_ApplyTradeBuy", accountIdParameter, marketParameter, sharesCodeParameter, buyAmountParameter, fundMultipleParameter, entrustPriceParameter, closingTimeParameter, isFollowParameter, mainAccountIdParameter, errorCode, errorMessage, buyId);
-        }
-    
-        public virtual int P_ApplyTradeCancel(Nullable<long> accountId, Nullable<long> entrustId, ObjectParameter errorCode, ObjectParameter errorMessage)
-        {
-            var accountIdParameter = accountId.HasValue ?
-                new ObjectParameter("accountId", accountId) :
-                new ObjectParameter("accountId", typeof(long));
-    
-            var entrustIdParameter = entrustId.HasValue ?
-                new ObjectParameter("entrustId", entrustId) :
-                new ObjectParameter("entrustId", typeof(long));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_ApplyTradeCancel", accountIdParameter, entrustIdParameter, errorCode, errorMessage);
-        }
-    
-        public virtual int P_ApplyTradeSell(Nullable<long> accountId, Nullable<long> holdId, Nullable<int> sellCount, Nullable<int> sellType, Nullable<long> sellPrice, Nullable<int> type, Nullable<bool> isFollow, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter sellId)
-        {
-            var accountIdParameter = accountId.HasValue ?
-                new ObjectParameter("accountId", accountId) :
-                new ObjectParameter("accountId", typeof(long));
-    
-            var holdIdParameter = holdId.HasValue ?
-                new ObjectParameter("holdId", holdId) :
-                new ObjectParameter("holdId", typeof(long));
-    
-            var sellCountParameter = sellCount.HasValue ?
-                new ObjectParameter("sellCount", sellCount) :
-                new ObjectParameter("sellCount", typeof(int));
-    
-            var sellTypeParameter = sellType.HasValue ?
-                new ObjectParameter("sellType", sellType) :
-                new ObjectParameter("sellType", typeof(int));
-    
-            var sellPriceParameter = sellPrice.HasValue ?
-                new ObjectParameter("sellPrice", sellPrice) :
-                new ObjectParameter("sellPrice", typeof(long));
-    
-            var typeParameter = type.HasValue ?
-                new ObjectParameter("type", type) :
-                new ObjectParameter("type", typeof(int));
-    
-            var isFollowParameter = isFollow.HasValue ?
-                new ObjectParameter("isFollow", isFollow) :
-                new ObjectParameter("isFollow", typeof(bool));
-    
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_ApplyTradeSell", accountIdParameter, holdIdParameter, sellCountParameter, sellTypeParameter, sellPriceParameter, typeParameter, isFollowParameter, errorCode, errorMessage, sellId);
-        }
-    
         public virtual int P_AutoBuy_OtherPar_Calculate(Nullable<long> detailsId, ObjectParameter result)
         {
             var detailsIdParameter = detailsId.HasValue ?
@@ -1567,6 +1480,97 @@ namespace MealTicket_DBCommon
         public virtual int P_SharesQuotes_Update()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_SharesQuotes_Update");
+        }
+    
+        public virtual int P_ApplyTradeBuy(Nullable<long> accountId, Nullable<int> market, string sharesCode, Nullable<long> buyAmount, Nullable<int> fundMultiple, Nullable<long> entrustPrice, Nullable<System.DateTime> closingTime, Nullable<bool> isFollow, Nullable<long> mainAccountId, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter buyId)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var marketParameter = market.HasValue ?
+                new ObjectParameter("market", market) :
+                new ObjectParameter("market", typeof(int));
+    
+            var sharesCodeParameter = sharesCode != null ?
+                new ObjectParameter("sharesCode", sharesCode) :
+                new ObjectParameter("sharesCode", typeof(string));
+    
+            var buyAmountParameter = buyAmount.HasValue ?
+                new ObjectParameter("buyAmount", buyAmount) :
+                new ObjectParameter("buyAmount", typeof(long));
+    
+            var fundMultipleParameter = fundMultiple.HasValue ?
+                new ObjectParameter("fundMultiple", fundMultiple) :
+                new ObjectParameter("fundMultiple", typeof(int));
+    
+            var entrustPriceParameter = entrustPrice.HasValue ?
+                new ObjectParameter("entrustPrice", entrustPrice) :
+                new ObjectParameter("entrustPrice", typeof(long));
+    
+            var closingTimeParameter = closingTime.HasValue ?
+                new ObjectParameter("closingTime", closingTime) :
+                new ObjectParameter("closingTime", typeof(System.DateTime));
+    
+            var isFollowParameter = isFollow.HasValue ?
+                new ObjectParameter("isFollow", isFollow) :
+                new ObjectParameter("isFollow", typeof(bool));
+    
+            var mainAccountIdParameter = mainAccountId.HasValue ?
+                new ObjectParameter("mainAccountId", mainAccountId) :
+                new ObjectParameter("mainAccountId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_ApplyTradeBuy", accountIdParameter, marketParameter, sharesCodeParameter, buyAmountParameter, fundMultipleParameter, entrustPriceParameter, closingTimeParameter, isFollowParameter, mainAccountIdParameter, errorCode, errorMessage, buyId);
+        }
+    
+        public virtual int P_ApplyTradeSell(Nullable<long> accountId, Nullable<long> holdId, Nullable<int> sellCount, Nullable<int> sellType, Nullable<long> sellPrice, Nullable<int> type, Nullable<long> mainAccountId, ObjectParameter errorCode, ObjectParameter errorMessage, ObjectParameter sellId)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var holdIdParameter = holdId.HasValue ?
+                new ObjectParameter("holdId", holdId) :
+                new ObjectParameter("holdId", typeof(long));
+    
+            var sellCountParameter = sellCount.HasValue ?
+                new ObjectParameter("sellCount", sellCount) :
+                new ObjectParameter("sellCount", typeof(int));
+    
+            var sellTypeParameter = sellType.HasValue ?
+                new ObjectParameter("sellType", sellType) :
+                new ObjectParameter("sellType", typeof(int));
+    
+            var sellPriceParameter = sellPrice.HasValue ?
+                new ObjectParameter("sellPrice", sellPrice) :
+                new ObjectParameter("sellPrice", typeof(long));
+    
+            var typeParameter = type.HasValue ?
+                new ObjectParameter("type", type) :
+                new ObjectParameter("type", typeof(int));
+    
+            var mainAccountIdParameter = mainAccountId.HasValue ?
+                new ObjectParameter("mainAccountId", mainAccountId) :
+                new ObjectParameter("mainAccountId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_ApplyTradeSell", accountIdParameter, holdIdParameter, sellCountParameter, sellTypeParameter, sellPriceParameter, typeParameter, mainAccountIdParameter, errorCode, errorMessage, sellId);
+        }
+    
+        public virtual int P_ApplyTradeCancel(Nullable<long> accountId, Nullable<long> entrustId, Nullable<long> mainAccountId, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var entrustIdParameter = entrustId.HasValue ?
+                new ObjectParameter("entrustId", entrustId) :
+                new ObjectParameter("entrustId", typeof(long));
+    
+            var mainAccountIdParameter = mainAccountId.HasValue ?
+                new ObjectParameter("mainAccountId", mainAccountId) :
+                new ObjectParameter("mainAccountId", typeof(long));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_ApplyTradeCancel", accountIdParameter, entrustIdParameter, mainAccountIdParameter, errorCode, errorMessage);
         }
     }
 }

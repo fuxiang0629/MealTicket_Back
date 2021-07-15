@@ -953,6 +953,7 @@
     <EntitySetMapping Name="t_account_shares_hold_conditiontrade">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_hold_conditiontrade">
         <MappingFragment StoreEntitySet="t_account_shares_hold_conditiontrade">
+          <ScalarProperty Name="CreateAccountId" ColumnName="CreateAccountId" />
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="AccountId" ColumnName="AccountId" />
@@ -3631,9 +3632,6 @@
     <FunctionImportMapping FunctionImportName="P_Admin_ModifyBackAccountRole" FunctionName="meal_ticketModel.Store.P_Admin_ModifyBackAccountRole" />
     <FunctionImportMapping FunctionImportName="P_Admin_ModifyFrontAccountWallet" FunctionName="meal_ticketModel.Store.P_Admin_ModifyFrontAccountWallet" />
     <FunctionImportMapping FunctionImportName="P_Admin_ModifyPassword" FunctionName="meal_ticketModel.Store.P_Admin_ModifyPassword" />
-    <FunctionImportMapping FunctionImportName="P_ApplyTradeBuy" FunctionName="meal_ticketModel.Store.P_ApplyTradeBuy" />
-    <FunctionImportMapping FunctionImportName="P_ApplyTradeCancel" FunctionName="meal_ticketModel.Store.P_ApplyTradeCancel" />
-    <FunctionImportMapping FunctionImportName="P_ApplyTradeSell" FunctionName="meal_ticketModel.Store.P_ApplyTradeSell" />
     <FunctionImportMapping FunctionImportName="P_AutoBuy_OtherPar_Calculate" FunctionName="meal_ticketModel.Store.P_AutoBuy_OtherPar_Calculate" />
     <FunctionImportMapping FunctionImportName="P_AutoBuy_OtherPar_Other_Calculate" FunctionName="meal_ticketModel.Store.P_AutoBuy_OtherPar_Other_Calculate" />
     <FunctionImportMapping FunctionImportName="P_BindBankCard" FunctionName="meal_ticketModel.Store.P_BindBankCard" />
@@ -3679,5 +3677,8 @@
     <FunctionImportMapping FunctionImportName="P_TradeRecovery" FunctionName="meal_ticketModel.Store.P_TradeRecovery" />
     <FunctionImportMapping FunctionImportName="P_TryToCancelEntrust" FunctionName="meal_ticketModel.Store.P_TryToCancelEntrust" />
     <FunctionImportMapping FunctionImportName="P_SharesQuotes_Update" FunctionName="meal_ticketModel.Store.P_SharesQuotes_Update" />
+    <FunctionImportMapping FunctionImportName="P_ApplyTradeBuy" FunctionName="meal_ticketModel.Store.P_ApplyTradeBuy" />
+    <FunctionImportMapping FunctionImportName="P_ApplyTradeSell" FunctionName="meal_ticketModel.Store.P_ApplyTradeSell" />
+    <FunctionImportMapping FunctionImportName="P_ApplyTradeCancel" FunctionName="meal_ticketModel.Store.P_ApplyTradeCancel" />
   </EntityContainerMapping>
 </Mapping>

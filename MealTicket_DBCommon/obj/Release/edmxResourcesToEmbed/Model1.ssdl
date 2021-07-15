@@ -912,6 +912,7 @@
     <Property Name="EntrustId" Type="bigint" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="CreateAccountId" Type="bigint" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_hold_conditiontrade_child">
     <Key>
@@ -3690,6 +3691,7 @@
   <Function Name="P_ApplyTradeCancel" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="accountId" Type="bigint" Mode="In" />
     <Parameter Name="entrustId" Type="bigint" Mode="In" />
+    <Parameter Name="mainAccountId" Type="bigint" Mode="In" />
     <Parameter Name="errorCode" Type="int" Mode="InOut" />
     <Parameter Name="errorMessage" Type="nvarchar" Mode="InOut" />
   </Function>
@@ -3700,7 +3702,7 @@
     <Parameter Name="sellType" Type="int" Mode="In" />
     <Parameter Name="sellPrice" Type="bigint" Mode="In" />
     <Parameter Name="type" Type="int" Mode="In" />
-    <Parameter Name="isFollow" Type="bit" Mode="In" />
+    <Parameter Name="mainAccountId" Type="bigint" Mode="In" />
     <Parameter Name="errorCode" Type="int" Mode="InOut" />
     <Parameter Name="errorMessage" Type="nvarchar" Mode="InOut" />
     <Parameter Name="sellId" Type="bigint" Mode="InOut" />

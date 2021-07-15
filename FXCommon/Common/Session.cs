@@ -87,6 +87,15 @@ namespace FXCommon.Common
         public abstract T UpdateSession();
 
         /// <summary>
+        /// 手动更新Session
+        /// </summary>
+        /// <returns></returns>
+        public virtual bool UpdateSessionManual() 
+        {
+            return UpdateSessionWithLock();
+        }
+
+        /// <summary>
         /// 释放资源。
         /// </summary>
         public void Dispose()
