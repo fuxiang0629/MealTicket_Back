@@ -6905,6 +6905,16 @@
             盈亏金额
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.BrokerAccountSysPositionDetails.PresentPrice">
+            <summary>
+            当前价格
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.BrokerAccountSysPositionDetails.ClosedPrice">
+            <summary>
+            昨日收盘价
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.BrokerAccountSysPositionDetails.LastModified">
             <summary>
             数据最后更新时间

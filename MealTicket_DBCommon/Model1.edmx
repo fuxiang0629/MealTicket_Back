@@ -4372,32 +4372,6 @@
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
-        <EntityType Name="t_account_baseinfo">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Mobile" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="NickName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="HeadUrl" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
-          <Property Name="Sex" Type="Int32" Nullable="false" />
-          <Property Name="BirthDay" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <Property Name="RecommandCode" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="ReferId" Type="Int64" />
-          <Property Name="ForbidStatus" Type="Int32" Nullable="false" />
-          <Property Name="CashStatus" Type="Int32" Nullable="false" />
-          <Property Name="MonitorStatus" Type="Int32" Nullable="false" />
-          <Property Name="MultipleChangeStatus" Type="Int32" Nullable="false" />
-          <Property Name="Status" Type="Int32" Nullable="false" />
-          <Property Name="QrCodeUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="RegisterPageUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="PostersUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="PostersComposeUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-          <Property Name="LoginPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="TransactionPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
-        </EntityType>
         <EntityType Name="t_account_cash_record">
           <Key>
             <PropertyRef Name="Id" />
@@ -5764,30 +5738,6 @@
           <Property Name="BrokerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Version" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
           <Property Name="Status" Type="Int32" Nullable="false" />
-          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
-        </EntityType>
-        <EntityType Name="t_broker_account_info">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="AccountCode" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="AccountType" Type="Int32" Nullable="false" />
-          <Property Name="AccountNo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="TradeAccountNo0" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="TradeAccountNo1" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Holder0" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="Holder1" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="JyPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="TxPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-          <Property Name="BrokerCode" Type="Int32" Nullable="false" />
-          <Property Name="DepartmentCode" Type="Int32" Nullable="false" />
-          <Property Name="InitialFunding" Type="Int64" Nullable="false" />
-          <Property Name="Status" Type="Int32" Nullable="false" />
-          <Property Name="SynchronizationStatus" Type="Int32" Nullable="false" />
-          <Property Name="SynchronizationTime" Type="DateTime" Precision="3" />
-          <Property Name="IsPrivate" Type="Boolean" Nullable="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
@@ -7779,7 +7729,6 @@
         <EntityContainer Name="meal_ticketEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="t_account_api" EntityType="Self.t_account_api" />
           <EntitySet Name="t_account_bank_card" EntityType="Self.t_account_bank_card" />
-          <EntitySet Name="t_account_baseinfo" EntityType="Self.t_account_baseinfo" />
           <EntitySet Name="t_account_cash_record" EntityType="Self.t_account_cash_record" />
           <EntitySet Name="t_account_cash_record_details" EntityType="Self.t_account_cash_record_details" />
           <EntitySet Name="t_account_follow_apply_record" EntityType="Self.t_account_follow_apply_record" />
@@ -7882,7 +7831,6 @@
           <EntitySet Name="t_banner" EntityType="Self.t_banner" />
           <EntitySet Name="t_banner_group" EntityType="Self.t_banner_group" />
           <EntitySet Name="t_broker" EntityType="Self.t_broker" />
-          <EntitySet Name="t_broker_account_info" EntityType="Self.t_broker_account_info" />
           <EntitySet Name="t_broker_account_info_capital" EntityType="Self.t_broker_account_info_capital" />
           <EntitySet Name="t_broker_account_info_frontaccount_rel" EntityType="Self.t_broker_account_info_frontaccount_rel" />
           <EntitySet Name="t_broker_account_info_position" EntityType="Self.t_broker_account_info_position" />
@@ -8513,7 +8461,59 @@
             <Parameter Name="errorCode" Mode="InOut" Type="Int32" />
             <Parameter Name="errorMessage" Mode="InOut" Type="String" />
           </FunctionImport>
+          <EntitySet Name="t_account_baseinfo" EntityType="meal_ticketModel.t_account_baseinfo" />
+          <EntitySet Name="t_broker_account_info" EntityType="meal_ticketModel.t_broker_account_info" />
         </EntityContainer>
+        <EntityType Name="t_account_baseinfo">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Mobile" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="NickName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="HeadUrl" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
+          <Property Name="Sex" Type="Int32" Nullable="false" />
+          <Property Name="BirthDay" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="RecommandCode" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+          <Property Name="ReferId" Type="Int64" />
+          <Property Name="ForbidStatus" Type="Int32" Nullable="false" />
+          <Property Name="CashStatus" Type="Int32" Nullable="false" />
+          <Property Name="MonitorStatus" Type="Int32" Nullable="false" />
+          <Property Name="MultipleChangeStatus" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="QrCodeUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="RegisterPageUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PostersUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="PostersComposeUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="LoginPassword" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TransactionPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_broker_account_info">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountCode" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+          <Property Name="AccountType" Type="Int32" Nullable="false" />
+          <Property Name="AccountNo" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="TradeAccountNo0" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="TradeAccountNo1" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Holder0" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="Holder1" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="JyPassword" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="TxPassword" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="BrokerCode" Type="Int32" Nullable="false" />
+          <Property Name="DepartmentCode" Type="Int32" Nullable="false" />
+          <Property Name="InitialFunding" Type="Int64" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="SynchronizationStatus" Type="Int32" Nullable="false" />
+          <Property Name="SynchronizationTime" Type="DateTime" Precision="3" />
+          <Property Name="IsPrivate" Type="Boolean" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -8542,33 +8542,6 @@
                 <ScalarProperty Name="BankCode" ColumnName="BankCode" />
                 <ScalarProperty Name="Mobile" ColumnName="Mobile" />
                 <ScalarProperty Name="CardBreed" ColumnName="CardBreed" />
-                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="t_account_baseinfo">
-            <EntityTypeMapping TypeName="meal_ticketModel.t_account_baseinfo">
-              <MappingFragment StoreEntitySet="t_account_baseinfo">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
-                <ScalarProperty Name="NickName" ColumnName="NickName" />
-                <ScalarProperty Name="HeadUrl" ColumnName="HeadUrl" />
-                <ScalarProperty Name="Sex" ColumnName="Sex" />
-                <ScalarProperty Name="BirthDay" ColumnName="BirthDay" />
-                <ScalarProperty Name="RecommandCode" ColumnName="RecommandCode" />
-                <ScalarProperty Name="ReferId" ColumnName="ReferId" />
-                <ScalarProperty Name="ForbidStatus" ColumnName="ForbidStatus" />
-                <ScalarProperty Name="CashStatus" ColumnName="CashStatus" />
-                <ScalarProperty Name="MonitorStatus" ColumnName="MonitorStatus" />
-                <ScalarProperty Name="MultipleChangeStatus" ColumnName="MultipleChangeStatus" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="QrCodeUrl" ColumnName="QrCodeUrl" />
-                <ScalarProperty Name="RegisterPageUrl" ColumnName="RegisterPageUrl" />
-                <ScalarProperty Name="PostersUrl" ColumnName="PostersUrl" />
-                <ScalarProperty Name="PostersComposeUrl" ColumnName="PostersComposeUrl" />
-                <ScalarProperty Name="LoginPassword" ColumnName="LoginPassword" />
-                <ScalarProperty Name="TransactionPassword" ColumnName="TransactionPassword" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
               </MappingFragment>
@@ -10039,31 +10012,6 @@
                 <ScalarProperty Name="BrokerName" ColumnName="BrokerName" />
                 <ScalarProperty Name="Version" ColumnName="Version" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="t_broker_account_info">
-            <EntityTypeMapping TypeName="meal_ticketModel.t_broker_account_info">
-              <MappingFragment StoreEntitySet="t_broker_account_info">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="AccountCode" ColumnName="AccountCode" />
-                <ScalarProperty Name="AccountType" ColumnName="AccountType" />
-                <ScalarProperty Name="AccountNo" ColumnName="AccountNo" />
-                <ScalarProperty Name="TradeAccountNo0" ColumnName="TradeAccountNo0" />
-                <ScalarProperty Name="TradeAccountNo1" ColumnName="TradeAccountNo1" />
-                <ScalarProperty Name="Holder0" ColumnName="Holder0" />
-                <ScalarProperty Name="Holder1" ColumnName="Holder1" />
-                <ScalarProperty Name="JyPassword" ColumnName="JyPassword" />
-                <ScalarProperty Name="TxPassword" ColumnName="TxPassword" />
-                <ScalarProperty Name="BrokerCode" ColumnName="BrokerCode" />
-                <ScalarProperty Name="DepartmentCode" ColumnName="DepartmentCode" />
-                <ScalarProperty Name="InitialFunding" ColumnName="InitialFunding" />
-                <ScalarProperty Name="Status" ColumnName="Status" />
-                <ScalarProperty Name="SynchronizationStatus" ColumnName="SynchronizationStatus" />
-                <ScalarProperty Name="SynchronizationTime" ColumnName="SynchronizationTime" />
-                <ScalarProperty Name="IsPrivate" ColumnName="IsPrivate" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
               </MappingFragment>
@@ -12199,6 +12147,58 @@
           <FunctionImportMapping FunctionImportName="P_ApplyTradeBuy" FunctionName="meal_ticketModel.Store.P_ApplyTradeBuy" />
           <FunctionImportMapping FunctionImportName="P_ApplyTradeSell" FunctionName="meal_ticketModel.Store.P_ApplyTradeSell" />
           <FunctionImportMapping FunctionImportName="P_ApplyTradeCancel" FunctionName="meal_ticketModel.Store.P_ApplyTradeCancel" />
+          <EntitySetMapping Name="t_account_baseinfo">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_baseinfo">
+              <MappingFragment StoreEntitySet="t_account_baseinfo">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="TransactionPassword" ColumnName="TransactionPassword" />
+                <ScalarProperty Name="LoginPassword" ColumnName="LoginPassword" />
+                <ScalarProperty Name="PostersComposeUrl" ColumnName="PostersComposeUrl" />
+                <ScalarProperty Name="PostersUrl" ColumnName="PostersUrl" />
+                <ScalarProperty Name="RegisterPageUrl" ColumnName="RegisterPageUrl" />
+                <ScalarProperty Name="QrCodeUrl" ColumnName="QrCodeUrl" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="MultipleChangeStatus" ColumnName="MultipleChangeStatus" />
+                <ScalarProperty Name="MonitorStatus" ColumnName="MonitorStatus" />
+                <ScalarProperty Name="CashStatus" ColumnName="CashStatus" />
+                <ScalarProperty Name="ForbidStatus" ColumnName="ForbidStatus" />
+                <ScalarProperty Name="ReferId" ColumnName="ReferId" />
+                <ScalarProperty Name="RecommandCode" ColumnName="RecommandCode" />
+                <ScalarProperty Name="BirthDay" ColumnName="BirthDay" />
+                <ScalarProperty Name="Sex" ColumnName="Sex" />
+                <ScalarProperty Name="HeadUrl" ColumnName="HeadUrl" />
+                <ScalarProperty Name="NickName" ColumnName="NickName" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_broker_account_info">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_broker_account_info">
+              <MappingFragment StoreEntitySet="t_broker_account_info">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="IsPrivate" ColumnName="IsPrivate" />
+                <ScalarProperty Name="SynchronizationTime" ColumnName="SynchronizationTime" />
+                <ScalarProperty Name="SynchronizationStatus" ColumnName="SynchronizationStatus" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="InitialFunding" ColumnName="InitialFunding" />
+                <ScalarProperty Name="DepartmentCode" ColumnName="DepartmentCode" />
+                <ScalarProperty Name="BrokerCode" ColumnName="BrokerCode" />
+                <ScalarProperty Name="TxPassword" ColumnName="TxPassword" />
+                <ScalarProperty Name="JyPassword" ColumnName="JyPassword" />
+                <ScalarProperty Name="Holder1" ColumnName="Holder1" />
+                <ScalarProperty Name="Holder0" ColumnName="Holder0" />
+                <ScalarProperty Name="TradeAccountNo1" ColumnName="TradeAccountNo1" />
+                <ScalarProperty Name="TradeAccountNo0" ColumnName="TradeAccountNo0" />
+                <ScalarProperty Name="AccountNo" ColumnName="AccountNo" />
+                <ScalarProperty Name="AccountType" ColumnName="AccountType" />
+                <ScalarProperty Name="AccountCode" ColumnName="AccountCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

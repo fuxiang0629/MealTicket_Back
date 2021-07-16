@@ -994,7 +994,9 @@ namespace MealTicket_Admin_Handler
                                 AccountMobile = item3.Mobile,
                                 AccountName = item3.NickName,
                                 ProfitAmount = ProfitAmount,
-                                CostPrice = CostPrice
+                                CostPrice = CostPrice,
+                                PresentPrice= PresentPrice,
+                                ClosedPrice= item2.ClosedPrice
                             }).ToList();
                 if (sysHold.Count() > 0)
                 {
@@ -1005,7 +1007,7 @@ namespace MealTicket_Admin_Handler
                         AccountName = "",
                         Id = 0,
                         LastModified = DateTime.Now,
-                        TotalCount = sysHold.Sum(e => e.SimulateSharesCount),
+                        TotalCount = sysHold.Sum(e => e.SimulateSharesCount)
                     });
                 }
                 int totalCount = hold.Count();

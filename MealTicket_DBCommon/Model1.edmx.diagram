@@ -7,7 +7,6 @@
       <Diagram DiagramId="088639a6a3f9452096ff0d76ea28dd34" Name="Diagram1">
         <EntityTypeShape EntityType="meal_ticketModel.t_account_api" Width="1.5" PointX="0.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_bank_card" Width="1.5" PointX="2.75" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="meal_ticketModel.t_account_baseinfo" Width="1.5" PointX="4.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_cash_record" Width="1.5" PointX="0.75" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_cash_record_details" Width="1.5" PointX="6.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_follow_apply_record" Width="1.5" PointX="2.75" PointY="6.75" IsExpanded="true" />
@@ -110,7 +109,6 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_banner" Width="1.5" PointX="28.75" PointY="18.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_banner_group" Width="1.5" PointX="28.75" PointY="22.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_broker" Width="1.5" PointX="28.75" PointY="25.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="meal_ticketModel.t_broker_account_info" Width="1.5" PointX="14.75" PointY="29.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_broker_account_info_capital" Width="1.5" PointX="16.75" PointY="29.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_broker_account_info_frontaccount_rel" Width="1.5" PointX="28.75" PointY="29.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_broker_account_info_position" Width="1.5" PointX="30.75" PointY="0.75" IsExpanded="true" />
@@ -235,6 +233,8 @@
         <EntityTypeShape EntityType="meal_ticketModel.v_plate_shares" Width="1.5" PointX="44.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.v_shares_baseinfo" Width="1.5" PointX="44.75" PointY="6.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.v_shares_quotes_last" Width="1.5" PointX="44.75" PointY="11.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_baseinfo" Width="1.5" PointX="19.375" PointY="44.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_broker_account_info" Width="1.5" PointX="25.375" PointY="44.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

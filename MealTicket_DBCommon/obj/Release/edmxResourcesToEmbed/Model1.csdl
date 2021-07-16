@@ -37,32 +37,6 @@
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
-  <EntityType Name="t_account_baseinfo">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Mobile" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="NickName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="HeadUrl" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
-    <Property Name="Sex" Type="Int32" Nullable="false" />
-    <Property Name="BirthDay" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="RecommandCode" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="ReferId" Type="Int64" />
-    <Property Name="ForbidStatus" Type="Int32" Nullable="false" />
-    <Property Name="CashStatus" Type="Int32" Nullable="false" />
-    <Property Name="MonitorStatus" Type="Int32" Nullable="false" />
-    <Property Name="MultipleChangeStatus" Type="Int32" Nullable="false" />
-    <Property Name="Status" Type="Int32" Nullable="false" />
-    <Property Name="QrCodeUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-    <Property Name="RegisterPageUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-    <Property Name="PostersUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-    <Property Name="PostersComposeUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-    <Property Name="LoginPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="TransactionPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
-  </EntityType>
   <EntityType Name="t_account_cash_record">
     <Key>
       <PropertyRef Name="Id" />
@@ -1429,30 +1403,6 @@
     <Property Name="BrokerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="Version" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="Status" Type="Int32" Nullable="false" />
-    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
-  </EntityType>
-  <EntityType Name="t_broker_account_info">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="AccountCode" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-    <Property Name="AccountType" Type="Int32" Nullable="false" />
-    <Property Name="AccountNo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="TradeAccountNo0" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="TradeAccountNo1" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="Holder0" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="Holder1" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="JyPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="TxPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="BrokerCode" Type="Int32" Nullable="false" />
-    <Property Name="DepartmentCode" Type="Int32" Nullable="false" />
-    <Property Name="InitialFunding" Type="Int64" Nullable="false" />
-    <Property Name="Status" Type="Int32" Nullable="false" />
-    <Property Name="SynchronizationStatus" Type="Int32" Nullable="false" />
-    <Property Name="SynchronizationTime" Type="DateTime" Precision="3" />
-    <Property Name="IsPrivate" Type="Boolean" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
@@ -3444,7 +3394,6 @@
   <EntityContainer Name="meal_ticketEntities" annotation:LazyLoadingEnabled="true">
     <EntitySet Name="t_account_api" EntityType="Self.t_account_api" />
     <EntitySet Name="t_account_bank_card" EntityType="Self.t_account_bank_card" />
-    <EntitySet Name="t_account_baseinfo" EntityType="Self.t_account_baseinfo" />
     <EntitySet Name="t_account_cash_record" EntityType="Self.t_account_cash_record" />
     <EntitySet Name="t_account_cash_record_details" EntityType="Self.t_account_cash_record_details" />
     <EntitySet Name="t_account_follow_apply_record" EntityType="Self.t_account_follow_apply_record" />
@@ -3547,7 +3496,6 @@
     <EntitySet Name="t_banner" EntityType="Self.t_banner" />
     <EntitySet Name="t_banner_group" EntityType="Self.t_banner_group" />
     <EntitySet Name="t_broker" EntityType="Self.t_broker" />
-    <EntitySet Name="t_broker_account_info" EntityType="Self.t_broker_account_info" />
     <EntitySet Name="t_broker_account_info_capital" EntityType="Self.t_broker_account_info_capital" />
     <EntitySet Name="t_broker_account_info_frontaccount_rel" EntityType="Self.t_broker_account_info_frontaccount_rel" />
     <EntitySet Name="t_broker_account_info_position" EntityType="Self.t_broker_account_info_position" />
@@ -4178,5 +4126,57 @@
       <Parameter Name="errorCode" Mode="InOut" Type="Int32" />
       <Parameter Name="errorMessage" Mode="InOut" Type="String" />
     </FunctionImport>
+    <EntitySet Name="t_account_baseinfo" EntityType="meal_ticketModel.t_account_baseinfo" />
+    <EntitySet Name="t_broker_account_info" EntityType="meal_ticketModel.t_broker_account_info" />
   </EntityContainer>
+  <EntityType Name="t_account_baseinfo">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Mobile" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="NickName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="HeadUrl" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
+    <Property Name="Sex" Type="Int32" Nullable="false" />
+    <Property Name="BirthDay" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="RecommandCode" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+    <Property Name="ReferId" Type="Int64" />
+    <Property Name="ForbidStatus" Type="Int32" Nullable="false" />
+    <Property Name="CashStatus" Type="Int32" Nullable="false" />
+    <Property Name="MonitorStatus" Type="Int32" Nullable="false" />
+    <Property Name="MultipleChangeStatus" Type="Int32" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="QrCodeUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="RegisterPageUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="PostersUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="PostersComposeUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="LoginPassword" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="TransactionPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_broker_account_info">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountCode" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="AccountType" Type="Int32" Nullable="false" />
+    <Property Name="AccountNo" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="TradeAccountNo0" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="TradeAccountNo1" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Holder0" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Holder1" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="JyPassword" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="TxPassword" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="BrokerCode" Type="Int32" Nullable="false" />
+    <Property Name="DepartmentCode" Type="Int32" Nullable="false" />
+    <Property Name="InitialFunding" Type="Int64" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="SynchronizationStatus" Type="Int32" Nullable="false" />
+    <Property Name="SynchronizationTime" Type="DateTime" Precision="3" />
+    <Property Name="IsPrivate" Type="Boolean" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
 </Schema>

@@ -28,33 +28,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="t_account_baseinfo">
-      <EntityTypeMapping TypeName="meal_ticketModel.t_account_baseinfo">
-        <MappingFragment StoreEntitySet="t_account_baseinfo">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="Mobile" ColumnName="Mobile" />
-          <ScalarProperty Name="NickName" ColumnName="NickName" />
-          <ScalarProperty Name="HeadUrl" ColumnName="HeadUrl" />
-          <ScalarProperty Name="Sex" ColumnName="Sex" />
-          <ScalarProperty Name="BirthDay" ColumnName="BirthDay" />
-          <ScalarProperty Name="RecommandCode" ColumnName="RecommandCode" />
-          <ScalarProperty Name="ReferId" ColumnName="ReferId" />
-          <ScalarProperty Name="ForbidStatus" ColumnName="ForbidStatus" />
-          <ScalarProperty Name="CashStatus" ColumnName="CashStatus" />
-          <ScalarProperty Name="MonitorStatus" ColumnName="MonitorStatus" />
-          <ScalarProperty Name="MultipleChangeStatus" ColumnName="MultipleChangeStatus" />
-          <ScalarProperty Name="Status" ColumnName="Status" />
-          <ScalarProperty Name="QrCodeUrl" ColumnName="QrCodeUrl" />
-          <ScalarProperty Name="RegisterPageUrl" ColumnName="RegisterPageUrl" />
-          <ScalarProperty Name="PostersUrl" ColumnName="PostersUrl" />
-          <ScalarProperty Name="PostersComposeUrl" ColumnName="PostersComposeUrl" />
-          <ScalarProperty Name="LoginPassword" ColumnName="LoginPassword" />
-          <ScalarProperty Name="TransactionPassword" ColumnName="TransactionPassword" />
-          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="t_account_cash_record">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_cash_record">
         <MappingFragment StoreEntitySet="t_account_cash_record">
@@ -1520,31 +1493,6 @@
           <ScalarProperty Name="BrokerName" ColumnName="BrokerName" />
           <ScalarProperty Name="Version" ColumnName="Version" />
           <ScalarProperty Name="Status" ColumnName="Status" />
-          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="t_broker_account_info">
-      <EntityTypeMapping TypeName="meal_ticketModel.t_broker_account_info">
-        <MappingFragment StoreEntitySet="t_broker_account_info">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="AccountCode" ColumnName="AccountCode" />
-          <ScalarProperty Name="AccountType" ColumnName="AccountType" />
-          <ScalarProperty Name="AccountNo" ColumnName="AccountNo" />
-          <ScalarProperty Name="TradeAccountNo0" ColumnName="TradeAccountNo0" />
-          <ScalarProperty Name="TradeAccountNo1" ColumnName="TradeAccountNo1" />
-          <ScalarProperty Name="Holder0" ColumnName="Holder0" />
-          <ScalarProperty Name="Holder1" ColumnName="Holder1" />
-          <ScalarProperty Name="JyPassword" ColumnName="JyPassword" />
-          <ScalarProperty Name="TxPassword" ColumnName="TxPassword" />
-          <ScalarProperty Name="BrokerCode" ColumnName="BrokerCode" />
-          <ScalarProperty Name="DepartmentCode" ColumnName="DepartmentCode" />
-          <ScalarProperty Name="InitialFunding" ColumnName="InitialFunding" />
-          <ScalarProperty Name="Status" ColumnName="Status" />
-          <ScalarProperty Name="SynchronizationStatus" ColumnName="SynchronizationStatus" />
-          <ScalarProperty Name="SynchronizationTime" ColumnName="SynchronizationTime" />
-          <ScalarProperty Name="IsPrivate" ColumnName="IsPrivate" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
         </MappingFragment>
@@ -3680,5 +3628,57 @@
     <FunctionImportMapping FunctionImportName="P_ApplyTradeBuy" FunctionName="meal_ticketModel.Store.P_ApplyTradeBuy" />
     <FunctionImportMapping FunctionImportName="P_ApplyTradeSell" FunctionName="meal_ticketModel.Store.P_ApplyTradeSell" />
     <FunctionImportMapping FunctionImportName="P_ApplyTradeCancel" FunctionName="meal_ticketModel.Store.P_ApplyTradeCancel" />
+    <EntitySetMapping Name="t_account_baseinfo">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_baseinfo">
+        <MappingFragment StoreEntitySet="t_account_baseinfo">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="TransactionPassword" ColumnName="TransactionPassword" />
+          <ScalarProperty Name="LoginPassword" ColumnName="LoginPassword" />
+          <ScalarProperty Name="PostersComposeUrl" ColumnName="PostersComposeUrl" />
+          <ScalarProperty Name="PostersUrl" ColumnName="PostersUrl" />
+          <ScalarProperty Name="RegisterPageUrl" ColumnName="RegisterPageUrl" />
+          <ScalarProperty Name="QrCodeUrl" ColumnName="QrCodeUrl" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="MultipleChangeStatus" ColumnName="MultipleChangeStatus" />
+          <ScalarProperty Name="MonitorStatus" ColumnName="MonitorStatus" />
+          <ScalarProperty Name="CashStatus" ColumnName="CashStatus" />
+          <ScalarProperty Name="ForbidStatus" ColumnName="ForbidStatus" />
+          <ScalarProperty Name="ReferId" ColumnName="ReferId" />
+          <ScalarProperty Name="RecommandCode" ColumnName="RecommandCode" />
+          <ScalarProperty Name="BirthDay" ColumnName="BirthDay" />
+          <ScalarProperty Name="Sex" ColumnName="Sex" />
+          <ScalarProperty Name="HeadUrl" ColumnName="HeadUrl" />
+          <ScalarProperty Name="NickName" ColumnName="NickName" />
+          <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_broker_account_info">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_broker_account_info">
+        <MappingFragment StoreEntitySet="t_broker_account_info">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="IsPrivate" ColumnName="IsPrivate" />
+          <ScalarProperty Name="SynchronizationTime" ColumnName="SynchronizationTime" />
+          <ScalarProperty Name="SynchronizationStatus" ColumnName="SynchronizationStatus" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="InitialFunding" ColumnName="InitialFunding" />
+          <ScalarProperty Name="DepartmentCode" ColumnName="DepartmentCode" />
+          <ScalarProperty Name="BrokerCode" ColumnName="BrokerCode" />
+          <ScalarProperty Name="TxPassword" ColumnName="TxPassword" />
+          <ScalarProperty Name="JyPassword" ColumnName="JyPassword" />
+          <ScalarProperty Name="Holder1" ColumnName="Holder1" />
+          <ScalarProperty Name="Holder0" ColumnName="Holder0" />
+          <ScalarProperty Name="TradeAccountNo1" ColumnName="TradeAccountNo1" />
+          <ScalarProperty Name="TradeAccountNo0" ColumnName="TradeAccountNo0" />
+          <ScalarProperty Name="AccountNo" ColumnName="AccountNo" />
+          <ScalarProperty Name="AccountType" ColumnName="AccountType" />
+          <ScalarProperty Name="AccountCode" ColumnName="AccountCode" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

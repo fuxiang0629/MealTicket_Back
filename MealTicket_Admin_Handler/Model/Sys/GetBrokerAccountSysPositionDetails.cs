@@ -56,6 +56,16 @@ namespace MealTicket_Admin_Handler.Model
         public long ProfitAmount { get; set; }
 
         /// <summary>
+        /// 当前价格
+        /// </summary>
+        public long PresentPrice { get; set; }
+
+        /// <summary>
+        /// 昨日收盘价
+        /// </summary>
+        public long ClosedPrice { get; set; }
+
+        /// <summary>
         /// 数据最后更新时间
         /// </summary>
         public DateTime LastModified { get; set; }

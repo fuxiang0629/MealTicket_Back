@@ -29,7 +29,6 @@ namespace MealTicket_DBCommon
     
         public virtual DbSet<t_account_api> t_account_api { get; set; }
         public virtual DbSet<t_account_bank_card> t_account_bank_card { get; set; }
-        public virtual DbSet<t_account_baseinfo> t_account_baseinfo { get; set; }
         public virtual DbSet<t_account_cash_record> t_account_cash_record { get; set; }
         public virtual DbSet<t_account_cash_record_details> t_account_cash_record_details { get; set; }
         public virtual DbSet<t_account_follow_apply_record> t_account_follow_apply_record { get; set; }
@@ -132,7 +131,6 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_banner> t_banner { get; set; }
         public virtual DbSet<t_banner_group> t_banner_group { get; set; }
         public virtual DbSet<t_broker> t_broker { get; set; }
-        public virtual DbSet<t_broker_account_info> t_broker_account_info { get; set; }
         public virtual DbSet<t_broker_account_info_capital> t_broker_account_info_capital { get; set; }
         public virtual DbSet<t_broker_account_info_frontaccount_rel> t_broker_account_info_frontaccount_rel { get; set; }
         public virtual DbSet<t_broker_account_info_position> t_broker_account_info_position { get; set; }
@@ -257,6 +255,8 @@ namespace MealTicket_DBCommon
         public virtual DbSet<v_plate_shares> v_plate_shares { get; set; }
         public virtual DbSet<v_shares_baseinfo> v_shares_baseinfo { get; set; }
         public virtual DbSet<v_shares_quotes_last> v_shares_quotes_last { get; set; }
+        public virtual DbSet<t_account_baseinfo> t_account_baseinfo { get; set; }
+        public virtual DbSet<t_broker_account_info> t_broker_account_info { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)

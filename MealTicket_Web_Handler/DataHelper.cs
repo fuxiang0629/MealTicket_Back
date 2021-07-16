@@ -1921,7 +1921,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                     compare = Convert.ToInt32(temp.Compare);
                     type = Convert.ToInt32(temp.Type);
                     count = Convert.ToDouble(temp.Count);
-                    priceType = Convert.ToInt32(temp.priceType);
+                    priceType = Convert.ToInt32(temp.PriceType);
                 }
                 catch (Exception)
                 {
