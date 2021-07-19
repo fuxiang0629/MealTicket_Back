@@ -406,12 +406,13 @@ namespace MealTicket_Handler
                     RemainDeposit = accountWallet.Deposit / 100 * 100;
 
                 }
-                var buysetting = (from item in db.t_account_shares_buy_setting
-                                  where item.AccountId == basedata.AccountId && item.Type == 1
-                                  select item).FirstOrDefault();
+                var accountBuySetting = DbHelper.GetAccountBuySetting(basedata.AccountId, 1);
+                var buysetting = accountBuySetting.FirstOrDefault();
                 if (buysetting != null)
                 {
-                    RetainDeposit = buysetting.ParValue / 100 * 100;
+                    var valueObj=JsonConvert.DeserializeObject<dynamic>(buysetting.ParValueJson);
+                    long parValue = valueObj.Value;
+                    RetainDeposit = parValue / 100 * 100;
                 }
                 //股票持有
                 var sharesHold = from item in db.t_account_shares_hold

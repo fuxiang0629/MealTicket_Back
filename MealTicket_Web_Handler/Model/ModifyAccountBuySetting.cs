@@ -25,6 +25,6 @@ namespace MealTicket_Web_Handler.Model
         /// <summary>
         /// 参数值
         /// </summary>
-        public long ParValue { get; set; }
+        public string ParValueJson { get; set; }
     }
 }

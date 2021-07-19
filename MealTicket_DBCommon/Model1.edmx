@@ -265,7 +265,7 @@
           <Property Name="Type" Type="int" Nullable="false" />
           <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="500" />
-          <Property Name="ParValue" Type="bigint" Nullable="false" />
+          <Property Name="ParValueJson" Type="nvarchar(max)" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
         </EntityType>
@@ -4572,19 +4572,6 @@
           <Property Name="DeviceUA" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
-        <EntityType Name="t_account_shares_buy_setting">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="AccountId" Type="Int64" Nullable="false" />
-          <Property Name="Type" Type="Int32" Nullable="false" />
-          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-          <Property Name="ParValue" Type="Int64" Nullable="false" />
-          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
-        </EntityType>
         <EntityType Name="t_account_shares_buy_setting_par">
           <Key>
             <PropertyRef Name="Id" />
@@ -7743,7 +7730,6 @@
           <EntitySet Name="t_account_recommend_prize_type" EntityType="Self.t_account_recommend_prize_type" />
           <EntitySet Name="t_account_recommend_prize_type_level" EntityType="Self.t_account_recommend_prize_type_level" />
           <EntitySet Name="t_account_registerLog" EntityType="Self.t_account_registerLog" />
-          <EntitySet Name="t_account_shares_buy_setting" EntityType="Self.t_account_shares_buy_setting" />
           <EntitySet Name="t_account_shares_buy_setting_par" EntityType="Self.t_account_shares_buy_setting_par" />
           <EntitySet Name="t_account_shares_buy_synchro_setting" EntityType="Self.t_account_shares_buy_synchro_setting" />
           <EntitySet Name="t_account_shares_buy_synchro_setting_follow" EntityType="Self.t_account_shares_buy_synchro_setting_follow" />
@@ -8463,6 +8449,7 @@
           </FunctionImport>
           <EntitySet Name="t_account_baseinfo" EntityType="meal_ticketModel.t_account_baseinfo" />
           <EntitySet Name="t_broker_account_info" EntityType="meal_ticketModel.t_broker_account_info" />
+          <EntitySet Name="t_account_shares_buy_setting" EntityType="meal_ticketModel.t_account_shares_buy_setting" />
         </EntityContainer>
         <EntityType Name="t_account_baseinfo">
           <Key>
@@ -8511,6 +8498,19 @@
           <Property Name="SynchronizationStatus" Type="Int32" Nullable="false" />
           <Property Name="SynchronizationTime" Type="DateTime" Precision="3" />
           <Property Name="IsPrivate" Type="Boolean" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_buy_setting">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="ParValueJson" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
@@ -8758,20 +8758,6 @@
                 <ScalarProperty Name="RegIp" ColumnName="RegIp" />
                 <ScalarProperty Name="DeviceUA" ColumnName="DeviceUA" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="t_account_shares_buy_setting">
-            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_buy_setting">
-              <MappingFragment StoreEntitySet="t_account_shares_buy_setting">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
-                <ScalarProperty Name="Type" ColumnName="Type" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Description" ColumnName="Description" />
-                <ScalarProperty Name="ParValue" ColumnName="ParValue" />
-                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -12195,6 +12181,20 @@
                 <ScalarProperty Name="AccountNo" ColumnName="AccountNo" />
                 <ScalarProperty Name="AccountType" ColumnName="AccountType" />
                 <ScalarProperty Name="AccountCode" ColumnName="AccountCode" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_buy_setting">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_buy_setting">
+              <MappingFragment StoreEntitySet="t_account_shares_buy_setting">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="ParValueJson" ColumnName="ParValueJson" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

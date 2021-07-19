@@ -56,6 +56,11 @@ namespace MealTicket_Web_Handler.Model
         public long PresentPrice { get; set; }
 
         /// <summary>
+        /// 开盘价
+        /// </summary>
+        public long OpenedPrice { get; set; }
+
+        /// <summary>
         /// 收盘价
         /// </summary>
         public long ClosedPrice { get; set; }
@@ -74,6 +79,36 @@ namespace MealTicket_Web_Handler.Model
                 return (int)Math.Round(((PresentPrice - ClosedPrice) * 1.0 / ClosedPrice) * 10000, 0);
             } 
         }
+
+        /// <summary>
+        /// 开盘涨跌幅
+        /// </summary>
+        public int OpenedRiseRate
+        {
+            get
+            {
+                if (ClosedPrice <= 0)
+                {
+                    return 0;
+                }
+                return (int)Math.Round(((OpenedPrice - ClosedPrice) * 1.0 / ClosedPrice) * 10000, 0);
+            }
+        }
+
+        /// <summary>
+        /// 昨日涨跌幅
+        /// </summary>
+        public int YestodayRiseRate { get; set; }
+
+        /// <summary>
+        /// 前2日涨跌幅
+        /// </summary>
+        public int TwoDaysRiseRate { get; set; }
+
+        /// <summary>
+        /// 前3日涨跌幅
+        /// </summary>
+        public int ThreeDaysRiseRate { get; set; }
 
         /// <summary>
         /// 触发推送时间

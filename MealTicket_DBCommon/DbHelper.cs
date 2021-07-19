@@ -392,5 +392,31 @@ namespace MealTicket_DBCommon
                 return totalCost;
             }
         }
+
+        /// <summary>
+        /// 获取账户买入设置
+        /// </summary>
+        /// <returns></returns>
+        public static List<t_account_shares_buy_setting> GetAccountBuySetting(long accountId,int type) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var setting = from item in db.t_account_shares_buy_setting
+                              select item;
+                if (accountId != 0)
+                {
+                    setting = from item in setting
+                              where item.AccountId == accountId
+                              select item;
+                }
+                if (type != 0)
+                {
+                    setting = from item in setting
+                              where item.Type == type
+                              select item;
+                }
+                return setting.ToList();
+            }
+        }
     }
 }

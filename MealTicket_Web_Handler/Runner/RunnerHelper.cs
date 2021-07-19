@@ -665,8 +665,10 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                 }
 
                 //判断板块限制
-                sql = string.Format("select top 1 ParValue from t_account_shares_buy_setting with(nolock) where AccountId={0} and [Type]=4", item.AccountId);
-                long ParValue = db.Database.SqlQuery<long>(sql).FirstOrDefault();
+                sql = string.Format("select top 1 ParValueJson from t_account_shares_buy_setting with(nolock) where AccountId={0} and [Type]=4", item.AccountId);
+                string ParValueJson = db.Database.SqlQuery<string>(sql).FirstOrDefault();
+                var tempSetting = JsonConvert.DeserializeObject<dynamic>(ParValueJson);
+                long ParValue = tempSetting.Value;
                 if (ParValue == 1)
                 {
                     logRecord.AppendLine("===开始判断所属板块是否可买入" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
@@ -1561,20 +1563,10 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                             {
                                 try
                                 {
-                                    sql = string.Format(@"declare @parValue bigint,@id bigint;
-select @id=Id,@parValue=ParValue from t_account_shares_buy_setting with(xlock) where AccountId={0} and [Type]=3
-if(@parValue is null) 
-begin 
-    insert into t_account_shares_buy_setting(AccountId,[Type],Name,[Description],ParValue,CreateTime,LastModified)
-    values({0},3,'跟投分组轮序位置','跟投分组轮序位置',1,getdate(),getdate());
-	set @parValue=0;
-end
-else
-begin
-	update t_account_shares_buy_setting set ParValue=ParValue+1 where Id=@id;
-end
-select @parValue", item.AccountId);
-                                    var turn = db.Database.SqlQuery<long>(sql).FirstOrDefault();
+                                    sql = "declare @parValueJson nvarchar(max),@id bigint;select @id=Id,@parValueJson=ParValueJson from t_account_shares_buy_setting with(xlock) where AccountId=" + item.AccountId + " and [Type]=3 if(@id is null) begin insert into t_account_shares_buy_setting(AccountId,[Type],Name,[Description],ParValueJson,CreateTime,LastModified) values(" + item.AccountId+",3,'跟投分组轮序位置','跟投分组轮序位置','{\"Value\":1}',getdate(),getdate());set @parValueJson = '{\"Value\":0}';end else begin declare @parValue bigint; set @parValue = dbo.f_parseJson(@parValueJson, 'Value'); set @parValue = @parValue + 1; update t_account_shares_buy_setting set ParValueJson = '{\"Value\":' + convert(varchar(10), @parValue) + '}' where Id = @id; end select @parValueJson";
+                                    string turnJson = db.Database.SqlQuery<string>(sql).FirstOrDefault();
+                                    var tempTurn=JsonConvert.DeserializeObject<dynamic>(turnJson);
+                                    long turn = tempTurn.Value;
 
                                     //查询跟投分组信息
                                     sql = string.Format(@"select Id
@@ -1643,12 +1635,13 @@ inner
                         }
                         Deposit = wallet.Deposit;
 
-                        var buySetting = (from x in db.t_account_shares_buy_setting
-                                          where x.AccountId == item.AccountId && x.Type == 1
-                                          select x).FirstOrDefault();
+                        var accountBuySetting = DbHelper.GetAccountBuySetting(item.AccountId, 1);
+                        var buySetting = accountBuySetting.FirstOrDefault();
                         if (buySetting != null)
                         {
-                            RemainDeposit = buySetting.ParValue / 100 * 100;
+                            var valueObj = JsonConvert.DeserializeObject<dynamic>(buySetting.ParValueJson);
+                            long parValue = valueObj.Value;
+                            RemainDeposit = parValue / 100 * 100;
                         }
 
                         long EntrustAmount = item.EntrustAmount;
@@ -1674,12 +1667,13 @@ inner
                                 continue;
                             }
                             long followRemainDeposit = 0;
-                            var followBuySetting = (from x in db.t_account_shares_buy_setting
-                                                    where x.AccountId == account.AccountId && x.Type == 1
-                                                    select x).FirstOrDefault();
+                            var tempBuySetting = DbHelper.GetAccountBuySetting(account.AccountId, 1);
+                            var followBuySetting = tempBuySetting.FirstOrDefault();
                             if (followBuySetting != null)
                             {
-                                followRemainDeposit = followBuySetting.ParValue / 100 * 100;
+                                var valueObj = JsonConvert.DeserializeObject<dynamic>(followBuySetting.ParValueJson);
+                                long parValue = valueObj.Value;
+                                followRemainDeposit = parValue / 100 * 100;
                             }
                             var tempRate = account.BuyAmount == 0 ? buyRate : account.BuyAmount == -1 ? 1 : -1;
                             buyList.Add(new

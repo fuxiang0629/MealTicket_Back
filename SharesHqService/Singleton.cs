@@ -147,34 +147,6 @@ namespace SharesHqService
         //股票昨日收盘价缓存
         public List<SharesBaseInfo> SharesList = new List<SharesBaseInfo>();
 
-        //是否可以进入行情更新
-        object quotesLock = new object();
-        public bool QuotesCanEnter = true;
-
-        public bool TryQuotesCanEnter()
-        {
-            lock (quotesLock)
-            {
-                if (!QuotesCanEnter) { return false; }
-
-                QuotesCanEnter = false;
-            }
-
-            return true;
-        }
-
-        public bool TryQuotesCanLeave()
-        {
-            lock (quotesLock)
-            {
-                if (QuotesCanEnter) { return false; }
-
-                QuotesCanEnter = true;
-            }
-
-            return true;
-        }
-
         //行情是否在运行
         object isRunLock = new object();
         public bool IsRun = false;

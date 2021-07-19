@@ -45,6 +45,8 @@ namespace MealTicket_Web_Handler.Model
         /// </summary>
         public string AccountName { get; set; }
 
+        public long Deposit { get; set; }
+
         /// <summary>
         /// 最大可用余额
         /// </summary>

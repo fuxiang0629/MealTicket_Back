@@ -240,6 +240,10 @@ namespace MealTicket_Web_Handler
             {
                 _AccountRiseLimitTriSession.Dispose();
             }
+            if (_SharesQuotesDateSession != null)
+            {
+                _SharesQuotesDateSession.Dispose();
+            }
         }
 
         /// <summary>
@@ -567,7 +571,8 @@ namespace MealTicket_Web_Handler
         public SharesBaseSession _SharesBaseSession;
         public PlateRateSession _PlateRateSession;
         public AccountTrendTriSession _AccountTrendTriSession;
-        public AccountRiseLimitTriSession _AccountRiseLimitTriSession; 
+        public AccountRiseLimitTriSession _AccountRiseLimitTriSession;
+        public SharesQuotesDateSession _SharesQuotesDateSession;
         #endregion
     }
 }

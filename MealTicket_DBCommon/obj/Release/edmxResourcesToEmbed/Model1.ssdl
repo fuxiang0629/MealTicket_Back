@@ -260,7 +260,7 @@
     <Property Name="Type" Type="int" Nullable="false" />
     <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
     <Property Name="Description" Type="nvarchar" MaxLength="500" />
-    <Property Name="ParValue" Type="bigint" Nullable="false" />
+    <Property Name="ParValueJson" Type="nvarchar(max)" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>

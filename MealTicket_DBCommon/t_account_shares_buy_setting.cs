@@ -19,7 +19,7 @@ namespace MealTicket_DBCommon
         public int Type { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-        public long ParValue { get; set; }
+        public string ParValueJson { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
     }

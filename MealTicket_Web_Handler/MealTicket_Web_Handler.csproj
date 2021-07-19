@@ -248,6 +248,7 @@
     <Compile Include="session\model\SharesBaseInfo.cs" />
     <Compile Include="session\PlateRateSession.cs" />
     <Compile Include="session\SharesBaseSession.cs" />
+    <Compile Include="session\SharesQuotesDateSession.cs" />
     <Compile Include="session\SharesQuotesSession.cs" />
     <Compile Include="Singleton.cs" />
     <Compile Include="Transactiondata\TransactiondataAnalyseInfo.cs" />

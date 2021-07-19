@@ -56,5 +56,10 @@ namespace MealTicket_Web_Handler
         /// 最大购买股票数量
         /// </summary>
         public int MaxBuySharesCount { get; set; }
+
+        /// <summary>
+        /// 每日最大持仓数量
+        /// </summary>
+        public int MaxBuySharesCount_Day { get; set; }
     }
 }

@@ -99,7 +99,9 @@ namespace MealTicket_Web_APIService
             session._AccountTrendTriSession = new MealTicket_Web_Handler.session.AccountTrendTriSession();
             session._AccountTrendTriSession.StartUpdate(3000);
             session._AccountRiseLimitTriSession = new MealTicket_Web_Handler.session.AccountRiseLimitTriSession();
-            session._AccountRiseLimitTriSession.StartUpdate(3000); 
+            session._AccountRiseLimitTriSession.StartUpdate(3000);
+            session._SharesQuotesDateSession = new MealTicket_Web_Handler.session.SharesQuotesDateSession();
+            session._SharesQuotesDateSession.StartUpdate(3600000); 
 
              //加载依赖注入
              Kernel = LoadKernel();   

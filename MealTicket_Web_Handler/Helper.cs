@@ -259,14 +259,19 @@ namespace MealTicket_Web_Handler
         /// 获取最近交易日日期
         /// </summary>
         /// <returns></returns>
-        public static DateTime GetLastTradeDate(int hour = 0,int minute=0,int second=0) 
+        public static DateTime GetLastTradeDate(int hour = 0,int minute=0,int second=0,int day=0) 
         {
             DateTime dateNow = DateTime.Now.AddHours(hour).AddMinutes(minute).AddSeconds(second).Date;
+            int i = 0;
             while (true)
             {
                 if (Helper.CheckTradeDate(dateNow))
                 {
-                    break;
+                    if (i >= day)
+                    {
+                        break;
+                    }
+                    i++;
                 }
                 dateNow = dateNow.AddDays(-1);
             }

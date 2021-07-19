@@ -242,20 +242,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="t_account_shares_buy_setting">
-      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_buy_setting">
-        <MappingFragment StoreEntitySet="t_account_shares_buy_setting">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
-          <ScalarProperty Name="Type" ColumnName="Type" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="Description" ColumnName="Description" />
-          <ScalarProperty Name="ParValue" ColumnName="ParValue" />
-          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="t_account_shares_buy_setting_par">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_buy_setting_par">
         <MappingFragment StoreEntitySet="t_account_shares_buy_setting_par">
@@ -3676,6 +3662,20 @@
           <ScalarProperty Name="AccountNo" ColumnName="AccountNo" />
           <ScalarProperty Name="AccountType" ColumnName="AccountType" />
           <ScalarProperty Name="AccountCode" ColumnName="AccountCode" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_buy_setting">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_buy_setting">
+        <MappingFragment StoreEntitySet="t_account_shares_buy_setting">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="ParValueJson" ColumnName="ParValueJson" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>

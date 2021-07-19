@@ -10,7 +10,34 @@ namespace SharesHqService
 {
     public class SharesQuotesUpdateRunner : Runner
     {
-        static int checkTimes = 0;
+        //是否可以进入行情更新
+        object quotesLock = new object();
+        public bool QuotesCanEnter = true;
+
+        public bool TryQuotesCanEnter()
+        {
+            lock (quotesLock)
+            {
+                if (!QuotesCanEnter) { return false; }
+
+                QuotesCanEnter = false;
+            }
+
+            return true;
+        }
+
+
+        public bool TryQuotesCanLeave()
+        {
+            lock (quotesLock)
+            {
+                if (QuotesCanEnter) { return false; }
+
+                QuotesCanEnter = true;
+            }
+
+            return true;
+        }
 
         public SharesQuotesUpdateRunner()
         {
@@ -25,20 +52,11 @@ namespace SharesHqService
                 DateTime timeNow = DateTime.Now;
                 try
                 {
-                    //如果当前是交易时间，就60秒检查一次
-                    if (checkTimes % 60 == 0)
+                    if (!Helper.CheckTradeTime(timeNow.AddSeconds(-Singleton.Instance.RunStartTime)) && !Helper.CheckTradeTime(timeNow.AddSeconds(-Singleton.Instance.RunEndTime)))
                     {
-                        checkTimes = 0;
-                        if (!Helper.CheckTradeTime(timeNow.AddSeconds(-Singleton.Instance.RunStartTime)) && !Helper.CheckTradeTime(timeNow.AddSeconds(-Singleton.Instance.RunEndTime)))
-                        {
-                            //如果当前不是交易时间，30秒检查一次
-                            SleepTime = 30000;
-                            Singleton.Instance.TryToSetIsRun(false);
-                            return false;
-                        }
+                        Singleton.Instance.TryToSetIsRun(false);
+                        return false;
                     }
-                    SleepTime = Singleton.Instance.SshqUpdateRate;
-                    checkTimes++;
                     return true;
                 }
                 catch (Exception ex)
@@ -51,7 +69,7 @@ namespace SharesHqService
 
         public override void Execute()
         {
-            if (!Singleton.Instance.TryQuotesCanEnter())
+            if (!TryQuotesCanEnter())
             {
                 return;
             }
@@ -82,7 +100,7 @@ namespace SharesHqService
                 }
                 finally
                 {
-                    Singleton.Instance.TryQuotesCanLeave();
+                    TryQuotesCanLeave();
                     Singleton.Instance.TryToSetIsRun(true);
                 }
             });

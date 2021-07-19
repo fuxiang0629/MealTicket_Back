@@ -101,6 +101,7 @@
     <Compile Include="业务表更新\BusinessTableUpdateRunner.cs" />
     <Compile Include="更新所有股票基础数据服务\AllSharesUpdateRunner.cs" />
     <Compile Include="更新股票F10数据\SharesF10UpdateRunner.cs" />
+    <Compile Include="更新股票K线数据\SharesIndexBarsUpdateRunner_1Min.cs" />
     <Compile Include="更新股票实时五档行情服务\SharesQuotesUpdateRunner.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -120,7 +121,9 @@
       <Name>MealTicket_DBCommon</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="更新股票分时数据\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

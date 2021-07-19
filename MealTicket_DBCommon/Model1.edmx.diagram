@@ -21,7 +21,6 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_account_recommend_prize_type" Width="1.5" PointX="10.75" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_recommend_prize_type_level" Width="1.5" PointX="4.75" PointY="10.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_registerLog" Width="1.5" PointX="6.75" PointY="10.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_buy_setting" Width="1.5" PointX="10.75" PointY="7.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_buy_setting_par" Width="1.5" PointX="8.75" PointY="11.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_buy_synchro_setting" Width="1.5" PointX="10.75" PointY="11.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_buy_synchro_setting_follow" Width="1.5" PointX="12.75" PointY="0.75" IsExpanded="true" />
@@ -235,6 +234,7 @@
         <EntityTypeShape EntityType="meal_ticketModel.v_shares_quotes_last" Width="1.5" PointX="44.75" PointY="11.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_baseinfo" Width="1.5" PointX="19.375" PointY="44.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_broker_account_info" Width="1.5" PointX="25.375" PointY="44.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_buy_setting" Width="1.5" PointX="13.375" PointY="30.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

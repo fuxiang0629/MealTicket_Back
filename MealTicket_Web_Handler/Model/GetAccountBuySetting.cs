@@ -46,6 +46,11 @@ namespace MealTicket_Web_Handler.Model
         public long ParValue { get; set; }
 
         /// <summary>
+        /// 参数值json格式
+        /// </summary>
+        public string ParValueJson { get; set; }
+
+        /// <summary>
         /// 数据时间
         /// </summary>
         public DateTime CreateTime { get; set; }

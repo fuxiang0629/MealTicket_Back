@@ -40,12 +40,13 @@ namespace MealTicket_Web_Handler
                 {
                     DepositAmount = wallet.Deposit;
                 }
-                var parSetting = (from item in db.t_account_shares_buy_setting
-                                  where item.AccountId == request.Id && item.Type == 1
-                                  select item).FirstOrDefault();
+                var accountBuySetting = DbHelper.GetAccountBuySetting(request.Id, 1);
+                var parSetting = accountBuySetting.FirstOrDefault();
                 if (parSetting != null)
                 {
-                    RemainDeposit = parSetting.ParValue;
+                    var valueObj = JsonConvert.DeserializeObject<dynamic>(parSetting.ParValueJson);
+                    long parValue = valueObj.Value;
+                    RemainDeposit = parValue;
                 }
                 return new AccountWalletInfo
                 {
@@ -1601,7 +1602,7 @@ namespace MealTicket_Web_Handler
                                     {
                                         SharesCode = g.Key.item.SharesCode,
                                         SharesName = g.Key.item3.SharesName,
-                                        Business = g.Key.item3.Business,
+                                        Business = "",
                                         ClosedPrice = g.Key.item6.ClosedPrice,
                                         GroupList = (from x in g
                                                      where x.ai != null
@@ -1612,10 +1613,11 @@ namespace MealTicket_Web_Handler
                                                          ValidStartTime = x.ai.ValidStartTime,
                                                          ValidEndTime = x.ai.ValidEndTime
                                                      }).ToList(),
-                                        Industry = g.Key.item3.Industry,
+                                        Industry = "",
                                         Market = g.Key.item.Market,
                                         OptionalId = g.Key.item.OptionalId,
                                         PresentPrice = g.Key.item6.PresentPrice,
+                                        OpenedPrice=g.Key.item6.OpenedPrice,
                                         PushTime = g.Key.item.PushTime,
                                         RelId = g.Key.item.RelId,
                                         TrendId = g.Key.item.TrendId,
@@ -1636,6 +1638,27 @@ namespace MealTicket_Web_Handler
                     {
                         resultList.Add(item);
                     }
+                    var quoteDateList=Singleton.Instance._SharesQuotesDateSession.GetSessionData(); 
+                    var tempQuoteDateList = quoteDateList.Where(e => e.Market == item.Market && e.SharesCode == item.SharesCode).ToList();
+                    var temp1= tempQuoteDateList.OrderByDescending(e => e.LastModified).FirstOrDefault();
+                    if (temp1 == null)
+                    {
+                        continue;
+                    }
+                    item.YestodayRiseRate = temp1.ClosedPrice == 0 ? 0 : (int)Math.Round(((temp1.PresentPrice - temp1.ClosedPrice) * 1.0 / temp1.ClosedPrice) * 10000, 0);
+
+                    var temp2 = tempQuoteDateList.Where(e=>e.LastModified< temp1.LastModified).OrderByDescending(e => e.LastModified).FirstOrDefault();
+                    if (temp2 == null)
+                    {
+                        continue;
+                    }
+                    item.TwoDaysRiseRate = temp2.ClosedPrice == 0 ? 0 : (int)Math.Round(((temp1.PresentPrice - temp2.ClosedPrice) * 1.0 / temp2.ClosedPrice) * 10000, 0);
+                    var temp3 = tempQuoteDateList.Where(e => e.LastModified < temp2.LastModified).OrderByDescending(e => e.LastModified).FirstOrDefault();
+                    if (temp3 == null)
+                    {
+                        continue;
+                    }
+                    item.ThreeDaysRiseRate = temp3.ClosedPrice == 0 ? 0 : (int)Math.Round(((temp1.PresentPrice - temp3.ClosedPrice) * 1.0 / temp3.ClosedPrice) * 10000, 0);
                 }
                 return resultList;
             }
@@ -1721,11 +1744,12 @@ namespace MealTicket_Web_Handler
                         {
                             SharesCode = item.SharesCode,
                             SharesName = item3.SharesName,
-                            Business = item3.Business,
+                            Business = "",
                             Market = item.Market,
-                            Industry = item3.Industry,
+                            Industry = "",
                             ClosedPrice = item4.ClosedPrice,
                             PresentPrice = item4.PresentPrice,
+                            OpenedPrice=item4.OpenedPrice,
                             Type = item.Type,
                             PushTime = item.PushTime,
                             TriCountToday = item.TriCountToday,
@@ -1787,6 +1811,29 @@ namespace MealTicket_Web_Handler
                                       where x.Market == item.Market && x.SharesCode == item.SharesCode
                                       orderby x.RiseRate descending
                                       select x).ToList();
+
+                    var quoteDateList = Singleton.Instance._SharesQuotesDateSession.GetSessionData();
+                    var tempQuoteDateList = quoteDateList.Where(e => e.Market == item.Market && e.SharesCode == item.SharesCode).ToList();
+                    var temp1 = tempQuoteDateList.OrderByDescending(e => e.LastModified).FirstOrDefault();
+                    if (temp1 == null)
+                    {
+                        continue;
+                    }
+                    item.YestodayRiseRate = temp1.ClosedPrice == 0 ? 0 : (int)Math.Round(((temp1.PresentPrice - temp1.ClosedPrice) * 1.0 / temp1.ClosedPrice) * 10000, 0);
+
+                    var temp2 = tempQuoteDateList.Where(e => e.LastModified < temp1.LastModified).OrderByDescending(e => e.LastModified).FirstOrDefault();
+                    if (temp2 == null)
+                    {
+                        continue;
+                    }
+                    item.TwoDaysRiseRate = temp2.ClosedPrice == 0 ? 0 : (int)Math.Round(((temp1.PresentPrice - temp2.ClosedPrice) * 1.0 / temp2.ClosedPrice) * 10000, 0);
+                    var temp3 = tempQuoteDateList.Where(e => e.LastModified < temp2.LastModified).OrderByDescending(e => e.LastModified).FirstOrDefault();
+                    if (temp3 == null)
+                    {
+                        continue;
+                    }
+                    item.ThreeDaysRiseRate = temp3.ClosedPrice == 0 ? 0 : (int)Math.Round(((temp1.PresentPrice - temp3.ClosedPrice) * 1.0 / temp3.ClosedPrice) * 10000, 0);
+
                     resultList.Add(item);
                 }
 
@@ -2133,14 +2180,10 @@ namespace MealTicket_Web_Handler
         {
             using (var db = new meal_ticketEntities())
             {
-
-                var buySetting = from item in db.t_account_shares_buy_setting
-                                 where item.Type == 1
-                                 select item;
+                var buySetting = DbHelper.GetAccountBuySetting(0,1);
                 var followList = (from item in db.t_account_follow_rel
                                   join item2 in db.t_account_baseinfo on item.FollowAccountId equals item2.Id
                                   join item3 in db.t_account_wallet on item.FollowAccountId equals item3.AccountId
-                                  join item4 in buySetting on item.FollowAccountId equals item4.AccountId into a from ai in a.DefaultIfEmpty()
                                   where item.AccountId == basedata.AccountId && item2.Status == 1
                                   orderby item.OrderIndex descending,item.CreateTime
                                   select new FollowAccountInfo
@@ -2149,12 +2192,21 @@ namespace MealTicket_Web_Handler
                                       AccountId = item.FollowAccountId,
                                       AccountMobile = item2.Mobile,
                                       AccountName = item2.NickName,
-                                      MaxDeposit=item3.Deposit-(ai==null?0:ai.ParValue)
+                                      Deposit= item3.Deposit,
                                   }).ToList();
                 if (!string.IsNullOrEmpty(request.SharesCode))
                 {
                     foreach (var follow in followList)
                     {
+                        var accountSetting = (from x in buySetting
+                                              where x.AccountId == follow.AccountId
+                                              select x).FirstOrDefault();
+                        if (accountSetting != null)
+                        {
+                            var valueObj = JsonConvert.DeserializeObject<dynamic>(accountSetting.ParValueJson);
+                            long parValue = valueObj.Value;
+                            follow.MaxDeposit = follow.Deposit - parValue;
+                        }
                         //计算杠杆倍数
                         var accountRules = from item in db.t_shares_limit_fundmultiple_account
                                            where item.AccountId == follow.AccountId
@@ -2212,6 +2264,7 @@ namespace MealTicket_Web_Handler
                 long RemainDeposit = 0;
                 long RetainDeposit = 0;
                 int MaxBuySharesCount = -1;
+                int MaxBuySharesCount_Day = -1;
                 var accountWallet = (from item in db.t_account_wallet
                                      where item.AccountId == request.Id
                                      select item).FirstOrDefault();
@@ -2220,18 +2273,23 @@ namespace MealTicket_Web_Handler
                     RemainDeposit = accountWallet.Deposit / 100 * 100;
 
                 }
-                var buySetting = (from item in db.t_account_shares_buy_setting
-                                  where item.AccountId == request.Id
-                                  select item).ToList();
+                var tempBuySetting = DbHelper.GetAccountBuySetting(request.Id, 0);
+                var buySetting = tempBuySetting.ToList();
                 var temp1=buySetting.Where(e => e.Type == 1).FirstOrDefault();
                 if (temp1 != null)
                 {
-                    RetainDeposit = temp1.ParValue / 100 * 100;
+                    var valueObj = JsonConvert.DeserializeObject<dynamic>(temp1.ParValueJson);
+                    long parValue = valueObj.Value;
+                    RetainDeposit = parValue / 100 * 100;
                 }
                 var temp2 = buySetting.Where(e => e.Type == 2).FirstOrDefault();
                 if (temp2 != null)
                 {
-                    MaxBuySharesCount = (int)temp2.ParValue;
+                    var valueObj = JsonConvert.DeserializeObject<dynamic>(temp2.ParValueJson);
+                    long parValue1 = valueObj.Value1;
+                    long parValue2 = valueObj.Value2;
+                    MaxBuySharesCount = (int)parValue1;
+                    MaxBuySharesCount_Day= (int)parValue2;
                 }
                 //股票持有
                 var sharesHold = from item in db.t_account_shares_hold
@@ -2329,6 +2387,7 @@ namespace MealTicket_Web_Handler
                     RemainDeposit = RemainDeposit,
                     RetainDeposit= RetainDeposit,
                     MaxBuySharesCount= MaxBuySharesCount,
+                    MaxBuySharesCount_Day= MaxBuySharesCount_Day,
                     TotalMarketValue = TotalMarketValue,
                     TotalProfit = TotalProfit,
                     TotalFundAmount = TotalFundAmount,
@@ -2862,12 +2921,13 @@ namespace MealTicket_Web_Handler
                     }
                     Deposit = wallet.Deposit;
 
-                    var buySetting = (from item in db.t_account_shares_buy_setting
-                                      where item.AccountId == request.AccountId && item.Type == 1
-                                      select item).FirstOrDefault();
+                    var tempBuySetting = DbHelper.GetAccountBuySetting(0, 1);
+                    var buySetting = tempBuySetting.Where(e=>e.AccountId== request.AccountId).FirstOrDefault();
                     if (buySetting != null)
                     {
-                        RemainDeposit = buySetting.ParValue / 100 * 100;
+                        var valueObj = JsonConvert.DeserializeObject<dynamic>(buySetting.ParValueJson);
+                        long parValue = valueObj.Value;
+                        RemainDeposit = parValue / 100 * 100;
                     }
 
                     if (request.BuyAmount > (Deposit - RemainDeposit))
@@ -2890,12 +2950,12 @@ namespace MealTicket_Web_Handler
                             continue;
                         }
                         long followRemainDeposit = 0;
-                        var followBuySetting = (from item in db.t_account_shares_buy_setting
-                                                where item.AccountId == account && item.Type == 1
-                                                select item).FirstOrDefault();
+                        var followBuySetting = tempBuySetting.Where(e=>e.AccountId== account).FirstOrDefault();
                         if (followBuySetting != null)
                         {
-                            followRemainDeposit = followBuySetting.ParValue / 100 * 100;
+                            var valueObj = JsonConvert.DeserializeObject<dynamic>(followBuySetting.ParValueJson);
+                            long parValue = valueObj.Value;
+                            followRemainDeposit = parValue / 100 * 100;
                         }
                         buyList.Add(new
                         {
@@ -13624,28 +13684,29 @@ select @buyId;";
                 Type=1,
                 Name="保留余额",
                 Description="保留余额",
-                ParValue=0
+                ParValueJson="{\"Value\":0}"
             });
             tempList.Add(new AccountBuySettingInfo
             {
                 Type = 2,
                 Name = "最大持仓数量",
                 Description = "最大持仓数量",
-                ParValue = -1
+                ParValueJson = "{\"Value1\":-1,\"Value2\":-1}"
             });
             tempList.Add(new AccountBuySettingInfo
             {
                 Type = 3,
                 Name = "跟投分组轮序位置",
                 Description = "跟投分组轮序位置",
-                ParValue = 0
+                ParValue = 0,
+                ParValueJson = "{\"Value\":0}"
             });
             tempList.Add(new AccountBuySettingInfo
             {
                 Type = 4,
                 Name = "买入板块限制",
                 Description = "买入板块限制",
-                ParValue = 0
+                ParValueJson = "{\"Value\":0}"
             });
             bool IsMain = false;
             if (request.AccountId == 0)
@@ -13655,9 +13716,8 @@ select @buyId;";
             }
             using (var db = new meal_ticketEntities())
             {
-                var buySetting = (from item in db.t_account_shares_buy_setting
-                                  where item.AccountId == request.AccountId
-                                  select item).ToList();
+                var tempBuySetting = DbHelper.GetAccountBuySetting(request.AccountId, 0);
+                var buySetting = tempBuySetting.ToList();
                 foreach (var item in tempList)
                 {
                     var temp = buySetting.Where(e => e.Type == item.Type).FirstOrDefault();
@@ -13670,7 +13730,7 @@ select @buyId;";
                             Description=item.Description,
                             LastModified=DateTime.Now,
                             Name=item.Name,
-                            ParValue=item.ParValue,
+                            ParValueJson=item.ParValueJson,
                             Type=item.Type
                         };
                         db.t_account_shares_buy_setting.Add(temp);
@@ -13688,7 +13748,7 @@ select @buyId;";
                                   Description = item.Description,
                                   Id = item.Id,
                                   Name = item.Name,
-                                  ParValue = item.ParValue,
+                                  ParValueJson = item.ParValueJson,
                                   Type = item.Type
                               }).ToList();
                 return result;
@@ -13711,7 +13771,7 @@ select @buyId;";
                     throw new WebApiException(400,"数据不存在");
                 }
                 buySetting.LastModified = DateTime.Now;
-                buySetting.ParValue = request.ParValue;
+                buySetting.ParValueJson = request.ParValueJson;
                 buySetting.Description = request.Description;
                 db.SaveChanges();
             }
@@ -14030,12 +14090,13 @@ select @buyId;";
             {
                 //当前轮序位置
                 int currTurnIndex = 0;
-                var currTurn = (from item in db.t_account_shares_buy_setting
-                                where item.AccountId == basedata.AccountId && item.Type == 3
-                                select item).FirstOrDefault();
+                var accountBuySetting = DbHelper.GetAccountBuySetting(basedata.AccountId, 3);
+                var currTurn = accountBuySetting.FirstOrDefault();
                 if (currTurn != null)
                 {
-                    currTurnIndex = (int)currTurn.ParValue;
+                    var valueObj = JsonConvert.DeserializeObject<dynamic>(currTurn.ParValueJson);
+                    long parValue = valueObj.Value;
+                    currTurnIndex = (int)parValue;
                 }
                 //有效分组列表
                 var followGroup = (from item in db.t_account_follow_group

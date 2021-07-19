@@ -43,7 +43,6 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_account_recommend_prize_type> t_account_recommend_prize_type { get; set; }
         public virtual DbSet<t_account_recommend_prize_type_level> t_account_recommend_prize_type_level { get; set; }
         public virtual DbSet<t_account_registerLog> t_account_registerLog { get; set; }
-        public virtual DbSet<t_account_shares_buy_setting> t_account_shares_buy_setting { get; set; }
         public virtual DbSet<t_account_shares_buy_setting_par> t_account_shares_buy_setting_par { get; set; }
         public virtual DbSet<t_account_shares_buy_synchro_setting> t_account_shares_buy_synchro_setting { get; set; }
         public virtual DbSet<t_account_shares_buy_synchro_setting_follow> t_account_shares_buy_synchro_setting_follow { get; set; }
@@ -257,6 +256,7 @@ namespace MealTicket_DBCommon
         public virtual DbSet<v_shares_quotes_last> v_shares_quotes_last { get; set; }
         public virtual DbSet<t_account_baseinfo> t_account_baseinfo { get; set; }
         public virtual DbSet<t_broker_account_info> t_broker_account_info { get; set; }
+        public virtual DbSet<t_account_shares_buy_setting> t_account_shares_buy_setting { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)
