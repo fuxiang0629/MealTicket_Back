@@ -95,6 +95,7 @@
     <Compile Include="Model\AccountLogin.cs" />
     <Compile Include="Model\AccountMakeupDeposit.cs" />
     <Compile Include="Model\AddAccountAutoBuySyncroSetting.cs" />
+    <Compile Include="Model\AddAccountAutoBuySyncroSettingAuthorizedGroup.cs" />
     <Compile Include="Model\AddAccountBuyCondition.cs" />
     <Compile Include="Model\AddAccountBuyConditionAuto.cs" />
     <Compile Include="Model\AddAccountBuyConditionAutoGroup.cs" />
@@ -137,9 +138,11 @@
     <Compile Include="Model\BatchModifyAccountSharesPlateStatus.cs" />
     <Compile Include="Model\BatchSetConditiontradeBuySharesFollow.cs" />
     <Compile Include="Model\BatchSetConditiontradeBuySharesGroup.cs" />
+    <Compile Include="Model\BindAccountAutoBuySyncroSettingAuthorizedGroup.cs" />
     <Compile Include="Model\BindAccountOptionalSeat.cs" />
     <Compile Include="Model\ConfirmBuyTipRequest.cs" />
     <Compile Include="Model\DeleteConditiontradeBuyGroup.cs" />
+    <Compile Include="Model\GetAccountAutoBuySyncroSettingAuthorizedGroupList.cs" />
     <Compile Include="Model\GetAccountAutoBuySyncroSettingList.cs" />
     <Compile Include="Model\GetAccountBuyConditionAutoGroupList.cs" />
     <Compile Include="Model\GetAccountBuyConditionAutoList.cs" />
@@ -154,8 +157,10 @@
     <Compile Include="Model\GetAccountFollowGroupFollowAccountList.cs" />
     <Compile Include="Model\GetAccountFollowGroupList.cs" />
     <Compile Include="Model\GetAccountListByMobile.cs" />
+    <Compile Include="Model\GetAccountRealTimeTabSetting.cs" />
     <Compile Include="Model\GetAccountRiseLimitTriList.cs" />
     <Compile Include="Model\GetAccountSharesPlateSharesList.cs" />
+    <Compile Include="Model\GetAutoBuySyncroAuthorizedAccountList.cs" />
     <Compile Include="Model\GetConditiontradeBuyGroupList.cs" />
     <Compile Include="Model\GetConditiontradeBuyGroupSharesAccountList.cs" />
     <Compile Include="Model\GetConditiontradeTemplateBuyAutoGroupList.cs" />
@@ -204,6 +209,7 @@
     <Compile Include="Model\ImportConditiontradeTemplateSell.cs" />
     <Compile Include="Model\ImportysPlateShares.cs" />
     <Compile Include="Model\ModifyAccountAutoBuySyncroSetting.cs" />
+    <Compile Include="Model\ModifyAccountAutoBuySyncroSettingAuthorizedGroup.cs" />
     <Compile Include="Model\ModifyAccountBuyCondition.cs" />
     <Compile Include="Model\ModifyAccountBuyConditionAuto.cs" />
     <Compile Include="Model\ModifyAccountBuyConditionAutoGroup.cs" />
@@ -220,10 +226,13 @@
     <Compile Include="Model\ModifyAccountOptionalGroupRelGroupIsContinue.cs" />
     <Compile Include="Model\ModifyAccountOptionalTrendPar.cs" />
     <Compile Include="Model\ModifyAccountOptionalTrendTri.cs" />
+    <Compile Include="Model\ModifyAccountRealTimeTabSetting.cs" />
     <Compile Include="Model\ModifyAccountRealTimeTrendTri.cs" />
     <Compile Include="Model\ModifyAccountRealTimeTrendTriGroup.cs" />
     <Compile Include="Model\ModifyAccountSeat.cs" />
     <Compile Include="Model\ModifyConditiontradeBuyGroup.cs" />
+    <Compile Include="Model\ModifyConditiontradeBuyGroupSyncroAccount.cs" />
+    <Compile Include="Model\ModifyConditiontradeBuyGroupSyncroAccountBuynext.cs" />
     <Compile Include="Model\ModifyConditiontradeBuySharesMyGroup.cs" />
     <Compile Include="Model\ModifyConditiontradeTemplate.cs" />
     <Compile Include="Model\ModifyConditiontradeTemplateBuyAuto.cs" />

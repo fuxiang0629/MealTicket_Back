@@ -1697,25 +1697,24 @@ namespace MealTicket_Handler.RunnerHandler
         {
             DateTime timeDate = DateTime.Now.Date;
             using (var db = new meal_ticketEntities())
+            using (var tran=db.Database.BeginTransaction())
             {
-                var shares = (from item in db.v_shares_quotes_last
-                              where item.LastModified > timeDate
-                              select item).ToList();
-                foreach (var item in shares)
+                try
                 {
-                    try
-                    {
-                        var sendData = new
-                        {
-                            Market = item.Market,
-                            SharesCode = item.SharesCode,
-                            Date = timeDate.ToString("yyyy-MM-dd"),
-                            Type = 1
-                        };
-                        Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "TransactionData", "Update");
-                    }
-                    catch (Exception)
-                    { }
+                    string sql = @"merge into t_shares_transactiondata_update as t
+using (select Market,SharesCode from v_shares_quotes_last where LastModified>convert(varchar(10),getdate(),120)) as t1
+on t.Market=t1.Market and t.SharescCode=t1.SharesCode
+when matched
+then update set [Type]=1,LastModified=getdate()
+when not matched by target
+then insert(Market,SharesCode,[Type],LastModified) values(t1.Market,t1.SharesCode,1,getdate());";
+                    db.Database.ExecuteSqlCommand(sql);
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteFileLog("批量更新分笔出错",ex);
+                    tran.Rollback();
                 }
             }
         }

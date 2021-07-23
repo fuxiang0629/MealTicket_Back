@@ -319,6 +319,9 @@ namespace MealTicket_Handler
             }
             DateTime startDate = DateNow;
             DateTime endDate = DateNow.AddDays(1);
+            int MaxOrderIndex = 0;
+            int MinOrderIndex = 0;
+            List<TradeSharesTransactionDataInfo> list = new List<TradeSharesTransactionDataInfo>();
             using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
             {
                 using (var db = new meal_ticketEntities())
@@ -340,50 +343,62 @@ namespace MealTicket_Handler
                                           select item;
                     }
 
-                    var list = (from item in transactiondata
-                                orderby item.Time descending, item.OrderIndex descending
-                                select new TradeSharesTransactionDataInfo
-                                {
-                                    SharesCode = item.SharesCode,
-                                    TimeStr = item.TimeStr,
-                                    Market = item.Market,
-                                    Price = item.Price,
-                                    Type = item.Type,
-                                    Stock = item.Stock,
-                                    OrderIndex = item.OrderIndex
-                                }).Take(request.TakeCount).ToList().OrderBy(e => e.TimeStr).ThenBy(e => e.OrderIndex).ToList();
+                    list = (from item in transactiondata
+                            orderby item.Time descending, item.OrderIndex descending
+                            select new TradeSharesTransactionDataInfo
+                            {
+                                SharesCode = item.SharesCode,
+                                TimeStr = item.TimeStr,
+                                Market = item.Market,
+                                Price = item.Price,
+                                Type = item.Type,
+                                Stock = item.Stock,
+                                OrderIndex = item.OrderIndex
+                            }).Take(request.TakeCount).ToList().OrderBy(e => e.TimeStr).ThenBy(e => e.OrderIndex).ToList();
 
 
 
-                    int MaxOrderIndex = 0;
-                    int MinOrderIndex = 0;
                     if (list.Count() > 0)
                     {
                         MaxOrderIndex = list.Max(e => e.OrderIndex);
                         MinOrderIndex = list.Min(e => e.OrderIndex);
                     }
-
-                    try
-                    {
-                        var sendData = new
-                        {
-                            Market = request.Market,
-                            SharesCode = request.SharesCode
-                        };
-                        Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "TransactionData", "Tri");
-                    }
-                    catch (Exception)
-                    { }
-
                     scope.Complete();
-                    return new GetTradeSharesTransactionDataListRes
-                    {
-                        MaxOrderIndex = MaxOrderIndex,
-                        MinOrderIndex = MinOrderIndex,
-                        List = list
-                    };
                 }
             }
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    string sql = string.Format(@"declare @id bigint;
+select top 1 @id=Id from t_shares_transactiondata_update with(xlock) where Market={0} and SharesCode='{1}';
+if(@id is null)
+begin
+	insert into t_shares_transactiondata_update
+	(Market,SharesCode,[Type],LastModified)
+	values({0},'{1}',0,getdate())
+end
+else
+begin
+	update t_shares_transactiondata_update
+	set LastModified=getdate(),[Type]=0
+	where Id=@id;
+end", request.Market, request.SharesCode);
+                    db.Database.ExecuteSqlCommand(sql);
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                }
+            }
+            return new GetTradeSharesTransactionDataListRes
+            {
+                MaxOrderIndex = MaxOrderIndex,
+                MinOrderIndex = MinOrderIndex,
+                List = list
+            };
         }
 
         /// <summary>

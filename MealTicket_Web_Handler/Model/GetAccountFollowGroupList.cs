@@ -16,6 +16,16 @@ namespace MealTicket_Web_Handler.Model
         /// 状态
         /// </summary>
         public int Status { get; set; }
+
+        /// <summary>
+        /// 市场
+        /// </summary>
+        public int Market { get; set; }
+
+        /// <summary>
+        /// 股票代码
+        /// </summary>
+        public string SharesCode { get; set; }
     }
 
     public class AccountFollowGroupInfo

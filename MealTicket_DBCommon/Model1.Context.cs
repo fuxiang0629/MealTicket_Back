@@ -46,7 +46,6 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_account_shares_buy_setting_par> t_account_shares_buy_setting_par { get; set; }
         public virtual DbSet<t_account_shares_buy_synchro_setting> t_account_shares_buy_synchro_setting { get; set; }
         public virtual DbSet<t_account_shares_buy_synchro_setting_follow> t_account_shares_buy_synchro_setting_follow { get; set; }
-        public virtual DbSet<t_account_shares_buy_synchro_setting_group> t_account_shares_buy_synchro_setting_group { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy> t_account_shares_conditiontrade_buy { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_details> t_account_shares_conditiontrade_buy_details { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_details_auto> t_account_shares_conditiontrade_buy_details_auto { get; set; }
@@ -64,7 +63,6 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_account_shares_conditiontrade_buy_group> t_account_shares_conditiontrade_buy_group { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_group_rel> t_account_shares_conditiontrade_buy_group_rel { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_group_share_account> t_account_shares_conditiontrade_buy_group_share_account { get; set; }
-        public virtual DbSet<t_account_shares_conditiontrade_buy_group_syncro_account> t_account_shares_conditiontrade_buy_group_syncro_account { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_plate> t_account_shares_conditiontrade_buy_plate { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_trend_par_template> t_account_shares_conditiontrade_buy_trend_par_template { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_trend_template> t_account_shares_conditiontrade_buy_trend_template { get; set; }
@@ -257,6 +255,13 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_account_baseinfo> t_account_baseinfo { get; set; }
         public virtual DbSet<t_broker_account_info> t_broker_account_info { get; set; }
         public virtual DbSet<t_account_shares_buy_setting> t_account_shares_buy_setting { get; set; }
+        public virtual DbSet<t_account_shares_buy_synchro_setting_authorized_group> t_account_shares_buy_synchro_setting_authorized_group { get; set; }
+        public virtual DbSet<t_account_shares_buy_synchro_setting_authorized_group_rel> t_account_shares_buy_synchro_setting_authorized_group_rel { get; set; }
+        public virtual DbSet<t_account_shares_buy_synchro_setting_group> t_account_shares_buy_synchro_setting_group { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_buy_group_syncro_account> t_account_shares_conditiontrade_buy_group_syncro_account { get; set; }
+        public virtual DbSet<t_account_tab_setting> t_account_tab_setting { get; set; }
+        public virtual DbSet<t_account_shares_conditiontrade_buy_trirecord> t_account_shares_conditiontrade_buy_trirecord { get; set; }
+        public virtual DbSet<t_shares_transactiondata_update> t_shares_transactiondata_update { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)

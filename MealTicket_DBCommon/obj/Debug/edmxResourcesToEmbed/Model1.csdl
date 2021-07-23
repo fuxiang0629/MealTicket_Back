@@ -37,32 +37,6 @@
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
-  <EntityType Name="t_account_baseinfo">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Mobile" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="NickName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="HeadUrl" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
-    <Property Name="Sex" Type="Int32" Nullable="false" />
-    <Property Name="BirthDay" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-    <Property Name="RecommandCode" Type="String" MaxLength="32" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="ReferId" Type="Int64" />
-    <Property Name="ForbidStatus" Type="Int32" Nullable="false" />
-    <Property Name="CashStatus" Type="Int32" Nullable="false" />
-    <Property Name="MonitorStatus" Type="Int32" Nullable="false" />
-    <Property Name="MultipleChangeStatus" Type="Int32" Nullable="false" />
-    <Property Name="Status" Type="Int32" Nullable="false" />
-    <Property Name="QrCodeUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-    <Property Name="RegisterPageUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-    <Property Name="PostersUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-    <Property Name="PostersComposeUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
-    <Property Name="LoginPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="TransactionPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
-  </EntityType>
   <EntityType Name="t_account_cash_record">
     <Key>
       <PropertyRef Name="Id" />
@@ -263,19 +237,6 @@
     <Property Name="DeviceUA" Type="String" MaxLength="512" FixedLength="false" Unicode="true" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
-  <EntityType Name="t_account_shares_buy_setting">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="AccountId" Type="Int64" Nullable="false" />
-    <Property Name="Type" Type="Int32" Nullable="false" />
-    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-    <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
-    <Property Name="ParValue" Type="Int64" Nullable="false" />
-    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
-  </EntityType>
   <EntityType Name="t_account_shares_buy_setting_par">
     <Key>
       <PropertyRef Name="Id" />
@@ -308,15 +269,6 @@
     <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="SettingId" Type="Int64" Nullable="false" />
     <Property Name="FollowAccountId" Type="Int64" Nullable="false" />
-    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-  </EntityType>
-  <EntityType Name="t_account_shares_buy_synchro_setting_group">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="SettingId" Type="Int64" Nullable="false" />
-    <Property Name="GroupId" Type="Int64" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_buy">
@@ -509,6 +461,7 @@
     <Property Name="MaxBuyCount" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CurrSyncroIndex" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_buy_group_rel">
     <Key>
@@ -527,16 +480,6 @@
     <Property Name="GroupId" Type="Int64" Nullable="false" />
     <Property Name="AccountId" Type="Int64" Nullable="false" />
     <Property Name="ShareAccountId" Type="Int64" Nullable="false" />
-    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-  </EntityType>
-  <EntityType Name="t_account_shares_conditiontrade_buy_group_syncro_account">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="GroupId" Type="Int64" Nullable="false" />
-    <Property Name="AccountId" Type="Int64" Nullable="false" />
-    <Property Name="SyncroAccountId" Type="Int64" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_buy_plate">
@@ -924,6 +867,7 @@
     <Property Name="EntrustId" Type="Int64" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CreateAccountId" Type="Int64" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_hold_conditiontrade_child">
     <Key>
@@ -1428,30 +1372,6 @@
     <Property Name="BrokerName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
     <Property Name="Version" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
     <Property Name="Status" Type="Int32" Nullable="false" />
-    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
-  </EntityType>
-  <EntityType Name="t_broker_account_info">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="AccountCode" Type="String" MaxLength="128" FixedLength="false" Unicode="true" Nullable="false" />
-    <Property Name="AccountType" Type="Int32" Nullable="false" />
-    <Property Name="AccountNo" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="TradeAccountNo0" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="TradeAccountNo1" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="Holder0" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="Holder1" Type="String" MaxLength="200" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="JyPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="TxPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="BrokerCode" Type="Int32" Nullable="false" />
-    <Property Name="DepartmentCode" Type="Int32" Nullable="false" />
-    <Property Name="InitialFunding" Type="Int64" Nullable="false" />
-    <Property Name="Status" Type="Int32" Nullable="false" />
-    <Property Name="SynchronizationStatus" Type="Int32" Nullable="false" />
-    <Property Name="SynchronizationTime" Type="DateTime" Precision="3" />
-    <Property Name="IsPrivate" Type="Boolean" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
@@ -3443,7 +3363,6 @@
   <EntityContainer Name="meal_ticketEntities" annotation:LazyLoadingEnabled="true">
     <EntitySet Name="t_account_api" EntityType="Self.t_account_api" />
     <EntitySet Name="t_account_bank_card" EntityType="Self.t_account_bank_card" />
-    <EntitySet Name="t_account_baseinfo" EntityType="Self.t_account_baseinfo" />
     <EntitySet Name="t_account_cash_record" EntityType="Self.t_account_cash_record" />
     <EntitySet Name="t_account_cash_record_details" EntityType="Self.t_account_cash_record_details" />
     <EntitySet Name="t_account_follow_apply_record" EntityType="Self.t_account_follow_apply_record" />
@@ -3458,11 +3377,9 @@
     <EntitySet Name="t_account_recommend_prize_type" EntityType="Self.t_account_recommend_prize_type" />
     <EntitySet Name="t_account_recommend_prize_type_level" EntityType="Self.t_account_recommend_prize_type_level" />
     <EntitySet Name="t_account_registerLog" EntityType="Self.t_account_registerLog" />
-    <EntitySet Name="t_account_shares_buy_setting" EntityType="Self.t_account_shares_buy_setting" />
     <EntitySet Name="t_account_shares_buy_setting_par" EntityType="Self.t_account_shares_buy_setting_par" />
     <EntitySet Name="t_account_shares_buy_synchro_setting" EntityType="Self.t_account_shares_buy_synchro_setting" />
     <EntitySet Name="t_account_shares_buy_synchro_setting_follow" EntityType="Self.t_account_shares_buy_synchro_setting_follow" />
-    <EntitySet Name="t_account_shares_buy_synchro_setting_group" EntityType="Self.t_account_shares_buy_synchro_setting_group" />
     <EntitySet Name="t_account_shares_conditiontrade_buy" EntityType="Self.t_account_shares_conditiontrade_buy" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_details" EntityType="Self.t_account_shares_conditiontrade_buy_details" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_details_auto" EntityType="Self.t_account_shares_conditiontrade_buy_details_auto" />
@@ -3480,7 +3397,6 @@
     <EntitySet Name="t_account_shares_conditiontrade_buy_group" EntityType="Self.t_account_shares_conditiontrade_buy_group" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_group_rel" EntityType="Self.t_account_shares_conditiontrade_buy_group_rel" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_group_share_account" EntityType="Self.t_account_shares_conditiontrade_buy_group_share_account" />
-    <EntitySet Name="t_account_shares_conditiontrade_buy_group_syncro_account" EntityType="Self.t_account_shares_conditiontrade_buy_group_syncro_account" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_plate" EntityType="Self.t_account_shares_conditiontrade_buy_plate" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_trend_par_template" EntityType="Self.t_account_shares_conditiontrade_buy_trend_par_template" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_trend_template" EntityType="Self.t_account_shares_conditiontrade_buy_trend_template" />
@@ -3546,7 +3462,6 @@
     <EntitySet Name="t_banner" EntityType="Self.t_banner" />
     <EntitySet Name="t_banner_group" EntityType="Self.t_banner_group" />
     <EntitySet Name="t_broker" EntityType="Self.t_broker" />
-    <EntitySet Name="t_broker_account_info" EntityType="Self.t_broker_account_info" />
     <EntitySet Name="t_broker_account_info_capital" EntityType="Self.t_broker_account_info_capital" />
     <EntitySet Name="t_broker_account_info_frontaccount_rel" EntityType="Self.t_broker_account_info_frontaccount_rel" />
     <EntitySet Name="t_broker_account_info_position" EntityType="Self.t_broker_account_info_position" />
@@ -3891,24 +3806,6 @@
       <Parameter Name="errorMessage" Mode="InOut" Type="String" />
       <Parameter Name="token" Mode="InOut" Type="String" />
     </FunctionImport>
-    <FunctionImport Name="P_ApplyTradeCancel">
-      <Parameter Name="accountId" Mode="In" Type="Int64" />
-      <Parameter Name="entrustId" Mode="In" Type="Int64" />
-      <Parameter Name="errorCode" Mode="InOut" Type="Int32" />
-      <Parameter Name="errorMessage" Mode="InOut" Type="String" />
-    </FunctionImport>
-    <FunctionImport Name="P_ApplyTradeSell">
-      <Parameter Name="accountId" Mode="In" Type="Int64" />
-      <Parameter Name="holdId" Mode="In" Type="Int64" />
-      <Parameter Name="sellCount" Mode="In" Type="Int32" />
-      <Parameter Name="sellType" Mode="In" Type="Int32" />
-      <Parameter Name="sellPrice" Mode="In" Type="Int64" />
-      <Parameter Name="type" Mode="In" Type="Int32" />
-      <Parameter Name="isFollow" Mode="In" Type="Boolean" />
-      <Parameter Name="errorCode" Mode="InOut" Type="Int32" />
-      <Parameter Name="errorMessage" Mode="InOut" Type="String" />
-      <Parameter Name="sellId" Mode="InOut" Type="Int64" />
-    </FunctionImport>
     <FunctionImport Name="P_AutoBuy_OtherPar_Calculate">
       <Parameter Name="detailsId" Mode="In" Type="Int64" />
       <Parameter Name="result" Mode="InOut" Type="String" />
@@ -4176,5 +4073,177 @@
       <Parameter Name="errorMessage" Mode="InOut" Type="String" />
       <Parameter Name="buyId" Mode="InOut" Type="Int64" />
     </FunctionImport>
+    <FunctionImport Name="P_ApplyTradeSell">
+      <Parameter Name="accountId" Mode="In" Type="Int64" />
+      <Parameter Name="holdId" Mode="In" Type="Int64" />
+      <Parameter Name="sellCount" Mode="In" Type="Int32" />
+      <Parameter Name="sellType" Mode="In" Type="Int32" />
+      <Parameter Name="sellPrice" Mode="In" Type="Int64" />
+      <Parameter Name="type" Mode="In" Type="Int32" />
+      <Parameter Name="mainAccountId" Mode="In" Type="Int64" />
+      <Parameter Name="errorCode" Mode="InOut" Type="Int32" />
+      <Parameter Name="errorMessage" Mode="InOut" Type="String" />
+      <Parameter Name="sellId" Mode="InOut" Type="Int64" />
+    </FunctionImport>
+    <FunctionImport Name="P_ApplyTradeCancel">
+      <Parameter Name="accountId" Mode="In" Type="Int64" />
+      <Parameter Name="entrustId" Mode="In" Type="Int64" />
+      <Parameter Name="mainAccountId" Mode="In" Type="Int64" />
+      <Parameter Name="errorCode" Mode="InOut" Type="Int32" />
+      <Parameter Name="errorMessage" Mode="InOut" Type="String" />
+    </FunctionImport>
+    <EntitySet Name="t_account_baseinfo" EntityType="meal_ticketModel.t_account_baseinfo" />
+    <EntitySet Name="t_broker_account_info" EntityType="meal_ticketModel.t_broker_account_info" />
+    <EntitySet Name="t_account_shares_buy_setting" EntityType="meal_ticketModel.t_account_shares_buy_setting" />
+    <EntitySet Name="t_account_shares_buy_synchro_setting_authorized_group" EntityType="meal_ticketModel.t_account_shares_buy_synchro_setting_authorized_group" />
+    <EntitySet Name="t_account_shares_buy_synchro_setting_authorized_group_rel" EntityType="meal_ticketModel.t_account_shares_buy_synchro_setting_authorized_group_rel" />
+    <EntitySet Name="t_account_shares_buy_synchro_setting_group" EntityType="meal_ticketModel.t_account_shares_buy_synchro_setting_group" />
+    <EntitySet Name="t_account_shares_conditiontrade_buy_group_syncro_account" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_group_syncro_account" />
+    <EntitySet Name="t_account_tab_setting" EntityType="meal_ticketModel.t_account_tab_setting" />
+    <EntitySet Name="t_account_shares_conditiontrade_buy_trirecord" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_trirecord" />
+    <EntitySet Name="t_shares_transactiondata_update" EntityType="meal_ticketModel.t_shares_transactiondata_update" />
   </EntityContainer>
+  <EntityType Name="t_account_baseinfo">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Mobile" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="NickName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="HeadUrl" Type="String" MaxLength="1024" FixedLength="false" Unicode="false" />
+    <Property Name="Sex" Type="Int32" Nullable="false" />
+    <Property Name="BirthDay" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="RecommandCode" Type="String" Nullable="false" MaxLength="32" FixedLength="false" Unicode="false" />
+    <Property Name="ReferId" Type="Int64" />
+    <Property Name="ForbidStatus" Type="Int32" Nullable="false" />
+    <Property Name="CashStatus" Type="Int32" Nullable="false" />
+    <Property Name="MonitorStatus" Type="Int32" Nullable="false" />
+    <Property Name="MultipleChangeStatus" Type="Int32" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="QrCodeUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="RegisterPageUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="PostersUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="PostersComposeUrl" Type="String" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="LoginPassword" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="TransactionPassword" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_broker_account_info">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountCode" Type="String" Nullable="false" MaxLength="128" FixedLength="false" Unicode="true" />
+    <Property Name="AccountType" Type="Int32" Nullable="false" />
+    <Property Name="AccountNo" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="TradeAccountNo0" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="TradeAccountNo1" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Holder0" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="Holder1" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+    <Property Name="JyPassword" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="TxPassword" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="BrokerCode" Type="Int32" Nullable="false" />
+    <Property Name="DepartmentCode" Type="Int32" Nullable="false" />
+    <Property Name="InitialFunding" Type="Int64" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="SynchronizationStatus" Type="Int32" Nullable="false" />
+    <Property Name="SynchronizationTime" Type="DateTime" Precision="3" />
+    <Property Name="IsPrivate" Type="Boolean" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_buy_setting">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="ParValueJson" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_buy_synchro_setting_authorized_group">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="GroupName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_buy_synchro_setting_authorized_group_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="GroupId" Type="Int64" Nullable="false" />
+    <Property Name="SettingId" Type="Int64" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_buy_synchro_setting_group">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SettingId" Type="Int64" Nullable="false" />
+    <Property Name="GroupId" Type="Int64" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_conditiontrade_buy_group_syncro_account">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="GroupId" Type="Int64" Nullable="false" />
+    <Property Name="AuthorizedGroupId" Type="Int64" Nullable="false" />
+    <Property Name="OrderIndex" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_tab_setting">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
+    <Property Name="Value" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_conditiontrade_buy_trirecord">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="CreateAccountId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="SharesName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="BuyAuto" Type="Boolean" Nullable="false" />
+    <Property Name="EntrustId" Type="Int64" Nullable="false" />
+    <Property Name="EntrustErrorDes" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="SourceFrom" Type="Int32" Nullable="false" />
+    <Property Name="DetailsId" Type="Int64" Nullable="false" />
+    <Property Name="TriggerTime" Type="DateTime" Precision="3" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="TriAccountId" Type="Int64" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_transactiondata_update">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
 </Schema>

@@ -23,6 +23,11 @@ namespace MealTicket_Web_Handler.Model
         public long FollowId { get; set; }
 
         /// <summary>
+        /// 跟投账户Id
+        /// </summary>
+        public long FollowAccountId { get; set; }
+
+        /// <summary>
         /// 跟投人员手机号
         /// </summary>
         public string FollowAccountMobile { get; set; }
@@ -46,5 +51,15 @@ namespace MealTicket_Web_Handler.Model
         /// 数据创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }
+
+        /// <summary>
+        /// 最大可用余额
+        /// </summary>
+        public long MaxDeposit { get; set; }
+
+        /// <summary>
+        /// 最大跟投倍数
+        /// </summary>
+        public long MaxFundMultiple { get; set; }
     }
 }

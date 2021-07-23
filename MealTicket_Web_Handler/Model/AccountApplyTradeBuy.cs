@@ -45,11 +45,29 @@ namespace MealTicket_Web_Handler
         /// <summary>
         /// 跟投人员列表
         /// </summary>
-        public List<long> FollowList { get; set; }
+        public List<FollowBuyInfo> FollowList { get; set; }
 
         /// <summary>
         /// 自动买入Id
         /// </summary>
         public long AutoDetailsId { get; set; }
+
+        /// <summary>
+        /// 跟投人员列表
+        /// </summary>
+        public List<long> SyncroAccountList { get; set; }
+    }
+
+    public class FollowBuyInfo
+    {
+        /// <summary>
+        /// 跟投账户Id
+        /// </summary>
+        public long AccountId { get; set; }
+
+        /// <summary>
+        /// 购买金额-1表示全仓 0表示跟随主账户百分比 其他表示具体金额
+        /// </summary>
+        public long BuyAmount { get; set; }
     }
 }

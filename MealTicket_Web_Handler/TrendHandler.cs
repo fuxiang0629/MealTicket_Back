@@ -2898,180 +2898,274 @@ namespace MealTicket_Web_Handler
         {
             using (var db = new meal_ticketEntities())
             {
-                //查询跟投人员
-                var followList = (from item in db.t_account_follow_rel
-                                  join item2 in db.t_account_baseinfo on item.FollowAccountId equals item2.Id
-                                  join item3 in db.t_account_wallet on item.FollowAccountId equals item3.AccountId
-                                  where item.AccountId == basedata.AccountId && item2.Status == 1
-                                  select item3).ToList();
-
-                List<dynamic> buyList = new List<dynamic>();
                 if (request.AccountId == 0)
                 {
                     request.AccountId = basedata.AccountId;
-                    long RemainDeposit = 0;
-                    long Deposit = 0;
-                    //计算本人购买仓位比
-                    var wallet = (from item in db.t_account_wallet
-                                  where item.AccountId == request.AccountId
-                                  select item).FirstOrDefault();
-                    if (wallet == null)
-                    {
-                        throw new WebApiException(400, "账户有误");
-                    }
-                    Deposit = wallet.Deposit;
-
-                    var tempBuySetting = DbHelper.GetAccountBuySetting(0, 1);
-                    var buySetting = tempBuySetting.Where(e=>e.AccountId== request.AccountId).FirstOrDefault();
-                    if (buySetting != null)
-                    {
-                        var valueObj = JsonConvert.DeserializeObject<dynamic>(buySetting.ParValueJson);
-                        long parValue = valueObj.Value;
-                        RemainDeposit = parValue / 100 * 100;
-                    }
-
-                    if (request.BuyAmount > (Deposit - RemainDeposit))
-                    {
-                        request.BuyAmount = Deposit - RemainDeposit;
-                    }
-                    buyList.Add(new
-                    {
-                        AccountId = request.AccountId,
-                        BuyAmount = request.BuyAmount,
-                        IsFollow = false
-                    });
-
-                    var buyRate = request.BuyAmount * 1.0 / (Deposit - RemainDeposit);//仓位占比
-                    foreach (var account in request.FollowList)
-                    {
-                        var temp = followList.Where(e => e.AccountId == account).FirstOrDefault();
-                        if (temp == null)
-                        {
-                            continue;
-                        }
-                        long followRemainDeposit = 0;
-                        var followBuySetting = tempBuySetting.Where(e=>e.AccountId== account).FirstOrDefault();
-                        if (followBuySetting != null)
-                        {
-                            var valueObj = JsonConvert.DeserializeObject<dynamic>(followBuySetting.ParValueJson);
-                            long parValue = valueObj.Value;
-                            followRemainDeposit = parValue / 100 * 100;
-                        }
-                        buyList.Add(new
-                        {
-                            AccountId = account,
-                            BuyAmount = (long)((temp.Deposit - followRemainDeposit) * buyRate),
-                            IsFollow = true
-                        });
-                    }
                 }
-                else
-                {
-                    if (followList.Where(e => e.AccountId == request.AccountId).FirstOrDefault() == null)
-                    {
-                        throw new WebApiException(400, "无权操作");
-                    }
-                    buyList.Add(new
-                    {
-                        AccountId = request.AccountId,
-                        BuyAmount = request.BuyAmount,
-                        IsFollow = false
-                    });
-                }
+                var buyList=TradeToBuildFollow(db, basedata.AccountId,request.AccountId,request.BuyAmount,request.FollowList);
 
-                long mainEntrustId = 0;
+                TradeToBuy(db,buyList, basedata.AccountId,request.Market,request.SharesCode,request.BuyPrice,request.AutoDetailsId);
 
-                List<dynamic> sendDataList = new List<dynamic>();
-                string error = "";
-                int i = 0;
-                foreach (var buy in buyList)
+                //判断同步
+                //筛选有效同步账号
+                var syncroSettingList = (from item in db.t_account_shares_buy_synchro_setting
+                                         where item.MainAccountId == request.AccountId && item.Status == 1 && request.SyncroAccountList.Contains(item.AccountId)
+                                         select item).ToList();
+                List<long> settingIdList = syncroSettingList.Select(e => e.Id).ToList();
+                //所有同步指定跟投账户
+                var syncroFollow = (from item in db.t_account_shares_buy_synchro_setting_follow
+                                    where settingIdList.Contains(item.SettingId)
+                                    select item).ToList();
+
+                foreach (var item in syncroSettingList)
                 {
-                    long buyId = 0;
-                    using (var tran = db.Database.BeginTransaction())
+                    try
                     {
-                        try
+                        List<FollowBuyInfo> followList = new List<FollowBuyInfo>();
+                        if (item.FollowType == 0)//指定跟投账户
                         {
-                            ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
-                            ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
-                            ObjectParameter buyIdDb = new ObjectParameter("buyId", 0);
-                            db.P_ApplyTradeBuy(buy.AccountId, request.Market, request.SharesCode, buy.BuyAmount, request.FundMultiple, request.BuyPrice, null, buy.IsFollow, basedata.AccountId, errorCodeDb, errorMessageDb, buyIdDb);
-                            int errorCode = (int)errorCodeDb.Value;
-                            string errorMessage = errorMessageDb.Value.ToString();
-                            if (errorCode != 0)
+                            followList = (from x in syncroFollow
+                                          where x.SettingId == item.Id
+                                          select new FollowBuyInfo
+                                          {
+                                              AccountId = x.FollowAccountId,
+                                              BuyAmount = 0
+                                          }).ToList();
+                        }
+                        else if (item.FollowType == 1)//分组轮序
+                        {
+                            using (var tran = db.Database.BeginTransaction())
                             {
-                                throw new WebApiException(errorCode, errorMessage);
-                            }
-                            buyId = (long)buyIdDb.Value;
-
-                            var entrust = (from item in db.t_account_shares_entrust
-                                           where item.Id == buyId
-                                           select item).FirstOrDefault();
-                            if (entrust == null)
-                            {
-                                throw new WebApiException(400, "未知错误");
-                            }
-                            if (buy.AccountId != basedata.AccountId)//不是自己买，绑定跟买关系
-                            {
-                                db.t_account_shares_entrust_follow.Add(new t_account_shares_entrust_follow
+                                try
                                 {
-                                    CreateTime = DateTime.Now,
-                                    MainAccountId = basedata.AccountId,
-                                    MainEntrustId = mainEntrustId,
-                                    FollowAccountId = buy.AccountId,
-                                    FollowEntrustId = entrust.Id,
-                                });
-                                db.SaveChanges();
-                            }
-                            else
-                            {
-                                mainEntrustId = entrust.Id;
-                            }
+                                    string sql = "declare @parValueJson nvarchar(max),@id bigint;select @id=Id,@parValueJson=ParValueJson from t_account_shares_buy_setting with(xlock) where AccountId=" + item.AccountId + " and [Type]=3 if(@id is null) begin insert into t_account_shares_buy_setting(AccountId,[Type],Name,[Description],ParValueJson,CreateTime,LastModified) values(" + item.AccountId + ",3,'跟投分组轮序位置','跟投分组轮序位置','{\"Value\":1}',getdate(),getdate());set @parValueJson = '{\"Value\":0}';end else begin declare @parValue bigint; set @parValue = dbo.f_parseJson(@parValueJson, 'Value'); set @parValue = @parValue + 1; update t_account_shares_buy_setting set ParValueJson = '{\"Value\":' + convert(varchar(10), @parValue) + '}' where Id = @id; end select @parValueJson";
+                                    string turnJson = db.Database.SqlQuery<string>(sql).FirstOrDefault();
+                                    var tempTurn = JsonConvert.DeserializeObject<dynamic>(turnJson);
+                                    long turn = tempTurn.Value;
 
-                            sendDataList.Add(new
-                            {
-                                BuyId = buyId,
-                                BuyCount = entrust.EntrustCount,
-                                BuyTime = DateTime.Now.ToString("yyyy-MM-dd")
-                            });
+                                    //查询跟投分组信息
+                                    sql = string.Format(@"select Id
+  from t_account_follow_group with(nolock)
+  where AccountId = {0} and[Status] = 1
+  order by OrderIndex", item.AccountId);
+                                    var groupList = db.Database.SqlQuery<long>(sql).ToList();
+                                    int groupCount = groupList.Count();
+                                    if (groupCount > 0)
+                                    {
+                                        int thisIndex = (int)turn % groupCount;
+                                        long thisId = groupList[thisIndex];
 
-                            tran.Commit();
-                            i++;
-                        }
-                        catch (Exception ex)
-                        {
-                            error = ex.Message;
-                            Logger.WriteFileLog("购买失败", ex);
-                            tran.Rollback();
-                            if (buy.AccountId == basedata.AccountId)//主账号失败直接退出
-                            {
-                                sendDataList = new List<dynamic>();
-                                break;
+                                        sql = string.Format(@"select t2.FollowAccountId AccountId,t1.BuyAmount
+  from t_account_follow_group t with(nolock)
+  inner
+  join t_account_follow_group_rel t1 with(nolock) on t.Id = t1.GroupId
+
+inner
+  join t_account_follow_rel t2 with(nolock) on t1.RelId = t2.Id
+  where t.Id = {0} and t.AccountId = {1} and t.[Status]= 1 and t2.AccountId = {1}", thisId, item.AccountId);
+                                        followList = db.Database.SqlQuery<FollowBuyInfo>(sql).ToList();
+                                    }
+
+                                    tran.Commit();
+                                }
+                                catch (Exception ex)
+                                {
+                                    Logger.WriteFileLog("手动更新跟投分组出错", ex);
+                                    tran.Rollback();
+                                }
                             }
                         }
+
+                        buyList = TradeToBuildFollow(db, item.AccountId, item.AccountId, item.BuyAmount, followList);
+                        TradeToBuy(db, buyList, item.AccountId, request.Market, request.SharesCode, request.BuyPrice, 0);
                     }
-
-                    if (request.AutoDetailsId > 0 && i == 1 && buyId > 0)
+                    catch (Exception ex)
                     {
-                        var details = (from x in db.t_account_shares_conditiontrade_buy_details
-                                       where x.Id == request.AutoDetailsId
-                                       select x).FirstOrDefault();
-                        if (details != null)
+                        Logger.WriteFileLog("手动同步购买失败",ex);
+                    }
+                }
+            }
+        }
+
+        private List<dynamic> TradeToBuildFollow(meal_ticketEntities db, long mainAccountId,long buyAccountId,long buyAmount,List<FollowBuyInfo> followBuyList)
+        {
+            //查询跟投人员
+            var followList = (from item in db.t_account_follow_rel
+                              join item2 in db.t_account_baseinfo on item.FollowAccountId equals item2.Id
+                              join item3 in db.t_account_wallet on item.FollowAccountId equals item3.AccountId
+                              where item.AccountId == mainAccountId && item2.Status == 1
+                              select item3).ToList();
+
+            List<dynamic> buyList = new List<dynamic>();
+            if (buyAccountId == 0 || mainAccountId== buyAccountId)
+            {
+                buyAccountId = mainAccountId;
+                long RemainDeposit = 0;
+                long Deposit = 0;
+                //计算本人购买仓位比
+                var wallet = (from item in db.t_account_wallet
+                              where item.AccountId == buyAccountId
+                              select item).FirstOrDefault();
+                if (wallet == null)
+                {
+                    throw new WebApiException(400, "账户有误");
+                }
+                Deposit = wallet.Deposit;
+
+                var tempBuySetting = DbHelper.GetAccountBuySetting(0, 1);
+                var buySetting = tempBuySetting.Where(e => e.AccountId == buyAccountId).FirstOrDefault();
+                if (buySetting != null)
+                {
+                    var valueObj = JsonConvert.DeserializeObject<dynamic>(buySetting.ParValueJson);
+                    long parValue = valueObj.Value;
+                    RemainDeposit = parValue / 100 * 100;
+                }
+
+                if (buyAmount > (Deposit - RemainDeposit))
+                {
+                    buyAmount = Deposit - RemainDeposit;
+                }
+                buyList.Add(new
+                {
+                    AccountId = buyAccountId,
+                    BuyAmount = buyAmount,
+                    IsFollow = false
+                });
+
+                var buyRate = buyAmount * 1.0 / (Deposit - RemainDeposit);//仓位占比
+                foreach (var account in followBuyList)
+                {
+                    var temp = followList.Where(e => e.AccountId == account.AccountId).FirstOrDefault();
+                    if (temp == null)
+                    {
+                        continue;
+                    }
+                    long followRemainDeposit = 0;
+                    var followBuySetting = tempBuySetting.Where(e => e.AccountId == account.AccountId).FirstOrDefault();
+                    if (followBuySetting != null)
+                    {
+                        var valueObj = JsonConvert.DeserializeObject<dynamic>(followBuySetting.ParValueJson);
+                        long parValue = valueObj.Value;
+                        followRemainDeposit = parValue / 100 * 100;
+                    }
+                    buyList.Add(new
+                    {
+                        AccountId = account.AccountId,
+                        BuyAmount = account.BuyAmount == -1 ? temp.Deposit - followRemainDeposit : account.BuyAmount == 0 ? (long)((temp.Deposit - followRemainDeposit) * buyRate) : account.BuyAmount,
+                        IsFollow = true
+                    });
+                }
+            }
+            else
+            {
+                if (followList.Where(e => e.AccountId == buyAccountId).FirstOrDefault() == null)
+                {
+                    throw new WebApiException(400, "无权操作");
+                }
+                buyList.Add(new
+                {
+                    AccountId = buyAccountId,
+                    BuyAmount = buyAmount,
+                    IsFollow = false
+                });
+            }
+            return buyList;
+        }
+
+        private void TradeToBuy(meal_ticketEntities db, List<dynamic> buyList, long mainAccountId, int market, string sharesCode, long buyPrice, long autoDetailsId)
+        {
+            long mainEntrustId = 0;
+
+            List<dynamic> sendDataList = new List<dynamic>();
+            string error = "";
+            int i = 0;
+            foreach (var buy in buyList)
+            {
+                long buyId = 0;
+                using (var tran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
+                        ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
+                        ObjectParameter buyIdDb = new ObjectParameter("buyId", 0);
+                        db.P_ApplyTradeBuy(buy.AccountId, market, sharesCode, buy.BuyAmount, 0, buyPrice, null, buy.IsFollow, mainAccountId, errorCodeDb, errorMessageDb, buyIdDb);
+                        int errorCode = (int)errorCodeDb.Value;
+                        string errorMessage = errorMessageDb.Value.ToString();
+                        if (errorCode != 0)
                         {
-                            details.BusinessStatus = 4;
-                            details.EntrustId = buyId;
+                            throw new WebApiException(errorCode, errorMessage);
+                        }
+                        buyId = (long)buyIdDb.Value;
+
+                        var entrust = (from item in db.t_account_shares_entrust
+                                       where item.Id == buyId
+                                       select item).FirstOrDefault();
+                        if (entrust == null)
+                        {
+                            throw new WebApiException(400, "未知错误");
+                        }
+                        if (buy.AccountId != mainAccountId)//不是自己买，绑定跟买关系
+                        {
+                            db.t_account_shares_entrust_follow.Add(new t_account_shares_entrust_follow
+                            {
+                                CreateTime = DateTime.Now,
+                                MainAccountId = mainAccountId,
+                                MainEntrustId = mainEntrustId,
+                                FollowAccountId = buy.AccountId,
+                                FollowEntrustId = entrust.Id,
+                            });
                             db.SaveChanges();
                         }
+                        else
+                        {
+                            mainEntrustId = entrust.Id;
+                        }
+
+                        sendDataList.Add(new
+                        {
+                            BuyId = buyId,
+                            BuyCount = entrust.EntrustCount,
+                            BuyTime = DateTime.Now.ToString("yyyy-MM-dd")
+                        });
+
+                        tran.Commit();
+                        i++;
+                    }
+                    catch (Exception ex)
+                    {
+                        error = ex.Message;
+                        Logger.WriteFileLog("购买失败", ex);
+                        tran.Rollback();
+                        if (!buy.IsFollow)//非跟投失败直接退出
+                        {
+                            sendDataList = new List<dynamic>();
+                            break;
+                        }
                     }
                 }
-                if (sendDataList.Count() <= 0)
+
+                if (autoDetailsId > 0 && i == 1 && buyId > 0)
                 {
-                    throw new WebApiException(400, error);
+                    var details = (from x in db.t_account_shares_conditiontrade_buy_details
+                                   where x.Id == autoDetailsId
+                                   select x).FirstOrDefault();
+                    if (details != null)
+                    {
+                        details.BusinessStatus = 4;
+                        details.EntrustId = buyId;
+                        db.SaveChanges();
+                    }
                 }
-                bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new { type = 1, data = sendDataList })), "SharesBuy", "s1");
-                if (!isSendSuccess)
-                {
-                    throw new WebApiException(400, "买入失败,请撤销重试");
-                }
+            }
+            if (sendDataList.Count() <= 0)
+            {
+                throw new WebApiException(400, error);
+            }
+            bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new { type = 1, data = sendDataList })), "SharesBuy", "s1");
+            if (!isSendSuccess)
+            {
+                throw new WebApiException(400, "买入失败,请撤销重试");
             }
         }
 
@@ -4696,6 +4790,7 @@ namespace MealTicket_Web_Handler
                         MaxId = 0,
                         TotalCount = 0,
                         List = (from item in plateList
+                                orderby item.item.Name
                                 select new SharesPlateInfo
                                 {
                                     Id = item.item.Id,
@@ -4832,6 +4927,50 @@ namespace MealTicket_Web_Handler
             }
         }
 
+        public void BatchAddConditionBuyPlate(DetailsRequest request, HeadBase basedata)
+        {
+            if (request.Id == 0)
+            {
+                request.Id = basedata.AccountId;
+            }
+            using (var db = new meal_ticketEntities())
+            using (var tran=db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var plateList = from item in db.t_shares_plate
+                                    join item2 in db.t_shares_plate_type_business on item.Type equals item2.Id
+                                    where item.Status == 1 && (item.ChooseStatus == 1 || (item2.IsBasePlate == 1 && item.BaseStatus == 1))
+                                    select item;
+
+                    var accountPlate = (from item in db.t_account_shares_conditiontrade_buy_plate
+                                        where item.AccountId == request.Id
+                                        select item).ToList();
+                    db.t_account_shares_conditiontrade_buy_plate.RemoveRange(accountPlate);
+                    db.SaveChanges();
+
+                    foreach (var item in plateList)
+                    {
+                        db.t_account_shares_conditiontrade_buy_plate.Add(new t_account_shares_conditiontrade_buy_plate
+                        {
+                            AccountId = request.Id,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            PlateId = item.Id
+                        });
+                    }
+                    db.SaveChanges();
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
         public void DeleteConditionBuyPlate(DeleteRequest request, HeadBase basedata)
         {
             using (var db = new meal_ticketEntities())
@@ -4845,6 +4984,25 @@ namespace MealTicket_Web_Handler
                 }
                 db.t_account_shares_conditiontrade_buy_plate.Remove(result);
                 db.SaveChanges();
+            }
+        }
+
+        public void BatchDeleteConditionBuyPlate(DeleteRequest request, HeadBase basedata)
+        {
+            if (request.Id == 0)
+            {
+                request.Id = basedata.AccountId;
+            }
+            using (var db = new meal_ticketEntities())
+            {
+                var result = (from item in db.t_account_shares_conditiontrade_buy_plate
+                              where item.AccountId == request.Id
+                              select item).ToList();
+                if (result.Count()>0)
+                {
+                    db.t_account_shares_conditiontrade_buy_plate.RemoveRange(result);
+                    db.SaveChanges();
+                }
             }
         }
 
@@ -13081,7 +13239,8 @@ select @buyId;";
                                     where tempGroupList.Contains(item.GroupId)
                                     select item).ToList();
                 var syncroAccount = (from item in db.t_account_shares_conditiontrade_buy_group_syncro_account
-                                    where tempGroupList.Contains(item.GroupId)
+                                     join item2 in db.t_account_shares_buy_synchro_setting_authorized_group on item.AuthorizedGroupId equals item2.Id
+                                    where tempGroupList.Contains(item.GroupId) && item2.Status==1
                                     select item).ToList();
 
                 foreach (var item in list)
@@ -13561,7 +13720,7 @@ select @buyId;";
         }
 
         /// <summary>
-        /// 查询条件买入自定义分组同步用户列表
+        /// 查询条件买入自定义分组同步被授权账户分组列表
         /// </summary>
         /// <param name="request"></param>
         /// <param name="basedata"></param>
@@ -13571,29 +13730,48 @@ select @buyId;";
             using (var db = new meal_ticketEntities())
             {
                 var syncroAccount = (from item in db.t_account_shares_conditiontrade_buy_group_syncro_account
-                                     join item2 in db.t_account_baseinfo on item.SyncroAccountId equals item2.Id into a
-                                     from ai in a.DefaultIfEmpty()
-                                     join item3 in db.t_account_shares_buy_synchro_setting on new { followAccountId = item.SyncroAccountId, MainAccountId = item.AccountId } equals new
-                                     {
-                                         followAccountId = item3.AccountId,
-                                         MainAccountId = item3.MainAccountId
-                                     } into b
-                                     from bi in b.DefaultIfEmpty()
-                                     where item.GroupId == request.Id
+                                     join item2 in db.t_account_shares_buy_synchro_setting_authorized_group on item.AuthorizedGroupId equals item2.Id
+                                     where item.GroupId == request.Id && item2.Status==1
+                                     orderby item.OrderIndex
                                      select new ConditiontradeBuyGroupSharesAccount
                                      {
-                                         CreateTime = item.CreateTime,
-                                         Id = item.Id,
-                                         Mobile = ai == null ? "" : ai.Mobile,
-                                         NickName = ai == null ? "" : ai.NickName,
-                                         Status = (bi == null || bi.Status != 1) ? 2 : 1
+                                         AuthorizedGroupId=item.AuthorizedGroupId,
+                                         CreateTime=item.CreateTime,
+                                         GroupName=item2.GroupName,
+                                         Status=item.Status,
+                                         Id=item.Id,
+                                         OrderIndex=item.OrderIndex,
+                                         IsNextBuyGroup=false
                                      }).ToList();
+                var buy_group = (from item in db.t_account_shares_conditiontrade_buy_group
+                                 where item.Id == request.Id
+                                 select item).FirstOrDefault();
+                if (buy_group == null)
+                {
+                    return new List<ConditiontradeBuyGroupSharesAccount>();
+                }
+                var tempSyncroAccountList = syncroAccount.Where(e => e.Status == 1).ToList();
+                if (tempSyncroAccountList.Count() > 0)
+                {
+                    int index = buy_group.CurrSyncroIndex % tempSyncroAccountList.Count();
+                    tempSyncroAccountList[index].IsNextBuyGroup = true;
+                }
+
+                List<long> groupIdList = syncroAccount.Select(e => e.AuthorizedGroupId).ToList();
+                var synchro_setting = (from item in db.t_account_shares_buy_synchro_setting
+                                       join item2 in db.t_account_shares_buy_synchro_setting_authorized_group_rel on item.Id equals item2.SettingId
+                                       where item.Status == 1 && groupIdList.Contains(item2.GroupId)
+                                       select item2).ToList();
+                foreach (var item in syncroAccount)
+                {
+                    item.AccountCount = synchro_setting.Where(e => e.GroupId == item.AuthorizedGroupId).Count();
+                }
                 return syncroAccount;
             }
         }
 
         /// <summary>
-        /// 添加条件买入自定义分组同步用户
+        /// 添加条件买入自定义分组同步被授权账户分组
         /// </summary>
         /// <param name="request"></param>
         /// <param name="basedata"></param>
@@ -13609,44 +13787,130 @@ select @buyId;";
                 {
                     throw new WebApiException(400, "分组不存在");
                 }
-                //判断用户是否存在
-                var shareAccount = (from item in db.t_account_baseinfo
-                                    where item.Mobile == request.Mobile
+                //判断被授权账户分组是否存在
+                var shareAccount = (from item in db.t_account_shares_buy_synchro_setting_authorized_group
+                                    where item.Id == request.AuthorizedGroupId
                                     select item).FirstOrDefault();
                 if (shareAccount == null)
                 {
-                    throw new WebApiException(400, "同步用户不存在");
-                }
-                if (group.AccountId == shareAccount.Id)
-                {
-                    throw new WebApiException(400, "不能同步给本人");
+                    throw new WebApiException(400, "判断被授权账户分组不存在");
                 }
 
                 //判断是否已经同步
                 var temp = (from item in db.t_account_shares_conditiontrade_buy_group_syncro_account
-                            where item.GroupId == request.GroupId && item.SyncroAccountId == shareAccount.Id
+                            where item.GroupId == request.GroupId && item.AuthorizedGroupId == request.AuthorizedGroupId
                             select item).FirstOrDefault();
                 if (temp != null)
                 {
-                    throw new WebApiException(400, "该用户已存在同步列表");
+                    throw new WebApiException(400, "该被授权账户分组已存在");
                 }
-                //判断是否允许同步操作
-                var synchro_setting = (from item in db.t_account_shares_buy_synchro_setting
-                                       where item.MainAccountId == basedata.AccountId && item.AccountId == shareAccount.Id && item.Status == 1
-                                       select item).FirstOrDefault();
-                if (synchro_setting == null)
-                {
-                    throw new WebApiException(400, "该用户未开通同步权限");
-                }
-
                 db.t_account_shares_conditiontrade_buy_group_syncro_account.Add(new t_account_shares_conditiontrade_buy_group_syncro_account
                 {
-                    SyncroAccountId = shareAccount.Id,
-                    AccountId = group.AccountId,
+                    AuthorizedGroupId = request.AuthorizedGroupId,
+                    OrderIndex = request.OrderIndex,
                     CreateTime = DateTime.Now,
+                    Status=1,
                     GroupId = request.GroupId
                 });
                 db.SaveChanges();
+            }
+        }
+
+        public void ModifyConditiontradeBuyGroupSyncroAccount(ModifyConditiontradeBuyGroupSyncroAccountRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var dis = (from item in db.t_account_shares_conditiontrade_buy_group_syncro_account
+                           where item.Id == request.Id
+                           select item).FirstOrDefault();
+                if (dis == null)
+                {
+                    throw new WebApiException(400,"数据不存在");
+                }
+                //判断被授权账户分组是否存在
+                var shareAccount = (from item in db.t_account_shares_buy_synchro_setting_authorized_group
+                                    where item.Id == request.AuthorizedGroupId
+                                    select item).FirstOrDefault();
+                if (shareAccount == null)
+                {
+                    throw new WebApiException(400, "判断被授权账户分组不存在");
+                }
+
+                //判断是否已经同步
+                var temp = (from item in db.t_account_shares_conditiontrade_buy_group_syncro_account
+                            where item.GroupId == dis.GroupId && item.AuthorizedGroupId == request.AuthorizedGroupId && item.Id!=request.Id
+                            select item).FirstOrDefault();
+                if (temp != null)
+                {
+                    throw new WebApiException(400, "该被授权账户分组已存在");
+                }
+
+                dis.AuthorizedGroupId = request.AuthorizedGroupId;
+                dis.OrderIndex = request.OrderIndex;
+                db.SaveChanges();
+            }
+        }
+
+        public void ModifyConditiontradeBuyGroupSyncroAccountStatus(ModifyStatusRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var dis = (from item in db.t_account_shares_conditiontrade_buy_group_syncro_account
+                           where item.Id == request.Id
+                           select item).FirstOrDefault();
+                if (dis == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+               
+                dis.Status = request.Status;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改条件买入自定义分组下一轮买入
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifyConditiontradeBuyGroupSyncroAccountBuynext(ModifyConditiontradeBuyGroupSyncroAccountBuynextRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran=db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var groupInfo = (from item in db.t_account_shares_conditiontrade_buy_group
+                                     where item.Id == request.GroupId
+                                     select item).FirstOrDefault();
+                    if (groupInfo == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    var group_syncro = (from item in db.t_account_shares_conditiontrade_buy_group_syncro_account
+                                        join item2 in db.t_account_shares_buy_synchro_setting_authorized_group on item.AuthorizedGroupId equals item2.Id
+                                        where item2.Status == 1 && item.GroupId == request.GroupId && item.Status==1
+                                        orderby item.OrderIndex
+                                        select item).ToList();
+                    int CurrSyncroIndex = 0;
+                    foreach (var item in group_syncro)
+                    {
+                        if (item.AuthorizedGroupId == request.AuthorizedGroupId)
+                        {
+                            break;
+                        }
+                        CurrSyncroIndex++;
+                    }
+
+                    groupInfo.CurrSyncroIndex = CurrSyncroIndex;
+                    db.SaveChanges();
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
             }
         }
 
@@ -13924,18 +14188,12 @@ select @buyId;";
         {
             using (var db = new meal_ticketEntities())
             {
-                var triDetails = from item in db.t_account_shares_conditiontrade_buy_details
-                                 join item2 in db.t_account_shares_conditiontrade_buy on item.ConditionId equals item2.Id
-                                 join item3 in db.t_account_baseinfo on item2.AccountId equals item3.Id
-                                 select new { item, item3 };
-                var result = from item in db.t_account_shares_conditiontrade_buy_details
-                             join item2 in db.t_account_shares_conditiontrade_buy on item.ConditionId equals item2.Id
-                             join item3 in db.t_account_baseinfo on item2.AccountId equals item3.Id
-                             join item4 in db.t_shares_all on new { item2.Market, item2.SharesCode } equals new { item4.Market, item4.SharesCode }
-                             join item5 in db.t_account_shares_entrust on item.EntrustId equals item5.Id into a from ai in a.DefaultIfEmpty()
-                             join item6 in triDetails on item.FatherId equals item6.item.Id into b from bi in b.DefaultIfEmpty()
-                             where item.CreateAccountId == basedata.AccountId && item.TriggerTime != null
-                             select new { item, item2, item3, item4, ai, bi };
+                var result = from item in db.t_account_shares_conditiontrade_buy_trirecord
+                             join item2 in db.t_shares_all on new { item.Market,item.SharesCode} equals new { item2.Market,item2.SharesCode}
+                             join item3 in db.t_account_shares_entrust on item.EntrustId equals item3.Id into a from ai in a.DefaultIfEmpty()
+                             join item4 in db.t_account_baseinfo on item.TriAccountId equals item4.Id into b from bi in b.DefaultIfEmpty()
+                             where item.CreateAccountId == basedata.AccountId
+                             select new { item, item2 , ai, bi };
                 if (request.BusinessStatus == 1)
                 {
                     result = from item in result
@@ -13959,7 +14217,7 @@ select @buyId;";
                 if (!string.IsNullOrEmpty(request.SharesInfo))
                 {
                     result = from item in result
-                             where item.item4.SharesCode.Contains(request.SharesInfo) || item.item4.SharesName.Contains(request.SharesInfo) || item.item4.SharesPyjc.Contains(request.SharesInfo)
+                             where item.item2.SharesCode.Contains(request.SharesInfo) || item.item2.SharesName.Contains(request.SharesInfo) || item.item2.SharesPyjc.Contains(request.SharesInfo)
                              select item;
                 }
                 if (request.EntrustStatus == 1)
@@ -14011,13 +14269,13 @@ select @buyId;";
                             {
                                 SharesCode = item.item2.SharesCode,
                                 Market = item.item2.Market,
-                                SharesName = item.item4.SharesName,
+                                SharesName = item.item2.SharesName,
                                 BusinessStatus = item.item.BuyAuto?1:2,
                                 EntrustStatus = item.ai == null ? 6 : item.ai.Status,
                                 EntrustStatusDes = item.ai == null ? item.item.EntrustErrorDes : item.ai.StatusDes,
-                                AccountId = item.item2.AccountId,
-                                AccountMobile = item.bi ==null?"本账户": item.bi.item3.Mobile,
-                                AccountNickName = item.bi == null ? "" : item.bi.item3.NickName,
+                                AccountId = item.item.AccountId,
+                                AccountMobile = item.bi ==null?"本账户": item.bi.Mobile,
+                                AccountNickName = item.bi == null ? "" : item.bi.NickName,
                                 DealCount = item.ai == null ? 0 : item.ai.DealCount,
                                 EntrustCount = item.ai == null ? 0 : item.ai.EntrustCount,
                                 EntrustPrice = item.ai == null ? 0 : item.ai.EntrustPrice,
@@ -14051,31 +14309,77 @@ select @buyId;";
                 }
                 int totalCount = followGroup.Count();
 
+
+                var resultList = (from item in followGroup
+                                  orderby item.OrderIndex, item.CreateTime descending
+                                  select new AccountFollowGroupInfo
+                                  {
+                                      Status = item.Status,
+                                      CreateTime = item.CreateTime,
+                                      GroupName = item.GroupName,
+                                      OrderIndex = item.OrderIndex,
+                                      Id = item.Id,
+                                      FollowAccountList = (from x in db.t_account_follow_group_rel
+                                                           join x2 in db.t_account_follow_rel on x.RelId equals x2.Id
+                                                           join x3 in db.t_account_baseinfo on x2.FollowAccountId equals x3.Id
+                                                           join x4 in db.t_account_wallet on x2.FollowAccountId equals x4.AccountId
+                                                           where x.GroupId == item.Id && x2.AccountId == basedata.AccountId
+                                                           select new AccountFollowGroupFollowAccountInfo
+                                                           {
+                                                               FollowAccountId = x3.Id,
+                                                               FollowAccountName = x3.NickName,
+                                                               FollowAccountMobile = x3.Mobile,
+                                                               BuyAmount = x.BuyAmount,
+                                                               CreateTime = x.CreateTime,
+                                                               MaxDeposit= x4.Deposit
+                                                           }).ToList()
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                if (!string.IsNullOrEmpty(request.SharesCode))
+                {
+                    var buySetting = DbHelper.GetAccountBuySetting(0, 1);;
+                    foreach (var groupInfo in resultList)
+                    {
+                        foreach (var follow in groupInfo.FollowAccountList)
+                        {
+                            var accountSetting = (from x in buySetting
+                                                  where x.AccountId == follow.FollowAccountId
+                                                  select x).FirstOrDefault();
+                            if (accountSetting != null)
+                            {
+                                var valueObj = JsonConvert.DeserializeObject<dynamic>(accountSetting.ParValueJson);
+                                long parValue = valueObj.Value;
+                                follow.MaxDeposit = follow.MaxDeposit - parValue;
+                            }
+                            //计算杠杆倍数
+                            var accountRules = from item in db.t_shares_limit_fundmultiple_account
+                                               where item.AccountId == follow.FollowAccountId
+                                               select item;
+
+
+                            var rules = (from item in db.t_shares_limit_fundmultiple
+                                         join item2 in accountRules on item.Id equals item2.FundmultipleId into a
+                                         from ai in a.DefaultIfEmpty()
+                                         where (item.LimitMarket == request.Market || item.LimitMarket == -1) && (request.SharesCode.StartsWith(item.LimitKey))
+                                         orderby item.Priority descending, item.FundMultiple
+                                         select new { item, ai }).FirstOrDefault();
+                            if (rules == null)
+                            {
+                                follow.MaxFundMultiple = 0;
+                            }
+                            else
+                            {
+                                follow.MaxFundMultiple = (rules.ai == null || rules.item.FundMultiple < rules.ai.FundMultiple) ? rules.item.FundMultiple : rules.ai.FundMultiple;
+                            }
+                        }
+                    }
+                }
+
                 return new PageRes<AccountFollowGroupInfo>
                 {
                     MaxId = 0,
                     TotalCount = totalCount,
-                    List = (from item in followGroup
-                            orderby item.OrderIndex,item.CreateTime descending
-                            select new AccountFollowGroupInfo
-                            {
-                                Status = item.Status,
-                                CreateTime = item.CreateTime,
-                                GroupName = item.GroupName,
-                                OrderIndex=item.OrderIndex,
-                                Id = item.Id,
-                                FollowAccountList = (from x in db.t_account_follow_group_rel
-                                                     join x2 in db.t_account_follow_rel on x.RelId equals x2.Id
-                                                     join x3 in db.t_account_baseinfo on x2.FollowAccountId equals x3.Id
-                                                     where x.GroupId == item.Id && x2.AccountId== basedata.AccountId
-                                                     select new AccountFollowGroupFollowAccountInfo 
-                                                     {
-                                                         FollowAccountName=x3.NickName,
-                                                         FollowAccountMobile=x3.Mobile,
-                                                         BuyAmount=x.BuyAmount,
-                                                         CreateTime=x.CreateTime
-                                                     }).ToList()
-                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                    List = resultList
                 };
             }
         }
@@ -14705,6 +15009,48 @@ select @buyId;";
         }
 
         /// <summary>
+        /// 获取自动买入同步被授权账户列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<AutoBuySyncroAuthorizedAccountInfo> GetAutoBuySyncroAuthorizedAccountList(GetAutoBuySyncroAuthorizedAccountListRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var setting = from item in db.t_account_shares_buy_synchro_setting
+                              where item.MainAccountId == basedata.AccountId
+                              select item;
+                if (request.GroupId != 0)
+                {
+                    setting = from item in setting
+                              join item2 in db.t_account_shares_buy_synchro_setting_authorized_group_rel on item.Id equals item2.SettingId
+                              where item2.GroupId == request.GroupId
+                              select item;
+                }
+                int totalCount = setting.Count();
+
+                return new PageRes<AutoBuySyncroAuthorizedAccountInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in setting
+                            join item2 in db.t_account_baseinfo on item.AccountId equals item2.Id
+                            orderby item.CreateTime descending
+                            select new AutoBuySyncroAuthorizedAccountInfo
+                            {
+                                Status = item.Status,
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                AccountId = item.AccountId,
+                                AccountMobile = item2.Mobile,
+                                AccountName = item2.NickName
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
         /// 查询交易时间分组列表
         /// </summary>
         /// <returns></returns>
@@ -14721,6 +15067,251 @@ select @buyId;";
                                     MarketName = item.MarketName
                                 }).ToList();
                 return timeList;
+            }
+        }
+
+        /// <summary>
+        /// 获取自动买入同步设置分组列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<AccountAutoBuySyncroSettingAuthorizedGroupInfo> GetAccountAutoBuySyncroSettingAuthorizedGroupList(PageRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var groupList = from item in db.t_account_shares_buy_synchro_setting_authorized_group
+                                where item.AccountId == basedata.AccountId && item.Status == 1
+                                select item;
+                int totalCount = groupList.Count();
+
+                return new PageRes<AccountAutoBuySyncroSettingAuthorizedGroupInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in groupList
+                            orderby item.CreateTime descending
+                            select new AccountAutoBuySyncroSettingAuthorizedGroupInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                GroupName = item.GroupName,
+                                Id = item.Id,
+                                AccountIdList = (from x in db.t_account_shares_buy_synchro_setting_authorized_group_rel
+                                                join x2 in db.t_account_shares_buy_synchro_setting on x.SettingId equals x2.Id
+                                                where x.GroupId == item.Id && x2.Status == 1
+                                                select x2.Id).ToList()
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加自动买入同步设置分组
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void AddAccountAutoBuySyncroSettingAuthorizedGroup(AddAccountAutoBuySyncroSettingAuthorizedGroupRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //判断分组名称是否存在
+                var groupInfo = (from item in db.t_account_shares_buy_synchro_setting_authorized_group
+                                 where item.AccountId == basedata.AccountId && item.GroupName == request.GroupName
+                                 select item).FirstOrDefault();
+                if (groupInfo != null)
+                {
+                    throw new WebApiException(400,"分组名已存在");
+                }
+                db.t_account_shares_buy_synchro_setting_authorized_group.Add(new t_account_shares_buy_synchro_setting_authorized_group 
+                {
+                    Status=1,
+                    AccountId=basedata.AccountId,
+                    CreateTime=DateTime.Now,
+                    GroupName=request.GroupName,
+                    LastModified=DateTime.Now
+                });
+                db.SaveChanges();
+            }
+        }
+
+        public void ModifyAccountAutoBuySyncroSettingAuthorizedGroup(ModifyAccountAutoBuySyncroSettingAuthorizedGroupRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var dis = (from item in db.t_account_shares_buy_synchro_setting_authorized_group
+                           where item.Id == request.Id
+                           select item).FirstOrDefault();
+                if (dis == null)
+                {
+                    throw new WebApiException(400,"数据不存在");
+                }
+                //判断分组名称是否存在
+                var groupInfo = (from item in db.t_account_shares_buy_synchro_setting_authorized_group
+                                 where item.AccountId == basedata.AccountId && item.GroupName == request.GroupName && item.Id!=request.Id
+                                 select item).FirstOrDefault();
+                if (groupInfo != null)
+                {
+                    throw new WebApiException(400, "分组名已存在");
+                }
+                dis.LastModified = DateTime.Now;
+                dis.GroupName = request.GroupName;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 绑定自动买入同步设置分组账户
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void BindAccountAutoBuySyncroSettingAuthorizedGroup(BindAccountAutoBuySyncroSettingAuthorizedGroupRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran=db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //判断分组是否存在
+                    var groupinfo = (from item in db.t_account_shares_buy_synchro_setting_authorized_group
+                                     where item.Id == request.Id
+                                     select item).FirstOrDefault();
+                    if (groupinfo == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+
+                    var group_rel = (from item in db.t_account_shares_buy_synchro_setting_authorized_group_rel
+                                     where item.GroupId == request.Id
+                                     select item).ToList();
+                    if (group_rel.Count() > 0)
+                    {
+                        db.t_account_shares_buy_synchro_setting_authorized_group_rel.RemoveRange(group_rel);
+                        db.SaveChanges();
+                    }
+
+                    foreach (var item in request.AccountIdList)
+                    {
+                        db.t_account_shares_buy_synchro_setting_authorized_group_rel.Add(new t_account_shares_buy_synchro_setting_authorized_group_rel
+                        {
+                            SettingId = item,
+                            CreateTime = DateTime.Now,
+                            GroupId = request.Id,
+                        });
+                    }
+                    db.SaveChanges();
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 删除自动买入同步设置分组
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void DeleteAccountAutoBuySyncroSettingAuthorizedGroup(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran=db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var dis = (from item in db.t_account_shares_buy_synchro_setting_authorized_group
+                               where item.Id == request.Id
+                               select item).FirstOrDefault();
+                    if (dis == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    db.t_account_shares_buy_synchro_setting_authorized_group.Remove(dis);
+                    db.SaveChanges();
+
+                    var groupRel = (from item in db.t_account_shares_buy_synchro_setting_authorized_group_rel
+                                    where item.GroupId == request.Id
+                                    select item).ToList();
+                    if (groupRel.Count() > 0)
+                    {
+                        db.t_account_shares_buy_synchro_setting_authorized_group_rel.RemoveRange(groupRel);
+                        db.SaveChanges();
+                    }
+
+                    var group_syncro = (from item in db.t_account_shares_conditiontrade_buy_group_syncro_account
+                                        where item.AuthorizedGroupId == request.Id
+                                        select item).ToList();
+
+                    if (group_syncro.Count() > 0)
+                    {
+                        db.t_account_shares_conditiontrade_buy_group_syncro_account.RemoveRange(group_syncro);
+                        db.SaveChanges();
+                    }
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 查询实时监控过滤表示
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public List<AccountRealTimeTabSetting> GetAccountRealTimeTabSetting(DetailsRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = (from item in db.t_account_tab_setting
+                              where item.Type == request.Id && item.AccountId == basedata.AccountId
+                              select new AccountRealTimeTabSetting
+                              {
+                                  Value = item.Value
+                              }).ToList();
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// 更新实时监控过滤表示
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifyAccountRealTimeTabSetting(ModifyAccountRealTimeTabSettingRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran=db.Database.BeginTransaction())
+            {
+                try
+                {
+                    string sql = string.Format(@"declare @id bigint=0;
+  select @id=Id from t_account_tab_setting with(nolock) where AccountId={0} and [Type]={1};
+  if(not exists(select top 1 1 from t_account_tab_setting with(xlock) where Id=@id))
+  begin
+	insert into t_account_tab_setting(AccountId,[Type],Value,CreateTime,LastModified)
+	values({0},{1},'{2}',getdate(),getdate())
+  end
+  else
+  begin
+	update t_account_tab_setting set Value='{2}',LastModified=getdate() where Id=@id;
+  end", basedata.AccountId,request.Type,request.Value);
+                    db.Database.ExecuteSqlCommand(sql);
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
             }
         }
     }

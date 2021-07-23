@@ -673,10 +673,11 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                 {
                     logRecord.AppendLine("===开始判断所属板块是否可买入" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
                     sql = string.Format(@"select top 1 1  
-  from t_shares_plate_rel t with(nolock)
-  inner join t_account_shares_conditiontrade_buy_plate t1 with(nolock) on t.PlateId=t1.PlateId
-  inner join t_shares_plate t2 with(nolock) on t.PlateId=t2.Id
-  where t.Market={0} and t.SharesCode='{1}' and AccountId={2} and t2.ChooseStatus=1 and t2.[Status]=1", item.Market, item.SharesCode, item.AccountId);
+from t_shares_plate_rel t with(nolock)
+inner join t_account_shares_conditiontrade_buy_plate t1 with(nolock) on t.PlateId=t1.PlateId
+inner join t_shares_plate t2 with(nolock) on t.PlateId=t2.Id
+inner join t_shares_plate_type_business t3 with(nolock) on t2.[Type]=t3.Id
+where t.Market={0} and t.SharesCode='{1}' and AccountId={2} and t2.[Status]=1 and (t2.ChooseStatus=1 or (t3.IsBasePlate=1 and t2.BaseStatus=1))", item.Market, item.SharesCode, item.AccountId);
                     int result = db.Database.SqlQuery<int>(sql).FirstOrDefault();
                     if (result != 1)
                     {
@@ -1785,26 +1786,46 @@ inner
                         conditionInfo = JsonConvert.DeserializeObject<TradeAutoBuyCondition>(JsonConvert.SerializeObject(item));
                         Task task = new Task(() =>
                         {
+                            var tempGroupList = (from x in db.t_account_shares_conditiontrade_buy_group
+                                                 join x2 in db.t_account_shares_conditiontrade_buy_group_rel on x.Id equals x2.GroupId
+                                                 where x.AccountId == item.AccountId && x2.Market == item.Market && x2.SharesCode == item.SharesCode
+                                                 select x).ToList();
+                            List<long> authorized_group_id_list = new List<long>();
+                            foreach (var groupInfo in tempGroupList)
+                            {
+                                var AuthorizedGroup = (from x in db.t_account_shares_conditiontrade_buy_group_syncro_account
+                                                         join x2 in db.t_account_shares_buy_synchro_setting_authorized_group on x.AuthorizedGroupId equals x2.Id
+                                                         where x.GroupId == groupInfo.Id && x2.AccountId == groupInfo.AccountId && x2.Status == 1 && x.Status==1
+                                                         orderby x.OrderIndex
+                                                         select x2).ToList();
+                                if (AuthorizedGroup.Count() <= 0)
+                                {
+                                    continue;
+                                }
+                                int nexIndex = groupInfo.CurrSyncroIndex % AuthorizedGroup.Count();
+                                authorized_group_id_list.Add(AuthorizedGroup[nexIndex].Id);
+
+                                groupInfo.CurrSyncroIndex = groupInfo.CurrSyncroIndex + 1;
+                                db.SaveChanges();
+                            }
+
                             //导入条件数据
                             //1.查询股票所属自定义分组
                             //2.查询分组配置同步用户及参数
                             //3.循环导入参数并修改参数数据加入内存
-                            var syncroList = (from x in db.t_account_shares_conditiontrade_buy_group
-                                              join x2 in db.t_account_shares_conditiontrade_buy_group_rel on x.Id equals x2.GroupId
-                                              join x3 in db.t_account_shares_conditiontrade_buy_group_syncro_account on x.Id equals x3.GroupId
-                                              join x4 in db.t_account_shares_buy_synchro_setting on x3.SyncroAccountId equals x4.AccountId
-                                              where x.AccountId == item.AccountId && x2.Market == item.Market && x2.SharesCode == item.SharesCode && x3.AccountId == item.AccountId && x4.Status == 1 && x4.MainAccountId == item.AccountId
-                                              group x4 by x4 into g
+                            var syncroList = (from x in db.t_account_shares_buy_synchro_setting_authorized_group_rel
+                                              join x2 in db.t_account_shares_buy_synchro_setting on x.SettingId equals x2.Id
+                                              where authorized_group_id_list.Contains(x.GroupId) && x2.Status==1 && x2.MainAccountId==item.AccountId
                                               select new
                                               {
-                                                  disAccountId = g.Key.AccountId,
-                                                  followType = g.Key.FollowType,
-                                                  buyAmount = g.Key.BuyAmount,
+                                                  disAccountId = x2.AccountId,
+                                                  followType = x2.FollowType,
+                                                  buyAmount = x2.BuyAmount,
                                                   followList = (from y in db.t_account_shares_buy_synchro_setting_follow
-                                                                where y.SettingId == g.Key.Id
+                                                                where y.SettingId == x2.Id
                                                                 select y.FollowAccountId).ToList(),
                                                   groupList = (from y in db.t_account_shares_buy_synchro_setting_group
-                                                               where y.SettingId == g.Key.Id
+                                                               where y.SettingId == x2.Id
                                                                select y.GroupId).ToList()
                                               }).ToList();
                             foreach (var data in syncroList)

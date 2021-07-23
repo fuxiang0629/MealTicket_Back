@@ -1476,6 +1476,25 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 批量添加买入板块设置
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("condition/buy/plate/add/batch"), HttpPost]
+        [Description("批量添加买入板块设置")]
+        [CheckUserLoginFilter]
+        public object BatchAddConditionBuyPlate(DetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BatchAddConditionBuyPlate(request, basedata);
+            return null;
+        }
+
+        /// <summary>
         /// 删除买入板块设置
         /// </summary>
         /// <param name="request"></param>
@@ -1491,6 +1510,25 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             trendHandler.DeleteConditionBuyPlate(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量删除买入板块设置
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("condition/buy/plate/delete/batch"), HttpPost]
+        [Description("批量删除买入板块设置")]
+        [CheckUserLoginFilter]
+        public object BatchDeleteConditionBuyPlate(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BatchDeleteConditionBuyPlate(request, basedata);
             return null;
         }
 
@@ -5490,12 +5528,12 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
-        /// 查询条件买入自定义分组同步用户列表
+        /// 查询条件买入自定义分组同步被授权账户分组列表
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         [Route("conditiontrade/buy/group/syncroaccount/list"), HttpPost]
-        [Description("查询条件买入自定义分组同步用户列表")]
+        [Description("查询条件买入自定义分组同步被授权账户分组列表")]
         [CheckUserLoginFilter]
         public List<ConditiontradeBuyGroupSharesAccount> GetConditiontradeBuyGroupSyncroAccountList(DetailsRequest request)
         {
@@ -5508,12 +5546,12 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
-        /// 添加条件买入自定义分组同步用户
+        /// 添加条件买入自定义分组同步被授权账户分组
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         [Route("conditiontrade/buy/group/syncroaccount/add"), HttpPost]
-        [Description("添加条件买入自定义分组同步用户")]
+        [Description("添加条件买入自定义分组同步被授权账户分组")]
         [CheckUserLoginFilter]
         public object AddConditiontradeBuyGroupSyncroAccount(AddConditiontradeBuyGroupSharesAccountRequest request)
         {
@@ -5523,6 +5561,63 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             trendHandler.AddConditiontradeBuyGroupSyncroAccount(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑条件买入自定义分组同步被授权账户分组
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/buy/group/syncroaccount/modify"), HttpPost]
+        [Description("编辑条件买入自定义分组同步被授权账户分组")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeBuyGroupSyncroAccount(ModifyConditiontradeBuyGroupSyncroAccountRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeBuyGroupSyncroAccount(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改条件买入自定义分组同步被授权账户分组状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/buy/group/syncroaccount/status/modify"), HttpPost]
+        [Description("修改条件买入自定义分组同步被授权账户分组状态")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeBuyGroupSyncroAccountStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeBuyGroupSyncroAccountStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改条件买入自定义分组下一轮买入
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/buy/group/syncroaccount/buynext/modify"), HttpPost]
+        [Description("修改条件买入自定义分组下一轮买入")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeBuyGroupSyncroAccountBuynext(ModifyConditiontradeBuyGroupSyncroAccountBuynextRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeBuyGroupSyncroAccountBuynext(request, basedata);
             return null;
         }
 
@@ -5966,6 +6061,23 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 获取自动买入同步被授权账户列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取自动买入同步被授权账户列表")]
+        [Route("account/auto/buy/synchro/authorized/account/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public PageRes<AutoBuySyncroAuthorizedAccountInfo> GetAutoBuySyncroAuthorizedAccountList(GetAutoBuySyncroAuthorizedAccountListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAutoBuySyncroAuthorizedAccountList(request, basedata);
+        }
+
+        /// <summary>
         /// 查询交易时间分组列表
         /// </summary>
         /// <returns></returns>
@@ -5975,6 +6087,130 @@ namespace MealTicket_Web_APIService.controller
         public List<SharesTradeTimeGroupInfo> GetSharesTradeTimeGroupList()
         {
             return trendHandler.GetSharesTradeTimeGroupList();
+        }
+
+        /// <summary>
+        /// 获取自动买入同步设置分组列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取自动买入同步设置分组列表")]
+        [Route("account/auto/buy/synchro/setting/authorizedgroup/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public PageRes<AccountAutoBuySyncroSettingAuthorizedGroupInfo> GetAccountAutoBuySyncroSettingAuthorizedGroupList(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountAutoBuySyncroSettingAuthorizedGroupList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加自动买入同步设置分组
+        /// </summary>
+        /// <returns></returns>
+        [Description("添加自动买入同步设置分组")]
+        [Route("account/auto/buy/synchro/setting/authorizedgroup/add"), HttpPost]
+        [CheckUserLoginFilter]
+        public object AddAccountAutoBuySyncroSettingAuthorizedGroup(AddAccountAutoBuySyncroSettingAuthorizedGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountAutoBuySyncroSettingAuthorizedGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑自动买入同步设置分组
+        /// </summary>
+        /// <returns></returns>
+        [Description("编辑自动买入同步设置分组")]
+        [Route("account/auto/buy/synchro/setting/authorizedgroup/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifyAccountAutoBuySyncroSettingAuthorizedGroup(ModifyAccountAutoBuySyncroSettingAuthorizedGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountAutoBuySyncroSettingAuthorizedGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 绑定自动买入同步设置分组账户
+        /// </summary>
+        /// <returns></returns>
+        [Description("绑定自动买入同步设置分组账户")]
+        [Route("account/auto/buy/synchro/setting/authorizedgroup/bind"), HttpPost]
+        [CheckUserLoginFilter]
+        public object BindAccountAutoBuySyncroSettingAuthorizedGroup(BindAccountAutoBuySyncroSettingAuthorizedGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BindAccountAutoBuySyncroSettingAuthorizedGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除自动买入同步设置分组
+        /// </summary>
+        /// <returns></returns>
+        [Description("删除自动买入同步设置分组")]
+        [Route("account/auto/buy/synchro/setting/authorizedgroup/delete"), HttpPost]
+        [CheckUserLoginFilter]
+        public object DeleteAccountAutoBuySyncroSettingAuthorizedGroup(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountAutoBuySyncroSettingAuthorizedGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询实时监控过滤表示
+        /// </summary>
+        /// <returns></returns>
+        [Description("查询实时监控过滤表示")]
+        [Route("account/realtime/tab/setting"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<AccountRealTimeTabSetting> GetAccountRealTimeTabSetting(DetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountRealTimeTabSetting(request, basedata);
+        }
+
+        /// <summary>
+        /// 更新实时监控过滤表示
+        /// </summary>
+        /// <returns></returns>
+        [Description("更新实时监控过滤表示")]
+        [Route("account/realtime/tab/setting/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifyAccountRealTimeTabSetting(ModifyAccountRealTimeTabSettingRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountRealTimeTabSetting(request, basedata);
+            return null;
         }
     }
 }

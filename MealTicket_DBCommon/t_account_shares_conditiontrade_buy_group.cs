@@ -20,5 +20,6 @@ namespace MealTicket_DBCommon
         public int MaxBuyCount { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
+        public int CurrSyncroIndex { get; set; }
     }
 }

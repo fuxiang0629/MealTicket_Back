@@ -190,27 +190,12 @@ namespace TransactionDataUpdate
                         DateTime timeStart = timePar.Date;
                         DateTime timeEnd = timePar.Date.AddDays(1);
 
-                        //string sqlDel = string.Format("delete t_shares_transactiondata where Id in(select Id from t_shares_transactiondata with(nolock) where Market={0} and SharesCode='{1}' and Time>='{2}' and Time<'{3}' and Time>'{4}')", market, sharesCode, timeStart, timeEnd, lastTime.Value);
                         string sqlDel = string.Format("delete t_shares_transactiondata where Market={0} and SharesCode='{1}' and Time>='{2}' and Time<'{3}' and Time>'{4}'", market, sharesCode, timeStart, timeEnd, lastTime.Value);
                         using (var cmd = conn.CreateCommand())
                         {
                             cmd.CommandType = CommandType.Text;
                             cmd.CommandText = sqlDel;   //sql语句
                             cmd.ExecuteNonQuery();
-
-                            //int i = 0;
-                            //string sqlInsert = "";
-                            //foreach (var item in list)
-                            //{
-                            //    i++;
-                            //    sqlInsert = sqlInsert + string.Format("insert into t_shares_transactiondata(Market,SharesCode,[Time],TimeStr,Price,Volume,Stock,[Type],OrderIndex,LastModified) values({0},'{1}','{2}','{3}',{4},{5},{6},{7},{8},'{9}'); ", item.Market, item.SharesCode, item.Time.ToString("yyyy-MM-dd HH:mm:ss"), item.TimeStr, item.Price, item.Volume, item.Stock, item.Type, item.OrderIndex, DateTime.Now);
-                            //    if ((i % 100) == 0 || i == list.Count())
-                            //    {
-                            //        cmd.CommandText = sqlInsert;   //sql语句
-                            //        cmd.ExecuteNonQuery();
-                            //        sqlInsert = "";
-                            //    }
-                            //}
                         }
 
                         var bulk = BulkFactory.CreateBulkCopy(DatabaseType.SqlServer);

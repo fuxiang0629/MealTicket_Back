@@ -271,15 +271,6 @@
     <Property Name="FollowAccountId" Type="Int64" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
-  <EntityType Name="t_account_shares_buy_synchro_setting_group">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="SettingId" Type="Int64" Nullable="false" />
-    <Property Name="GroupId" Type="Int64" Nullable="false" />
-    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-  </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_buy">
     <Key>
       <PropertyRef Name="Id" />
@@ -470,6 +461,7 @@
     <Property Name="MaxBuyCount" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CurrSyncroIndex" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_buy_group_rel">
     <Key>
@@ -488,16 +480,6 @@
     <Property Name="GroupId" Type="Int64" Nullable="false" />
     <Property Name="AccountId" Type="Int64" Nullable="false" />
     <Property Name="ShareAccountId" Type="Int64" Nullable="false" />
-    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-  </EntityType>
-  <EntityType Name="t_account_shares_conditiontrade_buy_group_syncro_account">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="GroupId" Type="Int64" Nullable="false" />
-    <Property Name="AccountId" Type="Int64" Nullable="false" />
-    <Property Name="SyncroAccountId" Type="Int64" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_buy_plate">
@@ -3398,7 +3380,6 @@
     <EntitySet Name="t_account_shares_buy_setting_par" EntityType="Self.t_account_shares_buy_setting_par" />
     <EntitySet Name="t_account_shares_buy_synchro_setting" EntityType="Self.t_account_shares_buy_synchro_setting" />
     <EntitySet Name="t_account_shares_buy_synchro_setting_follow" EntityType="Self.t_account_shares_buy_synchro_setting_follow" />
-    <EntitySet Name="t_account_shares_buy_synchro_setting_group" EntityType="Self.t_account_shares_buy_synchro_setting_group" />
     <EntitySet Name="t_account_shares_conditiontrade_buy" EntityType="Self.t_account_shares_conditiontrade_buy" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_details" EntityType="Self.t_account_shares_conditiontrade_buy_details" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_details_auto" EntityType="Self.t_account_shares_conditiontrade_buy_details_auto" />
@@ -3416,7 +3397,6 @@
     <EntitySet Name="t_account_shares_conditiontrade_buy_group" EntityType="Self.t_account_shares_conditiontrade_buy_group" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_group_rel" EntityType="Self.t_account_shares_conditiontrade_buy_group_rel" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_group_share_account" EntityType="Self.t_account_shares_conditiontrade_buy_group_share_account" />
-    <EntitySet Name="t_account_shares_conditiontrade_buy_group_syncro_account" EntityType="Self.t_account_shares_conditiontrade_buy_group_syncro_account" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_plate" EntityType="Self.t_account_shares_conditiontrade_buy_plate" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_trend_par_template" EntityType="Self.t_account_shares_conditiontrade_buy_trend_par_template" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_trend_template" EntityType="Self.t_account_shares_conditiontrade_buy_trend_template" />
@@ -4115,6 +4095,13 @@
     <EntitySet Name="t_account_baseinfo" EntityType="meal_ticketModel.t_account_baseinfo" />
     <EntitySet Name="t_broker_account_info" EntityType="meal_ticketModel.t_broker_account_info" />
     <EntitySet Name="t_account_shares_buy_setting" EntityType="meal_ticketModel.t_account_shares_buy_setting" />
+    <EntitySet Name="t_account_shares_buy_synchro_setting_authorized_group" EntityType="meal_ticketModel.t_account_shares_buy_synchro_setting_authorized_group" />
+    <EntitySet Name="t_account_shares_buy_synchro_setting_authorized_group_rel" EntityType="meal_ticketModel.t_account_shares_buy_synchro_setting_authorized_group_rel" />
+    <EntitySet Name="t_account_shares_buy_synchro_setting_group" EntityType="meal_ticketModel.t_account_shares_buy_synchro_setting_group" />
+    <EntitySet Name="t_account_shares_conditiontrade_buy_group_syncro_account" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_group_syncro_account" />
+    <EntitySet Name="t_account_tab_setting" EntityType="meal_ticketModel.t_account_tab_setting" />
+    <EntitySet Name="t_account_shares_conditiontrade_buy_trirecord" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_trirecord" />
+    <EntitySet Name="t_shares_transactiondata_update" EntityType="meal_ticketModel.t_shares_transactiondata_update" />
   </EntityContainer>
   <EntityType Name="t_account_baseinfo">
     <Key>
@@ -4177,6 +4164,86 @@
     <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
     <Property Name="ParValueJson" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_buy_synchro_setting_authorized_group">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="GroupName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_buy_synchro_setting_authorized_group_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="GroupId" Type="Int64" Nullable="false" />
+    <Property Name="SettingId" Type="Int64" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_buy_synchro_setting_group">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SettingId" Type="Int64" Nullable="false" />
+    <Property Name="GroupId" Type="Int64" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_conditiontrade_buy_group_syncro_account">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="GroupId" Type="Int64" Nullable="false" />
+    <Property Name="AuthorizedGroupId" Type="Int64" Nullable="false" />
+    <Property Name="OrderIndex" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_tab_setting">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
+    <Property Name="Value" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_conditiontrade_buy_trirecord">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="CreateAccountId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="SharesName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="BuyAuto" Type="Boolean" Nullable="false" />
+    <Property Name="EntrustId" Type="Int64" Nullable="false" />
+    <Property Name="EntrustErrorDes" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="SourceFrom" Type="Int32" Nullable="false" />
+    <Property Name="DetailsId" Type="Int64" Nullable="false" />
+    <Property Name="TriggerTime" Type="DateTime" Precision="3" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="TriAccountId" Type="Int64" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_transactiondata_update">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
 </Schema>

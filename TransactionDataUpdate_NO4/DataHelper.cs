@@ -132,7 +132,6 @@ group by SharesInfoNum", SharesInfoNumArr, dateNow.ToString("yyyy-MM-dd"));
                                     bool isReconnectClient = false;
 
                                     DateTime? lastTime = null;
-                                    int orderIndex = 0;
                                     var lastData = lastList.Where(e => e.SharesInfoNumArr == tempData.SharesInfoNum).FirstOrDefault();
                                     if (lastData != null)
                                     {

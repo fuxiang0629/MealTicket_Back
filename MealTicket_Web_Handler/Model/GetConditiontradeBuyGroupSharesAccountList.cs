@@ -18,14 +18,19 @@ namespace MealTicket_Web_Handler.Model
         public long Id { get; set; }
 
         /// <summary>
-        /// 手机号码
+        /// 分组名称
         /// </summary>
-        public string Mobile { get; set; }
+        public string GroupName { get; set; }
 
         /// <summary>
-        /// 昵称
+        /// 排序值
         /// </summary>
-        public string NickName { get; set; }
+        public int OrderIndex { get; set; }
+
+        /// <summary>
+        /// 是否下一批买入账户组
+        /// </summary>
+        public bool IsNextBuyGroup { get; set; }
 
         /// <summary>
         /// 绑定时间
@@ -33,8 +38,16 @@ namespace MealTicket_Web_Handler.Model
         public DateTime CreateTime { get; set; }
 
         /// <summary>
-        /// 状态 1可用 2不可用
+        /// 买入账户数量
         /// </summary>
+        public int AccountCount { get; set; }
+
+        public long AuthorizedGroupId { get; set; }
+
+        public string Mobile { get; set; }
+
+        public string NickName { get; set; }
+
         public int Status { get; set; }
     }
 }

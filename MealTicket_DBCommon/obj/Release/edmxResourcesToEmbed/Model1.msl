@@ -279,16 +279,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="t_account_shares_buy_synchro_setting_group">
-      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_buy_synchro_setting_group">
-        <MappingFragment StoreEntitySet="t_account_shares_buy_synchro_setting_group">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="SettingId" ColumnName="SettingId" />
-          <ScalarProperty Name="GroupId" ColumnName="GroupId" />
-          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="t_account_shares_conditiontrade_buy">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy">
         <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy">
@@ -486,6 +476,7 @@
     <EntitySetMapping Name="t_account_shares_conditiontrade_buy_group">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_group">
         <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_group">
+          <ScalarProperty Name="CurrSyncroIndex" ColumnName="CurrSyncroIndex" />
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="AccountId" ColumnName="AccountId" />
           <ScalarProperty Name="Name" ColumnName="Name" />
@@ -512,17 +503,6 @@
           <ScalarProperty Name="GroupId" ColumnName="GroupId" />
           <ScalarProperty Name="AccountId" ColumnName="AccountId" />
           <ScalarProperty Name="ShareAccountId" ColumnName="ShareAccountId" />
-          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
-    <EntitySetMapping Name="t_account_shares_conditiontrade_buy_group_syncro_account">
-      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_group_syncro_account">
-        <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_group_syncro_account">
-          <ScalarProperty Name="Id" ColumnName="Id" />
-          <ScalarProperty Name="GroupId" ColumnName="GroupId" />
-          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
-          <ScalarProperty Name="SyncroAccountId" ColumnName="SyncroAccountId" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
         </MappingFragment>
       </EntityTypeMapping>
@@ -3676,6 +3656,93 @@
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="Type" ColumnName="Type" />
           <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_buy_synchro_setting_authorized_group">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_buy_synchro_setting_authorized_group">
+        <MappingFragment StoreEntitySet="t_account_shares_buy_synchro_setting_authorized_group">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="GroupName" ColumnName="GroupName" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_buy_synchro_setting_authorized_group_rel">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_buy_synchro_setting_authorized_group_rel">
+        <MappingFragment StoreEntitySet="t_account_shares_buy_synchro_setting_authorized_group_rel">
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="SettingId" ColumnName="SettingId" />
+          <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_buy_synchro_setting_group">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_buy_synchro_setting_group">
+        <MappingFragment StoreEntitySet="t_account_shares_buy_synchro_setting_group">
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+          <ScalarProperty Name="SettingId" ColumnName="SettingId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_conditiontrade_buy_group_syncro_account">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_group_syncro_account">
+        <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_group_syncro_account">
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
+          <ScalarProperty Name="AuthorizedGroupId" ColumnName="AuthorizedGroupId" />
+          <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_tab_setting">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_tab_setting">
+        <MappingFragment StoreEntitySet="t_account_tab_setting">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Value" ColumnName="Value" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_conditiontrade_buy_trirecord">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_trirecord">
+        <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_trirecord">
+          <ScalarProperty Name="TriAccountId" ColumnName="TriAccountId" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="TriggerTime" ColumnName="TriggerTime" />
+          <ScalarProperty Name="DetailsId" ColumnName="DetailsId" />
+          <ScalarProperty Name="SourceFrom" ColumnName="SourceFrom" />
+          <ScalarProperty Name="EntrustErrorDes" ColumnName="EntrustErrorDes" />
+          <ScalarProperty Name="EntrustId" ColumnName="EntrustId" />
+          <ScalarProperty Name="BuyAuto" ColumnName="BuyAuto" />
+          <ScalarProperty Name="SharesName" ColumnName="SharesName" />
+          <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+          <ScalarProperty Name="Market" ColumnName="Market" />
+          <ScalarProperty Name="CreateAccountId" ColumnName="CreateAccountId" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_shares_transactiondata_update">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_shares_transactiondata_update">
+        <MappingFragment StoreEntitySet="t_shares_transactiondata_update">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+          <ScalarProperty Name="Market" ColumnName="Market" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>

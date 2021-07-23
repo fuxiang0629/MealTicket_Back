@@ -18,8 +18,15 @@ namespace MealTicket_Web_Handler.Model
         public long GroupId { get; set; }
 
         /// <summary>
-        /// 用户手机号
+        /// 被授权账户分组Id
         /// </summary>
+        public long AuthorizedGroupId { get; set; }
+
+        /// <summary>
+        /// 排序值
+        /// </summary>
+        public int OrderIndex { get; set; }
+
         public string Mobile { get; set; }
     }
 }

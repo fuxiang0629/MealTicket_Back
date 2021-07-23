@@ -16,8 +16,9 @@ namespace MealTicket_DBCommon
     {
         public long Id { get; set; }
         public long GroupId { get; set; }
-        public long AccountId { get; set; }
-        public long SyncroAccountId { get; set; }
+        public long AuthorizedGroupId { get; set; }
+        public int OrderIndex { get; set; }
         public System.DateTime CreateTime { get; set; }
+        public int Status { get; set; }
     }
 }

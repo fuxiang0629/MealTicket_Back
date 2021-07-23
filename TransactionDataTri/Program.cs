@@ -11,7 +11,7 @@ namespace TransactionDataTri
         static void Main(string[] args)
         {
             var WaitQueryInstance = WaitQuery.Instance;
-            var mqHandler = WaitQueryInstance.StartMqHandler("Consumer_Received_Tri");
+            var mqHandler = WaitQueryInstance.StartMqHandler("TransactionDataTri");
             mqHandler.StartListen();
             Console.ReadLine();
         }

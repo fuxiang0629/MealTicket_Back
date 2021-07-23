@@ -260,7 +260,7 @@
     <Property Name="Type" Type="int" Nullable="false" />
     <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
     <Property Name="Description" Type="nvarchar" MaxLength="500" />
-    <Property Name="ParValue" Type="bigint" Nullable="false" />
+    <Property Name="ParValueJson" Type="nvarchar(max)" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
@@ -288,6 +288,26 @@
     <Property Name="FollowType" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_buy_synchro_setting_authorized_group">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="GroupName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_buy_synchro_setting_authorized_group_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="GroupId" Type="bigint" Nullable="false" />
+    <Property Name="SettingId" Type="bigint" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_buy_synchro_setting_follow">
     <Key>
@@ -495,6 +515,7 @@
     <Property Name="AccountId" Type="bigint" Nullable="false" />
     <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
     <Property Name="MaxBuyCount" Type="int" Nullable="false" />
+    <Property Name="CurrSyncroIndex" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
@@ -523,9 +544,10 @@
     </Key>
     <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="GroupId" Type="bigint" Nullable="false" />
-    <Property Name="AccountId" Type="bigint" Nullable="false" />
-    <Property Name="SyncroAccountId" Type="bigint" Nullable="false" />
+    <Property Name="AuthorizedGroupId" Type="bigint" Nullable="false" />
+    <Property Name="OrderIndex" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_buy_plate">
     <Key>
@@ -557,6 +579,25 @@
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_conditiontrade_buy_trirecord">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="CreateAccountId" Type="bigint" Nullable="false" />
+    <Property Name="TriAccountId" Type="bigint" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="SharesName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="BuyAuto" Type="bit" Nullable="false" />
+    <Property Name="EntrustId" Type="bigint" Nullable="false" />
+    <Property Name="EntrustErrorDes" Type="nvarchar" MaxLength="200" />
+    <Property Name="SourceFrom" Type="int" Nullable="false" />
+    <Property Name="DetailsId" Type="bigint" Nullable="false" />
+    <Property Name="TriggerTime" Type="datetime" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_conditiontrade_template">
     <Key>
@@ -912,6 +953,7 @@
     <Property Name="EntrustId" Type="bigint" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="CreateAccountId" Type="bigint" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_shares_hold_conditiontrade_child">
     <Key>
@@ -1125,6 +1167,17 @@
     <Property Name="ValidStartTime" Type="datetime" Nullable="false" />
     <Property Name="ValidEndTime" Type="datetime" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_tab_setting">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="Value" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="t_account_verifyCode">
     <Key>
@@ -2918,6 +2971,16 @@
     <Property Name="OrderIndex" Type="int" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
+  <EntityType Name="t_shares_transactiondata_update">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_sms_callback">
     <Key>
       <PropertyRef Name="Id" />
@@ -3690,6 +3753,7 @@
   <Function Name="P_ApplyTradeCancel" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="accountId" Type="bigint" Mode="In" />
     <Parameter Name="entrustId" Type="bigint" Mode="In" />
+    <Parameter Name="mainAccountId" Type="bigint" Mode="In" />
     <Parameter Name="errorCode" Type="int" Mode="InOut" />
     <Parameter Name="errorMessage" Type="nvarchar" Mode="InOut" />
   </Function>
@@ -3700,7 +3764,7 @@
     <Parameter Name="sellType" Type="int" Mode="In" />
     <Parameter Name="sellPrice" Type="bigint" Mode="In" />
     <Parameter Name="type" Type="int" Mode="In" />
-    <Parameter Name="isFollow" Type="bit" Mode="In" />
+    <Parameter Name="mainAccountId" Type="bigint" Mode="In" />
     <Parameter Name="errorCode" Type="int" Mode="InOut" />
     <Parameter Name="errorMessage" Type="nvarchar" Mode="InOut" />
     <Parameter Name="sellId" Type="bigint" Mode="InOut" />
@@ -3995,6 +4059,8 @@
     <EntitySet Name="t_account_shares_buy_setting" EntityType="Self.t_account_shares_buy_setting" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_buy_setting_par" EntityType="Self.t_account_shares_buy_setting_par" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_buy_synchro_setting" EntityType="Self.t_account_shares_buy_synchro_setting" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_buy_synchro_setting_authorized_group" EntityType="Self.t_account_shares_buy_synchro_setting_authorized_group" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_buy_synchro_setting_authorized_group_rel" EntityType="Self.t_account_shares_buy_synchro_setting_authorized_group_rel" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_buy_synchro_setting_follow" EntityType="Self.t_account_shares_buy_synchro_setting_follow" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_buy_synchro_setting_group" EntityType="Self.t_account_shares_buy_synchro_setting_group" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_conditiontrade_buy" EntityType="Self.t_account_shares_conditiontrade_buy" Schema="dbo" store:Type="Tables" />
@@ -4018,6 +4084,7 @@
     <EntitySet Name="t_account_shares_conditiontrade_buy_plate" EntityType="Self.t_account_shares_conditiontrade_buy_plate" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_trend_par_template" EntityType="Self.t_account_shares_conditiontrade_buy_trend_par_template" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_trend_template" EntityType="Self.t_account_shares_conditiontrade_buy_trend_template" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_conditiontrade_buy_trirecord" EntityType="Self.t_account_shares_conditiontrade_buy_trirecord" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_conditiontrade_template" EntityType="Self.t_account_shares_conditiontrade_template" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_conditiontrade_template_buy" EntityType="Self.t_account_shares_conditiontrade_template_buy" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_conditiontrade_template_buy_auto" EntityType="Self.t_account_shares_conditiontrade_template_buy_auto" Schema="dbo" store:Type="Tables" />
@@ -4057,6 +4124,7 @@
     <EntitySet Name="t_account_shares_seat" EntityType="Self.t_account_shares_seat" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_seat_order" EntityType="Self.t_account_shares_seat_order" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_seat_order_details" EntityType="Self.t_account_shares_seat_order_details" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_tab_setting" EntityType="Self.t_account_tab_setting" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_verifyCode" EntityType="Self.t_account_verifyCode" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_wallet" EntityType="Self.t_account_wallet" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_wallet_change_record" EntityType="Self.t_account_wallet_change_record" Schema="dbo" store:Type="Tables" />
@@ -4176,6 +4244,7 @@
     <EntitySet Name="t_shares_suspension" EntityType="Self.t_shares_suspension" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_today" EntityType="Self.t_shares_today" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_transactiondata" EntityType="Self.t_shares_transactiondata" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_transactiondata_update" EntityType="Self.t_shares_transactiondata_update" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_sms_callback" EntityType="Self.t_sms_callback" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_sms_channel" EntityType="Self.t_sms_channel" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_sms_channel_app" EntityType="Self.t_sms_channel_app" Schema="dbo" store:Type="Tables" />
