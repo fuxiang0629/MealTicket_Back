@@ -139,6 +139,9 @@
     <Compile Include="t_account_shares_buy_setting_par.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="t_account_shares_buy_setting_shares.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="t_account_shares_buy_synchro_setting.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

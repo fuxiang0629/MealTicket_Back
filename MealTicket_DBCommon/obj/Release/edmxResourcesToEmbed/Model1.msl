@@ -3017,6 +3017,7 @@
     <EntitySetMapping Name="t_shares_transactiondata">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_transactiondata">
         <MappingFragment StoreEntitySet="t_shares_transactiondata">
+          <ScalarProperty Name="SharesInfoNum" ColumnName="SharesInfoNum" />
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Market" ColumnName="Market" />
           <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
@@ -3743,6 +3744,18 @@
           <ScalarProperty Name="Type" ColumnName="Type" />
           <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
           <ScalarProperty Name="Market" ColumnName="Market" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_buy_setting_shares">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_buy_setting_shares">
+        <MappingFragment StoreEntitySet="t_account_shares_buy_setting_shares">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="ConditiontradeBuyId" ColumnName="ConditiontradeBuyId" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>

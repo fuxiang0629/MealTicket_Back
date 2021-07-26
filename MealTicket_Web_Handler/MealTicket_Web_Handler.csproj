@@ -160,6 +160,7 @@
     <Compile Include="Model\GetAccountRealTimeTabSetting.cs" />
     <Compile Include="Model\GetAccountRiseLimitTriList.cs" />
     <Compile Include="Model\GetAccountSharesPlateSharesList.cs" />
+    <Compile Include="Model\GetAuthorizeAccountSharesList.cs" />
     <Compile Include="Model\GetAutoBuySyncroAuthorizedAccountList.cs" />
     <Compile Include="Model\GetConditiontradeBuyGroupList.cs" />
     <Compile Include="Model\GetConditiontradeBuyGroupSharesAccountList.cs" />
