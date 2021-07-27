@@ -12,19 +12,13 @@ namespace MealTicket_DBCommon
     using System;
     using System.Collections.Generic;
     
-    public partial class t_shares_transactiondata
+    public partial class t_account_shares_buy_setting_shares
     {
         public long Id { get; set; }
-        public int Market { get; set; }
-        public string SharesCode { get; set; }
-        public System.DateTime Time { get; set; }
-        public string TimeStr { get; set; }
-        public long Price { get; set; }
-        public int Volume { get; set; }
-        public int Stock { get; set; }
-        public int Type { get; set; }
-        public int OrderIndex { get; set; }
+        public long AccountId { get; set; }
+        public long ConditiontradeBuyId { get; set; }
+        public int Status { get; set; }
+        public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
-        public Nullable<int> SharesInfoNum { get; set; }
     }
 }

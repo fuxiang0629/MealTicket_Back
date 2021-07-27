@@ -6212,5 +6212,53 @@ namespace MealTicket_Web_APIService.controller
             trendHandler.ModifyAccountRealTimeTabSetting(request, basedata);
             return null;
         }
+
+        /// <summary>
+        /// 获取授权账户股票列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取授权账户股票列表")]
+        [Route("authorize/account/shares/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public PageRes<AuthorizeAccountSharesInfo> GetAuthorizeAccountSharesList(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAuthorizeAccountSharesList(request, basedata);
+        }
+
+        /// <summary>
+        /// 修改授权账户股票状态
+        /// </summary>
+        /// <returns></returns>
+        [Description("修改授权账户股票状态")]
+        [Route("authorize/account/shares/status/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifyAuthorizeAccountSharesStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAuthorizeAccountSharesStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取同步未读股票数量
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取同步未读股票数量")]
+        [Route("authorize/account/shares/notreadcount"), HttpPost]
+        [CheckUserLoginFilter]
+        public object GetAuthorizeAccountSharesNotReadCount()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAuthorizeAccountSharesNotReadCount(basedata);
+        }
     }
 }

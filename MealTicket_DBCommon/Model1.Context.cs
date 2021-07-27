@@ -262,6 +262,7 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_account_tab_setting> t_account_tab_setting { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_buy_trirecord> t_account_shares_conditiontrade_buy_trirecord { get; set; }
         public virtual DbSet<t_shares_transactiondata_update> t_shares_transactiondata_update { get; set; }
+        public virtual DbSet<t_account_shares_buy_setting_shares> t_account_shares_buy_setting_shares { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)

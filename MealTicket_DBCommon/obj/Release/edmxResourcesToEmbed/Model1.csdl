@@ -2849,6 +2849,7 @@
     <Property Name="Type" Type="Int32" Nullable="false" />
     <Property Name="OrderIndex" Type="Int32" Nullable="false" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="SharesInfoNum" Type="Int32" annotation:StoreGeneratedPattern="Computed" />
   </EntityType>
   <EntityType Name="t_sms_callback">
     <Key>
@@ -4102,6 +4103,7 @@
     <EntitySet Name="t_account_tab_setting" EntityType="meal_ticketModel.t_account_tab_setting" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_trirecord" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_trirecord" />
     <EntitySet Name="t_shares_transactiondata_update" EntityType="meal_ticketModel.t_shares_transactiondata_update" />
+    <EntitySet Name="t_account_shares_buy_setting_shares" EntityType="meal_ticketModel.t_account_shares_buy_setting_shares" />
   </EntityContainer>
   <EntityType Name="t_account_baseinfo">
     <Key>
@@ -4244,6 +4246,17 @@
     <Property Name="Market" Type="Int32" Nullable="false" />
     <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="Type" Type="Int32" Nullable="false" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_buy_setting_shares">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="ConditiontradeBuyId" Type="Int64" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
 </Schema>

@@ -14728,12 +14728,7 @@ select @buyId;";
                               where item.AccountId == basedata.AccountId
                               select item;
                 int totalCount = setting.Count();
-
-                return new PageRes<AccountAutoBuySyncroSettingInfo>
-                {
-                    MaxId = 0,
-                    TotalCount = totalCount,
-                    List = (from item in setting
+                var list = (from item in setting
                             join item2 in db.t_account_baseinfo on item.MainAccountId equals item2.Id
                             orderby item.CreateTime descending
                             select new AccountAutoBuySyncroSettingInfo
@@ -14741,18 +14736,48 @@ select @buyId;";
                                 Status = item.Status,
                                 BuyAmount = item.BuyAmount,
                                 CreateTime = item.CreateTime,
-                                Id=item.Id,
-                                MainAccountId=item.MainAccountId,
-                                FollowType=item.FollowType,
-                                MainAccountMobile= item2.Mobile,
-                                MainAccountName=item2.NickName,
-                                GroupList=(from x in db.t_account_shares_buy_synchro_setting_group
-                                          where x.SettingId== item.Id
-                                          select x.GroupId).ToList(),
+                                Id = item.Id,
+                                MainAccountId = item.MainAccountId,
+                                FollowType = item.FollowType,
+                                MainAccountMobile = item2.Mobile,
+                                MainAccountName = item2.NickName,
+                                GroupList = (from x in db.t_account_shares_buy_synchro_setting_group
+                                             where x.SettingId == item.Id
+                                             select x.GroupId).ToList(),
                                 FollowList = (from x in db.t_account_shares_buy_synchro_setting_follow
                                               where x.SettingId == item.Id
                                               select x.FollowAccountId).ToList()
-                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                foreach(var x in list)
+                {
+                    var result = (from item in db.t_account_shares_buy_synchro_setting_authorized_group_rel
+                                  join item5 in db.t_account_shares_buy_synchro_setting on item.SettingId equals item5.Id
+                                  join item2 in db.t_account_shares_conditiontrade_buy_group_syncro_account on item.GroupId equals item2.AuthorizedGroupId
+                                  join item3 in db.t_account_shares_conditiontrade_buy_group_rel on item2.GroupId equals item3.GroupId
+                                  join item4 in db.t_account_shares_conditiontrade_buy on new { AccountId = item5.MainAccountId, item3.Market, item3.SharesCode } equals new { item4.AccountId, item4.Market, item4.SharesCode }
+                                  join item6 in db.t_account_shares_conditiontrade_buy_details on item4.Id equals item6.ConditionId
+                                  where item.SettingId == x.Id && item2.Status == 1 && item5.AccountId == basedata.AccountId && item6.TriggerTime == null
+                                  group item4 by item4 into g
+                                  select g.Key.Id).ToList(); ;
+
+                    //查询用户已查看股票
+                    var accountShares = (from item in db.t_account_shares_buy_setting_shares
+                                         join item2 in db.t_account_shares_conditiontrade_buy on item.ConditiontradeBuyId equals item2.Id
+                                         where item.AccountId == basedata.AccountId
+                                         select item.ConditiontradeBuyId).ToList();
+                    result = (from item in result
+                                  join item2 in accountShares on item equals item2 into a
+                                  from ai in a.DefaultIfEmpty()
+                                  select ai).ToList();
+                    x.NotRedCount = result.Where(e => e == 0).Count();
+                    x.TotalCount = result.Count();
+                }
+                return new PageRes<AccountAutoBuySyncroSettingInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List= list
                 };
             }
         }
@@ -15312,6 +15337,152 @@ select @buyId;";
                     tran.Rollback();
                     throw ex;
                 }
+            }
+        }
+
+        /// <summary>
+        /// 获取授权账户股票列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<AuthorizeAccountSharesInfo> GetAuthorizeAccountSharesList(DetailsPageRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_account_shares_buy_synchro_setting_authorized_group_rel
+                             join item5 in db.t_account_shares_buy_synchro_setting on item.SettingId equals item5.Id
+                             join item2 in db.t_account_shares_conditiontrade_buy_group_syncro_account on item.GroupId equals item2.AuthorizedGroupId
+                             join item3 in db.t_account_shares_conditiontrade_buy_group_rel on item2.GroupId equals item3.GroupId
+                             join item4 in db.t_account_shares_conditiontrade_buy on new { AccountId = item5.MainAccountId, item3.Market, item3.SharesCode } equals new { item4.AccountId, item4.Market, item4.SharesCode }
+                             join item6 in db.t_account_shares_conditiontrade_buy_details on item4.Id equals item6.ConditionId
+                             where item.SettingId == request.Id && item2.Status == 1 && item5.AccountId == basedata.AccountId && item6.TriggerTime==null
+                             group item4 by item4 into g
+                             select g;
+                int totalCount = result.Count();
+                var resultList = (from item in result
+                                  orderby item.Key.CreateTime descending
+                                  select new AuthorizeAccountSharesInfo
+                                  {
+                                      Market = item.Key.Market,
+                                      SharesCode = item.Key.SharesCode,
+                                      ConditiontradeBuyId = item.Key.Id
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                //查询用户已查看股票
+                var accountShares = (from item in db.t_account_shares_buy_setting_shares
+                                     join item2 in db.t_account_shares_conditiontrade_buy on item.ConditiontradeBuyId equals item2.Id
+                                     where item.AccountId == basedata.AccountId
+                                     select item).ToList();
+
+
+
+                resultList = (from item in resultList
+                              join item2 in accountShares on item.ConditiontradeBuyId equals item2.ConditiontradeBuyId into a
+                              from ai in a.DefaultIfEmpty()
+                              select new AuthorizeAccountSharesInfo
+                              {
+                                  ConditiontradeBuyId = item.ConditiontradeBuyId,
+                                  SharesCode = item.SharesCode,
+                                  Market = item.Market,
+                                  Status = ai == null ? 1 : ai.Status,
+                                  UpdateTime = ai == null ? DateTime.Now : ai.LastModified
+                              }).ToList();
+
+                DataTable table = new DataTable();
+                table.Columns.Add("ConditiontradeBuyId", typeof(long));
+                table.Columns.Add("AccountId", typeof(long));
+                foreach (var item in resultList)
+                {
+                    DataRow row = table.NewRow();
+                    row["ConditiontradeBuyId"] = item.ConditiontradeBuyId;
+                    row["AccountId"] = basedata.AccountId;
+                    table.Rows.Add(row);
+
+                    item.SharesName = (from x in Singleton.Instance._SharesBaseSession.GetSessionData()
+                                       where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                       select x.SharesName).FirstOrDefault();
+                }
+                using (var tran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        //关键是类型
+                        SqlParameter parameter = new SqlParameter("@buySettingShares", SqlDbType.Structured);
+                        //必须指定表类型名
+                        parameter.TypeName = "dbo.BuySettingShares";
+                        //赋值
+                        parameter.Value = table;
+                        db.Database.ExecuteSqlCommand("exec P_BuySettingShares_Update @buySettingShares", parameter);
+                        tran.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        tran.Rollback();
+                        throw ex;
+                    }
+                }
+
+                return new PageRes<AuthorizeAccountSharesInfo> 
+                {
+                    List= resultList,
+                    MaxId=0,
+                    TotalCount=totalCount
+                };
+            }
+        }
+
+        /// <summary>
+        /// 修改授权账户股票状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public void ModifyAuthorizeAccountSharesStatus(ModifyStatusRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = (from item in db.t_account_shares_buy_setting_shares
+                              where item.AccountId == basedata.AccountId && item.ConditiontradeBuyId == request.Id
+                              select item).FirstOrDefault();
+                if (result == null)
+                {
+                    throw new WebApiException(400,"数据不存在");
+                }
+                result.Status = request.Status;
+                result.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取同步未读股票数量
+        /// </summary>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public object GetAuthorizeAccountSharesNotReadCount(HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //查询用户已查看股票
+                var accountShares = from item in db.t_account_shares_buy_setting_shares
+                                    where item.AccountId == basedata.AccountId
+                                    select item;
+                var result = (from item in db.t_account_shares_buy_synchro_setting_authorized_group_rel
+                              join item5 in db.t_account_shares_buy_synchro_setting on item.SettingId equals item5.Id
+                              join item2 in db.t_account_shares_conditiontrade_buy_group_syncro_account on item.GroupId equals item2.AuthorizedGroupId
+                              join item3 in db.t_account_shares_conditiontrade_buy_group_rel on item2.GroupId equals item3.GroupId
+                              join item4 in db.t_account_shares_conditiontrade_buy on new { AccountId = item5.MainAccountId, item3.Market, item3.SharesCode } equals new { item4.AccountId, item4.Market, item4.SharesCode }
+                              join item6 in db.t_account_shares_conditiontrade_buy_details on item4.Id equals item6.ConditionId
+                              join item7 in accountShares on item4.Id equals item7.ConditiontradeBuyId into a
+                              from ai in a.DefaultIfEmpty()
+                              where item2.Status == 1 && item5.AccountId == basedata.AccountId && item6.TriggerTime == null && ai == null
+                              group item4 by item4 into g
+                              select g).Count();
+                return new 
+                {
+                    NotReadCount= result
+                };
             }
         }
     }

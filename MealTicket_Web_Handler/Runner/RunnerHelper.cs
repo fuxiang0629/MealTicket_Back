@@ -462,7 +462,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
             List<TradeAutoBuyCondition> disResult = new List<TradeAutoBuyCondition>();
             using (var db = new meal_ticketEntities())
             {
-                string sql = @"select t.Id,t1.AccountId,t1.SharesCode,t1.Market,t2.PresentPrice,t2.ClosedPrice,t2.LastModified,t.LimitUp,t2.LimitUpPrice,t2.LimitDownPrice,
+                string sql = @"select t.Id,t1.Id ConditionId,t1.AccountId,t1.SharesCode,t1.Market,t2.PresentPrice,t2.ClosedPrice,t2.LastModified,t.LimitUp,t2.LimitUpPrice,t2.LimitDownPrice,
 t.ForbidType,t.FirstExecTime,t2.BuyPrice1,t2.BuyPrice2,t2.BuyPrice3,t2.BuyPrice4,t2.BuyPrice5,t2.SellPrice1,t2.SellPrice2,t2.SellPrice3,
 t2.SellPrice4,t2.SellPrice5,t.ConditionPrice,t.ConditionType,t.ConditionRelativeType,t.ConditionRelativeRate,t.IsGreater,t.OtherConditionRelative,
 t.BusinessStatus,t.TriggerTime,t.ExecStatus,t.BuyAuto,t.EntrustPriceGear,t.EntrustType,t.EntrustAmount,t.IsHold,t.FollowType
@@ -552,7 +552,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
 
         private static void doAutoBuyTask(TradeAutoBuyCondition item, bool isSyncro = false)
         {
-               DateTime timeNow = DateTime.Now;
+            DateTime timeNow = DateTime.Now;
             using (var db = new meal_ticketEntities())
             {
                 string sql = "";
@@ -1832,6 +1832,13 @@ inner
                             {
                                 try
                                 {
+                                    var condition_buy = (from x in db.t_account_shares_buy_setting_shares
+                                                         where x.ConditiontradeBuyId == item.ConditionId && x.AccountId == data.disAccountId && x.Status != 1
+                                                         select x).FirstOrDefault();
+                                    if (condition_buy != null)
+                                    {
+                                        continue;
+                                    }
                                     CopyAccountBuyCondition(item.Id, data.disAccountId, data.groupList, data.followList, data.followType, data.buyAmount, conditionInfo);
                                     Singleton.Instance.AddSyncro(conditionInfo);
                                 }
@@ -2650,6 +2657,8 @@ inner
     public class TradeAutoBuyCondition
     {
         public long Id { get; set; }
+
+        public long ConditionId { get; set; }
 
         public long CreateAccountId { get; set; }
 

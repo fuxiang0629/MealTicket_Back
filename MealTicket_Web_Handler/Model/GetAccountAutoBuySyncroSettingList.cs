@@ -61,5 +61,15 @@ namespace MealTicket_Web_Handler.Model
         /// 数据时间
         /// </summary>
         public DateTime CreateTime { get; set; }
+
+        /// <summary>
+        /// 未读数量
+        /// </summary>
+        public int NotRedCount { get; set; }
+
+        /// <summary>
+        /// 总数量
+        /// </summary>
+        public int TotalCount { get; set; }
     }
 }
