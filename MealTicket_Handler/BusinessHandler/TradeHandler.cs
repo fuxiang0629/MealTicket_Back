@@ -567,7 +567,7 @@ end", request.Market, request.SharesCode);
                                 select item).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                 List<TradeHoldInfo> list = new List<TradeHoldInfo>();
 
-                var traderulesList = DbHelper.GetTraderules(basedata.AccountId);
+                var traderulesList_account = DbHelper.GetTraderules(basedata.AccountId);
                 var otherCostInfo = (from item in tempList
                                      select new OtherCostInfo
                                      {
@@ -585,7 +585,7 @@ end", request.Market, request.SharesCode);
 
                     List<ClosingLineInfo> closingList = new List<ClosingLineInfo>();
 
-                    traderulesList = DbHelper.GetSharesTotalRules(item.item.SharesCode, item.item2.SharesName, item.item.Market, traderulesList);
+                    var traderulesList=DbHelper.GetSharesTotalRules(item.item.SharesCode, item.item2.SharesName, item.item.Market, traderulesList_account);
                     long closingPrice = 0;
                     long cordonPrice = 0;
                     long addDepositAmount = 0;

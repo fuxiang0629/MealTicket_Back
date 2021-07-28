@@ -12,6 +12,10 @@ namespace MealTicket_Web_Handler.session
 {
     public class BuyTipSession: Session<List<BuyTipInfo>>
     {
+        public BuyTipSession()
+        {
+            Name = "BuyTipSession";
+        }
         public override List<BuyTipInfo> UpdateSession()
         {
             using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))

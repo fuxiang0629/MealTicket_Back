@@ -70,6 +70,16 @@ namespace MealTicket_Web_Handler
         /// </summary>
         public string SharesCodeMatch1 = "(^6.*)";
 
+        /// <summary>
+        /// 板块排行展示
+        /// </summary>
+        public int PlateRankShow = 10;
+
+        /// <summary>
+        /// 配置web端展示前几日成交量/成交额/换手
+        /// </summary>
+        public int QuotesDaysShow = 20;
+
         #region===再触发设置===
         public int MinPushTimeInterval = 180;
         public int MinPushRateInterval = 60;
@@ -243,6 +253,10 @@ namespace MealTicket_Web_Handler
             if (_SharesQuotesDateSession != null)
             {
                 _SharesQuotesDateSession.Dispose();
+            }
+            if (_BasePlateSession != null)
+            {
+                _BasePlateSession.Dispose();
             }
         }
 
@@ -419,6 +433,32 @@ namespace MealTicket_Web_Handler
                     }
                 }
                 catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "PlateRankShow"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        PlateRankShow = int.Parse(sysPar.ParamValue);
+                    }
+                }
+                catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "QuotesDaysShow"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        if (_SharesBaseSession != null && QuotesDaysShow!= int.Parse(sysPar.ParamValue))
+                        {
+                            _SharesBaseSession.UpdateSessionManual();
+                        }
+                        QuotesDaysShow = int.Parse(sysPar.ParamValue);
+                    }
+                }
+                catch { }
             }
 
             _tradeTime = GetTradeCloseTime();
@@ -573,6 +613,7 @@ namespace MealTicket_Web_Handler
         public AccountTrendTriSession _AccountTrendTriSession;
         public AccountRiseLimitTriSession _AccountRiseLimitTriSession;
         public SharesQuotesDateSession _SharesQuotesDateSession;
+        public BasePlateSession _BasePlateSession;
         #endregion
     }
 }

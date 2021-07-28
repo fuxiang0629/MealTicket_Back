@@ -187,11 +187,35 @@ namespace MealTicket_Web_Handler
                                   CurrPrice = item.PresentPrice,
                                   RisePrice = item.PresentPrice - item.ClosedPrice,
                                   RiseRate = (int)Math.Round(((item.PresentPrice - item.ClosedPrice) * 1.0 / item.ClosedPrice) * 10000, 0),
+                                  TodayDealCount=item.TotalCount,
+                                  TodayDealAmount=item.TotalAmount
                               }).ToList();
                 List<string> sharesInfoList = request.Select(e => e.Market + "" + e.SharesCode).ToList();
                 var plateList = (from x in Singleton.Instance._PlateRateSession.GetSessionData()
                                  where sharesInfoList.Contains(x.SharesInfo)
                                  select x).ToList();
+                quotes = (from item in quotes
+                          join item2 in Singleton.Instance._SharesBaseSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                          select new SharesListQuotesInfo
+                          {
+                              PushTime = item.PushTime,
+                              SharesCode = item.SharesCode,
+                              Market = item.Market,
+                              CurrPrice = item.CurrPrice,
+                              RisePrice = item.RisePrice,
+                              RiseRate = item.RiseRate,
+                              TodayDealCount = item.TodayDealCount,
+                              TodayDealAmount = item.TodayDealAmount,
+                              CirculatingCapital=item2.CirculatingCapital,
+                              DaysAvgDealAmount=item2.DaysAvgDealAmount,
+                              DaysAvgDealCount=item2.DaysAvgDealCount,
+                              LimitDownCount=item2.LimitDownCount,
+                              LimitUpCount=item2.LimitUpCount,
+                              LimitUpDay=item2.LimitUpDay,
+                              PreDayDealAmount=item2.PreDayDealAmount,
+                              PreDayDealCount=item2.PreDayDealCount,
+                              TotalCapital=item2.TotalCapital
+                          }).ToList();
                 foreach (var item in quotes)
                 {
                     //查询股票属于哪个板块
@@ -1626,6 +1650,8 @@ namespace MealTicket_Web_Handler
                                         ConditionStatus = g.Key.ci == null ? 1 : g.Key.ci.Status == 1 ? 3 : 2,
                                         ConditionId = g.Key.ci == null ? 0 : g.Key.ci.Id,
                                         AccountId = g.Key.item.AccountId,
+                                        TodayDealAmount=g.Key.item6.TotalAmount,
+                                        TodayDealCount=g.Key.item6.TotalCount,
                                         PlateList = (from x in plateList
                                                      where x.Market == g.Key.item.Market && x.SharesCode == g.Key.item.SharesCode
                                                      select x).ToList()
@@ -1659,7 +1685,49 @@ namespace MealTicket_Web_Handler
                         continue;
                     }
                     item.ThreeDaysRiseRate = temp3.ClosedPrice == 0 ? 0 : (int)Math.Round(((temp1.PresentPrice - temp3.ClosedPrice) * 1.0 / temp3.ClosedPrice) * 10000, 0);
+                    item.TodayDealAmount = temp1.TotalAmount;
+                    item.TodayDealCount = temp1.TotalCount;
                 }
+
+                resultList = (from item in resultList
+                              join item2 in Singleton.Instance._SharesBaseSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                              select new AccountTrendTriInfo
+                              {
+                                  PushTime = item.PushTime,
+                                  SharesCode = item.SharesCode,
+                                  Market = item.Market,
+                                  TodayDealCount = item.TodayDealCount,
+                                  TodayDealAmount = item.TodayDealAmount,
+                                  CirculatingCapital = item2.CirculatingCapital,
+                                  DaysAvgDealAmount = item2.DaysAvgDealAmount,
+                                  DaysAvgDealCount = item2.DaysAvgDealCount,
+                                  LimitDownCount = item2.LimitDownCount,
+                                  LimitUpCount = item2.LimitUpCount,
+                                  LimitUpDay = item2.LimitUpDay,
+                                  PreDayDealAmount = item2.PreDayDealAmount,
+                                  PreDayDealCount = item2.PreDayDealCount,
+                                  TotalCapital = item2.TotalCapital,
+                                  SharesName=item.SharesName,
+                                  ConditionStatus=item.ConditionStatus,
+                                  AccountId=item.AccountId,
+                                  Business=item.Business,
+                                  ClosedPrice=item.ClosedPrice,
+                                  ConditionId=item.ConditionId,
+                                  GroupList=item.GroupList,
+                                  Industry=item.Industry,
+                                  OpenedPrice=item.OpenedPrice,
+                                  OptionalId=item.OptionalId,
+                                  PlateList=item.PlateList,
+                                  PresentPrice=item.PresentPrice,
+                                  RelId=item.RelId,
+                                  ThreeDaysRiseRate=item.ThreeDaysRiseRate,
+                                  TrendId=item.TrendId,
+                                  TriCountToday=item.TriCountToday,
+                                  TriDesc=item.TriDesc,
+                                  TwoDaysRiseRate=item.TwoDaysRiseRate,
+                                  YestodayRiseRate=item.YestodayRiseRate
+                              }).ToList();
+
                 return resultList;
             }
         }
@@ -1755,7 +1823,9 @@ namespace MealTicket_Web_Handler
                             TriCountToday = item.TriCountToday,
                             RelId = item.RelId,
                             ConditionId = ai == null ? 0 : ai.Id,
-                            ConditionStatus = ai == null ? 0 : ai.Status
+                            ConditionStatus = ai == null ? 0 : ai.Status,
+                            TodayDealAmount=item4.TotalAmount,
+                            TodayDealCount=item4.TotalCount
                         }).ToList();
 
                 List<AccountRiseLimitTriInfo> resultList = new List<AccountRiseLimitTriInfo>();
@@ -1836,7 +1906,43 @@ namespace MealTicket_Web_Handler
 
                     resultList.Add(item);
                 }
-
+                resultList = (from item in resultList
+                              join item2 in Singleton.Instance._SharesBaseSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                              select new AccountRiseLimitTriInfo
+                              {
+                                  PushTime = item.PushTime,
+                                  SharesCode = item.SharesCode,
+                                  Market = item.Market,
+                                  TodayDealCount = item.TodayDealCount,
+                                  TodayDealAmount = item.TodayDealAmount,
+                                  CirculatingCapital = item2.CirculatingCapital,
+                                  DaysAvgDealAmount = item2.DaysAvgDealAmount,
+                                  DaysAvgDealCount = item2.DaysAvgDealCount,
+                                  LimitDownCount = item2.LimitDownCount,
+                                  LimitUpCount = item2.LimitUpCount,
+                                  LimitUpDay = item2.LimitUpDay,
+                                  PreDayDealAmount = item2.PreDayDealAmount,
+                                  PreDayDealCount = item2.PreDayDealCount,
+                                  TotalCapital = item2.TotalCapital,
+                                  SharesName = item.SharesName,
+                                  ConditionStatus = item.ConditionStatus,
+                                  Business = item.Business,
+                                  ClosedPrice = item.ClosedPrice,
+                                  ConditionId = item.ConditionId,
+                                  GroupList = item.GroupList,
+                                  Industry = item.Industry,
+                                  OpenedPrice = item.OpenedPrice,
+                                  PlateList = item.PlateList,
+                                  PresentPrice = item.PresentPrice,
+                                  RelId = item.RelId,
+                                  ThreeDaysRiseRate = item.ThreeDaysRiseRate,
+                                  TriCountToday = item.TriCountToday,
+                                  TwoDaysRiseRate = item.TwoDaysRiseRate,
+                                  YestodayRiseRate = item.YestodayRiseRate,
+                                  Fundmultiple=item.Fundmultiple,
+                                  Range=item.Range,
+                                  Type=item.Type
+                              }).ToList();
                 return resultList;
             }
         }
@@ -2440,7 +2546,7 @@ namespace MealTicket_Web_Handler
                                  where sharesList.Contains(x.SharesInfo)
                                  select x).ToList();
 
-                var traderulesList = DbHelper.GetTraderules(request.Id);
+                var traderulesList_account = DbHelper.GetTraderules(request.Id);
                 var otherCostInfo = (from item in tempList
                                      select new OtherCostInfo
                                      {
@@ -2459,7 +2565,7 @@ namespace MealTicket_Web_Handler
 
                     List<ClosingLineInfo> closingList = new List<ClosingLineInfo>();
 
-                    traderulesList=DbHelper.GetSharesTotalRules(item.item.SharesCode, item.item2.SharesName, item.item.Market, traderulesList);
+                    var traderulesList = DbHelper.GetSharesTotalRules(item.item.SharesCode, item.item2.SharesName, item.item.Market, traderulesList_account);
                     long closingPrice = 0;
                     long cordonPrice = 0;
                     long addDepositAmount = 0;
@@ -2536,10 +2642,52 @@ namespace MealTicket_Web_Handler
                         PlateList = (from x in plateList
                                     where x.Market == item.item.Market && x.SharesCode == item.item.SharesCode
                                     orderby x.RiseRate descending
-                                    select x).ToList()
+                                    select x).ToList(),
+                        TodayDealAmount= item.item3.TotalAmount,
+                        TodayDealCount=item.item3.TotalCount
                     });
                 }
                 ts.Complete();
+
+
+                list = (from item in list
+                        join item2 in Singleton.Instance._SharesBaseSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                        select new AccountTradeHoldInfo
+                        {
+                            SharesCode = item.SharesCode,
+                            SharesName = item.SharesName,
+                            HoldId = item.HoldId,
+                            Market = item.Market,
+                            FundAmount = item.FundAmount,
+                            RemainDeposit = item.RemainDeposit,
+                            PresentPrice = item.PresentPrice,
+                            BuyTotalAmount = item.BuyTotalAmount,
+                            CostPrice = item.CostPrice,
+                            RemainCount = item.RemainCount,
+                            MarketValue = item.MarketValue,
+                            CanSellCount = item.CanSellCount,
+                            ProfitAmount = item.ProfitAmount,
+                            TodayRiseAmount = item.TodayRiseAmount,
+                            ClosedPrice = item.ClosedPrice,
+                            ClosingTime = item.ClosingTime,
+                            ClosingLineList = item.ClosingLineList,
+                            ParExecuteCount = item.ParExecuteCount,
+                            ParTotalCount = item.ParTotalCount,
+                            ParValidCount = item.ParValidCount,
+                            PlateList = item.PlateList,
+                            CirculatingCapital=item2.CirculatingCapital,
+                            DaysAvgDealAmount=item2.DaysAvgDealAmount,
+                            DaysAvgDealCount=item2.DaysAvgDealCount,
+                            LimitDownCount=item2.LimitDownCount,
+                            LimitUpCount=item2.LimitUpCount,
+                            LimitUpDay=item2.LimitUpDay,
+                            PreDayDealAmount=item2.PreDayDealAmount,
+                            PreDayDealCount=item2.PreDayDealCount,
+                            TotalCapital=item2.TotalCapital,
+                            TodayDealAmount=item.TodayDealAmount,
+                            TodayDealCount=item.TodayDealCount
+                        }).ToList();
+
                 return new PageRes<AccountTradeHoldInfo>
                 {
                     MaxId = 0,
@@ -13972,6 +14120,13 @@ select @buyId;";
                 Description = "买入板块限制",
                 ParValueJson = "{\"Value\":0}"
             });
+            tempList.Add(new AccountBuySettingInfo
+            {
+                Type = 5,
+                Name = "同步交易默认买入",
+                Description = "同步交易默认买入",
+                ParValueJson = "{\"Value\":1}"
+            });
             bool IsMain = false;
             if (request.AccountId == 0)
             {
@@ -15369,12 +15524,16 @@ select @buyId;";
                                       ConditiontradeBuyId = item.Key.Id
                                   }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
 
+                var sharesList = resultList.Select(e => e.Market + "" + e.SharesCode).ToList();
+                var plateList = (from x in Singleton.Instance._PlateRateSession.GetSessionData()
+                                 where sharesList.Contains(x.SharesInfo)
+                                 select x).ToList();
+
                 //查询用户已查看股票
                 var accountShares = (from item in db.t_account_shares_buy_setting_shares
                                      join item2 in db.t_account_shares_conditiontrade_buy on item.ConditiontradeBuyId equals item2.Id
                                      where item.AccountId == basedata.AccountId
                                      select item).ToList();
-
 
 
                 resultList = (from item in resultList
@@ -15386,7 +15545,12 @@ select @buyId;";
                                   SharesCode = item.SharesCode,
                                   Market = item.Market,
                                   Status = ai == null ? 1 : ai.Status,
-                                  UpdateTime = ai == null ? DateTime.Now : ai.LastModified
+                                  UpdateTime = ai == null ? DateTime.Now : ai.CreateTime,
+                                  IsRead= ai==null?false:true,
+                                  PlateList = (from x in plateList
+                                               where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                               orderby x.RiseRate descending
+                                               select x).ToList()
                               }).ToList();
 
                 DataTable table = new DataTable();
@@ -15456,6 +15620,28 @@ select @buyId;";
         }
 
         /// <summary>
+        /// 批量修改授权账户股票状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public void BatchModifyAuthorizeAccountSharesStatus(ModifyStatusRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = (from item in db.t_account_shares_buy_setting_shares
+                              where item.AccountId == basedata.AccountId
+                              select item).ToList();
+                foreach (var item in result)
+                {
+                    item.Status = request.Status;
+                    item.LastModified = DateTime.Now;
+                }
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
         /// 获取同步未读股票数量
         /// </summary>
         /// <param name="basedata"></param>
@@ -15485,5 +15671,48 @@ select @buyId;";
                 };
             }
         }
+
+        /// <summary>
+        /// 获取板块涨跌幅排行
+        /// </summary>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public List<SharesPlateInfo> GetPlateRiseRateRankList(HeadBase basedata)
+        {
+            var list = (from item in Singleton.Instance._BasePlateSession.GetSessionData()
+                        orderby item.RiseRate descending
+                        select new SharesPlateInfo
+                        { 
+                            Name=item.PlateName,
+                            Id=item.PlateId,
+                            DownLimitCount=item.DownLimitCount,
+                            RiseLimitCount=item.RiseLimitCount,
+                            RiseRate=item.RiseRate,
+                            Type=item.PlateType
+                        }).Take(Singleton.Instance.PlateRankShow).ToList();
+            int i = 0;
+            foreach (var item in list)
+            {
+                i++;
+                item.Rank = i;
+            }
+            return list;
+        }
+
+        #region====自动选票====
+        /// <summary>
+        /// 获取自动选票列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<AccountAutoTobuyInfo> GetAccountAutoTobuyList(PageRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                throw new NotSupportedException();
+            }
+        }
+        #endregion
     }
 }

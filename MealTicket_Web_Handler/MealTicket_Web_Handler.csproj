@@ -144,6 +144,7 @@
     <Compile Include="Model\DeleteConditiontradeBuyGroup.cs" />
     <Compile Include="Model\GetAccountAutoBuySyncroSettingAuthorizedGroupList.cs" />
     <Compile Include="Model\GetAccountAutoBuySyncroSettingList.cs" />
+    <Compile Include="Model\GetAccountAutoTobuyList.cs" />
     <Compile Include="Model\GetAccountBuyConditionAutoGroupList.cs" />
     <Compile Include="Model\GetAccountBuyConditionAutoList.cs" />
     <Compile Include="Model\GetAccountBuyConditionAutoPar.cs" />
@@ -254,7 +255,9 @@
     <Compile Include="Runner\RunnerHelper.cs" />
     <Compile Include="session\AccountRiseLimitTriSession.cs" />
     <Compile Include="session\AccountTrendTriSession.cs" />
+    <Compile Include="session\BasePlateSession.cs" />
     <Compile Include="session\BuyTipSession.cs" />
+    <Compile Include="session\model\BasePlateInfo.cs" />
     <Compile Include="session\model\SharesBaseInfo.cs" />
     <Compile Include="session\PlateRateSession.cs" />
     <Compile Include="session\SharesBaseSession.cs" />

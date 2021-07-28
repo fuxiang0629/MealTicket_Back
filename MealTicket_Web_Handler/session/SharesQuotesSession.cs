@@ -10,6 +10,10 @@ namespace MealTicket_Web_Handler.session
 {
     public class SharesQuotesSession:Session<List<v_shares_quotes_last>>
     {
+        public SharesQuotesSession()
+        {
+            Name = "SharesQuotesSession";
+        }
         public override List<v_shares_quotes_last> UpdateSession()
         {
             using (var db = new meal_ticketEntities())

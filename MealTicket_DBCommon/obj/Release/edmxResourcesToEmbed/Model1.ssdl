@@ -251,6 +251,98 @@
     <Property Name="DeviceUA" Type="nvarchar" MaxLength="512" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
   </EntityType>
+  <EntityType Name="t_account_shares_auto_join_tobuy">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" />
+    <Property Name="TemplateType" Type="int" Nullable="false" />
+    <Property Name="TemplateId" Type="bigint" Nullable="false" />
+    <Property Name="IsClearOriginal" Type="bit" Nullable="false" />
+    <Property Name="FollowType" Type="int" Nullable="false" />
+    <Property Name="TimeCycleType" Type="int" Nullable="false" />
+    <Property Name="TimeCycle" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_auto_join_tobuy_follow">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ToBuyId" Type="bigint" Nullable="false" />
+    <Property Name="FollowAccountId" Type="bigint" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_auto_join_tobuy_group">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ToBuyId" Type="bigint" Nullable="false" />
+    <Property Name="GroupId" Type="bigint" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_auto_join_tobuy_other">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="ToBuyId" Type="bigint" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_auto_join_tobuy_other_trend">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OtherId" Type="bigint" Nullable="false" />
+    <Property Name="TrendId" Type="bigint" Nullable="false" />
+    <Property Name="TrendName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="TrendDescription" Type="nvarchar" MaxLength="500" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_auto_join_tobuy_other_trend_other">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OtherTrendId" Type="bigint" Nullable="false" />
+    <Property Name="TrendId" Type="bigint" Nullable="false" />
+    <Property Name="TrendName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="TrendDescription" Type="nvarchar" MaxLength="500" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_auto_join_tobuy_other_trend_other_par">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OtherTrendOtherId" Type="bigint" Nullable="false" />
+    <Property Name="ParamsInfo" Type="nvarchar(max)" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_auto_join_tobuy_other_trend_par">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="OtherTrendId" Type="bigint" Nullable="false" />
+    <Property Name="ParamsInfo" Type="nvarchar(max)" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_account_shares_buy_setting">
     <Key>
       <PropertyRef Name="Id" />
@@ -4068,6 +4160,14 @@
     <EntitySet Name="t_account_recommend_prize_type" EntityType="Self.t_account_recommend_prize_type" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_recommend_prize_type_level" EntityType="Self.t_account_recommend_prize_type_level" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_registerLog" EntityType="Self.t_account_registerLog" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_auto_join_tobuy" EntityType="Self.t_account_shares_auto_join_tobuy" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_auto_join_tobuy_follow" EntityType="Self.t_account_shares_auto_join_tobuy_follow" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_auto_join_tobuy_group" EntityType="Self.t_account_shares_auto_join_tobuy_group" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_auto_join_tobuy_other" EntityType="Self.t_account_shares_auto_join_tobuy_other" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_auto_join_tobuy_other_trend" EntityType="Self.t_account_shares_auto_join_tobuy_other_trend" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_auto_join_tobuy_other_trend_other" EntityType="Self.t_account_shares_auto_join_tobuy_other_trend_other" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_auto_join_tobuy_other_trend_other_par" EntityType="Self.t_account_shares_auto_join_tobuy_other_trend_other_par" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_auto_join_tobuy_other_trend_par" EntityType="Self.t_account_shares_auto_join_tobuy_other_trend_par" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_buy_setting" EntityType="Self.t_account_shares_buy_setting" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_buy_setting_par" EntityType="Self.t_account_shares_buy_setting_par" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_buy_setting_shares" EntityType="Self.t_account_shares_buy_setting_shares" Schema="dbo" store:Type="Tables" />

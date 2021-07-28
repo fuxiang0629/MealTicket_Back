@@ -2849,6 +2849,7 @@
     <Property Name="Type" Type="Int32" Nullable="false" />
     <Property Name="OrderIndex" Type="Int32" Nullable="false" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="SharesInfoNum" Type="Int32" annotation:StoreGeneratedPattern="Computed" />
   </EntityType>
   <EntityType Name="t_sms_callback">
     <Key>
@@ -4102,6 +4103,15 @@
     <EntitySet Name="t_account_tab_setting" EntityType="meal_ticketModel.t_account_tab_setting" />
     <EntitySet Name="t_account_shares_conditiontrade_buy_trirecord" EntityType="meal_ticketModel.t_account_shares_conditiontrade_buy_trirecord" />
     <EntitySet Name="t_shares_transactiondata_update" EntityType="meal_ticketModel.t_shares_transactiondata_update" />
+    <EntitySet Name="t_account_shares_buy_setting_shares" EntityType="meal_ticketModel.t_account_shares_buy_setting_shares" />
+    <EntitySet Name="t_account_shares_auto_join_tobuy" EntityType="meal_ticketModel.t_account_shares_auto_join_tobuy" />
+    <EntitySet Name="t_account_shares_auto_join_tobuy_follow" EntityType="meal_ticketModel.t_account_shares_auto_join_tobuy_follow" />
+    <EntitySet Name="t_account_shares_auto_join_tobuy_group" EntityType="meal_ticketModel.t_account_shares_auto_join_tobuy_group" />
+    <EntitySet Name="t_account_shares_auto_join_tobuy_other" EntityType="meal_ticketModel.t_account_shares_auto_join_tobuy_other" />
+    <EntitySet Name="t_account_shares_auto_join_tobuy_other_trend" EntityType="meal_ticketModel.t_account_shares_auto_join_tobuy_other_trend" />
+    <EntitySet Name="t_account_shares_auto_join_tobuy_other_trend_other" EntityType="meal_ticketModel.t_account_shares_auto_join_tobuy_other_trend_other" />
+    <EntitySet Name="t_account_shares_auto_join_tobuy_other_trend_other_par" EntityType="meal_ticketModel.t_account_shares_auto_join_tobuy_other_trend_other_par" />
+    <EntitySet Name="t_account_shares_auto_join_tobuy_other_trend_par" EntityType="meal_ticketModel.t_account_shares_auto_join_tobuy_other_trend_par" />
   </EntityContainer>
   <EntityType Name="t_account_baseinfo">
     <Key>
@@ -4244,6 +4254,109 @@
     <Property Name="Market" Type="Int32" Nullable="false" />
     <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="Type" Type="Int32" Nullable="false" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_buy_setting_shares">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="ConditiontradeBuyId" Type="Int64" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_auto_join_tobuy">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="TemplateType" Type="Int32" Nullable="false" />
+    <Property Name="TemplateId" Type="Int64" Nullable="false" />
+    <Property Name="IsClearOriginal" Type="Boolean" Nullable="false" />
+    <Property Name="FollowType" Type="Int32" Nullable="false" />
+    <Property Name="TimeCycleType" Type="Int32" Nullable="false" />
+    <Property Name="TimeCycle" Type="Int32" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_auto_join_tobuy_follow">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ToBuyId" Type="Int64" Nullable="false" />
+    <Property Name="FollowAccountId" Type="Int64" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_auto_join_tobuy_group">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ToBuyId" Type="Int64" Nullable="false" />
+    <Property Name="GroupId" Type="Int64" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_auto_join_tobuy_other">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ToBuyId" Type="Int64" Nullable="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_auto_join_tobuy_other_trend">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OtherId" Type="Int64" Nullable="false" />
+    <Property Name="TrendId" Type="Int64" Nullable="false" />
+    <Property Name="TrendName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="TrendDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_auto_join_tobuy_other_trend_other">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OtherTrendId" Type="Int64" Nullable="false" />
+    <Property Name="TrendId" Type="Int64" Nullable="false" />
+    <Property Name="TrendName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="TrendDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_auto_join_tobuy_other_trend_other_par">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OtherTrendOtherId" Type="Int64" Nullable="false" />
+    <Property Name="ParamsInfo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_auto_join_tobuy_other_trend_par">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="OtherTrendId" Type="Int64" Nullable="false" />
+    <Property Name="ParamsInfo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
 </Schema>

@@ -263,6 +263,14 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_account_shares_conditiontrade_buy_trirecord> t_account_shares_conditiontrade_buy_trirecord { get; set; }
         public virtual DbSet<t_shares_transactiondata_update> t_shares_transactiondata_update { get; set; }
         public virtual DbSet<t_account_shares_buy_setting_shares> t_account_shares_buy_setting_shares { get; set; }
+        public virtual DbSet<t_account_shares_auto_join_tobuy> t_account_shares_auto_join_tobuy { get; set; }
+        public virtual DbSet<t_account_shares_auto_join_tobuy_follow> t_account_shares_auto_join_tobuy_follow { get; set; }
+        public virtual DbSet<t_account_shares_auto_join_tobuy_group> t_account_shares_auto_join_tobuy_group { get; set; }
+        public virtual DbSet<t_account_shares_auto_join_tobuy_other> t_account_shares_auto_join_tobuy_other { get; set; }
+        public virtual DbSet<t_account_shares_auto_join_tobuy_other_trend> t_account_shares_auto_join_tobuy_other_trend { get; set; }
+        public virtual DbSet<t_account_shares_auto_join_tobuy_other_trend_other> t_account_shares_auto_join_tobuy_other_trend_other { get; set; }
+        public virtual DbSet<t_account_shares_auto_join_tobuy_other_trend_other_par> t_account_shares_auto_join_tobuy_other_trend_other_par { get; set; }
+        public virtual DbSet<t_account_shares_auto_join_tobuy_other_trend_par> t_account_shares_auto_join_tobuy_other_trend_par { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)

@@ -10,6 +10,10 @@ namespace MealTicket_Web_Handler.session
 {
     public class SharesQuotesDateSession : Session<List<t_shares_quotes_date>>
     {
+        public SharesQuotesDateSession()
+        {
+            Name = "SharesQuotesDateSession";
+        }
         public override List<t_shares_quotes_date> UpdateSession()
         {
             DateTime EndTime = Helper.GetLastTradeDate(-9, 0, 0);

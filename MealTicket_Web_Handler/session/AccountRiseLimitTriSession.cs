@@ -14,6 +14,11 @@ namespace MealTicket_Web_Handler.session
         DateTime? lastDataTime;
         List<AccountRiseLimitTriInfo> lastList = new List<AccountRiseLimitTriInfo>();
 
+        public AccountRiseLimitTriSession() 
+        {
+            Name = "AccountRiseLimitTriSession";
+        }
+
         public override List<AccountRiseLimitTriInfo> UpdateSession()
         {
             DateTime dateNow = Helper.GetLastTradeDate(-9, 0, 0);

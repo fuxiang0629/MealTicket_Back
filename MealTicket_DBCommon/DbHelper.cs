@@ -267,7 +267,7 @@ namespace MealTicket_DBCommon
         /// <summary>
         /// 获取某只股票当前的平仓线/警戒线
         /// </summary>
-        public static void GetSharesCurrRule(string sharesCode, string sharesName, int market, List<TradeRulesInfo> rules,ref int cordon,ref int closingLine, ref TimeSpan? startTime, ref TimeSpan? endTime,ref long rulesId)
+        public static void GetSharesCurrRule(string sharesCode, string sharesName, int market, List<TradeRulesInfo> rulesPar,ref int cordon,ref int closingLine, ref TimeSpan? startTime, ref TimeSpan? endTime,ref long rulesId)
         {
             TimeSpan timeSpan = TimeSpan.Parse(DateTime.Now.ToString("HH:mm:ss"));
             cordon = -1;
@@ -275,7 +275,7 @@ namespace MealTicket_DBCommon
             int cordon_common = -1;
             int closingLine_common = -1;
             rulesId = 0;
-            GetSharesTotalRules(sharesCode, sharesName, market, rules);
+            var rules=GetSharesTotalRules(sharesCode, sharesName, market, rulesPar);
             foreach (var item in rules)
             {
                 if (closingLine_common < item.ClosingLine)
@@ -317,7 +317,7 @@ namespace MealTicket_DBCommon
         /// <summary>
         /// 获取某只股票当前的平仓线/警戒线
         /// </summary>
-        public static void GetSharesNextRule(string sharesCode, string sharesName, int market, List<TradeRulesInfo> rules, TimeSpan? currEndTime, ref int cordon, ref int closingLine, ref TimeSpan? startTime, ref TimeSpan? endTime, ref long rulesId)
+        public static void GetSharesNextRule(string sharesCode, string sharesName, int market, List<TradeRulesInfo> rulesPar, TimeSpan? currEndTime, ref int cordon, ref int closingLine, ref TimeSpan? startTime, ref TimeSpan? endTime, ref long rulesId)
         {
             TimeSpan timeNowSpan = TimeSpan.Parse(DateTime.Now.ToString("HH:mm:ss"));
             cordon = -1;
@@ -327,7 +327,7 @@ namespace MealTicket_DBCommon
             rulesId = 0;
             startTime = null;
             endTime = null;
-            GetSharesTotalRules(sharesCode, sharesName, market, rules);
+            var rules=GetSharesTotalRules(sharesCode, sharesName, market, rulesPar);
             foreach (var item in rules)
             {
                 if (closingLine_common < item.ClosingLine)

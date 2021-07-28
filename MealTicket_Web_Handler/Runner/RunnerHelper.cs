@@ -1833,14 +1833,30 @@ inner
                                 try
                                 {
                                     var condition_buy = (from x in db.t_account_shares_buy_setting_shares
-                                                         where x.ConditiontradeBuyId == item.ConditionId && x.AccountId == data.disAccountId && x.Status != 1
+                                                         where x.ConditiontradeBuyId == item.ConditionId && x.AccountId == data.disAccountId
                                                          select x).FirstOrDefault();
-                                    if (condition_buy != null)
+                                    if (condition_buy == null)
+                                    {
+                                        //判断默认是否买入
+                                        var accountBuySetting = DbHelper.GetAccountBuySetting(data.disAccountId, 5);
+                                        var buySetting = accountBuySetting.FirstOrDefault();
+                                        if (buySetting != null)
+                                        {
+                                            var valueObj = JsonConvert.DeserializeObject<dynamic>(buySetting.ParValueJson);
+                                            int parValue = valueObj.Value;
+                                            if (parValue == 0)
+                                            {
+                                                continue;
+                                            }
+                                        }
+                                    }
+                                    else if (condition_buy.Status != 1)
                                     {
                                         continue;
                                     }
                                     CopyAccountBuyCondition(item.Id, data.disAccountId, data.groupList, data.followList, data.followType, data.buyAmount, conditionInfo);
-                                    Singleton.Instance.AddSyncro(conditionInfo);
+                                    var tempInfo = JsonConvert.DeserializeObject<TradeAutoBuyCondition>(JsonConvert.SerializeObject(conditionInfo));
+                                    Singleton.Instance.AddSyncro(tempInfo);
                                 }
                                 catch (Exception ex) { }
                             }

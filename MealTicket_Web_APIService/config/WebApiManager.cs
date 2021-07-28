@@ -81,12 +81,6 @@ namespace MealTicket_Web_APIService
         {
             //框架内部缓存信息
             session = Singleton.Instance;
-            var mqHandler=session.StartMqHandler();//生成Mq队列对象
-
-            var transactionDataTask=session.StartTransactionDataTask();
-            transactionDataTask.DoTask();
-
-            mqHandler.StartListen();//启动队列监听
 
             session._BuyTipSession = new MealTicket_Web_Handler.session.BuyTipSession();
             session._BuyTipSession.StartUpdate(1000);
@@ -101,10 +95,20 @@ namespace MealTicket_Web_APIService
             session._AccountRiseLimitTriSession = new MealTicket_Web_Handler.session.AccountRiseLimitTriSession();
             session._AccountRiseLimitTriSession.StartUpdate(3000);
             session._SharesQuotesDateSession = new MealTicket_Web_Handler.session.SharesQuotesDateSession();
-            session._SharesQuotesDateSession.StartUpdate(3600000); 
+            session._SharesQuotesDateSession.StartUpdate(3600000);
+            session._BasePlateSession = new MealTicket_Web_Handler.session.BasePlateSession();
+            session._BasePlateSession.StartUpdate(3000);
 
-             //加载依赖注入
-             Kernel = LoadKernel();   
+
+            var mqHandler = session.StartMqHandler();//生成Mq队列对象
+
+            var transactionDataTask = session.StartTransactionDataTask();
+            transactionDataTask.DoTask();
+
+            mqHandler.StartListen();//启动队列监听
+
+            //加载依赖注入
+            Kernel = LoadKernel();   
             //加载循环任务
             runners = Kernel.GetAll<Runner>().ToList();
             runners.ForEach(e => e.Run());

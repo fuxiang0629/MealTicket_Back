@@ -114,6 +114,10 @@ namespace MealTicket_Web_Handler.Model
         {
             get
             {
+                if (TriCountToday > 1)
+                {
+                    return "rgb(0, 0, 0)";
+                }
                 DateTime timeNow = DateTime.Now;
                 int intervalSecond = (int)(timeNow - PushTime).TotalSeconds;
                 if (intervalSecond < 60)
@@ -173,5 +177,116 @@ namespace MealTicket_Web_Handler.Model
         /// 板块列表
         /// </summary>
         public List<SharesPlateInfo> PlateList { get; set; }
+
+        /// <summary>
+        /// 总股本
+        /// </summary>
+        public long TotalCapital { get; set; }
+
+        /// <summary>
+        /// 流通股本
+        /// </summary>
+        public long CirculatingCapital { get; set; }
+
+        /// <summary>
+        /// 天数
+        /// </summary>
+        public int Days 
+        {
+            get 
+            {
+                return Singleton.Instance.QuotesDaysShow;
+            }
+        }
+
+        /// <summary>
+        /// x日平均成交量
+        /// </summary>
+        public int DaysAvgDealCount { get; set; }
+
+        /// <summary>
+        /// x日平均成交额
+        /// </summary>
+        public long DaysAvgDealAmount { get; set; }
+
+        /// <summary>
+        /// x日平均换手率
+        /// </summary>
+        public int DaysAvgHandsRate
+        {
+            get
+            {
+                if (CirculatingCapital <= 0)
+                {
+                    return 0;
+                }
+                return (int)(DaysAvgDealCount * 100 * 1.0 / CirculatingCapital * 10000);
+            }
+        }
+
+        /// <summary>
+        /// 上一日成交量
+        /// </summary>
+        public int PreDayDealCount { get; set; }
+
+        /// <summary>
+        /// 上一日成交额
+        /// </summary>
+        public long PreDayDealAmount { get; set; }
+
+        /// <summary>
+        /// 上一日换手率
+        /// </summary>
+        public int PreDayHandsRate
+        {
+            get
+            {
+                if (CirculatingCapital <= 0)
+                {
+                    return 0;
+                }
+                return (int)(PreDayDealCount* 1.0 / CirculatingCapital * 100 * 10000);
+            }
+        }
+
+        /// <summary>
+        /// 当日成交量
+        /// </summary>
+        public int TodayDealCount { get; set; }
+
+        /// <summary>
+        /// 当日成交额
+        /// </summary>
+        public long TodayDealAmount { get; set; }
+
+        /// <summary>
+        /// 当日换手率
+        /// </summary>
+        public int TodayHandsRate
+        {
+            get
+            {
+                if (CirculatingCapital <= 0)
+                {
+                    return 0;
+                }
+                return (int)(TodayDealCount * 100 * 1.0 / CirculatingCapital * 10000);
+            }
+        }
+
+        /// <summary>
+        /// x日涨停次数
+        /// </summary>
+        public int LimitUpCount { get; set; }
+
+        /// <summary>
+        /// x日跌停次数
+        /// </summary>
+        public int LimitDownCount { get; set; }
+
+        /// <summary>
+        /// 最近几个交易日涨停过
+        /// </summary>
+        public string LimitUpDay { get; set; }
     }
 }

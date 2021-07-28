@@ -3017,6 +3017,7 @@
     <EntitySetMapping Name="t_shares_transactiondata">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_transactiondata">
         <MappingFragment StoreEntitySet="t_shares_transactiondata">
+          <ScalarProperty Name="SharesInfoNum" ColumnName="SharesInfoNum" />
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="Market" ColumnName="Market" />
           <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
@@ -3743,6 +3744,118 @@
           <ScalarProperty Name="Type" ColumnName="Type" />
           <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
           <ScalarProperty Name="Market" ColumnName="Market" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_buy_setting_shares">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_buy_setting_shares">
+        <MappingFragment StoreEntitySet="t_account_shares_buy_setting_shares">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="ConditiontradeBuyId" ColumnName="ConditiontradeBuyId" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_auto_join_tobuy">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_auto_join_tobuy">
+        <MappingFragment StoreEntitySet="t_account_shares_auto_join_tobuy">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="TimeCycle" ColumnName="TimeCycle" />
+          <ScalarProperty Name="TimeCycleType" ColumnName="TimeCycleType" />
+          <ScalarProperty Name="FollowType" ColumnName="FollowType" />
+          <ScalarProperty Name="IsClearOriginal" ColumnName="IsClearOriginal" />
+          <ScalarProperty Name="TemplateId" ColumnName="TemplateId" />
+          <ScalarProperty Name="TemplateType" ColumnName="TemplateType" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_auto_join_tobuy_follow">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_auto_join_tobuy_follow">
+        <MappingFragment StoreEntitySet="t_account_shares_auto_join_tobuy_follow">
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="FollowAccountId" ColumnName="FollowAccountId" />
+          <ScalarProperty Name="ToBuyId" ColumnName="ToBuyId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_auto_join_tobuy_group">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_auto_join_tobuy_group">
+        <MappingFragment StoreEntitySet="t_account_shares_auto_join_tobuy_group">
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+          <ScalarProperty Name="ToBuyId" ColumnName="ToBuyId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_auto_join_tobuy_other">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_auto_join_tobuy_other">
+        <MappingFragment StoreEntitySet="t_account_shares_auto_join_tobuy_other">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ToBuyId" ColumnName="ToBuyId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_auto_join_tobuy_other_trend">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_auto_join_tobuy_other_trend">
+        <MappingFragment StoreEntitySet="t_account_shares_auto_join_tobuy_other_trend">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="TrendDescription" ColumnName="TrendDescription" />
+          <ScalarProperty Name="TrendName" ColumnName="TrendName" />
+          <ScalarProperty Name="TrendId" ColumnName="TrendId" />
+          <ScalarProperty Name="OtherId" ColumnName="OtherId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_auto_join_tobuy_other_trend_other">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_auto_join_tobuy_other_trend_other">
+        <MappingFragment StoreEntitySet="t_account_shares_auto_join_tobuy_other_trend_other">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="TrendDescription" ColumnName="TrendDescription" />
+          <ScalarProperty Name="TrendName" ColumnName="TrendName" />
+          <ScalarProperty Name="TrendId" ColumnName="TrendId" />
+          <ScalarProperty Name="OtherTrendId" ColumnName="OtherTrendId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_auto_join_tobuy_other_trend_other_par">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_auto_join_tobuy_other_trend_other_par">
+        <MappingFragment StoreEntitySet="t_account_shares_auto_join_tobuy_other_trend_other_par">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="ParamsInfo" ColumnName="ParamsInfo" />
+          <ScalarProperty Name="OtherTrendOtherId" ColumnName="OtherTrendOtherId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_auto_join_tobuy_other_trend_par">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_auto_join_tobuy_other_trend_par">
+        <MappingFragment StoreEntitySet="t_account_shares_auto_join_tobuy_other_trend_par">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="ParamsInfo" ColumnName="ParamsInfo" />
+          <ScalarProperty Name="OtherTrendId" ColumnName="OtherTrendId" />
           <ScalarProperty Name="Id" ColumnName="Id" />
         </MappingFragment>
       </EntityTypeMapping>

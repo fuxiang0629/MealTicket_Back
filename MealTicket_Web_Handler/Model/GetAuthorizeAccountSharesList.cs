@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MealTicket_Web_Handler.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -41,5 +42,15 @@ namespace MealTicket_Web_Handler
         /// 数据更新时间
         /// </summary>
         public DateTime UpdateTime { get; set; }
+
+        /// <summary>
+        /// 是否已读
+        /// </summary>
+        public bool IsRead { get; set; }
+
+        /// <summary>
+        /// 板块列表
+        /// </summary>
+        public List<SharesPlateInfo> PlateList { get; set; }
     }
 }

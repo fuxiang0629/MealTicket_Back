@@ -72,5 +72,40 @@ namespace MealTicket_Web_Handler.session
         /// 上市状态
         /// </summary>
         public int MarketStatus { get; set; }
+
+        /// <summary>
+        /// x日平均成交量
+        /// </summary>
+        public int DaysAvgDealCount { get; set; }
+
+        /// <summary>
+        /// x日平均成交额
+        /// </summary>
+        public long DaysAvgDealAmount { get; set; }
+
+        /// <summary>
+        /// 上一日成交量
+        /// </summary>
+        public int PreDayDealCount { get; set; }
+
+        /// <summary>
+        /// 上一日成交额
+        /// </summary>
+        public long PreDayDealAmount { get; set; }
+
+        /// <summary>
+        /// x日涨停次数
+        /// </summary>
+        public int LimitUpCount { get; set; }
+
+        /// <summary>
+        /// x日跌停次数
+        /// </summary>
+        public int LimitDownCount { get; set; }
+
+        /// <summary>
+        /// 最近涨停日期
+        /// </summary>
+        public string LimitUpDay { get; set; }
     }
 }

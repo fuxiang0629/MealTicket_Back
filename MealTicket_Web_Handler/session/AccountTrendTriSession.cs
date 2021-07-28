@@ -14,6 +14,11 @@ namespace MealTicket_Web_Handler.session
         DateTime? lastDataTime;
         List<AccountTrendTriInfo> lastList = new List<AccountTrendTriInfo>();
 
+
+        public AccountTrendTriSession()
+        {
+            Name = "AccountTrendTriSession";
+        }
         public override List<AccountTrendTriInfo> UpdateSession()
         {
             DateTime dateNow = Helper.GetLastTradeDate(-9, 0, 0);

@@ -1,10 +1,11 @@
-﻿using System;
+﻿using MealTicket_Web_Handler.Model;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MealTicket_Web_Handler.Model
+namespace MealTicket_Web_Handler
 {
     class GetSharesPlateList
     {
@@ -91,6 +92,11 @@ namespace MealTicket_Web_Handler.Model
         /// 跌停股票数量
         /// </summary>
         public int DownLimitCount { get; set; }
+
+        /// <summary>
+        /// 涨跌幅排名
+        /// </summary>
+        public int Rank { get; set; }
     }
 
     public class GetSharesPlateListRequest:DetailsPageRequest 

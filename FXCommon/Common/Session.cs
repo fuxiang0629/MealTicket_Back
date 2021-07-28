@@ -13,6 +13,8 @@ namespace FXCommon.Common
 
         private T SessionData;
 
+        public string Name = "";
+
         /// <summary>
         /// 系统参数更新线程
         /// </summary>
@@ -26,20 +28,20 @@ namespace FXCommon.Common
         /// <summary>
         /// 启动更新
         /// </summary>
-        public void StartUpdate(int sleepTime) 
+        public void StartUpdate(int sleepTime)
         {
+            UpdateSessionWithLock();
             UpdateWait.Init();
             UpdateThread = new Thread(() =>
             {
                 do
                 {
-                    UpdateSessionWithLock();
-
                     int msgId = 0;
                     if (UpdateWait.WaitMessage(ref msgId, sleepTime))
                     {
                         break;
                     }
+                    UpdateSessionWithLock();
                 } while (true);
             });
             UpdateThread.Start();
@@ -60,8 +62,9 @@ namespace FXCommon.Common
                 SessionData = UpdateSession();
                 return true;
             }
-            catch (Exception) 
+            catch (Exception ex) 
             {
+                Logger.WriteFileLog(Name+"缓存加载失败",ex);
                 return false;
             }
         }

@@ -6249,6 +6249,24 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 批量修改授权账户股票状态
+        /// </summary>
+        /// <returns></returns>
+        [Description("批量修改授权账户股票状态")]
+        [Route("authorize/account/shares/status/modify/batch"), HttpPost]
+        [CheckUserLoginFilter]
+        public object BatchModifyAuthorizeAccountSharesStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BatchModifyAuthorizeAccountSharesStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
         /// 获取同步未读股票数量
         /// </summary>
         /// <returns></returns>
@@ -6260,5 +6278,37 @@ namespace MealTicket_Web_APIService.controller
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.GetAuthorizeAccountSharesNotReadCount(basedata);
         }
+
+        /// <summary>
+        /// 获取板块涨跌幅排行
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取板块涨跌幅排行")]
+        [Route("plate/riserate/rank/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<SharesPlateInfo> GetPlateRiseRateRankList()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetPlateRiseRateRankList(basedata);
+        }
+
+        #region====自动选票====
+        /// <summary>
+        /// 获取自动选票列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取自动选票列表")]
+        [Route("account/auto/tobuy/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public PageRes<AccountAutoTobuyInfo> GetAccountAutoTobuyList(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountAutoTobuyList(request, basedata);
+        }
+        #endregion
     }
 }

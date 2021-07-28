@@ -11,6 +11,10 @@ namespace MealTicket_Web_Handler.session
 {
     public class PlateRateSession:Session<List<SharesPlateInfo>>
     {
+        public PlateRateSession()
+        {
+            Name = "PlateRateSession";
+        }
         public override List<SharesPlateInfo> UpdateSession()
         {
             using (var db = new meal_ticketEntities())
@@ -34,6 +38,26 @@ namespace MealTicket_Web_Handler.session
                                      RiseLimitCount = ai == null ? 0 : ai.RiseLimitCount,
                                      SharesInfo=x.SharesInfo
                                  }).ToList();
+                plateList = plateList.OrderByDescending(e=>e.RiseRate).ToList();
+                var plateRank = (from item in db.t_shares_plate
+                                 join item2 in db.t_shares_plate_riserate_last on item.Id equals item2.PlateId
+                                 where item.Status == 1 && item.BaseStatus == 1
+                                 orderby item2.RiseRate descending
+                                 select item).ToList();
+                int type = 0;
+                foreach (var item in plateRank)
+                {
+                    type++;
+                    if (Singleton.Instance.PlateRankShow < type)
+                    {
+                        continue;
+                    }
+                    var tempList=plateList.Where(e => e.Id == item.Id).ToList();
+                    foreach (var x in tempList)
+                    {
+                        x.Rank = type;
+                    }
+                }
                 return plateList;
             }
         }
