@@ -1,5 +1,20 @@
-删除t_shares_quotes触发器
-  alter table t_shares_quotes_last_temp add TriNearLimitType int not null default 0;
+
+去除系统参数 NewTransactiondataPar=》TrendAnalyseSleepTime
+
 
 t_shares_info_fund_group
 t_shares_info_fund_group_details
+
+
+P_BuySettingShares_Update
+BuySettingShares
+
+
+t_account_shares_auto_join_tobuy
+t_account_shares_auto_join_tobuy_follow
+t_account_shares_auto_join_tobuy_group
+t_account_shares_auto_join_tobuy_other
+t_account_shares_auto_join_tobuy_other_trend
+t_account_shares_auto_join_tobuy_other_trend_other
+t_account_shares_auto_join_tobuy_other_trend_other_par
+t_account_shares_auto_join_tobuy_other_trend_par
