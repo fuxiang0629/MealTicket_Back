@@ -21,5 +21,7 @@ namespace MealTicket_DBCommon
         public int Type { get; set; }
         public int BusinessType { get; set; }
         public System.DateTime CreateTime { get; set; }
+        public long PresentPrice { get; set; }
+        public string SharesInfo { get; set; }
     }
 }

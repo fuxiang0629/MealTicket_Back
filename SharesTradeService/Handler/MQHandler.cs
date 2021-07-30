@@ -215,6 +215,7 @@ namespace SharesTradeService.Handler
         /// <param name="e"></param>
         private void BuyConsumer_Received(object sender, BasicDeliverEventArgs e)
         {
+            Logger.WriteFileLog("数据消费队列,时间" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), "RabbitMq/consumption/SharesBuy_" + Singleton.instance.ServerId, null);
             byte[] recvedData = e.Body.ToArray();
             var resultParse = JsonConvert.DeserializeObject<dynamic>(Encoding.UTF8.GetString(recvedData));
             byte[] newData = ((bool)resultParse.isCompressed ? Utils.Decompress((byte[])resultParse.data) : resultParse.data);
@@ -276,6 +277,7 @@ namespace SharesTradeService.Handler
         /// <param name="e"></param>
         private void SellConsumer_Received(object sender, BasicDeliverEventArgs e)
         {
+            Logger.WriteFileLog("数据消费队列,时间" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), "RabbitMq/consumption/SharesSell_" + Singleton.instance.ServerId, null);
             byte[] recvedData = e.Body.ToArray();
             var resultParse = JsonConvert.DeserializeObject<dynamic>(Encoding.UTF8.GetString(recvedData));
             byte[] newData = ((bool)resultParse.isCompressed ? Utils.Decompress((byte[])resultParse.data) : resultParse.data);
@@ -331,6 +333,7 @@ namespace SharesTradeService.Handler
         /// <param name="e"></param>
         private void CancelConsumer_Received(object sender, BasicDeliverEventArgs e)
         {
+            Logger.WriteFileLog("数据消费队列,时间" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), "RabbitMq/consumption/CancelSell_" + Singleton.instance.ServerId, null);
             byte[] recvedData = e.Body.ToArray();
             var resultParse = JsonConvert.DeserializeObject<dynamic>(Encoding.UTF8.GetString(recvedData));
             byte[] newData = ((bool)resultParse.isCompressed ? Utils.Decompress((byte[])resultParse.data) : resultParse.data);

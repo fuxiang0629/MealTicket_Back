@@ -11,7 +11,7 @@ namespace FXCommon.Common
     {
         private ReaderWriterLock _readWriteLock = new ReaderWriterLock();
 
-        private T SessionData;
+        private T SessionData = default(T);
 
         public string Name = "";
 
@@ -30,18 +30,17 @@ namespace FXCommon.Common
         /// </summary>
         public void StartUpdate(int sleepTime)
         {
-            UpdateSessionWithLock();
             UpdateWait.Init();
             UpdateThread = new Thread(() =>
             {
                 do
                 {
+                    UpdateSessionWithLock();
                     int msgId = 0;
                     if (UpdateWait.WaitMessage(ref msgId, sleepTime))
                     {
                         break;
                     }
-                    UpdateSessionWithLock();
                 } while (true);
             });
             UpdateThread.Start();
@@ -73,9 +72,9 @@ namespace FXCommon.Common
         /// 获取缓存数据
         /// </summary>
         /// <returns></returns>
-        public T GetSessionData()
+        public T GetSessionData(int timeout=Timeout.Infinite)
         {
-            _readWriteLock.AcquireReaderLock(-1);
+            _readWriteLock.AcquireReaderLock(timeout);
             T tempSessionData = _GetSessionData();
             _readWriteLock.ReleaseReaderLock();
             return tempSessionData;

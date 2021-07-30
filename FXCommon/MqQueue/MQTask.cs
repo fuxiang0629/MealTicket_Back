@@ -46,11 +46,6 @@ namespace FXCommon.MqQueue
         object sendModelLock = new object();
 
         /// <summary>
-        /// 监听数据通道是否有效
-        /// </summary>
-        bool isListenModelValid = false;
-
-        /// <summary>
         /// 监听数据通道对象锁
         /// </summary>
         object listenModellLock = new object();
@@ -124,6 +119,7 @@ namespace FXCommon.MqQueue
                     isSendModelValid = false;
                     SendModelConnect();
                 }
+                Logger.WriteFileLog("数据加入队列" + (sendSuccess ? "成功" : "失败") + ",时间" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), "RabbitMq/production/" + exchange + "/" + routekey, null);
                 return sendSuccess;
             }
         }
@@ -218,6 +214,7 @@ namespace FXCommon.MqQueue
         /// <param name="e"></param>
         private void Consumer_Received(object sender, BasicDeliverEventArgs e)
         {
+            Logger.WriteFileLog("数据消费队列,时间" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), "RabbitMq/consumption/" + ListenQueueName, null);
             try
             {
                 byte[] recvedData = e.Body.ToArray();

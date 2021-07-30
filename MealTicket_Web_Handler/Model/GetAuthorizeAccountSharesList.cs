@@ -34,6 +34,46 @@ namespace MealTicket_Web_Handler
         public string SharesName { get; set; }
 
         /// <summary>
+        /// 昨日收盘价
+        /// </summary>
+        public long ClosedPrice { get; set; }
+
+        /// <summary>
+        /// 当前价格
+        /// </summary>
+        public long CurrPrice { get; set; }
+
+        /// <summary>
+        /// 涨跌幅(1/万)
+        /// </summary>
+        public int RiseRate
+        {
+            get
+            {
+                if (ClosedPrice <= 0 || CurrPrice <= 0)
+                {
+                    return 0;
+                }
+                return (int)((CurrPrice - ClosedPrice)*1.0/ ClosedPrice*10000);
+            }
+        }
+
+        /// <summary>
+        /// 涨跌价
+        /// </summary>
+        public long RisePrice 
+        { 
+            get 
+            {
+                if (ClosedPrice <= 0 || CurrPrice <= 0)
+                {
+                    return 0;
+                }
+                return CurrPrice - ClosedPrice;
+            } 
+        }
+
+        /// <summary>
         /// 状态1有效 2无效
         /// </summary>
         public int Status { get; set; }

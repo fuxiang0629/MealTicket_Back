@@ -899,6 +899,42 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 查询监控记录-涨跌停
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/realtime/riselimit/record"), HttpPost]
+        [Description("查询监控记录-涨跌停")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountRealTimeRiselimitRecordInfo> GetAccountRealTimeRiselimitRecord(GetAccountRealTimeRiselimitRecordRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountRealTimeRiselimitRecord(request, basedata);
+        }
+
+        /// <summary>
+        /// 查询监控记录详情-涨跌停
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/realtime/riselimit/record/details"), HttpPost]
+        [Description("查询监控记录详情")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountRealTimeRiselimitRecordDetailsInfo> GetAccountRealTimeRiselimitRecordDetails(GetAccountRealTimeRiselimitRecordDetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountRealTimeRiselimitRecordDetails(request, basedata);
+        }
+
+        /// <summary>
         /// 查询商品列表
         /// </summary>
         /// <param name="request"></param>
@@ -6308,6 +6344,837 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.GetAccountAutoTobuyList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加自动选票
+        /// </summary>
+        /// <returns></returns>
+        [Description("添加自动选票")]
+        [Route("account/auto/tobuy/add"), HttpPost]
+        [CheckUserLoginFilter]
+        public object AddAccountAutoTobuy(AddAccountAutoTobuyRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountAutoTobuy(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑自动选票
+        /// </summary>
+        /// <returns></returns>
+        [Description("编辑自动选票")]
+        [Route("account/auto/tobuy/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifyAccountAutoTobuy(ModifyAccountAutoTobuyRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountAutoTobuy(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改自动选票状态
+        /// </summary>
+        /// <returns></returns>
+        [Description("修改自动选票状态")]
+        [Route("account/auto/tobuy/status/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifyAccountAutoTobuyStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountAutoTobuyStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除自动选票
+        /// </summary>
+        /// <returns></returns>
+        [Description("删除自动选票")]
+        [Route("account/auto/tobuy/delete"), HttpPost]
+        [CheckUserLoginFilter]
+        public object DeleteAccountAutoTobuy(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountAutoTobuy(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取自动选票触发条件分组列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/list"), HttpPost]
+        [Description("获取自动选票触发条件分组列表")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionOtherGroupInfo> GetAccountAutoTobuyOtherList(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountAutoTobuyOtherList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加自动选票触发条件分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/add"), HttpPost]
+        [Description("添加自动选票触发条件分组")]
+        [CheckUserLoginFilter]
+        public object AddAccountAutoTobuyOther(AddAccountBuyConditionOtherGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountAutoTobuyOther(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑自动选票触发条件分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/modify"), HttpPost]
+        [Description("编辑自动选票触发条件分组")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountAutoTobuyOther(ModifyAccountBuyConditionOtherGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountAutoTobuyOther(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改自动选票触发条件分组状态
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/status/modify"), HttpPost]
+        [Description("修改自动选票触发条件分组状态")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountAutoTobuyOtherStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountAutoTobuyOtherStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除自动选票触发条件分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/delete"), HttpPost]
+        [Description("删除自动选票触发条件分组")]
+        [CheckUserLoginFilter]
+        public object DeleteAccountAutoTobuyOther(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountAutoTobuyOther(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取自动选票触发条件参数列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/trend/list"), HttpPost]
+        [Description("获取自动选票触发条件参数列表")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionOtherInfo> GetAccountAutoTobuyOtherTrendList(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountAutoTobuyOtherTrendList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加自动选票触发条件参数
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/trend/add"), HttpPost]
+        [Description("添加自动选票触发条件参数")]
+        [CheckUserLoginFilter]
+        public object AddAccountAutoTobuyOtherTrend(AddAccountBuyConditionOtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountAutoTobuyOtherTrend(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑自动选票触发条件参数
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/trend/modify"), HttpPost]
+        [Description("编辑自动选票触发条件参数")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountAutoTobuyOtherTrend(ModifyAccountBuyConditionOtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountAutoTobuyOtherTrend(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改自动选票触发条件参数状态
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/trend/status/modify"), HttpPost]
+        [Description("修改自动选票触发条件参数状态")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountAutoTobuyOtherTrendStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountAutoTobuyOtherTrendStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除自动选票触发条件参数
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/trend/delete"), HttpPost]
+        [Description("删除自动选票触发条件参数")]
+        [CheckUserLoginFilter]
+        public object DeleteAccountAutoTobuyOtherTrend(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountAutoTobuyOtherTrend(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询自动选票触发条件参数设置
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/trend/par"), HttpPost]
+        [Description("查询自动选票触发条件参数设置")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionOtherParInfo> GetAccountAutoTobuyOtherTrendPar(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountAutoTobuyOtherTrendPar(request, basedata);
+        }
+
+        /// <summary>
+        /// 查询自动选票触发条件参数设置(板块涨跌幅)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/trend/par/plate"), HttpPost]
+        [Description("查询自动选票触发条件参数设置(板块涨跌幅)")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionOtherParInfo> GetAccountAutoTobuyOtherTrendParPlate(GetAccountBuyConditionOtherParPlateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountAutoTobuyOtherTrendParPlate(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加自动选票触发条件参数设置
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/trend/par/add"), HttpPost]
+        [Description("添加自动选票触发条件参数设置")]
+        [CheckUserLoginFilter]
+        public object AddAccountAutoTobuyOtherTrendPar(AddAccountBuyConditionOtherParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountAutoTobuyOtherTrendPar(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量添加自动选票触发条件参数设置(板块涨跌幅1)
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("account/auto/tobuy/other/trend/par/add/batch"), HttpPost]
+        [Description("批量添加自动选票触发条件参数设置(板块涨跌幅1)")]
+        public async Task<object> BatchAccountAutoTobuyOtherTrendPar()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<string> list = new List<string>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+
+                            list.Add(datas[0].Trim());
+                        }
+                        return trendHandler.BatchAccountAutoTobuyOtherTrendPar(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 批量添加自动选票触发条件参数设置(板块涨跌幅2)
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("account/auto/tobuy/other/trend/par/add/batch2"), HttpPost]
+        [Description("批量添加自动选票触发条件参数设置(板块涨跌幅2)")]
+        public async Task<object> BatchAccountAutoTobuyOtherTrendPar2()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<BatchAddSharesConditionTrendPar2Obj> list = new List<BatchAddSharesConditionTrendPar2Obj>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+                            if (datas.Length < 3)
+                            {
+                                continue;
+                            }
+                            string groupName = datas[0].Trim();
+                            int compare = datas[1].Trim() == ">=" ? 1 : 2;
+                            string rate = datas[2].Trim();
+
+                            list.Add(new BatchAddSharesConditionTrendPar2Obj
+                            {
+                                GroupName = groupName,
+                                Compare = compare,
+                                Rate = rate
+                            });
+                        }
+                        return trendHandler.BatchAccountAutoTobuyOtherTrendPar2(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 批量删除自动选票触发条件参数设置
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/trend/par/delete/batch"), HttpPost]
+        [Description("批量删除自动选票触发条件参数设置")]
+        [CheckUserLoginFilter]
+        public object BatchDeleteAccountAutoTobuyOtherTrendPar(BatchDeleteAccountBuyConditionOtherParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BatchDeleteAccountAutoTobuyOtherTrendPar(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑自动选票触发条件参数设置
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/trend/par/modify"), HttpPost]
+        [Description("编辑自动选票触发条件参数设置")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountAutoTobuyOtherTrendPar(ModifyAccountBuyConditionOtherParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountAutoTobuyOtherTrendPar(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除自动选票触发条件参数设置
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/trend/par/delete"), HttpPost]
+        [Description("删除自动选票触发条件参数设置")]
+        [CheckUserLoginFilter]
+        public object DeleteAccountAutoTobuyOtherTrendPar(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountAutoTobuyOtherTrendPar(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取自动选票触发条件参数列表-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/trend/list/other"), HttpPost]
+        [Description("获取自动选票触发条件参数列表-额外关系")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionOtherInfo> GetAccountAutoTobuyOtherTrendList_Other(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountAutoTobuyOtherTrendList_Other(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加自动选票触发条件参数-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/trend/add/other"), HttpPost]
+        [Description("添加自动选票触发条件参数-额外关系")]
+        [CheckUserLoginFilter]
+        public object AddAccountAutoTobuyOtherTrend_Other(AddAccountBuyConditionOtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountAutoTobuyOtherTrend_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑自动选票触发条件参数-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/trend/modify/other"), HttpPost]
+        [Description("编辑自动选票触发条件参数-额外关系")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountAutoTobuyOtherTrend_Other(ModifyAccountBuyConditionOtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountAutoTobuyOtherTrend_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改自动选票触发条件参数状态-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/trend/status/modify/other"), HttpPost]
+        [Description("修改自动选票触发条件参数状态-额外关系")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountAutoTobuyOtherTrendStatus_Other(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountAutoTobuyOtherTrendStatus_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除自动选票触发条件参数-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/trend/delete/other"), HttpPost]
+        [Description("删除自动选票触发条件参数-额外关系")]
+        [CheckUserLoginFilter]
+        public object DeleteAccountAutoTobuyOtherTrend_Other(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountAutoTobuyOtherTrend_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询自动选票触发条件参数设置-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/trend/par/other"), HttpPost]
+        [Description("查询自动选票触发条件参数设置-额外关系")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionOtherParInfo> GetAccountAutoTobuyOtherTrendPar_Other(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountAutoTobuyOtherTrendPar_Other(request, basedata);
+        }
+
+        /// <summary>
+        /// 查询自动选票触发条件参数设置(板块涨跌幅)-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/trend/par/plate/other"), HttpPost]
+        [Description("查询自动选票触发条件参数设置(板块涨跌幅)-额外关系")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountBuyConditionOtherParInfo> GetAccountAutoTobuyOtherTrendParPlate_Other(GetAccountBuyConditionOtherParPlateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountAutoTobuyOtherTrendParPlate_Other(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加自动选票触发条件参数设置-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/trend/par/add/other"), HttpPost]
+        [Description("添加自动选票触发条件参数设置-额外关系")]
+        [CheckUserLoginFilter]
+        public object AddAccountAutoTobuyOtherTrendPar_Other(AddAccountBuyConditionOtherParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountAutoTobuyOtherTrendPar_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量添加自动选票触发条件参数设置(板块涨跌幅1)-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("account/auto/tobuy/other/trend/par/add/batch/other"), HttpPost]
+        [Description("批量添加自动选票触发条件参数设置(板块涨跌幅1)-额外关系")]
+        public async Task<object> BatchAddAccountAutoTobuyOtherTrendPar_Other()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<string> list = new List<string>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+
+                            list.Add(datas[0].Trim());
+                        }
+                        return trendHandler.BatchAddAccountAutoTobuyOtherTrendPar_Other(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 批量添加自动选票触发条件参数设置(板块涨跌幅2)-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("account/auto/tobuy/other/trend/par/add/batch2/other"), HttpPost]
+        [Description("批量添加自动选票触发条件参数设置(板块涨跌幅2)-额外关系")]
+        public async Task<object> BatchAddAccountAutoTobuyOtherTrendPar2_Other()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<BatchAddSharesConditionTrendPar2Obj> list = new List<BatchAddSharesConditionTrendPar2Obj>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+                            if (datas.Length < 3)
+                            {
+                                continue;
+                            }
+                            string groupName = datas[0].Trim();
+                            int compare = datas[1].Trim() == ">=" ? 1 : 2;
+                            string rate = datas[2].Trim();
+
+                            list.Add(new BatchAddSharesConditionTrendPar2Obj
+                            {
+                                GroupName = groupName,
+                                Compare = compare,
+                                Rate = rate
+                            });
+                        }
+                        return trendHandler.BatchAddAccountAutoTobuyOtherTrendPar2_Other(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 批量删除自动选票触发条件参数设置-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/trend/par/delete/other/batch"), HttpPost]
+        [Description("批量删除自动选票触发条件参数设置-额外关系")]
+        [CheckUserLoginFilter]
+        public object BatchDeleteAccountAutoTobuyOtherTrendPar_Other(BatchDeleteAccountBuyConditionOtherPar_OtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BatchDeleteAccountAutoTobuyOtherTrendPar_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑自动选票触发条件参数设置-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/trend/par/modify/other"), HttpPost]
+        [Description("编辑自动选票触发条件参数设置-额外关系")]
+        [CheckUserLoginFilter]
+        public object ModifyAccountAutoTobuyOtherTrendPar_Other(ModifyAccountBuyConditionOtherParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountAutoTobuyOtherTrendPar_Other(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除自动选票触发条件参数设置-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/auto/tobuy/other/trend/par/delete/other"), HttpPost]
+        [Description("删除自动选票触发条件参数设置-额外关系")]
+        [CheckUserLoginFilter]
+        public object DeleteAccountAutoTobuyOtherTrendPar_Other(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountAutoTobuyOtherTrendPar_Other(request, basedata);
+            return null;
         }
         #endregion
     }

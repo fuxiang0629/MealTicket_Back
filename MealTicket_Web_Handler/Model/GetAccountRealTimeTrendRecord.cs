@@ -68,7 +68,7 @@ namespace MealTicket_Web_Handler.Model
         /// <summary>
         /// 日期
         /// </summary>
-        public DateTime Date { get; set; }
+        public string Date { get; set; }
 
         /// <summary>
         /// 最新触发触发描述

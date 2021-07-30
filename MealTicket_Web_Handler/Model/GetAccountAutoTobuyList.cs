@@ -61,5 +61,20 @@ namespace MealTicket_Web_Handler.Model
         /// 数据创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }
+
+        /// <summary>
+        /// 跟投人员列表
+        /// </summary>
+        public List<long> FollowAccountList { get; set; }
+
+        /// <summary>
+        /// 自定义分组列表
+        /// </summary>
+        public List<long> GroupIdList { get; set; }
+
+        /// <summary>
+        /// 触发条件数量
+        /// </summary>
+        public int OtherCount { get; set; }
     }
 }

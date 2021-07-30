@@ -1,5 +1,6 @@
 ﻿using FXCommon.Common;
 using MealTicket_DBCommon;
+using MealTicket_Web_Handler.Enum;
 using MealTicket_Web_Handler.Model;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -1784,85 +1785,87 @@ inner
                     {
                         TradeAutoBuyCondition conditionInfo = new TradeAutoBuyCondition();
                         conditionInfo = JsonConvert.DeserializeObject<TradeAutoBuyCondition>(JsonConvert.SerializeObject(item));
-                        Task task = new Task(() =>
+                        var tempGroupList = (from x in db.t_account_shares_conditiontrade_buy_group
+                                             join x2 in db.t_account_shares_conditiontrade_buy_group_rel on x.Id equals x2.GroupId
+                                             where x.AccountId == item.AccountId && x2.Market == item.Market && x2.SharesCode == item.SharesCode
+                                             select x).ToList();
+                        List<long> authorized_group_id_list = new List<long>();
+                        foreach (var groupInfo in tempGroupList)
                         {
-                            var tempGroupList = (from x in db.t_account_shares_conditiontrade_buy_group
-                                                 join x2 in db.t_account_shares_conditiontrade_buy_group_rel on x.Id equals x2.GroupId
-                                                 where x.AccountId == item.AccountId && x2.Market == item.Market && x2.SharesCode == item.SharesCode
-                                                 select x).ToList();
-                            List<long> authorized_group_id_list = new List<long>();
-                            foreach (var groupInfo in tempGroupList)
+                            var AuthorizedGroup = (from x in db.t_account_shares_conditiontrade_buy_group_syncro_account
+                                                   join x2 in db.t_account_shares_buy_synchro_setting_authorized_group on x.AuthorizedGroupId equals x2.Id
+                                                   where x.GroupId == groupInfo.Id && x2.AccountId == groupInfo.AccountId && x2.Status == 1 && x.Status == 1
+                                                   orderby x.OrderIndex
+                                                   select x2).ToList();
+                            if (AuthorizedGroup.Count() <= 0)
                             {
-                                var AuthorizedGroup = (from x in db.t_account_shares_conditiontrade_buy_group_syncro_account
-                                                         join x2 in db.t_account_shares_buy_synchro_setting_authorized_group on x.AuthorizedGroupId equals x2.Id
-                                                         where x.GroupId == groupInfo.Id && x2.AccountId == groupInfo.AccountId && x2.Status == 1 && x.Status==1
-                                                         orderby x.OrderIndex
-                                                         select x2).ToList();
-                                if (AuthorizedGroup.Count() <= 0)
+                                continue;
+                            }
+                            int nexIndex = groupInfo.CurrSyncroIndex % AuthorizedGroup.Count();
+                            authorized_group_id_list.Add(AuthorizedGroup[nexIndex].Id);
+
+                            groupInfo.CurrSyncroIndex = groupInfo.CurrSyncroIndex + 1;
+                            db.SaveChanges();
+                        }
+
+                        //导入条件数据
+                        //1.查询股票所属自定义分组
+                        //2.查询分组配置同步用户及参数
+                        //3.循环导入参数并修改参数数据加入内存
+                        var syncroList = (from x in db.t_account_shares_buy_synchro_setting_authorized_group_rel
+                                          join x2 in db.t_account_shares_buy_synchro_setting on x.SettingId equals x2.Id
+                                          where authorized_group_id_list.Contains(x.GroupId) && x2.Status == 1 && x2.MainAccountId == item.AccountId
+                                          select new
+                                          {
+                                              disAccountId = x2.AccountId,
+                                              followType = x2.FollowType,
+                                              buyAmount = x2.BuyAmount,
+                                              followList = (from y in db.t_account_shares_buy_synchro_setting_follow
+                                                            where y.SettingId == x2.Id
+                                                            select y.FollowAccountId).ToList(),
+                                              groupList = (from y in db.t_account_shares_buy_synchro_setting_group
+                                                           where y.SettingId == x2.Id
+                                                           select y.GroupId).ToList()
+                                          }).ToList();
+                        foreach (var data in syncroList)
+                        {
+                            try
+                            {
+                                var condition_buy = (from x in db.t_account_shares_buy_setting_shares
+                                                     where x.ConditiontradeBuyId == item.ConditionId && x.AccountId == data.disAccountId
+                                                     select x).FirstOrDefault();
+                                if (condition_buy == null)
+                                {
+                                    //判断默认是否买入
+                                    var accountBuySetting = DbHelper.GetAccountBuySetting(data.disAccountId, 5);
+                                    var buySetting = accountBuySetting.FirstOrDefault();
+                                    if (buySetting != null)
+                                    {
+                                        var valueObj = JsonConvert.DeserializeObject<dynamic>(buySetting.ParValueJson);
+                                        int parValue = valueObj.Value;
+                                        if (parValue == 0)
+                                        {
+                                            continue;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (CommonEnum.DefaultBuyStatus == 0)
+                                        {
+                                            continue;
+                                        }
+                                    }
+                                }
+                                else if (condition_buy.Status != 1)
                                 {
                                     continue;
                                 }
-                                int nexIndex = groupInfo.CurrSyncroIndex % AuthorizedGroup.Count();
-                                authorized_group_id_list.Add(AuthorizedGroup[nexIndex].Id);
-
-                                groupInfo.CurrSyncroIndex = groupInfo.CurrSyncroIndex + 1;
-                                db.SaveChanges();
+                                CopyAccountBuyCondition(item.Id, data.disAccountId, data.groupList, data.followList, data.followType, data.buyAmount, conditionInfo);
+                                var tempInfo = JsonConvert.DeserializeObject<TradeAutoBuyCondition>(JsonConvert.SerializeObject(conditionInfo));
+                                Singleton.Instance.AddSyncro(tempInfo);
                             }
-
-                            //导入条件数据
-                            //1.查询股票所属自定义分组
-                            //2.查询分组配置同步用户及参数
-                            //3.循环导入参数并修改参数数据加入内存
-                            var syncroList = (from x in db.t_account_shares_buy_synchro_setting_authorized_group_rel
-                                              join x2 in db.t_account_shares_buy_synchro_setting on x.SettingId equals x2.Id
-                                              where authorized_group_id_list.Contains(x.GroupId) && x2.Status==1 && x2.MainAccountId==item.AccountId
-                                              select new
-                                              {
-                                                  disAccountId = x2.AccountId,
-                                                  followType = x2.FollowType,
-                                                  buyAmount = x2.BuyAmount,
-                                                  followList = (from y in db.t_account_shares_buy_synchro_setting_follow
-                                                                where y.SettingId == x2.Id
-                                                                select y.FollowAccountId).ToList(),
-                                                  groupList = (from y in db.t_account_shares_buy_synchro_setting_group
-                                                               where y.SettingId == x2.Id
-                                                               select y.GroupId).ToList()
-                                              }).ToList();
-                            foreach (var data in syncroList)
-                            {
-                                try
-                                {
-                                    var condition_buy = (from x in db.t_account_shares_buy_setting_shares
-                                                         where x.ConditiontradeBuyId == item.ConditionId && x.AccountId == data.disAccountId
-                                                         select x).FirstOrDefault();
-                                    if (condition_buy == null)
-                                    {
-                                        //判断默认是否买入
-                                        var accountBuySetting = DbHelper.GetAccountBuySetting(data.disAccountId, 5);
-                                        var buySetting = accountBuySetting.FirstOrDefault();
-                                        if (buySetting != null)
-                                        {
-                                            var valueObj = JsonConvert.DeserializeObject<dynamic>(buySetting.ParValueJson);
-                                            int parValue = valueObj.Value;
-                                            if (parValue == 0)
-                                            {
-                                                continue;
-                                            }
-                                        }
-                                    }
-                                    else if (condition_buy.Status != 1)
-                                    {
-                                        continue;
-                                    }
-                                    CopyAccountBuyCondition(item.Id, data.disAccountId, data.groupList, data.followList, data.followType, data.buyAmount, conditionInfo);
-                                    var tempInfo = JsonConvert.DeserializeObject<TradeAutoBuyCondition>(JsonConvert.SerializeObject(conditionInfo));
-                                    Singleton.Instance.AddSyncro(tempInfo);
-                                }
-                                catch (Exception ex) { }
-                            }
-                        });
-                        task.Start();
-                        task.Wait();
+                            catch (Exception ex) { }
+                        }
                     }
                 }
             }

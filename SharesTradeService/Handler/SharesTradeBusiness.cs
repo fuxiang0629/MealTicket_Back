@@ -286,6 +286,7 @@ namespace SharesTradeService.Handler
 
                             if (!Singleton.instance.IsTest)
                             {
+                                Logger.WriteFileLog("股票("+ buyInfo.SharesCode + ")开始提交委托，时间："+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"),"SharesBuy",null);
                                 Trade_Helper.SendOrder(buyInfo.Market == 0 ? client.TradeClientId0 : client.TradeClientId1, 0, 0, buyInfo.Market == 0 ? client.Holder0 : client.Holder1, buyInfo.SharesCode + "," + buyInfo.Market, (float)Math.Round(buyInfo.EntrustPrice * 1.0 / 10000, 2), currEntrustCount, sResult, sErrInfo);
                             }
                             else
@@ -296,6 +297,7 @@ namespace SharesTradeService.Handler
                             }
                             if (!string.IsNullOrEmpty(sResult.ToString()))
                             {
+                                Logger.WriteFileLog("股票(" + buyInfo.SharesCode + ")提交成功，时间：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), "SharesBuy", null);
                                 //提交成功后剩余委托股票数量
                                 buyInfo.BuyCount = buyInfo.BuyCount - currEntrustCount <= 0 ? 0 : buyInfo.BuyCount - currEntrustCount;
 
@@ -317,6 +319,7 @@ namespace SharesTradeService.Handler
                             }
                             else
                             {
+                                Logger.WriteFileLog("股票(" + buyInfo.SharesCode + ")提交失败，时间：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), "SharesBuy", null);
                                 var EntrustList = string.Join(",", buyInfo.BuyList.Select(e => e.EntrustId).ToArray()); 
                                 string sql = string.Format("update t_account_shares_entrust set StatusDes='{0}' where Id in {1}", sErrInfo.ToString(), EntrustList);
                                 continue;

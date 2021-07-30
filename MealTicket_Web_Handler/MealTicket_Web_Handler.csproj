@@ -86,6 +86,7 @@
     <Compile Include="DataHelper.cs" />
     <Compile Include="DeleteRequest.cs" />
     <Compile Include="DetailsRequest.cs" />
+    <Compile Include="Enum\CommonEnum.cs" />
     <Compile Include="HeadBase.cs" />
     <Compile Include="Helper.cs" />
     <Compile Include="Model\AccountApplyTradeBuy.cs" />
@@ -96,6 +97,7 @@
     <Compile Include="Model\AccountMakeupDeposit.cs" />
     <Compile Include="Model\AddAccountAutoBuySyncroSetting.cs" />
     <Compile Include="Model\AddAccountAutoBuySyncroSettingAuthorizedGroup.cs" />
+    <Compile Include="Model\AddAccountAutoTobuy.cs" />
     <Compile Include="Model\AddAccountBuyCondition.cs" />
     <Compile Include="Model\AddAccountBuyConditionAuto.cs" />
     <Compile Include="Model\AddAccountBuyConditionAutoGroup.cs" />
@@ -158,6 +160,8 @@
     <Compile Include="Model\GetAccountFollowGroupFollowAccountList.cs" />
     <Compile Include="Model\GetAccountFollowGroupList.cs" />
     <Compile Include="Model\GetAccountListByMobile.cs" />
+    <Compile Include="Model\GetAccountRealTimeRiselimitRecord.cs" />
+    <Compile Include="Model\GetAccountRealTimeRiselimitRecordDetails.cs" />
     <Compile Include="Model\GetAccountRealTimeTabSetting.cs" />
     <Compile Include="Model\GetAccountRiseLimitTriList.cs" />
     <Compile Include="Model\GetAccountSharesPlateSharesList.cs" />
@@ -212,6 +216,7 @@
     <Compile Include="Model\ImportysPlateShares.cs" />
     <Compile Include="Model\ModifyAccountAutoBuySyncroSetting.cs" />
     <Compile Include="Model\ModifyAccountAutoBuySyncroSettingAuthorizedGroup.cs" />
+    <Compile Include="Model\ModifyAccountAutoTobuy.cs" />
     <Compile Include="Model\ModifyAccountBuyCondition.cs" />
     <Compile Include="Model\ModifyAccountBuyConditionAuto.cs" />
     <Compile Include="Model\ModifyAccountBuyConditionAutoGroup.cs" />
@@ -291,5 +296,6 @@
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

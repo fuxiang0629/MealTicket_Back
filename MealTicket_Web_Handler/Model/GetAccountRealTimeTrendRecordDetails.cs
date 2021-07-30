@@ -25,7 +25,7 @@ namespace MealTicket_Web_Handler.Model
         /// <summary>
         /// 日期
         /// </summary>
-        public DateTime? Date { get; set; }
+        public string Date { get; set; }
     }
 
     public class AccountRealTimeTrendRecordDetailsInfo

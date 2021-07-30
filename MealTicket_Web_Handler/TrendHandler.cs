@@ -1,5 +1,6 @@
 ﻿using FXCommon.Common;
 using MealTicket_DBCommon;
+using MealTicket_Web_Handler.Enum;
 using MealTicket_Web_Handler.Model;
 using Newtonsoft.Json;
 using System;
@@ -2146,49 +2147,55 @@ namespace MealTicket_Web_Handler
         {
             using (var db = new meal_ticketEntities())
             {
-                var record = (from item in db.t_account_shares_optional_trend_rel_tri_record
-                              join item2 in db.t_shares_all on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
-                              where item.AccountId == basedata.AccountId && item.IsPush == true
-                              select new { item, item2 }).ToList();
+                var record = from item in db.t_account_shares_optional_trend_rel_tri_record
+                             where item.AccountId == basedata.AccountId && item.IsPush == true
+                             select item;
+                var totalShares = Singleton.Instance._SharesBaseSession.GetSessionData();
                 if (!string.IsNullOrEmpty(request.SharesInfo))
                 {
-                    record = (from item in record
-                              where item.item.SharesCode.Contains(request.SharesInfo) || item.item2.SharesName.Contains(request.SharesInfo) || item.item2.SharesPyjc.Contains(request.SharesInfo)
-                              select item).ToList();
+                    List<string> sharesInfo = (from item in totalShares
+                                               where item.SharesCode.Contains(request.SharesInfo) || item.SharesName.Contains(request.SharesInfo) || item.SharesPyjc.Contains(request.SharesInfo)
+                                               select item.Market + "," + item.SharesCode).ToList();
+                    record = from item in record
+                             where sharesInfo.Contains(item.Market + "," + item.SharesCode)
+                             select item;
                 }
                 if (request.Date != null)
                 {
                     DateTime startDate = request.Date.Value.Date;
                     DateTime endDate = startDate.AddDays(1);
-                    record = (from item in record
-                              where item.item.CreateTime >= startDate && item.item.CreateTime < endDate
-                              select item).ToList();
+                    record = from item in record
+                             where item.CreateTime >= startDate && item.CreateTime < endDate
+                             select item;
                 }
 
                 var result = from item in record
-                             group item by new { item.item.Market, item.item.SharesCode, item.item.CreateTime.Date, item.item2.SharesName } into g
+                             group item by new { item.Market, item.SharesCode,Date=SqlFunctions.DateName("yyyy", item.CreateTime)+"-"+ SqlFunctions.DateName("mm", item.CreateTime)+"-"+ (SqlFunctions.DatePart("DD", item.CreateTime)>9?"":"0")+ SqlFunctions.DateName("DD", item.CreateTime)} into g
                              select g;
                 int totalCount = result.Count();
-
-                return new PageRes<AccountRealTimeTrendRecordInfo>
-                {
-                    MaxId = 0,
-                    TotalCount = totalCount,
-                    List = (from item in result
-                            let lastData = item.OrderByDescending(e => e.item.CreateTime).FirstOrDefault()
+                var list = (from item in result
+                            let lastData = item.OrderByDescending(e => e.CreateTime).FirstOrDefault()
                             orderby item.Key.Date descending
                             select new AccountRealTimeTrendRecordInfo
                             {
                                 SharesCode = item.Key.SharesCode,
-                                SharesName = item.Key.SharesName,
-                                LastTime = lastData.item.CreateTime,
-                                LastTrendName = lastData.item.TrendName,
-                                LastTriPrice = lastData.item.TriPrice,
+                                LastTime = lastData.CreateTime,
+                                LastTrendName = lastData.TrendName,
+                                LastTriPrice = lastData.TriPrice,
                                 Market = item.Key.Market,
                                 Date = item.Key.Date,
-                                LastTriDesc = lastData.item.TriDesc,
+                                LastTriDesc = lastData.TriDesc,
                                 TriCount = item.Count()
-                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+                foreach (var item in list)
+                {
+                    item.SharesName = totalShares.Where(e => e.Market == item.Market && e.SharesCode == item.SharesCode).Select(e => e.SharesName).FirstOrDefault();
+                }
+                return new PageRes<AccountRealTimeTrendRecordInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = list
                 };
             }
         }
@@ -2207,7 +2214,7 @@ namespace MealTicket_Web_Handler
                              select item;
                 if (request.Date != null)
                 {
-                    DateTime startDate = request.Date.Value.Date;
+                    DateTime startDate=DateTime.Parse(request.Date + " 00:00:00");
                     DateTime endDate = startDate.AddDays(1);
                     record = from item in record
                              where item.CreateTime >= startDate && item.CreateTime < endDate
@@ -2230,6 +2237,163 @@ namespace MealTicket_Web_Handler
                                 TrendPrice = item.TriPrice,
                                 TriDesc = item.TriDesc,
                                 SharesName = item.SharesName
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 查询监控记录-涨跌停
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<AccountRealTimeRiselimitRecordInfo> GetAccountRealTimeRiselimitRecord(GetAccountRealTimeRiselimitRecordRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                List<string> sharesInfo = new List<string>();
+                var limit = (from item in db.t_shares_limit
+                             select item).ToList();
+                var totalShares = Singleton.Instance._SharesBaseSession.GetSessionData();
+                foreach (var item in totalShares)
+                {
+                    var temp = limit.Where(e => (item.Market == e.LimitMarket || e.LimitMarket == -1) && ((e.LimitType == 1 && item.SharesCode.StartsWith(e.LimitKey)) || (e.LimitType == 2 && item.SharesName.StartsWith(e.LimitKey)))).FirstOrDefault();
+                    if (temp != null)
+                    {
+                        continue;
+                    }
+                    if (!string.IsNullOrEmpty(request.SharesInfo)) 
+                    {
+                        if (!(item.SharesCode.Contains(request.SharesInfo) || item.SharesName.Contains(request.SharesInfo) || item.SharesPyjc.Contains(request.SharesInfo)))
+                        {
+                            continue;
+                        }
+                    }
+                    sharesInfo.Add(item.Market + "," + item.SharesCode);
+                }
+
+                var record = from item in db.t_shares_quotes_history
+                             where ((request.Type == 1 && item.Type == 5) || (request.Type == 2 && item.Type == 1 && item.BusinessType == 1) || (request.Type == 3 && item.Type == 3 && item.BusinessType == 1) || (request.Type == 4 && item.Type == 6) || (request.Type == 5 && item.Type == 2 && item.BusinessType == 1) || (request.Type == 6 && item.Type == 4 && item.BusinessType == 1)) && sharesInfo.Contains(item.SharesInfo)
+                             select item;
+                
+                if (request.Date != null)
+                {
+                    string date = request.Date.Value.ToString("yyyy-MM-dd");
+                    record = from item in record
+                             where item.Date== date
+                             select item;
+                }
+
+                var result = from item in record
+                             group item by new { item.Market, item.SharesCode, item.Date} into g
+                             select g;
+                int totalCount = result.Count();
+
+                var list = (from item in result
+                            join item2 in db.t_shares_quotes_date on new { item.Key.Market, item.Key.SharesCode, item.Key.Date } equals new { item2.Market, item2.SharesCode, item2.Date }
+                            let lastData = item.OrderByDescending(e => e.CreateTime).FirstOrDefault()
+                            orderby item.Key.Date descending
+                            select new AccountRealTimeRiselimitRecordInfo
+                            {
+                                SharesCode = item.Key.SharesCode,
+                                LastTime = lastData.CreateTime,
+                                LastTriPrice = lastData.PresentPrice,
+                                Market = item.Key.Market,
+                                Date = item.Key.Date,
+                                ClosedPrice = item2.ClosedPrice,
+                                CurrPrice = item2.PresentPrice,
+                                TriCount = item.Count()
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                foreach (var item in list)
+                {
+                    item.SharesName = totalShares.Where(e => e.Market == item.Market && e.SharesCode == item.SharesCode).Select(e => e.SharesName).FirstOrDefault();
+                }
+
+                return new PageRes<AccountRealTimeRiselimitRecordInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = list
+                };
+            }
+        }
+
+        /// <summary>
+        /// 查询监控记录详情-涨跌停
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<AccountRealTimeRiselimitRecordDetailsInfo> GetAccountRealTimeRiselimitRecordDetails(GetAccountRealTimeRiselimitRecordDetailsRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var record = from item in db.t_shares_quotes_history
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select item;
+                if (request.Date != null)
+                {
+                    record = from item in record
+                             where item.Date== request.Date
+                             select item;
+                }
+
+                if (request.Type == 1)
+                {
+                    record = from item in record
+                             where item.Type == 5
+                             select item;
+                }
+                if (request.Type == 2)
+                {
+                    record = from item in record
+                             where item.Type ==1&& item.BusinessType==1
+                             select item;
+                }
+                if (request.Type == 3)
+                {
+                    record = from item in record
+                             where item.Type == 3 && item.BusinessType==1
+                             select item;
+                }
+                if (request.Type == 4)
+                {
+                    record = from item in record
+                             where item.Type ==6
+                             select item;
+                }
+                if (request.Type == 5)
+                {
+                    record = from item in record
+                             where item.Type == 2 && item.BusinessType==1
+                             select item;
+                }
+                if (request.Type == 6)
+                {
+                    record = from item in record
+                             where item.Type == 4 && item.BusinessType == 1
+                             select item;
+                }
+
+                int totalCount = record.Count();
+
+                return new PageRes<AccountRealTimeRiselimitRecordDetailsInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in record
+                            join item2 in db.t_shares_all on new { item.Market,item.SharesCode} equals new { item2.Market,item2.SharesCode}
+                            join item3 in db.t_shares_quotes_date on new { item.Market, item.SharesCode ,item.Date} equals new { item3.Market, item3.SharesCode,item3.Date }
+                            orderby item.CreateTime descending
+                            select new AccountRealTimeRiselimitRecordDetailsInfo
+                            {
+                                SharesCode = item.SharesCode,
+                                CreateTime = item.CreateTime,
+                                TrendPrice = item.PresentPrice,
+                                SharesName = item2.SharesName,
+                                ClosedPrice= item3.ClosedPrice
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
                 };
             }
@@ -14125,7 +14289,7 @@ select @buyId;";
                 Type = 5,
                 Name = "同步交易默认买入",
                 Description = "同步交易默认买入",
-                ParValueJson = "{\"Value\":1}"
+                ParValueJson = "{\"Value\":"+CommonEnum.DefaultBuyStatus+"}"
             });
             bool IsMain = false;
             if (request.AccountId == 0)
@@ -15278,7 +15442,7 @@ select @buyId;";
                                 Id = item.Id,
                                 AccountIdList = (from x in db.t_account_shares_buy_synchro_setting_authorized_group_rel
                                                 join x2 in db.t_account_shares_buy_synchro_setting on x.SettingId equals x2.Id
-                                                where x.GroupId == item.Id && x2.Status == 1
+                                                where x.GroupId == item.Id
                                                 select x2.Id).ToList()
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
                 };
@@ -15505,23 +15669,42 @@ select @buyId;";
         {
             using (var db = new meal_ticketEntities())
             {
+                int defaultStatus = CommonEnum.DefaultBuyStatus == 1 ? 1 : 2;
+                var accountBuySetting = DbHelper.GetAccountBuySetting(basedata.AccountId, 5);
+                var parSetting = accountBuySetting.FirstOrDefault();
+                if (parSetting != null)
+                {
+                    var valueObj = JsonConvert.DeserializeObject<dynamic>(parSetting.ParValueJson);
+                    int parValue = valueObj.Value;
+                    defaultStatus = parValue == 1 ? 1 : 2;
+                }
+
+                //查询用户已查看股票
+                var accountShares = from item in db.t_account_shares_buy_setting_shares
+                                    where item.AccountId == basedata.AccountId
+                                    select item;
                 var result = from item in db.t_account_shares_buy_synchro_setting_authorized_group_rel
                              join item5 in db.t_account_shares_buy_synchro_setting on item.SettingId equals item5.Id
                              join item2 in db.t_account_shares_conditiontrade_buy_group_syncro_account on item.GroupId equals item2.AuthorizedGroupId
                              join item3 in db.t_account_shares_conditiontrade_buy_group_rel on item2.GroupId equals item3.GroupId
                              join item4 in db.t_account_shares_conditiontrade_buy on new { AccountId = item5.MainAccountId, item3.Market, item3.SharesCode } equals new { item4.AccountId, item4.Market, item4.SharesCode }
                              join item6 in db.t_account_shares_conditiontrade_buy_details on item4.Id equals item6.ConditionId
+                             join item7 in accountShares on item4.Id equals item7.ConditiontradeBuyId into b from bi in b.DefaultIfEmpty()
                              where item.SettingId == request.Id && item2.Status == 1 && item5.AccountId == basedata.AccountId && item6.TriggerTime==null
-                             group item4 by item4 into g
+                             group item4 by new { item4, bi} into g
                              select g;
                 int totalCount = result.Count();
                 var resultList = (from item in result
-                                  orderby item.Key.CreateTime descending
+                                  let orderindex=item.Key.bi==null?1:2
+                                  orderby orderindex,item.Key.item4.CreateTime descending
                                   select new AuthorizeAccountSharesInfo
                                   {
-                                      Market = item.Key.Market,
-                                      SharesCode = item.Key.SharesCode,
-                                      ConditiontradeBuyId = item.Key.Id
+                                      Status = item.Key.bi == null ? defaultStatus : item.Key.bi.Status,
+                                      Market = item.Key.item4.Market,
+                                      SharesCode = item.Key.item4.SharesCode,
+                                      ConditiontradeBuyId = item.Key.item4.Id,
+                                      UpdateTime=item.Key.item4.CreateTime,
+                                      IsRead = item.Key.bi == null ? false : true,
                                   }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
 
                 var sharesList = resultList.Select(e => e.Market + "" + e.SharesCode).ToList();
@@ -15529,61 +15712,56 @@ select @buyId;";
                                  where sharesList.Contains(x.SharesInfo)
                                  select x).ToList();
 
-                //查询用户已查看股票
-                var accountShares = (from item in db.t_account_shares_buy_setting_shares
-                                     join item2 in db.t_account_shares_conditiontrade_buy on item.ConditiontradeBuyId equals item2.Id
-                                     where item.AccountId == basedata.AccountId
-                                     select item).ToList();
-
-
-                resultList = (from item in resultList
-                              join item2 in accountShares on item.ConditiontradeBuyId equals item2.ConditiontradeBuyId into a
-                              from ai in a.DefaultIfEmpty()
-                              select new AuthorizeAccountSharesInfo
-                              {
-                                  ConditiontradeBuyId = item.ConditiontradeBuyId,
-                                  SharesCode = item.SharesCode,
-                                  Market = item.Market,
-                                  Status = ai == null ? 1 : ai.Status,
-                                  UpdateTime = ai == null ? DateTime.Now : ai.CreateTime,
-                                  IsRead= ai==null?false:true,
-                                  PlateList = (from x in plateList
-                                               where x.Market == item.Market && x.SharesCode == item.SharesCode
-                                               orderby x.RiseRate descending
-                                               select x).ToList()
-                              }).ToList();
-
                 DataTable table = new DataTable();
                 table.Columns.Add("ConditiontradeBuyId", typeof(long));
+                table.Columns.Add("Status", typeof(int));
                 table.Columns.Add("AccountId", typeof(long));
                 foreach (var item in resultList)
                 {
-                    DataRow row = table.NewRow();
-                    row["ConditiontradeBuyId"] = item.ConditiontradeBuyId;
-                    row["AccountId"] = basedata.AccountId;
-                    table.Rows.Add(row);
-
                     item.SharesName = (from x in Singleton.Instance._SharesBaseSession.GetSessionData()
                                        where x.Market == item.Market && x.SharesCode == item.SharesCode
                                        select x.SharesName).FirstOrDefault();
-                }
-                using (var tran = db.Database.BeginTransaction())
-                {
-                    try
+                    var quotes = (from x in Singleton.Instance._SharesQuotesSession.GetSessionData()
+                                  where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                  select x).FirstOrDefault();
+                    if (quotes != null)
                     {
-                        //关键是类型
-                        SqlParameter parameter = new SqlParameter("@buySettingShares", SqlDbType.Structured);
-                        //必须指定表类型名
-                        parameter.TypeName = "dbo.BuySettingShares";
-                        //赋值
-                        parameter.Value = table;
-                        db.Database.ExecuteSqlCommand("exec P_BuySettingShares_Update @buySettingShares", parameter);
-                        tran.Commit();
+                        item.CurrPrice = quotes.PresentPrice;
+                        item.ClosedPrice = quotes.ClosedPrice;
                     }
-                    catch (Exception ex)
+                    item.PlateList = (from x in plateList
+                                      where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                      orderby x.RiseRate descending
+                                      select x).ToList();
+                    if (!item.IsRead)
                     {
-                        tran.Rollback();
-                        throw ex;
+                        DataRow row = table.NewRow();
+                        row["ConditiontradeBuyId"] = item.ConditiontradeBuyId;
+                        row["Status"] = defaultStatus;
+                        row["AccountId"] = basedata.AccountId;
+                        table.Rows.Add(row);
+                    }
+                }
+                if (table.Rows.Count > 0)
+                {
+                    using (var tran = db.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            //关键是类型
+                            SqlParameter parameter = new SqlParameter("@buySettingShares", SqlDbType.Structured);
+                            //必须指定表类型名
+                            parameter.TypeName = "dbo.BuySettingShares";
+                            //赋值
+                            parameter.Value = table;
+                            db.Database.ExecuteSqlCommand("exec P_BuySettingShares_Update @buySettingShares", parameter);
+                            tran.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            tran.Rollback();
+                            throw ex;
+                        }
                     }
                 }
 
@@ -15710,7 +15888,1526 @@ select @buyId;";
         {
             using (var db = new meal_ticketEntities())
             {
-                throw new NotSupportedException();
+                var JoinToBuy = from item in db.t_account_shares_auto_join_tobuy
+                                where item.AccountId == basedata.AccountId
+                                select item;
+                int totalCount = JoinToBuy.Count();
+
+                var list = (from item in JoinToBuy
+                            orderby item.CreateTime descending
+                            select new AccountAutoTobuyInfo
+                            {
+                                Status = item.Status,
+                                CreateTime = item.CreateTime,
+                                FollowType = item.FollowType,
+                                Id = item.Id,
+                                IsClearOriginal = item.IsClearOriginal,
+                                Name = item.Name,
+                                TemplateId = item.TemplateId,
+                                TemplateType = item.TemplateType,
+                                TimeCycle = item.TimeCycle,
+                                TimeCycleType = item.TimeCycleType
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                List<long> joinIdList = list.Select(e => e.Id).ToList();
+
+                var followList = (from item in db.t_account_shares_auto_join_tobuy_follow
+                                  where joinIdList.Contains(item.ToBuyId)
+                                  select item).ToList();
+                var groupList = (from item in db.t_account_shares_auto_join_tobuy_group
+                                 where joinIdList.Contains(item.ToBuyId)
+                                 select item).ToList();
+                var tobuyOther = (from item in db.t_account_shares_auto_join_tobuy_other
+                                  where joinIdList.Contains(item.ToBuyId)
+                                  select item).ToList();
+                foreach (var item in list)
+                {
+                    item.OtherCount = tobuyOther.Where(e => e.ToBuyId == item.Id).Count(); ;
+                    item.GroupIdList = groupList.Where(e => e.ToBuyId == item.Id).Select(e => e.GroupId).ToList();
+                    if (item.FollowType == 0)
+                    {
+                        item.FollowAccountList = followList.Where(e => e.ToBuyId == item.Id).Select(e => e.FollowAccountId).ToList();
+                    }
+                }
+
+                return new PageRes<AccountAutoTobuyInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = list
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加自动选票
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void AddAccountAutoTobuy(AddAccountAutoTobuyRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran=db.Database.BeginTransaction())
+            {
+                try
+                {
+                    t_account_shares_auto_join_tobuy joinInfo = new t_account_shares_auto_join_tobuy 
+                    {
+                        Status=2,
+                        AccountId=basedata.AccountId,
+                        CreateTime=DateTime.Now,
+                        FollowType=request.FollowType,
+                        IsClearOriginal=request.IsClearOriginal,
+                        LastModified=DateTime.Now,
+                        Name=request.Name,
+                        TemplateId=request.TemplateId,
+                        TemplateType=request.TemplateType,
+                        TimeCycle=request.TimeCycle,
+                        TimeCycleType=request.TimeCycleType
+                    };
+                    db.t_account_shares_auto_join_tobuy.Add(joinInfo);
+                    db.SaveChanges();
+
+                    if (request.FollowType == 0)
+                    {
+                        foreach (var followAccountId in request.FollowAccountList)
+                        {
+                            db.t_account_shares_auto_join_tobuy_follow.Add(new t_account_shares_auto_join_tobuy_follow 
+                            {
+                                CreateTime=DateTime.Now,
+                                FollowAccountId= followAccountId,
+                                ToBuyId= joinInfo.Id
+                            });
+                        }
+                        db.SaveChanges();
+                    }
+
+                    foreach (var groupId in request.GroupIdList)
+                    {
+                        db.t_account_shares_auto_join_tobuy_group.Add(new t_account_shares_auto_join_tobuy_group
+                        {
+                            CreateTime = DateTime.Now,
+                            GroupId = groupId,
+                            ToBuyId = joinInfo.Id
+                        });
+                    }
+                    db.SaveChanges();
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 编辑自动选票
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifyAccountAutoTobuy(ModifyAccountAutoTobuyRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var joinInfo = (from item in db.t_account_shares_auto_join_tobuy
+                                    where item.Id == request.Id && item.AccountId == basedata.AccountId
+                                    select item).FirstOrDefault();
+                    if (joinInfo == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    joinInfo.FollowType = request.FollowType;
+                    joinInfo.IsClearOriginal = request.IsClearOriginal;
+                    joinInfo.LastModified = DateTime.Now;
+                    joinInfo.Name = request.Name;
+                    joinInfo.TemplateId = request.TemplateId;
+                    joinInfo.TemplateType = request.TemplateType;
+                    joinInfo.TimeCycle = request.TimeCycle;
+                    joinInfo.TimeCycleType = request.TimeCycleType;
+                    db.SaveChanges();
+
+                    var followList = (from item in db.t_account_shares_auto_join_tobuy_follow
+                                      where item.ToBuyId == request.Id
+                                      select item).ToList();
+                    if (followList.Count() > 0)
+                    {
+                        db.t_account_shares_auto_join_tobuy_follow.RemoveRange(followList);
+                        db.SaveChanges();
+                    }
+                    if (request.FollowType == 0)
+                    {
+                        foreach (var followAccountId in request.FollowAccountList)
+                        {
+                            db.t_account_shares_auto_join_tobuy_follow.Add(new t_account_shares_auto_join_tobuy_follow
+                            {
+                                CreateTime = DateTime.Now,
+                                FollowAccountId = followAccountId,
+                                ToBuyId = joinInfo.Id
+                            });
+                        }
+                        db.SaveChanges();
+                    }
+                    var groupList = (from item in db.t_account_shares_auto_join_tobuy_group
+                                     where item.ToBuyId == request.Id
+                                     select item).ToList();
+                    if (groupList.Count() > 0)
+                    {
+                        db.t_account_shares_auto_join_tobuy_group.RemoveRange(groupList);
+                        db.SaveChanges();
+                    }
+                    foreach (var groupId in request.GroupIdList)
+                    {
+                        db.t_account_shares_auto_join_tobuy_group.Add(new t_account_shares_auto_join_tobuy_group
+                        {
+                            CreateTime = DateTime.Now,
+                            GroupId = groupId,
+                            ToBuyId = joinInfo.Id
+                        });
+                    }
+                    db.SaveChanges();
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 修改自动选票状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifyAccountAutoTobuyStatus(ModifyStatusRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var joinInfo = (from item in db.t_account_shares_auto_join_tobuy
+                                    where item.Id == request.Id && item.AccountId == basedata.AccountId
+                                    select item).FirstOrDefault();
+                    if (joinInfo == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    joinInfo.Status = request.Status;
+                    joinInfo.LastModified = DateTime.Now;
+                    db.SaveChanges();
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 删除自动选票
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void DeleteAccountAutoTobuy(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var joinInfo = (from item in db.t_account_shares_auto_join_tobuy
+                                    where item.Id == request.Id && item.AccountId == basedata.AccountId
+                                    select item).FirstOrDefault();
+                    if (joinInfo == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    db.t_account_shares_auto_join_tobuy.Remove(joinInfo);
+                    db.SaveChanges();
+
+                    //删除跟投
+                    var followList = (from item in db.t_account_shares_auto_join_tobuy_follow
+                                      where item.ToBuyId == request.Id
+                                      select item).ToList();
+                    if (followList.Count() > 0)
+                    {
+                        db.t_account_shares_auto_join_tobuy_follow.RemoveRange(followList);
+                        db.SaveChanges();
+                    }
+
+                    //删除分组
+                    var groupList = (from item in db.t_account_shares_auto_join_tobuy_group
+                                     where item.ToBuyId == request.Id
+                                     select item).ToList();
+                    if (groupList.Count() > 0)
+                    {
+                        db.t_account_shares_auto_join_tobuy_group.RemoveRange(groupList);
+                        db.SaveChanges();
+                    }
+
+                    //删除条件
+                    var other = (from item in db.t_account_shares_auto_join_tobuy_other
+                                 where item.ToBuyId == request.Id
+                                 select item).ToList();
+                    if (other.Count() > 0)
+                    {
+                        db.t_account_shares_auto_join_tobuy_other.RemoveRange(other);
+                        db.SaveChanges();
+                    }
+
+                    List<long> OtherIdList = other.Select(e => e.Id).ToList();
+                    var otherTrend = (from item in db.t_account_shares_auto_join_tobuy_other_trend
+                                      where OtherIdList.Contains(item.OtherId)
+                                      select item).ToList();
+                    if (otherTrend.Count() > 0)
+                    {
+                        db.t_account_shares_auto_join_tobuy_other_trend.RemoveRange(otherTrend);
+                        db.SaveChanges();
+                    }
+
+                    List<long> OtherTrendIdList = otherTrend.Select(e => e.Id).ToList();
+                    var otherTrendPar = (from item in db.t_account_shares_auto_join_tobuy_other_trend_par
+                                         where OtherTrendIdList.Contains(item.OtherTrendId)
+                                         select item).ToList();
+                    if (otherTrendPar.Count() > 0)
+                    {
+                        db.t_account_shares_auto_join_tobuy_other_trend_par.RemoveRange(otherTrendPar);
+                        db.SaveChanges();
+                    }
+
+                    var otherTrendOther = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other
+                                           where OtherTrendIdList.Contains(item.OtherTrendId)
+                                           select item).ToList();
+                    if (otherTrendOther.Count() > 0)
+                    {
+                        db.t_account_shares_auto_join_tobuy_other_trend_other.RemoveRange(otherTrendOther);
+                        db.SaveChanges();
+                    }
+
+                    List<long> otherTrendOtherIdList = otherTrendOther.Select(e => e.Id).ToList();
+                    var otherTrendOtherPar = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other_par
+                                              where otherTrendOtherIdList.Contains(item.OtherTrendOtherId)
+                                              select item).ToList();
+                    if (otherTrendOther.Count() > 0)
+                    {
+                        db.t_account_shares_auto_join_tobuy_other_trend_other_par.RemoveRange(otherTrendOtherPar);
+                        db.SaveChanges();
+                    }
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取自动选票触发条件分组列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionOtherGroupInfo> GetAccountAutoTobuyOtherList(DetailsPageRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var other = from item in db.t_account_shares_auto_join_tobuy_other
+                            where item.ToBuyId == request.Id
+                            select item;
+                int totalCount = other.Count();
+                return new PageRes<AccountBuyConditionOtherGroupInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in other
+                            orderby item.CreateTime
+                            select new AccountBuyConditionOtherGroupInfo
+                            {
+                                Id = item.Id,
+                                Status = item.Status,
+                                CreateTime = item.CreateTime,
+                                Name = item.Name
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加自动选票触发条件分组
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void AddAccountAutoTobuyOther(AddAccountBuyConditionOtherGroupRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                db.t_account_shares_auto_join_tobuy_other.Add(new t_account_shares_auto_join_tobuy_other
+                {
+                    ToBuyId=request.DetailsId,
+                    Status = 1,
+                    CreateTime = DateTime.Now,
+                    LastModified = DateTime.Now,
+                    Name = request.Name
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 编辑自动选票触发条件分组
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountAutoTobuyOther(ModifyAccountBuyConditionOtherGroupRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var other = (from item in db.t_account_shares_auto_join_tobuy_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (other == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                other.Name = request.Name;
+                other.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改自动选票触发条件分组状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountAutoTobuyOtherStatus(ModifyStatusRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var other = (from item in db.t_account_shares_auto_join_tobuy_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (other == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                other.Status = request.Status;
+                other.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除自动选票触发条件分组
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void DeleteAccountAutoTobuyOther(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //删除条件
+                    var other = (from item in db.t_account_shares_auto_join_tobuy_other
+                                 where item.Id == request.Id
+                                 select item).FirstOrDefault();
+                    if (other == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    db.t_account_shares_auto_join_tobuy_other.Remove(other);
+                    db.SaveChanges();
+
+                    var otherTrend = (from item in db.t_account_shares_auto_join_tobuy_other_trend
+                                      where item.OtherId == request.Id
+                                      select item).ToList();
+                    if (otherTrend.Count() > 0)
+                    {
+                        db.t_account_shares_auto_join_tobuy_other_trend.RemoveRange(otherTrend);
+                        db.SaveChanges();
+                    }
+
+                    List<long> OtherTrendIdList = otherTrend.Select(e => e.Id).ToList();
+                    var otherTrendPar = (from item in db.t_account_shares_auto_join_tobuy_other_trend_par
+                                         where OtherTrendIdList.Contains(item.OtherTrendId)
+                                         select item).ToList();
+                    if (otherTrendPar.Count() > 0)
+                    {
+                        db.t_account_shares_auto_join_tobuy_other_trend_par.RemoveRange(otherTrendPar);
+                        db.SaveChanges();
+                    }
+
+                    var otherTrendOther = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other
+                                           where OtherTrendIdList.Contains(item.OtherTrendId)
+                                           select item).ToList();
+                    if (otherTrendOther.Count() > 0)
+                    {
+                        db.t_account_shares_auto_join_tobuy_other_trend_other.RemoveRange(otherTrendOther);
+                        db.SaveChanges();
+                    }
+
+                    List<long> otherTrendOtherIdList = otherTrendOther.Select(e => e.Id).ToList();
+                    var otherTrendOtherPar = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other_par
+                                              where otherTrendOtherIdList.Contains(item.OtherTrendOtherId)
+                                              select item).ToList();
+                    if (otherTrendOther.Count() > 0)
+                    {
+                        db.t_account_shares_auto_join_tobuy_other_trend_other_par.RemoveRange(otherTrendOtherPar);
+                        db.SaveChanges();
+                    }
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取自动选票触发条件参数列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionOtherInfo> GetAccountAutoTobuyOtherTrendList(DetailsPageRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = from item in db.t_account_shares_auto_join_tobuy_other_trend
+                            where item.OtherId == request.Id
+                            select item;
+                int totalCount = trend.Count();
+
+                var list = (from item in trend
+                            orderby item.CreateTime descending
+                            select new AccountBuyConditionOtherInfo
+                            {
+                                Status = item.Status,
+                                TrendId = item.TrendId,
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                TrendDescription = item.TrendDescription,
+                                TrendName = item.TrendName
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                List<long> otehrTrendIdList = trend.Select(e => e.Id).ToList();
+                var otherTrendPar = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other
+                                     where otehrTrendIdList.Contains(item.OtherTrendId)
+                                     select item).ToList();
+
+                foreach (var item in list)
+                {
+                    item.OtherParCount = otherTrendPar.Where(e => e.OtherTrendId == item.Id).Count();
+                }
+
+                return new PageRes<AccountBuyConditionOtherInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = list
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加自动选票触发条件参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddAccountAutoTobuyOtherTrend(AddAccountBuyConditionOtherRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    t_account_shares_auto_join_tobuy_other_trend temp = new t_account_shares_auto_join_tobuy_other_trend
+                    {
+                        Status = 1,
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        OtherId = request.RelId,
+                        TrendDescription = request.TrendDescription,
+                        TrendId = request.TrendId,
+                        TrendName = request.TrendName
+                    };
+                    db.t_account_shares_auto_join_tobuy_other_trend.Add(temp);
+                    db.SaveChanges();
+
+                    //查询参数值
+                    var par = (from item in db.t_account_shares_conditiontrade_buy_trend_par_template.AsNoTracking()
+                               where item.TrendId == request.TrendId
+                               select item).ToList();
+                    foreach (var item in par)
+                    {
+                        db.t_account_shares_auto_join_tobuy_other_trend_par.Add(new t_account_shares_auto_join_tobuy_other_trend_par
+                        {
+                            OtherTrendId = temp.Id,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = item.ParamsInfo
+                        });
+                    }
+                    if (par.Count() > 0)
+                    {
+                        db.SaveChanges();
+                    }
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 编辑自动选票触发条件参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public void ModifyAccountAutoTobuyOtherTrend(ModifyAccountBuyConditionOtherRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_account_shares_auto_join_tobuy_other_trend
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trend.TrendDescription = request.Description;
+                trend.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改自动选票触发条件参数状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountAutoTobuyOtherTrendStatus(ModifyStatusRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_account_shares_auto_join_tobuy_other_trend
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trend.Status = request.Status;
+                trend.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除自动选票触发条件参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteAccountAutoTobuyOtherTrend(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var otherTrend = (from item in db.t_account_shares_auto_join_tobuy_other_trend
+                                      where item.Id == request.Id
+                                      select item).FirstOrDefault();
+                    if (otherTrend == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    db.t_account_shares_auto_join_tobuy_other_trend.Remove(otherTrend);
+                    db.SaveChanges();
+
+                    var otherTrendPar = (from item in db.t_account_shares_auto_join_tobuy_other_trend_par
+                                         where item.OtherTrendId == request.Id
+                                         select item).ToList();
+                    if (otherTrendPar.Count() > 0)
+                    {
+                        db.t_account_shares_auto_join_tobuy_other_trend_par.RemoveRange(otherTrendPar);
+                        db.SaveChanges();
+                    }
+
+                    var otherTrendOther = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other
+                                           where item.OtherTrendId == request.Id
+                                           select item).ToList();
+                    if (otherTrendOther.Count() > 0)
+                    {
+                        db.t_account_shares_auto_join_tobuy_other_trend_other.RemoveRange(otherTrendOther);
+                        db.SaveChanges();
+                    }
+
+                    List<long> otherTrendOtherIdList = otherTrendOther.Select(e => e.Id).ToList();
+                    var otherTrendOtherPar = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other_par
+                                              where otherTrendOtherIdList.Contains(item.OtherTrendOtherId)
+                                              select item).ToList();
+                    if (otherTrendOther.Count() > 0)
+                    {
+                        db.t_account_shares_auto_join_tobuy_other_trend_other_par.RemoveRange(otherTrendOtherPar);
+                        db.SaveChanges();
+                    }
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 查询自动选票触发条件参数设置
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionOtherParInfo> GetAccountAutoTobuyOtherTrendPar(DetailsPageRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = from item in db.t_account_shares_auto_join_tobuy_other_trend_par
+                               where item.OtherTrendId == request.Id
+                               select item;
+                int totalCount = trendPar.Count();
+
+                return new PageRes<AccountBuyConditionOtherParInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trendPar
+                            orderby item.CreateTime descending
+                            select new AccountBuyConditionOtherParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                ParamsInfo = item.ParamsInfo
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 查询自动选票触发条件参数设置(板块涨跌幅)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionOtherParInfo> GetAccountAutoTobuyOtherTrendParPlate(GetAccountBuyConditionOtherParPlateRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_auto_join_tobuy_other_trend_par
+                                where item.OtherTrendId == request.Id
+                                select item).ToList();
+                List<AccountBuyConditionOtherParInfo> list = new List<AccountBuyConditionOtherParInfo>();
+                foreach (var item in trendPar)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    if (temp.GroupType == request.GroupType && temp.DataType == request.DataType)
+                    {
+                        list.Add(new AccountBuyConditionOtherParInfo
+                        {
+                            CreateTime = item.CreateTime,
+                            Id = item.Id,
+                            ParamsInfo = item.ParamsInfo
+                        });
+                    }
+                }
+                int totalCount = list.Count();
+
+                return new PageRes<AccountBuyConditionOtherParInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in list
+                            orderby item.CreateTime descending
+                            select new AccountBuyConditionOtherParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                ParamsInfo = item.ParamsInfo
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加自动选票触发条件参数设置
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddAccountAutoTobuyOtherTrendPar(AddAccountBuyConditionOtherParRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                if (request.TrendId != 1 && request.TrendId != 7)
+                {
+                    var par = (from item in db.t_account_shares_auto_join_tobuy_other_trend_par
+                               where item.OtherTrendId == request.RelId
+                               select item).FirstOrDefault();
+                    if (par != null)
+                    {
+                        par.ParamsInfo = request.ParamsInfo;
+                        par.LastModified = DateTime.Now;
+                    }
+                    else
+                    {
+                        db.t_account_shares_auto_join_tobuy_other_trend_par.Add(new t_account_shares_auto_join_tobuy_other_trend_par
+                        {
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = request.ParamsInfo,
+                            OtherTrendId = request.RelId
+                        });
+                    }
+                }
+                else
+                {
+                    if (request.TrendId == 7)
+                    {
+                        var source = JsonConvert.DeserializeObject<dynamic>(request.ParamsInfo);
+                        long sourcegroupId = source.GroupId;
+                        int sourcegroupType = source.GroupType;
+                        int sourcedataType = source.DataType;
+                        //判断分组是否存在
+                        var tempLit = (from item in db.t_account_shares_auto_join_tobuy_other_trend_par
+                                       where item.OtherTrendId == request.RelId
+                                       select item).ToList();
+                        foreach (var item in tempLit)
+                        {
+                            var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                            long groupId = 0;
+                            int groupType = 0;
+                            int dataType = 0;
+                            try
+                            {
+                                groupId = temp.GroupId;
+                                groupType = temp.GroupType;
+                                dataType = temp.DataType;
+                            }
+                            catch (Exception ex)
+                            {
+                                continue;
+                            }
+                            if (sourcegroupId == groupId && sourcegroupType == groupType && sourcedataType == dataType)
+                            {
+                                throw new WebApiException(400, "该分组已添加");
+                            }
+                        }
+                    }
+                    db.t_account_shares_auto_join_tobuy_other_trend_par.Add(new t_account_shares_auto_join_tobuy_other_trend_par
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        ParamsInfo = request.ParamsInfo,
+                        OtherTrendId = request.RelId
+                    });
+                }
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 批量添加自动选票触发条件参数设置(板块涨跌幅1)
+        /// </summary>
+        /// <param name="TrendId"></param>
+        /// <param name="Type"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAccountAutoTobuyOtherTrendPar(int Type, long RelId, List<string> list)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //查询分组
+                var plate = (from item in db.t_shares_plate
+                             where item.Type == Type && list.Contains(item.Name)
+                             select item).ToList();
+                //判断分组是否存在
+                var tempLit = (from item in db.t_account_shares_auto_join_tobuy_other_trend_par
+                               where item.OtherTrendId == RelId
+                               select item).ToList();
+                List<long> groupIdList = plate.Select(e => e.Id).ToList();
+                foreach (var item in tempLit)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    long groupId = 0;
+                    int groupType = 0;
+                    int dataType = 0;
+                    try
+                    {
+                        groupId = temp.GroupId;
+                        groupType = temp.GroupType;
+                        dataType = temp.DataType;
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
+                    if (groupIdList.Contains(groupId) && groupType == Type && dataType == 1)
+                    {
+                        groupIdList.Remove(groupId);
+                    }
+                }
+                plate = (from item in plate
+                         where groupIdList.Contains(item.Id)
+                         select item).ToList();
+                var result = (from item in plate
+                              select new t_account_shares_auto_join_tobuy_other_trend_par
+                              {
+                                  CreateTime = DateTime.Now,
+                                  LastModified = DateTime.Now,
+                                  OtherTrendId = RelId,
+                                  ParamsInfo = JsonConvert.SerializeObject(new
+                                  {
+                                      GroupId = item.Id,
+                                      GroupName = item.Name,
+                                      GroupType = Type,
+                                      DataType = 1,
+                                  })
+                              }).ToList();
+                db.t_account_shares_auto_join_tobuy_other_trend_par.AddRange(result);
+                db.SaveChanges();
+                return result.Count();
+            }
+        }
+
+        /// <summary>
+        /// 批量添加自动选票触发条件参数设置(板块涨跌幅2)
+        /// </summary>
+        /// <param name="Type"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAccountAutoTobuyOtherTrendPar2(int Type, long RelId, List<BatchAddSharesConditionTrendPar2Obj> list)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                int i = 0;
+                foreach (var item in list)
+                {
+                    string groupName = item.GroupName;
+                    int compare = item.Compare;
+                    string rate = item.Rate;
+                    //查询分组
+                    var plate = (from x in db.t_shares_plate
+                                 where x.Type == Type && x.Name == groupName
+                                 select x).FirstOrDefault();
+                    if (plate == null)
+                    {
+                        continue;
+                    }
+                    db.t_account_shares_auto_join_tobuy_other_trend_par.Add(new t_account_shares_auto_join_tobuy_other_trend_par
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        OtherTrendId = RelId,
+                        ParamsInfo = JsonConvert.SerializeObject(new
+                        {
+                            GroupId = plate.Id,
+                            GroupName = plate.Name,
+                            GroupType = plate.Type,
+                            DataType = 2,
+                            Compare = compare,
+                            Rate = rate,
+                        })
+                    });
+
+                    i++;
+                }
+                db.SaveChanges();
+                return i;
+            }
+        }
+
+        /// <summary>
+        /// 批量删除自动选票触发条件参数设置
+        /// </summary>
+        /// <param name="request"></param>
+        public void BatchDeleteAccountAutoTobuyOtherTrendPar(BatchDeleteAccountBuyConditionOtherParRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_auto_join_tobuy_other_trend_par
+                                where item.OtherTrendId == request.OtherTrendId
+                                select item).ToList();
+                List<t_account_shares_auto_join_tobuy_other_trend_par> list = new List<t_account_shares_auto_join_tobuy_other_trend_par>();
+                foreach (var item in trendPar)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    int dataType = 0;
+                    int groupType = 0;
+                    long groupId = 0;
+                    try
+                    {
+                        dataType = temp.DataType;
+                        groupType = temp.GroupType;
+                        groupId = temp.GroupId;
+                    }
+                    catch (Exception ex)
+                    { }
+                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0) && groupId >= 0)
+                    {
+                        list.Add(item);
+                    }
+                }
+                if (list.Count() > 0)
+                {
+                    db.t_account_shares_auto_join_tobuy_other_trend_par.RemoveRange(list);
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 编辑自动选票触发条件参数设置
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountAutoTobuyOtherTrendPar(ModifyAccountBuyConditionOtherParRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_auto_join_tobuy_other_trend_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trendPar.ParamsInfo = request.ParamsInfo;
+                trendPar.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除自动选票触发条件参数设置
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteAccountAutoTobuyOtherTrendPar(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_auto_join_tobuy_other_trend_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_account_shares_auto_join_tobuy_other_trend_par.Remove(trendPar);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取自动选票触发条件参数列表-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionOtherInfo> GetAccountAutoTobuyOtherTrendList_Other(DetailsPageRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = from item in db.t_account_shares_auto_join_tobuy_other_trend_other
+                            where item.OtherTrendId == request.Id
+                            select item;
+                int totalCount = trend.Count();
+
+                return new PageRes<AccountBuyConditionOtherInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trend
+                            orderby item.CreateTime descending
+                            select new AccountBuyConditionOtherInfo
+                            {
+                                Status = item.Status,
+                                TrendId = item.TrendId,
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                TrendDescription = item.TrendDescription,
+                                TrendName = item.TrendName
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加自动选票触发条件参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddAccountAutoTobuyOtherTrend_Other(AddAccountBuyConditionOtherRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    t_account_shares_auto_join_tobuy_other_trend_other temp = new t_account_shares_auto_join_tobuy_other_trend_other
+                    {
+                        Status = 1,
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        OtherTrendId = request.RelId,
+                        TrendDescription = request.TrendDescription,
+                        TrendId = request.TrendId,
+                        TrendName = request.TrendName
+                    };
+                    db.t_account_shares_auto_join_tobuy_other_trend_other.Add(temp);
+                    db.SaveChanges();
+
+                    //查询参数值
+                    var par = (from item in db.t_account_shares_conditiontrade_buy_trend_par_template.AsNoTracking()
+                               where item.TrendId == request.TrendId
+                               select item).ToList();
+                    foreach (var item in par)
+                    {
+                        db.t_account_shares_auto_join_tobuy_other_trend_other_par.Add(new t_account_shares_auto_join_tobuy_other_trend_other_par
+                        {
+                            OtherTrendOtherId = temp.Id,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = item.ParamsInfo
+                        });
+                    }
+                    if (par.Count() > 0)
+                    {
+                        db.SaveChanges();
+                    }
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 编辑自动选票触发条件参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public void ModifyAccountAutoTobuyOtherTrend_Other(ModifyAccountBuyConditionOtherRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trend.TrendDescription = request.Description;
+                trend.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改自动选票触发条件参数状态-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountAutoTobuyOtherTrendStatus_Other(ModifyStatusRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trend.Status = request.Status;
+                trend.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除自动选票触发条件参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteAccountAutoTobuyOtherTrend_Other(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_account_shares_auto_join_tobuy_other_trend_other.Remove(trend);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 查询自动选票触发条件参数设置-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionOtherParInfo> GetAccountAutoTobuyOtherTrendPar_Other(DetailsPageRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = from item in db.t_account_shares_auto_join_tobuy_other_trend_other_par
+                               where item.OtherTrendOtherId == request.Id
+                               select item;
+                int totalCount = trendPar.Count();
+
+                return new PageRes<AccountBuyConditionOtherParInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trendPar
+                            orderby item.CreateTime descending
+                            select new AccountBuyConditionOtherParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                ParamsInfo = item.ParamsInfo
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 查询自动选票触发条件参数设置(板块涨跌幅)-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<AccountBuyConditionOtherParInfo> GetAccountAutoTobuyOtherTrendParPlate_Other(GetAccountBuyConditionOtherParPlateRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other_par
+                                where item.OtherTrendOtherId == request.Id
+                                select item).ToList();
+                List<AccountBuyConditionOtherParInfo> list = new List<AccountBuyConditionOtherParInfo>();
+                foreach (var item in trendPar)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    if (temp.GroupType == request.GroupType && temp.DataType == request.DataType)
+                    {
+                        list.Add(new AccountBuyConditionOtherParInfo
+                        {
+                            CreateTime = item.CreateTime,
+                            Id = item.Id,
+                            ParamsInfo = item.ParamsInfo
+                        });
+                    }
+                }
+                int totalCount = list.Count();
+
+                return new PageRes<AccountBuyConditionOtherParInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in list
+                            orderby item.CreateTime descending
+                            select new AccountBuyConditionOtherParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                ParamsInfo = item.ParamsInfo
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加自动选票触发条件参数设置-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddAccountAutoTobuyOtherTrendPar_Other(AddAccountBuyConditionOtherParRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                if (request.TrendId != 1 && request.TrendId != 7)
+                {
+                    var par = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other_par
+                               where item.OtherTrendOtherId == request.RelId
+                               select item).FirstOrDefault();
+                    if (par != null)
+                    {
+                        par.ParamsInfo = request.ParamsInfo;
+                        par.LastModified = DateTime.Now;
+                    }
+                    else
+                    {
+                        db.t_account_shares_auto_join_tobuy_other_trend_other_par.Add(new t_account_shares_auto_join_tobuy_other_trend_other_par
+                        {
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = request.ParamsInfo,
+                            OtherTrendOtherId = request.RelId
+                        });
+                    }
+                }
+                else
+                {
+                    if (request.TrendId == 7)
+                    {
+                        var source = JsonConvert.DeserializeObject<dynamic>(request.ParamsInfo);
+                        long sourcegroupId = source.GroupId;
+                        int sourcegroupType = source.GroupType;
+                        int sourcedataType = source.DataType;
+                        //判断分组是否存在
+                        var tempLit = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other_par
+                                       where item.OtherTrendOtherId == request.RelId
+                                       select item).ToList();
+                        foreach (var item in tempLit)
+                        {
+                            var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                            long groupId = 0;
+                            int groupType = 0;
+                            int dataType = 0;
+                            try
+                            {
+                                groupId = temp.GroupId;
+                                groupType = temp.GroupType;
+                                dataType = temp.DataType;
+                            }
+                            catch (Exception ex)
+                            {
+                                continue;
+                            }
+                            if (sourcegroupId == groupId && sourcegroupType == groupType && sourcedataType == dataType)
+                            {
+                                throw new WebApiException(400, "该分组已添加");
+                            }
+                        }
+                    }
+                    db.t_account_shares_auto_join_tobuy_other_trend_other_par.Add(new t_account_shares_auto_join_tobuy_other_trend_other_par
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        ParamsInfo = request.ParamsInfo,
+                        OtherTrendOtherId = request.RelId
+                    });
+                }
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 批量添加自动选票触发条件参数设置(板块涨跌幅1)-额外关系
+        /// </summary>
+        /// <param name="TrendId"></param>
+        /// <param name="Type"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAddAccountAutoTobuyOtherTrendPar_Other(int Type, long RelId, List<string> list)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //查询分组
+                var plate = (from item in db.t_shares_plate
+                             where item.Type == Type && list.Contains(item.Name)
+                             select item).ToList();
+                //判断分组是否存在
+                var tempLit = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other_par
+                               where item.OtherTrendOtherId == RelId
+                               select item).ToList();
+                List<long> groupIdList = plate.Select(e => e.Id).ToList();
+                foreach (var item in tempLit)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    long groupId = 0;
+                    int groupType = 0;
+                    int dataType = 0;
+                    try
+                    {
+                        groupId = temp.GroupId;
+                        groupType = temp.GroupType;
+                        dataType = temp.DataType;
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
+                    if (groupIdList.Contains(groupId) && groupType == Type && dataType == 1)
+                    {
+                        groupIdList.Remove(groupId);
+                    }
+                }
+                plate = (from item in plate
+                         where groupIdList.Contains(item.Id)
+                         select item).ToList();
+                var result = (from item in plate
+                              select new t_account_shares_auto_join_tobuy_other_trend_other_par
+                              {
+                                  CreateTime = DateTime.Now,
+                                  LastModified = DateTime.Now,
+                                  OtherTrendOtherId = RelId,
+                                  ParamsInfo = JsonConvert.SerializeObject(new
+                                  {
+                                      GroupId = item.Id,
+                                      GroupName = item.Name,
+                                      GroupType = Type,
+                                      DataType = 1,
+                                  })
+                              }).ToList();
+                db.t_account_shares_auto_join_tobuy_other_trend_other_par.AddRange(result);
+                db.SaveChanges();
+                return result.Count();
+            }
+        }
+
+        /// <summary>
+        /// 批量添加自动选票触发条件参数设置(板块涨跌幅2)-额外关系
+        /// </summary>
+        /// <param name="Type"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAddAccountAutoTobuyOtherTrendPar2_Other(int Type, long RelId, List<BatchAddSharesConditionTrendPar2Obj> list)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                int i = 0;
+                foreach (var item in list)
+                {
+                    string groupName = item.GroupName;
+                    int compare = item.Compare;
+                    string rate = item.Rate;
+                    //查询分组
+                    var plate = (from x in db.t_shares_plate
+                                 where x.Type == Type && x.Name == groupName
+                                 select x).FirstOrDefault();
+                    if (plate == null)
+                    {
+                        continue;
+                    }
+                    db.t_account_shares_auto_join_tobuy_other_trend_other_par.Add(new t_account_shares_auto_join_tobuy_other_trend_other_par
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        OtherTrendOtherId = RelId,
+                        ParamsInfo = JsonConvert.SerializeObject(new
+                        {
+                            GroupId = plate.Id,
+                            GroupName = plate.Name,
+                            GroupType = plate.Type,
+                            DataType = 2,
+                            Compare = compare,
+                            Rate = rate,
+                        })
+                    });
+
+                    i++;
+                }
+                db.SaveChanges();
+                return i;
+            }
+        }
+
+        /// <summary>
+        /// 批量删除自动选票触发条件参数设置-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void BatchDeleteAccountAutoTobuyOtherTrendPar_Other(BatchDeleteAccountBuyConditionOtherPar_OtherRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other_par
+                                where item.OtherTrendOtherId == request.OtherTrendOtherId
+                                select item).ToList();
+                List<t_account_shares_auto_join_tobuy_other_trend_other_par> list = new List<t_account_shares_auto_join_tobuy_other_trend_other_par>();
+                foreach (var item in trendPar)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    int dataType = 0;
+                    int groupType = 0;
+                    long groupId = 0;
+                    try
+                    {
+                        dataType = temp.DataType;
+                        groupType = temp.GroupType;
+                        groupId = temp.GroupId;
+                    }
+                    catch (Exception ex)
+                    { }
+                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0) && groupId >= 0)
+                    {
+                        list.Add(item);
+                    }
+                }
+                if (list.Count() > 0)
+                {
+                    db.t_account_shares_auto_join_tobuy_other_trend_other_par.RemoveRange(list);
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 编辑自动选票触发条件参数设置-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyAccountAutoTobuyOtherTrendPar_Other(ModifyAccountBuyConditionOtherParRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trendPar.ParamsInfo = request.ParamsInfo;
+                trendPar.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除自动选票触发条件参数设置-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteAccountAutoTobuyOtherTrendPar_Other(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_account_shares_auto_join_tobuy_other_trend_other_par.Remove(trendPar);
+                db.SaveChanges();
             }
         }
         #endregion
