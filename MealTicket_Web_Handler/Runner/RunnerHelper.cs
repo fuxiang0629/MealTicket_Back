@@ -7,8 +7,10 @@ using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Data;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.SqlServer;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -1686,94 +1688,99 @@ inner
                             });
                         }
 
-                        long mainEntrustId = 0;
+                        SqlParameter[] parameter = new SqlParameter[8];
+                        //市场
+                        var marketPar = new SqlParameter("@market", SqlDbType.Int);
+                        marketPar.Value = item.Market;
+                        parameter[0] = marketPar;
+                        //股票代码
+                        var sharesCodePar = new SqlParameter("@sharesCode", SqlDbType.VarChar,20);
+                        sharesCodePar.Value = item.SharesCode;
+                        parameter[1] = sharesCodePar;
+                        //委托价格
+                        var entrustPricePar = new SqlParameter("@entrustPrice", SqlDbType.BigInt);
+                        entrustPricePar.Value = EntrustPrice;
+                        parameter[2] = entrustPricePar;
+                        //主账户Id
+                        var mainAccountIdPar = new SqlParameter("@mainAccountId", SqlDbType.BigInt);
+                        mainAccountIdPar.Value = item.CreateAccountId == 0 ? item.AccountId : item.CreateAccountId;
+                        parameter[3] = mainAccountIdPar;
+                        //自动买入条件Id
+                        var autoBuyDetailsIdPar = new SqlParameter("@autoBuyDetailsId", SqlDbType.BigInt);
+                        autoBuyDetailsIdPar.Value = item.Id;
+                        parameter[4] = autoBuyDetailsIdPar;
+                        //买入列表
+                        var applyTradeBuyInfoPar = new SqlParameter("@applyTradeBuyInfo", SqlDbType.Structured);
+                        applyTradeBuyInfoPar.TypeName = "dbo.ApplyTradeBuyInfo";
+                        using (DataTable table = new DataTable())
+                        {
+                            #region====定义表字段数据类型====
+                            table.Columns.Add("AccountId", typeof(long));
+                            table.Columns.Add("BuyAmount", typeof(long));
+                            table.Columns.Add("ClosingTime", typeof(DateTime));
+                            table.Columns.Add("IsFollow", typeof(bool));
+                            #endregion
+
+                            #region====绑定数据====
+                            foreach (var data in buyList)
+                            {
+                                long buyAccountId = data.AccountId;
+                                long buyAmount = data.BuyAmount;
+                                bool isFollow = data.IsFollow;
+                                DataRow row = table.NewRow();
+                                row["AccountId"] = buyAccountId;
+                                row["BuyAmount"] = buyAmount;
+                                row["ClosingTime"] = DBNull.Value;
+                                row["IsFollow"] = isFollow;
+                                table.Rows.Add(row);
+                            }
+                            #endregion
+
+                            applyTradeBuyInfoPar.Value = table;
+                        }
+                        parameter[5] = applyTradeBuyInfoPar;
+                        //errorcode
+                        var errorCodePar = new SqlParameter("@errorCode", SqlDbType.Int);
+                        errorCodePar.Direction = ParameterDirection.Output;
+                        parameter[6] = errorCodePar;
+                        //errormessage
+                        var errorMessagePar = new SqlParameter("@errorMessage", SqlDbType.NVarChar,200);
+                        errorMessagePar.Direction = ParameterDirection.Output;
+                        parameter[7] = errorMessagePar;
+
+                        var resultList=db.Database.SqlQuery<ApplyTradeBuyInfo>("exec P_ApplyTradeBuy_Batch @market,@sharesCode,@entrustPrice,@mainAccountId,@autoBuyDetailsId,@applyTradeBuyInfo,@errorCode out,@errorMessage out", parameter).ToList();
+
+                        if ((int)parameter[6].Value != 0)
+                        {
+                            throw new WebApiException(400, parameter[7].Value.ToString());
+                        }
 
                         List<dynamic> sendDataList = new List<dynamic>();
-                        string error = "";
-                        int i = 0;
-                        foreach (var buy in buyList)
+                        foreach (var x in resultList)
                         {
-                            long buyId = 0;
-                            using (var tran = db.Database.BeginTransaction())
+                            bool IsSuccess = x.IsSuccess;
+                            if (IsSuccess)
                             {
-                                try
+                                sendDataList.Add(new
                                 {
-                                    ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
-                                    ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
-                                    ObjectParameter buyIdDb = new ObjectParameter("buyId", 0);
-                                    db.P_ApplyTradeBuy(buy.AccountId, item.Market, item.SharesCode, buy.BuyAmount, -1, EntrustPrice, null, buy.IsFollow, item.CreateAccountId==0?item.AccountId:item.CreateAccountId, errorCodeDb, errorMessageDb, buyIdDb);
-                                    int errorCode = (int)errorCodeDb.Value;
-                                    string errorMessage = errorMessageDb.Value.ToString();
-                                    if (errorCode != 0)
-                                    {
-                                        throw new WebApiException(errorCode, errorMessage);
-                                    }
-                                    buyId = (long)buyIdDb.Value;
-
-                                    var entrust = (from x in db.t_account_shares_entrust
-                                                   where x.Id == buyId
-                                                   select x).FirstOrDefault();
-                                    if (entrust == null)
-                                    {
-                                        throw new WebApiException(400, "未知错误");
-                                    }
-                                    if (buy.AccountId != item.AccountId)//不是自己买，绑定跟买关系
-                                    {
-                                        db.t_account_shares_entrust_follow.Add(new t_account_shares_entrust_follow
-                                        {
-                                            CreateTime = DateTime.Now,
-                                            MainAccountId = item.AccountId,
-                                            MainEntrustId = mainEntrustId,
-                                            FollowAccountId = buy.AccountId,
-                                            FollowEntrustId = entrust.Id,
-                                        });
-                                        db.SaveChanges();
-                                    }
-                                    else
-                                    {
-                                        mainEntrustId = entrust.Id;
-                                    }
-
-                                    sendDataList.Add(new
-                                    {
-                                        BuyId = buyId,
-                                        BuyCount = entrust.EntrustCount,
-                                        BuyTime = DateTime.Now.ToString("yyyy-MM-dd")
-                                    });
-
-                                    tran.Commit();
-                                    i++;
-                                }
-                                catch (Exception ex)
-                                {
-                                    error = ex.Message;
-                                    Logger.WriteFileLog("购买失败", ex);
-                                    tran.Rollback();
-                                    if (buy.AccountId == item.AccountId)//主账号失败直接退出
-                                    {
-                                        //更新错误原因
-                                        sql = string.Format("update t_account_shares_conditiontrade_buy_details set EntrustErrorDes='{0}' where Id={1}", ex.Message, item.Id);
-                                        db.Database.ExecuteSqlCommand(sql);
-                                        sendDataList = new List<dynamic>();
-                                        break;
-                                    }
-                                }
+                                    BuyId = x.BuyId,
+                                    BuyCount = x.BuyCount,
+                                    BuyTime = x.BuyTime.ToString("yyyy-MM-dd 00:00:00"),
+                                });
                             }
-
-                            if (buy.AccountId == item.AccountId)
+                            else 
                             {
-                                sql = string.Format("update t_account_shares_conditiontrade_buy_details set EntrustId={0} where Id={1}", buyId, item.Id);
-                                db.Database.ExecuteSqlCommand(sql);
+                                string errorMessage = x.ErrorMessage;
+                                Logger.WriteFileLog(errorMessage, null);
                             }
                         }
-                        if (sendDataList.Count() <= 0)
+                        if (sendDataList.Count() > 0)
                         {
-                            throw new WebApiException(400, error);
-                        }
-                        bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new { type = 1, data = sendDataList })), "SharesBuy", "s1");
-                        if (!isSendSuccess)
-                        {
-                            throw new WebApiException(400, "买入失败,请撤销重试");
+                            bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new { type = 1, data = sendDataList })), "SharesBuy", "s1");
+                            if (!isSendSuccess)
+                            {
+                                throw new WebApiException(400, "买入失败,请撤销重试");
+                            }
                         }
                     }
                     catch (Exception ex)

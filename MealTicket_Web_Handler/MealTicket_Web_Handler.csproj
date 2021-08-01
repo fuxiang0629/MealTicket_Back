@@ -127,6 +127,7 @@
     <Compile Include="Model\AddConditiontradeTemplateBuyOtherGroup.cs" />
     <Compile Include="Model\AddConditiontradeTemplateBuyOtherPar.cs" />
     <Compile Include="Model\AddConditiontradeTemplateSellDetails.cs" />
+    <Compile Include="Model\ApplyTradeBuyInfo.cs" />
     <Compile Include="Model\BatchAddSharesConditionTrendPar2Obj.cs" />
     <Compile Include="Model\BatchDeleteAccountBuyConditionAutoPar.cs" />
     <Compile Include="Model\BatchDeleteAccountBuyConditionAutoPar_Other.cs" />

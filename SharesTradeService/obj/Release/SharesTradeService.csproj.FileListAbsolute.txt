@@ -194,7 +194,6 @@ D:\项目\饭票\后端\SharesTradeService\bin\Release\System.Threading.Channels
 D:\项目\饭票\后端\SharesTradeService\bin\Release\System.Threading.Tasks.Extensions.xml
 D:\项目\饭票\后端\SharesTradeService\bin\Release\zh-Hans\EntityFramework.resources.dll
 D:\项目\饭票\后端\SharesTradeService\bin\Release\zh-Hans\EntityFramework.SqlServer.resources.dll
-D:\项目\饭票\后端\SharesTradeService\obj\Release\SharesTradeService.csprojAssemblyReference.cache
 D:\项目\饭票\后端\SharesTradeService\obj\Release\SharesTradeService.csproj.CoreCompileInputs.cache
 D:\项目\饭票\后端\SharesTradeService\obj\Release\SharesTradeService.csproj.CopyComplete
 D:\项目\饭票\后端\SharesTradeService\obj\Release\SharesTradeService.exe
@@ -247,3 +246,4 @@ D:\项目\饭票\后端\SharesTradeService\bin\Release\MealTicket_DBCommon.dll
 D:\项目\饭票\后端\SharesTradeService\bin\Release\MealTicket_DBCommon.pdb
 D:\项目\饭票\后端\SharesTradeService\bin\Release\MealTicket_DBCommon.dll.config
 F:\项目\饭票后端\SharesTradeService\obj\Release\SharesTradeService.csprojAssemblyReference.cache
+D:\项目\饭票\后端\SharesTradeService\obj\Release\SharesTradeService.csprojAssemblyReference.cache

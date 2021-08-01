@@ -2830,9 +2830,11 @@
     <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Market" Type="int" Nullable="false" />
     <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="SharesInfo" Type="varchar" MaxLength="31" StoreGeneratedPattern="Computed" />
     <Property Name="Date" Type="varchar" MaxLength="50" Nullable="false" />
     <Property Name="Type" Type="int" Nullable="false" />
     <Property Name="BusinessType" Type="int" Nullable="false" />
+    <Property Name="PresentPrice" Type="bigint" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_quotes_last">

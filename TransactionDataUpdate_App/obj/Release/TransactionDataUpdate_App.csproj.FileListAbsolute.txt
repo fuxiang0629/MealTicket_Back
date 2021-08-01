@@ -76,7 +76,6 @@ D:\项目\饭票\后端\TransactionDataUpdate_App\bin\Release\System.Buffers.xml
 D:\项目\饭票\后端\TransactionDataUpdate_App\bin\Release\System.Numerics.Vectors.xml
 D:\项目\饭票\后端\TransactionDataUpdate_App\bin\Release\zh-Hans\EntityFramework.resources.dll
 D:\项目\饭票\后端\TransactionDataUpdate_App\bin\Release\zh-Hans\EntityFramework.SqlServer.resources.dll
-D:\项目\饭票\后端\TransactionDataUpdate_App\obj\Release\TransactionDataUpdate_App.csprojAssemblyReference.cache
 D:\项目\饭票\后端\TransactionDataUpdate_App\obj\Release\TransactionDataUpdate_App.csproj.CoreCompileInputs.cache
 D:\项目\饭票\后端\TransactionDataUpdate_App\obj\Release\TransactionDataUpdate_App.csproj.CopyComplete
 D:\项目\饭票\后端\TransactionDataUpdate_App\obj\Release\TransactionDataUpdate_App.exe

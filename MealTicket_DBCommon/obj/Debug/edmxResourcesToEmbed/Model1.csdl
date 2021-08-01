@@ -2610,6 +2610,8 @@
     <Property Name="Type" Type="Int32" Nullable="false" />
     <Property Name="BusinessType" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="PresentPrice" Type="Int64" Nullable="false" />
+    <Property Name="SharesInfo" Type="String" MaxLength="31" FixedLength="false" Unicode="false" annotation:StoreGeneratedPattern="Computed" />
   </EntityType>
   <EntityType Name="t_shares_quotes_last">
     <Key>

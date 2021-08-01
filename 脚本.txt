@@ -9,6 +9,13 @@ t_shares_info_fund_group_details
 P_BuySettingShares_Update
 BuySettingShares
 
+ApplyTradeBuyInfo
+P_ApplyTradeBuy_Handler
+P_ApplyTradeBuy_Batch
+
+t_account_shares_hold索引index_market_sharescode
+t_account_shares_entrust索引index_accountId，index_status
+
 
 t_account_shares_auto_join_tobuy
 t_account_shares_auto_join_tobuy_follow
