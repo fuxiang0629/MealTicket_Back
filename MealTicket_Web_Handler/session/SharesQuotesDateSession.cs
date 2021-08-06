@@ -21,7 +21,7 @@ namespace MealTicket_Web_Handler.session
             using (var db = new meal_ticketEntities())
             {
                 var shares_quotes_date = (from item in db.t_shares_quotes_date
-                                          where item.LastModified > startTime && item.LastModified < EndTime
+                                          where item.LastModified >= startTime && item.LastModified < EndTime
                                           select item).ToList();
                 return shares_quotes_date;
             }

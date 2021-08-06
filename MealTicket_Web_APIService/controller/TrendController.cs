@@ -6365,6 +6365,24 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 从模板导入自动选票
+        /// </summary>
+        /// <returns></returns>
+        [Description("从模板导入自动选票")]
+        [Route("account/auto/tobuy/export"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ExportAccountAutoTobuy(ExportAccountAutoTobuyRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ExportAccountAutoTobuy(request, basedata);
+            return null;
+        }
+
+        /// <summary>
         /// 编辑自动选票
         /// </summary>
         /// <returns></returns>
@@ -7177,5 +7195,873 @@ namespace MealTicket_Web_APIService.controller
             return null;
         }
         #endregion
+
+        #region===自动加入模板===
+        /// <summary>
+        /// 获取自动加入模板详情列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/details/list"), HttpPost]
+        [Description("获取自动加入模板详情列表")]
+        [CheckUserLoginFilter]
+        public PageRes<ConditiontradeTemplateJoinDetailsInfo> GetConditiontradeTemplateJoinDetailsList(GetConditiontradeTemplateJoinDetailsListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return trendHandler.GetConditiontradeTemplateJoinDetailsList(request);
+        }
+
+        /// <summary>
+        /// 添加自动加入模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/details/add"), HttpPost]
+        [Description("添加自动加入模板详情")]
+        [CheckUserLoginFilter]
+        public object AddConditiontradeTemplateJoinDetails(AddConditiontradeTemplateJoinDetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            trendHandler.AddConditiontradeTemplateJoinDetails(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑自动加入模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/details/modify"), HttpPost]
+        [Description("编辑自动加入模板详情")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateJoinDetails(ModifyConditiontradeTemplateJoinDetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            trendHandler.ModifyConditiontradeTemplateJoinDetails(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改自动加入模板详情状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/details/status/modify"), HttpPost]
+        [Description("修改自动加入模板详情状态")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateJoinDetailsStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            trendHandler.ModifyConditiontradeTemplateJoinDetailsStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除自动加入模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/details/delete"), HttpPost]
+        [Description("删除自动加入模板详情")]
+        [CheckUserLoginFilter]
+        public object DeleteConditiontradeTemplateJoinDetails(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            trendHandler.DeleteConditiontradeTemplateJoinDetails(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取自动加入模板额外条件分组列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/group/list"), HttpPost]
+        [Description("获取自动加入模板额外条件分组列表")]
+        [CheckUserLoginFilter]
+        public PageRes<ConditiontradeTemplateBuyOtherGroupInfo> GetConditiontradeTemplateJoinOtherGroupList(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeTemplateJoinOtherGroupList(request);
+        }
+
+        /// <summary>
+        /// 添加自动加入模板额外条件分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/group/add"), HttpPost]
+        [Description("添加自动加入模板额外条件分组")]
+        [CheckUserLoginFilter]
+        public object AddConditiontradeTemplateJoinOtherGroup(AddConditiontradeTemplateBuyOtherGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddConditiontradeTemplateJoinOtherGroup(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑自动加入模板额外条件分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/group/modify"), HttpPost]
+        [Description("编辑自动加入模板额外条件分组")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateJoinOtherGroup(ModifyConditiontradeTemplateBuyOtherGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateJoinOtherGroup(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改自动加入模板额外条件分组状态
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/group/status/modify"), HttpPost]
+        [Description("修改自动加入模板额外条件分组状态")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateJoinOtherGroupStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateJoinOtherGroupStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除自动加入模板额外条件分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/group/delete"), HttpPost]
+        [Description("删除自动加入模板额外条件分组")]
+        [CheckUserLoginFilter]
+        public object DeleteConditiontradeTemplateJoinOtherGroup(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteConditiontradeTemplateJoinOtherGroup(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取自动加入模板额外条件列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/list"), HttpPost]
+        [Description("获取自动加入模板额外条件列表")]
+        [CheckUserLoginFilter]
+        public PageRes<ConditiontradeTemplateBuyOtherInfo> GetConditiontradeTemplateJoinOtherList(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeTemplateJoinOtherList(request);
+        }
+
+        /// <summary>
+        /// 添加自动加入模板额外条件
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/add"), HttpPost]
+        [Description("添加自动加入模板额外条件")]
+        [CheckUserLoginFilter]
+        public object AddConditiontradeTemplateJoinOther(AddConditiontradeTemplateBuyOtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddConditiontradeTemplateJoinOther(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑自动加入模板额外条件
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/modify"), HttpPost]
+        [Description("编辑自动加入模板额外条件")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateJoinOther(ModifyConditiontradeTemplateBuyOtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateJoinOther(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改自动加入模板额外条件状态
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/status/modify"), HttpPost]
+        [Description("修改自动加入模板额外条件状态")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateJoinOtherStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateJoinOtherStatus(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除自动加入模板额外条件
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/delete"), HttpPost]
+        [Description("删除自动加入模板额外条件")]
+        [CheckUserLoginFilter]
+        public object DeleteConditiontradeTemplateJoinOther(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteConditiontradeTemplateJoinOther(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询自动加入模板额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/par"), HttpPost]
+        [Description("查询自动加入模板额外条件类型参数")]
+        [CheckUserLoginFilter]
+        public PageRes<ConditiontradeTemplateBuyOtherParInfo> GetConditiontradeTemplateJoinOtherPar(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeTemplateJoinOtherPar(request);
+        }
+
+        /// <summary>
+        /// 查询自动加入模板额外条件类型参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/par/plate"), HttpPost]
+        [Description("查询自动加入模板额外条件类型参数(板块涨跌幅)")]
+        [CheckUserLoginFilter]
+        public PageRes<ConditiontradeTemplateBuyOtherParInfo> GetConditiontradeTemplateJoinOtherParPlate(GetConditiontradeTemplateBuyOtherParPlateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeTemplateJoinOtherParPlate(request);
+        }
+
+        /// <summary>
+        /// 添加自动加入模板额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/par/add"), HttpPost]
+        [Description("添加自动加入模板额外条件类型参数")]
+        [CheckUserLoginFilter]
+        public object AddConditiontradeTemplateJoinOtherPar(AddConditiontradeTemplateBuyOtherParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddConditiontradeTemplateJoinOtherPar(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量添加自动加入模板额外条件类型参数(板块涨跌幅1)
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("conditiontrade/template/join/other/par/add/batch"), HttpPost]
+        [Description("批量添加自动加入模板额外条件类型参数(板块涨跌幅1)")]
+        public async Task<object> BatchAddConditiontradeTemplateJoinOtherPar()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<string> list = new List<string>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+
+                            list.Add(datas[0].Trim());
+                        }
+                        return trendHandler.BatchAddConditiontradeTemplateJoinOtherPar(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 批量添加自动加入模板额外条件类型参数(板块涨跌幅2)
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("conditiontrade/template/join/other/par/add/batch2"), HttpPost]
+        [Description("批量添加自动加入模板额外条件类型参数(板块涨跌幅2)")]
+        public async Task<object> BatchAddConditiontradeTemplateJoinOtherPar2()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<BatchAddSharesConditionTrendPar2Obj> list = new List<BatchAddSharesConditionTrendPar2Obj>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+                            if (datas.Length < 3)
+                            {
+                                continue;
+                            }
+                            string groupName = datas[0].Trim();
+                            int compare = datas[1].Trim() == ">=" ? 1 : 2;
+                            string rate = datas[2].Trim();
+
+                            list.Add(new BatchAddSharesConditionTrendPar2Obj
+                            {
+                                GroupName = groupName,
+                                Compare = compare,
+                                Rate = rate
+                            });
+                        }
+                        return trendHandler.BatchAddConditiontradeTemplateJoinOtherPar2(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 批量删除自动加入模板额外条件类型参数（板块涨跌幅）
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/par/delete/batch"), HttpPost]
+        [Description("批量删除自动加入模板额外条件类型参数（板块涨跌幅）")]
+        [CheckUserLoginFilter]
+        public object BatchDeleteConditiontradeTemplateJoinOtherPar(BatchDeleteConditiontradeTemplateBuyOtherParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BatchDeleteConditiontradeTemplateJoinOtherPar(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑自动加入模板额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/par/modify"), HttpPost]
+        [Description("编辑自动加入模板额外条件类型参数")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateJoinOtherPar(ModifyConditiontradeTemplateBuyOtherParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateJoinOtherPar(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除自动加入模板额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/par/delete"), HttpPost]
+        [Description("删除自动加入模板额外条件类型参数")]
+        [CheckUserLoginFilter]
+        public object DeleteConditiontradeTemplateJoinOtherPar(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteConditiontradeTemplateJoinOtherPar(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取自动加入模板额外条件列表-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/list/other"), HttpPost]
+        [Description("获取自动加入模板额外条件列表-额外关系")]
+        [CheckUserLoginFilter]
+        public PageRes<ConditiontradeTemplateBuyOtherInfo> GetConditiontradeTemplateJoinOtherList_Other(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeTemplateJoinOtherList_Other(request);
+        }
+
+        /// <summary>
+        /// 添加自动加入模板额外条件-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/add/other"), HttpPost]
+        [Description("添加自动加入模板额外条件-额外关系")]
+        [CheckUserLoginFilter]
+        public object AddConditiontradeTemplateJoinOther_Other(AddConditiontradeTemplateBuyOtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddConditiontradeTemplateJoinOther_Other(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑自动加入模板额外条件-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/modify/other"), HttpPost]
+        [Description("编辑自动加入模板额外条件-额外关系")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateJoinOther_Other(ModifyConditiontradeTemplateBuyOtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateJoinOther_Other(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改自动加入模板额外条件状态-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/status/modify/other"), HttpPost]
+        [Description("修改自动加入模板额外条件状态-额外关系")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateJoinOtherStatus_Other(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateJoinOtherStatus_Other(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除自动加入模板额外条件-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/delete/other"), HttpPost]
+        [Description("删除自动加入模板额外条件-额外关系")]
+        [CheckUserLoginFilter]
+        public object DeleteConditiontradeTemplateJoinOther_Other(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteConditiontradeTemplateJoinOther_Other(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询自动加入模板额外条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/par/other"), HttpPost]
+        [Description("查询自动加入模板额外条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public PageRes<ConditiontradeTemplateBuyOtherParInfo> GetConditiontradeTemplateJoinOtherPar_Other(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeTemplateJoinOtherPar_Other(request);
+        }
+
+        /// <summary>
+        /// 查询自动加入模板额外条件类型参数(板块涨跌幅)-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/par/plate/other"), HttpPost]
+        [Description("查询自动加入模板额外条件类型参数(板块涨跌幅)-额外关系")]
+        [CheckUserLoginFilter]
+        public PageRes<ConditiontradeTemplateBuyOtherParInfo> GetConditiontradeTemplateJoinOtherParPlate_Other(GetConditiontradeTemplateBuyOtherParPlateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetConditiontradeTemplateJoinOtherParPlate_Other(request);
+        }
+
+        /// <summary>
+        /// 添加自动加入模板额外条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/par/add/other"), HttpPost]
+        [Description("添加自动加入模板额外条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public object AddConditiontradeTemplateJoinOtherPar_Other(AddConditiontradeTemplateBuyOtherParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddConditiontradeTemplateJoinOtherPar_Other(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量添加自动加入模板额外条件类型参数(板块涨跌幅1)-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("conditiontrade/template/join/other/par/add/batch/other"), HttpPost]
+        [Description("批量添加自动加入模板额外条件类型参数(板块涨跌幅1)-额外关系")]
+        public async Task<object> BatchAddConditiontradeTemplateJoinOtherPar_Other()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<string> list = new List<string>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+
+                            list.Add(datas[0].Trim());
+                        }
+                        return trendHandler.BatchAddConditiontradeTemplateJoinOtherPar_Other(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 批量添加自动加入模板额外条件类型参数(板块涨跌幅2)-额外关系
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("conditiontrade/template/join/other/par/add/batch2/other"), HttpPost]
+        [Description("批量添加自动加入模板额外条件类型参数(板块涨跌幅2)-额外关系")]
+        public async Task<object> BatchAddConditiontradeTemplateJoinOtherPar2_Other()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var Type = int.Parse(provider.FormData["Type"]);
+                        var RelId = long.Parse(provider.FormData["RelId"]);
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+                        List<BatchAddSharesConditionTrendPar2Obj> list = new List<BatchAddSharesConditionTrendPar2Obj>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+                            if (datas.Length < 3)
+                            {
+                                continue;
+                            }
+                            string groupName = datas[0].Trim();
+                            int compare = datas[1].Trim() == ">=" ? 1 : 2;
+                            string rate = datas[2].Trim();
+
+                            list.Add(new BatchAddSharesConditionTrendPar2Obj
+                            {
+                                GroupName = groupName,
+                                Compare = compare,
+                                Rate = rate
+                            });
+                        }
+                        return trendHandler.BatchAddConditiontradeTemplateJoinOtherPar2_Other(Type, RelId, list);
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
+        /// 批量删除自动加入模板额外条件类型参数(板块涨跌幅)-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/par/delete/other/batch"), HttpPost]
+        [Description("批量删除自动加入模板额外条件类型参数(板块涨跌幅)-额外关系")]
+        [CheckUserLoginFilter]
+        public object BatchDeleteConditiontradeTemplateJoinOtherPar_Other(BatchDeleteConditiontradeTemplateBuyOtherPar_OtherRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BatchDeleteConditiontradeTemplateJoinOtherPar_Other(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑自动加入模板额外条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/par/modify/other"), HttpPost]
+        [Description("编辑自动加入模板额外条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateJoinOtherPar_Other(ModifyConditiontradeTemplateBuyOtherParRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyConditiontradeTemplateJoinOtherPar_Other(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除自动加入模板额外条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/join/other/par/delete/other"), HttpPost]
+        [Description("删除自动加入模板额外条件类型参数-额外关系")]
+        [CheckUserLoginFilter]
+        public object DeleteConditiontradeTemplateJoinOtherPar_Other(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteConditiontradeTemplateJoinOtherPar_Other(request);
+            return null;
+        }
+        #endregion
+
+        /// <summary>
+        /// 股票条件搜索
+        /// </summary>
+        /// <returns></returns>
+        [Description("股票条件搜索")]
+        [Route("shares/condition/search"), HttpPost]
+        [CheckUserLoginFilter]
+        //public List<SharesConditionSearchInfo> GetSharesConditionSearch(GetSharesConditionSearchRequest request)
+        public object GetSharesConditionSearch(GetSharesConditionSearchRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesConditionSearch(request,basedata);
+        }
     }
 }

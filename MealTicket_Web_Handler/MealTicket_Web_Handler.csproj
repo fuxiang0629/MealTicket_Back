@@ -126,6 +126,7 @@
     <Compile Include="Model\AddConditiontradeTemplateBuyOther.cs" />
     <Compile Include="Model\AddConditiontradeTemplateBuyOtherGroup.cs" />
     <Compile Include="Model\AddConditiontradeTemplateBuyOtherPar.cs" />
+    <Compile Include="Model\AddConditiontradeTemplateJoinDetails.cs" />
     <Compile Include="Model\AddConditiontradeTemplateSellDetails.cs" />
     <Compile Include="Model\ApplyTradeBuyInfo.cs" />
     <Compile Include="Model\BatchAddSharesConditionTrendPar2Obj.cs" />
@@ -145,6 +146,7 @@
     <Compile Include="Model\BindAccountOptionalSeat.cs" />
     <Compile Include="Model\ConfirmBuyTipRequest.cs" />
     <Compile Include="Model\DeleteConditiontradeBuyGroup.cs" />
+    <Compile Include="Model\ExportAccountAutoTobuy.cs" />
     <Compile Include="Model\GetAccountAutoBuySyncroSettingAuthorizedGroupList.cs" />
     <Compile Include="Model\GetAccountAutoBuySyncroSettingList.cs" />
     <Compile Include="Model\GetAccountAutoTobuyList.cs" />
@@ -177,8 +179,10 @@
     <Compile Include="Model\GetConditiontradeTemplateBuyOtherGroupList.cs" />
     <Compile Include="Model\GetConditiontradeTemplateBuyOtherList.cs" />
     <Compile Include="Model\GetConditiontradeTemplateBuyOtherPar.cs" />
+    <Compile Include="Model\GetConditiontradeTemplateJoinDetailsList.cs" />
     <Compile Include="Model\GetConditiontradeTemplateList.cs" />
     <Compile Include="Model\GetConditiontradeTemplateSellDetailsList.cs" />
+    <Compile Include="Model\GetSharesConditionSearch.cs" />
     <Compile Include="Model\GetSharesConditionTrendList.cs" />
     <Compile Include="Model\GetSharesListQuotes.cs" />
     <Compile Include="Model\GetSharesPlateList.cs" />
@@ -250,6 +254,7 @@
     <Compile Include="Model\ModifyConditiontradeTemplateBuyOther.cs" />
     <Compile Include="Model\ModifyConditiontradeTemplateBuyOtherGroup.cs" />
     <Compile Include="Model\ModifyConditiontradeTemplateBuyOtherPar.cs" />
+    <Compile Include="Model\ModifyConditiontradeTemplateJoinDetails.cs" />
     <Compile Include="Model\ModifyConditiontradeTemplateSellDetails.cs" />
     <Compile Include="Model\RelIdInfo.cs" />
     <Compile Include="ModifyStatusRequest.cs" />

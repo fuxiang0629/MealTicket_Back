@@ -14,6 +14,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 using static StockTrendMonitor.Define.StockMonitorDefine;
 
 namespace MealTicket_Web_Handler.Runner
@@ -2678,6 +2679,1333 @@ inner
             }
             return batchSize;
         }
+
+        /// <summary>
+        /// 自动加入
+        /// </summary>
+        public static void SharesAutoJoin()
+        {
+            //查询需要自动加入的股票
+            List<SharesAutoJoinInfo> disResult = ToQuerySharesAutoJoin();
+            if (disResult.Count() <= 0)
+            {
+                return;
+            }
+            //查询每只股票判断参数
+            List<SharesAutoJoinPar> parList =ToQuerySharesAutoJoinPar(disResult);
+            if (parList.Count() <= 0)
+            {
+                return;
+            }
+            //判断是否达到加入条件
+            List<SharesAutoJoinInfo> exportList =ToQueryNeedToExportList(parList);
+            if (exportList.Count() <= 0)
+            {
+                return;
+            }
+            //构建导入数据
+            List<SharesAutoJoinExportInfo> toExportList = QueryExportSharesInfo(exportList);
+            if (toExportList.Count() <= 0)
+            {
+                return;
+            }
+            //导入
+            var successList=ToExportShares(toExportList);
+            //记录日志
+            WriteToLogRecord(successList);
+        }
+
+        /// <summary>
+        /// 查询需要判断的股票
+        /// </summary>
+        /// <returns></returns>
+        private static List<SharesAutoJoinInfo> ToQuerySharesAutoJoin()
+        {
+            List<SharesAutoJoinInfo> disResult = new List<SharesAutoJoinInfo>();
+            using (var db = new meal_ticketEntities())
+            {
+                string sql = @"declare @currTime datetime;
+set @currTime=getdate();
+select distinct m.Market,m.SharesCode,m1.ToBuyId,m1.ToBuyName
+from
+(
+	select distinct t2.AccountId,t2.Market,t2.SharesCode,isnull(t6.GroupId,0) GroupId
+	from t_account_shares_optional_trend_rel_tri t with(nolock)
+	inner join t_account_shares_optional_trend_rel t1 with(nolock) on t.RelId=t1.Id
+	inner join t_account_shares_optional t2 with(nolock) on t1.OptionalId=t2.Id
+	inner join t_shares_monitor t3 with(nolock) on t2.Market=t3.Market and t2.SharesCode=t3.SharesCode
+	left join 
+	(
+		select * from t_account_shares_optional_group_rel t6 with(nolock) where GroupIsContinue=1 or (ValidStartTime<=@currTime and ValidEndTime>@currTime) 
+	)t6 on t2.Id=t6.OptionalId
+	where t.LastPushTime>convert(varchar(10),@currTime,120) and t1.[Status]=1 and t2.IsTrendClose=0
+	union all 
+	select distinct -1 AccountId, Market, SharesCode,case when PriceType = 1 then -1 when PriceType = 2 then -2 when PriceType = 0 and LimitUpCount > 0 then -3 
+	when PriceType = 0 and LimitDownCount > 0 then -4 when TriNearLimitType = 1 and LimitUpCount = 0 then -5 else -6 end GroupId
+	from t_shares_quotes_date t with(nolock)
+	where t.[Date]=convert(varchar(10),@currTime,120) and (t.PriceType = 1 or t.PriceType = 2 or (t.PriceType = 0 and t.LimitUpCount > 0) 
+	or (t.PriceType = 0 and t.LimitDownCount > 0) or (t.TriNearLimitType = 1 and t.LimitUpCount = 0) or (t.TriNearLimitType = 2 and t.LimitDownCount = 0))
+)m
+inner join 
+(
+  select t.AccountId,t.Id ToBuyId,t1.GroupId,t.Name ToBuyName,t.TimeCycleType,t.TimeCycle
+  from t_account_shares_auto_join_tobuy t with(nolock)
+  inner join t_account_shares_auto_join_tobuy_usegroup t1 with(nolock) on t.Id=t1.ToBuyId
+  where t.[Status]=1
+)m1 on (m.AccountId=m1.AccountId or m.AccountId=-1) and m.GroupId=m1.GroupId
+inner join t_shares_all m2 with(nolock) on m.Market=m2.Market and m.SharesCode=m2.SharesCode
+left join t_shares_limit m3 with(nolock) on (m.Market=m3.LimitMarket or m3.LimitMarket=-1) 
+	and ((m3.LimitType=1 and m.SharesCode like m3.LimitKey+'%') or (m3.LimitType=2 and m2.SharesName like m3.LimitKey+'%'))
+left join 
+(
+	select ToBuyId,AccountId,Market,SharesCode,Max(CreateTime) LastTime
+	from t_account_shares_auto_join_tobuy_record with(nolock)
+	group by ToBuyId,AccountId,Market,SharesCode
+) m4 on m1.ToBuyId=m4.ToBuyId and m1.AccountId=m4.AccountId and m.Market=m4.Market and m.SharesCode=m4.SharesCode 
+and ((m1.TimeCycleType=1 and dateadd(HOUR,m1.TimeCycle,LastTime)>=@currTime) 
+or (m1.TimeCycleType=2 and dateadd(DAY,m1.TimeCycle,LastTime)>=@currTime) 
+or (m1.TimeCycleType=3 and dateadd(WEEK,m1.TimeCycle,LastTime)>=@currTime)
+or (m1.TimeCycleType=4 and dateadd(MONTH,m1.TimeCycle,LastTime)>=@currTime)
+or (m1.TimeCycleType=5 and dateadd(YEAR,m1.TimeCycle,LastTime)>=@currTime))
+where m3.Id is null and m4.ToBuyId is null";
+                disResult = db.Database.SqlQuery<SharesAutoJoinInfo>(sql).ToList();
+            }
+            return disResult;
+        }
+
+        /// <summary>
+        /// 查询股票判断参数
+        /// </summary>
+        /// <param name="disResult"></param>
+        /// <returns></returns>
+        private static List<SharesAutoJoinPar> ToQuerySharesAutoJoinPar(List<SharesAutoJoinInfo> disResult) 
+        {
+            //toBuyId分组
+            var dicResult = disResult.GroupBy(e=>e.ToBuyId).ToDictionary(e => e.Key, v => v.ToList());
+
+            ThreadMsgTemplate<KeyValuePair<long, List<SharesAutoJoinInfo>>> conditionData = new ThreadMsgTemplate<KeyValuePair<long, List<SharesAutoJoinInfo>>>();
+            conditionData.Init();
+
+            foreach (var item in dicResult)
+            {
+                conditionData.AddMessage(item);
+            }
+
+            int maxTastCount = 50;
+            int taskCount = conditionData.GetCount();
+            if (taskCount > maxTastCount)
+            {
+                taskCount = maxTastCount;
+            }
+
+            List<SharesAutoJoinPar> parList = new List<SharesAutoJoinPar>();
+            object parLock = new object();
+            Task[] tArr = new Task[taskCount];
+            for (int i = 0; i < taskCount; i++)
+            {
+                tArr[i] = new Task(() =>
+                {
+                    while (true)
+                    {
+                        KeyValuePair<long, List<SharesAutoJoinInfo>> temp = new KeyValuePair<long, List<SharesAutoJoinInfo>>();
+                        if (!conditionData.GetMessage(ref temp, true))
+                        {
+                            break;
+                        }
+                        _ToQuerySharesAutoJoinPar(temp, parLock, parList);
+                    }
+                },TaskCreationOptions.LongRunning);
+                tArr[i].Start();
+            }
+            Task.WaitAll(tArr);
+            conditionData.Release();
+
+            return parList;
+        }
+
+        private static void _ToQuerySharesAutoJoinPar(KeyValuePair<long, List<SharesAutoJoinInfo>> toBuyInfo, object parLock, List<SharesAutoJoinPar> parList)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var other = (from item in db.t_account_shares_auto_join_tobuy_other
+                             where item.ToBuyId == toBuyInfo.Key && item.Status == 1
+                             select item).ToList();
+                List<long> otherIdList = other.Select(e => e.Id).ToList();
+
+                var other_trend = (from item in db.t_account_shares_auto_join_tobuy_other_trend
+                                   where otherIdList.Contains(item.OtherId) && item.Status == 1
+                                   select item).ToList();
+                List<long> otherTrendIdList= other_trend.Select(e => e.Id).ToList();
+
+                var other_trend_par = (from item in db.t_account_shares_auto_join_tobuy_other_trend_par
+                                       where otherTrendIdList.Contains(item.OtherTrendId)
+                                       select item).ToList();
+
+                var other_trend_other = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other
+                                         where otherTrendIdList.Contains(item.OtherTrendId) && item.Status == 1
+                                         select item).ToList();
+                List<long> otherTrendOtherIdList= other_trend_other.Select(e => e.Id).ToList();
+
+                var other_trend_other_par = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other_par
+                                             where otherTrendOtherIdList.Contains(item.OtherTrendOtherId)
+                                             select item).ToList();
+                List<SharesAutoJoinPar> tempList = new List<SharesAutoJoinPar>();
+                foreach (var item in toBuyInfo.Value)
+                {
+                    tempList.Add(new SharesAutoJoinPar
+                    {
+                        Market = item.Market,
+                        SharesCode = item.SharesCode,
+                        ToBuyId=item.ToBuyId,
+                        ToBuyName=item.ToBuyName,
+                        OtherList = (from o in other
+                                     select new SharesAutoJoinOther
+                                     {
+                                         OtherId = o.Id,
+                                         OtherName = o.Name,
+                                         TrendList = (from t in other_trend
+                                                      where t.OtherId == o.Id
+                                                      select new SharesAutoJoinOtherTrend
+                                                      {
+                                                          TrendId = t.TrendId,
+                                                          TrendName = t.TrendName,
+                                                          TrendDescription = t.TrendDescription,
+                                                          ParList = (from p in other_trend_par
+                                                                     where p.OtherTrendId == t.Id
+                                                                     select p.ParamsInfo).ToList(),
+                                                          OtherTrendList = (from ot in other_trend_other
+                                                                            where ot.OtherTrendId == t.Id
+                                                                            select new SharesAutoJoinOtherTrend
+                                                                            {
+                                                                                TrendId = ot.TrendId,
+                                                                                TrendName = ot.TrendName,
+                                                                                TrendDescription = ot.TrendDescription,
+                                                                                ParList = (from op in other_trend_other_par
+                                                                                           where op.OtherTrendOtherId == ot.Id
+                                                                                           select op.ParamsInfo).ToList()
+                                                                            }).ToList()
+                                                      }).ToList()
+                                     }).ToList()
+                    });
+                }
+
+                lock (parLock)
+                {
+                    parList.AddRange(tempList);
+                }
+
+                scope.Complete();
+            }
+        }
+
+        /// <summary>
+        /// 查询符合条件的股票
+        /// </summary>
+        /// <param name="parList"></param>
+        /// <returns></returns>
+        private static List<SharesAutoJoinInfo> ToQueryNeedToExportList(List<SharesAutoJoinPar> parList) 
+        {
+            ThreadMsgTemplate<SharesAutoJoinPar> conditionData = new ThreadMsgTemplate<SharesAutoJoinPar>();
+            conditionData.Init();
+            foreach (var item in parList)
+            {
+                conditionData.AddMessage(item);
+            }
+
+            int maxTastCount = 50;
+            int taskCount = conditionData.GetCount();
+            if (taskCount > maxTastCount)
+            {
+                taskCount = maxTastCount;
+            }
+
+            List<SharesAutoJoinInfo> exportList = new List<SharesAutoJoinInfo>();
+            object exportLock = new object();
+            Task[] tArr = new Task[taskCount];
+            for (int i = 0; i < taskCount; i++)
+            {
+                tArr[i] = new Task(() =>
+                {
+                    while (true)
+                    {
+                        SharesAutoJoinPar temp = new SharesAutoJoinPar();
+                        if (!conditionData.GetMessage(ref temp, true))
+                        {
+                            break;
+                        }
+                        _ToQueryNeedToExportList(temp, exportLock, exportList);
+                    }
+                }, TaskCreationOptions.LongRunning);
+                tArr[i].Start();
+            }
+            Task.WaitAll(tArr);
+            conditionData.Release();
+
+            return exportList;
+        }
+
+        private static void _ToQueryNeedToExportList(SharesAutoJoinPar parInfo, object exportLock, List<SharesAutoJoinInfo> exportList) 
+        {
+            StringBuilder logRecord = new StringBuilder();
+            logRecord.AppendLine("===开始判断条件("+ parInfo.ToBuyName+ ");"+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")+"===");
+            bool success = true;
+            foreach (var other in parInfo.OtherList)
+            {
+                var trendSuccess=_CheckTrendConditions(false,parInfo.Market, parInfo.SharesCode, other.OtherName, other.TrendList, logRecord);
+                if (!trendSuccess) 
+                {
+                    success = false;
+                    break;
+                }
+            }
+            if (success)
+            {
+                lock (exportLock)
+                {
+                    exportList.Add(new SharesAutoJoinInfo
+                    {
+                        SharesCode= parInfo.SharesCode,
+                        Market= parInfo.Market,
+                        ToBuyId= parInfo.ToBuyId
+                    });
+                }
+            }
+            logRecord.AppendLine("===条件(" + parInfo.ToBuyName + ")判断结束;" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
+            Logger.WriteFileLog(logRecord.ToString(), "AutoJoinRecord/"+parInfo.SharesCode, null);
+        }
+
+        /// <summary>
+        /// 判断走势条件是否符合
+        /// </summary>
+        /// <returns></returns>
+        private static bool _CheckTrendConditions(bool isother,int market,string sharesCode,string groupName,List<SharesAutoJoinOtherTrend> trendList, StringBuilder logRecord = null) 
+        {
+            StringBuilder tempString = new StringBuilder();
+            string tab = "\t";
+            if (isother) 
+            {
+                tab = tab + "\t";
+            }
+            tempString.AppendLine(tab+"分组名称:" +groupName);
+
+            bool trendSuccess = true;
+            foreach (var trend in trendList)
+            {
+                trendSuccess = false;
+                int errorCode = _ToJudgeCondition(isother,trend.TrendId, market, sharesCode, trend.TrendDescription, trend.ParList, tempString);
+                if (errorCode == 0)
+                {
+                    trendSuccess = true;
+                    if (!isother && trend.OtherTrendList.Count()>0)//判断额外参数
+                    {
+                        trendSuccess=_CheckTrendConditions(true, market, sharesCode,"额外参数", trend.OtherTrendList, tempString);
+                    }
+                    if (trendSuccess)
+                    {
+                        break;
+                    }
+                }
+            }
+            tempString.AppendLine(tab + "分组结果" + (trendSuccess ? "条件成立" : "条件不成立"));
+            if (logRecord != null)
+            {
+                logRecord.AppendLine(tempString.ToString());
+            }
+            return trendSuccess;
+        }
+
+        private static int _ToJudgeCondition(bool isother, long trendId, int market, string sharesCode, string trendDes, List<string> parList, StringBuilder logRecord = null)
+        {
+            StringBuilder tempString = new StringBuilder();
+            DateTime timeNow = DateTime.Now;
+            string tab = "\t\t";
+            if (isother)
+            {
+                tab = tab + "\t";
+            }
+            tempString.Append(tab + "走势名称:" + trendDes + "");
+
+            int result = -1;
+            switch (trendId)
+            {
+                case 1:
+                    result = DataHelper.Analysis_Trend1_New(sharesCode, market, parList, tempString);
+                    break;
+                case 2:
+                    result = DataHelper.Analysis_Trend2_New(sharesCode, market, parList, tempString);
+                    break;
+                case 3:
+                    result = DataHelper.Analysis_Trend3_New(sharesCode, market, parList, tempString);
+                    break;
+                case 4:
+                    result = DataHelper.Analysis_TimeSlot_New(sharesCode, market, parList, tempString);
+                    break;
+                case 5:
+                    result = DataHelper.Analysis_HisRiseRate_New(sharesCode, market, parList, tempString);
+                    break;
+                case 6:
+                    result = DataHelper.Analysis_TodayRiseRate_New(sharesCode, market, parList, tempString);
+                    break;
+                case 7:
+                    result = DataHelper.Analysis_PlateRiseRate_New(sharesCode, market, parList, tempString);
+                    break;
+                case 8:
+                    result = DataHelper.Analysis_BuyOrSellCount_New(sharesCode, market, parList, tempString);
+                    break;
+                case 9:
+                    result = DataHelper.Analysis_ReferPrice_New(sharesCode, market, parList, tempString);
+                    break;
+                case 10:
+                    result = DataHelper.Analysis_ReferAverage_New(sharesCode, market, parList, tempString);
+                    break;
+                case 11:
+                    result = DataHelper.Analysis_QuotesChangeRate_New(sharesCode, market, parList, tempString);
+                    break;
+                case 12:
+                    result = DataHelper.Analysis_CurrentPrice_New(sharesCode, market, parList, tempString);
+                    break;
+                case 13:
+                    result = DataHelper.Analysis_QuotesTypeChangeRate_New(sharesCode, market, parList, tempString);
+                    break;
+                default:
+                    result = -1;
+                    break;
+
+            }
+
+            if (logRecord != null)
+            {
+                logRecord.AppendLine(tempString.ToString());
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 构建导入数据
+        /// </summary>
+        private static List<SharesAutoJoinExportInfo> QueryExportSharesInfo(List<SharesAutoJoinInfo> exportList) 
+        {
+            Dictionary<long, List<SharesAutoJoinInfo>> exportDic = exportList.GroupBy(e => e.ToBuyId).ToDictionary(e => e.Key, v => v.ToList());
+            ThreadMsgTemplate<KeyValuePair<long, List<SharesAutoJoinInfo>>> conditionData = new ThreadMsgTemplate<KeyValuePair<long, List<SharesAutoJoinInfo>>>();
+            conditionData.Init();
+
+            foreach (var item in exportDic)
+            {
+                conditionData.AddMessage(item);
+            }
+
+            int maxTastCount = 50;
+            int taskCount = conditionData.GetCount();
+            if (taskCount > maxTastCount)
+            {
+                taskCount = maxTastCount;
+            }
+
+            List<SharesAutoJoinExportInfo> toExportList = new List<SharesAutoJoinExportInfo>();
+            object exportLock = new object();
+
+            Task[] tArr = new Task[taskCount];
+            for (int i = 0; i < taskCount; i++)
+            {
+                tArr[i] = new Task(() =>
+                {
+                    while (true)
+                    {
+                        KeyValuePair<long, List<SharesAutoJoinInfo>> temp = new KeyValuePair<long, List<SharesAutoJoinInfo>>();
+                        if (!conditionData.GetMessage(ref temp, true))
+                        {
+                            break;
+                        }
+                        _ToQueryExportSharesInfo(temp, exportLock, toExportList);
+                    }
+                }, TaskCreationOptions.LongRunning);
+                tArr[i].Start();
+            }
+            Task.WaitAll(tArr);
+            conditionData.Release();
+
+            return toExportList;
+        }
+
+        private static void _ToQueryExportSharesInfo(KeyValuePair<long, List<SharesAutoJoinInfo>> temp, object exportLock, List<SharesAutoJoinExportInfo> toExportList) 
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                //查询基础信息
+                var toBuy = (from item in db.t_account_shares_auto_join_tobuy
+                             where item.Id == temp.Key
+                             select new SharesAutoJoinExportInfo
+                             {
+                                 ToBuyId= temp.Key,
+                                 AccountId = item.AccountId,
+                                 IsClear = item.IsClearOriginal,
+                                 Type = item.TemplateType,
+                                 TemplateId = item.TemplateId,
+                                 FollowType = item.FollowType
+                             }).FirstOrDefault();
+                if (toBuy == null)
+                {
+                    return;
+                }
+                //查询跟投人员
+                var follow = (from item in db.t_account_shares_auto_join_tobuy_follow
+                              where item.ToBuyId == temp.Key
+                              select item.FollowAccountId).ToList();
+                toBuy.FollowList = follow;
+
+                //查询自定义分组
+                var groupInfo = (from item in db.t_account_shares_auto_join_tobuy_group
+                                 where item.ToBuyId == temp.Key
+                                 select item.GroupId).ToList();
+                toBuy.GroupList = groupInfo;
+
+                //查询股票
+                toBuy.SharesList = (from item in temp.Value
+                                    select new SharesBase
+                                    {
+                                        Market = item.Market,
+                                        SharesCode = item.SharesCode
+                                    }).ToList();
+
+                lock (exportLock)
+                {
+                    toExportList.Add(toBuy);
+                }
+                scope.Complete();
+            }
+        }
+
+        //导入股票
+        private static List<SharesAutoJoinExportInfo> ToExportShares(List<SharesAutoJoinExportInfo> toExportList) 
+        {
+            List<SharesAutoJoinExportInfo> successList = new List<SharesAutoJoinExportInfo>();
+            object dataLock = new object();
+
+            ThreadMsgTemplate<SharesAutoJoinExportInfo> conditionData = new ThreadMsgTemplate<SharesAutoJoinExportInfo>();
+            conditionData.Init();
+
+            foreach (var item in toExportList)
+            {
+                conditionData.AddMessage(item);
+            }
+
+            int maxTastCount = 50;
+            int taskCount = conditionData.GetCount();
+            if (taskCount > maxTastCount)
+            {
+                taskCount = maxTastCount;
+            }
+
+            Task[] tArr = new Task[taskCount];
+            for (int i = 0; i < taskCount; i++)
+            {
+                tArr[i] = new Task(() =>
+                {
+                    while (true)
+                    {
+                        SharesAutoJoinExportInfo temp = new SharesAutoJoinExportInfo();
+                        if (!conditionData.GetMessage(ref temp, true))
+                        {
+                            break;
+                        }
+                        List<SharesBase> successShares=_ToExportShares(temp);
+                        lock (dataLock)
+                        {
+                            successList.Add(new SharesAutoJoinExportInfo 
+                            {
+                                SharesList= successShares,
+                                ToBuyId= temp.ToBuyId,
+                                AccountId=temp.AccountId
+                            });
+                        }
+                    }
+                }, TaskCreationOptions.LongRunning);
+                tArr[i].Start();
+            }
+            Task.WaitAll(tArr);
+            conditionData.Release();
+
+            return successList;
+        }
+
+        public static List<SharesBase> _ToExportShares(SharesAutoJoinExportInfo temp)
+        {
+            List<SharesBase> successList = new List<SharesBase>();
+            object dataLock = new object();
+            //查询模板数据
+            List<template_buy> template_buy = new List<template_buy>();
+            List<buy_child> template_buy_child = new List<buy_child>();
+            List<buy_other> template_buy_other = new List<buy_other>();
+            List<buy_other_trend> template_buy_other_trend = new List<buy_other_trend>();
+            List<buy_other_trend_par> template_buy_other_trend_par = new List<buy_other_trend_par>();
+            List<buy_other_trend_other> template_buy_other_trend_other = new List<buy_other_trend_other>();
+            List<buy_other_trend_other_par> template_buy_other_trend_other_par = new List<buy_other_trend_other_par>();
+            List<buy_auto> template_buy_auto = new List<buy_auto>();
+            List<buy_auto_trend> template_buy_auto_trend = new List<buy_auto_trend>();
+            List<buy_auto_trend_par> template_buy_auto_trend_par = new List<buy_auto_trend_par>();
+            List<buy_auto_trend_other> template_buy_auto_trend_other = new List<buy_auto_trend_other>();
+            List<buy_auto_trend_other_par> template_buy_auto_trend_other_par = new List<buy_auto_trend_other_par>();
+            long totalDeposit = 0;
+
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                if (temp.Type == 1)
+                {
+                    var template = (from item in db.t_account_shares_conditiontrade_template
+                                    where item.Type == 1 && item.Id == temp.TemplateId
+                                    select item).FirstOrDefault();
+                    if (template == null)
+                    {
+                        throw new WebApiException(400, "模板不存在");
+                    }
+                    template_buy = (from item in db.t_account_shares_conditiontrade_template_buy
+                                    where item.TemplateId == temp.TemplateId
+                                    select new template_buy
+                                    {
+                                        Status = item.Status,
+                                        BuyAuto = item.BuyAuto,
+                                        ConditionPriceBase = item.ConditionPriceBase,
+                                        ConditionPriceRate = item.ConditionPriceRate,
+                                        ConditionPriceType = item.ConditionPriceType,
+                                        ConditionType = item.ConditionType,
+                                        CreateTime = item.CreateTime,
+                                        EntrustAmount = item.EntrustAmount,
+                                        EntrustAmountType = item.EntrustAmountType,
+                                        EntrustPriceGear = item.EntrustPriceGear,
+                                        EntrustType = item.EntrustType,
+                                        ForbidType = item.ForbidType,
+                                        Id = item.Id,
+                                        IsGreater = item.IsGreater,
+                                        IsHold = item.IsHold,
+                                        LastModified = item.LastModified,
+                                        LimitUp = item.LimitUp,
+                                        Name = item.Name,
+                                        OtherConditionRelative = item.OtherConditionRelative,
+                                        TemplateId = item.TemplateId
+                                    }).ToList();
+                    var template_buy_id_list = template_buy.Select(e => e.Id).ToList();
+
+                    template_buy_child = (from item in db.t_account_shares_conditiontrade_template_buy_child
+                                          where template_buy_id_list.Contains(item.FatherId)
+                                          select new buy_child
+                                          {
+                                              ChildId = item.ChildId,
+                                              FatherId = item.FatherId,
+                                              Id = item.Id,
+                                              Status = item.Status
+                                          }).ToList();
+
+                    template_buy_other = (from item in db.t_account_shares_conditiontrade_template_buy_other
+                                          where template_buy_id_list.Contains(item.TemplateBuyId)
+                                          select new buy_other
+                                          {
+                                              CreateTime = item.CreateTime,
+                                              Status = item.Status,
+                                              Id = item.Id,
+                                              LastModified = item.LastModified,
+                                              Name = item.Name,
+                                              TemplateBuyId = item.TemplateBuyId
+                                          }).ToList();
+                    var template_buy_other_id_list = template_buy_other.Select(e => e.Id).ToList();
+
+                    template_buy_other_trend = (from item in db.t_account_shares_conditiontrade_template_buy_other_trend
+                                                where template_buy_other_id_list.Contains(item.OtherId)
+                                                select new buy_other_trend
+                                                {
+                                                    Status = item.Status,
+                                                    CreateTime = item.CreateTime,
+                                                    Id = item.Id,
+                                                    LastModified = item.LastModified,
+                                                    OtherId = item.OtherId,
+                                                    TrendDescription = item.TrendDescription,
+                                                    TrendId = item.TrendId,
+                                                    TrendName = item.TrendName
+                                                }).ToList();
+                    var template_buy_other_trend_id_list = template_buy_other_trend.Select(e => e.Id).ToList();
+
+                    template_buy_other_trend_par = (from item in db.t_account_shares_conditiontrade_template_buy_other_trend_par
+                                                    where template_buy_other_trend_id_list.Contains(item.OtherTrendId)
+                                                    select new buy_other_trend_par
+                                                    {
+                                                        CreateTime = item.CreateTime,
+                                                        Id = item.Id,
+                                                        LastModified = item.LastModified,
+                                                        OtherTrendId = item.OtherTrendId,
+                                                        ParamsInfo = item.ParamsInfo
+                                                    }).ToList();
+
+                    template_buy_other_trend_other = (from item in db.t_account_shares_conditiontrade_template_buy_other_trend_other
+                                                      where template_buy_other_trend_id_list.Contains(item.OtherTrendId)
+                                                      select new buy_other_trend_other
+                                                      {
+                                                          CreateTime = item.CreateTime,
+                                                          Id = item.Id,
+                                                          Status = item.Status,
+                                                          LastModified = item.LastModified,
+                                                          OtherTrendId = item.OtherTrendId,
+                                                          TrendDescription = item.TrendDescription,
+                                                          TrendId = item.TrendId,
+                                                          TrendName = item.TrendName
+                                                      }).ToList();
+                    var template_buy_other_trend_other_id_list = template_buy_other_trend_other.Select(e => e.Id).ToList();
+
+                    template_buy_other_trend_other_par = (from item in db.t_account_shares_conditiontrade_template_buy_other_trend_other_par
+                                                          where template_buy_other_trend_other_id_list.Contains(item.OtherTrendOtherId)
+                                                          select new buy_other_trend_other_par
+                                                          {
+                                                              CreateTime = item.CreateTime,
+                                                              Id = item.Id,
+                                                              LastModified = item.LastModified,
+                                                              OtherTrendOtherId = item.OtherTrendOtherId,
+                                                              ParamsInfo = item.ParamsInfo
+                                                          }).ToList();
+
+                    template_buy_auto = (from item in db.t_account_shares_conditiontrade_template_buy_auto
+                                         where template_buy_id_list.Contains(item.TemplateBuyId)
+                                         select new buy_auto
+                                         {
+                                             CreateTime = item.CreateTime,
+                                             Status = item.Status,
+                                             Id = item.Id,
+                                             LastModified = item.LastModified,
+                                             Name = item.Name,
+                                             TemplateBuyId = item.TemplateBuyId
+                                         }).ToList();
+                    var template_buy_auto_id_list = template_buy_auto.Select(e => e.Id).ToList();
+
+                    template_buy_auto_trend = (from item in db.t_account_shares_conditiontrade_template_buy_auto_trend
+                                               where template_buy_auto_id_list.Contains(item.AutoId)
+                                               select new buy_auto_trend
+                                               {
+                                                   Status = item.Status,
+                                                   CreateTime = item.CreateTime,
+                                                   Id = item.Id,
+                                                   LastModified = item.LastModified,
+                                                   AutoId = item.AutoId,
+                                                   TrendDescription = item.TrendDescription,
+                                                   TrendId = item.TrendId,
+                                                   TrendName = item.TrendName
+                                               }).ToList();
+                    var template_buy_auto_trend_id_list = template_buy_auto_trend.Select(e => e.Id).ToList();
+
+                    template_buy_auto_trend_par = (from item in db.t_account_shares_conditiontrade_template_buy_auto_trend_par
+                                                   where template_buy_auto_trend_id_list.Contains(item.AutoTrendId)
+                                                   select new buy_auto_trend_par
+                                                   {
+                                                       CreateTime = item.CreateTime,
+                                                       Id = item.Id,
+                                                       LastModified = item.LastModified,
+                                                       AutoTrendId = item.AutoTrendId,
+                                                       ParamsInfo = item.ParamsInfo
+                                                   }).ToList();
+
+                    template_buy_auto_trend_other = (from item in db.t_account_shares_conditiontrade_template_buy_auto_trend_other
+                                                     where template_buy_auto_trend_id_list.Contains(item.AutoTrendId)
+                                                     select new buy_auto_trend_other
+                                                     {
+                                                         CreateTime = item.CreateTime,
+                                                         Id = item.Id,
+                                                         Status = item.Status,
+                                                         LastModified = item.LastModified,
+                                                         AutoTrendId = item.AutoTrendId,
+                                                         TrendDescription = item.TrendDescription,
+                                                         TrendId = item.TrendId,
+                                                         TrendName = item.TrendName
+                                                     }).ToList();
+                    var template_buy_auto_trend_other_id_list = template_buy_auto_trend_other.Select(e => e.Id).ToList();
+
+                    template_buy_auto_trend_other_par = (from item in db.t_account_shares_conditiontrade_template_buy_auto_trend_other_par
+                                                         where template_buy_auto_trend_other_id_list.Contains(item.AutoTrendOtherId)
+                                                         select new buy_auto_trend_other_par
+                                                         {
+                                                             CreateTime = item.CreateTime,
+                                                             Id = item.Id,
+                                                             LastModified = item.LastModified,
+                                                             AutoTrendOtherId = item.AutoTrendOtherId,
+                                                             ParamsInfo = item.ParamsInfo
+                                                         }).ToList();
+                }
+                else if (temp.Type == 2)
+                {
+                    var template = (from item in db.t_sys_conditiontrade_template
+                                    where item.Type == 1 && item.Id == temp.TemplateId
+                                    select item).FirstOrDefault();
+                    if (template == null)
+                    {
+                        throw new WebApiException(400, "模板不存在");
+                    }
+                    template_buy = (from item in db.t_sys_conditiontrade_template_buy
+                                    where item.TemplateId == temp.TemplateId
+                                    select new template_buy
+                                    {
+                                        Status = item.Status,
+                                        BuyAuto = item.BuyAuto,
+                                        ConditionPriceBase = item.ConditionPriceBase,
+                                        ConditionPriceRate = item.ConditionPriceRate,
+                                        ConditionPriceType = item.ConditionPriceType,
+                                        ConditionType = item.ConditionType,
+                                        CreateTime = item.CreateTime,
+                                        EntrustAmount = item.EntrustAmount,
+                                        EntrustAmountType = item.EntrustAmountType,
+                                        EntrustPriceGear = item.EntrustPriceGear,
+                                        EntrustType = item.EntrustType,
+                                        ForbidType = item.ForbidType,
+                                        Id = item.Id,
+                                        IsGreater = item.IsGreater,
+                                        IsHold = item.IsHold,
+                                        LastModified = item.LastModified,
+                                        LimitUp = item.LimitUp,
+                                        Name = item.Name,
+                                        OtherConditionRelative = item.OtherConditionRelative,
+                                        TemplateId = item.TemplateId
+                                    }).ToList();
+                    var template_buy_id_list = template_buy.Select(e => e.Id).ToList();
+
+                    template_buy_child = (from item in db.t_sys_conditiontrade_template_buy_child
+                                          where template_buy_id_list.Contains(item.FatherId)
+                                          select new buy_child
+                                          {
+                                              ChildId = item.ChildId,
+                                              FatherId = item.ChildId,
+                                              Id = item.Id,
+                                              Status = item.Status
+                                          }).ToList();
+
+                    template_buy_other = (from item in db.t_sys_conditiontrade_template_buy_other
+                                          where template_buy_id_list.Contains(item.TemplateBuyId)
+                                          select new buy_other
+                                          {
+                                              CreateTime = item.CreateTime,
+                                              Status = item.Status,
+                                              Id = item.Id,
+                                              LastModified = item.LastModified,
+                                              Name = item.Name,
+                                              TemplateBuyId = item.TemplateBuyId
+                                          }).ToList();
+                    var template_buy_other_id_list = template_buy_other.Select(e => e.Id).ToList();
+
+                    template_buy_other_trend = (from item in db.t_sys_conditiontrade_template_buy_other_trend
+                                                where template_buy_other_id_list.Contains(item.OtherId)
+                                                select new buy_other_trend
+                                                {
+                                                    Status = item.Status,
+                                                    CreateTime = item.CreateTime,
+                                                    Id = item.Id,
+                                                    LastModified = item.LastModified,
+                                                    OtherId = item.OtherId,
+                                                    TrendDescription = item.TrendDescription,
+                                                    TrendId = item.TrendId,
+                                                    TrendName = item.TrendName
+                                                }).ToList();
+                    var template_buy_other_trend_id_list = template_buy_other_trend.Select(e => e.Id).ToList();
+
+                    template_buy_other_trend_par = (from item in db.t_sys_conditiontrade_template_buy_other_trend_par
+                                                    where template_buy_other_trend_id_list.Contains(item.OtherTrendId)
+                                                    select new buy_other_trend_par
+                                                    {
+                                                        CreateTime = item.CreateTime,
+                                                        Id = item.Id,
+                                                        LastModified = item.LastModified,
+                                                        OtherTrendId = item.OtherTrendId,
+                                                        ParamsInfo = item.ParamsInfo
+                                                    }).ToList();
+
+                    template_buy_other_trend_other = (from item in db.t_sys_conditiontrade_template_buy_other_trend_other
+                                                      where template_buy_other_trend_id_list.Contains(item.OtherTrendId)
+                                                      select new buy_other_trend_other
+                                                      {
+                                                          CreateTime = item.CreateTime,
+                                                          Id = item.Id,
+                                                          Status = item.Status,
+                                                          LastModified = item.LastModified,
+                                                          OtherTrendId = item.OtherTrendId,
+                                                          TrendDescription = item.TrendDescription,
+                                                          TrendId = item.TrendId,
+                                                          TrendName = item.TrendName
+                                                      }).ToList();
+                    var template_buy_other_trend_other_id_list = template_buy_other_trend_other.Select(e => e.Id).ToList();
+
+                    template_buy_other_trend_other_par = (from item in db.t_sys_conditiontrade_template_buy_other_trend_other_par
+                                                          where template_buy_other_trend_other_id_list.Contains(item.OtherTrendOtherId)
+                                                          select new buy_other_trend_other_par
+                                                          {
+                                                              CreateTime = item.CreateTime,
+                                                              Id = item.Id,
+                                                              LastModified = item.LastModified,
+                                                              OtherTrendOtherId = item.OtherTrendOtherId,
+                                                              ParamsInfo = item.ParamsInfo
+                                                          }).ToList();
+
+                    template_buy_auto = (from item in db.t_sys_conditiontrade_template_buy_auto
+                                         where template_buy_id_list.Contains(item.TemplateBuyId)
+                                         select new buy_auto
+                                         {
+                                             CreateTime = item.CreateTime,
+                                             Status = item.Status,
+                                             Id = item.Id,
+                                             LastModified = item.LastModified,
+                                             Name = item.Name,
+                                             TemplateBuyId = item.TemplateBuyId
+                                         }).ToList();
+                    var template_buy_auto_id_list = template_buy_auto.Select(e => e.Id).ToList();
+
+                    template_buy_auto_trend = (from item in db.t_sys_conditiontrade_template_buy_auto_trend
+                                               where template_buy_other_id_list.Contains(item.AutoId)
+                                               select new buy_auto_trend
+                                               {
+                                                   Status = item.Status,
+                                                   CreateTime = item.CreateTime,
+                                                   Id = item.Id,
+                                                   LastModified = item.LastModified,
+                                                   AutoId = item.AutoId,
+                                                   TrendDescription = item.TrendDescription,
+                                                   TrendId = item.TrendId,
+                                                   TrendName = item.TrendName
+                                               }).ToList();
+                    var template_buy_auto_trend_id_list = template_buy_auto_trend.Select(e => e.Id).ToList();
+
+                    template_buy_auto_trend_par = (from item in db.t_sys_conditiontrade_template_buy_auto_trend_par
+                                                   where template_buy_auto_trend_id_list.Contains(item.AutoTrendId)
+                                                   select new buy_auto_trend_par
+                                                   {
+                                                       CreateTime = item.CreateTime,
+                                                       Id = item.Id,
+                                                       LastModified = item.LastModified,
+                                                       AutoTrendId = item.AutoTrendId,
+                                                       ParamsInfo = item.ParamsInfo
+                                                   }).ToList();
+
+                    template_buy_auto_trend_other = (from item in db.t_sys_conditiontrade_template_buy_auto_trend_other
+                                                     where template_buy_auto_trend_id_list.Contains(item.AutoTrendId)
+                                                     select new buy_auto_trend_other
+                                                     {
+                                                         CreateTime = item.CreateTime,
+                                                         Id = item.Id,
+                                                         Status = item.Status,
+                                                         LastModified = item.LastModified,
+                                                         AutoTrendId = item.AutoTrendId,
+                                                         TrendDescription = item.TrendDescription,
+                                                         TrendId = item.TrendId,
+                                                         TrendName = item.TrendName
+                                                     }).ToList();
+                    var template_buy_auto_trend_other_id_list = template_buy_auto_trend_other.Select(e => e.Id).ToList();
+
+                    template_buy_auto_trend_other_par = (from item in db.t_sys_conditiontrade_template_buy_auto_trend_other_par
+                                                         where template_buy_auto_trend_other_id_list.Contains(item.AutoTrendOtherId)
+                                                         select new buy_auto_trend_other_par
+                                                         {
+                                                             CreateTime = item.CreateTime,
+                                                             Id = item.Id,
+                                                             LastModified = item.LastModified,
+                                                             AutoTrendOtherId = item.AutoTrendOtherId,
+                                                             ParamsInfo = item.ParamsInfo
+                                                         }).ToList();
+                }
+                else
+                {
+                    throw new WebApiException(400, "参数错误");
+                }
+
+                totalDeposit = (from item in db.t_account_wallet
+                                where item.AccountId == temp.AccountId
+                                select item.Deposit).FirstOrDefault();
+                var accountBuySetting = DbHelper.GetAccountBuySetting(temp.AccountId, 1);
+                var buysetting = accountBuySetting.FirstOrDefault();
+                if (buysetting != null)
+                {
+                    var valueObj = JsonConvert.DeserializeObject<dynamic>(buysetting.ParValueJson);
+                    long parValue = valueObj.Value;
+                    totalDeposit = totalDeposit - parValue / 100 * 100;
+                }
+                scope.Complete();
+            }
+
+            int sharesCount = temp.SharesList.Count();
+            int taskCount = sharesCount;
+            Task[] tArr = new Task[taskCount];
+
+            for (int i = 0; i < sharesCount; i++)
+            {
+                int index = i;
+                tArr[index] = new Task(() =>
+                {
+                    using (var db = new meal_ticketEntities())
+                    {
+                        int market = temp.SharesList[index].Market;
+                        string sharesCode = temp.SharesList[index].SharesCode;
+                        string sharesName = (from item in db.t_shares_all
+                                             where item.Market == market && item.SharesCode == sharesCode
+                                             select item.SharesName).FirstOrDefault();
+                        using (var tran = db.Database.BeginTransaction())
+                        {
+                            try
+                            {
+                                //判断目标是否存在这只股票
+                                string sql = @"declare @timeNow datetime=getdate(),@buyId bigint;
+select top 1 @buyId=Id from t_account_shares_conditiontrade_buy with(xlock) where AccountId={0} and Market={1} and SharesCode='{2}';
+if(@buyId is null)
+begin
+	insert into t_account_shares_conditiontrade_buy
+	(AccountId,Market,SharesCode,[Status],CreateTime,LastModified,DataType)
+	values({0},{1},'{2}',1,@timeNow,@timeNow,1);
+	set @buyId=@@IDENTITY;
+end
+select @buyId;";
+                                long shares_buy_id = db.Database.SqlQuery<long>(string.Format(sql, temp.AccountId, market, sharesCode)).FirstOrDefault();
+
+                                //添加自定义分组
+                                var groupInfo = (from item in db.t_account_shares_conditiontrade_buy_group_rel
+                                                 where temp.GroupList.Contains(item.GroupId) && item.Market == market && item.SharesCode == sharesCode
+                                                 select item).ToList();
+                                if (groupInfo.Count() > 0)
+                                {
+                                    db.t_account_shares_conditiontrade_buy_group_rel.RemoveRange(groupInfo);
+                                    db.SaveChanges();
+                                }
+                                foreach (var groupId in temp.GroupList)
+                                {
+                                    db.t_account_shares_conditiontrade_buy_group_rel.Add(new t_account_shares_conditiontrade_buy_group_rel
+                                    {
+                                        SharesCode = sharesCode,
+                                        Market = market,
+                                        GroupId = groupId
+                                    });
+                                }
+                                db.SaveChanges();
+
+                                //是否清除原来数据
+                                if (temp.IsClear)
+                                {
+                                    sql = @"delete t_account_shares_conditiontrade_buy_details where ConditionId={0} and TriggerTime is null";
+                                    db.Database.ExecuteSqlCommand(string.Format(sql, shares_buy_id));
+                                }
+                                else
+                                {
+                                    sql = @"delete t_account_shares_conditiontrade_buy_details where ToBuyId={0} and TriggerTime is null";
+                                    db.Database.ExecuteSqlCommand(string.Format(sql, temp.ToBuyId));
+                                }
+
+                                //当前价
+                                long currPrice = 0;
+                                //昨日收盘价
+                                long closedPrice = 0;
+                                //计算杠杆倍数
+                                int range = 0;
+                                
+                                //当前行情信息
+                                var quote = (from item in db.v_shares_quotes_last
+                                                 where item.Market == market && item.SharesCode == sharesCode
+                                                 select item).FirstOrDefault();
+                                if (quote == null)
+                                {
+                                    throw new WebApiException(400, "暂无行情");
+                                }
+                                //当前价
+                                currPrice = quote.PresentPrice;
+                                //昨日收盘价
+                                closedPrice = quote.ClosedPrice;
+                                //计算杠杆倍数
+                                range = 1000;
+                                var rules = (from item in db.t_shares_limit_fundmultiple
+                                             where (item.LimitMarket == market || item.LimitMarket == -1) && (sharesCode.StartsWith(item.LimitKey))
+                                             orderby item.Priority descending, item.FundMultiple
+                                             select item).FirstOrDefault();
+                                if (rules == null)
+                                {
+                                    throw new WebApiException(400, "后台配置有误");
+                                }
+                                else
+                                {
+                                    range = rules.Range;
+                                    if (sharesName.ToUpper().Contains("ST"))
+                                    {
+                                        range = range / 2;
+                                    }
+                                }
+
+                                List<RelIdInfo> relIdList = new List<RelIdInfo>();
+                                List<t_account_shares_conditiontrade_buy_details_child> tempList = new List<t_account_shares_conditiontrade_buy_details_child>();
+                                foreach (var buy in template_buy)
+                                {
+                                    long conditionPrice = 0;
+                                    long EntrustAmount = buy.EntrustAmountType==0? (long)(totalDeposit*1.0/10000* buy.EntrustAmount): buy.EntrustAmount;
+                                    int ConditionRelativeRate = buy.ConditionPriceRate ?? 0;
+                                    int ConditionRelativeType = buy.ConditionPriceType ?? 0;
+                                    int ConditionPriceBase = buy.ConditionPriceBase ?? 0;
+                                    int ConditionType = buy.ConditionType;
+                                    if (ConditionType == 1)
+                                    {
+                                        long basePrice = ConditionPriceBase == 1 ? closedPrice : currPrice;
+                                        conditionPrice = ConditionRelativeType == 1 ? ((long)Math.Round(basePrice / 100 + basePrice / 100 * 1.0 / 10000 * range + ConditionRelativeRate)) * 100 : ConditionRelativeType == 2 ? ((long)Math.Round(basePrice / 100 - basePrice / 100 * 1.0 / 10000 * range + ConditionRelativeRate)) * 100 : ((long)Math.Round(basePrice / 100 + basePrice / 100 * 1.0 / 10000 * ConditionRelativeRate)) * 100;
+                                    }
+                                    t_account_shares_conditiontrade_buy_details buy_details = new t_account_shares_conditiontrade_buy_details
+                                    {
+                                        ToBuyId=temp.ToBuyId,
+                                        Status = buy.Status,
+                                        CreateTime = DateTime.Now,
+                                        EntrustId = 0,
+                                        LastModified = DateTime.Now,
+                                        EntrustPriceGear = buy.EntrustPriceGear,
+                                        ConditionType = ConditionType,
+                                        EntrustType = buy.EntrustType,
+                                        ForbidType = buy.ForbidType,
+                                        FollowType = temp.FollowType,
+                                        Name = buy.Name,
+                                        TriggerTime = null,
+                                        ConditionRelativeType = ConditionRelativeType,
+                                        ConditionRelativeRate = ConditionRelativeRate,
+                                        SourceFrom = 1,
+                                        CreateAccountId = temp.AccountId,
+                                        BuyAuto = buy.BuyAuto,
+                                        IsGreater = buy.IsGreater,
+                                        ConditionId = shares_buy_id,
+                                        BusinessStatus = 0,
+                                        ExecStatus = 0,
+                                        LimitUp = buy.LimitUp,
+                                        IsHold = buy.LimitUp,
+                                        EntrustAmount = EntrustAmount,
+                                        ConditionPrice = conditionPrice,
+                                        OtherConditionRelative = buy.OtherConditionRelative
+                                    };
+                                    db.t_account_shares_conditiontrade_buy_details.Add(buy_details);
+                                    db.SaveChanges();
+                                    relIdList.Add(new RelIdInfo
+                                    {
+                                        TemplateId = buy.Id,
+                                        RelId = buy_details.Id
+                                    });
+                                    //child
+                                    var temp_child = template_buy_child.Where(e => e.FatherId == buy.Id).ToList();
+                                    foreach (var x in temp_child)
+                                    {
+                                        tempList.Add(new t_account_shares_conditiontrade_buy_details_child
+                                        {
+                                            Status = x.Status,
+                                            ConditionId = buy_details.Id,
+                                            ChildId = x.ChildId,
+                                        });
+                                    }
+                                    //添加跟投
+                                    foreach (var followId in temp.FollowList)
+                                    {
+                                        db.t_account_shares_conditiontrade_buy_details_follow.Add(new t_account_shares_conditiontrade_buy_details_follow
+                                        {
+                                            CreateTime = DateTime.Now,
+                                            FollowAccountId = followId,
+                                            DetailsId = buy_details.Id
+                                        });
+                                    }
+                                    db.SaveChanges();
+
+                                    //额外参数
+                                    var other = template_buy_other.Where(e => e.TemplateBuyId == buy.Id).ToList();
+                                    var otherIdList = other.Select(e => e.Id).ToList();
+                                    var trend = template_buy_other_trend.Where(e => otherIdList.Contains(e.OtherId)).ToList();
+                                    var trendIdList = trend.Select(e => e.Id).ToList();
+                                    var par = template_buy_other_trend_par.Where(e => trendIdList.Contains(e.OtherTrendId)).ToList();
+                                    var trend_other = template_buy_other_trend_other.Where(e => trendIdList.Contains(e.OtherTrendId)).ToList();
+                                    var trend_otherIdList = trend_other.Select(e => e.Id).ToList();
+                                    var trend_other_par = template_buy_other_trend_other_par.Where(e => trend_otherIdList.Contains(e.OtherTrendOtherId)).ToList();
+                                    foreach (var o in other)
+                                    {
+                                        t_account_shares_conditiontrade_buy_details_other otherTemp = new t_account_shares_conditiontrade_buy_details_other
+                                        {
+                                            Status = o.Status,
+                                            CreateTime = DateTime.Now,
+                                            DetailsId = buy_details.Id,
+                                            LastModified = DateTime.Now,
+                                            Name = o.Name
+                                        };
+                                        db.t_account_shares_conditiontrade_buy_details_other.Add(otherTemp);
+                                        db.SaveChanges();
+                                        var trendList = trend.Where(e => e.OtherId == o.Id).ToList();
+                                        foreach (var t in trendList)
+                                        {
+                                            t_account_shares_conditiontrade_buy_details_other_trend trendTemp = new t_account_shares_conditiontrade_buy_details_other_trend
+                                            {
+                                                OtherId = otherTemp.Id,
+                                                LastModified = DateTime.Now,
+                                                CreateTime = DateTime.Now,
+                                                Status = t.Status,
+                                                TrendDescription = t.TrendDescription,
+                                                TrendId = t.TrendId,
+                                                TrendName = t.TrendName
+                                            };
+                                            db.t_account_shares_conditiontrade_buy_details_other_trend.Add(trendTemp);
+                                            db.SaveChanges();
+                                            var parList = (from x in par
+                                                           where x.OtherTrendId == t.Id
+                                                           select new t_account_shares_conditiontrade_buy_details_other_trend_par
+                                                           {
+                                                               CreateTime = DateTime.Now,
+                                                               OtherTrendId = trendTemp.Id,
+                                                               LastModified = DateTime.Now,
+                                                               ParamsInfo = x.ParamsInfo
+                                                           }).ToList();
+                                            db.t_account_shares_conditiontrade_buy_details_other_trend_par.AddRange(parList);
+                                            db.SaveChanges();
+                                            var temp_trend_otherList = trend_other.Where(e => e.OtherTrendId == t.Id).ToList();
+                                            foreach (var t2 in temp_trend_otherList)
+                                            {
+                                                t_account_shares_conditiontrade_buy_details_other_trend_other othertrendTemp = new t_account_shares_conditiontrade_buy_details_other_trend_other
+                                                {
+                                                    Status = t2.Status,
+                                                    CreateTime = DateTime.Now,
+                                                    LastModified = DateTime.Now,
+                                                    OtherTrendId = trendTemp.Id,
+                                                    TrendDescription = t2.TrendDescription,
+                                                    TrendId = t2.TrendId,
+                                                    TrendName = t2.TrendName
+                                                };
+                                                db.t_account_shares_conditiontrade_buy_details_other_trend_other.Add(othertrendTemp);
+                                                db.SaveChanges();
+                                                var other_parList = (from x in trend_other_par
+                                                                     where x.OtherTrendOtherId == t2.Id
+                                                                     select new t_account_shares_conditiontrade_buy_details_other_trend_other_par
+                                                                     {
+                                                                         CreateTime = DateTime.Now,
+                                                                         OtherTrendOtherId = othertrendTemp.Id,
+                                                                         LastModified = DateTime.Now,
+                                                                         ParamsInfo = x.ParamsInfo
+                                                                     }).ToList();
+                                                db.t_account_shares_conditiontrade_buy_details_other_trend_other_par.AddRange(other_parList);
+                                                db.SaveChanges();
+                                            }
+                                        }
+                                    }
+                                    //转自动参数
+                                    var auto = template_buy_auto.Where(e => e.TemplateBuyId == buy.Id).ToList();
+                                    var autoIdList = auto.Select(e => e.Id).ToList();
+                                    var autotrend = template_buy_auto_trend.Where(e => autoIdList.Contains(e.AutoId)).ToList();
+                                    var autotrendIdList = autotrend.Select(e => e.Id).ToList();
+                                    var autopar = template_buy_auto_trend_par.Where(e => autotrendIdList.Contains(e.AutoTrendId)).ToList();
+                                    var autotrend_other = template_buy_auto_trend_other.Where(e => autotrendIdList.Contains(e.AutoTrendId)).ToList();
+                                    var autotrend_otherIdList = autotrend_other.Select(e => e.Id).ToList();
+                                    var autotrend_other_par = template_buy_auto_trend_other_par.Where(e => autotrend_otherIdList.Contains(e.AutoTrendOtherId)).ToList();
+                                    foreach (var o in auto)
+                                    {
+                                        t_account_shares_conditiontrade_buy_details_auto autoTemp = new t_account_shares_conditiontrade_buy_details_auto
+                                        {
+                                            Status = o.Status,
+                                            CreateTime = DateTime.Now,
+                                            DetailsId = buy_details.Id,
+                                            LastModified = DateTime.Now,
+                                            Name = o.Name
+                                        };
+                                        db.t_account_shares_conditiontrade_buy_details_auto.Add(autoTemp);
+                                        db.SaveChanges();
+                                        var autotrendList = autotrend.Where(e => e.AutoId == o.Id).ToList();
+                                        foreach (var t in autotrendList)
+                                        {
+                                            t_account_shares_conditiontrade_buy_details_auto_trend autotrendTemp = new t_account_shares_conditiontrade_buy_details_auto_trend
+                                            {
+                                                AutoId = autoTemp.Id,
+                                                LastModified = DateTime.Now,
+                                                CreateTime = DateTime.Now,
+                                                Status = t.Status,
+                                                TrendDescription = t.TrendDescription,
+                                                TrendId = t.TrendId,
+                                                TrendName = t.TrendName
+                                            };
+                                            db.t_account_shares_conditiontrade_buy_details_auto_trend.Add(autotrendTemp);
+                                            db.SaveChanges();
+                                            var autoparList = (from x in autopar
+                                                               where x.AutoTrendId == t.Id
+                                                               select new t_account_shares_conditiontrade_buy_details_auto_trend_par
+                                                               {
+                                                                   CreateTime = DateTime.Now,
+                                                                   AutoTrendId = autotrendTemp.Id,
+                                                                   LastModified = DateTime.Now,
+                                                                   ParamsInfo = x.ParamsInfo
+                                                               }).ToList();
+                                            db.t_account_shares_conditiontrade_buy_details_auto_trend_par.AddRange(autoparList);
+                                            db.SaveChanges();
+                                            var temp_autotrend_otherList = autotrend_other.Where(e => e.AutoTrendId == t.Id).ToList();
+                                            foreach (var t2 in temp_autotrend_otherList)
+                                            {
+                                                t_account_shares_conditiontrade_buy_details_auto_trend_other othertrendTemp = new t_account_shares_conditiontrade_buy_details_auto_trend_other
+                                                {
+                                                    Status = t2.Status,
+                                                    CreateTime = DateTime.Now,
+                                                    LastModified = DateTime.Now,
+                                                    AutoTrendId = autotrendTemp.Id,
+                                                    TrendDescription = t2.TrendDescription,
+                                                    TrendId = t2.TrendId,
+                                                    TrendName = t2.TrendName
+                                                };
+                                                db.t_account_shares_conditiontrade_buy_details_auto_trend_other.Add(othertrendTemp);
+                                                db.SaveChanges();
+                                                var other_parList = (from x in autotrend_other_par
+                                                                     where x.AutoTrendOtherId == t2.Id
+                                                                     select new t_account_shares_conditiontrade_buy_details_auto_trend_other_par
+                                                                     {
+                                                                         CreateTime = DateTime.Now,
+                                                                         AutoTrendOtherId = othertrendTemp.Id,
+                                                                         LastModified = DateTime.Now,
+                                                                         ParamsInfo = x.ParamsInfo
+                                                                     }).ToList();
+                                                db.t_account_shares_conditiontrade_buy_details_auto_trend_other_par.AddRange(other_parList);
+                                                db.SaveChanges();
+                                            }
+                                        }
+                                    }
+                                }
+                                foreach (var x in tempList)
+                                {
+                                    x.ChildId = relIdList.Where(e => e.TemplateId == x.ChildId).Select(e => e.RelId).FirstOrDefault();
+                                    db.t_account_shares_conditiontrade_buy_details_child.Add(x);
+                                }
+                                db.SaveChanges();
+                                tran.Commit();
+                                lock (dataLock)
+                                {
+                                    successList.Add(new SharesBase 
+                                    {
+                                        Market=market,
+                                        SharesCode=sharesCode
+                                    });
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                Logger.WriteFileLog("导入买入模板出错", ex);
+                                tran.Rollback();
+                            }
+                        }
+                    }
+                });
+                tArr[i].Start();
+            }
+            Task.WaitAll(tArr);
+
+            return successList;
+        }
+
+        //记录日志
+        public static void WriteToLogRecord(List<SharesAutoJoinExportInfo> list) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                foreach (var item in list)
+                {
+                    foreach (var item2 in item.SharesList)
+                    {
+                        db.t_account_shares_auto_join_tobuy_record.Add(new t_account_shares_auto_join_tobuy_record 
+                        {
+                            SharesCode= item2.SharesCode,
+                            Market=item2.Market,
+                            AccountId=item.AccountId,
+                            ToBuyId=item.ToBuyId,
+                            CreateTime=DateTime.Now
+                        });
+                    }
+                }
+                db.SaveChanges();
+            }
+        }
     }
 
     public class TradeAutoBuyCondition
@@ -2787,5 +4115,63 @@ inner
         public long AccountId { get; set; }
 
         public long BuyAmount { get; set; }
+    }
+
+    public class SharesAutoJoinInfo
+    {
+        public int Market { get; set; }
+
+        public string SharesCode { get; set; }
+
+        public long ToBuyId { get; set; }
+
+        public string ToBuyName { get; set; }
+    }
+
+    public class SharesAutoJoinPar : SharesAutoJoinInfo
+    {
+        public List<SharesAutoJoinOther> OtherList { get; set; }
+    }
+
+    public class SharesAutoJoinOther 
+    {
+        public long OtherId { get; set; }
+
+        public string OtherName { get; set; }
+
+        public List<SharesAutoJoinOtherTrend> TrendList { get; set; }
+    }
+
+    public class SharesAutoJoinOtherTrend
+    {
+        public long TrendId { get; set; }
+
+        public string TrendName { get; set; }
+
+        public string TrendDescription { get; set; }
+
+        public List<string> ParList { get; set; }
+
+        public List<SharesAutoJoinOtherTrend> OtherTrendList { get; set; }
+    }
+
+    public class SharesAutoJoinExportInfo
+    {
+        public long ToBuyId { get; set; }
+        public long AccountId { get; set; }
+        public long TemplateId { get; set; }
+        public int Type { get; set; }
+        public bool IsClear { get; set; }
+        public List<SharesBase> SharesList { get; set; }
+        public int FollowType { get; set; }
+        public List<long> FollowList { get; set; }
+        public List<long> GroupList { get; set; }
+    }
+
+    public class SharesBase 
+    {
+        public int Market { get; set; }
+
+        public string SharesCode { get; set; }
     }
 }

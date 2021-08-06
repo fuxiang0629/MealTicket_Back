@@ -2,6 +2,7 @@
 using MealTicket_DBCommon;
 using MealTicket_Web_Handler.Enum;
 using MealTicket_Web_Handler.Model;
+using MealTicket_Web_Handler.session;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -1661,10 +1662,12 @@ namespace MealTicket_Web_Handler
                 foreach (var item in accountTrend)
                 {
                     var temp = limit.Where(e => (item.Market == e.LimitMarket || e.LimitMarket == -1) && ((e.LimitType == 1 && item.SharesCode.StartsWith(e.LimitKey)) || (e.LimitType == 2 && item.SharesName.StartsWith(e.LimitKey)))).FirstOrDefault();
-                    if (temp == null)
+                    if (temp != null)
                     {
-                        resultList.Add(item);
+                        continue;
                     }
+                    resultList.Add(item);
+
                     var quoteDateList=Singleton.Instance._SharesQuotesDateSession.GetSessionData(); 
                     var tempQuoteDateList = quoteDateList.Where(e => e.Market == item.Market && e.SharesCode == item.SharesCode).ToList();
                     var temp1= tempQuoteDateList.OrderByDescending(e => e.LastModified).FirstOrDefault();
@@ -1686,8 +1689,6 @@ namespace MealTicket_Web_Handler
                         continue;
                     }
                     item.ThreeDaysRiseRate = temp3.ClosedPrice == 0 ? 0 : (int)Math.Round(((temp1.PresentPrice - temp3.ClosedPrice) * 1.0 / temp3.ClosedPrice) * 10000, 0);
-                    item.TodayDealAmount = temp1.TotalAmount;
-                    item.TodayDealCount = temp1.TotalCount;
                 }
 
                 resultList = (from item in resultList
@@ -8558,6 +8559,10 @@ inner
                     {
                         CopyConditiontradeTemplate_Sell(request.Id, newTemplate.Id, db);
                     }
+                    else if (template.Type == 3)//卖出模板复制
+                    {
+                        CopyConditiontradeTemplate_Join(request.Id, newTemplate.Id, db);
+                    }
                     else
                     {
                         throw new WebApiException(400, "数据有误");
@@ -8842,6 +8847,113 @@ inner
                     });
                 }
                 db.SaveChanges();
+            }
+        }
+        private void CopyConditiontradeTemplate_Join(long templateId, long newTemplateId, meal_ticketEntities db)
+        {
+            var template_join = (from item in db.t_account_shares_conditiontrade_template_join
+                                 where item.TemplateId == templateId
+                                 select item).ToList();
+            foreach (var item in template_join)
+            {
+                t_account_shares_conditiontrade_template_join new_template_join = new t_account_shares_conditiontrade_template_join
+                {
+                    Status = item.Status,
+                    CreateTime = DateTime.Now,
+                    LastModified = DateTime.Now,
+                    Name = item.Name,
+                    IsClearOriginal = item.IsClearOriginal,
+                    TimeCycle = item.TimeCycle,
+                    TimeCycleType = item.TimeCycleType,
+                    TemplateId = newTemplateId
+                };
+                db.t_account_shares_conditiontrade_template_join.Add(new_template_join);
+                db.SaveChanges();
+
+                var join_other = (from x in db.t_account_shares_conditiontrade_template_join_other
+                                  where x.TemplateJoinId == item.Id
+                                  select x).ToList();
+                foreach (var other in join_other)
+                {
+                    t_account_shares_conditiontrade_template_join_other new_join_other = new t_account_shares_conditiontrade_template_join_other
+                    {
+                        Status = other.Status,
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        Name = other.Name,
+                        TemplateJoinId = new_template_join.Id
+                    };
+                    db.t_account_shares_conditiontrade_template_join_other.Add(new_join_other);
+                    db.SaveChanges();
+
+                    var join_other_trend = (from x in db.t_account_shares_conditiontrade_template_join_other_trend
+                                            where x.OtherId == other.Id
+                                            select x).ToList();
+                    foreach (var other_trend in join_other_trend)
+                    {
+                        t_account_shares_conditiontrade_template_join_other_trend new_other_trend = new t_account_shares_conditiontrade_template_join_other_trend
+                        {
+                            Status = other_trend.Status,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            OtherId = new_join_other.Id,
+                            TrendDescription = other_trend.TrendDescription,
+                            TrendId = other_trend.TrendId,
+                            TrendName = other_trend.TrendName
+                        };
+                        db.t_account_shares_conditiontrade_template_join_other_trend.Add(new_other_trend);
+                        db.SaveChanges();
+
+                        var join_other_trend_par = (from x in db.t_account_shares_conditiontrade_template_join_other_trend_par
+                                                    where x.OtherTrendId == other_trend.Id
+                                                    select x).ToList();
+                        foreach (var other_trend_par in join_other_trend_par)
+                        {
+                            db.t_account_shares_conditiontrade_template_join_other_trend_par.Add(new t_account_shares_conditiontrade_template_join_other_trend_par
+                            {
+                                CreateTime = DateTime.Now,
+                                LastModified = DateTime.Now,
+                                OtherTrendId = new_other_trend.Id,
+                                ParamsInfo = other_trend_par.ParamsInfo
+                            });
+                        }
+                        db.SaveChanges();
+
+                        var join_other_trend_other = (from x in db.t_account_shares_conditiontrade_template_join_other_trend_other
+                                                      where x.OtherTrendId == other_trend.Id
+                                                      select x).ToList();
+                        foreach (var other_trend_other in join_other_trend_other)
+                        {
+                            t_account_shares_conditiontrade_template_join_other_trend_other new_other_trend_other = new t_account_shares_conditiontrade_template_join_other_trend_other
+                            {
+                                Status = other_trend_other.Status,
+                                CreateTime = DateTime.Now,
+                                LastModified = DateTime.Now,
+                                OtherTrendId = new_other_trend.Id,
+                                TrendDescription = other_trend_other.TrendDescription,
+                                TrendId = other_trend_other.TrendId,
+                                TrendName = other_trend_other.TrendName
+                            };
+                            db.t_account_shares_conditiontrade_template_join_other_trend_other.Add(new_other_trend_other);
+                            db.SaveChanges();
+
+                            var join_other_trend_other_par = (from x in db.t_account_shares_conditiontrade_template_join_other_trend_other_par
+                                                              where x.OtherTrendOtherId == other_trend_other.Id
+                                                              select x).ToList();
+                            foreach (var other_trend_other_par in join_other_trend_other_par)
+                            {
+                                db.t_account_shares_conditiontrade_template_join_other_trend_other_par.Add(new t_account_shares_conditiontrade_template_join_other_trend_other_par
+                                {
+                                    CreateTime = DateTime.Now,
+                                    LastModified = DateTime.Now,
+                                    OtherTrendOtherId = new_other_trend_other.Id,
+                                    ParamsInfo = other_trend_other_par.ParamsInfo
+                                });
+                            }
+                            db.SaveChanges();
+                        }
+                    }
+                }
             }
         }
 
@@ -15690,7 +15802,7 @@ select @buyId;";
                              join item4 in db.t_account_shares_conditiontrade_buy on new { AccountId = item5.MainAccountId, item3.Market, item3.SharesCode } equals new { item4.AccountId, item4.Market, item4.SharesCode }
                              join item6 in db.t_account_shares_conditiontrade_buy_details on item4.Id equals item6.ConditionId
                              join item7 in accountShares on item4.Id equals item7.ConditiontradeBuyId into b from bi in b.DefaultIfEmpty()
-                             where item.SettingId == request.Id && item2.Status == 1 && item5.AccountId == basedata.AccountId && item6.TriggerTime==null
+                             where item.SettingId == request.Id && item2.Status == 1 && item5.AccountId == basedata.AccountId && item6.TriggerTime==null && item6.Status==1 && item4.Status==1
                              group item4 by new { item4, bi} into g
                              select g;
                 int totalCount = result.Count();
@@ -15920,8 +16032,12 @@ select @buyId;";
                 var tobuyOther = (from item in db.t_account_shares_auto_join_tobuy_other
                                   where joinIdList.Contains(item.ToBuyId)
                                   select item).ToList();
+                var useGroupList = (from item in db.t_account_shares_auto_join_tobuy_usegroup
+                                    where joinIdList.Contains(item.ToBuyId)
+                                    select item).ToList();
                 foreach (var item in list)
                 {
+                    item.UseGroupIdList= useGroupList.Where(e => e.ToBuyId == item.Id).Select(e => e.GroupId).ToList();
                     item.OtherCount = tobuyOther.Where(e => e.ToBuyId == item.Id).Count(); ;
                     item.GroupIdList = groupList.Where(e => e.ToBuyId == item.Id).Select(e => e.GroupId).ToList();
                     if (item.FollowType == 0)
@@ -15992,6 +16108,361 @@ select @buyId;";
                         });
                     }
                     db.SaveChanges();
+
+                    foreach (var groupId in request.UseGroupIdList)
+                    {
+                        db.t_account_shares_auto_join_tobuy_usegroup.Add(new t_account_shares_auto_join_tobuy_usegroup
+                        {
+                            CreateTime = DateTime.Now,
+                            GroupId = groupId,
+                            ToBuyId = joinInfo.Id
+                        });
+                    }
+                    db.SaveChanges();
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 从模板导入自动选票
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ExportAccountAutoTobuy(ExportAccountAutoTobuyRequest request, HeadBase basedata)
+        {
+            //查询模板数据
+            List<ConditiontradeTemplateJoinDetailsInfo> template_join = new List<ConditiontradeTemplateJoinDetailsInfo>();
+            List<buy_other> template_join_other = new List<buy_other>();
+            List<buy_other_trend> template_join_other_trend = new List<buy_other_trend>();
+            List<buy_other_trend_par> template_join_other_trend_par = new List<buy_other_trend_par>();
+            List<buy_other_trend_other> template_join_other_trend_other = new List<buy_other_trend_other>();
+            List<buy_other_trend_other_par> template_join_other_trend_other_par = new List<buy_other_trend_other_par>();
+
+            using (var db = new meal_ticketEntities())
+            {
+                if (request.TemplateType == 1)
+                {
+                    var template = (from item in db.t_account_shares_conditiontrade_template
+                                    where item.Type == 3 && item.Id == request.TemplateId
+                                    select item).FirstOrDefault();
+                    if (template == null)
+                    {
+                        throw new WebApiException(400, "模板不存在");
+                    }
+                    template_join = (from item in db.t_account_shares_conditiontrade_template_join
+                                     where item.TemplateId == request.TemplateId
+                                     select new ConditiontradeTemplateJoinDetailsInfo
+                                     {
+                                         Id=item.Id,
+                                         Status = item.Status,
+                                         IsClearOriginal = item.IsClearOriginal,
+                                         Name = item.Name,
+                                         TimeCycle = item.TimeCycle,
+                                         TimeCycleType = item.TimeCycleType
+                                     }).ToList();
+                    var template_join_id_list = template_join.Select(e => e.Id).ToList();
+
+                    template_join_other = (from item in db.t_account_shares_conditiontrade_template_join_other
+                                           where template_join_id_list.Contains(item.TemplateJoinId)
+                                           select new buy_other
+                                           {
+                                               CreateTime = item.CreateTime,
+                                               Status = item.Status,
+                                               Id = item.Id,
+                                               LastModified = item.LastModified,
+                                               Name = item.Name,
+                                               TemplateBuyId = item.TemplateJoinId
+                                           }).ToList();
+                    var template_buy_other_id_list = template_join_other.Select(e => e.Id).ToList();
+
+                    template_join_other_trend = (from item in db.t_account_shares_conditiontrade_template_join_other_trend
+                                                 where template_buy_other_id_list.Contains(item.OtherId)
+                                                 select new buy_other_trend
+                                                 {
+                                                     Status = item.Status,
+                                                     CreateTime = item.CreateTime,
+                                                     Id = item.Id,
+                                                     LastModified = item.LastModified,
+                                                     OtherId = item.OtherId,
+                                                     TrendDescription = item.TrendDescription,
+                                                     TrendId = item.TrendId,
+                                                     TrendName = item.TrendName
+                                                 }).ToList();
+                    var template_buy_other_trend_id_list = template_join_other_trend.Select(e => e.Id).ToList();
+
+                    template_join_other_trend_par = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_par
+                                                     where template_buy_other_trend_id_list.Contains(item.OtherTrendId)
+                                                     select new buy_other_trend_par
+                                                     {
+                                                         CreateTime = item.CreateTime,
+                                                         Id = item.Id,
+                                                         LastModified = item.LastModified,
+                                                         OtherTrendId = item.OtherTrendId,
+                                                         ParamsInfo = item.ParamsInfo
+                                                     }).ToList();
+
+                    template_join_other_trend_other = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_other
+                                                       where template_buy_other_trend_id_list.Contains(item.OtherTrendId)
+                                                       select new buy_other_trend_other
+                                                       {
+                                                           CreateTime = item.CreateTime,
+                                                           Id = item.Id,
+                                                           Status = item.Status,
+                                                           LastModified = item.LastModified,
+                                                           OtherTrendId = item.OtherTrendId,
+                                                           TrendDescription = item.TrendDescription,
+                                                           TrendId = item.TrendId,
+                                                           TrendName = item.TrendName
+                                                       }).ToList();
+                    var template_buy_other_trend_other_id_list = template_join_other_trend_other.Select(e => e.Id).ToList();
+
+                    template_join_other_trend_other_par = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_other_par
+                                                           where template_buy_other_trend_other_id_list.Contains(item.OtherTrendOtherId)
+                                                           select new buy_other_trend_other_par
+                                                           {
+                                                               CreateTime = item.CreateTime,
+                                                               Id = item.Id,
+                                                               LastModified = item.LastModified,
+                                                               OtherTrendOtherId = item.OtherTrendOtherId,
+                                                               ParamsInfo = item.ParamsInfo
+                                                           }).ToList();
+                }
+                else if (request.TemplateType == 2)
+                {
+                    var template = (from item in db.t_sys_conditiontrade_template
+                                    where item.Type == 3 && item.Id == request.TemplateId
+                                    select item).FirstOrDefault();
+                    if (template == null)
+                    {
+                        throw new WebApiException(400, "模板不存在");
+                    }
+                    template_join = (from item in db.t_sys_conditiontrade_template_join
+                                     where item.TemplateId == request.TemplateId
+                                     select new ConditiontradeTemplateJoinDetailsInfo
+                                     {
+                                         Status = item.Status,
+                                         IsClearOriginal = item.IsClearOriginal,
+                                         Name = item.Name,
+                                         TimeCycle = item.TimeCycle,
+                                         TimeCycleType = item.TimeCycleType
+                                     }).ToList();
+                    var template_buy_id_list = template_join.Select(e => e.Id).ToList();
+
+                    template_join_other = (from item in db.t_sys_conditiontrade_template_join_other
+                                           where template_buy_id_list.Contains(item.TemplateJoinId)
+                                           select new buy_other
+                                           {
+                                               CreateTime = item.CreateTime,
+                                               Status = item.Status,
+                                               Id = item.Id,
+                                               LastModified = item.LastModified,
+                                               Name = item.Name,
+                                               TemplateBuyId = item.TemplateJoinId
+                                           }).ToList();
+                    var template_buy_other_id_list = template_join_other.Select(e => e.Id).ToList();
+
+                    template_join_other_trend = (from item in db.t_sys_conditiontrade_template_join_other_trend
+                                                 where template_buy_other_id_list.Contains(item.OtherId)
+                                                 select new buy_other_trend
+                                                 {
+                                                     Status = item.Status,
+                                                     CreateTime = item.CreateTime,
+                                                     Id = item.Id,
+                                                     LastModified = item.LastModified,
+                                                     OtherId = item.OtherId,
+                                                     TrendDescription = item.TrendDescription,
+                                                     TrendId = item.TrendId,
+                                                     TrendName = item.TrendName
+                                                 }).ToList();
+                    var template_buy_other_trend_id_list = template_join_other_trend.Select(e => e.Id).ToList();
+
+                    template_join_other_trend_par = (from item in db.t_sys_conditiontrade_template_join_other_trend_par
+                                                     where template_buy_other_trend_id_list.Contains(item.OtherTrendId)
+                                                     select new buy_other_trend_par
+                                                     {
+                                                         CreateTime = item.CreateTime,
+                                                         Id = item.Id,
+                                                         LastModified = item.LastModified,
+                                                         OtherTrendId = item.OtherTrendId,
+                                                         ParamsInfo = item.ParamsInfo
+                                                     }).ToList();
+
+                    template_join_other_trend_other = (from item in db.t_sys_conditiontrade_template_join_other_trend_other
+                                                       where template_buy_other_trend_id_list.Contains(item.OtherTrendId)
+                                                       select new buy_other_trend_other
+                                                       {
+                                                           CreateTime = item.CreateTime,
+                                                           Id = item.Id,
+                                                           Status = item.Status,
+                                                           LastModified = item.LastModified,
+                                                           OtherTrendId = item.OtherTrendId,
+                                                           TrendDescription = item.TrendDescription,
+                                                           TrendId = item.TrendId,
+                                                           TrendName = item.TrendName
+                                                       }).ToList();
+                    var template_buy_other_trend_other_id_list = template_join_other_trend_other.Select(e => e.Id).ToList();
+
+                    template_join_other_trend_other_par = (from item in db.t_sys_conditiontrade_template_join_other_trend_other_par
+                                                           where template_buy_other_trend_other_id_list.Contains(item.OtherTrendOtherId)
+                                                           select new buy_other_trend_other_par
+                                                           {
+                                                               CreateTime = item.CreateTime,
+                                                               Id = item.Id,
+                                                               LastModified = item.LastModified,
+                                                               OtherTrendOtherId = item.OtherTrendOtherId,
+                                                               ParamsInfo = item.ParamsInfo
+                                                           }).ToList();
+                }
+                else
+                {
+                    throw new WebApiException(400, "参数错误");
+                }
+                _ExportAccountAutoTobuy(db, request,basedata.AccountId,template_join, template_join_other, template_join_other_trend, template_join_other_trend_par, template_join_other_trend_other, template_join_other_trend_other_par);
+            }
+        }
+        private void _ExportAccountAutoTobuy(meal_ticketEntities db, ExportAccountAutoTobuyRequest request, long accountId, List<ConditiontradeTemplateJoinDetailsInfo> template_join, List<buy_other> template_join_other, List<buy_other_trend> template_join_other_trend, List<buy_other_trend_par> template_join_other_trend_par, List<buy_other_trend_other> template_join_other_trend_other, List<buy_other_trend_other_par> template_join_other_trend_other_par)
+        {
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    foreach (var item in template_join)
+                    {
+                        t_account_shares_auto_join_tobuy joinInfo = new t_account_shares_auto_join_tobuy
+                        {
+                            Status = item.Status,
+                            AccountId = accountId,
+                            CreateTime = DateTime.Now,
+                            FollowType = request.FollowType,
+                            IsClearOriginal = item.IsClearOriginal,
+                            LastModified = DateTime.Now,
+                            Name = item.Name,
+                            TemplateId = request.BuyTemplateId,
+                            TemplateType = request.BuyTemplateType,
+                            TimeCycle = item.TimeCycle,
+                            TimeCycleType = item.TimeCycleType
+                        };
+                        db.t_account_shares_auto_join_tobuy.Add(joinInfo);
+                        db.SaveChanges();
+
+                        var otherList = template_join_other.Where(e => e.TemplateBuyId == item.Id).ToList();
+                        foreach (var other in otherList)
+                        {
+                            t_account_shares_auto_join_tobuy_other tempOther = new t_account_shares_auto_join_tobuy_other
+                            {
+                                Status= other.Status,
+                                CreateTime=DateTime.Now,
+                                LastModified=DateTime.Now,
+                                Name=other.Name,
+                                ToBuyId= joinInfo.Id
+                            };
+                            db.t_account_shares_auto_join_tobuy_other.Add(tempOther);
+                            db.SaveChanges();
+
+                            var otherTrendList = template_join_other_trend.Where(e => e.OtherId == other.Id).ToList();
+                            foreach (var trend in otherTrendList)
+                            {
+                                t_account_shares_auto_join_tobuy_other_trend tempTrend = new t_account_shares_auto_join_tobuy_other_trend 
+                                {
+                                    Status=trend.Status,
+                                    CreateTime=DateTime.Now,
+                                    LastModified=DateTime.Now,
+                                    OtherId= tempOther.Id,
+                                    TrendDescription= trend.TrendDescription,
+                                    TrendId= trend.TrendId,
+                                    TrendName= trend.TrendName
+                                };
+                                db.t_account_shares_auto_join_tobuy_other_trend.Add(tempTrend);
+                                db.SaveChanges();
+
+                                var otherTrendParList = template_join_other_trend_par.Where(e => e.OtherTrendId == trend.Id).ToList();
+                                foreach (var otherTrendPar in otherTrendParList)
+                                {
+                                    db.t_account_shares_auto_join_tobuy_other_trend_par.Add(new t_account_shares_auto_join_tobuy_other_trend_par 
+                                    {
+                                        CreateTime=DateTime.Now,
+                                        LastModified=DateTime.Now,
+                                        OtherTrendId= tempTrend.Id,
+                                        ParamsInfo= otherTrendPar.ParamsInfo
+                                    });
+                                }
+                                db.SaveChanges();
+
+                                var otherTrendOtherList = template_join_other_trend_other.Where(e => e.OtherTrendId == trend.Id).ToList();
+                                foreach (var otherTrendOther in otherTrendOtherList)
+                                {
+                                    t_account_shares_auto_join_tobuy_other_trend_other tempOtherTrendOther = new t_account_shares_auto_join_tobuy_other_trend_other
+                                    {
+                                        CreateTime = DateTime.Now,
+                                        LastModified = DateTime.Now,
+                                        OtherTrendId = tempTrend.Id,
+                                        Status = otherTrendOther.Status,
+                                        TrendDescription = otherTrendOther.TrendDescription,
+                                        TrendId = otherTrendOther.TrendId,
+                                        TrendName = otherTrendOther.TrendName
+                                    };
+                                    db.t_account_shares_auto_join_tobuy_other_trend_other.Add(tempOtherTrendOther);
+                                    db.SaveChanges();
+
+                                    var otherTrendOtherParList = template_join_other_trend_other_par.Where(e => e.OtherTrendOtherId == otherTrendOther.Id).ToList();
+                                    foreach (var otherTrendOtherPar in otherTrendOtherParList)
+                                    {
+                                        db.t_account_shares_auto_join_tobuy_other_trend_other_par.Add(new t_account_shares_auto_join_tobuy_other_trend_other_par
+                                        {
+                                            CreateTime = DateTime.Now,
+                                            LastModified=DateTime.Now,
+                                            OtherTrendOtherId= tempOtherTrendOther.Id,
+                                            ParamsInfo= otherTrendOtherPar.ParamsInfo
+                                        });
+                                    }
+                                    db.SaveChanges();
+                                }
+                            }
+                        }
+
+                        if (request.FollowType == 0)
+                        {
+                            foreach (var followAccountId in request.FollowAccountList)
+                            {
+                                db.t_account_shares_auto_join_tobuy_follow.Add(new t_account_shares_auto_join_tobuy_follow
+                                {
+                                    CreateTime = DateTime.Now,
+                                    FollowAccountId = followAccountId,
+                                    ToBuyId = joinInfo.Id
+                                });
+                            }
+                            db.SaveChanges();
+                        }
+
+                        foreach (var groupId in request.GroupIdList)
+                        {
+                            db.t_account_shares_auto_join_tobuy_group.Add(new t_account_shares_auto_join_tobuy_group
+                            {
+                                CreateTime = DateTime.Now,
+                                GroupId = groupId,
+                                ToBuyId = joinInfo.Id
+                            });
+                        }
+                        db.SaveChanges();
+
+                        foreach (var groupId in request.UseGroupIdList)
+                        {
+                            db.t_account_shares_auto_join_tobuy_usegroup.Add(new t_account_shares_auto_join_tobuy_usegroup
+                            {
+                                CreateTime = DateTime.Now,
+                                GroupId = groupId,
+                                ToBuyId = joinInfo.Id
+                            });
+                        }
+                        db.SaveChanges();
+                    }
 
                     tran.Commit();
                 }
@@ -16064,6 +16535,25 @@ select @buyId;";
                     foreach (var groupId in request.GroupIdList)
                     {
                         db.t_account_shares_auto_join_tobuy_group.Add(new t_account_shares_auto_join_tobuy_group
+                        {
+                            CreateTime = DateTime.Now,
+                            GroupId = groupId,
+                            ToBuyId = joinInfo.Id
+                        });
+                    }
+                    db.SaveChanges();
+
+                    var useGroupList = (from item in db.t_account_shares_auto_join_tobuy_usegroup
+                                        where item.ToBuyId == request.Id
+                                        select item).ToList();
+                    if (useGroupList.Count() > 0)
+                    {
+                        db.t_account_shares_auto_join_tobuy_usegroup.RemoveRange(useGroupList);
+                        db.SaveChanges();
+                    }
+                    foreach (var groupId in request.UseGroupIdList)
+                    {
+                        db.t_account_shares_auto_join_tobuy_usegroup.Add(new t_account_shares_auto_join_tobuy_usegroup
                         {
                             CreateTime = DateTime.Now,
                             GroupId = groupId,
@@ -16154,6 +16644,16 @@ select @buyId;";
                     if (groupList.Count() > 0)
                     {
                         db.t_account_shares_auto_join_tobuy_group.RemoveRange(groupList);
+                        db.SaveChanges();
+                    }
+
+                    //删除应用范围
+                    var useGroupList = (from item in db.t_account_shares_auto_join_tobuy_usegroup
+                                        where item.ToBuyId == request.Id
+                                        select item).ToList();
+                    if (groupList.Count() > 0)
+                    {
+                        db.t_account_shares_auto_join_tobuy_usegroup.RemoveRange(useGroupList);
                         db.SaveChanges();
                     }
 
@@ -17057,16 +17557,37 @@ select @buyId;";
         public void DeleteAccountAutoTobuyOtherTrend_Other(DeleteRequest request, HeadBase basedata)
         {
             using (var db = new meal_ticketEntities())
+            using (var tran=db.Database.BeginTransaction())
             {
-                var trend = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other
-                             where item.Id == request.Id
-                             select item).FirstOrDefault();
-                if (trend == null)
+                try
                 {
-                    throw new WebApiException(400, "数据不存在");
+                    var trend = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other
+                                 where item.Id == request.Id
+                                 select item).FirstOrDefault();
+                    if (trend == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    db.t_account_shares_auto_join_tobuy_other_trend_other.Remove(trend);
+                    db.SaveChanges();
+
+                    //删除par
+                    var other_par = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other_par
+                                     where item.OtherTrendOtherId == request.Id
+                                     select item).ToList();
+                    if (other_par.Count() > 0)
+                    {
+                        db.t_account_shares_auto_join_tobuy_other_trend_other_par.RemoveRange(other_par);
+                        db.SaveChanges();
+                    }
+
+                    tran.Commit();
                 }
-                db.t_account_shares_auto_join_tobuy_other_trend_other.Remove(trend);
-                db.SaveChanges();
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
             }
         }
 
@@ -17411,5 +17932,1626 @@ select @buyId;";
             }
         }
         #endregion
+
+        #region===自动加入模板===
+        /// <summary>
+        /// 获取自动加入模板详情列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<ConditiontradeTemplateJoinDetailsInfo> GetConditiontradeTemplateJoinDetailsList(GetConditiontradeTemplateJoinDetailsListRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var joinList = from item in db.t_account_shares_conditiontrade_template_join
+                               where item.TemplateId == request.TemplateId
+                               select item;
+                int totalCount = joinList.Count();
+
+                var list = (from item in joinList
+                            orderby item.CreateTime descending
+                            select new ConditiontradeTemplateJoinDetailsInfo
+                            {
+                                Status = item.Status,
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                IsClearOriginal = item.IsClearOriginal,
+                                Name = item.Name,
+                                TimeCycle = item.TimeCycle,
+                                TimeCycleType = item.TimeCycleType,
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+                List<long> JoinIdList = list.Select(e => e.Id).ToList();
+                var join_other = (from item in db.t_account_shares_conditiontrade_template_join_other
+                                  where JoinIdList.Contains(item.TemplateJoinId)
+                                  select item).ToList();
+                foreach (var item in list)
+                {
+                    item.OtherCount = join_other.Where(e => e.TemplateJoinId == item.Id).Count();
+                }
+                return new PageRes<ConditiontradeTemplateJoinDetailsInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = list
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加自动加入模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddConditiontradeTemplateJoinDetails(AddConditiontradeTemplateJoinDetailsRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //判断模板是否存在
+                    var template = (from item in db.t_account_shares_conditiontrade_template
+                                    where item.Id == request.TemplateId
+                                    select item).FirstOrDefault();
+                    if (template == null)
+                    {
+                        throw new WebApiException(400, "模板不存在");
+                    }
+                    t_account_shares_conditiontrade_template_join temp = new t_account_shares_conditiontrade_template_join
+                    {
+                        Status = 1,
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        Name = string.IsNullOrEmpty(request.Name) ? Guid.NewGuid().ToString("N") : request.Name,
+                        TemplateId = request.TemplateId,
+                        IsClearOriginal = request.IsClearOriginal,
+                        TimeCycle = request.TimeCycle,
+                        TimeCycleType = request.TimeCycleType
+                    };
+                    db.t_account_shares_conditiontrade_template_join.Add(temp);
+                    db.SaveChanges();
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 编辑自动加入模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateJoinDetails(ModifyConditiontradeTemplateJoinDetailsRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var joinInfo = (from item in db.t_account_shares_conditiontrade_template_join
+                                    where item.Id == request.Id
+                                    select item).FirstOrDefault();
+                    if (joinInfo == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    joinInfo.LastModified = DateTime.Now;
+                    joinInfo.Name = string.IsNullOrEmpty(request.Name) ? Guid.NewGuid().ToString("N") : request.Name;
+                    joinInfo.IsClearOriginal = request.IsClearOriginal;
+                    joinInfo.TimeCycle = request.TimeCycle;
+                    joinInfo.TimeCycleType = request.TimeCycleType;
+                    db.SaveChanges();
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 修改自动加入模板详情状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateJoinDetailsStatus(ModifyStatusRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var joinInfo = (from item in db.t_account_shares_conditiontrade_template_join
+                                    where item.Id == request.Id
+                                    select item).FirstOrDefault();
+                    if (joinInfo == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    joinInfo.LastModified = DateTime.Now;
+                    joinInfo.Status = request.Status;
+                    db.SaveChanges();
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 删除自动加入模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteConditiontradeTemplateJoinDetails(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var joinInfo = (from item in db.t_account_shares_conditiontrade_template_join
+                                    where item.Id == request.Id
+                                    select item).FirstOrDefault();
+                    if (joinInfo == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    db.t_account_shares_conditiontrade_template_join.Remove(joinInfo);
+                    db.SaveChanges();
+
+                    //删除条件
+                    var other = (from item in db.t_account_shares_conditiontrade_template_join_other
+                                 where item.TemplateJoinId == request.Id
+                                 select item).ToList();
+                    if (other.Count() > 0)
+                    {
+                        db.t_account_shares_conditiontrade_template_join_other.RemoveRange(other);
+                        db.SaveChanges();
+                    }
+
+                    List<long> OtherIdList = other.Select(e => e.Id).ToList();
+                    var otherTrend = (from item in db.t_account_shares_conditiontrade_template_join_other_trend
+                                      where OtherIdList.Contains(item.OtherId)
+                                      select item).ToList();
+                    if (otherTrend.Count() > 0)
+                    {
+                        db.t_account_shares_conditiontrade_template_join_other_trend.RemoveRange(otherTrend);
+                        db.SaveChanges();
+                    }
+
+                    List<long> OtherTrendIdList = otherTrend.Select(e => e.Id).ToList();
+                    var otherTrendPar = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_par
+                                         where OtherTrendIdList.Contains(item.OtherTrendId)
+                                         select item).ToList();
+                    if (otherTrendPar.Count() > 0)
+                    {
+                        db.t_account_shares_conditiontrade_template_join_other_trend_par.RemoveRange(otherTrendPar);
+                        db.SaveChanges();
+                    }
+
+                    var otherTrendOther = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_other
+                                           where OtherTrendIdList.Contains(item.OtherTrendId)
+                                           select item).ToList();
+                    if (otherTrendOther.Count() > 0)
+                    {
+                        db.t_account_shares_conditiontrade_template_join_other_trend_other.RemoveRange(otherTrendOther);
+                        db.SaveChanges();
+                    }
+
+                    List<long> otherTrendOtherIdList = otherTrendOther.Select(e => e.Id).ToList();
+                    var otherTrendOtherPar = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_other_par
+                                              where otherTrendOtherIdList.Contains(item.OtherTrendOtherId)
+                                              select item).ToList();
+                    if (otherTrendOther.Count() > 0)
+                    {
+                        db.t_account_shares_conditiontrade_template_join_other_trend_other_par.RemoveRange(otherTrendOtherPar);
+                        db.SaveChanges();
+                    }
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取自动加入模板额外条件分组列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<ConditiontradeTemplateBuyOtherGroupInfo> GetConditiontradeTemplateJoinOtherGroupList(DetailsPageRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var other = from item in db.t_account_shares_conditiontrade_template_join_other
+                            where item.TemplateJoinId == request.Id
+                            select item;
+                int totalCount = other.Count();
+                return new PageRes<ConditiontradeTemplateBuyOtherGroupInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in other
+                            orderby item.CreateTime
+                            select new ConditiontradeTemplateBuyOtherGroupInfo
+                            {
+                                Id = item.Id,
+                                Status = item.Status,
+                                CreateTime = item.CreateTime,
+                                Name = item.Name
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加自动加入模板额外条件分组
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddConditiontradeTemplateJoinOtherGroup(AddConditiontradeTemplateBuyOtherGroupRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                db.t_account_shares_conditiontrade_template_join_other.Add(new t_account_shares_conditiontrade_template_join_other
+                {
+                    TemplateJoinId = request.DetailsId,
+                    Status = 1,
+                    CreateTime = DateTime.Now,
+                    LastModified = DateTime.Now,
+                    Name = request.Name
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 编辑自动加入模板额外条件分组
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateJoinOtherGroup(ModifyConditiontradeTemplateBuyOtherGroupRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var other = (from item in db.t_account_shares_conditiontrade_template_join_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (other == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                other.Name = request.Name;
+                other.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改自动加入模板额外条件分组状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateJoinOtherGroupStatus(ModifyStatusRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var other = (from item in db.t_account_shares_conditiontrade_template_join_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (other == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                other.Status = request.Status;
+                other.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除自动加入模板额外条件分组
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteConditiontradeTemplateJoinOtherGroup(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //删除条件
+                    var other = (from item in db.t_account_shares_conditiontrade_template_join_other
+                                 where item.Id == request.Id
+                                 select item).FirstOrDefault();
+                    if (other == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    db.t_account_shares_conditiontrade_template_join_other.Remove(other);
+                    db.SaveChanges();
+
+                    var otherTrend = (from item in db.t_account_shares_conditiontrade_template_join_other_trend
+                                      where item.OtherId == request.Id
+                                      select item).ToList();
+                    if (otherTrend.Count() > 0)
+                    {
+                        db.t_account_shares_conditiontrade_template_join_other_trend.RemoveRange(otherTrend);
+                        db.SaveChanges();
+                    }
+
+                    List<long> OtherTrendIdList = otherTrend.Select(e => e.Id).ToList();
+                    var otherTrendPar = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_par
+                                         where OtherTrendIdList.Contains(item.OtherTrendId)
+                                         select item).ToList();
+                    if (otherTrendPar.Count() > 0)
+                    {
+                        db.t_account_shares_conditiontrade_template_join_other_trend_par.RemoveRange(otherTrendPar);
+                        db.SaveChanges();
+                    }
+
+                    var otherTrendOther = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_other
+                                           where OtherTrendIdList.Contains(item.OtherTrendId)
+                                           select item).ToList();
+                    if (otherTrendOther.Count() > 0)
+                    {
+                        db.t_account_shares_conditiontrade_template_join_other_trend_other.RemoveRange(otherTrendOther);
+                        db.SaveChanges();
+                    }
+
+                    List<long> otherTrendOtherIdList = otherTrendOther.Select(e => e.Id).ToList();
+                    var otherTrendOtherPar = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_other_par
+                                              where otherTrendOtherIdList.Contains(item.OtherTrendOtherId)
+                                              select item).ToList();
+                    if (otherTrendOther.Count() > 0)
+                    {
+                        db.t_account_shares_conditiontrade_template_join_other_trend_other_par.RemoveRange(otherTrendOtherPar);
+                        db.SaveChanges();
+                    }
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取自动加入模板额外条件列表
+        /// </summary>
+        /// <returns></returns>
+        public PageRes<ConditiontradeTemplateBuyOtherInfo> GetConditiontradeTemplateJoinOtherList(DetailsPageRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = from item in db.t_account_shares_conditiontrade_template_join_other_trend
+                            where item.OtherId == request.Id
+                            select item;
+                int totalCount = trend.Count();
+
+                var list = (from item in trend
+                            orderby item.CreateTime descending
+                            select new ConditiontradeTemplateBuyOtherInfo
+                            {
+                                Status = item.Status,
+                                TrendId = item.TrendId,
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                TrendDescription = item.TrendDescription,
+                                TrendName = item.TrendName
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                List<long> otehrTrendIdList = trend.Select(e => e.Id).ToList();
+                var otherTrendPar = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_other
+                                     where otehrTrendIdList.Contains(item.OtherTrendId)
+                                     select item).ToList();
+
+                foreach (var item in list)
+                {
+                    item.OtherParCount = otherTrendPar.Where(e => e.OtherTrendId == item.Id).Count();
+                }
+
+                return new PageRes<ConditiontradeTemplateBuyOtherInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = list
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加自动加入模板额外条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddConditiontradeTemplateJoinOther(AddConditiontradeTemplateBuyOtherRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    t_account_shares_conditiontrade_template_join_other_trend temp = new t_account_shares_conditiontrade_template_join_other_trend
+                    {
+                        Status = 1,
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        OtherId = request.RelId,
+                        TrendDescription = request.TrendDescription,
+                        TrendId = request.TrendId,
+                        TrendName = request.TrendName
+                    };
+                    db.t_account_shares_conditiontrade_template_join_other_trend.Add(temp);
+                    db.SaveChanges();
+
+                    //查询参数值
+                    var par = (from item in db.t_account_shares_conditiontrade_buy_trend_par_template.AsNoTracking()
+                               where item.TrendId == request.TrendId
+                               select item).ToList();
+                    foreach (var item in par)
+                    {
+                        db.t_account_shares_conditiontrade_template_join_other_trend_par.Add(new t_account_shares_conditiontrade_template_join_other_trend_par
+                        {
+                            OtherTrendId = temp.Id,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = item.ParamsInfo
+                        });
+                    }
+                    if (par.Count() > 0)
+                    {
+                        db.SaveChanges();
+                    }
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 编辑自动加入模板额外条件
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public void ModifyConditiontradeTemplateJoinOther(ModifyConditiontradeTemplateBuyOtherRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_account_shares_conditiontrade_template_join_other_trend
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trend.TrendDescription = request.Description;
+                trend.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改自动加入模板额外条件状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateJoinOtherStatus(ModifyStatusRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_account_shares_conditiontrade_template_join_other_trend
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trend.Status = request.Status;
+                trend.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除自动加入模板额外条件
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteConditiontradeTemplateJoinOther(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var otherTrend = (from item in db.t_account_shares_conditiontrade_template_join_other_trend
+                                      where item.Id == request.Id
+                                      select item).FirstOrDefault();
+                    if (otherTrend == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    db.t_account_shares_conditiontrade_template_join_other_trend.Remove(otherTrend);
+                    db.SaveChanges();
+
+                    var otherTrendPar = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_par
+                                         where item.OtherTrendId == request.Id
+                                         select item).ToList();
+                    if (otherTrendPar.Count() > 0)
+                    {
+                        db.t_account_shares_conditiontrade_template_join_other_trend_par.RemoveRange(otherTrendPar);
+                        db.SaveChanges();
+                    }
+
+                    var otherTrendOther = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_other
+                                           where item.OtherTrendId == request.Id
+                                           select item).ToList();
+                    if (otherTrendOther.Count() > 0)
+                    {
+                        db.t_account_shares_conditiontrade_template_join_other_trend_other.RemoveRange(otherTrendOther);
+                        db.SaveChanges();
+                    }
+
+                    List<long> otherTrendOtherIdList = otherTrendOther.Select(e => e.Id).ToList();
+                    var otherTrendOtherPar = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_other_par
+                                              where otherTrendOtherIdList.Contains(item.OtherTrendOtherId)
+                                              select item).ToList();
+                    if (otherTrendOther.Count() > 0)
+                    {
+                        db.t_account_shares_conditiontrade_template_join_other_trend_other_par.RemoveRange(otherTrendOtherPar);
+                        db.SaveChanges();
+                    }
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 查询自动加入模板额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<ConditiontradeTemplateBuyOtherParInfo> GetConditiontradeTemplateJoinOtherPar(DetailsPageRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = from item in db.t_account_shares_conditiontrade_template_join_other_trend_par
+                               where item.OtherTrendId == request.Id
+                               select item;
+                int totalCount = trendPar.Count();
+
+                return new PageRes<ConditiontradeTemplateBuyOtherParInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trendPar
+                            orderby item.CreateTime descending
+                            select new ConditiontradeTemplateBuyOtherParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                ParamsInfo = item.ParamsInfo
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 查询自动加入模板额外条件类型参数(板块涨跌幅)
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<ConditiontradeTemplateBuyOtherParInfo> GetConditiontradeTemplateJoinOtherParPlate(GetConditiontradeTemplateBuyOtherParPlateRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_par
+                                where item.OtherTrendId == request.Id
+                                select item).ToList();
+                List<ConditiontradeTemplateBuyOtherParInfo> list = new List<ConditiontradeTemplateBuyOtherParInfo>();
+                foreach (var item in trendPar)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    if (temp.GroupType == request.GroupType && temp.DataType == request.DataType)
+                    {
+                        list.Add(new ConditiontradeTemplateBuyOtherParInfo
+                        {
+                            CreateTime = item.CreateTime,
+                            Id = item.Id,
+                            ParamsInfo = item.ParamsInfo
+                        });
+                    }
+                }
+                int totalCount = list.Count();
+
+                return new PageRes<ConditiontradeTemplateBuyOtherParInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in list
+                            orderby item.CreateTime descending
+                            select new ConditiontradeTemplateBuyOtherParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                ParamsInfo = item.ParamsInfo
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加自动加入模板额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddConditiontradeTemplateJoinOtherPar(AddConditiontradeTemplateBuyOtherParRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                if (request.TrendId != 1 && request.TrendId != 7)
+                {
+                    var par = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_par
+                               where item.OtherTrendId == request.RelId
+                               select item).FirstOrDefault();
+                    if (par != null)
+                    {
+                        par.ParamsInfo = request.ParamsInfo;
+                        par.LastModified = DateTime.Now;
+                    }
+                    else
+                    {
+                        db.t_account_shares_conditiontrade_template_join_other_trend_par.Add(new t_account_shares_conditiontrade_template_join_other_trend_par
+                        {
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = request.ParamsInfo,
+                            OtherTrendId = request.RelId
+                        });
+                    }
+                }
+                else
+                {
+                    if (request.TrendId == 7)
+                    {
+                        var source = JsonConvert.DeserializeObject<dynamic>(request.ParamsInfo);
+                        long sourcegroupId = source.GroupId;
+                        int sourcegroupType = source.GroupType;
+                        int sourcedataType = source.DataType;
+                        //判断分组是否存在
+                        var tempLit = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_par
+                                       where item.OtherTrendId == request.RelId
+                                       select item).ToList();
+                        foreach (var item in tempLit)
+                        {
+                            var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                            long groupId = 0;
+                            int groupType = 0;
+                            int dataType = 0;
+                            try
+                            {
+                                groupId = temp.GroupId;
+                                groupType = temp.GroupType;
+                                dataType = temp.DataType;
+                            }
+                            catch (Exception ex)
+                            {
+                                continue;
+                            }
+                            if (sourcegroupId == groupId && sourcegroupType == groupType && sourcedataType == dataType)
+                            {
+                                throw new WebApiException(400, "该分组已添加");
+                            }
+                        }
+                    }
+                    db.t_account_shares_conditiontrade_template_join_other_trend_par.Add(new t_account_shares_conditiontrade_template_join_other_trend_par
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        ParamsInfo = request.ParamsInfo,
+                        OtherTrendId = request.RelId
+                    });
+                }
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 批量添加自动加入模板额外条件类型参数(板块涨跌幅1)
+        /// </summary>
+        /// <param name="Type"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAddConditiontradeTemplateJoinOtherPar(int Type, long RelId, List<string> list)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //查询分组
+                var plate = (from item in db.t_shares_plate
+                             where item.Type == Type && list.Contains(item.Name)
+                             select item).ToList();
+                //判断分组是否存在
+                var tempLit = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_par
+                               where item.OtherTrendId == RelId
+                               select item).ToList();
+                List<long> groupIdList = plate.Select(e => e.Id).ToList();
+                foreach (var item in tempLit)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    long groupId = 0;
+                    int groupType = 0;
+                    int dataType = 0;
+                    try
+                    {
+                        groupId = temp.GroupId;
+                        groupType = temp.GroupType;
+                        dataType = temp.DataType;
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
+                    if (groupIdList.Contains(groupId) && groupType == Type && dataType == 1)
+                    {
+                        groupIdList.Remove(groupId);
+                    }
+                }
+                plate = (from item in plate
+                         where groupIdList.Contains(item.Id)
+                         select item).ToList();
+                var result = (from item in plate
+                              select new t_account_shares_conditiontrade_template_join_other_trend_par
+                              {
+                                  CreateTime = DateTime.Now,
+                                  LastModified = DateTime.Now,
+                                  OtherTrendId = RelId,
+                                  ParamsInfo = JsonConvert.SerializeObject(new
+                                  {
+                                      GroupId = item.Id,
+                                      GroupName = item.Name,
+                                      GroupType = Type,
+                                      DataType = 1,
+                                  })
+                              }).ToList();
+                db.t_account_shares_conditiontrade_template_join_other_trend_par.AddRange(result);
+                db.SaveChanges();
+                return result.Count();
+            }
+        }
+
+        /// <summary>
+        /// 批量添加自动加入模板额外条件类型参数(板块涨跌幅2)
+        /// </summary>
+        /// <param name="Type"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAddConditiontradeTemplateJoinOtherPar2(int Type, long RelId, List<BatchAddSharesConditionTrendPar2Obj> list)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                int i = 0;
+                foreach (var item in list)
+                {
+                    string groupName = item.GroupName;
+                    int compare = item.Compare;
+                    string rate = item.Rate;
+                    //查询分组
+                    var plate = (from x in db.t_shares_plate
+                                 where x.Type == Type && x.Name == groupName
+                                 select x).FirstOrDefault();
+                    if (plate == null)
+                    {
+                        continue;
+                    }
+                    db.t_account_shares_conditiontrade_template_join_other_trend_par.Add(new t_account_shares_conditiontrade_template_join_other_trend_par
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        OtherTrendId = RelId,
+                        ParamsInfo = JsonConvert.SerializeObject(new
+                        {
+                            GroupId = plate.Id,
+                            GroupName = plate.Name,
+                            GroupType = plate.Type,
+                            DataType = 2,
+                            Compare = compare,
+                            Rate = rate,
+                        })
+                    });
+
+                    i++;
+                }
+                db.SaveChanges();
+                return i;
+            }
+        }
+
+        /// <summary>
+        /// 批量删除自动加入模板额外条件类型参数（板块涨跌幅）
+        /// </summary>
+        /// <param name="request"></param>
+        public void BatchDeleteConditiontradeTemplateJoinOtherPar(BatchDeleteConditiontradeTemplateBuyOtherParRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_par
+                                where item.OtherTrendId == request.OtherTrendId
+                                select item).ToList();
+                List<t_account_shares_conditiontrade_template_join_other_trend_par> list = new List<t_account_shares_conditiontrade_template_join_other_trend_par>();
+                foreach (var item in trendPar)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    int dataType = 0;
+                    int groupType = 0;
+                    long groupId = 0;
+                    try
+                    {
+                        dataType = temp.DataType;
+                        groupType = temp.GroupType;
+                        groupId = temp.GroupId;
+                    }
+                    catch (Exception ex)
+                    { }
+                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0) && groupId >= 0)
+                    {
+                        list.Add(item);
+                    }
+                }
+                if (list.Count() > 0)
+                {
+                    db.t_account_shares_conditiontrade_template_join_other_trend_par.RemoveRange(list);
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 编辑自动加入模板额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateJoinOtherPar(ModifyConditiontradeTemplateBuyOtherParRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trendPar.ParamsInfo = request.ParamsInfo;
+                trendPar.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除自动加入模板额外条件类型参数
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteConditiontradeTemplateJoinOtherPar(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_account_shares_conditiontrade_template_join_other_trend_par.Remove(trendPar);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取自动加入模板额外条件列表-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<ConditiontradeTemplateBuyOtherInfo> GetConditiontradeTemplateJoinOtherList_Other(DetailsPageRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = from item in db.t_account_shares_conditiontrade_template_join_other_trend_other
+                            where item.OtherTrendId == request.Id
+                            select item;
+                int totalCount = trend.Count();
+
+                return new PageRes<ConditiontradeTemplateBuyOtherInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trend
+                            orderby item.CreateTime descending
+                            select new ConditiontradeTemplateBuyOtherInfo
+                            {
+                                Status = item.Status,
+                                TrendId = item.TrendId,
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                TrendDescription = item.TrendDescription,
+                                TrendName = item.TrendName
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加自动加入模板额外条件-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddConditiontradeTemplateJoinOther_Other(AddConditiontradeTemplateBuyOtherRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    t_account_shares_conditiontrade_template_join_other_trend_other temp = new t_account_shares_conditiontrade_template_join_other_trend_other
+                    {
+                        Status = 1,
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        OtherTrendId = request.RelId,
+                        TrendDescription = request.TrendDescription,
+                        TrendId = request.TrendId,
+                        TrendName = request.TrendName
+                    };
+                    db.t_account_shares_conditiontrade_template_join_other_trend_other.Add(temp);
+                    db.SaveChanges();
+
+                    //查询参数值
+                    var par = (from item in db.t_account_shares_conditiontrade_buy_trend_par_template.AsNoTracking()
+                               where item.TrendId == request.TrendId
+                               select item).ToList();
+                    foreach (var item in par)
+                    {
+                        db.t_account_shares_conditiontrade_template_join_other_trend_other_par.Add(new t_account_shares_conditiontrade_template_join_other_trend_other_par
+                        {
+                            OtherTrendOtherId = temp.Id,
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = item.ParamsInfo
+                        });
+                    }
+                    if (par.Count() > 0)
+                    {
+                        db.SaveChanges();
+                    }
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 编辑自动加入模板额外条件-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateJoinOther_Other(ModifyConditiontradeTemplateBuyOtherRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trend.TrendDescription = request.Description;
+                trend.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改自动加入模板额外条件状态-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateJoinOtherStatus_Other(ModifyStatusRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trend = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_other
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (trend == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trend.Status = request.Status;
+                trend.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除自动加入模板额外条件-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteConditiontradeTemplateJoinOther_Other(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var trend = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_other
+                                 where item.Id == request.Id
+                                 select item).FirstOrDefault();
+                    if (trend == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    db.t_account_shares_conditiontrade_template_join_other_trend_other.Remove(trend);
+                    db.SaveChanges();
+
+                    //删除par
+                    var other_par = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_other_par
+                                     where item.OtherTrendOtherId == request.Id
+                                     select item).ToList();
+                    if (other_par.Count() > 0)
+                    {
+                        db.t_account_shares_conditiontrade_template_join_other_trend_other_par.RemoveRange(other_par);
+                        db.SaveChanges();
+                    }
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 查询自动加入模板额外条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<ConditiontradeTemplateBuyOtherParInfo> GetConditiontradeTemplateJoinOtherPar_Other(DetailsPageRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = from item in db.t_account_shares_conditiontrade_template_join_other_trend_other_par
+                               where item.OtherTrendOtherId == request.Id
+                               select item;
+                int totalCount = trendPar.Count();
+
+                return new PageRes<ConditiontradeTemplateBuyOtherParInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in trendPar
+                            orderby item.CreateTime descending
+                            select new ConditiontradeTemplateBuyOtherParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                ParamsInfo = item.ParamsInfo
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 查询自动加入模板额外条件类型参数(板块涨跌幅)-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<ConditiontradeTemplateBuyOtherParInfo> GetConditiontradeTemplateJoinOtherParPlate_Other(GetConditiontradeTemplateBuyOtherParPlateRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_other_par
+                                where item.OtherTrendOtherId == request.Id
+                                select item).ToList();
+                List<ConditiontradeTemplateBuyOtherParInfo> list = new List<ConditiontradeTemplateBuyOtherParInfo>();
+                foreach (var item in trendPar)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    if (temp.GroupType == request.GroupType && temp.DataType == request.DataType)
+                    {
+                        list.Add(new ConditiontradeTemplateBuyOtherParInfo
+                        {
+                            CreateTime = item.CreateTime,
+                            Id = item.Id,
+                            ParamsInfo = item.ParamsInfo
+                        });
+                    }
+                }
+                int totalCount = list.Count();
+
+                return new PageRes<ConditiontradeTemplateBuyOtherParInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in list
+                            orderby item.CreateTime descending
+                            select new ConditiontradeTemplateBuyOtherParInfo
+                            {
+                                CreateTime = item.CreateTime,
+                                Id = item.Id,
+                                ParamsInfo = item.ParamsInfo
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加自动加入模板额外条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        public void AddConditiontradeTemplateJoinOtherPar_Other(AddConditiontradeTemplateBuyOtherParRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                if (request.TrendId != 1 && request.TrendId != 7)
+                {
+                    var par = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_other_par
+                               where item.OtherTrendOtherId == request.RelId
+                               select item).FirstOrDefault();
+                    if (par != null)
+                    {
+                        par.ParamsInfo = request.ParamsInfo;
+                        par.LastModified = DateTime.Now;
+                    }
+                    else
+                    {
+                        db.t_account_shares_conditiontrade_template_join_other_trend_other_par.Add(new t_account_shares_conditiontrade_template_join_other_trend_other_par
+                        {
+                            CreateTime = DateTime.Now,
+                            LastModified = DateTime.Now,
+                            ParamsInfo = request.ParamsInfo,
+                            OtherTrendOtherId = request.RelId
+                        });
+                    }
+                }
+                else
+                {
+                    if (request.TrendId == 7)
+                    {
+                        var source = JsonConvert.DeserializeObject<dynamic>(request.ParamsInfo);
+                        long sourcegroupId = source.GroupId;
+                        int sourcegroupType = source.GroupType;
+                        int sourcedataType = source.DataType;
+                        //判断分组是否存在
+                        var tempLit = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_other_par
+                                       where item.OtherTrendOtherId == request.RelId
+                                       select item).ToList();
+                        foreach (var item in tempLit)
+                        {
+                            var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                            long groupId = 0;
+                            int groupType = 0;
+                            int dataType = 0;
+                            try
+                            {
+                                groupId = temp.GroupId;
+                                groupType = temp.GroupType;
+                                dataType = temp.DataType;
+                            }
+                            catch (Exception ex)
+                            {
+                                continue;
+                            }
+                            if (sourcegroupId == groupId && sourcegroupType == groupType && sourcedataType == dataType)
+                            {
+                                throw new WebApiException(400, "该分组已添加");
+                            }
+                        }
+                    }
+                    db.t_account_shares_conditiontrade_template_join_other_trend_other_par.Add(new t_account_shares_conditiontrade_template_join_other_trend_other_par
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        ParamsInfo = request.ParamsInfo,
+                        OtherTrendOtherId = request.RelId
+                    });
+                }
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 批量添加自动加入模板额外条件类型参数(板块涨跌幅1)-额外关系
+        /// </summary>
+        /// <param name="TrendId"></param>
+        /// <param name="Type"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAddConditiontradeTemplateJoinOtherPar_Other(int Type, long RelId, List<string> list)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //查询分组
+                var plate = (from item in db.t_shares_plate
+                             where item.Type == Type && list.Contains(item.Name)
+                             select item).ToList();
+                //判断分组是否存在
+                var tempLit = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_other_par
+                               where item.OtherTrendOtherId == RelId
+                               select item).ToList();
+                List<long> groupIdList = plate.Select(e => e.Id).ToList();
+                foreach (var item in tempLit)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    long groupId = 0;
+                    int groupType = 0;
+                    int dataType = 0;
+                    try
+                    {
+                        groupId = temp.GroupId;
+                        groupType = temp.GroupType;
+                        dataType = temp.DataType;
+                    }
+                    catch (Exception ex)
+                    {
+                        continue;
+                    }
+                    if (groupIdList.Contains(groupId) && groupType == Type && dataType == 1)
+                    {
+                        groupIdList.Remove(groupId);
+                    }
+                }
+                plate = (from item in plate
+                         where groupIdList.Contains(item.Id)
+                         select item).ToList();
+                var result = (from item in plate
+                              select new t_account_shares_conditiontrade_template_join_other_trend_other_par
+                              {
+                                  CreateTime = DateTime.Now,
+                                  LastModified = DateTime.Now,
+                                  OtherTrendOtherId = RelId,
+                                  ParamsInfo = JsonConvert.SerializeObject(new
+                                  {
+                                      GroupId = item.Id,
+                                      GroupName = item.Name,
+                                      GroupType = Type,
+                                      DataType = 1,
+                                  })
+                              }).ToList();
+                db.t_account_shares_conditiontrade_template_join_other_trend_other_par.AddRange(result);
+                db.SaveChanges();
+                return result.Count();
+            }
+        }
+
+        /// <summary>
+        /// 批量添加自动加入模板额外条件类型参数(板块涨跌幅2)-额外关系
+        /// </summary>
+        /// <param name="Type"></param>
+        /// <param name="list"></param>
+        /// <returns></returns>
+        public int BatchAddConditiontradeTemplateJoinOtherPar2_Other(int Type, long RelId, List<BatchAddSharesConditionTrendPar2Obj> list)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                int i = 0;
+                foreach (var item in list)
+                {
+                    string groupName = item.GroupName;
+                    int compare = item.Compare;
+                    string rate = item.Rate;
+                    //查询分组
+                    var plate = (from x in db.t_shares_plate
+                                 where x.Type == Type && x.Name == groupName
+                                 select x).FirstOrDefault();
+                    if (plate == null)
+                    {
+                        continue;
+                    }
+                    db.t_account_shares_conditiontrade_template_join_other_trend_other_par.Add(new t_account_shares_conditiontrade_template_join_other_trend_other_par
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        OtherTrendOtherId = RelId,
+                        ParamsInfo = JsonConvert.SerializeObject(new
+                        {
+                            GroupId = plate.Id,
+                            GroupName = plate.Name,
+                            GroupType = plate.Type,
+                            DataType = 2,
+                            Compare = compare,
+                            Rate = rate,
+                        })
+                    });
+
+                    i++;
+                }
+                db.SaveChanges();
+                return i;
+            }
+        }
+
+        /// <summary>
+        /// 批量删除自动加入模板额外条件类型参数(板块涨跌幅)-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        public void BatchDeleteConditiontradeTemplateJoinOtherPar_Other(BatchDeleteConditiontradeTemplateBuyOtherPar_OtherRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_other_par
+                                where item.OtherTrendOtherId == request.OtherTrendOtherId
+                                select item).ToList();
+                List<t_account_shares_conditiontrade_template_join_other_trend_other_par> list = new List<t_account_shares_conditiontrade_template_join_other_trend_other_par>();
+                foreach (var item in trendPar)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ParamsInfo);
+                    int dataType = 0;
+                    int groupType = 0;
+                    long groupId = 0;
+                    try
+                    {
+                        dataType = temp.DataType;
+                        groupType = temp.GroupType;
+                        groupId = temp.GroupId;
+                    }
+                    catch (Exception ex)
+                    { }
+                    if ((dataType == request.Id / 10 || dataType == 0) && (groupType == request.Id % 10 || groupType == 0) && groupId >= 0)
+                    {
+                        list.Add(item);
+                    }
+                }
+                if (list.Count() > 0)
+                {
+                    db.t_account_shares_conditiontrade_template_join_other_trend_other_par.RemoveRange(list);
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 编辑自动加入模板额外条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateJoinOtherPar_Other(ModifyConditiontradeTemplateBuyOtherParRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_other_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                trendPar.ParamsInfo = request.ParamsInfo;
+                trendPar.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除自动加入模板额外条件类型参数-额外关系
+        /// </summary>
+        /// <param name="request"></param>
+        public void DeleteConditiontradeTemplateJoinOtherPar_Other(DeleteRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var trendPar = (from item in db.t_account_shares_conditiontrade_template_join_other_trend_other_par
+                                where item.Id == request.Id
+                                select item).FirstOrDefault();
+                if (trendPar == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                db.t_account_shares_conditiontrade_template_join_other_trend_other_par.Remove(trendPar);
+                db.SaveChanges();
+            }
+        }
+        #endregion
+
+        /// <summary>
+        /// 股票条件搜索
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        //public List<SharesConditionSearchInfo> GetSharesConditionSearch(GetSharesConditionSearchRequest request, HeadBase basedata)
+        public object GetSharesConditionSearch(GetSharesConditionSearchRequest request, HeadBase basedata)
+        {
+            List<SharesBaseInfo> sharesList = GetEligibleShares(request.SearchInfo);
+            return sharesList;
+        }
+
+        private List<SharesBaseInfo> GetEligibleShares(List<searchInfo> searchInfo)
+        {
+            List<SharesBaseInfo> result = new List<SharesBaseInfo>();
+            object dataLock = new object();
+
+            ThreadMsgTemplate<SharesBaseInfo> data = new ThreadMsgTemplate<SharesBaseInfo>();
+            data.Init();
+            foreach (var item in Singleton.Instance._SharesBaseSession.GetSessionData())
+            {
+                data.AddMessage(item);
+            }
+
+            int taskCount = data.GetCount();
+            int defaultCount = 50;
+            if (taskCount > defaultCount)
+            {
+                taskCount = defaultCount;
+            }
+
+            Task[] taskArr = new Task[taskCount];
+
+            for (int i = 0; i < taskCount; i++)
+            {
+                taskArr[i] = new Task(() =>
+                {
+                    do
+                    {
+                        SharesBaseInfo temp = new SharesBaseInfo();
+                        if (!data.GetMessage(ref temp, true))
+                        {
+                            break;
+                        }
+                        if (!_CheckConditions(temp.Market, temp.SharesCode, searchInfo))
+                        {
+                            continue;
+                        }
+                        lock (dataLock)
+                        {
+                            result.Add(temp);
+                        }
+                    } while (true);
+                },TaskCreationOptions.LongRunning);
+                taskArr[i].Start();
+            }
+            Task.WaitAll(taskArr);
+            data.Release();
+            return result;
+        }
+
+        private bool _CheckConditions(int market,string sharesCode, List<searchInfo> searchInfo) 
+        {
+            int leftBracketCount = 0;
+            int rightBracketCount = 0;
+            int bracketDiff = 0;
+            int currConnect = 0;
+            int nextOperation = 0;//0继续下一条 1成功找右括号 2失败找右括号
+
+            foreach (var item in searchInfo)
+            {
+                if (item.leftbracket == 1)//有左括号
+                {
+                    leftBracketCount++;
+                }
+                if (item.rightbracket == 1)//有右括号
+                {
+                    rightBracketCount++;
+                }
+                if ((nextOperation == 1 || nextOperation==2) && leftBracketCount - rightBracketCount + 1 != bracketDiff)
+                {
+                    continue;
+                }
+                currConnect = item.connect;
+                int result = nextOperation == 2 ? -1 : 0; ;
+                //判断当前条件是否成立
+                if (nextOperation == 0)
+                {
+                    result = _ToCheckCondition(market, sharesCode, item.type, item.content);
+                }
+                if (result == 0) 
+                {
+                    if (currConnect == 1 && leftBracketCount - rightBracketCount <= 0)//或，最外层，返回true
+                    {
+                        return true;
+                    }
+                    else if (currConnect == 1)
+                    {
+                        nextOperation = 1;
+                        continue;
+                    }
+                    else if(currConnect==2)
+                    {
+                        nextOperation = 0;
+                        continue;
+                    }
+                    return true;
+                }
+                else 
+                {
+                    if (currConnect == 2 && leftBracketCount - rightBracketCount <= 0)//且，最外层，返回false
+                    {
+                        return false;
+                    }
+                    else if (currConnect == 2)
+                    {
+                        nextOperation = 2;
+                        continue;
+                    }
+                    else if (currConnect == 1)
+                    {
+                        nextOperation = 0;
+                        continue;
+                    }
+                    return false;
+                }
+            }
+
+            return false;
+        }
+
+        private int _ToCheckCondition(int market, string sharesCode, int type, string content)
+        {
+            List<string> parList = new List<string>
+            {
+                content
+            };
+
+            int result = -1;
+            switch (type)
+            {
+                case 1:
+                    result = DataHelper.Analysis_Price_New(sharesCode, market, parList);
+                    break;
+                case 2:
+                    result = DataHelper.Analysis_HisRiseRate_New(sharesCode, market, parList);
+                    break;
+                case 3:
+                    result = DataHelper.Analysis_TodayRiseRate_New(sharesCode, market, parList);
+                    break;
+                case 4:
+                    result = DataHelper.Analysis_PlateRiseRate_New(sharesCode, market, parList);
+                    break;
+                case 5:
+                    result = DataHelper.Analysis_CurrentPrice_New(sharesCode, market, parList);
+                    break;
+                case 6:
+                    result = DataHelper.Analysis_ReferAverage_New(sharesCode, market, parList);
+                    break;
+                case 7:
+                    result = DataHelper.Analysis_ReferPrice_New(sharesCode, market, parList);
+                    break;
+                case 8:
+                    result = DataHelper.Analysis_BuyOrSellCount_New(sharesCode, market, parList);
+                    break;
+                case 9:
+                    result = DataHelper.Analysis_QuotesChangeRate_New(sharesCode, market, parList);
+                    break;
+                case 10:
+                    result = DataHelper.Analysis_QuotesTypeChangeRate_New(sharesCode, market, parList);
+                    break;
+                default:
+                    result = -1;
+                    break;
+            }
+            return result;
+        }
     }
 }

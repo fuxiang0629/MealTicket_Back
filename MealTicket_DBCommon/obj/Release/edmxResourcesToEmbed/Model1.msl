@@ -297,6 +297,7 @@
     <EntitySetMapping Name="t_account_shares_conditiontrade_buy_details">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_buy_details">
         <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_buy_details">
+          <ScalarProperty Name="ToBuyId" ColumnName="ToBuyId" />
           <ScalarProperty Name="Id" ColumnName="Id" />
           <ScalarProperty Name="FatherId" ColumnName="FatherId" />
           <ScalarProperty Name="ConditionId" ColumnName="ConditionId" />
@@ -3854,6 +3855,182 @@
     <EntitySetMapping Name="t_account_shares_auto_join_tobuy_other_trend_par">
       <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_auto_join_tobuy_other_trend_par">
         <MappingFragment StoreEntitySet="t_account_shares_auto_join_tobuy_other_trend_par">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="ParamsInfo" ColumnName="ParamsInfo" />
+          <ScalarProperty Name="OtherTrendId" ColumnName="OtherTrendId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_auto_join_tobuy_usegroup">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_auto_join_tobuy_usegroup">
+        <MappingFragment StoreEntitySet="t_account_shares_auto_join_tobuy_usegroup">
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+          <ScalarProperty Name="ToBuyId" ColumnName="ToBuyId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_auto_join_tobuy_record">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_auto_join_tobuy_record">
+        <MappingFragment StoreEntitySet="t_account_shares_auto_join_tobuy_record">
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+          <ScalarProperty Name="Market" ColumnName="Market" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="ToBuyId" ColumnName="ToBuyId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_sys_conditiontrade_template_join">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_sys_conditiontrade_template_join">
+        <MappingFragment StoreEntitySet="t_sys_conditiontrade_template_join">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="TimeCycle" ColumnName="TimeCycle" />
+          <ScalarProperty Name="TimeCycleType" ColumnName="TimeCycleType" />
+          <ScalarProperty Name="IsClearOriginal" ColumnName="IsClearOriginal" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="TemplateId" ColumnName="TemplateId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_sys_conditiontrade_template_join_other">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_sys_conditiontrade_template_join_other">
+        <MappingFragment StoreEntitySet="t_sys_conditiontrade_template_join_other">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="TemplateJoinId" ColumnName="TemplateJoinId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_sys_conditiontrade_template_join_other_trend">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_sys_conditiontrade_template_join_other_trend">
+        <MappingFragment StoreEntitySet="t_sys_conditiontrade_template_join_other_trend">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="TrendDescription" ColumnName="TrendDescription" />
+          <ScalarProperty Name="TrendName" ColumnName="TrendName" />
+          <ScalarProperty Name="TrendId" ColumnName="TrendId" />
+          <ScalarProperty Name="OtherId" ColumnName="OtherId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_sys_conditiontrade_template_join_other_trend_other">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_sys_conditiontrade_template_join_other_trend_other">
+        <MappingFragment StoreEntitySet="t_sys_conditiontrade_template_join_other_trend_other">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="TrendDescription" ColumnName="TrendDescription" />
+          <ScalarProperty Name="TrendName" ColumnName="TrendName" />
+          <ScalarProperty Name="TrendId" ColumnName="TrendId" />
+          <ScalarProperty Name="OtherTrendId" ColumnName="OtherTrendId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_sys_conditiontrade_template_join_other_trend_other_par">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_sys_conditiontrade_template_join_other_trend_other_par">
+        <MappingFragment StoreEntitySet="t_sys_conditiontrade_template_join_other_trend_other_par">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="ParamsInfo" ColumnName="ParamsInfo" />
+          <ScalarProperty Name="OtherTrendOtherId" ColumnName="OtherTrendOtherId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_sys_conditiontrade_template_join_other_trend_par">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_sys_conditiontrade_template_join_other_trend_par">
+        <MappingFragment StoreEntitySet="t_sys_conditiontrade_template_join_other_trend_par">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="ParamsInfo" ColumnName="ParamsInfo" />
+          <ScalarProperty Name="OtherTrendId" ColumnName="OtherTrendId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_conditiontrade_template_join">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_template_join">
+        <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_template_join">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="TimeCycle" ColumnName="TimeCycle" />
+          <ScalarProperty Name="TimeCycleType" ColumnName="TimeCycleType" />
+          <ScalarProperty Name="IsClearOriginal" ColumnName="IsClearOriginal" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="TemplateId" ColumnName="TemplateId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_conditiontrade_template_join_other">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_template_join_other">
+        <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_template_join_other">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="TemplateJoinId" ColumnName="TemplateJoinId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_conditiontrade_template_join_other_trend">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_template_join_other_trend">
+        <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_template_join_other_trend">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="TrendDescription" ColumnName="TrendDescription" />
+          <ScalarProperty Name="TrendName" ColumnName="TrendName" />
+          <ScalarProperty Name="TrendId" ColumnName="TrendId" />
+          <ScalarProperty Name="OtherId" ColumnName="OtherId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_conditiontrade_template_join_other_trend_other">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_template_join_other_trend_other">
+        <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_template_join_other_trend_other">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="TrendDescription" ColumnName="TrendDescription" />
+          <ScalarProperty Name="TrendName" ColumnName="TrendName" />
+          <ScalarProperty Name="TrendId" ColumnName="TrendId" />
+          <ScalarProperty Name="OtherTrendId" ColumnName="OtherTrendId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_conditiontrade_template_join_other_trend_other_par">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_template_join_other_trend_other_par">
+        <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_template_join_other_trend_other_par">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="ParamsInfo" ColumnName="ParamsInfo" />
+          <ScalarProperty Name="OtherTrendOtherId" ColumnName="OtherTrendOtherId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_conditiontrade_template_join_other_trend_par">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_template_join_other_trend_par">
+        <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_template_join_other_trend_par">
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="ParamsInfo" ColumnName="ParamsInfo" />

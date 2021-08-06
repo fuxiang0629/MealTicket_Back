@@ -3405,6 +3405,239 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetConditiontradeTemplateJoinDetailsList(MealTicket_Admin_Handler.Model.GetConditiontradeTemplateJoinDetailsListRequest)">
+            <summary>
+            获取自动加入模板详情列表
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.AddConditiontradeTemplateJoinDetails(MealTicket_Admin_Handler.Model.AddConditiontradeTemplateJoinDetailsRequest)">
+            <summary>
+            添加自动加入模板详情
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyConditiontradeTemplateJoinDetails(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateJoinDetailsRequest)">
+            <summary>
+            编辑自动加入模板详情
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyConditiontradeTemplateJoinDetailsStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改自动加入模板详情状态
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeleteConditiontradeTemplateJoinDetails(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除自动加入模板详情
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetConditiontradeTemplateJoinOtherGroupList(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
+            <summary>
+            获取自动加入模板额外条件分组列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.AddConditiontradeTemplateJoinOtherGroup(MealTicket_Admin_Handler.Model.AddConditiontradeTemplateBuyOtherGroupRequest)">
+            <summary>
+            添加自动加入模板额外条件分组
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyConditiontradeTemplateJoinOtherGroup(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyOtherGroupRequest)">
+            <summary>
+            编辑自动加入模板额外条件分组
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyConditiontradeTemplateJoinOtherGroupStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改自动加入模板额外条件分组状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeleteConditiontradeTemplateJoinOtherGroup(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除自动加入模板额外条件分组
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetConditiontradeTemplateJoinOtherList(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
+            <summary>
+            获取自动加入模板额外条件列表
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.AddConditiontradeTemplateJoinOther(MealTicket_Admin_Handler.Model.AddConditiontradeTemplateBuyOtherRequest)">
+            <summary>
+            添加自动加入模板额外条件
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyConditiontradeTemplateJoinOther(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyOtherRequest)">
+            <summary>
+            编辑自动加入模板额外条件
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyConditiontradeTemplateJoinOtherStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改自动加入模板额外条件状态
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeleteConditiontradeTemplateJoinOther(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除自动加入模板额外条件
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetConditiontradeTemplateJoinOtherPar(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
+            <summary>
+            查询自动加入模板额外条件类型参数
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetConditiontradeTemplateJoinOtherParPlate(MealTicket_Admin_Handler.Model.GetConditiontradeTemplateBuyOtherParPlateRequest)">
+            <summary>
+            查询自动加入模板额外条件类型参数(板块涨跌幅)
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.AddConditiontradeTemplateJoinOtherPar(MealTicket_Admin_Handler.Model.AddConditiontradeTemplateBuyOtherParRequest)">
+            <summary>
+            添加自动加入模板额外条件类型参数
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.BatchAddConditiontradeTemplateJoinOtherPar">
+            <summary>
+            批量添加自动加入模板额外条件类型参数(板块涨跌幅1)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.BatchAddConditiontradeTemplateJoinOtherPar2">
+            <summary>
+            批量添加自动加入模板额外条件类型参数(板块涨跌幅2)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.BatchDeleteConditiontradeTemplateJoinOtherPar(MealTicket_Admin_Handler.Model.BatchDeleteConditiontradeTemplateBuyOtherParRequest)">
+            <summary>
+            批量删除自动加入模板额外条件类型参数（板块涨跌幅）
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyConditiontradeTemplateJoinOtherPar(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyOtherParRequest)">
+            <summary>
+            编辑自动加入模板额外条件类型参数
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeleteConditiontradeTemplateJoinOtherPar(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除自动加入模板额外条件类型参数
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetConditiontradeTemplateJoinOtherList_Other(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
+            <summary>
+            获取自动加入模板额外条件列表-额外关系
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.AddConditiontradeTemplateJoinOther_Other(MealTicket_Admin_Handler.Model.AddConditiontradeTemplateBuyOtherRequest)">
+            <summary>
+            添加自动加入模板额外条件-额外关系
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyConditiontradeTemplateJoinOther_Other(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyOtherRequest)">
+            <summary>
+            编辑自动加入模板额外条件-额外关系
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyConditiontradeTemplateJoinOtherStatus_Other(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改自动加入模板额外条件状态-额外关系
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeleteConditiontradeTemplateJoinOther_Other(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除自动加入模板额外条件-额外关系
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetConditiontradeTemplateJoinOtherPar_Other(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
+            <summary>
+            查询自动加入模板额外条件类型参数-额外关系
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetConditiontradeTemplateJoinOtherParPlate_Other(MealTicket_Admin_Handler.Model.GetConditiontradeTemplateBuyOtherParPlateRequest)">
+            <summary>
+            查询自动加入模板额外条件类型参数(板块涨跌幅)-额外关系
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.AddConditiontradeTemplateJoinOtherPar_Other(MealTicket_Admin_Handler.Model.AddConditiontradeTemplateBuyOtherParRequest)">
+            <summary>
+            添加自动加入模板额外条件类型参数-额外关系
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.BatchAddConditiontradeTemplateJoinOtherPar_Other">
+            <summary>
+            批量添加自动加入模板额外条件类型参数(板块涨跌幅1)-额外关系
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.BatchAddConditiontradeTemplateJoinOtherPar2_Other">
+            <summary>
+            批量添加自动加入模板额外条件类型参数(板块涨跌幅2)-额外关系
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.BatchDeleteConditiontradeTemplateJoinOtherPar_Other(MealTicket_Admin_Handler.Model.BatchDeleteConditiontradeTemplateBuyOtherPar_OtherRequest)">
+            <summary>
+            批量删除自动加入模板额外条件类型参数(板块涨跌幅)-额外关系
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyConditiontradeTemplateJoinOtherPar_Other(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyOtherParRequest)">
+            <summary>
+            编辑自动加入模板额外条件类型参数-额外关系
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeleteConditiontradeTemplateJoinOtherPar_Other(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除自动加入模板额外条件类型参数-额外关系
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.ExtensionHelper.GetAllWebApi(System.Web.Http.HttpConfiguration)">
             <summary>
             获取当前配置内的所有web api
