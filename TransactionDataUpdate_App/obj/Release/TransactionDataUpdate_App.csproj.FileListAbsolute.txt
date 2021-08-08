@@ -81,3 +81,4 @@ D:\项目\饭票\后端\TransactionDataUpdate_App\obj\Release\TransactionDataUpd
 D:\项目\饭票\后端\TransactionDataUpdate_App\obj\Release\TransactionDataUpdate_App.exe
 D:\项目\饭票\后端\TransactionDataUpdate_App\obj\Release\TransactionDataUpdate_App.pdb
 F:\项目\饭票后端\TransactionDataUpdate_App\obj\Release\TransactionDataUpdate_App.csprojAssemblyReference.cache
+D:\项目\饭票\后端\TransactionDataUpdate_App\obj\Release\TransactionDataUpdate_App.csprojAssemblyReference.cache

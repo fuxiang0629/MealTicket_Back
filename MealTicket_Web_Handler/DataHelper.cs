@@ -1,6 +1,7 @@
 ﻿using FXCommon.Common;
 using MealTicket_DBCommon;
 using MealTicket_Web_Handler.Model;
+using MealTicket_Web_Handler.Runner;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using stock_db_core;
@@ -4319,6 +4320,159 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                 {
                     conn.Close();
                 }
+            }
+        }
+
+        //分析价格条件-批量
+        public static List<SharesBase> Analysis_Price_New_Batch(List<SharesBase> sharesList, string par)
+        {
+            try
+            {
+                SqlParameter[] parameter = new SqlParameter[2];
+                var sharesPar = new SqlParameter("@sharesTable", SqlDbType.Structured);
+                sharesPar.TypeName = "dbo.SharesBase";
+                using (DataTable table = new DataTable())
+                {
+                    #region====定义表字段数据类型====
+                    table.Columns.Add("Market", typeof(int));
+                    table.Columns.Add("SharesCode", typeof(string));
+                    #endregion
+
+                    #region====绑定数据====
+                    foreach (var data in sharesList)
+                    {
+                        DataRow row = table.NewRow();
+                        row["Market"] = data.Market;
+                        row["SharesCode"] = data.SharesCode;
+                        table.Rows.Add(row);
+                    }
+                    #endregion
+
+                    sharesPar.Value = table;
+                }
+                parameter[0] = sharesPar;
+                var trendPar = new SqlParameter("@trendPar", SqlDbType.NVarChar);
+                trendPar.Value = par;
+                parameter[1] = trendPar;
+                using (var db = new meal_ticketEntities())
+                {
+                    var resultList = db.Database.SqlQuery<SharesBase>("exec P_Analysis_Price_New_Batch @sharesTable,@trendPar", parameter).ToList();
+                    return resultList;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("Analysis_Price_New_Batch异常", ex);
+                return new List<SharesBase>();
+            }
+        }
+
+        //分析时间段-批量
+        public static List<SharesBase> Analysis_TimeSlot_New_Batch(List<SharesBase> sharesList, string par)
+        {
+            DateTime timeNow = DateTime.Now;
+            try
+            {
+                var temp = JsonConvert.DeserializeObject<dynamic>(par);
+                JArray timeList = temp.Times;
+                if (timeNow >= DateTime.Parse(timeList[0].ToString()) && timeNow < DateTime.Parse(timeList[1].ToString()))
+                {
+                    return sharesList;
+                }
+                return new List<SharesBase>();
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("分析时间段出错了", ex);
+                return new List<SharesBase>();
+            }
+        }
+
+        //分析历史涨跌幅数据-批量
+        public static List<SharesBase> Analysis_HisRiseRate_New_Batch(List<SharesBase> sharesList, string par)
+        {
+            try
+            {
+                SqlParameter[] parameter = new SqlParameter[2];
+                var sharesPar = new SqlParameter("@sharesTable", SqlDbType.Structured);
+                sharesPar.TypeName = "dbo.SharesBase";
+                using (DataTable table = new DataTable())
+                {
+                    #region====定义表字段数据类型====
+                    table.Columns.Add("Market", typeof(int));
+                    table.Columns.Add("SharesCode", typeof(string));
+                    #endregion
+
+                    #region====绑定数据====
+                    foreach (var data in sharesList)
+                    {
+                        DataRow row = table.NewRow();
+                        row["Market"] = data.Market;
+                        row["SharesCode"] = data.SharesCode;
+                        table.Rows.Add(row);
+                    }
+                    #endregion
+
+                    sharesPar.Value = table;
+                }
+                parameter[0] = sharesPar;
+                var trendPar = new SqlParameter("@trendPar", SqlDbType.NVarChar);
+                trendPar.Value = par;
+                parameter[1] = trendPar;
+                using (var db = new meal_ticketEntities())
+                {
+                    var resultList = db.Database.SqlQuery<SharesBase>("exec Analysis_HisRiseRate_New_Batch @sharesTable,@trendPar", parameter).ToList();
+                    return resultList;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("Analysis_HisRiseRate_New_Batch异常", ex);
+                return new List<SharesBase>();
+            }
+        }
+
+        //分析今日涨跌幅-批量
+        public static List<SharesBase> Analysis_TodayRiseRate_New_Batch(List<SharesBase> sharesList, string par)
+        {
+            try
+            {
+                SqlParameter[] parameter = new SqlParameter[2];
+                var sharesPar = new SqlParameter("@sharesTable", SqlDbType.Structured);
+                sharesPar.TypeName = "dbo.SharesBase";
+                using (DataTable table = new DataTable())
+                {
+                    #region====定义表字段数据类型====
+                    table.Columns.Add("Market", typeof(int));
+                    table.Columns.Add("SharesCode", typeof(string));
+                    #endregion
+
+                    #region====绑定数据====
+                    foreach (var data in sharesList)
+                    {
+                        DataRow row = table.NewRow();
+                        row["Market"] = data.Market;
+                        row["SharesCode"] = data.SharesCode;
+                        table.Rows.Add(row);
+                    }
+                    #endregion
+
+                    sharesPar.Value = table;
+                }
+                parameter[0] = sharesPar;
+                var trendPar = new SqlParameter("@trendPar", SqlDbType.NVarChar);
+                trendPar.Value = par;
+                parameter[1] = trendPar;
+                using (var db = new meal_ticketEntities())
+                {
+                    var resultList = db.Database.SqlQuery<SharesBase>("exec Analysis_HisRiseRate_New_Batch @sharesTable,@trendPar", parameter).ToList();
+                    return resultList;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("Analysis_HisRiseRate_New_Batch异常", ex);
+                return new List<SharesBase>();
             }
         }
     }
