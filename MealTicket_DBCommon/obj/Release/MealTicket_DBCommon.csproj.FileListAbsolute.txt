@@ -1,18 +1,4 @@
-F:\项目\饭票后端\MealTicket_DBCommon\bin\Release\MealTicket_DBCommon.dll.config
-F:\项目\饭票后端\MealTicket_DBCommon\bin\Release\MealTicket_DBCommon.dll
-F:\项目\饭票后端\MealTicket_DBCommon\bin\Release\MealTicket_DBCommon.pdb
-F:\项目\饭票后端\MealTicket_DBCommon\bin\Release\EntityFramework.dll
-F:\项目\饭票后端\MealTicket_DBCommon\bin\Release\EntityFramework.SqlServer.dll
-F:\项目\饭票后端\MealTicket_DBCommon\bin\Release\Newtonsoft.Json.dll
-F:\项目\饭票后端\MealTicket_DBCommon\bin\Release\EntityFramework.xml
-F:\项目\饭票后端\MealTicket_DBCommon\bin\Release\EntityFramework.SqlServer.xml
-F:\项目\饭票后端\MealTicket_DBCommon\bin\Release\Newtonsoft.Json.xml
-F:\项目\饭票后端\MealTicket_DBCommon\bin\Release\zh-Hans\EntityFramework.resources.dll
-F:\项目\饭票后端\MealTicket_DBCommon\bin\Release\zh-Hans\EntityFramework.SqlServer.resources.dll
-F:\项目\饭票后端\MealTicket_DBCommon\obj\Release\MealTicket_DBCommon.csproj.CoreCompileInputs.cache
-F:\项目\饭票后端\MealTicket_DBCommon\obj\Release\MealTicket_DBCommon.csproj.CopyComplete
-F:\项目\饭票后端\MealTicket_DBCommon\obj\Release\MealTicket_DBCommon.dll
-F:\项目\饭票后端\MealTicket_DBCommon\obj\Release\MealTicket_DBCommon.pdb
+D:\项目\饭票\后端\MealTicket_DBCommon\obj\Release\MealTicket_DBCommon.csproj.CoreCompileInputs.cache
 D:\项目\饭票\后端\MealTicket_DBCommon\bin\Release\MealTicket_DBCommon.dll.config
 D:\项目\饭票\后端\MealTicket_DBCommon\bin\Release\MealTicket_DBCommon.dll
 D:\项目\饭票\后端\MealTicket_DBCommon\bin\Release\MealTicket_DBCommon.pdb
@@ -24,7 +10,6 @@ D:\项目\饭票\后端\MealTicket_DBCommon\bin\Release\EntityFramework.SqlServe
 D:\项目\饭票\后端\MealTicket_DBCommon\bin\Release\Newtonsoft.Json.xml
 D:\项目\饭票\后端\MealTicket_DBCommon\bin\Release\zh-Hans\EntityFramework.resources.dll
 D:\项目\饭票\后端\MealTicket_DBCommon\bin\Release\zh-Hans\EntityFramework.SqlServer.resources.dll
-D:\项目\饭票\后端\MealTicket_DBCommon\obj\Release\MealTicket_DBCommon.csproj.CoreCompileInputs.cache
 D:\项目\饭票\后端\MealTicket_DBCommon\obj\Release\MealTicket_DBCommon.csproj.CopyComplete
 D:\项目\饭票\后端\MealTicket_DBCommon\obj\Release\MealTicket_DBCommon.dll
 D:\项目\饭票\后端\MealTicket_DBCommon\obj\Release\MealTicket_DBCommon.pdb
