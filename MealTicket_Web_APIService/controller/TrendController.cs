@@ -8053,8 +8053,7 @@ namespace MealTicket_Web_APIService.controller
         [Description("股票条件搜索")]
         [Route("shares/condition/search"), HttpPost]
         [CheckUserLoginFilter]
-        //public List<SharesConditionSearchInfo> GetSharesConditionSearch(GetSharesConditionSearchRequest request)
-        public object GetSharesConditionSearch(GetSharesConditionSearchRequest request)
+        public List<SharesConditionSearchInfo> GetSharesConditionSearch(GetSharesConditionSearchRequest request)
         {
             if (request == null)
             {

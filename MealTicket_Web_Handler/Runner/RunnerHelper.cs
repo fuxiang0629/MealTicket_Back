@@ -1872,7 +1872,10 @@ inner
                                 var tempInfo = JsonConvert.DeserializeObject<TradeAutoBuyCondition>(JsonConvert.SerializeObject(conditionInfo));
                                 Singleton.Instance.AddSyncro(tempInfo);
                             }
-                            catch (Exception ex) { }
+                            catch (Exception ex) 
+                            {
+                                Logger.WriteFileLog("同步出错",ex);
+                            }
                         }
                     }
                 }
@@ -4173,5 +4176,10 @@ select @buyId;";
         public int Market { get; set; }
 
         public string SharesCode { get; set; }
+
+        /// <summary>
+        /// 是否成功
+        /// </summary>
+        public List<bool> IsSuccess { get; set; }
     }
 }

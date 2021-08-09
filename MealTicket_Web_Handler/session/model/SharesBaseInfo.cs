@@ -6,18 +6,8 @@ using System.Threading.Tasks;
 
 namespace MealTicket_Web_Handler.session
 {
-    public class SharesBaseInfo
+    public class SharesBaseInfo:SharesBase
     {
-        /// <summary>
-        /// 市场代码
-        /// </summary>
-        public int Market { get; set; }
-
-        /// <summary>
-        /// 股票代码
-        /// </summary>
-        public string SharesCode { get; set; } 
-
         /// <summary>
         /// 股票名称
         /// </summary>
@@ -107,5 +97,14 @@ namespace MealTicket_Web_Handler.session
         /// 最近涨停日期
         /// </summary>
         public string LimitUpDay { get; set; }
+    }
+
+    public class SharesBase 
+    {
+        public int Market { get; set; }
+
+        public string SharesCode { get; set; }
+
+        public List<bool> IsSuccess { get; set; }
     }
 }

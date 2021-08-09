@@ -2,7 +2,6 @@
 using MealTicket_DBCommon;
 using MealTicket_Web_Handler.Enum;
 using MealTicket_Web_Handler.Model;
-using MealTicket_Web_Handler.Runner;
 using MealTicket_Web_Handler.session;
 using Newtonsoft.Json;
 using System;
@@ -19382,11 +19381,165 @@ select @buyId;";
         /// <param name="request"></param>
         /// <param name="basedata"></param>
         /// <returns></returns>
-        //public List<SharesConditionSearchInfo> GetSharesConditionSearch(GetSharesConditionSearchRequest request, HeadBase basedata)
-        public object GetSharesConditionSearch(GetSharesConditionSearchRequest request, HeadBase basedata)
+        public List<SharesConditionSearchInfo> GetSharesConditionSearch(GetSharesConditionSearchRequest request, HeadBase basedata)
         {
-            List<SharesBaseInfo> sharesList = GetEligibleSharesBatch(request.SearchInfo);
-            return sharesList;
+            var tempSharesList = GetEligibleSharesBatch(request.SearchInfo);
+
+            using (var db = new meal_ticketEntities())
+            {
+                var groupRelList = (from x in db.t_account_shares_conditiontrade_buy_group_rel
+                                    join x2 in db.t_account_shares_conditiontrade_buy_group on x.GroupId equals x2.Id
+                                    where x2.AccountId == basedata.AccountId
+                                    select x).ToList();
+
+                List<string> sharesList = tempSharesList.Select(e => e.Market + "" + e.SharesCode).ToList();
+                var plateList = (from x in Singleton.Instance._PlateRateSession.GetSessionData()
+                                 where sharesList.Contains(x.SharesInfo)
+                                 select x).ToList();
+
+                //计算杠杆倍数
+                var accountRules = (from x in db.t_shares_limit_fundmultiple_account
+                                    where x.AccountId == basedata.AccountId
+                                    select x).ToList();
+                var fundmultiple = (from x in db.t_shares_limit_fundmultiple
+                                    select x).ToList();
+
+                var sharesList2 = tempSharesList.Select(e => e.SharesCode + "," + e.Market).ToList();
+                var conditionBuy = (from item in db.t_account_shares_conditiontrade_buy
+                                    where item.AccountId == basedata.AccountId && sharesList2.Contains(item.SharesInfo)
+                                    select item).ToList();
+                var limit = (from item in db.t_shares_limit
+                             select item).ToList();
+                var list = (from item in tempSharesList
+                            join item2 in conditionBuy on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
+                            from ai in a.DefaultIfEmpty()
+                            join item3 in Singleton.Instance._SharesBaseSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode }
+                            join item4 in Singleton.Instance._SharesQuotesSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item4.Market, item4.SharesCode }
+                            select new SharesConditionSearchInfo
+                            {
+                                SharesCode = item.SharesCode,
+                                SharesName = item3.SharesName,
+                                Market = item.Market,
+                                ClosedPrice = item4.ClosedPrice,
+                                PresentPrice = item4.PresentPrice,
+                                OpenedPrice = item4.OpenedPrice,
+                                ConditionId = ai == null ? 0 : ai.Id,
+                                ConditionStatus = ai == null ? 0 : ai.Status,
+                                TodayDealAmount = item4.TotalAmount,
+                                TodayDealCount = item4.TotalCount
+                            }).ToList();
+
+                List<SharesConditionSearchInfo> resultList = new List<SharesConditionSearchInfo>();
+                foreach (var item in list)
+                {
+                    var temp = limit.Where(e => (item.Market == e.LimitMarket || e.LimitMarket == -1) && ((e.LimitType == 1 && item.SharesCode.StartsWith(e.LimitKey)) || (e.LimitType == 2 && item.SharesName.StartsWith(e.LimitKey)))).FirstOrDefault();
+                    if (temp != null)
+                    {
+                        continue;
+                    }
+
+                    if (item.ConditionStatus == 0)
+                    {
+                        item.ConditionStatus = 1;
+                    }
+                    else if (item.ConditionStatus == 1)
+                    {
+                        item.ConditionStatus = 3;
+                    }
+                    else if (item.ConditionStatus == 2)
+                    {
+                        item.ConditionStatus = 2;
+                    }
+                    var rules = (from x in fundmultiple
+                                 join x2 in accountRules on x.Id equals x2.FundmultipleId into a
+                                 from ai in a.DefaultIfEmpty()
+                                 where (x.LimitMarket == item.Market || x.LimitMarket == -1) && (item.SharesCode.StartsWith(x.LimitKey))
+                                 orderby x.Priority descending, x.FundMultiple
+                                 select new { x, ai }).FirstOrDefault();
+                    if (rules == null)
+                    {
+                        item.Fundmultiple = 0;
+                        item.Range = 0;
+                    }
+                    else
+                    {
+                        item.Fundmultiple = (rules.ai == null || rules.x.FundMultiple < rules.ai.FundMultiple) ? rules.x.FundMultiple : rules.ai.FundMultiple;
+                        item.Range = rules.x.Range;
+                        if (item.SharesName.ToUpper().Contains("ST"))
+                        {
+                            item.Range = item.Range / 2;
+                        }
+                    }
+
+                    var groupRel = (from x in groupRelList
+                                    where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                    select x).ToList();
+
+                    item.GroupList = groupRel.Select(e => e.GroupId).ToList();
+
+                    //查询股票属于哪个板块
+                    item.PlateList = (from x in plateList
+                                      where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                      orderby x.RiseRate descending
+                                      select x).ToList();
+
+                    var quoteDateList = Singleton.Instance._SharesQuotesDateSession.GetSessionData();
+                    var tempQuoteDateList = quoteDateList.Where(e => e.Market == item.Market && e.SharesCode == item.SharesCode).ToList();
+                    var temp1 = tempQuoteDateList.OrderByDescending(e => e.LastModified).FirstOrDefault();
+                    if (temp1 == null)
+                    {
+                        continue;
+                    }
+                    item.YestodayRiseRate = temp1.ClosedPrice == 0 ? 0 : (int)Math.Round(((temp1.PresentPrice - temp1.ClosedPrice) * 1.0 / temp1.ClosedPrice) * 10000, 0);
+
+                    var temp2 = tempQuoteDateList.Where(e => e.LastModified < temp1.LastModified).OrderByDescending(e => e.LastModified).FirstOrDefault();
+                    if (temp2 == null)
+                    {
+                        continue;
+                    }
+                    item.TwoDaysRiseRate = temp2.ClosedPrice == 0 ? 0 : (int)Math.Round(((temp1.PresentPrice - temp2.ClosedPrice) * 1.0 / temp2.ClosedPrice) * 10000, 0);
+                    var temp3 = tempQuoteDateList.Where(e => e.LastModified < temp2.LastModified).OrderByDescending(e => e.LastModified).FirstOrDefault();
+                    if (temp3 == null)
+                    {
+                        continue;
+                    }
+                    item.ThreeDaysRiseRate = temp3.ClosedPrice == 0 ? 0 : (int)Math.Round(((temp1.PresentPrice - temp3.ClosedPrice) * 1.0 / temp3.ClosedPrice) * 10000, 0);
+
+                    resultList.Add(item);
+                }
+                resultList = (from item in resultList
+                              join item2 in Singleton.Instance._SharesBaseSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                              select new SharesConditionSearchInfo
+                              {
+                                  SharesCode = item.SharesCode,
+                                  Market = item.Market,
+                                  TodayDealCount = item.TodayDealCount,
+                                  TodayDealAmount = item.TodayDealAmount,
+                                  CirculatingCapital = item2.CirculatingCapital,
+                                  DaysAvgDealAmount = item2.DaysAvgDealAmount,
+                                  DaysAvgDealCount = item2.DaysAvgDealCount,
+                                  LimitDownCount = item2.LimitDownCount,
+                                  LimitUpCount = item2.LimitUpCount,
+                                  LimitUpDay = item2.LimitUpDay,
+                                  PreDayDealAmount = item2.PreDayDealAmount,
+                                  PreDayDealCount = item2.PreDayDealCount,
+                                  TotalCapital = item2.TotalCapital,
+                                  SharesName = item.SharesName,
+                                  ConditionStatus = item.ConditionStatus,
+                                  ClosedPrice = item.ClosedPrice,
+                                  ConditionId = item.ConditionId,
+                                  GroupList = item.GroupList,
+                                  OpenedPrice = item.OpenedPrice,
+                                  PlateList = item.PlateList,
+                                  PresentPrice = item.PresentPrice,
+                                  ThreeDaysRiseRate = item.ThreeDaysRiseRate,
+                                  TwoDaysRiseRate = item.TwoDaysRiseRate,
+                                  YestodayRiseRate = item.YestodayRiseRate,
+                                  Fundmultiple = item.Fundmultiple,
+                                  Range = item.Range
+                              }).ToList();
+                return resultList;
+            }
         }
 
         private List<SharesBase> GetEligibleSharesBatch(List<searchInfo> searchInfo)
@@ -19403,99 +19556,47 @@ select @buyId;";
                 });
             }
 
-            result = _CheckConditionsBatch(sourceList, searchInfo);
+            var tempResult = _CheckConditionsBatch(sourceList, searchInfo);
+
+            foreach (var item in tempResult)
+            {
+                if (_CheckConditions(item.Market, item.SharesCode, item.IsSuccess, searchInfo))
+                {
+                    result.Add(new SharesBase 
+                    {
+                        Market= item.Market,
+                        SharesCode=item.SharesCode
+                    });
+                }
+            }
             return result;
         }
 
         private List<SharesBase> _CheckConditionsBatch(List<SharesBase> sharesList, List<searchInfo> searchInfo)
         {
-            int leftBracketCount = 0;
-            int rightBracketCount = 0;
-            int bracketDiff = 0;
-            int currConnect = 0;
-            int nextOperation = 0;//0继续下一条 1成功找右括号 2失败找右括号
-
-            List<SharesBase> successList = new List<SharesBase>();
-            List<SharesBase> tempSuccessList = new List<SharesBase>();
-            List<SharesBase> sourceList = new List<SharesBase>();
-            sourceList.AddRange(sharesList);
-
             foreach (var item in searchInfo)
             {
-                if (item.leftbracket == 1)//有左括号
+                var tempList=_ToCheckConditionBatch(sharesList, item.type, item.content);
+                foreach (var shares in sharesList)
                 {
-                    leftBracketCount++;
-                }
-                if (item.rightbracket == 1)//有右括号
-                {
-                    rightBracketCount++;
-                }
-                if ((nextOperation == 1 || nextOperation == 2) && leftBracketCount - rightBracketCount + 1 != bracketDiff)
-                {
-                    continue;
-                }
-                currConnect = item.connect;
-                //判断当前条件是否成立
-                if (nextOperation == 0)
-                {
-                    sharesList = _ToCheckConditionBatch(sourceList, item.type, item.content);
-                }
-                if (currConnect == 1)//或
-                {
-                    if (leftBracketCount - rightBracketCount <= 0)
+                    if (shares.IsSuccess == null)
                     {
-                        successList.AddRange(sharesList);
-                        sourceList = (from x in sourceList
-                                      join x2 in successList on new { x.Market, x.SharesCode } equals new { x2.Market, x2.SharesCode } into a
-                                      from ai in a.DefaultIfEmpty()
-                                      where ai == null
-                                      select x).ToList();
+                        shares.IsSuccess = new List<bool>();
+                    }
+                    var tempShares = (from x in tempList
+                                      where x.Market == shares.Market && x.SharesCode == shares.SharesCode
+                                      select x).FirstOrDefault();
+                    if (tempShares == null)
+                    {
+                        shares.IsSuccess.Add(false);
                     }
                     else
                     {
-                        
+                        shares.IsSuccess.Add(true);
                     }
-                }
-
-
-
-                    if (result == 0)
-                {
-                    if (currConnect == 1 && leftBracketCount - rightBracketCount <= 0)//或，最外层，返回true
-                    {
-                        return true;
-                    }
-                    else if (currConnect == 1)
-                    {
-                        nextOperation = 1;
-                        continue;
-                    }
-                    else if (currConnect == 2)
-                    {
-                        nextOperation = 0;
-                        continue;
-                    }
-                    return true;
-                }
-                else
-                {
-                    if (currConnect == 2 && leftBracketCount - rightBracketCount <= 0)//且，最外层，返回false
-                    {
-                        return false;
-                    }
-                    else if (currConnect == 2)
-                    {
-                        nextOperation = 2;
-                        continue;
-                    }
-                    else if (currConnect == 1)
-                    {
-                        nextOperation = 0;
-                        continue;
-                    }
-                    return false;
                 }
             }
+            return sharesList;
         }
 
         private List<SharesBase> _ToCheckConditionBatch(List<SharesBase> sharesList, int type, string content)
@@ -19507,10 +19608,10 @@ select @buyId;";
                     result = DataHelper.Analysis_Price_New_Batch(sharesList, content);
                     break;
                 case 2:
-                    result = DataHelper.Analysis_HisRiseRate_New_Batch(sharesList, parList);
+                    result = DataHelper.Analysis_HisRiseRate_New_Batch(sharesList, content);
                     break;
                 case 3:
-                    result = DataHelper.Analysis_TodayRiseRate_New_Batch(sharesList, parList);
+                    result = DataHelper.Analysis_TodayRiseRate_New_Batch(sharesList, content);
                     break;
                 case 4:
                     //result = DataHelper.Analysis_PlateRiseRate_New(sharesCode, market, parList);
@@ -19540,56 +19641,7 @@ select @buyId;";
             return result;
         }
 
-        private List<SharesBaseInfo> GetEligibleShares(List<searchInfo> searchInfo)
-        {
-            List<SharesBaseInfo> result = new List<SharesBaseInfo>();
-            object dataLock = new object();
-
-            ThreadMsgTemplate<SharesBaseInfo> data = new ThreadMsgTemplate<SharesBaseInfo>();
-            data.Init();
-            foreach (var item in Singleton.Instance._SharesBaseSession.GetSessionData())
-            {
-                data.AddMessage(item);
-            }
-
-            int taskCount = data.GetCount();
-            int defaultCount = 50;
-            if (taskCount > defaultCount)
-            {
-                taskCount = defaultCount;
-            }
-
-            Task[] taskArr = new Task[taskCount];
-
-            for (int i = 0; i < taskCount; i++)
-            {
-                taskArr[i] = new Task(() =>
-                {
-                    do
-                    {
-                        SharesBaseInfo temp = new SharesBaseInfo();
-                        if (!data.GetMessage(ref temp, true))
-                        {
-                            break;
-                        }
-                        if (!_CheckConditions(temp.Market, temp.SharesCode, searchInfo))
-                        {
-                            continue;
-                        }
-                        lock (dataLock)
-                        {
-                            result.Add(temp);
-                        }
-                    } while (true);
-                },TaskCreationOptions.LongRunning);
-                taskArr[i].Start();
-            }
-            Task.WaitAll(taskArr);
-            data.Release();
-            return result;
-        }
-
-        private bool _CheckConditions(int market,string sharesCode, List<searchInfo> searchInfo) 
+        private bool _CheckConditions(int market,string sharesCode,List<bool> isSuccess, List<searchInfo> searchInfo) 
         {
             int leftBracketCount = 0;
             int rightBracketCount = 0;
@@ -19597,8 +19649,10 @@ select @buyId;";
             int currConnect = 0;
             int nextOperation = 0;//0继续下一条 1成功找右括号 2失败找右括号
 
+            int index = 0;
             foreach (var item in searchInfo)
             {
+                index++;
                 if (item.leftbracket == 1)//有左括号
                 {
                     leftBracketCount++;
@@ -19616,7 +19670,7 @@ select @buyId;";
                 //判断当前条件是否成立
                 if (nextOperation == 0)
                 {
-                    result = _ToCheckCondition(market, sharesCode, item.type, item.content);
+                    result = isSuccess[index-1] ? 0 : -1;
                 }
                 if (result == 0) 
                 {
@@ -19657,53 +19711,6 @@ select @buyId;";
             }
 
             return false;
-        }
-
-        private int _ToCheckCondition(int market, string sharesCode, int type, string content)
-        {
-            List<string> parList = new List<string>
-            {
-                content
-            };
-
-            int result = -1;
-            switch (type)
-            {
-                case 1:
-                    result = DataHelper.Analysis_Price_New(sharesCode, market, parList);
-                    break;
-                case 2:
-                    result = DataHelper.Analysis_HisRiseRate_New(sharesCode, market, parList);
-                    break;
-                case 3:
-                    result = DataHelper.Analysis_TodayRiseRate_New(sharesCode, market, parList);
-                    break;
-                case 4:
-                    result = DataHelper.Analysis_PlateRiseRate_New(sharesCode, market, parList);
-                    break;
-                case 5:
-                    result = DataHelper.Analysis_CurrentPrice_New(sharesCode, market, parList);
-                    break;
-                case 6:
-                    result = DataHelper.Analysis_ReferAverage_New(sharesCode, market, parList);
-                    break;
-                case 7:
-                    result = DataHelper.Analysis_ReferPrice_New(sharesCode, market, parList);
-                    break;
-                case 8:
-                    result = DataHelper.Analysis_BuyOrSellCount_New(sharesCode, market, parList);
-                    break;
-                case 9:
-                    result = DataHelper.Analysis_QuotesChangeRate_New(sharesCode, market, parList);
-                    break;
-                case 10:
-                    result = DataHelper.Analysis_QuotesTypeChangeRate_New(sharesCode, market, parList);
-                    break;
-                default:
-                    result = -1;
-                    break;
-            }
-            return result;
         }
     }
 }
