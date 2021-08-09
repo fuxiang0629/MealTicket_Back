@@ -2280,10 +2280,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
             }
         }
 
-        /// <summary>
-        /// 分析价格条件
-        /// </summary>
-        /// <returns></returns>
+        //分析价格条件
         public static int Analysis_Price_New(string sharesCode, int market, List<string> par, StringBuilder logRecord = null)
         {
             string logDes = "【{0}】";
@@ -4076,9 +4073,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
             }
         }
 
-        /// <summary>
-        /// 分析箱体上涨
-        /// </summary>
+        //分析箱体上涨
         public static int Analysis_Trend3_New(string sharesCode, int market, List<string> par, StringBuilder logRecord = null)
         {
             DateTime timeNow = DateTime.Now;
@@ -4139,9 +4134,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
             }
         }
 
-        /// <summary>
-        /// 分析多头上涨
-        /// </summary>
+        //分析多头上涨
         public static int Analysis_Trend2_New(string sharesCode, int market, List<string> par, StringBuilder logRecord = null)
         {
             DateTime timeNow = DateTime.Now;
@@ -4200,9 +4193,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
             }
         }
 
-        /// <summary>
-        /// 分析快速上涨
-        /// </summary>
+        //分析快速上涨
         public static int Analysis_Trend1_New(string sharesCode, int market, List<string> par, StringBuilder logRecord = null)
         {
             DateTime timeNow = DateTime.Now;
