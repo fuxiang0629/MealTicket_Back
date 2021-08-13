@@ -4129,6 +4129,8 @@
     <EntitySet Name="t_account_shares_conditiontrade_template_join_other_trend_other" EntityType="meal_ticketModel.t_account_shares_conditiontrade_template_join_other_trend_other" />
     <EntitySet Name="t_account_shares_conditiontrade_template_join_other_trend_other_par" EntityType="meal_ticketModel.t_account_shares_conditiontrade_template_join_other_trend_other_par" />
     <EntitySet Name="t_account_shares_conditiontrade_template_join_other_trend_par" EntityType="meal_ticketModel.t_account_shares_conditiontrade_template_join_other_trend_par" />
+    <EntitySet Name="t_sys_conditiontrade_template_search" EntityType="meal_ticketModel.t_sys_conditiontrade_template_search" />
+    <EntitySet Name="t_account_shares_conditiontrade_template_search" EntityType="meal_ticketModel.t_account_shares_conditiontrade_template_search" />
   </EntityContainer>
   <EntityType Name="t_account_baseinfo">
     <Key>
@@ -4535,6 +4537,24 @@
     <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="OtherTrendId" Type="Int64" Nullable="false" />
     <Property Name="ParamsInfo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_sys_conditiontrade_template_search">
+    <Key>
+      <PropertyRef Name="TemplateId" />
+    </Key>
+    <Property Name="TemplateId" Type="Int64" Nullable="false" />
+    <Property Name="TemplateContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_conditiontrade_template_search">
+    <Key>
+      <PropertyRef Name="TemplateId" />
+    </Key>
+    <Property Name="TemplateId" Type="Int64" Nullable="false" />
+    <Property Name="TemplateContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>

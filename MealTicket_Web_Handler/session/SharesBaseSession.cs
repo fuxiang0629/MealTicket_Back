@@ -22,23 +22,6 @@ namespace MealTicket_Web_Handler.session
             {
                 string sql = @"select SharesCode,SharesName,SharesPyjc,SharesHandCount,isnull(CirculatingCapital,0) CirculatingCapital,Market,isnull(TotalCapital,0) TotalCapital,ClosedPrice,MarketStatus from v_shares_baseinfo with(nolock)";
                 var result = db.Database.SqlQuery<SharesBaseInfo>(sql).ToList();
-                //var result = (from item in db.v_shares_baseinfo
-                //              select new SharesBaseInfo
-                //              {
-                //                  SharesCode = item.SharesCode,
-                //                  SharesName = item.SharesName,
-                //                  SharesPyjc = item.SharesPyjc,
-                //                  //Area = item.Area,
-                //                  //Business = item.Business,
-                //                  SharesHandCount = item.SharesHandCount,
-                //                  CirculatingCapital = item.CirculatingCapital ?? 0,
-                //                  //Idea = item.Idea,
-                //                  //Industry = item.Industry,
-                //                  Market = item.Market,
-                //                  TotalCapital = item.TotalCapital ?? 0,
-                //                  ClosedPrice=item.ClosedPrice,
-                //                  MarketStatus=item.MarketStatus
-                //              }).ToList();
 
                 var quotes_date = (from item in db.t_shares_quotes_date
                                    where item.LastModified >= startTime && item.LastModified < endTime

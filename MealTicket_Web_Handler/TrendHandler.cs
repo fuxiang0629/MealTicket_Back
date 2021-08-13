@@ -8563,6 +8563,10 @@ inner
                     {
                         CopyConditiontradeTemplate_Join(request.Id, newTemplate.Id, db);
                     }
+                    else if (template.Type == 4)//卖出模板复制
+                    {
+                        CopyConditiontradeTemplate_Search(request.Id, newTemplate.Id, db);
+                    }
                     else
                     {
                         throw new WebApiException(400, "数据有误");
@@ -8954,6 +8958,23 @@ inner
                         }
                     }
                 }
+            }
+        }
+        private void CopyConditiontradeTemplate_Search(long templateId, long newTemplateId, meal_ticketEntities db)
+        {
+            var template_search = (from item in db.t_account_shares_conditiontrade_template_search
+                                   where item.TemplateId == templateId
+                                   select item).FirstOrDefault();
+            if (template_search != null)
+            {
+                db.t_account_shares_conditiontrade_template_search.Add(new t_account_shares_conditiontrade_template_search
+                { 
+                    CreateTime=DateTime.Now,
+                    LastModified=DateTime.Now,
+                    TemplateId= newTemplateId,
+                    TemplateContent= template_search.TemplateContent
+                });
+                db.SaveChanges();
             }
         }
 
@@ -19381,18 +19402,37 @@ select @buyId;";
         /// <param name="request"></param>
         /// <param name="basedata"></param>
         /// <returns></returns>
-        public List<SharesConditionSearchInfo> GetSharesConditionSearch(GetSharesConditionSearchRequest request, HeadBase basedata)
+        public PageRes<SharesConditionSearchInfo> GetSharesConditionSearch(GetSharesConditionSearchRequest request, HeadBase basedata)
         {
             var tempSharesList = GetEligibleSharesBatch(request.SearchInfo);
 
             using (var db = new meal_ticketEntities())
             {
+                List<SharesBase> resultSharesList = new List<SharesBase>();
+                var limit = (from item in db.t_shares_limit
+                             select item).ToList();
+                foreach (var item in tempSharesList)
+                {
+                    string sharesName = (from x in Singleton.Instance._SharesBaseSession.GetSessionData()
+                                         where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                         select x.SharesName).FirstOrDefault();
+                    if (string.IsNullOrEmpty(sharesName))
+                    {
+                        continue;
+                    }
+                    var temp = limit.Where(e => (item.Market == e.LimitMarket || e.LimitMarket == -1) && ((e.LimitType == 1 && item.SharesCode.StartsWith(e.LimitKey)) || (e.LimitType == 2 && sharesName.StartsWith(e.LimitKey)))).FirstOrDefault();
+                    if (temp != null)
+                    {
+                        continue;
+                    }
+                    resultSharesList.Add(item);
+                }
                 var groupRelList = (from x in db.t_account_shares_conditiontrade_buy_group_rel
                                     join x2 in db.t_account_shares_conditiontrade_buy_group on x.GroupId equals x2.Id
                                     where x2.AccountId == basedata.AccountId
                                     select x).ToList();
 
-                List<string> sharesList = tempSharesList.Select(e => e.Market + "" + e.SharesCode).ToList();
+                List<string> sharesList = resultSharesList.Select(e => e.Market + "" + e.SharesCode).ToList();
                 var plateList = (from x in Singleton.Instance._PlateRateSession.GetSessionData()
                                  where sharesList.Contains(x.SharesInfo)
                                  select x).ToList();
@@ -19404,40 +19444,46 @@ select @buyId;";
                 var fundmultiple = (from x in db.t_shares_limit_fundmultiple
                                     select x).ToList();
 
-                var sharesList2 = tempSharesList.Select(e => e.SharesCode + "," + e.Market).ToList();
+                var sharesList2 = resultSharesList.Select(e => e.SharesCode + "," + e.Market).ToList();
                 var conditionBuy = (from item in db.t_account_shares_conditiontrade_buy
                                     where item.AccountId == basedata.AccountId && sharesList2.Contains(item.SharesInfo)
                                     select item).ToList();
-                var limit = (from item in db.t_shares_limit
-                             select item).ToList();
-                var list = (from item in tempSharesList
-                            join item2 in conditionBuy on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
-                            from ai in a.DefaultIfEmpty()
-                            join item3 in Singleton.Instance._SharesBaseSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode }
-                            join item4 in Singleton.Instance._SharesQuotesSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item4.Market, item4.SharesCode }
-                            select new SharesConditionSearchInfo
-                            {
-                                SharesCode = item.SharesCode,
-                                SharesName = item3.SharesName,
-                                Market = item.Market,
-                                ClosedPrice = item4.ClosedPrice,
-                                PresentPrice = item4.PresentPrice,
-                                OpenedPrice = item4.OpenedPrice,
-                                ConditionId = ai == null ? 0 : ai.Id,
-                                ConditionStatus = ai == null ? 0 : ai.Status,
-                                TodayDealAmount = item4.TotalAmount,
-                                TodayDealCount = item4.TotalCount
-                            }).ToList();
+                var list = from item in resultSharesList
+                           join item2 in conditionBuy on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
+                           from ai in a.DefaultIfEmpty()
+                           join item3 in Singleton.Instance._SharesBaseSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode }
+                           join item4 in Singleton.Instance._SharesQuotesSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item4.Market, item4.SharesCode }
+                           select new { item, ai, item3, item4 };
+                int totalCount = list.Count();
+
+                var tempList = (from item in list
+                                orderby item.item.SharesCode
+                                select new SharesConditionSearchInfo
+                                {
+                                    SharesCode = item.item.SharesCode,
+                                    SharesName = item.item3.SharesName,
+                                    Market = item.item.Market,
+                                    ClosedPrice = item.item4.ClosedPrice,
+                                    PresentPrice = item.item4.PresentPrice,
+                                    OpenedPrice = item.item4.OpenedPrice,
+                                    ConditionId = item.ai == null ? 0 : item.ai.Id,
+                                    ConditionStatus = item.ai == null ? 0 : item.ai.Status,
+                                    TodayDealAmount = item.item4.TotalAmount,
+                                    TodayDealCount = item.item4.TotalCount,
+                                    CirculatingCapital = item.item3.CirculatingCapital,
+                                    DaysAvgDealAmount = item.item3.DaysAvgDealAmount,
+                                    DaysAvgDealCount = item.item3.DaysAvgDealCount,
+                                    LimitDownCount = item.item3.LimitDownCount,
+                                    LimitUpCount = item.item3.LimitUpCount,
+                                    LimitUpDay = item.item3.LimitUpDay,
+                                    PreDayDealAmount = item.item3.PreDayDealAmount,
+                                    PreDayDealCount = item.item3.PreDayDealCount,
+                                    TotalCapital = item.item3.TotalCapital,
+                                }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
 
                 List<SharesConditionSearchInfo> resultList = new List<SharesConditionSearchInfo>();
-                foreach (var item in list)
+                foreach (var item in tempList)
                 {
-                    var temp = limit.Where(e => (item.Market == e.LimitMarket || e.LimitMarket == -1) && ((e.LimitType == 1 && item.SharesCode.StartsWith(e.LimitKey)) || (e.LimitType == 2 && item.SharesName.StartsWith(e.LimitKey)))).FirstOrDefault();
-                    if (temp != null)
-                    {
-                        continue;
-                    }
-
                     if (item.ConditionStatus == 0)
                     {
                         item.ConditionStatus = 1;
@@ -19507,38 +19553,12 @@ select @buyId;";
 
                     resultList.Add(item);
                 }
-                resultList = (from item in resultList
-                              join item2 in Singleton.Instance._SharesBaseSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
-                              select new SharesConditionSearchInfo
-                              {
-                                  SharesCode = item.SharesCode,
-                                  Market = item.Market,
-                                  TodayDealCount = item.TodayDealCount,
-                                  TodayDealAmount = item.TodayDealAmount,
-                                  CirculatingCapital = item2.CirculatingCapital,
-                                  DaysAvgDealAmount = item2.DaysAvgDealAmount,
-                                  DaysAvgDealCount = item2.DaysAvgDealCount,
-                                  LimitDownCount = item2.LimitDownCount,
-                                  LimitUpCount = item2.LimitUpCount,
-                                  LimitUpDay = item2.LimitUpDay,
-                                  PreDayDealAmount = item2.PreDayDealAmount,
-                                  PreDayDealCount = item2.PreDayDealCount,
-                                  TotalCapital = item2.TotalCapital,
-                                  SharesName = item.SharesName,
-                                  ConditionStatus = item.ConditionStatus,
-                                  ClosedPrice = item.ClosedPrice,
-                                  ConditionId = item.ConditionId,
-                                  GroupList = item.GroupList,
-                                  OpenedPrice = item.OpenedPrice,
-                                  PlateList = item.PlateList,
-                                  PresentPrice = item.PresentPrice,
-                                  ThreeDaysRiseRate = item.ThreeDaysRiseRate,
-                                  TwoDaysRiseRate = item.TwoDaysRiseRate,
-                                  YestodayRiseRate = item.YestodayRiseRate,
-                                  Fundmultiple = item.Fundmultiple,
-                                  Range = item.Range
-                              }).ToList();
-                return resultList;
+                return new PageRes<SharesConditionSearchInfo>
+                {
+                    List = resultList,
+                    MaxId = 0,
+                    TotalCount = totalCount
+                };
             }
         }
 
@@ -19560,7 +19580,11 @@ select @buyId;";
 
             foreach (var item in tempResult)
             {
-                if (_CheckConditions(item.Market, item.SharesCode, item.IsSuccess, searchInfo))
+                if (item.SharesCode == "002760")
+                {
+                    
+                }
+                if (_CheckConditions(item.IsSuccess, searchInfo))
                 {
                     result.Add(new SharesBase 
                     {
@@ -19614,34 +19638,36 @@ select @buyId;";
                     result = DataHelper.Analysis_TodayRiseRate_New_Batch(sharesList, content);
                     break;
                 case 4:
-                    //result = DataHelper.Analysis_PlateRiseRate_New(sharesCode, market, parList);
+                    result = DataHelper.Analysis_PlateRiseRate_New(sharesList, content);
                     break;
                 case 5:
-                    //result = DataHelper.Analysis_CurrentPrice_New(sharesCode, market, parList);
+                    result = DataHelper.Analysis_CurrentPrice_New_Batch(sharesList, content);
                     break;
                 case 6:
-                    //result = DataHelper.Analysis_ReferAverage_New(sharesCode, market, parList);
+                    result = DataHelper.Analysis_ReferAverage_New_Batch(sharesList, content);
                     break;
                 case 7:
-                    //result = DataHelper.Analysis_ReferPrice_New(sharesCode, market, parList);
+                    result = DataHelper.Analysis_ReferPrice_New_Batch(sharesList, content);
                     break;
                 case 8:
-                    //result = DataHelper.Analysis_BuyOrSellCount_New(sharesCode, market, parList);
+                    result = DataHelper.Analysis_BuyOrSellCount_New_Batch(sharesList, content);
                     break;
                 case 9:
-                    //result = DataHelper.Analysis_QuotesChangeRate_New(sharesCode, market, parList);
+                    result = DataHelper.Analysis_QuotesChangeRate_New_Batch(sharesList, content);
                     break;
                 case 10:
-                    //result = DataHelper.Analysis_QuotesTypeChangeRate_New(sharesCode, market, parList);
+                    result = DataHelper.Analysis_QuotesTypeChangeRate_New_Batch(sharesList, content);
+                    break;
+                case 11:
+                    result = DataHelper.Analysis_SharesMarket_New_Batch(sharesList, content);
                     break;
                 default:
-                    //result = -1;
                     break;
             }
             return result;
         }
 
-        private bool _CheckConditions(int market,string sharesCode,List<bool> isSuccess, List<searchInfo> searchInfo) 
+        private bool _CheckConditions(List<bool> isSuccess, List<searchInfo> searchInfo) 
         {
             int leftBracketCount = 0;
             int rightBracketCount = 0;
@@ -19661,7 +19687,7 @@ select @buyId;";
                 {
                     rightBracketCount++;
                 }
-                if ((nextOperation == 1 || nextOperation==2) && leftBracketCount - rightBracketCount + 1 != bracketDiff)
+                if ((nextOperation == 1 || nextOperation==2) && leftBracketCount - rightBracketCount != bracketDiff)
                 {
                     continue;
                 }
@@ -19712,5 +19738,85 @@ select @buyId;";
 
             return false;
         }
+
+        #region===搜索===
+        /// <summary>
+        /// 获取搜索模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public object GetConditiontradeTemplateSearchDetails(DetailsRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = (from item in db.t_account_shares_conditiontrade_template_search
+                              where item.TemplateId == request.Id
+                              select item).FirstOrDefault();
+                if (result == null)
+                {
+                    return null;
+                }
+                return new
+                {
+                    TemplateId = result.TemplateId,
+                    TemplateContent = result.TemplateContent,
+                };
+            }
+        }
+
+        /// <summary>
+        /// 获取搜索系统模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public object GetConditiontradeSysTemplateSearchDetails(DetailsRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = (from item in db.t_sys_conditiontrade_template_search
+                              where item.TemplateId == request.Id
+                              select item).FirstOrDefault();
+                if (result == null)
+                {
+                    return null;
+                }
+                return new
+                {
+                    TemplateId = result.TemplateId,
+                    TemplateContent = result.TemplateContent,
+                };
+            }
+        }
+
+        /// <summary>
+        /// 编辑搜索模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateSearchDetails(ModifyConditiontradeTemplateSearchDetailsRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = (from item in db.t_account_shares_conditiontrade_template_search
+                              where item.TemplateId == request.TemplateId
+                              select item).FirstOrDefault();
+                if (result == null)
+                {
+                    db.t_account_shares_conditiontrade_template_search.Add(new t_account_shares_conditiontrade_template_search
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        TemplateContent = request.TemplateContent,
+                        TemplateId = request.TemplateId
+                    });
+                }
+                else
+                {
+                    result.TemplateContent = request.TemplateContent;
+                    result.LastModified = DateTime.Now;
+                }
+                db.SaveChanges();
+            }
+        }
+        #endregion
     }
 }

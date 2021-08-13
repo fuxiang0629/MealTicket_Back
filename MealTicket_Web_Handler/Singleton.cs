@@ -2,6 +2,7 @@
 using FXCommon.Database;
 using MealTicket_DBCommon;
 using MealTicket_Web_Handler.Runner;
+using MealTicket_Web_Handler.SecurityBarsData;
 using MealTicket_Web_Handler.session;
 using MealTicket_Web_Handler.Transactiondata;
 using Newtonsoft.Json;
@@ -80,6 +81,8 @@ namespace MealTicket_Web_Handler
         /// </summary>
         public int QuotesDaysShow = 20;
 
+        public int MaxTrendCheckTaskCount = 32;
+
         #region===再触发设置===
         public int MinPushTimeInterval = 180;
         public int MinPushRateInterval = 60;
@@ -96,7 +99,14 @@ namespace MealTicket_Web_Handler
         public int NewTransactionDataRunEndTime = 180;//运行时间比交易时间滞后秒数
         public int NewTransactiondataTaskTimeOut = 15000;//任务超时时间
         public int NewTransactiondataTaskTimeOut2 = 45000;//任务超时时间2
-        public int NewTransactiondataTaskUpdateCountOnce = 4000;//单次写分时数据数量
+        public int NewTransactiondataTaskUpdateCountOnce = 5000;//单次写分时数据数量
+        #endregion
+
+        #region====K线数据参数====
+        public int SecurityBarsIntervalTime = 3000;//间隔时间(毫秒)
+        public int SecurityBarsTaskTimeout = 15000;//任务超时时间(毫秒)
+        public int SecurityBarsBatchCount = 64;//每批次处理股票数量
+        public int SecurityBarsUpdateCountOnce = 5000;//每次写入数据库数据量
         #endregion
 
 
@@ -594,6 +604,26 @@ namespace MealTicket_Web_Handler
         }
 
         /// <summary>
+        /// K线队列对象
+        /// </summary>
+        public MQHandler_SecurityBarsData mqHandler_SecurityBarsData;
+        /// <summary>
+        /// 启动K线Mq队列
+        /// </summary>
+        public MQHandler_SecurityBarsData StartMqHandler_SecurityBarsData()
+        {
+            string hostName = ConfigurationManager.AppSettings["MQ_HostName"];
+            int port = int.Parse(ConfigurationManager.AppSettings["MQ_Port"]);
+            string userName = ConfigurationManager.AppSettings["MQ_UserName"];
+            string password = ConfigurationManager.AppSettings["MQ_Password"];
+            string virtualHost = ConfigurationManager.AppSettings["MQ_VirtualHost"];
+            mqHandler_SecurityBarsData = new MQHandler_SecurityBarsData(hostName, port, userName, password, virtualHost);
+            mqHandler_SecurityBarsData.ListenQueueName = "SecurityBars_1min";//设置监听队列
+            return mqHandler_SecurityBarsData;
+        }
+
+
+        /// <summary>
         /// 分笔数据处理任务
         /// </summary>
         public TransactionDataTask _transactionDataTask;
@@ -603,6 +633,18 @@ namespace MealTicket_Web_Handler
             _transactionDataTask = new TransactionDataTask();
             _transactionDataTask.Init();
             return _transactionDataTask;
+        }
+
+        /// <summary>
+        /// K线数据处理任务
+        /// </summary>
+        public SecurityBarsDataTask _securityBarsDataTask;
+
+        public SecurityBarsDataTask StartSecurityBarsDataTask()
+        {
+            _securityBarsDataTask = new SecurityBarsDataTask();
+            _securityBarsDataTask.Init();
+            return _securityBarsDataTask;
         }
 
         #region=========session缓存========

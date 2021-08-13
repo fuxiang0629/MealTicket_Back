@@ -53,6 +53,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MealTicket_DBCommon", "Meal
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TransactionDataUpdate_App", "TransactionDataUpdate_App\TransactionDataUpdate_App.csproj", "{7321FC2F-2C2E-4B60-90EC-363F7829B416}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SecurityBarsData", "SecurityBarsData", "{40A3473D-3A50-4F66-8D26-E8AB5C330329}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecurityBarsDataUpdate", "SecurityBarsDataUpdate\SecurityBarsDataUpdate.csproj", "{39176D87-6D3B-4EB9-99F4-0E4815CDCBEA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -127,6 +131,10 @@ Global
 		{7321FC2F-2C2E-4B60-90EC-363F7829B416}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7321FC2F-2C2E-4B60-90EC-363F7829B416}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7321FC2F-2C2E-4B60-90EC-363F7829B416}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39176D87-6D3B-4EB9-99F4-0E4815CDCBEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39176D87-6D3B-4EB9-99F4-0E4815CDCBEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39176D87-6D3B-4EB9-99F4-0E4815CDCBEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39176D87-6D3B-4EB9-99F4-0E4815CDCBEA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -147,6 +155,8 @@ Global
 		{E9518A19-AE2B-48F5-A3E7-59156024647D} = {8119C932-A84B-4906-BEFD-12914AF4D43D}
 		{4AED8FA0-F60B-4FEA-899F-271E1EDE595B} = {C1AB0F2E-0C7C-47AD-B991-89261AC0D011}
 		{7321FC2F-2C2E-4B60-90EC-363F7829B416} = {C1AB0F2E-0C7C-47AD-B991-89261AC0D011}
+		{40A3473D-3A50-4F66-8D26-E8AB5C330329} = {8119C932-A84B-4906-BEFD-12914AF4D43D}
+		{39176D87-6D3B-4EB9-99F4-0E4815CDCBEA} = {40A3473D-3A50-4F66-8D26-E8AB5C330329}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {F3F33CA3-89F0-4C91-ABCD-D436E7796644}

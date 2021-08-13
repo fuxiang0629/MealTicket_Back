@@ -360,28 +360,16 @@ namespace SharesHqService
                             select item).ToList();
                 list.AddRange(tempList);
             }
-            //list = list.Take(200).ToList();
-            //计算分页数量
-            int BarsCount = Singleton.Instance.BarsCount;
-            int totalCount = list.Count();
-            int pageSize;
-            if (totalCount % BarsCount == 0)
+           
+            ThreadMsgTemplate<SharesBaseInfo> data = new ThreadMsgTemplate<SharesBaseInfo>();
+            data.Init();
+            foreach (var item in list)
             {
-                pageSize = totalCount / BarsCount;
+                data.AddMessage(item);
             }
-            else
-            {
-                pageSize = totalCount / BarsCount + 1;
-            }
-            list = list.OrderBy(e => e.ShareCode).ToList();
 
-            for (int size = 0; size < pageSize; size++)
-            {
-                int temSize = size;
-                var temp = list.Skip(size * BarsCount).Take(BarsCount).ToList();
-                WaitCallback method = (t) => GetSecurityBars(nCategory, temp, temSize);
-                ThreadPool.QueueUserWorkItem(method);
-            }
+            Task[] taskArr = new Task[Singleton.Instance.hqClientCount];
+         
         }
 
         /// <summary>

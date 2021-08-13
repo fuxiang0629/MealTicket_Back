@@ -8053,7 +8053,7 @@ namespace MealTicket_Web_APIService.controller
         [Description("股票条件搜索")]
         [Route("shares/condition/search"), HttpPost]
         [CheckUserLoginFilter]
-        public List<SharesConditionSearchInfo> GetSharesConditionSearch(GetSharesConditionSearchRequest request)
+        public PageRes<SharesConditionSearchInfo> GetSharesConditionSearch(GetSharesConditionSearchRequest request)
         {
             if (request == null)
             {
@@ -8062,5 +8062,59 @@ namespace MealTicket_Web_APIService.controller
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.GetSharesConditionSearch(request,basedata);
         }
+
+        #region===搜索模板===
+        /// <summary>
+        /// 获取搜索模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/search/details"), HttpPost]
+        [Description("获取搜索模板详情")]
+        [CheckUserLoginFilter]
+        public object GetConditiontradeTemplateSearchDetails(DetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return trendHandler.GetConditiontradeTemplateSearchDetails(request);
+        }
+
+        /// <summary>
+        /// 获取搜索系统模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/sys/template/search/details"), HttpPost]
+        [Description("获取搜索系统模板详情")]
+        [CheckUserLoginFilter]
+        public object GetConditiontradeSysTemplateSearchDetails(DetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return trendHandler.GetConditiontradeSysTemplateSearchDetails(request);
+        }
+
+        /// <summary>
+        /// 编辑搜索模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("conditiontrade/template/search/details/modify"), HttpPost]
+        [Description("编辑搜索模板详情")]
+        [CheckUserLoginFilter]
+        public object ModifyConditiontradeTemplateSearchDetails(ModifyConditiontradeTemplateSearchDetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            trendHandler.ModifyConditiontradeTemplateSearchDetails(request);
+            return null;
+        }
+        #endregion
     }
 }

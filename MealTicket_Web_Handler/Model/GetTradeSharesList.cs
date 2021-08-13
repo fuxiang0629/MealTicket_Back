@@ -64,5 +64,7 @@ namespace MealTicket_Web_Handler
         /// 涨幅
         /// </summary>
         public string Rise { get; set; }
+
+        public DateTime Time { get; set; }
     }
 }

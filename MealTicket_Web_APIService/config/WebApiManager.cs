@@ -101,11 +101,14 @@ namespace MealTicket_Web_APIService
 
 
             var mqHandler = session.StartMqHandler();//生成Mq队列对象
-
             var transactionDataTask = session.StartTransactionDataTask();
             transactionDataTask.DoTask();
-
             mqHandler.StartListen();//启动队列监听
+
+            var mqHandler_SecurityBarsData = session.StartMqHandler_SecurityBarsData();//生成Mq队列对象
+            var securityBarsDataTask = session.StartSecurityBarsDataTask();
+            securityBarsDataTask.DoTask();
+            //mqHandler_SecurityBarsData.StartListen();//启动队列监听
 
             //加载依赖注入
             Kernel = LoadKernel();   
