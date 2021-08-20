@@ -2,7 +2,6 @@
 using MealTicket_DBCommon;
 using MealTicket_Web_Handler.Enum;
 using MealTicket_Web_Handler.Model;
-using MealTicket_Web_Handler.SecurityBarsData;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using System;
@@ -2680,60 +2679,6 @@ inner
                     DataType = dataType,
                     DataList = batchList
                 })), "TransactionData", dataType == 0 ? "UpdateNew" : "UpdateNew2");
-            }
-            return batchSize;
-        }
-
-        /// <summary>
-        /// 推送需要获取K线的股票到队列
-        /// </summary>
-        /// <param name="taskGuid"></param>
-        /// <returns></returns>
-        public static int SendTransactionShares(string taskGuid) 
-        {
-            List<SecurityBarsPushDataInfo> sharesList = (from item in Singleton.Instance._SharesQuotesSession.GetSessionData()
-                                                         select new SecurityBarsPushDataInfo
-                                                         {
-                                                             Market = item.Market,
-                                                             SharesCode = item.SharesCode
-                                                         }).ToList();
-            List<SecurityBarsPushDataInfo> securitybarsdata = new List<SecurityBarsPushDataInfo>();
-            using (var db = new meal_ticketEntities())
-            {
-                string sql = @"select Market,SharesCode,MAX([Time]) [Time]
-  from t_shares_securitybarsdata_1min with(nolock)
-  where [Date] = convert(varchar(10), getdate(), 120)
-  group by Market,SharesCode";
-                securitybarsdata=db.Database.SqlQuery<SecurityBarsDataInfo>(sql).ToList();
-            }
-            sharesList = (from item in sharesList
-                          join item2 in securitybarsdata on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
-                          from ai in a.DefaultIfEmpty()
-                          select new SecurityBarsPushDataInfo
-                          {
-                              SharesCode = item.SharesCode,
-                              Market = item.Market,
-                              Time = ai == null ? null : ai.Time
-                          }).ToList();
-
-            int totalCount = sharesList.Count();
-            //批次数
-            int HandlerCount = Singleton.Instance.SecurityBarsBatchCount;
-            int batchSize = totalCount / HandlerCount;
-            if (totalCount % HandlerCount != 0)
-            {
-                batchSize = batchSize + 1;
-            }
-            Singleton.Instance.mqHandler.ClearQueueData("SecurityBars_1min");
-
-            for (int size = 0; size < batchSize; size++)
-            {
-                var batchList = sharesList.Skip(size * HandlerCount).Take(HandlerCount).ToList();
-                Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new SecurityBarsDataTaskQueueInfo
-                {
-                    TaskGuid = taskGuid,
-                    DataList = batchList
-                })), "SecurityBars", "1min");
             }
             return batchSize;
         }

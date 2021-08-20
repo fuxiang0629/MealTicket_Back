@@ -1,5 +1,6 @@
 ﻿using FXCommon.Common;
 using MealTicket_DBCommon;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -341,7 +342,25 @@ namespace SecurityBarsDataUpdate
         {
             using (var db = new meal_ticketEntities())
             {
-                
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "SecurityBarsPar"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                        int tempSecurityBarsGetCount = sysValue.SecurityBarsGetCount;
+                        if (tempSecurityBarsGetCount > 0)
+                        {
+                            SecurityBarsGetCount = tempSecurityBarsGetCount;
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteFileLog("k线配置",ex);
+                }
             }
         }
 

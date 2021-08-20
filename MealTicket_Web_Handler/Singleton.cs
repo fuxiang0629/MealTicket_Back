@@ -1,9 +1,8 @@
 ﻿using FXCommon.Common;
 using FXCommon.Database;
+using MealTicket_CacheCommon_Session;
 using MealTicket_DBCommon;
 using MealTicket_Web_Handler.Runner;
-using MealTicket_Web_Handler.SecurityBarsData;
-using MealTicket_Web_Handler.session;
 using MealTicket_Web_Handler.Transactiondata;
 using Newtonsoft.Json;
 using StockTrendMonitor.Models;
@@ -203,6 +202,9 @@ namespace MealTicket_Web_Handler
 
             UpdateWait.Init();
             StartSysparUpdateThread();
+
+
+            sessionClient.Connect(session_server, session_username, session_password);
         }
 
         public static Singleton Instance
@@ -235,38 +237,6 @@ namespace MealTicket_Web_Handler
             if (_transactionDataTask != null)
             {
                 _transactionDataTask.Dispose();
-            }
-            if (_BuyTipSession != null)
-            {
-                _BuyTipSession.Dispose();
-            }
-            if (_SharesQuotesSession != null)
-            {
-                _SharesQuotesSession.Dispose();
-            }
-            if (_PlateRateSession != null)
-            {
-                _PlateRateSession.Dispose();
-            }
-            if (_AccountTrendTriSession != null)
-            {
-                _AccountTrendTriSession.Dispose();
-            }
-            if (_SharesBaseSession != null)
-            {
-                _SharesBaseSession.Dispose();
-            }
-            if (_AccountRiseLimitTriSession != null)
-            {
-                _AccountRiseLimitTriSession.Dispose();
-            }
-            if (_SharesQuotesDateSession != null)
-            {
-                _SharesQuotesDateSession.Dispose();
-            }
-            if (_BasePlateSession != null)
-            {
-                _BasePlateSession.Dispose();
             }
         }
 
@@ -461,10 +431,6 @@ namespace MealTicket_Web_Handler
                                   select item).FirstOrDefault();
                     if (sysPar != null)
                     {
-                        if (_SharesBaseSession != null && QuotesDaysShow!= int.Parse(sysPar.ParamValue))
-                        {
-                            _SharesBaseSession.UpdateSessionManual();
-                        }
                         QuotesDaysShow = int.Parse(sysPar.ParamValue);
                     }
                 }
@@ -603,25 +569,6 @@ namespace MealTicket_Web_Handler
             return mqHandler;
         }
 
-        /// <summary>
-        /// K线队列对象
-        /// </summary>
-        public MQHandler_SecurityBarsData mqHandler_SecurityBarsData;
-        /// <summary>
-        /// 启动K线Mq队列
-        /// </summary>
-        public MQHandler_SecurityBarsData StartMqHandler_SecurityBarsData()
-        {
-            string hostName = ConfigurationManager.AppSettings["MQ_HostName"];
-            int port = int.Parse(ConfigurationManager.AppSettings["MQ_Port"]);
-            string userName = ConfigurationManager.AppSettings["MQ_UserName"];
-            string password = ConfigurationManager.AppSettings["MQ_Password"];
-            string virtualHost = ConfigurationManager.AppSettings["MQ_VirtualHost"];
-            mqHandler_SecurityBarsData = new MQHandler_SecurityBarsData(hostName, port, userName, password, virtualHost);
-            mqHandler_SecurityBarsData.ListenQueueName = "SecurityBars_1min";//设置监听队列
-            return mqHandler_SecurityBarsData;
-        }
-
 
         /// <summary>
         /// 分笔数据处理任务
@@ -635,27 +582,22 @@ namespace MealTicket_Web_Handler
             return _transactionDataTask;
         }
 
-        /// <summary>
-        /// K线数据处理任务
-        /// </summary>
-        public SecurityBarsDataTask _securityBarsDataTask;
 
-        public SecurityBarsDataTask StartSecurityBarsDataTask()
-        {
-            _securityBarsDataTask = new SecurityBarsDataTask();
-            _securityBarsDataTask.Init();
-            return _securityBarsDataTask;
-        }
+        #region===缓存===
+        private string session_server = ConfigurationManager.AppSettings["session_server"];
+        private string session_username = ConfigurationManager.AppSettings["session_username"];
+        private string session_password = ConfigurationManager.AppSettings["session_password"];
+        public SessionClient sessionClient = new SessionClient();
 
-        #region=========session缓存========
-        public BuyTipSession _BuyTipSession;
-        public SharesQuotesSession _SharesQuotesSession;
-        public SharesBaseSession _SharesBaseSession;
-        public PlateRateSession _PlateRateSession;
-        public AccountTrendTriSession _AccountTrendTriSession;
-        public AccountRiseLimitTriSession _AccountRiseLimitTriSession;
-        public SharesQuotesDateSession _SharesQuotesDateSession;
-        public BasePlateSession _BasePlateSession;
+        public string AccountRiseLimitTriSession = "AccountRiseLimitTriSession";
+        public string AccountTrendTriSession = "AccountTrendTriSession";
+        public string BuyTipSession = "BuyTipSession";
+        public string SharesBaseSession = "SharesBaseSession";
+        public string SharesHisRiseRateSession = "SharesHisRiseRateSession";
+        public string SharesPlateQuotesSession = "SharesPlateQuotesSession";
+        public string SharesPlateRelSession = "SharesPlateRelSession";
+        public string SharesPlateSession = "SharesPlateSession";
+        public string SharesQuotesSession = "SharesQuotesSession";
         #endregion
     }
 }

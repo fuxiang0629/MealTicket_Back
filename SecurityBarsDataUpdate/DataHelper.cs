@@ -105,18 +105,23 @@ namespace SecurityBarsDataUpdate
         /// <returns></returns>
         public static List<SecurityBarsDataInfo> TdxHq_GetSecurityBarsData_byShares(int hqClient, SecurityBarsDataInfo sharesData,TRANSACTION_DATA_STRING result_info, ref bool isReconnectClient)
         {
-            DateTime datePar = DateTime.Now.Date;
             List<SecurityBarsDataInfo> resultlist = new List<SecurityBarsDataInfo>();
-            string date = datePar.ToString("yyyy-MM-dd");
+            if (sharesData.Time == null)
+            {
+                sharesData.Time = DateTime.Now.Date;
+            }
   
-            short nStart = 0;
-            short nCount = (short)Singleton.Instance.SecurityBarsGetCount;
+            short nStart = 0; 
+            short nCount = 0;
+            short defaultGetCount= (short)Singleton.Instance.SecurityBarsGetCount;
+            bool isContinue = true;
             do
             {
                 StringBuilder sErrInfo = result_info.sErrInfo;
                 StringBuilder sResult = result_info.sResult;
                 sErrInfo.Clear();
                 sResult.Clear();
+                nCount = defaultGetCount;
 
                 bool bRet = TradeX_M.TdxHq_GetSecurityBars(hqClient, 7, (byte)sharesData.Market, sharesData.SharesCode, nStart, ref nCount, sResult, sErrInfo);
                 if (!bRet)
@@ -130,16 +135,13 @@ namespace SecurityBarsDataUpdate
                 {
                     string result = sResult.ToString();
                     string[] rows = result.Split('\n');
+                    Array.Reverse(rows);
 
                     List<SecurityBarsDataInfo> tempResultlist = new List<SecurityBarsDataInfo>();
-                    for (int i = 0; i < rows.Length; i++)
+                    for (int i = 0; i < rows.Length-1; i++)
                     {
-                        if (i == 0)
-                        {
-                            continue;
-                        }
                         string[] column = rows[i].Split('\t');
-                        if (column.Length < 9)
+                        if (column.Length < 7)
                         {
                             string errDes = "获取K线数据结构有误";
                             Console.WriteLine(errDes);
@@ -152,28 +154,36 @@ namespace SecurityBarsDataUpdate
                             string SharesCode = sharesData.SharesCode;//股票代码
                             string TimeStr = column[0];
                             DateTime Time;
-                            if (TimeStr.Length == 18)
+                            if (TimeStr.Length != 18)
                             {
-                                //1989--15--20
-                                Int32 lYear = 4009 - Int32.Parse(TimeStr.Substring(0, 4));
-                                Int32 lMonth = 20 - Int32.Parse(TimeStr.Substring(6, 2));
-                                Int32 lDay = 48 - Int32.Parse(TimeStr.Substring(10, 2));
-                                Int32 lHour = Int32.Parse(TimeStr.Substring(13, 2));
-                                Int32 lMinute = Int32.Parse(TimeStr.Substring(16, 2));
-                                Time = new DateTime(lYear, lMonth, lDay, lHour, lMinute, 0);
+                                throw new Exception("时间格式有误，时间:"+ TimeStr+",股票:"+ SharesCode+"，市场"+ Market);
                             }
-                            else
+
+                            //1989--15--20
+                            Int32 lYear = 4011 - Int32.Parse(TimeStr.Substring(0, 4));
+                            Int32 lMonth = 20 - Int32.Parse(TimeStr.Substring(6, 2));
+                            Int32 lDay = 48 - Int32.Parse(TimeStr.Substring(10, 2));
+                            Int32 lHour = Int32.Parse(TimeStr.Substring(13, 2));
+                            Int32 lMinute = Int32.Parse(TimeStr.Substring(16, 2));
+                            if (lHour == 13 && lMinute == 0)
                             {
-                                Time = DateTime.ParseExact(TimeStr, "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
+                                lHour = 11;
+                                lMinute = 30;
                             }
+                            Time = new DateTime(lYear, lMonth, lDay, lHour, lMinute, 0);
+
                             long ClosedPrice = (long)(Math.Round(float.Parse(column[2]) * 10000, 0));//收盘
                             long OpenedPrice = (long)(Math.Round(float.Parse(column[1]) * 10000, 0));//开盘
                             long MaxPrice = (long)(Math.Round(float.Parse(column[3]) * 10000, 0));//最高
                             long MinPrice = (long)(Math.Round(float.Parse(column[4]) * 10000, 0));//最低
                             int Volume = int.Parse(column[5]);//成交量
                             long Turnover = (long)(Math.Round(float.Parse(column[6]) * 10000, 0));//成交额
-                            int FallCount = int.Parse(column[8]);//跌家数
-                            int RiseCount = int.Parse(column[7]);//涨家数
+
+                            if (sharesData.Time.Value > Time)
+                            {
+                                isContinue = false;
+                                break;
+                            }
 
                             tempResultlist.Add(new SecurityBarsDataInfo
                             {
@@ -185,23 +195,30 @@ namespace SecurityBarsDataUpdate
                                 MinPrice = MinPrice,
                                 OpenedPrice = OpenedPrice,
                                 Time = Time,
-                                Date= Time,
-                                TradeStock= Volume,
-                                FallCount= FallCount,
-                                RiseCount= RiseCount,
-                                TradeAmount= Turnover
-
+                                Date = Time.Date,
+                                TradeStock = Volume,
+                                TradeAmount = Turnover
                             });
                         }
                         catch (Exception ex)
                         {
+                            Logger.WriteFileLog("获取K线数据出错", ex);
                             return new List<SecurityBarsDataInfo>();
                         }
                     }
-                    resultlist=tempResultlist.Concat(resultlist).ToList();
+                    resultlist= resultlist.Concat(tempResultlist).ToList();
                     nStart = (short)(nStart + nCount);
                 }
-            } while (true);
+            } while (nCount >=defaultGetCount && isContinue);
+
+            resultlist = resultlist.OrderBy(e => e.Time).ToList();
+            long preClosePrice = sharesData.PreClosePrice;
+            foreach (var item in resultlist)
+            {
+                item.PreClosePrice = preClosePrice;
+                preClosePrice = item.ClosedPrice;
+            }    
+            return resultlist;
         }
     }
 }

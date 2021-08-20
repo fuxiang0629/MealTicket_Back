@@ -75,13 +75,17 @@ namespace FXCommon.Common
         /// <param name="encoding">编码方式</param>
         /// <param name="methord">HTTP动词</param>
         /// <returns>响应内容</returns>
-        public static string Request(string content, string url, string type, Encoding encoding, string methord)
+        public static string Request(string content, string url, string type, Encoding encoding, string methord,string header = "")
         {
             HttpWebRequest myRequest = (HttpWebRequest)WebRequest.Create(url);
             byte[] buf = UnicodeEncoding.UTF8.GetBytes(content);
             myRequest.Method = methord;
             myRequest.ContentLength = buf.Length;
             myRequest.ContentType = type;
+            if (!string.IsNullOrEmpty(header))
+            {
+                myRequest.Headers.Add(header);
+            }
             using (Stream newStream = myRequest.GetRequestStream())
             {
                 newStream.Write(buf, 0, buf.Length);

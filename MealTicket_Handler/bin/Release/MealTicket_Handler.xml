@@ -3079,6 +3079,193 @@
             更新股票分笔数据
             </summary>
         </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.QueueMsgObj.MsgId">
+            <summary>
+            消息Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.QueueMsgObj.MsgObj">
+            <summary>
+            消息内容
+            </summary>
+        </member>
+        <member name="F:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.TaskThread">
+            <summary>
+            任务线程
+            </summary>
+        </member>
+        <member name="F:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.SecurityBarsDataQueue">
+            <summary>
+            K线数据回调队列
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.Init">
+            <summary>
+            任务初始化
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.DoTask">
+            <summary>
+            启动任务
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.CalcIntervalTime(System.Nullable{System.DateTime},System.Int32)">
+            <summary>
+            计算间隔时间
+            </summary>
+            <param name="dtTime"></param>
+            <param name="timeout"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.CheckTaskTimeout(MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo)">
+            <summary>
+            判断任务是否超时
+            </summary>
+            <param name="dataObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.ClearTaskInfo(MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo)">
+            <summary>
+            清空任务信息
+            </summary>
+            <param name="dataObj"></param>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.PushToDataUpDate(MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo)">
+            <summary>
+            需要更新K线的股票数据扔到队列
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.DoBusiness(MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo,System.Int32)">
+            <summary>
+            执行业务
+            </summary>
+            <param name="dataObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.UpdateToDataBase(MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo,System.Boolean@)">
+            <summary>
+            数据更新到数据库
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.UpdateOtherToDataBase(System.Int32)">
+            <summary>
+            更新其他K线数据
+            </summary>
+            <param name="type">1.5分钟线 2.15分钟线 3.30分钟线 4.60分钟线 5.日线 6.周线 7.月线 8.季度线 9.年线</param>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.SendTransactionShares(System.String)">
+            <summary>
+            推送需要获取K线的股票到队列
+            </summary>
+            <param name="taskGuid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.Dispose">
+            <summary>
+            资源回收
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo.TaskGuid">
+            <summary>
+            任务Guid
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo.TotalPacketCount">
+            <summary>
+            总包数量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo.CallBackPacketCount">
+            <summary>
+            回调包数量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo.StartTime">
+            <summary>
+            数据包扔出时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo.TaskTimeOut">
+            <summary>
+            超时时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo.DataIndex">
+            <summary>
+            数据列表最大下标
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo.DataList">
+            <summary>
+            数据列表
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataInfo.Market">
+            <summary>
+            市场代码
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataInfo.SharesCode">
+            <summary>
+            股票代码
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataInfo.SharesInfoNum">
+            <summary>
+            股票唯一数字
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataInfo.Date">
+            <summary>
+            日期
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataInfo.Time">
+            <summary>
+            时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataInfo.TimeStr">
+            <summary>
+            时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataInfo.OpenedPrice">
+            <summary>
+            开盘价
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataInfo.ClosedPrice">
+            <summary>
+            收盘价
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataInfo.MinPrice">
+            <summary>
+            最低价
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataInfo.MaxPrice">
+            <summary>
+            最高价
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataInfo.TradeStock">
+            <summary>
+            成交量(笔)
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataInfo.TradeAmount">
+            <summary>
+            成交额(元*10000)
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataInfo.PreClosePrice">
+            <summary>
+            上一时段收盘价
+            </summary>
+        </member>
         <member name="F:MealTicket_Handler.Singleton.instance">
             <summary>
             单例对象
@@ -3167,6 +3354,21 @@
         <member name="M:MealTicket_Handler.Singleton.StartMqHandler(System.String)">
             <summary>
             启动Mq队列
+            </summary>
+        </member>
+        <member name="F:MealTicket_Handler.Singleton.mqHandler_SecurityBarsData">
+            <summary>
+            K线队列对象
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.Singleton.StartMqHandler_SecurityBarsData">
+            <summary>
+            启动K线Mq队列
+            </summary>
+        </member>
+        <member name="F:MealTicket_Handler.Singleton._securityBarsDataTask">
+            <summary>
+            K线数据处理任务
             </summary>
         </member>
         <member name="M:MealTicket_Handler.DBUtils.CalculateOtherCost(System.Collections.Generic.List{System.Int64},System.Int32)">

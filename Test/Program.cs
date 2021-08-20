@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FXCommon.Common;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -12,20 +13,17 @@ namespace Test
 {
     class Program
     {
-        static long accountId = 10000;
         static void Main(string[] args)
         {
-            for (int j = 0; j < 100; j++)
-            {
-                Task[] tArr = new Task[5];
-                for (int i = 0; i < 5; i++)
-                {
-                    tArr[i].Start();
-                }
-                Task.WaitAll(tArr);
-                accountId++;
-            }
-            Console.ReadLine();
+            SessionClient cache = new SessionClient();
+            int error=cache.Connect("http://localhost:8800", "u1", "p1");
+            error = cache.Set<A>("k1", new A { V = "v1" });
+            var result=cache.Get<A>("k1", ref error);
         }
+    }
+
+    public class A 
+    {
+        public string V { get; set; }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using FXCommon.Common;
+using MealTicket_CacheCommon_Session.session;
 using MealTicket_DBCommon;
 using MealTicket_Web_Handler.Model;
-using MealTicket_Web_Handler.session;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using stock_db_core;
@@ -4337,7 +4337,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
         }
 
         //分析价格条件-批量
-        public static List<SharesBase> Analysis_Price_New_Batch(List<SharesBase> sharesList, string par)
+        public static List<SharesBase_Session> Analysis_Price_New_Batch(List<SharesBase_Session> sharesList, string par)
         {
             try
             {
@@ -4365,14 +4365,14 @@ from v_shares_quotes_last with(nolock)";
                     quotes_list = db.Database.SqlQuery<QuotesDateInfo>(sql).ToList();
                 }
 
-                ThreadMsgTemplate<SharesBase> data = new ThreadMsgTemplate<SharesBase>();
+                ThreadMsgTemplate<SharesBase_Session> data = new ThreadMsgTemplate<SharesBase_Session>();
                 data.Init();
                 foreach (var item in sharesList)
                 {
                     data.AddMessage(item);
                 }
 
-                List<SharesBase> result = new List<SharesBase>();
+                List<SharesBase_Session> result = new List<SharesBase_Session>();
                 object dataLock = new object();
 
                 int defaultCount = Singleton.Instance.MaxTrendCheckTaskCount;
@@ -4389,7 +4389,7 @@ from v_shares_quotes_last with(nolock)";
                     {
                         do
                         {
-                            SharesBase tempData = new SharesBase();
+                            SharesBase_Session tempData = new SharesBase_Session();
                             if (!data.GetMessage(ref tempData, true))
                             {
                                 break;
@@ -4411,7 +4411,7 @@ from v_shares_quotes_last with(nolock)";
                             {
                                 lock (dataLock)
                                 {
-                                    result.Add(new SharesBase
+                                    result.Add(new SharesBase_Session
                                     {
                                         Market = tempData.Market,
                                         SharesCode = tempData.SharesCode
@@ -4429,12 +4429,12 @@ from v_shares_quotes_last with(nolock)";
             catch (Exception ex)
             {
                 Logger.WriteFileLog("Analysis_Price_New_Batch出错了", ex);
-                return new List<SharesBase>();
+                return new List<SharesBase_Session>();
             }
         }
 
         //分析时间段-批量
-        public static List<SharesBase> Analysis_TimeSlot_New_Batch(List<SharesBase> sharesList, string par)
+        public static List<SharesBase_Session> Analysis_TimeSlot_New_Batch(List<SharesBase_Session> sharesList, string par)
         {
             DateTime timeNow = DateTime.Now;
             try
@@ -4445,17 +4445,17 @@ from v_shares_quotes_last with(nolock)";
                 {
                     return sharesList;
                 }
-                return new List<SharesBase>();
+                return new List<SharesBase_Session>();
             }
             catch (Exception ex)
             {
                 Logger.WriteFileLog("分析时间段出错了", ex);
-                return new List<SharesBase>();
+                return new List<SharesBase_Session>();
             }
         }
 
         //分析历史涨跌幅数据-批量
-        public static List<SharesBase> Analysis_HisRiseRate_New_Batch(List<SharesBase> sharesList, string par)
+        public static List<SharesBase_Session> Analysis_HisRiseRate_New_Batch(List<SharesBase_Session> sharesList, string par)
         {
             try
             {
@@ -4537,14 +4537,14 @@ from v_shares_quotes_last with(nolock)";
                     quotes_date_list = db.Database.SqlQuery<QuotesDateInfo>(sql).ToList();
                 }
 
-                ThreadMsgTemplate<SharesBase> data = new ThreadMsgTemplate<SharesBase>();
+                ThreadMsgTemplate<SharesBase_Session> data = new ThreadMsgTemplate<SharesBase_Session>();
                 data.Init();
                 foreach (var item in sharesList)
                 {
                     data.AddMessage(item);
                 }
 
-                List<SharesBase> result = new List<SharesBase>();
+                List<SharesBase_Session> result = new List<SharesBase_Session>();
                 object dataLock = new object();
 
 
@@ -4562,7 +4562,7 @@ from v_shares_quotes_last with(nolock)";
                     {
                         do
                         {
-                            SharesBase tempData = new SharesBase();
+                            SharesBase_Session tempData = new SharesBase_Session();
                             if (!data.GetMessage(ref tempData, true))
                             {
                                 break;
@@ -4576,7 +4576,7 @@ from v_shares_quotes_last with(nolock)";
                                 {
                                     lock (dataLock)
                                     {
-                                        result.Add(new SharesBase
+                                        result.Add(new SharesBase_Session
                                         {
                                             Market = tempData.Market,
                                             SharesCode= tempData.SharesCode
@@ -4601,7 +4601,7 @@ from v_shares_quotes_last with(nolock)";
                                 {
                                     lock (dataLock)
                                     {
-                                        result.Add(new SharesBase
+                                        result.Add(new SharesBase_Session
                                         {
                                             Market = tempData.Market,
                                             SharesCode = tempData.SharesCode
@@ -4625,7 +4625,7 @@ from v_shares_quotes_last with(nolock)";
                                 {
                                     lock (dataLock)
                                     {
-                                        result.Add(new SharesBase
+                                        result.Add(new SharesBase_Session
                                         {
                                             Market = tempData.Market,
                                             SharesCode = tempData.SharesCode
@@ -4641,7 +4641,7 @@ from v_shares_quotes_last with(nolock)";
                                 {
                                     lock (dataLock)
                                     {
-                                        result.Add(new SharesBase
+                                        result.Add(new SharesBase_Session
                                         {
                                             Market = tempData.Market,
                                             SharesCode = tempData.SharesCode
@@ -4679,7 +4679,7 @@ from v_shares_quotes_last with(nolock)";
                                 {
                                     lock (dataLock)
                                     {
-                                        result.Add(new SharesBase
+                                        result.Add(new SharesBase_Session
                                         {
                                             Market = tempData.Market,
                                             SharesCode = tempData.SharesCode
@@ -4705,7 +4705,7 @@ from v_shares_quotes_last with(nolock)";
                                     {
                                         lock (dataLock)
                                         {
-                                            result.Add(new SharesBase
+                                            result.Add(new SharesBase_Session
                                             {
                                                 Market = tempData.Market,
                                                 SharesCode = tempData.SharesCode
@@ -4736,7 +4736,7 @@ from v_shares_quotes_last with(nolock)";
                                 }
                                 lock (dataLock)
                                 {
-                                    result.Add(new SharesBase
+                                    result.Add(new SharesBase_Session
                                     {
                                         Market = tempData.Market,
                                         SharesCode = tempData.SharesCode
@@ -4761,7 +4761,7 @@ from v_shares_quotes_last with(nolock)";
                                     {
                                         lock (dataLock)
                                         {
-                                            result.Add(new SharesBase
+                                            result.Add(new SharesBase_Session
                                             {
                                                 Market = tempData.Market,
                                                 SharesCode = tempData.SharesCode
@@ -4792,7 +4792,7 @@ from v_shares_quotes_last with(nolock)";
                                 }
                                 lock (dataLock)
                                 {
-                                    result.Add(new SharesBase
+                                    result.Add(new SharesBase_Session
                                     {
                                         Market = tempData.Market,
                                         SharesCode = tempData.SharesCode
@@ -4817,7 +4817,7 @@ from v_shares_quotes_last with(nolock)";
                                 {
                                     lock (dataLock)
                                     {
-                                        result.Add(new SharesBase
+                                        result.Add(new SharesBase_Session
                                         {
                                             Market = tempData.Market,
                                             SharesCode = tempData.SharesCode
@@ -4836,12 +4836,12 @@ from v_shares_quotes_last with(nolock)";
             catch (Exception ex)
             {
                 Logger.WriteFileLog("Analysis_HisRiseRate_New_Batch出错了", ex);
-                return new List<SharesBase>();
+                return new List<SharesBase_Session>();
             }
         }
 
         //分析今日涨跌幅-批量
-        public static List<SharesBase> Analysis_TodayRiseRate_New_Batch(List<SharesBase> sharesList, string par)
+        public static List<SharesBase_Session> Analysis_TodayRiseRate_New_Batch(List<SharesBase_Session> sharesList, string par)
         {
             try
             {
@@ -4943,14 +4943,14 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
                     }
                 }
 
-                ThreadMsgTemplate<SharesBase> data = new ThreadMsgTemplate<SharesBase>();
+                ThreadMsgTemplate<SharesBase_Session> data = new ThreadMsgTemplate<SharesBase_Session>();
                 data.Init();
                 foreach (var item in sharesList)
                 {
                     data.AddMessage(item);
                 }
 
-                List<SharesBase> result = new List<SharesBase>();
+                List<SharesBase_Session> result = new List<SharesBase_Session>();
                 object dataLock = new object();
 
                 int defaultCount = Singleton.Instance.MaxTrendCheckTaskCount;
@@ -4967,7 +4967,7 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
                     {
                         do
                         {
-                            SharesBase tempData = new SharesBase();
+                            SharesBase_Session tempData = new SharesBase_Session();
                             if (!data.GetMessage(ref tempData, true))
                             {
                                 break;
@@ -4985,7 +4985,7 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
                                 {
                                     lock (dataLock)
                                     {
-                                        result.Add(new SharesBase
+                                        result.Add(new SharesBase_Session
                                         {
                                             Market = tempData.Market,
                                             SharesCode = tempData.SharesCode
@@ -5001,7 +5001,7 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
                                 {
                                     lock (dataLock)
                                     {
-                                        result.Add(new SharesBase
+                                        result.Add(new SharesBase_Session
                                         {
                                             Market = tempData.Market,
                                             SharesCode = tempData.SharesCode
@@ -5016,7 +5016,7 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
                                 {
                                     lock (dataLock)
                                     {
-                                        result.Add(new SharesBase
+                                        result.Add(new SharesBase_Session
                                         {
                                             Market = tempData.Market,
                                             SharesCode = tempData.SharesCode
@@ -5060,7 +5060,7 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
                                 {
                                     lock (dataLock)
                                     {
-                                        result.Add(new SharesBase
+                                        result.Add(new SharesBase_Session
                                         {
                                             Market = tempData.Market,
                                             SharesCode = tempData.SharesCode
@@ -5082,7 +5082,7 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
                                 {
                                     lock (dataLock)
                                     {
-                                        result.Add(new SharesBase
+                                        result.Add(new SharesBase_Session
                                         {
                                             Market = tempData.Market,
                                             SharesCode = tempData.SharesCode
@@ -5105,7 +5105,7 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
                                 {
                                     lock (dataLock)
                                     {
-                                        result.Add(new SharesBase
+                                        result.Add(new SharesBase_Session
                                         {
                                             Market = tempData.Market,
                                             SharesCode = tempData.SharesCode
@@ -5126,7 +5126,7 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
                                 {
                                     lock (dataLock)
                                     {
-                                        result.Add(new SharesBase
+                                        result.Add(new SharesBase_Session
                                         {
                                             Market = tempData.Market,
                                             SharesCode = tempData.SharesCode
@@ -5145,7 +5145,7 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
                                     {
                                         lock (dataLock)
                                         {
-                                            result.Add(new SharesBase
+                                            result.Add(new SharesBase_Session
                                             {
                                                 Market = tempData.Market,
                                                 SharesCode = tempData.SharesCode
@@ -5167,7 +5167,7 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
                                 {
                                     lock (dataLock)
                                     {
-                                        result.Add(new SharesBase
+                                        result.Add(new SharesBase_Session
                                         {
                                             Market = tempData.Market,
                                             SharesCode = tempData.SharesCode
@@ -5186,7 +5186,7 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
                                     {
                                         lock (dataLock)
                                         {
-                                            result.Add(new SharesBase
+                                            result.Add(new SharesBase_Session
                                             {
                                                 Market = tempData.Market,
                                                 SharesCode = tempData.SharesCode
@@ -5206,16 +5206,16 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
             catch (Exception ex)
             {
                 Logger.WriteFileLog("Analysis_TodayRiseRate_New_Batch出错了", ex);
-                return new List<SharesBase>();
+                return new List<SharesBase_Session>();
             }
         }
 
         //分析板块涨跌幅
-        public static List<SharesBase> Analysis_PlateRiseRate_New(List<SharesBase> sharesList, string par)
+        public static List<SharesBase_Session> Analysis_PlateRiseRate_New_Batch(List<SharesBase_Session> sharesList, string par)
         {
             try
             {
-                List<SharesBase> resultList = new List<SharesBase>();
+                List<SharesBase_Session> resultList = new List<SharesBase_Session>();
                 var temp = JsonConvert.DeserializeObject<dynamic>(par);
                 int connect = 0;
                 List<long> plateList = new List<long>();
@@ -5237,7 +5237,14 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
 
                 using (var db = new meal_ticketEntities())
                 {
-                    var totalPlateList = (from item in Singleton.Instance._BasePlateSession.GetSessionData()
+                    int errorCode = 0;
+                    var SharesPlateQuotesSession = Singleton.Instance.sessionClient.Get<List<SharesPlateQuotesInfo_Session>>(Singleton.Instance.SharesPlateQuotesSession, ref errorCode);
+                    if (errorCode != 0)
+                    {
+                        SharesPlateQuotesSession = new List<SharesPlateQuotesInfo_Session>();
+                    }
+
+                    var totalPlateList = (from item in SharesPlateQuotesSession
                                           where plateList.Contains(item.PlateId)
                                           select item).ToList();
                     var sharesPlate = (from item in db.t_shares_plate_rel
@@ -5257,7 +5264,7 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
                     if (connect == 1)//或
                     {
                         resultList = (from item in result
-                                      select new SharesBase
+                                      select new SharesBase_Session
                                       {
                                           Market = item.Market,
                                           SharesCode = item.SharesCode
@@ -5268,7 +5275,7 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
                         int plateCount = totalPlateList.Count();
                         resultList = (from item in result
                                       where item.Count>= plateCount
-                                      select new SharesBase
+                                      select new SharesBase_Session
                                       {
                                           Market = item.Market,
                                           SharesCode = item.SharesCode
@@ -5284,12 +5291,12 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
             catch (Exception ex)
             {
                 Logger.WriteFileLog("Analysis_PlateRiseRate_New出错了", ex);
-                return new List<SharesBase>();
+                return new List<SharesBase_Session>();
             }
         }
 
         //分析买卖单占比-批量
-        public static List<SharesBase> Analysis_BuyOrSellCount_New_Batch(List<SharesBase> sharesList, string par)
+        public static List<SharesBase_Session> Analysis_BuyOrSellCount_New_Batch(List<SharesBase_Session> sharesList, string par)
         {
             try
             {
@@ -5312,14 +5319,14 @@ from v_shares_quotes_last with(nolock)";
                     quotes_list = db.Database.SqlQuery<QuotesDateInfo>(sql).ToList();
                 }
 
-                ThreadMsgTemplate<SharesBase> data = new ThreadMsgTemplate<SharesBase>();
+                ThreadMsgTemplate<SharesBase_Session> data = new ThreadMsgTemplate<SharesBase_Session>();
                 data.Init();
                 foreach (var item in sharesList)
                 {
                     data.AddMessage(item);
                 }
 
-                List<SharesBase> result = new List<SharesBase>();
+                List<SharesBase_Session> result = new List<SharesBase_Session>();
                 object dataLock = new object();
 
                 int defaultCount = Singleton.Instance.MaxTrendCheckTaskCount;
@@ -5336,7 +5343,7 @@ from v_shares_quotes_last with(nolock)";
                     {
                         do
                         {
-                            SharesBase tempData = new SharesBase();
+                            SharesBase_Session tempData = new SharesBase_Session();
                             if (!data.GetMessage(ref tempData, true))
                             {
                                 break;
@@ -5397,8 +5404,14 @@ from v_shares_quotes_last with(nolock)";
 
                             if (countType == 1)//流通股百分比
                             {
+                                int errorCode = 0;
+                                var SharesBaseSession = Singleton.Instance.sessionClient.Get<List<SharesBaseInfo_Session>>(Singleton.Instance.SharesBaseSession, ref errorCode);
+                                if (errorCode != 0)
+                                {
+                                    SharesBaseSession = new List<SharesBaseInfo_Session>();
+                                }
                                 //查询流通股
-                                var sharesInfo = (from item in Singleton.Instance._SharesBaseSession.GetSessionData()
+                                var sharesInfo = (from item in SharesBaseSession
                                                   where item.Market == tempData.Market && item.SharesCode == tempData.SharesCode
                                                   select item).FirstOrDefault();
                                 if (sharesInfo == null)
@@ -5412,7 +5425,7 @@ from v_shares_quotes_last with(nolock)";
                                 {
                                     lock (dataLock)
                                     {
-                                        result.Add(new SharesBase
+                                        result.Add(new SharesBase_Session
                                         {
                                             Market = tempData.Market,
                                             SharesCode = tempData.SharesCode
@@ -5426,7 +5439,7 @@ from v_shares_quotes_last with(nolock)";
                                 {
                                     lock (dataLock)
                                     {
-                                        result.Add(new SharesBase
+                                        result.Add(new SharesBase_Session
                                         {
                                             Market = tempData.Market,
                                             SharesCode = tempData.SharesCode
@@ -5449,12 +5462,12 @@ from v_shares_quotes_last with(nolock)";
             catch (Exception ex)
             {
                 Logger.WriteFileLog("Analysis_BuyOrSellCount_New_Batch出错了", ex);
-                return new List<SharesBase>();
+                return new List<SharesBase_Session>();
             }
         }
 
         //分析按参照价格-批量
-        public static List<SharesBase> Analysis_ReferPrice_New_Batch(List<SharesBase> sharesList, string par)
+        public static List<SharesBase_Session> Analysis_ReferPrice_New_Batch(List<SharesBase_Session> sharesList, string par)
         {
             DateTime dateNow = DateTime.Now.Date;
             try
@@ -5492,14 +5505,14 @@ from v_shares_quotes_last with(nolock)";
                     quotes_date_list = db.Database.SqlQuery<QuotesDateInfo>(sql).ToList();
                 }
 
-                ThreadMsgTemplate<SharesBase> data = new ThreadMsgTemplate<SharesBase>();
+                ThreadMsgTemplate<SharesBase_Session> data = new ThreadMsgTemplate<SharesBase_Session>();
                 data.Init();
                 foreach (var item in sharesList)
                 {
                     data.AddMessage(item);
                 }
 
-                List<SharesBase> result = new List<SharesBase>();
+                List<SharesBase_Session> result = new List<SharesBase_Session>();
                 object dataLock = new object();
 
                 int defaultCount = Singleton.Instance.MaxTrendCheckTaskCount;
@@ -5516,7 +5529,7 @@ from v_shares_quotes_last with(nolock)";
                     {
                         do
                         {
-                            SharesBase tempData = new SharesBase();
+                            SharesBase_Session tempData = new SharesBase_Session();
                             if (!data.GetMessage(ref tempData, true))
                             {
                                 break;
@@ -5562,7 +5575,7 @@ from v_shares_quotes_last with(nolock)";
                             {
                                 lock (dataLock)
                                 {
-                                    result.Add(new SharesBase
+                                    result.Add(new SharesBase_Session
                                     {
                                         Market = tempData.Market,
                                         SharesCode = tempData.SharesCode
@@ -5580,12 +5593,12 @@ from v_shares_quotes_last with(nolock)";
             catch (Exception ex)
             {
                 Logger.WriteFileLog("Analysis_ReferPrice_New_Batch出错了", ex);
-                return new List<SharesBase>();
+                return new List<SharesBase_Session>();
             }
         }
 
         //分析按均线价格-批量
-        public static List<SharesBase> Analysis_ReferAverage_New_Batch(List<SharesBase> sharesList, string par)
+        public static List<SharesBase_Session> Analysis_ReferAverage_New_Batch(List<SharesBase_Session> sharesList, string par)
         {
             DateTime dateNow = DateTime.Now.Date;
             try
@@ -5635,14 +5648,14 @@ from v_shares_quotes_last with(nolock)";
                     quotes_date_list = db.Database.SqlQuery<QuotesDateInfo>(sql).ToList();
                 }
 
-                ThreadMsgTemplate<SharesBase> data = new ThreadMsgTemplate<SharesBase>();
+                ThreadMsgTemplate<SharesBase_Session> data = new ThreadMsgTemplate<SharesBase_Session>();
                 data.Init();
                 foreach (var item in sharesList)
                 {
                     data.AddMessage(item);
                 }
 
-                List<SharesBase> result = new List<SharesBase>();
+                List<SharesBase_Session> result = new List<SharesBase_Session>();
                 object dataLock = new object();
 
                 int defaultCount = Singleton.Instance.MaxTrendCheckTaskCount;
@@ -5659,7 +5672,7 @@ from v_shares_quotes_last with(nolock)";
                     {
                         do
                         {
-                            SharesBase tempData = new SharesBase();
+                            SharesBase_Session tempData = new SharesBase_Session();
                             if (!data.GetMessage(ref tempData, true))
                             {
                                 break;
@@ -5687,7 +5700,7 @@ from v_shares_quotes_last with(nolock)";
                                 {
                                     lock (dataLock)
                                     {
-                                        result.Add(new SharesBase
+                                        result.Add(new SharesBase_Session
                                         {
                                             Market = tempData.Market,
                                             SharesCode = tempData.SharesCode
@@ -5756,7 +5769,7 @@ from v_shares_quotes_last with(nolock)";
                                 {
                                     lock (dataLock)
                                     {
-                                        result.Add(new SharesBase
+                                        result.Add(new SharesBase_Session
                                         {
                                             Market = tempData.Market,
                                             SharesCode = tempData.SharesCode
@@ -5775,12 +5788,12 @@ from v_shares_quotes_last with(nolock)";
             catch (Exception ex)
             {
                 Logger.WriteFileLog("Analysis_ReferAverage_New_Batch出错了", ex);
-                return new List<SharesBase>();
+                return new List<SharesBase_Session>();
             }
         }
 
         //分析买卖变化速度-批量
-        public static List<SharesBase> Analysis_QuotesChangeRate_New_Batch(List<SharesBase> sharesList, string par)
+        public static List<SharesBase_Session> Analysis_QuotesChangeRate_New_Batch(List<SharesBase_Session> sharesList, string par)
         {
             try
             {
@@ -5809,14 +5822,14 @@ from t_shares_quotes with(nolock)";
                     quotes_list = db.Database.SqlQuery<QuotesDateInfo>(sql).ToList();
                 }
 
-                ThreadMsgTemplate<SharesBase> data = new ThreadMsgTemplate<SharesBase>();
+                ThreadMsgTemplate<SharesBase_Session> data = new ThreadMsgTemplate<SharesBase_Session>();
                 data.Init();
                 foreach (var item in sharesList)
                 {
                     data.AddMessage(item);
                 }
 
-                List<SharesBase> result = new List<SharesBase>();
+                List<SharesBase_Session> result = new List<SharesBase_Session>();
                 object dataLock = new object();
 
                 int defaultCount = Singleton.Instance.MaxTrendCheckTaskCount;
@@ -5833,7 +5846,7 @@ from t_shares_quotes with(nolock)";
                     {
                         do
                         {
-                            SharesBase tempData = new SharesBase();
+                            SharesBase_Session tempData = new SharesBase_Session();
                             if (!data.GetMessage(ref tempData, true))
                             {
                                 break;
@@ -5978,7 +5991,7 @@ from t_shares_quotes with(nolock)";
                             {
                                 lock (dataLock)
                                 {
-                                    result.Add(new SharesBase
+                                    result.Add(new SharesBase_Session
                                     {
                                         Market = tempData.Market,
                                         SharesCode = tempData.SharesCode
@@ -5996,12 +6009,12 @@ from t_shares_quotes with(nolock)";
             catch (Exception ex)
             {
                 Logger.WriteFileLog("Analysis_QuotesChangeRate_New_Batch出错了", ex);
-                return new List<SharesBase>();
+                return new List<SharesBase_Session>();
             }
         }
 
         //分析五档变化速度-批量
-        public static List<SharesBase> Analysis_QuotesTypeChangeRate_New_Batch(List<SharesBase> sharesList, string par)
+        public static List<SharesBase_Session> Analysis_QuotesTypeChangeRate_New_Batch(List<SharesBase_Session> sharesList, string par)
         {
             try
             {
@@ -6032,14 +6045,14 @@ from t_shares_quotes with(nolock)";
                     quotes_list = db.Database.SqlQuery<QuotesDateInfo>(sql).ToList();
                 }
 
-                ThreadMsgTemplate<SharesBase> data = new ThreadMsgTemplate<SharesBase>();
+                ThreadMsgTemplate<SharesBase_Session> data = new ThreadMsgTemplate<SharesBase_Session>();
                 data.Init();
                 foreach (var item in sharesList)
                 {
                     data.AddMessage(item);
                 }
 
-                List<SharesBase> result = new List<SharesBase>();
+                List<SharesBase_Session> result = new List<SharesBase_Session>();
                 object dataLock = new object();
 
                 int defaultCount = Singleton.Instance.MaxTrendCheckTaskCount;
@@ -6056,7 +6069,7 @@ from t_shares_quotes with(nolock)";
                     {
                         do
                         {
-                            SharesBase tempData = new SharesBase();
+                            SharesBase_Session tempData = new SharesBase_Session();
                             if (!data.GetMessage(ref tempData, true))
                             {
                                 break;
@@ -6216,7 +6229,7 @@ from t_shares_quotes with(nolock)";
                             {
                                 lock (dataLock)
                                 {
-                                    result.Add(new SharesBase
+                                    result.Add(new SharesBase_Session
                                     {
                                         Market = tempData.Market,
                                         SharesCode = tempData.SharesCode
@@ -6234,15 +6247,22 @@ from t_shares_quotes with(nolock)";
             catch (Exception ex)
             {
                 Logger.WriteFileLog("分析五档变化速度出错了", ex);
-                return new List<SharesBase>();
+                return new List<SharesBase_Session>();
             }
         }
 
         //分析按当前价格-批量
-        public static List<SharesBase> Analysis_CurrentPrice_New_Batch(List<SharesBase> sharesList, string par)
+        public static List<SharesBase_Session> Analysis_CurrentPrice_New_Batch(List<SharesBase_Session> sharesList, string par)
         {
             try
             {
+                int errorCode = 0;
+                var SharesBaseSession = Singleton.Instance.sessionClient.Get<List<SharesBaseInfo_Session>>(Singleton.Instance.SharesBaseSession, ref errorCode);
+                if (errorCode != 0)
+                {
+                    SharesBaseSession = new List<SharesBaseInfo_Session>();
+                }
+
                 var temp = JsonConvert.DeserializeObject<dynamic>(par);
                 int riseType = 0;
                 int compare = 0;
@@ -6273,14 +6293,14 @@ from v_shares_quotes_last with(nolock)";
                     quotes_list = db.Database.SqlQuery<QuotesDateInfo>(sql).ToList();
                 }
 
-                ThreadMsgTemplate<SharesBase> data = new ThreadMsgTemplate<SharesBase>();
+                ThreadMsgTemplate<SharesBase_Session> data = new ThreadMsgTemplate<SharesBase_Session>();
                 data.Init();
                 foreach (var item in sharesList)
                 {
                     data.AddMessage(item);
                 }
 
-                List<SharesBase> result = new List<SharesBase>();
+                List<SharesBase_Session> result = new List<SharesBase_Session>();
                 object dataLock = new object();
 
                 int defaultCount = Singleton.Instance.MaxTrendCheckTaskCount;
@@ -6297,7 +6317,7 @@ from v_shares_quotes_last with(nolock)";
                     {
                         do
                         {
-                            SharesBase tempData = new SharesBase();
+                            SharesBase_Session tempData = new SharesBase_Session();
                             if (!data.GetMessage(ref tempData, true))
                             {
                                 break;
@@ -6313,7 +6333,7 @@ from v_shares_quotes_last with(nolock)";
                             {
                                 lock (dataLock)
                                 {
-                                    result.Add(new SharesBase
+                                    result.Add(new SharesBase_Session
                                     {
                                         Market = tempData.Market,
                                         SharesCode = tempData.SharesCode
@@ -6325,7 +6345,7 @@ from v_shares_quotes_last with(nolock)";
                             {
                                 lock (dataLock)
                                 {
-                                    result.Add(new SharesBase
+                                    result.Add(new SharesBase_Session
                                     {
                                         Market = tempData.Market,
                                         SharesCode = tempData.SharesCode
@@ -6337,7 +6357,7 @@ from v_shares_quotes_last with(nolock)";
                             {
                                 lock (dataLock)
                                 {
-                                    result.Add(new SharesBase
+                                    result.Add(new SharesBase_Session
                                     {
                                         Market = tempData.Market,
                                         SharesCode = tempData.SharesCode
@@ -6350,7 +6370,7 @@ from v_shares_quotes_last with(nolock)";
                             {
                                 lock (dataLock)
                                 {
-                                    result.Add(new SharesBase
+                                    result.Add(new SharesBase_Session
                                     {
                                         Market = tempData.Market,
                                         SharesCode = tempData.SharesCode
@@ -6364,7 +6384,7 @@ from v_shares_quotes_last with(nolock)";
                                 {
                                     lock (dataLock)
                                     {
-                                        result.Add(new SharesBase
+                                        result.Add(new SharesBase_Session
                                         {
                                             Market = tempData.Market,
                                             SharesCode = tempData.SharesCode
@@ -6376,7 +6396,7 @@ from v_shares_quotes_last with(nolock)";
                             else if (riseType == 6)
                             {
                                 //查询流通股
-                                var sharesInfo = (from item in Singleton.Instance._SharesBaseSession.GetSessionData()
+                                var sharesInfo = (from item in SharesBaseSession
                                                   where item.Market == tempData.Market && item.SharesCode == tempData.SharesCode
                                                   select item).FirstOrDefault();
                                 if (sharesInfo == null)
@@ -6388,7 +6408,7 @@ from v_shares_quotes_last with(nolock)";
                                 {
                                     lock (dataLock)
                                     {
-                                        result.Add(new SharesBase
+                                        result.Add(new SharesBase_Session
                                         {
                                             Market = tempData.Market,
                                             SharesCode = tempData.SharesCode
@@ -6399,7 +6419,7 @@ from v_shares_quotes_last with(nolock)";
                             else if (riseType == 7)
                             {
                                 //查询总股本
-                                var sharesInfo = (from item in Singleton.Instance._SharesBaseSession.GetSessionData()
+                                var sharesInfo = (from item in SharesBaseSession
                                                   where item.Market == tempData.Market && item.SharesCode == tempData.SharesCode
                                                   select item).FirstOrDefault();
                                 if (sharesInfo == null)
@@ -6411,7 +6431,7 @@ from v_shares_quotes_last with(nolock)";
                                 {
                                     lock (dataLock)
                                     {
-                                        result.Add(new SharesBase
+                                        result.Add(new SharesBase_Session
                                         {
                                             Market = tempData.Market,
                                             SharesCode = tempData.SharesCode
@@ -6430,16 +6450,23 @@ from v_shares_quotes_last with(nolock)";
             catch (Exception ex)
             {
                 Logger.WriteFileLog("分析按当前价格出错了", ex);
-                return new List<SharesBase>();
+                return new List<SharesBase_Session>();
             }
         }
 
         //分心股票市场-批量
-        public static List<SharesBase> Analysis_SharesMarket_New_Batch(List<SharesBase> sharesList, string par)
+        public static List<SharesBase_Session> Analysis_SharesMarket_New_Batch(List<SharesBase_Session> sharesList, string par)
         {
             try
             {
-                List<SharesBase> result = new List<SharesBase>();
+                int errorCode = 0;
+                var SharesBaseSession = Singleton.Instance.sessionClient.Get<List<SharesBaseInfo_Session>>(Singleton.Instance.SharesBaseSession, ref errorCode);
+                if (errorCode != 0)
+                {
+                    SharesBaseSession = new List<SharesBaseInfo_Session>();
+                }
+
+                List<SharesBase_Session> result = new List<SharesBase_Session>();
                 var temp = JsonConvert.DeserializeObject<dynamic>(par);
                 string sharesKey = string.Empty;
                 int sharesType = 0;
@@ -6490,7 +6517,7 @@ from v_shares_quotes_last with(nolock)";
 
                 foreach (var item in sharesList)
                 {
-                    string sharesName = (from x in Singleton.Instance._SharesBaseSession.GetSessionData()
+                    string sharesName = (from x in SharesBaseSession
                                          where x.Market == item.Market && x.SharesCode == item.SharesCode
                                          select x.SharesName).FirstOrDefault();
                     if (string.IsNullOrEmpty(sharesName))
@@ -6508,7 +6535,7 @@ from v_shares_quotes_last with(nolock)";
             catch (Exception ex)
             {
                 Logger.WriteFileLog("Analysis_SharesMarket_New_Batch出错", ex);
-                return new List<SharesBase>();
+                return new List<SharesBase_Session>();
             }
         }
     }

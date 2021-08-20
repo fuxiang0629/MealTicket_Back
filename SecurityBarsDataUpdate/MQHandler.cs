@@ -34,12 +34,12 @@ namespace SecurityBarsDataUpdate
                 Console.WriteLine("");
                 Console.WriteLine("");
 
-                //SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new SecurityBarsDataTaskQueueInfo
-                //{
-                //    DataList = list,
-                //    TaskGuid = resultData.TaskGuid
+                SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new SecurityBarsDataTaskQueueInfo
+                {
+                    DataList = list,
+                    TaskGuid = resultData.TaskGuid
 
-                //})), "TransactionData", "TrendAnalyse");
+                })), "SecurityBars", "update_1min");
             }
             catch (Exception ex)
             {

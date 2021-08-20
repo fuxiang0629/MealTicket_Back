@@ -64,7 +64,7 @@ namespace SecurityBarsDataUpdate
         /// <summary>
         /// 时间
         /// </summary>
-        public DateTime Time { get; set; }
+        public DateTime? Time { get; set; }
 
         /// <summary>
         /// 时间
@@ -102,13 +102,8 @@ namespace SecurityBarsDataUpdate
         public long TradeAmount { get; set; }
 
         /// <summary>
-        /// 涨家数
+        /// 上一时段收盘价
         /// </summary>
-        public int RiseCount { get; set; }
-
-        /// <summary>
-        /// 跌家数
-        /// </summary>
-        public int FallCount { get; set; }
+        public long PreClosePrice { get; set; }
     }
 }
