@@ -380,6 +380,7 @@
     <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateBuyOtherGroup.cs" />
     <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateBuyOtherPar.cs" />
     <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateJoinDetails.cs" />
+    <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateSearchDetails.cs" />
     <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateSellDetails.cs" />
     <Compile Include="Model\TradeCenter\ModifySharesCorrigendum.cs" />
     <Compile Include="Model\TradeCenter\ModifySharesLimitAutoBuy.cs" />

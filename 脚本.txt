@@ -12,3 +12,4 @@ t_shares_info_fund_group_details
 P_Analysis_Price_New_Batch
 Analysis_HisRiseRate_New_Batch
 Analysis_TodayRiseRate_New_Batch
+P_Analysis_BuyOrSellCount_New_Batch

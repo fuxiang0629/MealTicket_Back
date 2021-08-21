@@ -1,6 +1,7 @@
 ﻿using FXCommon.Common;
 using MealTicket_DBCommon;
 using MealTicket_Handler.Model;
+using MealTicket_Handler.SecurityBarsData;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -112,6 +113,13 @@ namespace MealTicket_Handler
         /// </summary>
         public long PriceFormat = 10000;
 
+        #region====K线数据参数====
+        public int SecurityBarsIntervalTime = 3000;//间隔时间(毫秒)
+        public int SecurityBarsTaskTimeout = 15000;//任务超时时间(毫秒)
+        public int SecurityBarsBatchCount = 64;//每批次处理股票数量
+        public int SecurityBarsUpdateCountOnce = 10000;//每次写入数据库数据量
+        #endregion
+
         // 显式静态构造函数告诉C＃编译器
         // 不要将类型标记为BeforeFieldInit
         static Singleton()
@@ -124,6 +132,8 @@ namespace MealTicket_Handler
             UpdateSysPar();
             UpdateWait.Init();
             StartSysparUpdateThread();
+
+            sessionClient.Connect(session_server, session_username, session_password);
         }
 
         public static Singleton Instance
@@ -144,6 +154,18 @@ namespace MealTicket_Handler
                 UpdateWait.AddMessage(0);
                 SysparUpdateThread.Join();
                 UpdateWait.Release();
+            }
+            if (mqHandler_SecurityBarsData != null)
+            {
+                mqHandler_SecurityBarsData.Dispose();
+            }
+            if (mqHandler != null)
+            {
+                mqHandler.Dispose();
+            }
+            if (_securityBarsDataTask != null)
+            {
+                _securityBarsDataTask.Dispose();
             }
         }
 
@@ -319,6 +341,37 @@ namespace MealTicket_Handler
                     }
                 }
                 catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                    where item.ParamName == "SecurityBarsPar"
+                                    select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                        int tempSecurityBarsIntervalTime = sysValue.SecurityBarsIntervalTime;
+                        if (tempSecurityBarsIntervalTime>0)
+                        {
+                            SecurityBarsIntervalTime = tempSecurityBarsIntervalTime;
+                        }
+                        int tempSecurityBarsTaskTimeout = sysValue.SecurityBarsTaskTimeout;
+                        if (tempSecurityBarsTaskTimeout > 0)
+                        {
+                            SecurityBarsTaskTimeout = tempSecurityBarsTaskTimeout;
+                        }
+                        int tempSecurityBarsBatchCount = sysValue.SecurityBarsBatchCount;
+                        if (tempSecurityBarsBatchCount >= 32)
+                        {
+                            SecurityBarsBatchCount = tempSecurityBarsBatchCount;
+                        }
+                        int tempSecurityBarsUpdateCountOnce = sysValue.SecurityBarsUpdateCountOnce;
+                        if (tempSecurityBarsUpdateCountOnce > 0)
+                        {
+                            SecurityBarsUpdateCountOnce = tempSecurityBarsUpdateCountOnce;
+                        }
+                    }
+                }
+                catch { }
             }
         }
 
@@ -339,5 +392,46 @@ namespace MealTicket_Handler
             mqHandler = new MQHandler(hostName, port, userName, password, virtualHost);
             return mqHandler;
         }
+
+
+        /// <summary>
+        /// K线队列对象
+        /// </summary>
+        public MQHandler_SecurityBarsData mqHandler_SecurityBarsData;
+        /// <summary>
+        /// 启动K线Mq队列
+        /// </summary>
+        public MQHandler_SecurityBarsData StartMqHandler_SecurityBarsData()
+        {
+            string hostName = ConfigurationManager.AppSettings["MQ_HostName"];
+            int port = int.Parse(ConfigurationManager.AppSettings["MQ_Port"]);
+            string userName = ConfigurationManager.AppSettings["MQ_UserName"];
+            string password = ConfigurationManager.AppSettings["MQ_Password"];
+            string virtualHost = ConfigurationManager.AppSettings["MQ_VirtualHost"];
+            mqHandler_SecurityBarsData = new MQHandler_SecurityBarsData(hostName, port, userName, password, virtualHost);
+            mqHandler_SecurityBarsData.ListenQueueName = "SecurityBars_Update_1min";//设置监听队列
+            return mqHandler_SecurityBarsData;
+        }
+
+        /// <summary>
+        /// K线数据处理任务
+        /// </summary>
+        public SecurityBarsDataTask _securityBarsDataTask;
+
+        public SecurityBarsDataTask StartSecurityBarsDataTask()
+        {
+            _securityBarsDataTask = new SecurityBarsDataTask();
+            _securityBarsDataTask.Init();
+            return _securityBarsDataTask;
+        }
+
+        #region===缓存===
+        private string session_server = ConfigurationManager.AppSettings["session_server"];
+        private string session_username = ConfigurationManager.AppSettings["session_username"];
+        private string session_password = ConfigurationManager.AppSettings["session_password"]; 
+        public SessionClient sessionClient = new SessionClient();
+
+        public string SharesBaseSession = "SharesBaseSession";
+        #endregion
     }
 }

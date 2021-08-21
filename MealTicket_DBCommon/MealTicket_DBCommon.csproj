@@ -157,8 +157,12 @@
     <Compile Include="t_account_shares_auto_join_tobuy_other_trend_par.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="t_account_shares_auto_join_tobuy_record.cs" />
-    <Compile Include="t_account_shares_auto_join_tobuy_usegroup.cs" />
+    <Compile Include="t_account_shares_auto_join_tobuy_record.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_auto_join_tobuy_usegroup.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="t_account_shares_buy_setting.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -288,12 +292,27 @@
     <Compile Include="t_account_shares_conditiontrade_template_buy_other_trend_par.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="t_account_shares_conditiontrade_template_join.cs" />
-    <Compile Include="t_account_shares_conditiontrade_template_join_other.cs" />
-    <Compile Include="t_account_shares_conditiontrade_template_join_other_trend.cs" />
-    <Compile Include="t_account_shares_conditiontrade_template_join_other_trend_other.cs" />
-    <Compile Include="t_account_shares_conditiontrade_template_join_other_trend_other_par.cs" />
-    <Compile Include="t_account_shares_conditiontrade_template_join_other_trend_par.cs" />
+    <Compile Include="t_account_shares_conditiontrade_template_join.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_conditiontrade_template_join_other.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_conditiontrade_template_join_other_trend.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_conditiontrade_template_join_other_trend_other.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_conditiontrade_template_join_other_trend_other_par.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_conditiontrade_template_join_other_trend_par.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_conditiontrade_template_search.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="t_account_shares_conditiontrade_template_sell.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -792,12 +811,27 @@
     <Compile Include="t_sys_conditiontrade_template_buy_other_trend_par.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
-    <Compile Include="t_sys_conditiontrade_template_join.cs" />
-    <Compile Include="t_sys_conditiontrade_template_join_other.cs" />
-    <Compile Include="t_sys_conditiontrade_template_join_other_trend.cs" />
-    <Compile Include="t_sys_conditiontrade_template_join_other_trend_other.cs" />
-    <Compile Include="t_sys_conditiontrade_template_join_other_trend_other_par.cs" />
-    <Compile Include="t_sys_conditiontrade_template_join_other_trend_par.cs" />
+    <Compile Include="t_sys_conditiontrade_template_join.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_sys_conditiontrade_template_join_other.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_sys_conditiontrade_template_join_other_trend.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_sys_conditiontrade_template_join_other_trend_other.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_sys_conditiontrade_template_join_other_trend_other_par.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_sys_conditiontrade_template_join_other_trend_par.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_sys_conditiontrade_template_search.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="t_sys_conditiontrade_template_sell.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -852,5 +886,6 @@
       <LastGenOutput>Model1.cs</LastGenOutput>
     </Content>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

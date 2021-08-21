@@ -33,8 +33,6 @@ namespace MealTicket_Web_APIService
             _manager.Start<Startup>("http://localhost:8800/");
             Console.WriteLine("程序已启动,按任意键退出");
             Console.ReadLine();
-            _manager.Dispose();
-            Console.ReadLine();
         }
     }
 }

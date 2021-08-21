@@ -255,25 +255,16 @@
     <Compile Include="Model\ModifyConditiontradeTemplateBuyOtherGroup.cs" />
     <Compile Include="Model\ModifyConditiontradeTemplateBuyOtherPar.cs" />
     <Compile Include="Model\ModifyConditiontradeTemplateJoinDetails.cs" />
+    <Compile Include="Model\ModifyConditiontradeTemplateSearchDetails.cs" />
     <Compile Include="Model\ModifyConditiontradeTemplateSellDetails.cs" />
     <Compile Include="Model\RelIdInfo.cs" />
     <Compile Include="ModifyStatusRequest.cs" />
-    <Compile Include="MQHandler.cs" />
+    <Compile Include="MQ\MQHandler.cs" />
     <Compile Include="OptionalTrend.cs" />
     <Compile Include="PageRequest.cs" />
     <Compile Include="PageRes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Runner\RunnerHelper.cs" />
-    <Compile Include="session\AccountRiseLimitTriSession.cs" />
-    <Compile Include="session\AccountTrendTriSession.cs" />
-    <Compile Include="session\BasePlateSession.cs" />
-    <Compile Include="session\BuyTipSession.cs" />
-    <Compile Include="session\model\BasePlateInfo.cs" />
-    <Compile Include="session\model\SharesBaseInfo.cs" />
-    <Compile Include="session\PlateRateSession.cs" />
-    <Compile Include="session\SharesBaseSession.cs" />
-    <Compile Include="session\SharesQuotesDateSession.cs" />
-    <Compile Include="session\SharesQuotesSession.cs" />
     <Compile Include="Singleton.cs" />
     <Compile Include="Transactiondata\TransactiondataAnalyseInfo.cs" />
     <Compile Include="Transactiondata\TransactionDataTask.cs" />
@@ -285,6 +276,10 @@
     <ProjectReference Include="..\FXCommon\FXCommon.csproj">
       <Project>{0ECD9F97-E7B1-42DD-AB4F-FFBBF6216257}</Project>
       <Name>FXCommon</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\MealTicket_CacheCommon_Model\MealTicket_CacheCommon_Session.csproj">
+      <Project>{f0988678-9dd3-4f26-8ccf-52081544eee2}</Project>
+      <Name>MealTicket_CacheCommon_Session</Name>
     </ProjectReference>
     <ProjectReference Include="..\MealTicket_DBCommon\MealTicket_DBCommon.csproj">
       <Project>{100AABCB-BBBC-46DD-B494-57D56083590A}</Project>

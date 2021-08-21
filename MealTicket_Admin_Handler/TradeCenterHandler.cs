@@ -877,15 +877,41 @@ namespace MealTicket_Admin_Handler
                 }
                 if (request.ChooseStatus != 0)
                 {
-                    list = from item in list
-                           where item.item2.ChooseStatus == request.ChooseStatus && item.item2.Status==1
-                           select item;
+                    if (request.Level == 1)
+                    {
+                        list = from item in list
+                               join item2 in db.t_shares_plate_type_business on item.item2.Type equals item2.Id
+                               where item.item2.ChooseStatus == request.ChooseStatus || (item2.IsBasePlate == 1 && item.item2.BaseStatus == 1)
+                               select item;
+                    }
+                    else
+                    {
+                        list = from item in list
+                               where item.item2.ChooseStatus == request.ChooseStatus
+                               select item;
+                    }
                 }
                 if (!string.IsNullOrEmpty(request.Name))
                 {
                     list = from item in list
                            where item.item2.Name.Contains(request.Name)
                            select item;
+                }
+                if (request.Level == 1)
+                {
+                    return new PageRes<SharesPlateInfo>
+                    {
+                        MaxId = 0,
+                        TotalCount = 0,
+                        List = (from item in list
+                                orderby item.item2.Name
+                                select new SharesPlateInfo
+                                {
+                                    Id = item.item2.Id,
+                                    Type = item.item2.Type,
+                                    Name = item.item2.Name
+                                }).ToList()
+                    };
                 }
 
                 int totalCount = list.Count();
@@ -3940,6 +3966,10 @@ namespace MealTicket_Admin_Handler
                     {
                         CopyConditiontradeTemplate_Join(request.Id, newTemplate.Id, db);
                     }
+                    else if (template.Type == 4)//自动加入模板复制
+                    {
+                        CopyConditiontradeTemplate_Search(request.Id, newTemplate.Id, db);
+                    }
                     else
                     {
                         throw new WebApiException(400, "数据有误");
@@ -4331,6 +4361,23 @@ namespace MealTicket_Admin_Handler
                         }
                     }
                 }
+            }
+        }
+        private void CopyConditiontradeTemplate_Search(long templateId, long newTemplateId, meal_ticketEntities db)
+        {
+            var template_search = (from item in db.t_sys_conditiontrade_template_search
+                                   where item.TemplateId == templateId
+                                   select item).FirstOrDefault();
+            if (template_search != null)
+            {
+                db.t_sys_conditiontrade_template_search.Add(new t_sys_conditiontrade_template_search
+                {
+                    CreateTime = DateTime.Now,
+                    LastModified = DateTime.Now,
+                    TemplateId = newTemplateId,
+                    TemplateContent = template_search.TemplateContent
+                });
+                db.SaveChanges();
             }
         }
 
@@ -7942,6 +7989,8 @@ namespace MealTicket_Admin_Handler
             }
         }
 
+        #endregion
+
         #region===自动加入===
         /// <summary>
         /// 获取自动加入模板详情列表
@@ -8012,9 +8061,9 @@ namespace MealTicket_Admin_Handler
                         LastModified = DateTime.Now,
                         Name = string.IsNullOrEmpty(request.Name) ? Guid.NewGuid().ToString("N") : request.Name,
                         TemplateId = request.TemplateId,
-                        IsClearOriginal=request.IsClearOriginal,
-                        TimeCycle=request.TimeCycle,
-                        TimeCycleType=request.TimeCycleType
+                        IsClearOriginal = request.IsClearOriginal,
+                        TimeCycle = request.TimeCycle,
+                        TimeCycleType = request.TimeCycleType
                     };
                     db.t_sys_conditiontrade_template_join.Add(temp);
                     db.SaveChanges();
@@ -9384,6 +9433,60 @@ namespace MealTicket_Admin_Handler
         }
         #endregion
 
+        #region===搜索===
+        /// <summary>
+        /// 获取搜索模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public object GetConditiontradeTemplateSearchDetails(DetailsRequest request) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = (from item in db.t_sys_conditiontrade_template_search
+                              where item.TemplateId == request.Id
+                              select item).FirstOrDefault();
+                if (result == null)
+                {
+                    return null;
+                }
+                return new 
+                {
+                    TemplateId=result.TemplateId,
+                    TemplateContent=result.TemplateContent,
+                };
+            }
+        }
+
+        /// <summary>
+        /// 编辑搜索模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyConditiontradeTemplateSearchDetails(ModifyConditiontradeTemplateSearchDetailsRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = (from item in db.t_sys_conditiontrade_template_search
+                              where item.TemplateId == request.TemplateId
+                              select item).FirstOrDefault();
+                if (result == null)
+                {
+                    db.t_sys_conditiontrade_template_search.Add(new t_sys_conditiontrade_template_search
+                    {
+                        CreateTime = DateTime.Now,
+                        LastModified = DateTime.Now,
+                        TemplateContent = request.TemplateContent,
+                        TemplateId = request.TemplateId
+                    });
+                }
+                else
+                {
+                    result.TemplateContent = request.TemplateContent;
+                    result.LastModified = DateTime.Now;
+                }
+                db.SaveChanges();
+            }
+        }
         #endregion
     }
 }

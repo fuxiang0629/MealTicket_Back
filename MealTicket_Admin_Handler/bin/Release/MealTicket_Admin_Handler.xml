@@ -1249,6 +1249,12 @@
             </summary>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_Handler.Helper.CheckTradeTime(System.Nullable{System.DateTime})">
+            <summary>
+            检查当前是否交易时间
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_Handler.MenuHandler.GetMenuList(MealTicket_Admin_Handler.Model.GetMenuListRequest,MealTicket_Admin_Handler.Model.HeadBase)">
             <summary>
             获取菜单列表
@@ -9635,6 +9641,11 @@
             ascending：升序  descending：降序
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetSharesPlateListRequest.Level">
+            <summary>
+            等级
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.SharesPlateInfo.Id">
             <summary>
             Id
@@ -10063,6 +10074,16 @@
         <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateJoinDetailsRequest.TimeCycle">
             <summary>
             周期次数
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSearchDetailsRequest.TemplateId">
+            <summary>
+            模板Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSearchDetailsRequest.TemplateContent">
+            <summary>
+            模板内容
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSellDetailsRequest.Id">
@@ -13792,6 +13813,19 @@
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteConditiontradeTemplateJoinOtherPar_Other(MealTicket_Admin_Handler.Model.DeleteRequest)">
             <summary>
             删除自动加入模板额外条件类型参数-额外关系
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetConditiontradeTemplateSearchDetails(MealTicket_Admin_Handler.Model.DetailsRequest)">
+            <summary>
+            获取搜索模板详情
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifyConditiontradeTemplateSearchDetails(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSearchDetailsRequest)">
+            <summary>
+            编辑搜索模板详情
             </summary>
             <param name="request"></param>
         </member>

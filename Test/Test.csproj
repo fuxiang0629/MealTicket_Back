@@ -52,5 +52,11 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FXCommon\FXCommon.csproj">
+      <Project>{0ecd9f97-e7b1-42dd-ab4f-ffbbf6216257}</Project>
+      <Name>FXCommon</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

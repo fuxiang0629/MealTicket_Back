@@ -223,6 +223,10 @@ namespace SharesHqService
         public readonly int TransactionDataCount = 1;
         #endregion
 
+        #region===获取K线参数====
+        public int SecurityIndexBarsGetCount = 5;//每次获取k线数据数量
+        #endregion
+
         /// <summary>
         /// 运行时间比交易时间提前秒数
         /// </summary>

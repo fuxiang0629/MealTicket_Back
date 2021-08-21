@@ -3395,7 +3395,7 @@
         </member>
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.AddSharesPriorityAutoBuyPlate(MealTicket_Admin_Handler.Model.AddSharesPriorityAutoBuyPlateRequest)">
             <summary>
-            添加自动买入优先级适用板块
+            添加自动买入优先级适用板块endregion
             </summary>
             <returns></returns>
         </member>
@@ -3634,6 +3634,20 @@
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeleteConditiontradeTemplateJoinOtherPar_Other(MealTicket_Admin_Handler.Model.DeleteRequest)">
             <summary>
             删除自动加入模板额外条件类型参数-额外关系
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetConditiontradeTemplateSearchDetails(MealTicket_Admin_Handler.Model.DetailsRequest)">
+            <summary>
+            获取搜索模板详情
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyConditiontradeTemplateSearchDetails(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSearchDetailsRequest)">
+            <summary>
+            编辑搜索模板详情
             </summary>
             <param name="request"></param>
             <returns></returns>

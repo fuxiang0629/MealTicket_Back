@@ -1,8 +1,8 @@
 ﻿using FXCommon.Common;
 using FXCommon.Database;
+using MealTicket_CacheCommon_Session;
 using MealTicket_DBCommon;
 using MealTicket_Web_Handler.Runner;
-using MealTicket_Web_Handler.session;
 using MealTicket_Web_Handler.Transactiondata;
 using Newtonsoft.Json;
 using StockTrendMonitor.Models;
@@ -80,6 +80,8 @@ namespace MealTicket_Web_Handler
         /// </summary>
         public int QuotesDaysShow = 20;
 
+        public int MaxTrendCheckTaskCount = 32;
+
         #region===再触发设置===
         public int MinPushTimeInterval = 180;
         public int MinPushRateInterval = 60;
@@ -96,7 +98,14 @@ namespace MealTicket_Web_Handler
         public int NewTransactionDataRunEndTime = 180;//运行时间比交易时间滞后秒数
         public int NewTransactiondataTaskTimeOut = 15000;//任务超时时间
         public int NewTransactiondataTaskTimeOut2 = 45000;//任务超时时间2
-        public int NewTransactiondataTaskUpdateCountOnce = 4000;//单次写分时数据数量
+        public int NewTransactiondataTaskUpdateCountOnce = 5000;//单次写分时数据数量
+        #endregion
+
+        #region====K线数据参数====
+        public int SecurityBarsIntervalTime = 3000;//间隔时间(毫秒)
+        public int SecurityBarsTaskTimeout = 15000;//任务超时时间(毫秒)
+        public int SecurityBarsBatchCount = 64;//每批次处理股票数量
+        public int SecurityBarsUpdateCountOnce = 5000;//每次写入数据库数据量
         #endregion
 
 
@@ -193,6 +202,9 @@ namespace MealTicket_Web_Handler
 
             UpdateWait.Init();
             StartSysparUpdateThread();
+
+
+            sessionClient.Connect(session_server, session_username, session_password);
         }
 
         public static Singleton Instance
@@ -225,38 +237,6 @@ namespace MealTicket_Web_Handler
             if (_transactionDataTask != null)
             {
                 _transactionDataTask.Dispose();
-            }
-            if (_BuyTipSession != null)
-            {
-                _BuyTipSession.Dispose();
-            }
-            if (_SharesQuotesSession != null)
-            {
-                _SharesQuotesSession.Dispose();
-            }
-            if (_PlateRateSession != null)
-            {
-                _PlateRateSession.Dispose();
-            }
-            if (_AccountTrendTriSession != null)
-            {
-                _AccountTrendTriSession.Dispose();
-            }
-            if (_SharesBaseSession != null)
-            {
-                _SharesBaseSession.Dispose();
-            }
-            if (_AccountRiseLimitTriSession != null)
-            {
-                _AccountRiseLimitTriSession.Dispose();
-            }
-            if (_SharesQuotesDateSession != null)
-            {
-                _SharesQuotesDateSession.Dispose();
-            }
-            if (_BasePlateSession != null)
-            {
-                _BasePlateSession.Dispose();
             }
         }
 
@@ -451,10 +431,6 @@ namespace MealTicket_Web_Handler
                                   select item).FirstOrDefault();
                     if (sysPar != null)
                     {
-                        if (_SharesBaseSession != null && QuotesDaysShow!= int.Parse(sysPar.ParamValue))
-                        {
-                            _SharesBaseSession.UpdateSessionManual();
-                        }
                         QuotesDaysShow = int.Parse(sysPar.ParamValue);
                     }
                 }
@@ -593,6 +569,7 @@ namespace MealTicket_Web_Handler
             return mqHandler;
         }
 
+
         /// <summary>
         /// 分笔数据处理任务
         /// </summary>
@@ -605,15 +582,22 @@ namespace MealTicket_Web_Handler
             return _transactionDataTask;
         }
 
-        #region=========session缓存========
-        public BuyTipSession _BuyTipSession;
-        public SharesQuotesSession _SharesQuotesSession;
-        public SharesBaseSession _SharesBaseSession;
-        public PlateRateSession _PlateRateSession;
-        public AccountTrendTriSession _AccountTrendTriSession;
-        public AccountRiseLimitTriSession _AccountRiseLimitTriSession;
-        public SharesQuotesDateSession _SharesQuotesDateSession;
-        public BasePlateSession _BasePlateSession;
+
+        #region===缓存===
+        private string session_server = ConfigurationManager.AppSettings["session_server"];
+        private string session_username = ConfigurationManager.AppSettings["session_username"];
+        private string session_password = ConfigurationManager.AppSettings["session_password"];
+        public SessionClient sessionClient = new SessionClient();
+
+        public string AccountRiseLimitTriSession = "AccountRiseLimitTriSession";
+        public string AccountTrendTriSession = "AccountTrendTriSession";
+        public string BuyTipSession = "BuyTipSession";
+        public string SharesBaseSession = "SharesBaseSession";
+        public string SharesHisRiseRateSession = "SharesHisRiseRateSession";
+        public string SharesPlateQuotesSession = "SharesPlateQuotesSession";
+        public string SharesPlateRelSession = "SharesPlateRelSession";
+        public string SharesPlateSession = "SharesPlateSession";
+        public string SharesQuotesSession = "SharesQuotesSession";
         #endregion
     }
 }

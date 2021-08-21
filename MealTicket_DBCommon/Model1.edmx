@@ -959,6 +959,15 @@
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_template_search">
+          <Key>
+            <PropertyRef Name="TemplateId" />
+          </Key>
+          <Property Name="TemplateId" Type="bigint" Nullable="false" />
+          <Property Name="TemplateContent" Type="nvarchar(max)" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="t_account_shares_conditiontrade_template_sell">
           <Key>
             <PropertyRef Name="Id" />
@@ -3486,6 +3495,15 @@
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="t_sys_conditiontrade_template_search">
+          <Key>
+            <PropertyRef Name="TemplateId" />
+          </Key>
+          <Property Name="TemplateId" Type="bigint" Nullable="false" />
+          <Property Name="TemplateContent" Type="nvarchar(max)" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="t_sys_conditiontrade_template_sell">
           <Key>
             <PropertyRef Name="Id" />
@@ -4389,6 +4407,7 @@
           <EntitySet Name="t_account_shares_conditiontrade_template_join_other_trend_other" EntityType="Self.t_account_shares_conditiontrade_template_join_other_trend_other" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_conditiontrade_template_join_other_trend_other_par" EntityType="Self.t_account_shares_conditiontrade_template_join_other_trend_other_par" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_conditiontrade_template_join_other_trend_par" EntityType="Self.t_account_shares_conditiontrade_template_join_other_trend_par" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_conditiontrade_template_search" EntityType="Self.t_account_shares_conditiontrade_template_search" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_conditiontrade_template_sell" EntityType="Self.t_account_shares_conditiontrade_template_sell" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_conditiontrade_template_sell_child" EntityType="Self.t_account_shares_conditiontrade_template_sell_child" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_entrust" EntityType="Self.t_account_shares_entrust" Schema="dbo" store:Type="Tables" />
@@ -4560,6 +4579,7 @@
           <EntitySet Name="t_sys_conditiontrade_template_join_other_trend_other" EntityType="Self.t_sys_conditiontrade_template_join_other_trend_other" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_sys_conditiontrade_template_join_other_trend_other_par" EntityType="Self.t_sys_conditiontrade_template_join_other_trend_other_par" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_sys_conditiontrade_template_join_other_trend_par" EntityType="Self.t_sys_conditiontrade_template_join_other_trend_par" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_sys_conditiontrade_template_search" EntityType="Self.t_sys_conditiontrade_template_search" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_sys_conditiontrade_template_sell" EntityType="Self.t_sys_conditiontrade_template_sell" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_sys_conditiontrade_template_sell_child" EntityType="Self.t_sys_conditiontrade_template_sell_child" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_system_param" EntityType="Self.t_system_param" Schema="dbo" store:Type="Tables" />
@@ -8823,6 +8843,8 @@
           <EntitySet Name="t_account_shares_conditiontrade_template_join_other_trend_other" EntityType="meal_ticketModel.t_account_shares_conditiontrade_template_join_other_trend_other" />
           <EntitySet Name="t_account_shares_conditiontrade_template_join_other_trend_other_par" EntityType="meal_ticketModel.t_account_shares_conditiontrade_template_join_other_trend_other_par" />
           <EntitySet Name="t_account_shares_conditiontrade_template_join_other_trend_par" EntityType="meal_ticketModel.t_account_shares_conditiontrade_template_join_other_trend_par" />
+          <EntitySet Name="t_sys_conditiontrade_template_search" EntityType="meal_ticketModel.t_sys_conditiontrade_template_search" />
+          <EntitySet Name="t_account_shares_conditiontrade_template_search" EntityType="meal_ticketModel.t_account_shares_conditiontrade_template_search" />
         </EntityContainer>
         <EntityType Name="t_account_baseinfo">
           <Key>
@@ -9229,6 +9251,24 @@
           <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="OtherTrendId" Type="Int64" Nullable="false" />
           <Property Name="ParamsInfo" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_sys_conditiontrade_template_search">
+          <Key>
+            <PropertyRef Name="TemplateId" />
+          </Key>
+          <Property Name="TemplateId" Type="Int64" Nullable="false" />
+          <Property Name="TemplateContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_conditiontrade_template_search">
+          <Key>
+            <PropertyRef Name="TemplateId" />
+          </Key>
+          <Property Name="TemplateId" Type="Int64" Nullable="false" />
+          <Property Name="TemplateContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
@@ -13273,6 +13313,26 @@
                 <ScalarProperty Name="ParamsInfo" ColumnName="ParamsInfo" />
                 <ScalarProperty Name="OtherTrendId" ColumnName="OtherTrendId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_sys_conditiontrade_template_search">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_sys_conditiontrade_template_search">
+              <MappingFragment StoreEntitySet="t_sys_conditiontrade_template_search">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="TemplateContent" ColumnName="TemplateContent" />
+                <ScalarProperty Name="TemplateId" ColumnName="TemplateId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_account_shares_conditiontrade_template_search">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_conditiontrade_template_search">
+              <MappingFragment StoreEntitySet="t_account_shares_conditiontrade_template_search">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="TemplateContent" ColumnName="TemplateContent" />
+                <ScalarProperty Name="TemplateId" ColumnName="TemplateId" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

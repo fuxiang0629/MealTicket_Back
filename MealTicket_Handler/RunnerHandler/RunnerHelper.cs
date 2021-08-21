@@ -1703,7 +1703,7 @@ namespace MealTicket_Handler.RunnerHandler
                 {
                     string sql = @"merge into t_shares_transactiondata_update as t
 using (select Market,SharesCode from v_shares_quotes_last where LastModified>convert(varchar(10),getdate(),120)) as t1
-on t.Market=t1.Market and t.SharescCode=t1.SharesCode
+on t.Market=t1.Market and t.SharesCode=t1.SharesCode
 when matched
 then update set [Type]=1,LastModified=getdate()
 when not matched by target

@@ -36,6 +36,11 @@ namespace MealTicket_Admin_Handler.Model
         /// ascending：升序  descending：降序
         /// </summary>
         public string OrderMethod { get; set; }
+
+        /// <summary>
+        /// 等级
+        /// </summary>
+        public int Level { get; set; }
     }
 
     public class SharesPlateInfo

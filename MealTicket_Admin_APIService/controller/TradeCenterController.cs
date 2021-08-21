@@ -4761,7 +4761,7 @@ namespace MealTicket_Admin_APIService.controller
         }
 
         /// <summary>
-        /// 添加自动买入优先级适用板块
+        /// 添加自动买入优先级适用板块endregion
         /// </summary>
         /// <returns></returns>
         [CheckUserPowerFilter]
@@ -4793,6 +4793,8 @@ namespace MealTicket_Admin_APIService.controller
             tradeCenterHandler.DeleteSharesPriorityAutoBuyPlate(request);
             return null;
         }
+
+        #endregion
 
         #region===自动加入模板===
         /// <summary>
@@ -5644,6 +5646,41 @@ namespace MealTicket_Admin_APIService.controller
         }
         #endregion
 
+        #region===搜索模板===
+        /// <summary>
+        /// 获取搜索模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("conditiontrade/template/search/details"), HttpPost]
+        [Description("获取搜索模板详情")]
+        public object GetConditiontradeTemplateSearchDetails(DetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetConditiontradeTemplateSearchDetails(request);
+        }
+
+        /// <summary>
+        /// 编辑搜索模板详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("conditiontrade/template/search/details/modify"), HttpPost]
+        [Description("编辑搜索模板详情")]
+        public object ModifyConditiontradeTemplateSearchDetails(ModifyConditiontradeTemplateSearchDetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ModifyConditiontradeTemplateSearchDetails(request);
+            return null;
+        }
         #endregion
     }
 }
