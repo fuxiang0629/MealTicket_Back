@@ -69,13 +69,7 @@ namespace MealTicket_APIService
         {
             //框架内部缓存信息
             session = Singleton.Instance;
-            var mqHandler = session.StartMqHandler("");
-
-            var mqHandler_SecurityBarsData = session.StartMqHandler_SecurityBarsData();//生成Mq队列对象
-            var securityBarsDataTask = session.StartSecurityBarsDataTask();
-            securityBarsDataTask.DoTask();
-            mqHandler_SecurityBarsData.StartListen();//启动队列监听
-
+            session.Init();
             //加载依赖注入
             Kernel = LoadKernel();   
             //加载循环任务

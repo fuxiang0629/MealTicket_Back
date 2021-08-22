@@ -3154,6 +3154,12 @@
             </summary>
             <param name="type">1.5分钟线 2.15分钟线 3.30分钟线 4.60分钟线 5.日线 6.周线 7.月线 8.季度线 9.年线</param>
         </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.UpdateOtherToDataBaseBack(System.Int32)">
+            <summary>
+            更新其他K线数据
+            </summary>
+            <param name="type">1.5分钟线 2.15分钟线 3.30分钟线 4.60分钟线 5.日线 6.周线 7.月线 8.季度线 9.年线</param>
+        </member>
         <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.SendTransactionShares(System.String)">
             <summary>
             推送需要获取K线的股票到队列
@@ -3264,6 +3270,11 @@
         <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataInfo.PreClosePrice">
             <summary>
             上一时段收盘价
+            </summary>
+        </member>
+        <member name="T:MealTicket_Handler.SharesBaseSession">
+            <summary>
+            股票基础数据缓存
             </summary>
         </member>
         <member name="F:MealTicket_Handler.Singleton.instance">

@@ -111,4 +111,22 @@ namespace MealTicket_Handler.SecurityBarsData
         /// </summary>
         public long PreClosePrice { get; set; }
     }
+
+    public class SecurityBarsData_1minInfo
+    {
+        public int Market { get; set; }
+        public string SharesCode { get; set; }
+        public DateTime Date{get;set;} public DateTime Time { get; set; }
+        public string TimeStr { get; set; }
+        public long OpenedPrice { get; set; }
+        public long ClosedPrice { get; set; }
+        public long PreClosePrice { get; set; }
+        public long MinPrice { get;set; }
+        public long MaxPrice { get; set; }
+        public int TradeStock { get; set; }
+        public long TradeAmount { get; set; }
+	    public long Tradable { get; set; }
+        public long TotalCapital { get; set; }
+        public int HandCount { get; set; }
+    }
 }

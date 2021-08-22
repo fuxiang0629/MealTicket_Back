@@ -1,6 +1,5 @@
 ﻿using FXCommon.Common;
 using FXCommon.Database;
-using MealTicket_CacheCommon_Session;
 using MealTicket_DBCommon;
 using MealTicket_Web_Handler.Runner;
 using MealTicket_Web_Handler.Transactiondata;
@@ -202,9 +201,6 @@ namespace MealTicket_Web_Handler
 
             UpdateWait.Init();
             StartSysparUpdateThread();
-
-
-            sessionClient.Connect(session_server, session_username, session_password);
         }
 
         public static Singleton Instance
@@ -237,6 +233,42 @@ namespace MealTicket_Web_Handler
             if (_transactionDataTask != null)
             {
                 _transactionDataTask.Dispose();
+            }
+            if (_SharesQuotesSession != null)
+            {
+                _SharesQuotesSession.Dispose();
+            }
+            if (_SharesBaseSession != null)
+            {
+                _SharesBaseSession.Dispose();
+            }
+            if (_SharesPlateSession != null)
+            {
+                _SharesPlateSession.Dispose();
+            }
+            if (_SharesPlateRelSession != null)
+            {
+                _SharesPlateRelSession.Dispose();
+            }
+            if (_SharesPlateQuotesSession != null)
+            {
+                _SharesPlateQuotesSession.Dispose();
+            }
+            if (_BuyTipSession != null)
+            {
+                _BuyTipSession.Dispose();
+            }
+            if (_AccountRiseLimitTriSession != null)
+            {
+                _AccountRiseLimitTriSession.Dispose();
+            }
+            if (_AccountTrendTriSession != null)
+            {
+                _AccountTrendTriSession.Dispose();
+            }
+            if (_SharesHisRiseRateSession != null)
+            {
+                _SharesHisRiseRateSession.Dispose();
             }
         }
 
@@ -582,22 +614,34 @@ namespace MealTicket_Web_Handler
             return _transactionDataTask;
         }
 
+        public void Init() 
+        {
+            var mqHandler = StartMqHandler();//生成Mq队列对象
+            var transactionDataTask = StartTransactionDataTask();
+            transactionDataTask.DoTask();
+            mqHandler.StartListen();//启动队列监听
+
+            _SharesQuotesSession.StartUpdate(3000);
+            _SharesBaseSession.StartUpdate(600000);
+            _SharesPlateSession.StartUpdate(600000);
+            _SharesPlateRelSession.StartUpdate(600000);
+            _SharesPlateQuotesSession.StartUpdate(3000);
+            _BuyTipSession.StartUpdate(1000);
+            _AccountRiseLimitTriSession.StartUpdate(3000);
+            _AccountTrendTriSession.StartUpdate(3000);
+            _SharesHisRiseRateSession.StartUpdate(600000);
+        }
 
         #region===缓存===
-        private string session_server = ConfigurationManager.AppSettings["session_server"];
-        private string session_username = ConfigurationManager.AppSettings["session_username"];
-        private string session_password = ConfigurationManager.AppSettings["session_password"];
-        public SessionClient sessionClient = new SessionClient();
-
-        public string AccountRiseLimitTriSession = "AccountRiseLimitTriSession";
-        public string AccountTrendTriSession = "AccountTrendTriSession";
-        public string BuyTipSession = "BuyTipSession";
-        public string SharesBaseSession = "SharesBaseSession";
-        public string SharesHisRiseRateSession = "SharesHisRiseRateSession";
-        public string SharesPlateQuotesSession = "SharesPlateQuotesSession";
-        public string SharesPlateRelSession = "SharesPlateRelSession";
-        public string SharesPlateSession = "SharesPlateSession";
-        public string SharesQuotesSession = "SharesQuotesSession";
-        #endregion
+        public SharesQuotesSession _SharesQuotesSession = new SharesQuotesSession();
+        public SharesBaseSession _SharesBaseSession = new SharesBaseSession();
+        public SharesPlateSession _SharesPlateSession = new SharesPlateSession();
+        public SharesPlateRelSession _SharesPlateRelSession = new SharesPlateRelSession();
+        public SharesPlateQuotesSession _SharesPlateQuotesSession = new SharesPlateQuotesSession();
+        public BuyTipSession _BuyTipSession = new BuyTipSession();
+        public AccountRiseLimitTriSession _AccountRiseLimitTriSession = new AccountRiseLimitTriSession();
+        public AccountTrendTriSession _AccountTrendTriSession = new AccountTrendTriSession();
+        public SharesHisRiseRateSession _SharesHisRiseRateSession = new SharesHisRiseRateSession();
+        # endregion
     }
 }

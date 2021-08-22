@@ -20,7 +20,10 @@ namespace MealTicket_CacheCommon_Session.session
         {
             using (var db = new meal_ticketEntities())
             {
-                string sql = "select Id,Name,[Type],BaseStatus,ChooseStatus from t_shares_plate with(nolock) where [Status]=1";
+                string sql = @"select t.Id,t.Name,t.[Type],t.BaseStatus,t.ChooseStatus,isnull(t1.IsBasePlate,2)IsBasePlate
+from t_shares_plate t with(nolock)
+inner join t_shares_plate_type_business t1 on t.[Type]= t1.Id
+where t.[Status]= 1";
                 var result = db.Database.SqlQuery<SharesPlateInfo_Session>(sql).ToList();
                 return result;
             }

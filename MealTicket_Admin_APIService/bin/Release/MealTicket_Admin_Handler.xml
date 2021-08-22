@@ -11051,6 +11051,11 @@
             交易时间(格式：09:00:00-09:15:00)
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesTradeTimeGroupInfo.Time7">
+            <summary>
+            K线时间(格式：09:30:00-11:30:00,13:00:00-15:00:00)
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.SharesTradeTimeGroupInfo.CreateTime">
             <summary>
             数据创建时间

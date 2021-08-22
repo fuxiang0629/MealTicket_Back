@@ -2573,6 +2573,7 @@
     <Property Name="Time4" Type="nvarchar(max)" />
     <Property Name="Time5" Type="nvarchar(max)" />
     <Property Name="Time6" Type="nvarchar(max)" />
+    <Property Name="Time7" Type="nvarchar(max)" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
@@ -2650,23 +2651,18 @@
     <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Market" Type="int" Nullable="false" />
     <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Date" Type="date" Nullable="false" />
     <Property Name="Time" Type="datetime" Nullable="false" />
+    <Property Name="TimeStr" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="Price" Type="bigint" Nullable="false" />
-    <Property Name="Volume" Type="int" Nullable="false" />
+    <Property Name="AvgPrice" Type="bigint" Nullable="false" />
+    <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="TradeStock" Type="int" Nullable="false" />
+    <Property Name="TradeAmount" Type="bigint" Nullable="false" />
+    <Property Name="Tradable" Type="bigint" Nullable="false" />
+    <Property Name="TotalCapital" Type="bigint" Nullable="false" />
+    <Property Name="HandCount" Type="int" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
-  </EntityType>
-  <EntityType Name="t_shares_minutetimedata_temp">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-    <Property Name="Market" Type="int" Nullable="false" />
-    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
-    <Property Name="Time" Type="datetime" Nullable="false" />
-    <Property Name="Price" Type="bigint" Nullable="false" />
-    <Property Name="Volume" Type="int" Nullable="false" />
-    <Property Name="LastModified" Type="datetime" Nullable="false" />
-    <Property Name="BatchTime" Type="varchar" MaxLength="50" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_monitor">
     <Key>
@@ -4524,7 +4520,6 @@
     <EntitySet Name="t_shares_limit_traderules_other" EntityType="Self.t_shares_limit_traderules_other" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_markettime" EntityType="Self.t_shares_markettime" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_minutetimedata" EntityType="Self.t_shares_minutetimedata" Schema="dbo" store:Type="Tables" />
-    <EntitySet Name="t_shares_minutetimedata_temp" EntityType="Self.t_shares_minutetimedata_temp" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_monitor" EntityType="Self.t_shares_monitor" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_monitor_details" EntityType="Self.t_shares_monitor_details" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_monitor_trend" EntityType="Self.t_shares_monitor_trend" Schema="dbo" store:Type="Tables" />

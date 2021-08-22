@@ -2251,6 +2251,7 @@
     <Property Name="Time6" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Time7" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
   </EntityType>
   <EntityType Name="t_shares_limit_tradequota">
     <Key>
@@ -2318,31 +2319,6 @@
     <Property Name="Business" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="TotalCapital" Type="Int64" Nullable="false" />
     <Property Name="CirculatingCapital" Type="Int64" Nullable="false" />
-  </EntityType>
-  <EntityType Name="t_shares_minutetimedata">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Market" Type="Int32" Nullable="false" />
-    <Property Name="SharesCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="Price" Type="Int64" Nullable="false" />
-    <Property Name="Volume" Type="Int32" Nullable="false" />
-    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
-  </EntityType>
-  <EntityType Name="t_shares_minutetimedata_temp">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Market" Type="Int32" Nullable="false" />
-    <Property Name="SharesCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" Nullable="false" />
-    <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="Price" Type="Int64" Nullable="false" />
-    <Property Name="Volume" Type="Int32" Nullable="false" />
-    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="BatchTime" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_monitor">
     <Key>
@@ -3535,8 +3511,6 @@
     <EntitySet Name="t_shares_limit_traderules" EntityType="Self.t_shares_limit_traderules" />
     <EntitySet Name="t_shares_limit_traderules_other" EntityType="Self.t_shares_limit_traderules_other" />
     <EntitySet Name="t_shares_markettime" EntityType="Self.t_shares_markettime" />
-    <EntitySet Name="t_shares_minutetimedata" EntityType="Self.t_shares_minutetimedata" />
-    <EntitySet Name="t_shares_minutetimedata_temp" EntityType="Self.t_shares_minutetimedata_temp" />
     <EntitySet Name="t_shares_monitor" EntityType="Self.t_shares_monitor" />
     <EntitySet Name="t_shares_monitor_details" EntityType="Self.t_shares_monitor_details" />
     <EntitySet Name="t_shares_monitor_trend" EntityType="Self.t_shares_monitor_trend" />
@@ -4131,6 +4105,7 @@
     <EntitySet Name="t_account_shares_conditiontrade_template_join_other_trend_par" EntityType="meal_ticketModel.t_account_shares_conditiontrade_template_join_other_trend_par" />
     <EntitySet Name="t_sys_conditiontrade_template_search" EntityType="meal_ticketModel.t_sys_conditiontrade_template_search" />
     <EntitySet Name="t_account_shares_conditiontrade_template_search" EntityType="meal_ticketModel.t_account_shares_conditiontrade_template_search" />
+    <EntitySet Name="t_shares_minutetimedata" EntityType="meal_ticketModel.t_shares_minutetimedata" />
   </EntityContainer>
   <EntityType Name="t_account_baseinfo">
     <Key>
@@ -4556,6 +4531,26 @@
     <Property Name="TemplateId" Type="Int64" Nullable="false" />
     <Property Name="TemplateContent" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_minutetimedata">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="TimeStr" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Price" Type="Int64" Nullable="false" />
+    <Property Name="AvgPrice" Type="Int64" Nullable="false" />
+    <Property Name="ClosedPrice" Type="Int64" Nullable="false" />
+    <Property Name="TradeStock" Type="Int32" Nullable="false" />
+    <Property Name="TradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="Tradable" Type="Int64" Nullable="false" />
+    <Property Name="TotalCapital" Type="Int64" Nullable="false" />
+    <Property Name="HandCount" Type="Int32" Nullable="false" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
 </Schema>

@@ -63,6 +63,11 @@ namespace MealTicket_Admin_Handler.Model
         public string Time6 { get; set; }
 
         /// <summary>
+        /// K线时间(格式：09:30:00-11:30:00,13:00:00-15:00:00)
+        /// </summary>
+        public string Time7 { get; set; }
+
+        /// <summary>
         /// 数据创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }

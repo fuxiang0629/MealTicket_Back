@@ -81,12 +81,7 @@ namespace MealTicket_Web_APIService
         {
             //框架内部缓存信息
             session = Singleton.Instance;
-
-            var mqHandler = session.StartMqHandler();//生成Mq队列对象
-            var transactionDataTask = session.StartTransactionDataTask();
-            transactionDataTask.DoTask();
-            mqHandler.StartListen();//启动队列监听
-
+            session.Init();
             //加载依赖注入
             Kernel = LoadKernel();   
             //加载循环任务

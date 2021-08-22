@@ -32,5 +32,8 @@ namespace MealTicket_CacheCommon_Session.session
         /// 业务板块状态
         /// </summary>
         public int ChooseStatus { get; set; }
+
+
+        public int IsBasePlate { get; set; }
     }
 }
