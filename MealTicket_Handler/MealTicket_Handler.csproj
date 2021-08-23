@@ -179,6 +179,7 @@
     <Compile Include="RunnerHandler\RunnerHelper.cs" />
     <Compile Include="SecurityBarsData\SecurityBarsDataTask.cs" />
     <Compile Include="SecurityBarsData\SecurityBarsDataTaskModel.cs" />
+    <Compile Include="Session\SharesBaseSession.cs" />
     <Compile Include="Singleton.cs" />
     <Compile Include="DBUtils.cs" />
   </ItemGroup>
@@ -194,10 +195,6 @@
       <Project>{0ecd9f97-e7b1-42dd-ab4f-ffbbf6216257}</Project>
       <Name>FXCommon</Name>
     </ProjectReference>
-    <ProjectReference Include="..\MealTicket_CacheCommon_Model\MealTicket_CacheCommon_Session.csproj">
-      <Project>{f0988678-9dd3-4f26-8ccf-52081544eee2}</Project>
-      <Name>MealTicket_CacheCommon_Session</Name>
-    </ProjectReference>
     <ProjectReference Include="..\MealTicket_DBCommon\MealTicket_DBCommon.csproj">
       <Project>{100AABCB-BBBC-46DD-B494-57D56083590A}</Project>
       <Name>MealTicket_DBCommon</Name>
@@ -207,5 +204,6 @@
       <Name>NoticeHandler</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -2115,6 +2115,7 @@ namespace MealTicket_Admin_Handler
                                 Time4 = item.Time4,
                                 Time5 = item.Time5,
                                 Time6 = item.Time6,
+                                Time7 = item.Time7,
                                 MarketName = item.MarketName,
                                 CreateTime = item.CreateTime,
                                 Id = item.Id,
@@ -2138,6 +2139,9 @@ namespace MealTicket_Admin_Handler
                     Time2 = null,
                     Time3 = null,
                     Time4 = null,
+                    Time5 = null,
+                    Time6 = null,
+                    Time7 = null,
                     CreateTime = DateTime.Now,
                     LastModified = DateTime.Now,
                     LimitKey = request.LimitKey,
@@ -2212,6 +2216,11 @@ namespace MealTicket_Admin_Handler
                 if (request.Type == 6)
                 {
                     timeInfo.Time6 = request.Time;
+                    db.SaveChanges();
+                }
+                if (request.Type == 7)
+                {
+                    timeInfo.Time7 = request.Time;
                     db.SaveChanges();
                 }
             }

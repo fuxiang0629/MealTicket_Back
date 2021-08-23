@@ -132,8 +132,6 @@ namespace MealTicket_Handler
             UpdateSysPar();
             UpdateWait.Init();
             StartSysparUpdateThread();
-
-            sessionClient.Connect(session_server, session_username, session_password);
         }
 
         public static Singleton Instance
@@ -166,6 +164,10 @@ namespace MealTicket_Handler
             if (_securityBarsDataTask != null)
             {
                 _securityBarsDataTask.Dispose();
+            }
+            if (_sharesBaseSession != null)
+            {
+                _sharesBaseSession.Dispose();
             }
         }
 
@@ -425,13 +427,18 @@ namespace MealTicket_Handler
             return _securityBarsDataTask;
         }
 
-        #region===缓存===
-        private string session_server = ConfigurationManager.AppSettings["session_server"];
-        private string session_username = ConfigurationManager.AppSettings["session_username"];
-        private string session_password = ConfigurationManager.AppSettings["session_password"]; 
-        public SessionClient sessionClient = new SessionClient();
+        public void Init() 
+        {
+            var mqHandler = StartMqHandler("");
+            var mqHandler_SecurityBarsData = StartMqHandler_SecurityBarsData();//生成Mq队列对象
+            var securityBarsDataTask = StartSecurityBarsDataTask();
+            securityBarsDataTask.DoTask();
+            mqHandler_SecurityBarsData.StartListen();//启动队列监听
+            _sharesBaseSession.StartUpdate(600000);
+        }
 
-        public string SharesBaseSession = "SharesBaseSession";
+        #region===缓存===
+        public SharesBaseSession _sharesBaseSession = new SharesBaseSession();
         #endregion
     }
 }

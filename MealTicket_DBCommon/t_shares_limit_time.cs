@@ -26,5 +26,6 @@ namespace MealTicket_DBCommon
         public string Time6 { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
+        public string Time7 { get; set; }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using FXCommon.Common;
-using MealTicket_CacheCommon_Session.session;
 using MealTicket_DBCommon;
 using MealTicket_Web_Handler.Model;
 using Newtonsoft.Json;
@@ -5237,23 +5236,17 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
 
                 using (var db = new meal_ticketEntities())
                 {
-                    int errorCode = 0;
-                    var SharesPlateQuotesSession = Singleton.Instance.sessionClient.Get<List<SharesPlateQuotesInfo_Session>>(Singleton.Instance.SharesPlateQuotesSession, ref errorCode);
-                    if (errorCode != 0)
-                    {
-                        SharesPlateQuotesSession = new List<SharesPlateQuotesInfo_Session>();
-                    }
-
-                    var totalPlateList = (from item in SharesPlateQuotesSession
+                    var totalPlateList = (from item in Singleton.Instance._SharesPlateSession.GetSessionData()
+                                          join item2 in Singleton.Instance._SharesPlateQuotesSession.GetSessionData() on item.PlateId equals item2.PlateId
                                           where plateList.Contains(item.PlateId)
-                                          select item).ToList();
-                    var sharesPlate = (from item in db.t_shares_plate_rel
+                                          select new { item, item2 }).ToList();
+                    var sharesPlate = (from item in Singleton.Instance._SharesPlateRelSession.GetSessionData()
                                        where plateList.Contains(item.PlateId)
                                        select item).ToList();
                     var result = (from item in sharesList
                                   join item2 in sharesPlate on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
-                                  join item3 in totalPlateList on item2.PlateId equals item3.PlateId
-                                  where compare == 0 || (compare == 1 && item3.RiseRate >= riseRate) || (compare == 2 && item3.RiseRate <= riseRate)
+                                  join item3 in totalPlateList on item2.PlateId equals item3.item.PlateId
+                                  where compare == 0 || (compare == 1 && item3.item2.RiseRate >= riseRate) || (compare == 2 && item3.item2.RiseRate <= riseRate)
                                   group item by item into g
                                   select new
                                   {
@@ -5311,14 +5304,23 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
                 count = Convert.ToDouble(temp.Count);
                 countType = Convert.ToInt32(temp.CountType);
 
-                List<QuotesDateInfo> quotes_list = new List<QuotesDateInfo>();
-                string sql = @"select Market,SharesCode,BuyCount1,BuyCount2,BuyCount3,BuyCount4,BuyCount5,SellCount1,SellCount2,SellCount3,SellCount4,SellCount5
-from v_shares_quotes_last with(nolock)";
-                using (var db = new meal_ticketEntities())
-                {
-                    quotes_list = db.Database.SqlQuery<QuotesDateInfo>(sql).ToList();
-                }
-
+                List<QuotesDateInfo> quotes_list = (from item in Singleton.Instance._SharesQuotesSession.GetSessionData()
+                                                    join item2 in sharesList on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                                                    select new QuotesDateInfo
+                                                    {
+                                                        Market = item.Market,
+                                                        SharesCode = item.SharesCode,
+                                                        BuyCount1 = item.BuyCount1,
+                                                        BuyCount2 = item.BuyCount2,
+                                                        BuyCount3 = item.BuyCount3,
+                                                        BuyCount4 = item.BuyCount4,
+                                                        BuyCount5 = item.BuyCount5,
+                                                        SellCount1 = item.SellCount1,
+                                                        SellCount2 = item.SellCount2,
+                                                        SellCount3 = item.SellCount3,
+                                                        SellCount4 = item.SellCount4,
+                                                        SellCount5 = item.SellCount5,
+                                                    }).ToList();
                 ThreadMsgTemplate<SharesBase_Session> data = new ThreadMsgTemplate<SharesBase_Session>();
                 data.Init();
                 foreach (var item in sharesList)
@@ -5404,14 +5406,8 @@ from v_shares_quotes_last with(nolock)";
 
                             if (countType == 1)//流通股百分比
                             {
-                                int errorCode = 0;
-                                var SharesBaseSession = Singleton.Instance.sessionClient.Get<List<SharesBaseInfo_Session>>(Singleton.Instance.SharesBaseSession, ref errorCode);
-                                if (errorCode != 0)
-                                {
-                                    SharesBaseSession = new List<SharesBaseInfo_Session>();
-                                }
                                 //查询流通股
-                                var sharesInfo = (from item in SharesBaseSession
+                                var sharesInfo = (from item in Singleton.Instance._SharesBaseSession.GetSessionData()
                                                   where item.Market == tempData.Market && item.SharesCode == tempData.SharesCode
                                                   select item).FirstOrDefault();
                                 if (sharesInfo == null)
@@ -6256,13 +6252,6 @@ from t_shares_quotes with(nolock)";
         {
             try
             {
-                int errorCode = 0;
-                var SharesBaseSession = Singleton.Instance.sessionClient.Get<List<SharesBaseInfo_Session>>(Singleton.Instance.SharesBaseSession, ref errorCode);
-                if (errorCode != 0)
-                {
-                    SharesBaseSession = new List<SharesBaseInfo_Session>();
-                }
-
                 var temp = JsonConvert.DeserializeObject<dynamic>(par);
                 int riseType = 0;
                 int compare = 0;
@@ -6285,13 +6274,16 @@ from t_shares_quotes with(nolock)";
                 {
                 }
 
-                string sql = @"select Market,SharesCode,PresentPrice,TriPriceType,PriceType
-from v_shares_quotes_last with(nolock)";
-                List<QuotesDateInfo> quotes_list = new List<QuotesDateInfo>();
-                using (var db = new meal_ticketEntities())
-                {
-                    quotes_list = db.Database.SqlQuery<QuotesDateInfo>(sql).ToList();
-                }
+                List<QuotesDateInfo> quotes_list = (from item in Singleton.Instance._SharesQuotesSession.GetSessionData()
+                                                    join item2 in sharesList on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                                                    select new QuotesDateInfo
+                                                    {
+                                                        Market = item.Market,
+                                                        SharesCode = item.SharesCode,
+                                                        PresentPrice = item.PresentPrice,
+                                                        TriPriceType = item.TriPriceType,
+                                                        PriceType = item.PriceType
+                                                    }).ToList();
 
                 ThreadMsgTemplate<SharesBase_Session> data = new ThreadMsgTemplate<SharesBase_Session>();
                 data.Init();
@@ -6396,7 +6388,7 @@ from v_shares_quotes_last with(nolock)";
                             else if (riseType == 6)
                             {
                                 //查询流通股
-                                var sharesInfo = (from item in SharesBaseSession
+                                var sharesInfo = (from item in Singleton.Instance._SharesBaseSession.GetSessionData()
                                                   where item.Market == tempData.Market && item.SharesCode == tempData.SharesCode
                                                   select item).FirstOrDefault();
                                 if (sharesInfo == null)
@@ -6419,7 +6411,7 @@ from v_shares_quotes_last with(nolock)";
                             else if (riseType == 7)
                             {
                                 //查询总股本
-                                var sharesInfo = (from item in SharesBaseSession
+                                var sharesInfo = (from item in Singleton.Instance._SharesBaseSession.GetSessionData()
                                                   where item.Market == tempData.Market && item.SharesCode == tempData.SharesCode
                                                   select item).FirstOrDefault();
                                 if (sharesInfo == null)
@@ -6459,13 +6451,6 @@ from v_shares_quotes_last with(nolock)";
         {
             try
             {
-                int errorCode = 0;
-                var SharesBaseSession = Singleton.Instance.sessionClient.Get<List<SharesBaseInfo_Session>>(Singleton.Instance.SharesBaseSession, ref errorCode);
-                if (errorCode != 0)
-                {
-                    SharesBaseSession = new List<SharesBaseInfo_Session>();
-                }
-
                 List<SharesBase_Session> result = new List<SharesBase_Session>();
                 var temp = JsonConvert.DeserializeObject<dynamic>(par);
                 string sharesKey = string.Empty;
@@ -6517,7 +6502,7 @@ from v_shares_quotes_last with(nolock)";
 
                 foreach (var item in sharesList)
                 {
-                    string sharesName = (from x in SharesBaseSession
+                    string sharesName = (from x in Singleton.Instance._SharesBaseSession.GetSessionData()
                                          where x.Market == item.Market && x.SharesCode == item.SharesCode
                                          select x.SharesName).FirstOrDefault();
                     if (string.IsNullOrEmpty(sharesName))

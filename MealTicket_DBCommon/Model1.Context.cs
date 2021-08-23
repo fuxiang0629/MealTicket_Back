@@ -197,8 +197,6 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_shares_limit_traderules> t_shares_limit_traderules { get; set; }
         public virtual DbSet<t_shares_limit_traderules_other> t_shares_limit_traderules_other { get; set; }
         public virtual DbSet<t_shares_markettime> t_shares_markettime { get; set; }
-        public virtual DbSet<t_shares_minutetimedata> t_shares_minutetimedata { get; set; }
-        public virtual DbSet<t_shares_minutetimedata_temp> t_shares_minutetimedata_temp { get; set; }
         public virtual DbSet<t_shares_monitor> t_shares_monitor { get; set; }
         public virtual DbSet<t_shares_monitor_details> t_shares_monitor_details { get; set; }
         public virtual DbSet<t_shares_monitor_trend> t_shares_monitor_trend { get; set; }
@@ -287,6 +285,7 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_account_shares_conditiontrade_template_join_other_trend_par> t_account_shares_conditiontrade_template_join_other_trend_par { get; set; }
         public virtual DbSet<t_sys_conditiontrade_template_search> t_sys_conditiontrade_template_search { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_template_search> t_account_shares_conditiontrade_template_search { get; set; }
+        public virtual DbSet<t_shares_minutetimedata> t_shares_minutetimedata { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)

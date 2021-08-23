@@ -79,10 +79,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Session.cs" />
     <Compile Include="Common\SessionClient.cs" />
     <Compile Include="Common\HtmlSender.cs" />
     <Compile Include="Common\Logger.cs" />
     <Compile Include="Common\Runner.cs" />
+    <Compile Include="Common\Session_Model\AccountRiseLimitTriInfo_Session.cs" />
+    <Compile Include="Common\Session_Model\AccountTrendTriInfo_Session.cs" />
+    <Compile Include="Common\Session_Model\BuyTipInfo_Session.cs" />
+    <Compile Include="Common\Session_Model\SharesBaseInfo_Session.cs" />
+    <Compile Include="Common\Session_Model\SharesHisRiseRateInfo_Session.cs" />
+    <Compile Include="Common\Session_Model\SharesPlateInfo_Session.cs" />
+    <Compile Include="Common\Session_Model\SharesPlateQuotesInfo_Session.cs" />
+    <Compile Include="Common\Session_Model\SharesPlateRelInfo_Session.cs" />
     <Compile Include="Common\ThreadMsgTemplate.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Database\BulkBase.cs" />

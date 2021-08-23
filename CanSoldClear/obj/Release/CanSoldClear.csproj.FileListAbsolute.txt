@@ -80,7 +80,6 @@ D:\项目\饭票\后端\CanSoldClear\bin\Release\System.Numerics.Vectors.xml
 D:\项目\饭票\后端\CanSoldClear\bin\Release\zh-Hans\EntityFramework.resources.dll
 D:\项目\饭票\后端\CanSoldClear\bin\Release\zh-Hans\EntityFramework.SqlServer.resources.dll
 D:\项目\饭票\后端\CanSoldClear\obj\Release\CanSoldClear.csprojAssemblyReference.cache
-D:\项目\饭票\后端\CanSoldClear\obj\Release\CanSoldClear.exe.config
 D:\项目\饭票\后端\CanSoldClear\obj\Release\CanSoldClear.csproj.CoreCompileInputs.cache
 D:\项目\饭票\后端\CanSoldClear\obj\Release\CanSoldClear.csproj.CopyComplete
 D:\项目\饭票\后端\CanSoldClear\obj\Release\CanSoldClear.exe

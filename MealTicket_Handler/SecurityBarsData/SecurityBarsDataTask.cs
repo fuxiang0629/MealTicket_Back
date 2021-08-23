@@ -1,5 +1,4 @@
 ﻿using FXCommon.Common;
-using MealTicket_CacheCommon_Session.session;
 using MealTicket_DBCommon;
 using MealTicket_Handler.RunnerHandler;
 using Newtonsoft.Json;
@@ -202,6 +201,7 @@ namespace MealTicket_Handler.SecurityBarsData
             bool isFinish = false;
             if (UpdateToDataBase(dataObj, ref isFinish))
             {
+                dataObj.TaskTimeOut = -1;
                 if (!isFinish)
                 {
                     SecurityBarsDataQueue.AddMessage(new QueueMsgObj
@@ -209,7 +209,6 @@ namespace MealTicket_Handler.SecurityBarsData
                         MsgId = 2,
                         MsgObj = dataObj
                     });
-                    dataObj.TaskTimeOut = -1;
                 }
                 else 
                 {
@@ -339,42 +338,45 @@ namespace MealTicket_Handler.SecurityBarsData
         {
             try
             {
-                string sql;
+                string sql=string.Empty;
                 switch (type)
                 {
                     case 0:
-                        sql = "exec P_Shares_MinuteTimeData_Update";
+                        //sql = "exec P_Shares_MinuteTimeData_Update";
                         break;
                     case 1:
                         sql = "exec P_Shares_SecurityBarsData_5min_Update";
                         break;
                     case 2:
-                        sql = "exec P_Shares_SecurityBarsData_15min_Update";
+                        //sql = "exec P_Shares_SecurityBarsData_15min_Update";
                         break;
                     case 3:
-                        sql = "exec P_Shares_SecurityBarsData_30min_Update";
+                        //sql = "exec P_Shares_SecurityBarsData_30min_Update";
                         break;
                     case 4:
-                        sql = "exec P_Shares_SecurityBarsData_60min_Update";
+                        //sql = "exec P_Shares_SecurityBarsData_60min_Update";
                         break;
                     case 5:
-                        sql = "exec P_Shares_SecurityBarsData_1day_Update";
+                        //sql = "exec P_Shares_SecurityBarsData_1day_Update";
                         break;
                     case 6:
-                        sql = "exec P_Shares_SecurityBarsData_1week_Update";
+                        //sql = "exec P_Shares_SecurityBarsData_1week_Update";
                         break;
                     case 7:
-                        sql = "exec P_Shares_SecurityBarsData_1month_Update";
+                        //sql = "exec P_Shares_SecurityBarsData_1month_Update";
                         break;
                     case 8:
-                        sql = "exec P_Shares_SecurityBarsData_1quarter_Update";
+                        //sql = "exec P_Shares_SecurityBarsData_1quarter_Update";
                         break;
                     case 9:
-                        sql = "exec P_Shares_SecurityBarsData_1year_Update";
+                        //sql = "exec P_Shares_SecurityBarsData_1year_Update";
                         break;
                     default:
-                        sql = string.Empty;
                         break;
+                }
+                if (string.IsNullOrEmpty(sql))
+                {
+                    return;
                 }
                 using (var db = new meal_ticketEntities())
                 {
@@ -391,19 +393,93 @@ namespace MealTicket_Handler.SecurityBarsData
         }
 
         /// <summary>
+        /// 更新其他K线数据
+        /// </summary>
+        /// <param name="type">1.5分钟线 2.15分钟线 3.30分钟线 4.60分钟线 5.日线 6.周线 7.月线 8.季度线 9.年线</param>
+        private void UpdateOtherToDataBaseBack(int type)
+        {
+            string tableName = "";
+            switch (type)
+            {
+                case 0:
+                    tableName = "t_shares_minutetimedata";
+                    break;
+                case 1:
+                    tableName = "t_shares_securitybarsdata_5min";
+                    break;
+                case 2:
+                    tableName = "t_shares_securitybarsdata_15min";
+                    break;
+                case 3:
+                    tableName = "t_shares_securitybarsdata_30min";
+                    break;
+                case 4:
+                    tableName = "t_shares_securitybarsdata_60min";
+                    break;
+                case 5:
+                    tableName = "t_shares_securitybarsdata_1day";
+                    break;
+                case 6:
+                    tableName = "t_shares_securitybarsdata_1week";
+                    break;
+                case 7:
+                    tableName = "t_shares_securitybarsdata_1month";
+                    break;
+                case 8:
+                    tableName = "t_shares_securitybarsdata_1quarter";
+                    break;
+                case 9:
+                    tableName = "t_shares_securitybarsdata_1year";
+                    break;
+                default:
+                    break;
+            }
+            if (string.IsNullOrEmpty(tableName))
+            {
+                return;
+            }
+            try
+            {
+                //查询原始一分钟数据
+                List<SecurityBarsData_1minInfo> SecurityBarsData_1minList = new List<SecurityBarsData_1minInfo>();
+                using (var db = new meal_ticketEntities())
+                {
+                    string sql = string.Format(@"select t.Market,t.SharesCode,t.[Date],t.[Time],t.TimeStr,t.OpenedPrice,t.ClosedPrice,t.PreClosePrice,t.MinPrice,t.MaxPrice,t.TradeStock,t.TradeAmount,
+	  t.Tradable,t.TotalCapital,t.HandCount
+	  from t_shares_securitybarsdata_1min t with(nolock)
+	  inner join 
+	  (
+		 select t.Market,t.SharesCode,isnull(t1.MaxTime,'1991-01-01')MaxTime
+		 from v_shares_baseinfo t with(nolock)
+		 inner join t_shares_limit_time t2 with(nolock) on (t2.LimitMarket=-1 or t2.LimitMarket=t.Market) and (t.SharesCode like t2.LimitKey+'%')
+		 left join 
+		 (
+			select Market,SharesCode,max([Time])MaxTime
+			from {0} with(nolock)
+			group by Market,SharesCode
+		  ) t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode
+	  )t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode and t.[Time]>=t1.MaxTime
+	  order by t.Market,t.SharesCode,t.[Time]", tableName);
+                    SecurityBarsData_1minList = db.Database.SqlQuery<SecurityBarsData_1minInfo>(sql).ToList();
+                }
+
+
+
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("更新其他K线数据失败，type=" + type, ex);
+            }
+        }
+
+        /// <summary>
         /// 推送需要获取K线的股票到队列
         /// </summary>
         /// <param name="taskGuid"></param>
         /// <returns></returns>
         private static int SendTransactionShares(string taskGuid)
         {
-            int errorCode = 0;
-            var sessionData = Singleton.Instance.sessionClient.Get<List<SharesBaseInfo_Session>>(Singleton.Instance.SharesBaseSession, ref errorCode);
-            if (errorCode != 0)
-            {
-                sessionData = new List<SharesBaseInfo_Session>();
-            }
-            List<SecurityBarsDataInfo> sharesList = (from item in sessionData
+            List<SecurityBarsDataInfo> sharesList = (from item in Singleton.Instance._sharesBaseSession.GetSessionData()
                                                      select new SecurityBarsDataInfo
                                                      {
                                                          Market = item.Market,

@@ -175,8 +175,6 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_traderules" Width="1.5" PointX="2.75" PointY="38.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_limit_traderules_other" Width="1.5" PointX="38.75" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_markettime" Width="1.5" PointX="4.75" PointY="38.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="meal_ticketModel.t_shares_minutetimedata" Width="1.5" PointX="6.75" PointY="38.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="meal_ticketModel.t_shares_minutetimedata_temp" Width="1.5" PointX="38.75" PointY="8.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_monitor" Width="1.5" PointX="8.75" PointY="38.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_monitor_details" Width="1.5" PointX="38.75" PointY="12.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_monitor_trend" Width="1.5" PointX="38.75" PointY="15.75" IsExpanded="true" />
@@ -265,6 +263,7 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_template_join_other_trend_par" Width="1.5" PointX="47.375" PointY="38.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_sys_conditiontrade_template_search" Width="1.5" PointX="38.375" PointY="47.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_template_search" Width="1.5" PointX="7.375" PointY="48.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_minutetimedata" Width="1.5" PointX="48.375" PointY="41.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
