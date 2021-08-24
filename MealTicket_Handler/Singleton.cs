@@ -169,6 +169,22 @@ namespace MealTicket_Handler
             {
                 _sharesBaseSession.Dispose();
             }
+            if (_SharesLimitTimeSession != null)
+            {
+                _SharesLimitTimeSession.Dispose();
+            }
+            if (_DimTimeSession != null)
+            {
+                _DimTimeSession.Dispose();
+            }
+            if (_SharesLimitDateSession != null)
+            {
+                _SharesLimitDateSession.Dispose();
+            }
+            if (_SecurityBarsData_1minSession != null)
+            {
+                _SecurityBarsData_1minSession.Dispose();
+            }
         }
 
         /// <summary>
@@ -427,18 +443,27 @@ namespace MealTicket_Handler
             return _securityBarsDataTask;
         }
 
-        public void Init() 
+        public void Init()
         {
+            _SecurityBarsData_1minSession.UpdateSessionManual();
             var mqHandler = StartMqHandler("");
             var mqHandler_SecurityBarsData = StartMqHandler_SecurityBarsData();//生成Mq队列对象
             var securityBarsDataTask = StartSecurityBarsDataTask();
             securityBarsDataTask.DoTask();
             mqHandler_SecurityBarsData.StartListen();//启动队列监听
             _sharesBaseSession.StartUpdate(600000);
+            _SharesLimitTimeSession.StartUpdate(600000);
+            _DimTimeSession.StartUpdate(3600000);
+            _SharesLimitDateSession.StartUpdate(600000);
+            _SecurityBarsData_1minSession.StartUpdate(TimeSpan.Parse("01:30:00"), TimeSpan.Parse("03:30:00"));
         }
 
         #region===缓存===
         public SharesBaseSession _sharesBaseSession = new SharesBaseSession();
+        public SharesLimitTimeSession _SharesLimitTimeSession = new SharesLimitTimeSession();
+        public DimTimeSession _DimTimeSession = new DimTimeSession();
+        public SharesLimitDateSession _SharesLimitDateSession = new SharesLimitDateSession();
+        public SecurityBarsData_1minSession _SecurityBarsData_1minSession = new SecurityBarsData_1minSession(); 
         #endregion
     }
 }

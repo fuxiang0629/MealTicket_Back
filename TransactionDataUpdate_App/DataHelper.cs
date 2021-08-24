@@ -290,51 +290,65 @@ where t.num=1", SharesInfoNumArr);
         /// <returns></returns>
         public static void UpdateToDataBase(List<SharesTransactionDataInfo> dataList)
         {
-            DataTable table = new DataTable();
-            table.Columns.Add("Market", typeof(int));
-            table.Columns.Add("SharesCode", typeof(string));
-            table.Columns.Add("Time", typeof(DateTime));
-            table.Columns.Add("TimeStr", typeof(string));
-            table.Columns.Add("Price", typeof(long));
-            table.Columns.Add("Volume", typeof(int));
-            table.Columns.Add("Stock", typeof(int));
-            table.Columns.Add("Type", typeof(int));
-            table.Columns.Add("OrderIndex", typeof(int));
-            table.Columns.Add("LastModified", typeof(DateTime));
-            foreach (var item in dataList)
+            //分批次更新
+            int totalCount = dataList.Count();
+            int onceCount = 50000;
+            int batchCount = totalCount / onceCount;
+            if (totalCount % onceCount != 0)
             {
-                DataRow row = table.NewRow();
-                row["Market"] = item.Market;
-                row["SharesCode"] = item.SharesCode;
-                row["Time"] = item.Time;
-                row["TimeStr"] = item.TimeStr;
-                row["Price"] = item.Price;
-                row["Volume"] = item.Volume;
-                row["Stock"] = item.Stock;
-                row["Type"] = item.Type;
-                row["OrderIndex"] = item.OrderIndex;
-                row["LastModified"] = DateTime.Now;
-                table.Rows.Add(row);
+                batchCount = batchCount + 1;
             }
 
-            using (var db = new meal_ticketEntities())
-            using (var tran = db.Database.BeginTransaction())
+            for (int i = 0; i < batchCount; i++)
             {
-                try
+                var tempDataList=dataList.Skip(i * onceCount).Take(onceCount).ToList();
+
+                DataTable table = new DataTable();
+                table.Columns.Add("Market", typeof(int));
+                table.Columns.Add("SharesCode", typeof(string));
+                table.Columns.Add("Time", typeof(DateTime));
+                table.Columns.Add("TimeStr", typeof(string));
+                table.Columns.Add("Price", typeof(long));
+                table.Columns.Add("Volume", typeof(int));
+                table.Columns.Add("Stock", typeof(int));
+                table.Columns.Add("Type", typeof(int));
+                table.Columns.Add("OrderIndex", typeof(int));
+                table.Columns.Add("LastModified", typeof(DateTime));
+                foreach (var item in tempDataList)
                 {
-                    //关键是类型
-                    SqlParameter parameter = new SqlParameter("@sharesTransactiondata", SqlDbType.Structured);
-                    //必须指定表类型名
-                    parameter.TypeName = "dbo.SharesTransactiondata";
-                    //赋值
-                    parameter.Value = table;
-                    db.Database.ExecuteSqlCommand("exec P_Shares_Transactiondata_Update @sharesTransactiondata", parameter);
-                    tran.Commit();
+                    DataRow row = table.NewRow();
+                    row["Market"] = item.Market;
+                    row["SharesCode"] = item.SharesCode;
+                    row["Time"] = item.Time;
+                    row["TimeStr"] = item.TimeStr;
+                    row["Price"] = item.Price;
+                    row["Volume"] = item.Volume;
+                    row["Stock"] = item.Stock;
+                    row["Type"] = item.Type;
+                    row["OrderIndex"] = item.OrderIndex;
+                    row["LastModified"] = DateTime.Now;
+                    table.Rows.Add(row);
                 }
-                catch (Exception ex)
+
+                using (var db = new meal_ticketEntities())
+                using (var tran = db.Database.BeginTransaction())
                 {
-                    tran.Rollback();
-                    throw ex;
+                    try
+                    {
+                        //关键是类型
+                        SqlParameter parameter = new SqlParameter("@sharesTransactiondata", SqlDbType.Structured);
+                        //必须指定表类型名
+                        parameter.TypeName = "dbo.SharesTransactiondata";
+                        //赋值
+                        parameter.Value = table;
+                        db.Database.ExecuteSqlCommand("exec P_Shares_Transactiondata_Update @sharesTransactiondata", parameter);
+                        tran.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        tran.Rollback();
+                        throw ex;
+                    }
                 }
             }
         }

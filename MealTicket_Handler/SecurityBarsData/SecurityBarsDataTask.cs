@@ -27,6 +27,62 @@ namespace MealTicket_Handler.SecurityBarsData
         public object MsgObj { get; set; }
     }
 
+    public class SecurityBarsOtherData
+    {
+        public int Market { get; set; }
+
+        public string SharesCode { get; set; }
+
+        public DateTime Date { get; set; }
+
+        public DateTime GroupTime { get; set; }
+
+        public DateTime Time { get; set; }
+
+        public string TimeStr { get; set; }
+
+        public long OpenedPrice { get; set; }
+
+        public long ClosedPrice { get; set; }
+
+        public long PreClosePrice { get; set; }
+
+        public long MinPrice { get; set; }
+
+        public long MaxPrice { get; set; }
+
+        public long TradeStock { get; set; }
+
+        public long TradeAmount { get; set; }
+
+        public int LastTradeStock { get; set; }
+
+        public long LastTradeAmount { get; set; }
+
+        public long Tradable { get; set; }
+
+        public long TotalCapital { get; set; }
+
+        public int HandCount { get; set; }
+
+        public DateTime LastModified { get; set; }
+    }
+
+    public class SecurityBarsMaxTime 
+    {
+        public int Market { get; set; }
+
+        public string SharesCode { get; set; }
+
+        public DateTime MaxTime { get; set; }
+
+        public long Tradable { get; set; }
+
+        public long TotalCapital { get; set; }
+
+        public int HandCount { get; set; }
+    }
+
     public class SecurityBarsDataTask
     {
         /// <summary>
@@ -84,7 +140,9 @@ namespace MealTicket_Handler.SecurityBarsData
                         if (CheckTaskTimeout(dataObj))
                         {
                             ClearTaskInfo(dataObj);//超时则清空任务
+                            Logger.WriteFileLog("====开始扔队列" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "====", null);
                             PushToDataUpDate(dataObj);
+                            Logger.WriteFileLog("====结束扔队列" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "====", null);
                         }
                         continue;
                     }
@@ -159,10 +217,10 @@ namespace MealTicket_Handler.SecurityBarsData
             try
             {
                 DateTime timeNow = DateTime.Now;
-                if (!RunnerHelper.CheckTradeTime2(timeNow, false, true, false) && !RunnerHelper.CheckTradeTime2(timeNow.AddSeconds(-60), false, true, false))
-                {
-                    return false;
-                }
+                //if (!RunnerHelper.CheckTradeTime2(timeNow, false, true, false) && !RunnerHelper.CheckTradeTime2(timeNow.AddSeconds(-60), false, true, false))
+                //{
+                //    return false;
+                //}
 
                 var tempGuid = Guid.NewGuid().ToString("N");
                 dataObj.TotalPacketCount = SendTransactionShares(tempGuid);
@@ -192,6 +250,7 @@ namespace MealTicket_Handler.SecurityBarsData
                 }
                 dataObj.DataList.AddRange(receivedObj.DataList);
                 dataObj.CallBackPacketCount++;
+                Logger.WriteFileLog("====数据包统计："+ dataObj.CallBackPacketCount+"/"+ dataObj.TotalPacketCount +","+ DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "====", null);
                 if (dataObj.CallBackPacketCount < dataObj.TotalPacketCount)//接受包数量不正确
                 {
                     return;
@@ -199,9 +258,16 @@ namespace MealTicket_Handler.SecurityBarsData
             }
 
             bool isFinish = false;
+
+            Logger.WriteFileLog("====开始更新1分钟k线数据" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "====", null);
             if (UpdateToDataBase(dataObj, ref isFinish))
             {
+                Logger.WriteFileLog("====结束更新1分钟k线数据" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "====", null);
                 dataObj.TaskTimeOut = -1;
+
+                Logger.WriteFileLog("====开始加载到缓存" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "====", null);
+                Singleton.Instance._SecurityBarsData_1minSession.LoadMoreSession(dataObj.DataList);//加载缓存
+                Logger.WriteFileLog("====结束加载到缓存" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "====", null);
                 if (!isFinish)
                 {
                     SecurityBarsDataQueue.AddMessage(new QueueMsgObj
@@ -212,6 +278,7 @@ namespace MealTicket_Handler.SecurityBarsData
                 }
                 else 
                 {
+                    Logger.WriteFileLog("====开始导入其他k线数据"+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")+"====",null);
                     int taskCount = 10;
                     Task[] taskArr = new Task[taskCount];
                     for (int i = 0; i < taskCount; i++)
@@ -219,12 +286,14 @@ namespace MealTicket_Handler.SecurityBarsData
                         int type = i;
                         taskArr[type] = new Task(() =>
                         {
-                            UpdateOtherToDataBase(type);
+                            var resultData=CalculateOtherData(type);
+                            UpdateOtherToDataBase(type, resultData);
                         },TaskCreationOptions.LongRunning);
                         taskArr[type].Start();
                     }
                     Task.WaitAll(taskArr);
-                    receivedObj.TaskTimeOut = Singleton.Instance.SecurityBarsTaskTimeout;
+                    dataObj.TaskTimeOut = Singleton.Instance.SecurityBarsTaskTimeout;
+                    Logger.WriteFileLog("====结束导入其他k线数据" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "====", null);
                 }
             }
 
@@ -334,7 +403,7 @@ namespace MealTicket_Handler.SecurityBarsData
         /// 更新其他K线数据
         /// </summary>
         /// <param name="type">1.5分钟线 2.15分钟线 3.30分钟线 4.60分钟线 5.日线 6.周线 7.月线 8.季度线 9.年线</param>
-        private void UpdateOtherToDataBase(int type)
+        private void UpdateOtherToDataBase(int type, List<SecurityBarsOtherData> dataList)
         {
             try
             {
@@ -342,34 +411,34 @@ namespace MealTicket_Handler.SecurityBarsData
                 switch (type)
                 {
                     case 0:
-                        //sql = "exec P_Shares_MinuteTimeData_Update";
+                        //sql = "exec P_Shares_MinuteTimeData_Update sharesSecurityBarsOtherData";
                         break;
                     case 1:
-                        sql = "exec P_Shares_SecurityBarsData_5min_Update";
+                        sql = "exec P_Shares_SecurityBarsData_5min_Update @sharesSecurityBarsOtherData";
                         break;
                     case 2:
-                        //sql = "exec P_Shares_SecurityBarsData_15min_Update";
+                        sql = "exec P_Shares_SecurityBarsData_15min_Update @sharesSecurityBarsOtherData";
                         break;
                     case 3:
-                        //sql = "exec P_Shares_SecurityBarsData_30min_Update";
+                        sql = "exec P_Shares_SecurityBarsData_30min_Update @sharesSecurityBarsOtherData";
                         break;
                     case 4:
-                        //sql = "exec P_Shares_SecurityBarsData_60min_Update";
+                        sql = "exec P_Shares_SecurityBarsData_60min_Update @sharesSecurityBarsOtherData";
                         break;
                     case 5:
-                        //sql = "exec P_Shares_SecurityBarsData_1day_Update";
+                        sql = "exec P_Shares_SecurityBarsData_1day_Update @sharesSecurityBarsOtherData";
                         break;
                     case 6:
-                        //sql = "exec P_Shares_SecurityBarsData_1week_Update";
+                        sql = "exec P_Shares_SecurityBarsData_1week_Update @sharesSecurityBarsOtherData";
                         break;
                     case 7:
-                        //sql = "exec P_Shares_SecurityBarsData_1month_Update";
+                        sql = "exec P_Shares_SecurityBarsData_1month_Update @sharesSecurityBarsOtherData";
                         break;
                     case 8:
-                        //sql = "exec P_Shares_SecurityBarsData_1quarter_Update";
+                        sql = "exec P_Shares_SecurityBarsData_1quarter_Update @sharesSecurityBarsOtherData";
                         break;
                     case 9:
-                        //sql = "exec P_Shares_SecurityBarsData_1year_Update";
+                        sql = "exec P_Shares_SecurityBarsData_1year_Update @sharesSecurityBarsOtherData";
                         break;
                     default:
                         break;
@@ -378,12 +447,62 @@ namespace MealTicket_Handler.SecurityBarsData
                 {
                     return;
                 }
+
+                DataTable table = new DataTable();
+                table.Columns.Add("Market", typeof(int));
+                table.Columns.Add("SharesCode", typeof(string));
+                table.Columns.Add("Date", typeof(DateTime));
+                table.Columns.Add("GroupTime", typeof(DateTime)); 
+                table.Columns.Add("Time", typeof(DateTime));
+                table.Columns.Add("TimeStr", typeof(string));
+                table.Columns.Add("OpenedPrice", typeof(long));
+                table.Columns.Add("ClosedPrice", typeof(long));
+                table.Columns.Add("PreClosePrice", typeof(long));
+                table.Columns.Add("MinPrice", typeof(long));
+                table.Columns.Add("MaxPrice", typeof(long));
+                table.Columns.Add("TradeStock", typeof(long));
+                table.Columns.Add("TradeAmount", typeof(long));
+                table.Columns.Add("LastTradeStock", typeof(int));
+                table.Columns.Add("LastTradeAmount", typeof(long));
+                table.Columns.Add("Tradable", typeof(long));
+                table.Columns.Add("TotalCapital", typeof(long));
+                table.Columns.Add("HandCount", typeof(int));
+                table.Columns.Add("LastModified", typeof(DateTime));
+                foreach (var item in dataList)
+                {
+                    DataRow row = table.NewRow();
+                    row["Market"] = item.Market;
+                    row["SharesCode"] = item.SharesCode;
+                    row["Date"] = item.Date;
+                    row["GroupTime"] = item.GroupTime;
+                    row["Time"] = item.Time;
+                    row["TimeStr"] = item.TimeStr;
+                    row["OpenedPrice"] = item.OpenedPrice;
+                    row["ClosedPrice"] = item.ClosedPrice;
+                    row["PreClosePrice"] = item.PreClosePrice;
+                    row["MinPrice"] = item.MinPrice;
+                    row["MaxPrice"] = item.MaxPrice;
+                    row["TradeStock"] = item.TradeStock;
+                    row["TradeAmount"] = item.TradeAmount;
+                    row["LastTradeStock"] = item.LastTradeStock;
+                    row["LastTradeAmount"] = item.LastTradeAmount;
+                    row["Tradable"] = item.Tradable;
+                    row["TotalCapital"] = item.TotalCapital;
+                    row["HandCount"] = item.HandCount;
+                    row["LastModified"] = DateTime.Now;
+                    table.Rows.Add(row);
+                }
+
                 using (var db = new meal_ticketEntities())
                 {
-                    if (!string.IsNullOrEmpty(sql))
-                    {
-                        db.Database.ExecuteSqlCommand(sql);
-                    }
+                    db.Database.CommandTimeout = 600;
+                    //关键是类型
+                    SqlParameter parameter = new SqlParameter("@sharesSecurityBarsOtherData", SqlDbType.Structured);
+                    //必须指定表类型名
+                    parameter.TypeName = "dbo.SharesSecurityBarsOtherData";
+                    //赋值
+                    parameter.Value = table;
+                    db.Database.ExecuteSqlCommand(sql, parameter);
                 }
             }
             catch (Exception ex)
@@ -396,13 +515,14 @@ namespace MealTicket_Handler.SecurityBarsData
         /// 更新其他K线数据
         /// </summary>
         /// <param name="type">1.5分钟线 2.15分钟线 3.30分钟线 4.60分钟线 5.日线 6.周线 7.月线 8.季度线 9.年线</param>
-        private void UpdateOtherToDataBaseBack(int type)
+        private List<SecurityBarsOtherData> CalculateOtherData(int type)
         {
+            List<SecurityBarsOtherData> resultList = new List<SecurityBarsOtherData>();
             string tableName = "";
             switch (type)
             {
                 case 0:
-                    tableName = "t_shares_minutetimedata";
+                    //tableName = "t_shares_minutetimedata";
                     break;
                 case 1:
                     tableName = "t_shares_securitybarsdata_5min";
@@ -436,39 +556,289 @@ namespace MealTicket_Handler.SecurityBarsData
             }
             if (string.IsNullOrEmpty(tableName))
             {
-                return;
+                return resultList;
             }
             try
             {
                 //查询原始一分钟数据
                 List<SecurityBarsData_1minInfo> SecurityBarsData_1minList = new List<SecurityBarsData_1minInfo>();
+                List<SecurityBarsMaxTime> tempList = new List<SecurityBarsMaxTime>();
+
                 using (var db = new meal_ticketEntities())
                 {
-                    string sql = string.Format(@"select t.Market,t.SharesCode,t.[Date],t.[Time],t.TimeStr,t.OpenedPrice,t.ClosedPrice,t.PreClosePrice,t.MinPrice,t.MaxPrice,t.TradeStock,t.TradeAmount,
-	  t.Tradable,t.TotalCapital,t.HandCount
-	  from t_shares_securitybarsdata_1min t with(nolock)
-	  inner join 
-	  (
-		 select t.Market,t.SharesCode,isnull(t1.MaxTime,'1991-01-01')MaxTime
-		 from v_shares_baseinfo t with(nolock)
-		 inner join t_shares_limit_time t2 with(nolock) on (t2.LimitMarket=-1 or t2.LimitMarket=t.Market) and (t.SharesCode like t2.LimitKey+'%')
-		 left join 
-		 (
-			select Market,SharesCode,max([Time])MaxTime
-			from {0} with(nolock)
-			group by Market,SharesCode
-		  ) t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode
-	  )t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode and t.[Time]>=t1.MaxTime
-	  order by t.Market,t.SharesCode,t.[Time]", tableName);
-                    SecurityBarsData_1minList = db.Database.SqlQuery<SecurityBarsData_1minInfo>(sql).ToList();
+                    string sql = string.Format(@"select t.Market,t.SharesCode,isnull(t1.MaxTime,'1991-01-01')MaxTime,isnull(t.CirculatingCapital,0) Tradable,isnull(t.TotalCapital,0) TotalCapital,t.SharesHandCount HandCount
+from v_shares_baseinfo t with(nolock)
+inner join t_shares_limit_time t2 with(nolock) on (t2.LimitMarket=-1 or t2.LimitMarket=t.Market) and (t.SharesCode like t2.LimitKey+'%')
+left join 
+(
+	select Market,SharesCode,max([Time]) MaxTime
+	from {0} with(nolock)
+	group by Market,SharesCode
+) t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode;", tableName);
+                    tempList = db.Database.SqlQuery<SecurityBarsMaxTime>(sql).ToList();
                 }
+                foreach (var item in tempList)
+                {
+                    List<SecurityBarsDataInfo> tempData = new List<SecurityBarsDataInfo>();
+                    if (!Singleton.Instance._SecurityBarsData_1minSession.GetSessionData().TryGetValue(item.SharesCode + item.Market, out tempData))
+                    {
+                        continue;
+                    }
+                    var tempDataList = (from x in tempData
+                                        where x.Market == item.Market && x.SharesCode == item.SharesCode && x.Time >= item.MaxTime
+                                        orderby x.Market, x.SharesCode, x.Time
+                                        select new SecurityBarsData_1minInfo
+                                        {
+                                            SharesCode = x.SharesCode,
+                                            TimeStr = x.TimeStr,
+                                            ClosedPrice = x.ClosedPrice,
+                                            Date = x.Date,
+                                            HandCount = item.HandCount,
+                                            TradeStock = x.TradeStock,
+                                            Market = x.Market,
+                                            MaxPrice = x.MaxPrice,
+                                            MinPrice = x.MinPrice,
+                                            OpenedPrice = x.OpenedPrice,
+                                            PreClosePrice = x.PreClosePrice,
+                                            Time = x.Time.Value,
+                                            TotalCapital = item.TotalCapital,
+                                            Tradable = item.Tradable,
+                                            TradeAmount = x.TradeAmount
+                                        }).ToList();
+                    SecurityBarsData_1minList.AddRange(tempDataList);
+                }
+                int tempMarket=-1;
+                string tempSharesCode="";
+                long tempTradeStock=0;
+                long tempTradeAmount=0;
+                int tempLastTradeStock=0;
+                long tempLastTradeAmount = 0;
+                DateTime currGroupTime=DateTime.Parse("1991-01-01 00:00:00");
+                DateTime tempDate = DateTime.Parse("1991-01-01 00:00:00");
+                DateTime tempTime = DateTime.Parse("1991-01-01 00:00:00");
+                string tempTimeStr="";
+                long defaultMaxPrice = 9999999999;
+                long tempMinPrice= defaultMaxPrice;
+                long tempMaxPrice=0;
+                long tempTradable=0;
+                long tempTotalCapital=0;
+                int tempHandCount=0;
+                long tempClosedPrice=0;
+                long tempOpenedPrice=0;
+                long tempPreClosePrice = 0;
 
+                foreach (var item in SecurityBarsData_1minList)
+                {
+                    //判断当前分组时间
+                    var tempGroupTime = _checkGroupTime(item.Market, item.SharesCode, item.Time, type);
+                    if (tempGroupTime == null)
+                    {
+                        continue;
+                    }
+                    if (item.Market == tempMarket && item.SharesCode == tempSharesCode)
+                    {
+                        tempTradeStock = tempTradeStock + tempLastTradeStock;
+                        tempTradeAmount = tempTradeAmount + tempLastTradeAmount;
+                        tempLastTradeStock = 0;
+                        tempLastTradeAmount = 0;
+                    }
+                    if (item.Market != tempMarket || item.SharesCode != tempSharesCode || tempGroupTime != currGroupTime)
+                    {
+                        if (tempMarket != -1)
+                        {
+                            resultList.Add(new SecurityBarsOtherData
+                            {
+                                Market = tempMarket,
+                                SharesCode =tempSharesCode,
+                                Date=tempDate,
+                                GroupTime= currGroupTime,
+                                Time=tempTime,
+                                TimeStr = tempTimeStr,
+                                OpenedPrice=tempOpenedPrice,
+                                ClosedPrice=tempClosedPrice,
+                                PreClosePrice=tempPreClosePrice,
+                                MinPrice=tempMinPrice,
+                                MaxPrice=tempMaxPrice,
+                                TradeStock = tempTradeStock,
+                                TradeAmount=tempTradeAmount,
+                                LastTradeStock=tempLastTradeStock,
+                                LastTradeAmount = tempLastTradeAmount,
+                                Tradable = tempTradable,
+                                TotalCapital=tempTotalCapital,
+                                HandCount=tempHandCount,
+                                LastModified=DateTime.Now
+                            });
+                        }
+                        tempOpenedPrice = item.OpenedPrice;
+                        tempPreClosePrice = item.PreClosePrice;
+                        tempTradeStock = 0;
+                        tempTradeAmount = 0;
+                        tempMinPrice = defaultMaxPrice;
+                        tempMaxPrice = 0;
+                    }
 
-
+                    tempMarket = item.Market;
+                    tempSharesCode = item.SharesCode;
+                    currGroupTime = tempGroupTime.Value;
+                    tempDate = item.Date;
+                    tempTime = item.Time;
+                    tempTimeStr = item.TimeStr;
+                    tempLastTradeStock = item.TradeStock;
+                    tempLastTradeAmount = item.TradeAmount;
+                    if (tempMinPrice > item.MinPrice)
+                    {
+                        tempMinPrice = item.MinPrice;
+                    }
+                    if (tempMaxPrice < item.MaxPrice)
+                    {
+                        tempMaxPrice = item.MaxPrice;
+                    }
+                    tempTradable = item.Tradable;
+                    tempTotalCapital = item.TotalCapital;
+                    tempHandCount = item.HandCount;
+                    tempClosedPrice = item.ClosedPrice;
+                }
+                resultList.Add(new SecurityBarsOtherData
+                {
+                    Market = tempMarket,
+                    SharesCode = tempSharesCode,
+                    Date = tempDate,
+                    GroupTime = currGroupTime,
+                    Time = tempTime,
+                    TimeStr = tempTimeStr,
+                    OpenedPrice = tempOpenedPrice,
+                    ClosedPrice = tempClosedPrice,
+                    PreClosePrice = tempPreClosePrice,
+                    MinPrice = tempMinPrice,
+                    MaxPrice = tempMaxPrice,
+                    TradeStock = tempTradeStock,
+                    TradeAmount = tempTradeAmount,
+                    LastTradeStock = tempLastTradeStock,
+                    LastTradeAmount = tempLastTradeAmount,
+                    Tradable = tempTradable,
+                    TotalCapital = tempTotalCapital,
+                    HandCount = tempHandCount,
+                    LastModified = DateTime.Now
+                });
             }
             catch (Exception ex)
             {
                 Logger.WriteFileLog("更新其他K线数据失败，type=" + type, ex);
+            }
+            return resultList;
+        }
+
+        private DateTime? _checkGroupTime(int market, string sharesCode, DateTime time, int type)
+        {
+            if (type == 1 || type == 2 || type == 3 || type == 4)
+            {
+                return _checkGroupTime1(market, sharesCode, time, type);
+            }
+            else if (type == 5)
+            {
+                return _checkGroupTime2(time);
+            }
+            else if (type == 6 || type == 7 || type == 8 || type == 9)
+            {
+                return _checkGroupTime3(time, type);
+            }
+            else 
+            {
+                return null;
+            }
+        }
+
+        private DateTime? _checkGroupTime1(int market, string sharesCode, DateTime time, int type) 
+        {
+            try
+            {
+                TimeSpan timeSpan = TimeSpan.Parse(time.ToString("HH:mm:ss"));
+
+                string time7 = (from item in Singleton.Instance._SharesLimitTimeSession.GetSessionData()
+                                where (item.LimitMarket == -1 || item.LimitMarket == market) && sharesCode.StartsWith(item.LimitKey)
+                                select item.Time7).FirstOrDefault();
+                if (string.IsNullOrEmpty(time7))
+                {
+                    return null;
+                }
+                int riseMinute = type == 1 ? 5 : type == 2 ? 15 : type == 3 ? 30 : type == 4 ? 60 : 0;
+                if (riseMinute == 0)
+                {
+                    return null;
+                }
+                string[] timeArr = time7.Split(',');
+                for (int i = 0; i < timeArr.Length; i++)
+                {
+                    string[] timeInfo = timeArr[i].Split('-');
+                    TimeSpan startTime = TimeSpan.Parse(timeInfo[0]);
+                    TimeSpan endTime = TimeSpan.Parse(timeInfo[1]);
+                    if (timeSpan < startTime || timeSpan > endTime)
+                    {
+                        continue;
+                    }
+                    do 
+                    {
+                        startTime = startTime.Add(TimeSpan.FromMinutes(riseMinute));
+                        if (startTime > endTime)
+                        {
+                            break;
+                        }
+                        if (startTime >= timeSpan)
+                        {
+                            string resultTime = time.Date.ToString("yyyy-MM-dd") + " " + startTime.ToString();
+                            return DateTime.Parse(resultTime);
+                        }
+                    } while (true);
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("_checkGroupTime1出错", ex);
+                return null;
+            }
+        }
+
+        private DateTime _checkGroupTime2(DateTime time) 
+        {
+            return time.Date;
+        }
+
+        private DateTime? _checkGroupTime3(DateTime time, int type) 
+        {
+            try
+            {
+                var dimTimeSession = Singleton.Instance._DimTimeSession.GetSessionData();
+                var the_day = (from item in dimTimeSession
+                               where item.the_date == int.Parse(time.ToString("yyyyMMdd"))
+                               select item).FirstOrDefault();
+                if (the_day == null)
+                {
+                    return null;
+                }
+                int key = type == 6 ? the_day.the_week ?? 0 : type == 7 ? the_day.the_month ?? 0 : type == 8 ? the_day.the_quarter ?? 0 : type == 9 ? the_day.the_year ?? 0 : 0;
+                var tradeDate = dimTimeSession.Where(e => e.week_day != 1 && e.week_day != 7).OrderByDescending(e => e.the_date).ToList();
+                foreach (var item in tradeDate)
+                {
+                    var tempDate = (from x in Singleton.Instance._SharesLimitDateSession.GetSessionData()
+                                    where item.the_date >= x.BeginDate && item.the_date <= x.EndDate
+                                    select x).FirstOrDefault();
+                    if (tempDate != null)
+                    {
+                        continue;
+                    }
+
+                    if ((type == 6 && item.the_week == key) || (type == 7 && item.the_month == key) || (type == 8 && item.the_quarter == key) || (type == 9 && item.the_year == key))
+                    {
+                        return DateTime.ParseExact(item.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
+                    }
+                }
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("_checkGroupTime3出错", ex);
+                return null;
             }
         }
 

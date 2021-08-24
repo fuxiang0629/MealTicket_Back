@@ -12779,6 +12779,12 @@
             </summary>
             <param name="request"></param>
         </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchDeleteSharesMonitor(MealTicket_Admin_Handler.Model.BatchDeleteSharesMonitorRequest)">
+            <summary>
+            批量删除行情监控
+            </summary>
+            <param name="request"></param>
+        </member>
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.BatchAddSharesMonitor(System.Collections.Generic.List{MealTicket_Admin_Handler.Model.MarketTimeInfo})">
             <summary>
             批量导入行情监控数据

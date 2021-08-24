@@ -57,11 +57,6 @@ namespace MealTicket_Handler.SecurityBarsData
         public string SharesCode { get; set; }
 
         /// <summary>
-        /// 股票唯一数字
-        /// </summary>
-        public int SharesInfoNum { get; set; }
-
-        /// <summary>
         /// 日期
         /// </summary>
         public DateTime Date { get; set; }
@@ -116,7 +111,8 @@ namespace MealTicket_Handler.SecurityBarsData
     {
         public int Market { get; set; }
         public string SharesCode { get; set; }
-        public DateTime Date{get;set;} public DateTime Time { get; set; }
+        public DateTime Date{get;set;} 
+        public DateTime Time { get; set; }
         public string TimeStr { get; set; }
         public long OpenedPrice { get; set; }
         public long ClosedPrice { get; set; }

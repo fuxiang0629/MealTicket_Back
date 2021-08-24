@@ -348,6 +348,7 @@
     <Compile Include="Model\TradeCenter\BatchDeleteConditiontradeTemplateBuyAutoPar_Other.cs" />
     <Compile Include="Model\TradeCenter\BatchDeleteConditiontradeTemplateBuyOtherPar.cs" />
     <Compile Include="Model\TradeCenter\BatchDeleteConditiontradeTemplateBuyOtherPar_Other.cs" />
+    <Compile Include="Model\TradeCenter\BatchDeleteSharesMonitor.cs" />
     <Compile Include="Model\TradeCenter\BatchUpdateMonitorTrendPar.cs" />
     <Compile Include="Model\TradeCenter\GetConditiontradeTemplateBuyAutoGroupList.cs" />
     <Compile Include="Model\TradeCenter\GetConditiontradeTemplateBuyAutoList.cs" />

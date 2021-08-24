@@ -134,6 +134,7 @@
     <Compile Include="Model\BatchDeleteAccountBuyConditionAutoPar_Other.cs" />
     <Compile Include="Model\BatchDeleteAccountBuyConditionOtherPar.cs" />
     <Compile Include="Model\BatchDeleteAccountBuyConditionOtherPar_Other.cs" />
+    <Compile Include="Model\BatchDeleteAccountOptional.cs" />
     <Compile Include="Model\BatchDeleteConditiontradeBuyShares.cs" />
     <Compile Include="Model\BatchDeleteConditiontradeTemplateBuyAutoPar.cs" />
     <Compile Include="Model\BatchDeleteConditiontradeTemplateBuyAutoPar_Other.cs" />

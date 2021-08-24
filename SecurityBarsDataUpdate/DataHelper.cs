@@ -67,8 +67,8 @@ namespace SecurityBarsDataUpdate
                             }
 
                             bool isReconnectClient = false;
-
                             var tempList = TdxHq_GetSecurityBarsData_byShares(hqClient, tempData, (TRANSACTION_DATA_STRING)ref_string, ref isReconnectClient);
+
                             if (isReconnectClient)
                             {
                                 Singleton.Instance.AddRetryClient(hqClient);
@@ -79,7 +79,6 @@ namespace SecurityBarsDataUpdate
                             {
                                 resultList.AddRange(tempList);
                             }
-
                         } while (true);
                     }
                     catch (Exception ex)
@@ -105,6 +104,7 @@ namespace SecurityBarsDataUpdate
         /// <returns></returns>
         public static List<SecurityBarsDataInfo> TdxHq_GetSecurityBarsData_byShares(int hqClient, SecurityBarsDataInfo sharesData,TRANSACTION_DATA_STRING result_info, ref bool isReconnectClient)
         {
+            DateTime timeNow = DateTime.Now;
             List<SecurityBarsDataInfo> resultlist = new List<SecurityBarsDataInfo>();
             if (sharesData.Time == null)
             {
@@ -115,6 +115,7 @@ namespace SecurityBarsDataUpdate
             short nCount = 0;
             short defaultGetCount= (short)Singleton.Instance.SecurityBarsGetCount;
             bool isContinue = true;
+
             do
             {
                 StringBuilder sErrInfo = result_info.sErrInfo;
@@ -138,6 +139,7 @@ namespace SecurityBarsDataUpdate
                     Array.Reverse(rows);
 
                     List<SecurityBarsDataInfo> tempResultlist = new List<SecurityBarsDataInfo>();
+
                     for (int i = 0; i < rows.Length-1; i++)
                     {
                         string[] column = rows[i].Split('\t');
@@ -160,7 +162,7 @@ namespace SecurityBarsDataUpdate
                             }
 
                             //1989--15--20
-                            Int32 lYear = 4011 - Int32.Parse(TimeStr.Substring(0, 4));
+                            Int32 lYear = 31 + Int32.Parse(TimeStr.Substring(0, 4));
                             Int32 lMonth = 20 - Int32.Parse(TimeStr.Substring(6, 2));
                             Int32 lDay = 48 - Int32.Parse(TimeStr.Substring(10, 2));
                             Int32 lHour = Int32.Parse(TimeStr.Substring(13, 2));
@@ -171,6 +173,10 @@ namespace SecurityBarsDataUpdate
                                 lMinute = 30;
                             }
                             Time = new DateTime(lYear, lMonth, lDay, lHour, lMinute, 0);
+                            if (Time.Date != timeNow.Date)
+                            {
+                                throw new Exception("时间有误，时间:" + TimeStr + ",股票:" + SharesCode + "，市场" + Market);
+                            }
 
                             long ClosedPrice = (long)(Math.Round(float.Parse(column[2]) * 10000, 0));//收盘
                             long OpenedPrice = (long)(Math.Round(float.Parse(column[1]) * 10000, 0));//开盘
@@ -206,7 +212,7 @@ namespace SecurityBarsDataUpdate
                             return new List<SecurityBarsDataInfo>();
                         }
                     }
-                    resultlist= resultlist.Concat(tempResultlist).ToList();
+                    resultlist = resultlist.Concat(tempResultlist).ToList();
                     nStart = (short)(nStart + nCount);
                 }
             } while (nCount >=defaultGetCount && isContinue);
@@ -217,7 +223,7 @@ namespace SecurityBarsDataUpdate
             {
                 item.PreClosePrice = preClosePrice;
                 preClosePrice = item.ClosedPrice;
-            }    
+            }
             return resultlist;
         }
     }

@@ -286,6 +286,7 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_sys_conditiontrade_template_search> t_sys_conditiontrade_template_search { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_template_search> t_account_shares_conditiontrade_template_search { get; set; }
         public virtual DbSet<t_shares_minutetimedata> t_shares_minutetimedata { get; set; }
+        public virtual DbSet<t_shares_securitybarsdata_1min> t_shares_securitybarsdata_1min { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)

@@ -751,6 +751,62 @@ namespace MealTicket_Web_Handler
         }
 
         /// <summary>
+        /// 批量删除自选股
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void BatchDeleteAccountOptional(BatchDeleteAccountOptionalRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var optional = (from item in db.t_account_shares_optional
+                                    where request.IdList.Contains(item.Id) && item.AccountId == basedata.AccountId
+                                    select item).ToList();
+                    if (optional.Count() <= 0)
+                    {
+                        return;
+                    }
+                    List<long> optionalId = optional.Select(e => e.Id).ToList();
+
+                    var optionalTrend = (from item in db.t_account_shares_optional_trend_rel
+                                         where optionalId.Contains(item.OptionalId)
+                                         select item).ToList();
+                    List<long> relIdList = optionalTrend.Select(e => e.Id).ToList();
+
+                    var trendPar = (from item in db.t_account_shares_optional_trend_rel_par
+                                    where relIdList.Contains(item.RelId)
+                                    select item).ToList();
+
+                    db.t_account_shares_optional.RemoveRange(optional);
+                    if (optionalTrend.Count() > 0)
+                    {
+                        db.t_account_shares_optional_trend_rel.RemoveRange(optionalTrend);
+                    }
+                    if (trendPar.Count() > 0)
+                    {
+                        db.t_account_shares_optional_trend_rel_par.RemoveRange(trendPar);
+                    }
+                    var seatRel = (from item in db.t_account_shares_optional_seat_rel
+                                   where optionalId.Contains(item.OptionalId)
+                                   select item).ToList();
+                    db.t_account_shares_optional_seat_rel.RemoveRange(seatRel);
+                    db.SaveChanges();
+
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
         /// 绑定自选股席位
         /// </summary>
         /// <param name="request"></param>

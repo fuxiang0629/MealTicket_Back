@@ -232,6 +232,24 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 批量删除自选股
+        /// </summary>
+        /// <returns></returns>
+        [Description("批量删除自选股")]
+        [Route("account/optional/delete/batch"), HttpPost]
+        [CheckUserLoginFilter]
+        public object BatchDeleteAccountOptional(BatchDeleteAccountOptionalRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BatchDeleteAccountOptional(request, basedata);
+            return null;
+        }
+
+        /// <summary>
         /// 绑定自选股席位
         /// </summary>
         /// <returns></returns>

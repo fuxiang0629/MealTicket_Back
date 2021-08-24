@@ -2657,7 +2657,7 @@
     <Property Name="Price" Type="bigint" Nullable="false" />
     <Property Name="AvgPrice" Type="bigint" Nullable="false" />
     <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
-    <Property Name="TradeStock" Type="int" Nullable="false" />
+    <Property Name="TradeStock" Type="bigint" Nullable="false" />
     <Property Name="TradeAmount" Type="bigint" Nullable="false" />
     <Property Name="Tradable" Type="bigint" Nullable="false" />
     <Property Name="TotalCapital" Type="bigint" Nullable="false" />
@@ -3129,6 +3129,28 @@
     <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
     <Property Name="SharesName" Type="nvarchar" MaxLength="200" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_securitybarsdata_1min">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Date" Type="date" Nullable="false" />
+    <Property Name="Time" Type="datetime" Nullable="false" />
+    <Property Name="TimeStr" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
+    <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="PreClosePrice" Type="bigint" Nullable="false" />
+    <Property Name="MinPrice" Type="bigint" Nullable="false" />
+    <Property Name="MaxPrice" Type="bigint" Nullable="false" />
+    <Property Name="TradeStock" Type="int" Nullable="false" />
+    <Property Name="TradeAmount" Type="bigint" Nullable="false" />
+    <Property Name="Tradable" Type="bigint" Nullable="false" />
+    <Property Name="TotalCapital" Type="bigint" Nullable="false" />
+    <Property Name="HandCount" Type="int" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_suspension">
     <Key>
@@ -4541,6 +4563,7 @@
     <EntitySet Name="t_shares_quotes_record" EntityType="Self.t_shares_quotes_record" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_quotes_temp" EntityType="Self.t_shares_quotes_temp" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_search" EntityType="Self.t_shares_search" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_securitybarsdata_1min" EntityType="Self.t_shares_securitybarsdata_1min" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_suspension" EntityType="Self.t_shares_suspension" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_today" EntityType="Self.t_shares_today" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_transactiondata" EntityType="Self.t_shares_transactiondata" Schema="dbo" store:Type="Tables" />

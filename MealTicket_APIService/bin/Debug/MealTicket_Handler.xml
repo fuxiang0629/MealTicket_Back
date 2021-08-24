@@ -3148,7 +3148,13 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.UpdateOtherToDataBase(System.Int32)">
+        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.UpdateOtherToDataBase(System.Int32,System.Collections.Generic.List{MealTicket_Handler.SecurityBarsData.SecurityBarsOtherData})">
+            <summary>
+            更新其他K线数据
+            </summary>
+            <param name="type">1.5分钟线 2.15分钟线 3.30分钟线 4.60分钟线 5.日线 6.周线 7.月线 8.季度线 9.年线</param>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.CalculateOtherData(System.Int32)">
             <summary>
             更新其他K线数据
             </summary>
@@ -3211,11 +3217,6 @@
             股票代码
             </summary>
         </member>
-        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataInfo.SharesInfoNum">
-            <summary>
-            股票唯一数字
-            </summary>
-        </member>
         <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataInfo.Date">
             <summary>
             日期
@@ -3264,6 +3265,11 @@
         <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataInfo.PreClosePrice">
             <summary>
             上一时段收盘价
+            </summary>
+        </member>
+        <member name="T:MealTicket_Handler.SharesBaseSession">
+            <summary>
+            股票基础数据缓存
             </summary>
         </member>
         <member name="F:MealTicket_Handler.Singleton.instance">

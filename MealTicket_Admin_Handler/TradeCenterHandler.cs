@@ -3141,6 +3141,57 @@ namespace MealTicket_Admin_Handler
         }
 
         /// <summary>
+        /// 批量删除行情监控
+        /// </summary>
+        /// <param name="request"></param>
+        public void BatchDeleteSharesMonitor(BatchDeleteSharesMonitorRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var monitor = (from item in db.t_shares_monitor
+                                   where request.IdList.Contains(item.Id)
+                                   select item).ToList();
+                    if (monitor.Count()<=0)
+                    {
+                        return;
+                    }
+                    List<long> monitorId = monitor.Select(e => e.Id).ToList();
+
+                    var monitorTrend = (from item in db.t_shares_monitor_trend_rel
+                                        where monitorId.Contains(item.MonitorId)
+                                        select item).ToList();
+                    List<long> relIdList = monitorTrend.Select(e => e.Id).ToList();
+
+                    var trendPar = (from item in db.t_shares_monitor_trend_rel_par
+                                    where relIdList.Contains(item.RelId)
+                                    select item).ToList();
+
+                    db.t_shares_monitor.RemoveRange(monitor);
+                    if (monitorTrend.Count() > 0)
+                    {
+                        db.t_shares_monitor_trend_rel.RemoveRange(monitorTrend);
+                    }
+                    if (trendPar.Count() > 0)
+                    {
+                        db.t_shares_monitor_trend_rel_par.RemoveRange(trendPar);
+                    }
+                    db.SaveChanges();
+
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
         /// 批量导入行情监控数据
         /// </summary>
         /// <param name="list"></param>

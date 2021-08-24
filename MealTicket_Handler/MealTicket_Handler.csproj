@@ -179,7 +179,11 @@
     <Compile Include="RunnerHandler\RunnerHelper.cs" />
     <Compile Include="SecurityBarsData\SecurityBarsDataTask.cs" />
     <Compile Include="SecurityBarsData\SecurityBarsDataTaskModel.cs" />
+    <Compile Include="Session\DimTimeSession.cs" />
+    <Compile Include="Session\SecurityBarsData_1minSession.cs" />
     <Compile Include="Session\SharesBaseSession.cs" />
+    <Compile Include="Session\SharesLimitDateSession.cs" />
+    <Compile Include="Session\SharesLimitTimeSession.cs" />
     <Compile Include="Singleton.cs" />
     <Compile Include="DBUtils.cs" />
   </ItemGroup>

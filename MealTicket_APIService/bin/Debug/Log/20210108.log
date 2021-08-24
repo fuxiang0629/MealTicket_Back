@@ -1,6 +1,0 @@
-2021/1/8 20:52:39
-队列出错了
-System.NullReferenceException: 未将对象引用设置到对象的实例。
-   在 RabbitMQ.Client.IModelExensions.BasicPublish(IModel model, String exchange, String routingKey, IBasicProperties basicProperties, ReadOnlyMemory`1 body)
-   在 MealTicket_Handler.MQHandler.SendMessage(Byte[] data, String exchange, String routekey) 位置 F:\项目\饭票后端\MealTicket_Handler\RabbitMq\MQHandler.cs:行号 84
-

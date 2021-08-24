@@ -2025,6 +2025,24 @@ namespace MealTicket_Admin_APIService.controller
         }
 
         /// <summary>
+        /// 批量删除行情监控
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/monitor/delete/batch"), HttpPost]
+        [Description("批量删除行情监控")]
+        public object BatchDeleteSharesMonitor(BatchDeleteSharesMonitorRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.BatchDeleteSharesMonitor(request);
+            return null;
+        }
+
+        /// <summary>
         /// 批量导入行情监控数据
         /// </summary>
         /// <returns></returns>
