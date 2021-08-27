@@ -62,15 +62,20 @@ namespace MealTicket_Handler
                     List<SecurityBarsDataInfo> tempList = new List<SecurityBarsDataInfo>();
                     if (!SessionData.TryGetValue(item.Key.SharesCode + item.Key.Market, out tempList))
                     {
-                        SessionData.Add(item.Key.SharesCode + item.Key.Market, tempList);
+                        SessionData.Add(item.Key.SharesCode + item.Key.Market, item.ToList());
                     }
                     else
                     {
+                        if (tempList == null)
+                        {
+                            tempList = new List<SecurityBarsDataInfo>();
+                        }
                         if (tempList.Count() > 0)
                         {
                             tempList.RemoveAt(tempList.Count() - 1);
                         }
                         tempList.AddRange(item.ToList());
+                        SessionData[item.Key.SharesCode + item.Key.Market] = tempList;
                     }
                 }
                 return true;

@@ -38,9 +38,9 @@ namespace SecurityBarsDataUpdate
         /// 获取K线数据
         /// </summary>
         /// <returns></returns>
-        public static List<SecurityBarsDataInfo> TdxHq_GetSecurityBarsData(List<SecurityBarsDataInfo> sharesList)
+        public static List<SecurityBarsDataInfo> TdxHq_GetSecurityBarsData(List<SecurityBarsDataPar> sharesList, short defaultGetCount,DateTime date)
         {
-            ThreadMsgTemplate<SecurityBarsDataInfo> data = new ThreadMsgTemplate<SecurityBarsDataInfo>();
+            ThreadMsgTemplate<SecurityBarsDataPar> data = new ThreadMsgTemplate<SecurityBarsDataPar>();
             data.Init();
             foreach (var item in sharesList)
             {
@@ -60,14 +60,14 @@ namespace SecurityBarsDataUpdate
                     {
                         do
                         {
-                            SecurityBarsDataInfo tempData = new SecurityBarsDataInfo();
+                            SecurityBarsDataPar tempData = new SecurityBarsDataPar();
                             if (!data.GetMessage(ref tempData, true))
                             {
                                 break;
                             }
 
                             bool isReconnectClient = false;
-                            var tempList = TdxHq_GetSecurityBarsData_byShares(hqClient, tempData, (TRANSACTION_DATA_STRING)ref_string, ref isReconnectClient);
+                            var tempList = TdxHq_GetSecurityBarsData_byShares(hqClient, tempData, defaultGetCount, date,(TRANSACTION_DATA_STRING)ref_string, ref isReconnectClient);
 
                             if (isReconnectClient)
                             {
@@ -102,18 +102,12 @@ namespace SecurityBarsDataUpdate
         /// 获取某只股票K线数据
         /// </summary>
         /// <returns></returns>
-        public static List<SecurityBarsDataInfo> TdxHq_GetSecurityBarsData_byShares(int hqClient, SecurityBarsDataInfo sharesData,TRANSACTION_DATA_STRING result_info, ref bool isReconnectClient)
+        public static List<SecurityBarsDataInfo> TdxHq_GetSecurityBarsData_byShares(int hqClient, SecurityBarsDataPar sharesData, short defaultGetCount,DateTime date, TRANSACTION_DATA_STRING result_info, ref bool isReconnectClient)
         {
-            DateTime timeNow = DateTime.Now;
             List<SecurityBarsDataInfo> resultlist = new List<SecurityBarsDataInfo>();
-            if (sharesData.Time == null)
-            {
-                sharesData.Time = DateTime.Now.Date;
-            }
   
             short nStart = 0; 
             short nCount = 0;
-            short defaultGetCount= (short)Singleton.Instance.SecurityBarsGetCount;
             bool isContinue = true;
 
             do
@@ -128,8 +122,7 @@ namespace SecurityBarsDataUpdate
                 if (!bRet)
                 {
                     isReconnectClient = true;
-                    string errDes = string.Format("获取K线数据出错，原因：{0}", sErrInfo.ToString());
-                    Console.WriteLine(errDes);
+                    Logger.WriteFileLog(string.Format("获取K线数据出错，原因：{0}", sErrInfo.ToString()),null);
                     return new List<SecurityBarsDataInfo>();
                 }
                 else
@@ -145,8 +138,7 @@ namespace SecurityBarsDataUpdate
                         string[] column = rows[i].Split('\t');
                         if (column.Length < 7)
                         {
-                            string errDes = "获取K线数据结构有误";
-                            Console.WriteLine(errDes);
+                            Logger.WriteFileLog("获取K线数据结构有误", null);
                             return new List<SecurityBarsDataInfo>();
                         }
 
@@ -158,24 +150,31 @@ namespace SecurityBarsDataUpdate
                             DateTime Time;
                             if (TimeStr.Length != 18)
                             {
-                                throw new Exception("时间格式有误，时间:"+ TimeStr+",股票:"+ SharesCode+"，市场"+ Market);
+                                Time = DateTime.Parse(TimeStr);
                             }
-
-                            //1989--15--20
-                            Int32 lYear = 31 + Int32.Parse(TimeStr.Substring(0, 4));
-                            Int32 lMonth = 20 - Int32.Parse(TimeStr.Substring(6, 2));
-                            Int32 lDay = 48 - Int32.Parse(TimeStr.Substring(10, 2));
-                            Int32 lHour = Int32.Parse(TimeStr.Substring(13, 2));
-                            Int32 lMinute = Int32.Parse(TimeStr.Substring(16, 2));
-                            if (lHour == 13 && lMinute == 0)
+                            else
                             {
-                                lHour = 11;
-                                lMinute = 30;
+                                //1989--15--20
+                                Int32 lYear = 31 + Int32.Parse(TimeStr.Substring(0, 4));
+                                Int32 lMonth = 20 - Int32.Parse(TimeStr.Substring(6, 2));
+                                Int32 lDay = 48 - Int32.Parse(TimeStr.Substring(10, 2));
+                                Int32 lHour = Int32.Parse(TimeStr.Substring(13, 2));
+                                Int32 lMinute = Int32.Parse(TimeStr.Substring(16, 2));
+                                if (lHour == 13 && lMinute == 0)
+                                {
+                                    lHour = 11;
+                                    lMinute = 30;
+                                }
+                                Time = new DateTime(lYear, lMonth, lDay, lHour, lMinute, 0);
                             }
-                            Time = new DateTime(lYear, lMonth, lDay, lHour, lMinute, 0);
-                            if (Time.Date != timeNow.Date)
+                            if (Time.Date != date)
                             {
-                                throw new Exception("时间有误，时间:" + TimeStr + ",股票:" + SharesCode + "，市场" + Market);
+                                continue;
+                            }
+                            if (sharesData.Time!=null && sharesData.Time.Value > Time)
+                            {
+                                isContinue = false;
+                                break;
                             }
 
                             long ClosedPrice = (long)(Math.Round(float.Parse(column[2]) * 10000, 0));//收盘
@@ -185,11 +184,6 @@ namespace SecurityBarsDataUpdate
                             int Volume = int.Parse(column[5]);//成交量
                             long Turnover = (long)(Math.Round(float.Parse(column[6]) * 10000, 0));//成交额
 
-                            if (sharesData.Time.Value > Time)
-                            {
-                                isContinue = false;
-                                break;
-                            }
 
                             tempResultlist.Add(new SecurityBarsDataInfo
                             {

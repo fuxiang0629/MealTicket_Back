@@ -14,75 +14,6 @@ using System.Threading.Tasks;
 
 namespace MealTicket_Handler.SecurityBarsData
 {
-    public class QueueMsgObj
-    {
-        /// <summary>
-        /// 消息Id
-        /// </summary>
-        public int MsgId { get; set; }
-
-        /// <summary>
-        /// 消息内容
-        /// </summary>
-        public object MsgObj { get; set; }
-    }
-
-    public class SecurityBarsOtherData
-    {
-        public int Market { get; set; }
-
-        public string SharesCode { get; set; }
-
-        public DateTime Date { get; set; }
-
-        public DateTime GroupTime { get; set; }
-
-        public DateTime Time { get; set; }
-
-        public string TimeStr { get; set; }
-
-        public long OpenedPrice { get; set; }
-
-        public long ClosedPrice { get; set; }
-
-        public long PreClosePrice { get; set; }
-
-        public long MinPrice { get; set; }
-
-        public long MaxPrice { get; set; }
-
-        public long TradeStock { get; set; }
-
-        public long TradeAmount { get; set; }
-
-        public int LastTradeStock { get; set; }
-
-        public long LastTradeAmount { get; set; }
-
-        public long Tradable { get; set; }
-
-        public long TotalCapital { get; set; }
-
-        public int HandCount { get; set; }
-
-        public DateTime LastModified { get; set; }
-    }
-
-    public class SecurityBarsMaxTime 
-    {
-        public int Market { get; set; }
-
-        public string SharesCode { get; set; }
-
-        public DateTime MaxTime { get; set; }
-
-        public long Tradable { get; set; }
-
-        public long TotalCapital { get; set; }
-
-        public int HandCount { get; set; }
-    }
-
     public class SecurityBarsDataTask
     {
         /// <summary>
@@ -217,10 +148,10 @@ namespace MealTicket_Handler.SecurityBarsData
             try
             {
                 DateTime timeNow = DateTime.Now;
-                //if (!RunnerHelper.CheckTradeTime2(timeNow, false, true, false) && !RunnerHelper.CheckTradeTime2(timeNow.AddSeconds(-60), false, true, false))
-                //{
-                //    return false;
-                //}
+                if (!RunnerHelper.CheckTradeTime2(timeNow, false, true, false) && !RunnerHelper.CheckTradeTime2(timeNow.AddSeconds(-600), false, true, false))
+                {
+                    return false;
+                }
 
                 var tempGuid = Guid.NewGuid().ToString("N");
                 dataObj.TotalPacketCount = SendTransactionShares(tempGuid);
@@ -250,7 +181,6 @@ namespace MealTicket_Handler.SecurityBarsData
                 }
                 dataObj.DataList.AddRange(receivedObj.DataList);
                 dataObj.CallBackPacketCount++;
-                Logger.WriteFileLog("====数据包统计："+ dataObj.CallBackPacketCount+"/"+ dataObj.TotalPacketCount +","+ DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "====", null);
                 if (dataObj.CallBackPacketCount < dataObj.TotalPacketCount)//接受包数量不正确
                 {
                     return;
@@ -286,9 +216,17 @@ namespace MealTicket_Handler.SecurityBarsData
                         int type = i;
                         taskArr[type] = new Task(() =>
                         {
-                            var resultData=CalculateOtherData(type);
-                            UpdateOtherToDataBase(type, resultData);
-                        },TaskCreationOptions.LongRunning);
+                            if (type == 0)
+                            {
+                                var resultData = CalculateMinutetimedata();
+                                UpdateMinutetimeToDataBase(resultData);
+                            }
+                            else
+                            {
+                                var resultData = CalculateOtherData(type);
+                                UpdateOtherToDataBase(type, resultData);
+                            }
+                        }, TaskCreationOptions.LongRunning);
                         taskArr[type].Start();
                     }
                     Task.WaitAll(taskArr);
@@ -512,6 +450,71 @@ namespace MealTicket_Handler.SecurityBarsData
         }
 
         /// <summary>
+        /// 更新分时数据
+        /// </summary>
+        /// <param name="dataList"></param>
+        private void UpdateMinutetimeToDataBase(List<MinutetimeDataInfo> dataList)
+        {
+            try
+            {
+                DataTable table = new DataTable();
+                table.Columns.Add("Market", typeof(int));
+                table.Columns.Add("SharesCode", typeof(string));
+                table.Columns.Add("Date", typeof(DateTime));
+                table.Columns.Add("Time", typeof(DateTime));
+                table.Columns.Add("TimeStr", typeof(string));
+                table.Columns.Add("Price", typeof(long));
+                table.Columns.Add("AvgPrice", typeof(long));
+                table.Columns.Add("ClosedPrice", typeof(long));
+                table.Columns.Add("TradeStock", typeof(long));
+                table.Columns.Add("TradeAmount", typeof(long));
+                table.Columns.Add("TotalTradeStock", typeof(long));
+                table.Columns.Add("TotalTradeAmount", typeof(long));
+                table.Columns.Add("Tradable", typeof(long));
+                table.Columns.Add("TotalCapital", typeof(long));
+                table.Columns.Add("HandCount", typeof(int));
+                table.Columns.Add("LastModified", typeof(DateTime));
+                foreach (var item in dataList)
+                {
+                    DataRow row = table.NewRow();
+                    row["Market"] = item.Market;
+                    row["SharesCode"] = item.SharesCode;
+                    row["Date"] = item.Date;
+                    row["Time"] = item.Time;
+                    row["TimeStr"] = item.TimeStr;
+                    row["Price"] = item.Price;
+                    row["AvgPrice"] = item.AvgPrice;
+                    row["ClosedPrice"] = item.PreClosePrice;
+                    row["TradeStock"] = item.TradeStock;
+                    row["TradeAmount"] = item.TradeAmount;
+                    row["TotalTradeStock"] = item.TotalTradeStock;
+                    row["TotalTradeAmount"] = item.TotalTradeAmount;
+                    row["Tradable"] = item.Tradable;
+                    row["TotalCapital"] = item.TotalCapital;
+                    row["HandCount"] = item.HandCount;
+                    row["LastModified"] = DateTime.Now;
+                    table.Rows.Add(row);
+                }
+
+                using (var db = new meal_ticketEntities())
+                {
+                    db.Database.CommandTimeout = 600;
+                    //关键是类型
+                    SqlParameter parameter = new SqlParameter("@sharesMinuteTimeData", SqlDbType.Structured);
+                    //必须指定表类型名
+                    parameter.TypeName = "dbo.SharesMinuteTimeData";
+                    //赋值
+                    parameter.Value = table;
+                    db.Database.ExecuteSqlCommand("exec P_Shares_MinuteTimeData_Update @sharesMinuteTimeData", parameter);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("更新分时数据失败", ex);
+            }
+        }
+
+        /// <summary>
         /// 更新其他K线数据
         /// </summary>
         /// <param name="type">1.5分钟线 2.15分钟线 3.30分钟线 4.60分钟线 5.日线 6.周线 7.月线 8.季度线 9.年线</param>
@@ -566,7 +569,7 @@ namespace MealTicket_Handler.SecurityBarsData
 
                 using (var db = new meal_ticketEntities())
                 {
-                    string sql = string.Format(@"select t.Market,t.SharesCode,isnull(t1.MaxTime,'1991-01-01')MaxTime,isnull(t.CirculatingCapital,0) Tradable,isnull(t.TotalCapital,0) TotalCapital,t.SharesHandCount HandCount
+                    string sql = string.Format(@"select distinct t.Market,t.SharesCode,isnull(t1.MaxTime,'1991-01-01')MaxTime,isnull(t.CirculatingCapital,0) Tradable,isnull(t.TotalCapital,0) TotalCapital,t.SharesHandCount HandCount
 from v_shares_baseinfo t with(nolock)
 inner join t_shares_limit_time t2 with(nolock) on (t2.LimitMarket=-1 or t2.LimitMarket=t.Market) and (t.SharesCode like t2.LimitKey+'%')
 left join 
@@ -585,8 +588,8 @@ left join
                         continue;
                     }
                     var tempDataList = (from x in tempData
-                                        where x.Market == item.Market && x.SharesCode == item.SharesCode && x.Time >= item.MaxTime
-                                        orderby x.Market, x.SharesCode, x.Time
+                                        where x.Time >= item.MaxTime
+                                        orderby x.Time
                                         select new SecurityBarsData_1minInfo
                                         {
                                             SharesCode = x.SharesCode,
@@ -843,17 +846,102 @@ left join
         }
 
         /// <summary>
+        /// 计算分时数据
+        /// </summary>
+        /// <returns></returns>
+        private List<MinutetimeDataInfo> CalculateMinutetimedata() 
+        {
+            List<MinutetimeDataInfo> resultList = new List<MinutetimeDataInfo>();
+            try
+            {
+                //查询原始一分钟数据
+                List<SecurityBarsData_1minInfo> SecurityBarsData_1minList = new List<SecurityBarsData_1minInfo>();
+                List<MinutetimeDataInfo> tempList = new List<MinutetimeDataInfo>();
+
+                using (var db = new meal_ticketEntities())
+                {
+                    string sql = @"select t.Market,t.SharesCode,isnull(t1.[Time],convert(varchar(10),getdate(),120)) Time,isnull(t1.TotalTradeStock,0) TotalTradeStock,isnull(t1.TotalTradeAmount,0)TotalTradeAmount,
+isnull(t.CirculatingCapital,0) Tradable,isnull(t.TotalCapital,0) TotalCapital,t.SharesHandCount HandCount,t.ClosedPrice PreClosePrice
+from v_shares_baseinfo t with(nolock)
+left join 
+(
+	select Market,SharesCode,[Time],TotalTradeStock,TotalTradeAmount
+	from
+	(
+		select Market,SharesCode,[Time],TotalTradeStock,TotalTradeAmount,row_number()over(partition by Market,SharesCode order by [Time] desc)num
+		from t_shares_minutetimedata with(nolock)
+		where [Date]=convert(varchar(10),getdate(),120)
+	)m
+	where m.num=1
+) t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode;";
+                    tempList = db.Database.SqlQuery<MinutetimeDataInfo>(sql).ToList();
+                }
+                foreach (var item in tempList)
+                {
+                    List<SecurityBarsDataInfo> tempData = new List<SecurityBarsDataInfo>();
+                    if (!Singleton.Instance._SecurityBarsData_1minSession.GetSessionData().TryGetValue(item.SharesCode + item.Market, out tempData))
+                    {
+                        continue;
+                    }
+                    var tempDataList = (from x in tempData
+                                        where x.Market == item.Market && x.SharesCode == item.SharesCode && x.Time >= item.Time
+                                        orderby x.Market, x.SharesCode, x.Time
+                                        select x).ToList();
+                    long totalTradeStock = item.TotalTradeStock;
+                    long totalTradeAmount = item.TotalTradeAmount;
+                    DateTime lastTime=DateTime.Parse("1991-01-01 00:00:00");
+                    foreach (var mininfo in tempDataList)
+                    {
+                        if (mininfo.Time.Value == lastTime)
+                        {
+                            continue;
+                        }
+                        resultList.Add(new MinutetimeDataInfo 
+                        {
+                            Market= mininfo.Market,
+                            SharesCode= mininfo.SharesCode,
+                            TimeStr=mininfo.TimeStr,
+                            Time=mininfo.Time.Value,
+                            Date=mininfo.Date,
+                            Price=mininfo.ClosedPrice,
+                            TotalCapital=item.TotalCapital,
+                            Tradable= item.Tradable,
+                            HandCount= item.HandCount,
+                            LastModified= DateTime.Now,
+                            TotalTradeAmount= totalTradeAmount,
+                            TotalTradeStock= totalTradeStock,
+                            TradeStock= mininfo.TradeStock,
+                            TradeAmount= mininfo.TradeAmount,
+                            PreClosePrice=item.PreClosePrice,
+                            AvgPrice= totalTradeStock + mininfo.TradeStock==0? mininfo.ClosedPrice : (totalTradeAmount+ mininfo.TradeAmount)/(totalTradeStock+ mininfo.TradeStock)
+                        });
+                        totalTradeStock = totalTradeStock + mininfo.TradeStock;
+                        totalTradeAmount = totalTradeAmount + mininfo.TradeAmount;
+                        lastTime = mininfo.Time.Value;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("更新分时数据失败", ex);
+            }
+            return resultList;
+        }
+
+        /// <summary>
         /// 推送需要获取K线的股票到队列
         /// </summary>
         /// <param name="taskGuid"></param>
         /// <returns></returns>
         private static int SendTransactionShares(string taskGuid)
         {
+            DateTime dateNow = DateTime.Now.Date;
             List<SecurityBarsDataInfo> sharesList = (from item in Singleton.Instance._sharesBaseSession.GetSessionData()
                                                      select new SecurityBarsDataInfo
                                                      {
                                                          Market = item.Market,
-                                                         SharesCode = item.SharesCode
+                                                         SharesCode = item.SharesCode,
+                                                         PreClosePrice=item.ClosedPrice
                                                      }).ToList();
             List<SecurityBarsDataInfo> securitybarsdata = new List<SecurityBarsDataInfo>();
             using (var db = new meal_ticketEntities())
@@ -875,8 +963,8 @@ left join
                           {
                               SharesCode = item.SharesCode,
                               Market = item.Market,
-                              Time = ai == null ? null : ai.Time,
-                              PreClosePrice = ai == null ? 0 : ai.PreClosePrice
+                              Time = ai == null ? dateNow : ai.Time,
+                              PreClosePrice = ai == null ? item.PreClosePrice : ai.PreClosePrice
                           }).ToList();
 
             int totalCount = sharesList.Count();
@@ -895,6 +983,7 @@ left join
                 Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new SecurityBarsDataTaskQueueInfo
                 {
                     TaskGuid = taskGuid,
+                    Date= dateNow,
                     DataList = batchList
                 })), "SecurityBars", "1min");
             }

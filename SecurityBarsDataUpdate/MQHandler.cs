@@ -23,23 +23,31 @@ namespace SecurityBarsDataUpdate
         {
             try
             {
-                var resultData = JsonConvert.DeserializeObject<SecurityBarsDataTaskQueueInfo>(data);
+                var resultData = JsonConvert.DeserializeObject<SecurityBarsDataTaskInfo>(data);
+                if (resultData.SecurityBarsGetCount <= 0)
+                {
+                    resultData.SecurityBarsGetCount = Singleton.Instance.SecurityBarsGetCount;
+                }
+                if (string.IsNullOrEmpty(resultData.QueueRouteKey))
+                {
+                    resultData.QueueRouteKey = "update_1min";
+                }
                 List<SecurityBarsDataInfo> list = new List<SecurityBarsDataInfo>();
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
                 Console.WriteLine("==========开始获取K线数据======" + resultData.TaskGuid + "===");
-                list = DataHelper.TdxHq_GetSecurityBarsData(resultData.DataList);
+                list = DataHelper.TdxHq_GetSecurityBarsData(resultData.DataList, (short)resultData.SecurityBarsGetCount, resultData.Date);
                 stopwatch.Stop();
                 Console.WriteLine("=====获取K线数据结束:" + stopwatch.ElapsedMilliseconds + "============");
                 Console.WriteLine("");
                 Console.WriteLine("");
 
-                SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new SecurityBarsDataTaskQueueInfo
+                SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new
                 {
                     DataList = list,
+                    Date = resultData.Date,
                     TaskGuid = resultData.TaskGuid
-
-                })), "SecurityBars", "update_1min");
+                })), "SecurityBars", resultData.QueueRouteKey);
             }
             catch (Exception ex)
             {

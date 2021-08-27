@@ -265,6 +265,15 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_template_search" Width="1.5" PointX="7.375" PointY="48.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_minutetimedata" Width="1.5" PointX="48.375" PointY="41.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_securitybarsdata_1min" Width="1.5" PointX="45.375" PointY="48.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_securitybarsdata_15min" Width="1.5" PointX="48.75" PointY="46.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_securitybarsdata_1day" Width="1.5" PointX="49.75" PointY="0.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_securitybarsdata_1month" Width="1.5" PointX="0.75" PointY="49.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_securitybarsdata_1quarter" Width="1.5" PointX="49.75" PointY="6.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_securitybarsdata_1week" Width="1.5" PointX="49.75" PointY="12.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_securitybarsdata_1year" Width="1.5" PointX="16.75" PointY="49.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_securitybarsdata_30min" Width="1.5" PointX="49.75" PointY="18.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_securitybarsdata_5min" Width="1.5" PointX="49.75" PointY="24.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_securitybarsdata_60min" Width="1.5" PointX="27.75" PointY="49.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

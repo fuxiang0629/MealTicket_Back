@@ -9476,6 +9476,81 @@
             数据创建时间
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetSharesKlineListRequest.Market">
+            <summary>
+            市场代码
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetSharesKlineListRequest.SharesCode">
+            <summary>
+            股票代码
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetSharesKlineListRequest.StartTime">
+            <summary>
+            查询起始时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetSharesKlineListRequest.EndTime">
+            <summary>
+            查询截止时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesKlineInfo.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesKlineInfo.Date">
+            <summary>
+            日期
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesKlineInfo.TimeStr">
+            <summary>
+            时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesKlineInfo.Time">
+            <summary>
+            时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesKlineInfo.OpenedPrice">
+            <summary>
+            开盘价
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesKlineInfo.ClosedPrice">
+            <summary>
+            收盘价
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesKlineInfo.MinPrice">
+            <summary>
+            最低价
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesKlineInfo.MaxPrice">
+            <summary>
+            最高价
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesKlineInfo.TradeStock">
+            <summary>
+            成交量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesKlineInfo.TradeAmount">
+            <summary>
+            成交额
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesKlineInfo.LastModified">
+            <summary>
+            数据更新时间
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.SharesLimitAutoBuyInfo.Id">
             <summary>
             Id
@@ -11459,6 +11534,26 @@
         <member name="P:MealTicket_Admin_Handler.Model.ModifyTodaySharesRequest.OrderIndex">
             <summary>
             排序值
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ResetSharesKLineRequest.Market">
+            <summary>
+            市场代码
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ResetSharesKLineRequest.SharesCode">
+            <summary>
+            股票代码
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ResetSharesKLineRequest.StartDate">
+            <summary>
+            起始时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ResetSharesKLineRequest.EndDate">
+            <summary>
+            截止时间
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.ResetSharesTransactionDataRequest.Market">
@@ -13837,6 +13932,19 @@
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifyConditiontradeTemplateSearchDetails(MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSearchDetailsRequest)">
             <summary>
             编辑搜索模板详情
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetSharesKlineList(MealTicket_Admin_Handler.Model.GetSharesKlineListRequest)">
+            <summary>
+            获取k线数据
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ResetSharesKLine(MealTicket_Admin_Handler.Model.ResetSharesKLineRequest)">
+            <summary>
+            重置K线数据
             </summary>
             <param name="request"></param>
         </member>

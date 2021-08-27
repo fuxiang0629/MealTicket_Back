@@ -185,7 +185,9 @@
     <Compile Include="Model\GetConditiontradeTemplateSellDetailsList.cs" />
     <Compile Include="Model\GetSharesConditionSearch.cs" />
     <Compile Include="Model\GetSharesConditionTrendList.cs" />
+    <Compile Include="Model\GetSharesKLineList.cs" />
     <Compile Include="Model\GetSharesListQuotes.cs" />
+    <Compile Include="Model\GetSharesMinutetimedataList.cs" />
     <Compile Include="Model\GetSharesPlateList.cs" />
     <Compile Include="Model\GetAccountBuyConditionTradeSharesGroupSharesList.cs" />
     <Compile Include="Model\GetAccountBuyConditionTradeSharesList.cs" />

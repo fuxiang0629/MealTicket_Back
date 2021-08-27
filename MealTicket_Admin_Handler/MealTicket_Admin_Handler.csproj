@@ -362,6 +362,7 @@
     <Compile Include="Model\TradeCenter\GetConditiontradeTemplateSellDetailsList.cs" />
     <Compile Include="Model\TradeCenter\GetSharesConditionTrendParPlate.cs" />
     <Compile Include="Model\TradeCenter\GetSharesCorrigendumList.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesKlineList.cs" />
     <Compile Include="Model\TradeCenter\GetSharesLimitAutoBuyList.cs" />
     <Compile Include="Model\TradeCenter\GetSharesMonitorList.cs" />
     <Compile Include="Model\TradeCenter\GetSharesMonitorTrendList.cs" />
@@ -427,6 +428,7 @@
     <Compile Include="Model\TradeCenter\ModifySharesTradeTime.cs" />
     <Compile Include="Model\TradeCenter\ModifySharesTradeTimeGroup.cs" />
     <Compile Include="Model\TradeCenter\ModifyTodayShares.cs" />
+    <Compile Include="Model\TradeCenter\ResetSharesKLine.cs" />
     <Compile Include="Model\TradeCenter\ResetSharesTransactionData.cs" />
     <Compile Include="Model\TradeCenter\SuspensionInfo.cs" />
     <Compile Include="Model\TradeCenter\UpdateBrokerAccountPositionInfo.cs" />

@@ -9548,5 +9548,95 @@ namespace MealTicket_Admin_Handler
             }
         }
         #endregion
+
+        /// <summary>
+        /// 获取k线数据
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<SharesKlineInfo> GetSharesKlineList(GetSharesKlineListRequest request) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_securitybarsdata_1min
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select item;
+                if (request.StartTime != null && request.EndTime != null)
+                {
+                    result = from item in result
+                             where item.Time >= request.StartTime && item.Time < request.EndTime
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in result
+                            orderby item.Time descending
+                            select new SharesKlineInfo
+                            {
+                                TradeStock = item.TradeStock,
+                                ClosedPrice = item.ClosedPrice,
+                                Id = item.Id,
+                                LastModified = item.LastModified,
+                                MaxPrice = item.MaxPrice,
+                                MinPrice = item.MinPrice,
+                                OpenedPrice = item.OpenedPrice,
+                                Time = item.Time,
+                                TradeAmount = item.TradeAmount
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 重置K线数据
+        /// </summary>
+        /// <param name="request"></param>
+        public void ResetSharesKLine(ResetSharesKLineRequest request)
+        {
+            DateTime startTime = request.StartDate.Date;
+            DateTime endTime = request.EndDate.Date.AddDays(1);
+
+            List<t_shares_quotes_date> quoteDateList = new List<t_shares_quotes_date>();
+            using (var db = new meal_ticketEntities())
+            {
+                quoteDateList = (from item in db.t_shares_quotes_date
+                                 where item.Market == request.Market && item.SharesCode == request.SharesCode && item.LastModified >= startTime && item.LastModified <= endTime
+                                 select item).ToList();
+            }
+            while (startTime < endTime)
+            {
+                try
+                {
+                    string startDate = startTime.ToString("yyyy-MM-dd");
+                    long PreClosePrice = quoteDateList.Where(e => e.Date == startDate).Select(e => e.ClosedPrice).FirstOrDefault();
+                    List<dynamic> list = new List<dynamic>();
+                    list.Add(new
+                    {
+                        SharesCode = request.SharesCode,
+                        Market = request.Market,
+                        Time = startTime.Date,
+                        PreClosePrice = PreClosePrice
+                    });
+                    var sendData = new
+                    {
+                        QueueRouteKey= "update_1min_date",
+                        SecurityBarsGetCount=240,
+                        Date = startTime.Date,
+                        DataList = list
+                    };
+                    Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SecurityBars", "1min");
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteFileLog("重置K线数据有误", ex);
+                }
+                startTime = startTime.AddDays(1);
+            }
+        }
     }
 }

@@ -176,9 +176,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RabbitMq\MQHandler.cs" />
     <Compile Include="RabbitMq\MQHandler_SecurityBarsData.cs" />
+    <Compile Include="RabbitMq\MQHandler_SecurityBarsData_Date.cs" />
     <Compile Include="RunnerHandler\RunnerHelper.cs" />
     <Compile Include="SecurityBarsData\SecurityBarsDataTask.cs" />
     <Compile Include="SecurityBarsData\SecurityBarsDataTaskModel.cs" />
+    <Compile Include="SecurityBarsData\SecurityBarsData_DateTask.cs" />
     <Compile Include="Session\DimTimeSession.cs" />
     <Compile Include="Session\SecurityBarsData_1minSession.cs" />
     <Compile Include="Session\SharesBaseSession.cs" />

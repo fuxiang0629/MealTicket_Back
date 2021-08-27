@@ -1,4 +1,6 @@
 ﻿using FXCommon.Common;
+using MealTicket_DBCommon;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -15,15 +17,38 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            SessionClient cache = new SessionClient();
-            int error=cache.Connect("http://localhost:8800", "u1", "p1");
-            error = cache.Set<A>("k1", new A { V = "v1" });
-            var result=cache.Get<A>("k1", ref error);
+            Console.Write("url:");
+            string url = Console.ReadLine();
+            Console.Write("userTokrn:");
+            string userToken = Console.ReadLine();
+            try
+            {
+                url = string.Format("{0}/tradecenter/shares/kline/reset", url);
+                string startday = "2021-05-01 00:00:00";
+                string endday = "2021-08-27 00:00:00";
+                using (var db = new meal_ticketEntities())
+                {
+                    var sharesList = (from item in db.v_shares_baseinfo
+                                      select item).ToList();
+                    foreach (var item in sharesList)
+                    {
+                        var content = new
+                        {
+                            Market = item.Market,
+                            SharesCode = item.SharesCode,
+                            StartDate = startday,
+                            EndDate = endday
+                        };
+                        string res = HtmlSender.Request(JsonConvert.SerializeObject(content), url, "application/json", Encoding.UTF8, "POST", userToken);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            Console.WriteLine("执行完成,按1结束");
+            Console.ReadLine();
         }
-    }
-
-    public class A 
-    {
-        public string V { get; set; }
     }
 }

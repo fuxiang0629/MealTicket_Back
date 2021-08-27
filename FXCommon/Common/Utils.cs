@@ -405,5 +405,42 @@ namespace FXCommon.Common
             return Encoding.Default.GetString(depressBytes);
         }
 
+
+        public static string ToNumString(this int num)
+        {
+            if (num >= 100000000)
+            {
+                return (num * 1.0 / 100000000).ToString("F2")+"亿";
+            }
+            if (num > 10000)
+            {
+                return (num * 1.0 / 10000).ToString("F2")+"万";
+            }
+            return num.ToString();
+        }
+        public static string ToNumString(this long num)
+        {
+            if (num >= 100000000)
+            {
+                return (num * 1.0 / 100000000).ToString("F2") + "亿";
+            }
+            if (num > 10000)
+            {
+                return (num * 1.0 / 10000).ToString("F2") + "万";
+            }
+            return num.ToString();
+        }
+        public static string ToNumString(this double num)
+        {
+            if (num >= 100000000)
+            {
+                return (num / 100000000).ToString("F2") + "亿";
+            }
+            if (num > 10000)
+            {
+                return (num / 10000).ToString("F2") + "万";
+            }
+            return num.ToString("F2");
+        }
     }
 }

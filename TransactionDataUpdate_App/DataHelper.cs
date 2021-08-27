@@ -72,7 +72,11 @@ namespace TransactionDataUpdate_App
   where (LastModified>dateadd(SECOND,-{0},getdate()) and [Type]=0) or (LastModified>convert(varchar(10),getdate(),120) and [Type]=1)
   group by Market,SharesCode",Singleton.Instance.StopPeriodTime/1000);
                 var list = db.Database.SqlQuery<SharesInfo>(sql).ToList();
-                return TdxHq_GetTransactionData(list);
+                if (list.Count() > 0)
+                {
+                    return TdxHq_GetTransactionData(list);
+                }
+                return new List<SharesTransactionDataInfo>();
             }
         }
 
@@ -350,6 +354,12 @@ where t.num=1", SharesInfoNumArr);
                         throw ex;
                     }
                 }
+            }
+
+            using (var db = new meal_ticketEntities())
+            {
+                string sql = "update t_shares_transactiondata_update set [Type]=0";
+                db.Database.ExecuteSqlCommand(sql);
             }
         }
     }

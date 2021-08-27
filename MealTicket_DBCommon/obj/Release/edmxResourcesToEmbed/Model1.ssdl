@@ -3130,6 +3130,56 @@
     <Property Name="SharesName" Type="nvarchar" MaxLength="200" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
   </EntityType>
+  <EntityType Name="t_shares_securitybarsdata_15min">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Date" Type="date" Nullable="false" />
+    <Property Name="GroupTime" Type="datetime" Nullable="false" />
+    <Property Name="Time" Type="datetime" Nullable="false" />
+    <Property Name="TimeStr" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
+    <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="PreClosePrice" Type="bigint" Nullable="false" />
+    <Property Name="MinPrice" Type="bigint" Nullable="false" />
+    <Property Name="MaxPrice" Type="bigint" Nullable="false" />
+    <Property Name="TradeStock" Type="bigint" Nullable="false" />
+    <Property Name="TradeAmount" Type="bigint" Nullable="false" />
+    <Property Name="LastTradeStock" Type="int" Nullable="false" />
+    <Property Name="LastTradeAmount" Type="bigint" Nullable="false" />
+    <Property Name="Tradable" Type="bigint" Nullable="false" />
+    <Property Name="TotalCapital" Type="bigint" Nullable="false" />
+    <Property Name="HandCount" Type="int" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_securitybarsdata_1day">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Date" Type="date" Nullable="false" />
+    <Property Name="GroupTime" Type="datetime" Nullable="false" />
+    <Property Name="Time" Type="datetime" Nullable="false" />
+    <Property Name="TimeStr" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
+    <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="PreClosePrice" Type="bigint" Nullable="false" />
+    <Property Name="MinPrice" Type="bigint" Nullable="false" />
+    <Property Name="MaxPrice" Type="bigint" Nullable="false" />
+    <Property Name="TradeStock" Type="bigint" Nullable="false" />
+    <Property Name="TradeAmount" Type="bigint" Nullable="false" />
+    <Property Name="LastTradeStock" Type="int" Nullable="false" />
+    <Property Name="LastTradeAmount" Type="bigint" Nullable="false" />
+    <Property Name="Tradable" Type="bigint" Nullable="false" />
+    <Property Name="TotalCapital" Type="bigint" Nullable="false" />
+    <Property Name="HandCount" Type="int" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_shares_securitybarsdata_1min">
     <Key>
       <PropertyRef Name="Id" />
@@ -3147,6 +3197,181 @@
     <Property Name="MaxPrice" Type="bigint" Nullable="false" />
     <Property Name="TradeStock" Type="int" Nullable="false" />
     <Property Name="TradeAmount" Type="bigint" Nullable="false" />
+    <Property Name="Tradable" Type="bigint" Nullable="false" />
+    <Property Name="TotalCapital" Type="bigint" Nullable="false" />
+    <Property Name="HandCount" Type="int" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_securitybarsdata_1month">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Date" Type="date" Nullable="false" />
+    <Property Name="GroupTime" Type="datetime" Nullable="false" />
+    <Property Name="Time" Type="datetime" Nullable="false" />
+    <Property Name="TimeStr" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
+    <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="PreClosePrice" Type="bigint" Nullable="false" />
+    <Property Name="MinPrice" Type="bigint" Nullable="false" />
+    <Property Name="MaxPrice" Type="bigint" Nullable="false" />
+    <Property Name="TradeStock" Type="bigint" Nullable="false" />
+    <Property Name="TradeAmount" Type="bigint" Nullable="false" />
+    <Property Name="LastTradeStock" Type="int" Nullable="false" />
+    <Property Name="LastTradeAmount" Type="bigint" Nullable="false" />
+    <Property Name="Tradable" Type="bigint" Nullable="false" />
+    <Property Name="TotalCapital" Type="bigint" Nullable="false" />
+    <Property Name="HandCount" Type="int" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_securitybarsdata_1quarter">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Date" Type="date" Nullable="false" />
+    <Property Name="GroupTime" Type="datetime" Nullable="false" />
+    <Property Name="Time" Type="datetime" Nullable="false" />
+    <Property Name="TimeStr" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
+    <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="PreClosePrice" Type="bigint" Nullable="false" />
+    <Property Name="MinPrice" Type="bigint" Nullable="false" />
+    <Property Name="MaxPrice" Type="bigint" Nullable="false" />
+    <Property Name="TradeStock" Type="bigint" Nullable="false" />
+    <Property Name="TradeAmount" Type="bigint" Nullable="false" />
+    <Property Name="LastTradeStock" Type="int" Nullable="false" />
+    <Property Name="LastTradeAmount" Type="bigint" Nullable="false" />
+    <Property Name="Tradable" Type="bigint" Nullable="false" />
+    <Property Name="TotalCapital" Type="bigint" Nullable="false" />
+    <Property Name="HandCount" Type="int" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_securitybarsdata_1week">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Date" Type="date" Nullable="false" />
+    <Property Name="GroupTime" Type="datetime" Nullable="false" />
+    <Property Name="Time" Type="datetime" Nullable="false" />
+    <Property Name="TimeStr" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
+    <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="PreClosePrice" Type="bigint" Nullable="false" />
+    <Property Name="MinPrice" Type="bigint" Nullable="false" />
+    <Property Name="MaxPrice" Type="bigint" Nullable="false" />
+    <Property Name="TradeStock" Type="bigint" Nullable="false" />
+    <Property Name="TradeAmount" Type="bigint" Nullable="false" />
+    <Property Name="LastTradeStock" Type="int" Nullable="false" />
+    <Property Name="LastTradeAmount" Type="bigint" Nullable="false" />
+    <Property Name="Tradable" Type="bigint" Nullable="false" />
+    <Property Name="TotalCapital" Type="bigint" Nullable="false" />
+    <Property Name="HandCount" Type="int" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_securitybarsdata_1year">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Date" Type="date" Nullable="false" />
+    <Property Name="GroupTime" Type="datetime" Nullable="false" />
+    <Property Name="Time" Type="datetime" Nullable="false" />
+    <Property Name="TimeStr" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
+    <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="PreClosePrice" Type="bigint" Nullable="false" />
+    <Property Name="MinPrice" Type="bigint" Nullable="false" />
+    <Property Name="MaxPrice" Type="bigint" Nullable="false" />
+    <Property Name="TradeStock" Type="bigint" Nullable="false" />
+    <Property Name="TradeAmount" Type="bigint" Nullable="false" />
+    <Property Name="LastTradeStock" Type="int" Nullable="false" />
+    <Property Name="LastTradeAmount" Type="bigint" Nullable="false" />
+    <Property Name="Tradable" Type="bigint" Nullable="false" />
+    <Property Name="TotalCapital" Type="bigint" Nullable="false" />
+    <Property Name="HandCount" Type="int" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_securitybarsdata_30min">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Date" Type="date" Nullable="false" />
+    <Property Name="GroupTime" Type="datetime" Nullable="false" />
+    <Property Name="Time" Type="datetime" Nullable="false" />
+    <Property Name="TimeStr" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
+    <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="PreClosePrice" Type="bigint" Nullable="false" />
+    <Property Name="MinPrice" Type="bigint" Nullable="false" />
+    <Property Name="MaxPrice" Type="bigint" Nullable="false" />
+    <Property Name="TradeStock" Type="bigint" Nullable="false" />
+    <Property Name="TradeAmount" Type="bigint" Nullable="false" />
+    <Property Name="LastTradeStock" Type="int" Nullable="false" />
+    <Property Name="LastTradeAmount" Type="bigint" Nullable="false" />
+    <Property Name="Tradable" Type="bigint" Nullable="false" />
+    <Property Name="TotalCapital" Type="bigint" Nullable="false" />
+    <Property Name="HandCount" Type="int" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_securitybarsdata_5min">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Date" Type="date" Nullable="false" />
+    <Property Name="GroupTime" Type="datetime" Nullable="false" />
+    <Property Name="Time" Type="datetime" Nullable="false" />
+    <Property Name="TimeStr" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
+    <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="PreClosePrice" Type="bigint" Nullable="false" />
+    <Property Name="MinPrice" Type="bigint" Nullable="false" />
+    <Property Name="MaxPrice" Type="bigint" Nullable="false" />
+    <Property Name="TradeStock" Type="bigint" Nullable="false" />
+    <Property Name="TradeAmount" Type="bigint" Nullable="false" />
+    <Property Name="LastTradeStock" Type="int" Nullable="false" />
+    <Property Name="LastTradeAmount" Type="bigint" Nullable="false" />
+    <Property Name="Tradable" Type="bigint" Nullable="false" />
+    <Property Name="TotalCapital" Type="bigint" Nullable="false" />
+    <Property Name="HandCount" Type="int" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_securitybarsdata_60min">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Date" Type="date" Nullable="false" />
+    <Property Name="GroupTime" Type="datetime" Nullable="false" />
+    <Property Name="Time" Type="datetime" Nullable="false" />
+    <Property Name="TimeStr" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
+    <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="PreClosePrice" Type="bigint" Nullable="false" />
+    <Property Name="MinPrice" Type="bigint" Nullable="false" />
+    <Property Name="MaxPrice" Type="bigint" Nullable="false" />
+    <Property Name="TradeStock" Type="bigint" Nullable="false" />
+    <Property Name="TradeAmount" Type="bigint" Nullable="false" />
+    <Property Name="LastTradeStock" Type="int" Nullable="false" />
+    <Property Name="LastTradeAmount" Type="bigint" Nullable="false" />
     <Property Name="Tradable" Type="bigint" Nullable="false" />
     <Property Name="TotalCapital" Type="bigint" Nullable="false" />
     <Property Name="HandCount" Type="int" Nullable="false" />
@@ -4563,7 +4788,16 @@
     <EntitySet Name="t_shares_quotes_record" EntityType="Self.t_shares_quotes_record" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_quotes_temp" EntityType="Self.t_shares_quotes_temp" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_search" EntityType="Self.t_shares_search" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_securitybarsdata_15min" EntityType="Self.t_shares_securitybarsdata_15min" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_securitybarsdata_1day" EntityType="Self.t_shares_securitybarsdata_1day" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_securitybarsdata_1min" EntityType="Self.t_shares_securitybarsdata_1min" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_securitybarsdata_1month" EntityType="Self.t_shares_securitybarsdata_1month" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_securitybarsdata_1quarter" EntityType="Self.t_shares_securitybarsdata_1quarter" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_securitybarsdata_1week" EntityType="Self.t_shares_securitybarsdata_1week" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_securitybarsdata_1year" EntityType="Self.t_shares_securitybarsdata_1year" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_securitybarsdata_30min" EntityType="Self.t_shares_securitybarsdata_30min" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_securitybarsdata_5min" EntityType="Self.t_shares_securitybarsdata_5min" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_securitybarsdata_60min" EntityType="Self.t_shares_securitybarsdata_60min" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_suspension" EntityType="Self.t_shares_suspension" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_today" EntityType="Self.t_shares_today" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_transactiondata" EntityType="Self.t_shares_transactiondata" Schema="dbo" store:Type="Tables" />

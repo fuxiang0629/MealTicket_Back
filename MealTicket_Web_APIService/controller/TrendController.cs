@@ -8133,6 +8133,40 @@ namespace MealTicket_Web_APIService.controller
             trendHandler.ModifyConditiontradeTemplateSearchDetails(request);
             return null;
         }
+
+        /// <summary>
+        /// 获取股票K线数据
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取股票K线数据")]
+        [Route("shares/kline/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public GetSharesKLineListRes GetSharesKLineList(GetSharesKLineListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesKLineList(request,basedata);
+        }
+
+        /// <summary>
+        /// 获取股票分时数据
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取股票分时数据")]
+        [Route("shares/minutetimedata/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<SharesMinutetimedata> GetSharesMinutetimedataList(GetSharesMinutetimedataListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesMinutetimedataList(request, basedata);
+        }
         #endregion
     }
 }

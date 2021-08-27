@@ -5700,5 +5700,41 @@ namespace MealTicket_Admin_APIService.controller
             return null;
         }
         #endregion
+
+
+        /// <summary>
+        /// 获取k线数据
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/kline/list"), HttpPost]
+        [Description("获取k线数据")]
+        public PageRes<SharesKlineInfo> GetSharesKlineList(GetSharesKlineListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesKlineList(request);
+        }
+
+        /// <summary>
+        /// 重置K线数据
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/kline/reset"), HttpPost]
+        [Description("重置K线数据")]
+        public object ResetSharesKLine(ResetSharesKLineRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ResetSharesKLine(request);
+            return null;
+        }
     }
 }

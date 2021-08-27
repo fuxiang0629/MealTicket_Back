@@ -157,6 +157,10 @@ namespace MealTicket_Handler
             {
                 mqHandler_SecurityBarsData.Dispose();
             }
+            if (mqHandler_SecurityBarsData_Date != null)
+            {
+                mqHandler_SecurityBarsData_Date.Dispose();
+            }
             if (mqHandler != null)
             {
                 mqHandler.Dispose();
@@ -164,6 +168,10 @@ namespace MealTicket_Handler
             if (_securityBarsDataTask != null)
             {
                 _securityBarsDataTask.Dispose();
+            }
+            if (_securityBarsData_DateTask != null)
+            {
+                _securityBarsData_DateTask.Dispose();
             }
             if (_sharesBaseSession != null)
             {
@@ -431,6 +439,26 @@ namespace MealTicket_Handler
             return mqHandler_SecurityBarsData;
         }
 
+
+        /// <summary>
+        /// K线队列对象(整天数据)
+        /// </summary>
+        public MQHandler_SecurityBarsData_Date mqHandler_SecurityBarsData_Date;
+        /// <summary>
+        /// 启动K线Mq队列(整天数据)
+        /// </summary>
+        public MQHandler_SecurityBarsData_Date StartMqHandler_SecurityBarsData_Date()
+        {
+            string hostName = ConfigurationManager.AppSettings["MQ_HostName"];
+            int port = int.Parse(ConfigurationManager.AppSettings["MQ_Port"]);
+            string userName = ConfigurationManager.AppSettings["MQ_UserName"];
+            string password = ConfigurationManager.AppSettings["MQ_Password"];
+            string virtualHost = ConfigurationManager.AppSettings["MQ_VirtualHost"];
+            mqHandler_SecurityBarsData_Date = new MQHandler_SecurityBarsData_Date(hostName, port, userName, password, virtualHost);
+            mqHandler_SecurityBarsData_Date.ListenQueueName = "SecurityBars_Update_1min_date";//设置监听队列
+            return mqHandler_SecurityBarsData_Date;
+        }
+
         /// <summary>
         /// K线数据处理任务
         /// </summary>
@@ -442,15 +470,30 @@ namespace MealTicket_Handler
             _securityBarsDataTask.Init();
             return _securityBarsDataTask;
         }
+        /// <summary>
+        /// K线数据处理任务(整天)
+        /// </summary>
+        public SecurityBarsData_DateTask _securityBarsData_DateTask;
+
+        public SecurityBarsData_DateTask StartSecurityBarsData_DateTask()
+        {
+            _securityBarsData_DateTask = new SecurityBarsData_DateTask();
+            _securityBarsData_DateTask.Init();
+            return _securityBarsData_DateTask;
+        }
 
         public void Init()
         {
             _SecurityBarsData_1minSession.UpdateSessionManual();
             var mqHandler = StartMqHandler("");
             var mqHandler_SecurityBarsData = StartMqHandler_SecurityBarsData();//生成Mq队列对象
+            var mqHandler_SecurityBarsData_Date = StartMqHandler_SecurityBarsData_Date();//生成Mq队列对象
             var securityBarsDataTask = StartSecurityBarsDataTask();
             securityBarsDataTask.DoTask();
+            var securityBarsData_DateTask = StartSecurityBarsData_DateTask();
+            securityBarsData_DateTask.DoTask();
             mqHandler_SecurityBarsData.StartListen();//启动队列监听
+            mqHandler_SecurityBarsData_Date.StartListen();
             _sharesBaseSession.StartUpdate(600000);
             _SharesLimitTimeSession.StartUpdate(600000);
             _DimTimeSession.StartUpdate(3600000);

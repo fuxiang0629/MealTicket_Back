@@ -6,44 +6,6 @@ using System.Threading.Tasks;
 
 namespace SecurityBarsDataUpdate
 {
-    public class SecurityBarsDataTaskQueueInfo
-    {
-        /// <summary>
-        /// 任务Guid
-        /// </summary>
-        public string TaskGuid { get; set; }
-
-        /// <summary>
-        /// 总包数量
-        /// </summary>
-        public int TotalPacketCount { get; set; }
-
-        /// <summary>
-        /// 回调包数量
-        /// </summary>
-        public int CallBackPacketCount { get; set; }
-
-        /// <summary>
-        /// 数据包扔出时间
-        /// </summary>
-        public DateTime? StartTime { get; set; }
-
-        /// <summary>
-        /// 超时时间
-        /// </summary>
-        public int TaskTimeOut { get; set; }
-
-        /// <summary>
-        /// 数据列表最大下标
-        /// </summary>
-        public int DataIndex { get; set; }
-
-        /// <summary>
-        /// 数据列表
-        /// </summary>
-        public List<SecurityBarsDataInfo> DataList { get; set; }
-    }
-
     public class SecurityBarsDataInfo
     {
         /// <summary>
@@ -100,6 +62,57 @@ namespace SecurityBarsDataUpdate
         /// 成交额(元*10000)
         /// </summary>
         public long TradeAmount { get; set; }
+
+        /// <summary>
+        /// 上一时段收盘价
+        /// </summary>
+        public long PreClosePrice { get; set; }
+    }
+
+    public class SecurityBarsDataTaskInfo
+    {
+        /// <summary>
+        /// 任务Guid
+        /// </summary>
+        public string TaskGuid { get; set; }
+
+        /// <summary>
+        /// 队列绑定key（指示将结果数据扔往哪个队列）
+        /// </summary>
+        public string QueueRouteKey { get; set; }
+
+        /// <summary>
+        /// 每次获取数量（最大800）
+        /// </summary>
+        public int SecurityBarsGetCount { get; set; }
+
+        /// <summary>
+        /// 获取数据日期
+        /// </summary>
+        public DateTime Date { get; set; }
+
+        /// <summary>
+        /// 股票数据列表
+        /// </summary>
+         public List<SecurityBarsDataPar> DataList { get; set; }
+    }
+
+    public class SecurityBarsDataPar
+    {
+        /// <summary>
+        /// 市场代码
+        /// </summary>
+        public int Market { get; set; }
+
+        /// <summary>
+        /// 股票代码
+        /// </summary>
+        public string SharesCode { get; set; }
+
+        /// <summary>
+        /// 时间
+        /// </summary>
+        public DateTime? Time { get; set; }
 
         /// <summary>
         /// 上一时段收盘价
