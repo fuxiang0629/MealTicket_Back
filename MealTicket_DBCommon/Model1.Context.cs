@@ -286,9 +286,9 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_sys_conditiontrade_template_search> t_sys_conditiontrade_template_search { get; set; }
         public virtual DbSet<t_account_shares_conditiontrade_template_search> t_account_shares_conditiontrade_template_search { get; set; }
         public virtual DbSet<t_shares_minutetimedata> t_shares_minutetimedata { get; set; }
-        public virtual DbSet<t_shares_securitybarsdata_1min> t_shares_securitybarsdata_1min { get; set; }
         public virtual DbSet<t_shares_securitybarsdata_15min> t_shares_securitybarsdata_15min { get; set; }
         public virtual DbSet<t_shares_securitybarsdata_1day> t_shares_securitybarsdata_1day { get; set; }
+        public virtual DbSet<t_shares_securitybarsdata_1min> t_shares_securitybarsdata_1min { get; set; }
         public virtual DbSet<t_shares_securitybarsdata_1month> t_shares_securitybarsdata_1month { get; set; }
         public virtual DbSet<t_shares_securitybarsdata_1quarter> t_shares_securitybarsdata_1quarter { get; set; }
         public virtual DbSet<t_shares_securitybarsdata_1week> t_shares_securitybarsdata_1week { get; set; }

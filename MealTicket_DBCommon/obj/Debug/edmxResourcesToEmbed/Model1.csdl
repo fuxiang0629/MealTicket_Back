@@ -4106,9 +4106,9 @@
     <EntitySet Name="t_sys_conditiontrade_template_search" EntityType="meal_ticketModel.t_sys_conditiontrade_template_search" />
     <EntitySet Name="t_account_shares_conditiontrade_template_search" EntityType="meal_ticketModel.t_account_shares_conditiontrade_template_search" />
     <EntitySet Name="t_shares_minutetimedata" EntityType="meal_ticketModel.t_shares_minutetimedata" />
-    <EntitySet Name="t_shares_securitybarsdata_1min" EntityType="meal_ticketModel.t_shares_securitybarsdata_1min" />
     <EntitySet Name="t_shares_securitybarsdata_15min" EntityType="meal_ticketModel.t_shares_securitybarsdata_15min" />
     <EntitySet Name="t_shares_securitybarsdata_1day" EntityType="meal_ticketModel.t_shares_securitybarsdata_1day" />
+    <EntitySet Name="t_shares_securitybarsdata_1min" EntityType="meal_ticketModel.t_shares_securitybarsdata_1min" />
     <EntitySet Name="t_shares_securitybarsdata_1month" EntityType="meal_ticketModel.t_shares_securitybarsdata_1month" />
     <EntitySet Name="t_shares_securitybarsdata_1quarter" EntityType="meal_ticketModel.t_shares_securitybarsdata_1quarter" />
     <EntitySet Name="t_shares_securitybarsdata_1week" EntityType="meal_ticketModel.t_shares_securitybarsdata_1week" />
@@ -4550,36 +4550,14 @@
     <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Market" Type="Int32" Nullable="false" />
     <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
     <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="TimeStr" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="Price" Type="Int64" Nullable="false" />
-    <Property Name="AvgPrice" Type="Int64" Nullable="false" />
     <Property Name="ClosedPrice" Type="Int64" Nullable="false" />
-    <Property Name="TradeStock" Type="Int32" Nullable="false" />
+    <Property Name="TradeStock" Type="Int64" Nullable="false" />
     <Property Name="TradeAmount" Type="Int64" Nullable="false" />
-    <Property Name="Tradable" Type="Int64" Nullable="false" />
-    <Property Name="TotalCapital" Type="Int64" Nullable="false" />
-    <Property Name="HandCount" Type="Int32" Nullable="false" />
-    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
-  </EntityType>
-  <EntityType Name="t_shares_securitybarsdata_1min">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Market" Type="Int32" Nullable="false" />
-    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
-    <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="TimeStr" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
-    <Property Name="ClosedPrice" Type="Int64" Nullable="false" />
-    <Property Name="PreClosePrice" Type="Int64" Nullable="false" />
-    <Property Name="MinPrice" Type="Int64" Nullable="false" />
-    <Property Name="MaxPrice" Type="Int64" Nullable="false" />
-    <Property Name="TradeStock" Type="Int32" Nullable="false" />
-    <Property Name="TradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="TotalTradeStock" Type="Int64" Nullable="false" />
+    <Property Name="TotalTradeAmount" Type="Int64" Nullable="false" />
     <Property Name="Tradable" Type="Int64" Nullable="false" />
     <Property Name="TotalCapital" Type="Int64" Nullable="false" />
     <Property Name="HandCount" Type="Int32" Nullable="false" />
@@ -4592,8 +4570,7 @@
     <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Market" Type="Int32" Nullable="false" />
     <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
-    <Property Name="GroupTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
     <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="TimeStr" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
@@ -4603,7 +4580,7 @@
     <Property Name="MaxPrice" Type="Int64" Nullable="false" />
     <Property Name="TradeStock" Type="Int64" Nullable="false" />
     <Property Name="TradeAmount" Type="Int64" Nullable="false" />
-    <Property Name="LastTradeStock" Type="Int32" Nullable="false" />
+    <Property Name="LastTradeStock" Type="Int64" Nullable="false" />
     <Property Name="LastTradeAmount" Type="Int64" Nullable="false" />
     <Property Name="Tradable" Type="Int64" Nullable="false" />
     <Property Name="TotalCapital" Type="Int64" Nullable="false" />
@@ -4617,8 +4594,7 @@
     <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Market" Type="Int32" Nullable="false" />
     <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
-    <Property Name="GroupTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
     <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="TimeStr" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
@@ -4628,7 +4604,31 @@
     <Property Name="MaxPrice" Type="Int64" Nullable="false" />
     <Property Name="TradeStock" Type="Int64" Nullable="false" />
     <Property Name="TradeAmount" Type="Int64" Nullable="false" />
-    <Property Name="LastTradeStock" Type="Int32" Nullable="false" />
+    <Property Name="LastTradeStock" Type="Int64" Nullable="false" />
+    <Property Name="LastTradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="Tradable" Type="Int64" Nullable="false" />
+    <Property Name="TotalCapital" Type="Int64" Nullable="false" />
+    <Property Name="HandCount" Type="Int32" Nullable="false" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_securitybarsdata_1min">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
+    <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="TimeStr" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
+    <Property Name="ClosedPrice" Type="Int64" Nullable="false" />
+    <Property Name="PreClosePrice" Type="Int64" Nullable="false" />
+    <Property Name="MinPrice" Type="Int64" Nullable="false" />
+    <Property Name="MaxPrice" Type="Int64" Nullable="false" />
+    <Property Name="TradeStock" Type="Int64" Nullable="false" />
+    <Property Name="TradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="LastTradeStock" Type="Int64" Nullable="false" />
     <Property Name="LastTradeAmount" Type="Int64" Nullable="false" />
     <Property Name="Tradable" Type="Int64" Nullable="false" />
     <Property Name="TotalCapital" Type="Int64" Nullable="false" />
@@ -4642,8 +4642,7 @@
     <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Market" Type="Int32" Nullable="false" />
     <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
-    <Property Name="GroupTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
     <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="TimeStr" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
@@ -4653,7 +4652,7 @@
     <Property Name="MaxPrice" Type="Int64" Nullable="false" />
     <Property Name="TradeStock" Type="Int64" Nullable="false" />
     <Property Name="TradeAmount" Type="Int64" Nullable="false" />
-    <Property Name="LastTradeStock" Type="Int32" Nullable="false" />
+    <Property Name="LastTradeStock" Type="Int64" Nullable="false" />
     <Property Name="LastTradeAmount" Type="Int64" Nullable="false" />
     <Property Name="Tradable" Type="Int64" Nullable="false" />
     <Property Name="TotalCapital" Type="Int64" Nullable="false" />
@@ -4667,8 +4666,7 @@
     <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Market" Type="Int32" Nullable="false" />
     <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
-    <Property Name="GroupTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
     <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="TimeStr" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
@@ -4678,7 +4676,7 @@
     <Property Name="MaxPrice" Type="Int64" Nullable="false" />
     <Property Name="TradeStock" Type="Int64" Nullable="false" />
     <Property Name="TradeAmount" Type="Int64" Nullable="false" />
-    <Property Name="LastTradeStock" Type="Int32" Nullable="false" />
+    <Property Name="LastTradeStock" Type="Int64" Nullable="false" />
     <Property Name="LastTradeAmount" Type="Int64" Nullable="false" />
     <Property Name="Tradable" Type="Int64" Nullable="false" />
     <Property Name="TotalCapital" Type="Int64" Nullable="false" />
@@ -4692,8 +4690,7 @@
     <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Market" Type="Int32" Nullable="false" />
     <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
-    <Property Name="GroupTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
     <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="TimeStr" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
@@ -4703,7 +4700,7 @@
     <Property Name="MaxPrice" Type="Int64" Nullable="false" />
     <Property Name="TradeStock" Type="Int64" Nullable="false" />
     <Property Name="TradeAmount" Type="Int64" Nullable="false" />
-    <Property Name="LastTradeStock" Type="Int32" Nullable="false" />
+    <Property Name="LastTradeStock" Type="Int64" Nullable="false" />
     <Property Name="LastTradeAmount" Type="Int64" Nullable="false" />
     <Property Name="Tradable" Type="Int64" Nullable="false" />
     <Property Name="TotalCapital" Type="Int64" Nullable="false" />
@@ -4717,8 +4714,7 @@
     <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Market" Type="Int32" Nullable="false" />
     <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
-    <Property Name="GroupTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
     <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="TimeStr" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
@@ -4728,7 +4724,7 @@
     <Property Name="MaxPrice" Type="Int64" Nullable="false" />
     <Property Name="TradeStock" Type="Int64" Nullable="false" />
     <Property Name="TradeAmount" Type="Int64" Nullable="false" />
-    <Property Name="LastTradeStock" Type="Int32" Nullable="false" />
+    <Property Name="LastTradeStock" Type="Int64" Nullable="false" />
     <Property Name="LastTradeAmount" Type="Int64" Nullable="false" />
     <Property Name="Tradable" Type="Int64" Nullable="false" />
     <Property Name="TotalCapital" Type="Int64" Nullable="false" />
@@ -4742,8 +4738,7 @@
     <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Market" Type="Int32" Nullable="false" />
     <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
-    <Property Name="GroupTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
     <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="TimeStr" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
@@ -4753,7 +4748,7 @@
     <Property Name="MaxPrice" Type="Int64" Nullable="false" />
     <Property Name="TradeStock" Type="Int64" Nullable="false" />
     <Property Name="TradeAmount" Type="Int64" Nullable="false" />
-    <Property Name="LastTradeStock" Type="Int32" Nullable="false" />
+    <Property Name="LastTradeStock" Type="Int64" Nullable="false" />
     <Property Name="LastTradeAmount" Type="Int64" Nullable="false" />
     <Property Name="Tradable" Type="Int64" Nullable="false" />
     <Property Name="TotalCapital" Type="Int64" Nullable="false" />
@@ -4767,8 +4762,7 @@
     <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Market" Type="Int32" Nullable="false" />
     <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
-    <Property Name="GroupTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
     <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="TimeStr" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
@@ -4778,7 +4772,7 @@
     <Property Name="MaxPrice" Type="Int64" Nullable="false" />
     <Property Name="TradeStock" Type="Int64" Nullable="false" />
     <Property Name="TradeAmount" Type="Int64" Nullable="false" />
-    <Property Name="LastTradeStock" Type="Int32" Nullable="false" />
+    <Property Name="LastTradeStock" Type="Int64" Nullable="false" />
     <Property Name="LastTradeAmount" Type="Int64" Nullable="false" />
     <Property Name="Tradable" Type="Int64" Nullable="false" />
     <Property Name="TotalCapital" Type="Int64" Nullable="false" />
@@ -4792,8 +4786,7 @@
     <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Market" Type="Int32" Nullable="false" />
     <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
-    <Property Name="GroupTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
     <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="TimeStr" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
@@ -4803,7 +4796,7 @@
     <Property Name="MaxPrice" Type="Int64" Nullable="false" />
     <Property Name="TradeStock" Type="Int64" Nullable="false" />
     <Property Name="TradeAmount" Type="Int64" Nullable="false" />
-    <Property Name="LastTradeStock" Type="Int32" Nullable="false" />
+    <Property Name="LastTradeStock" Type="Int64" Nullable="false" />
     <Property Name="LastTradeAmount" Type="Int64" Nullable="false" />
     <Property Name="Tradable" Type="Int64" Nullable="false" />
     <Property Name="TotalCapital" Type="Int64" Nullable="false" />

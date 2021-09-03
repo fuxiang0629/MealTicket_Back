@@ -2878,12 +2878,11 @@ namespace MealTicket_Web_Handler
                         TodayDealCount = item.item3.TotalCount
                     });
                 }
-                ts.Complete();
 
 
                 list = (from item in list
                         join item2 in Singleton.Instance._SharesBaseSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
-                        join item3 in Singleton.Instance._SharesHisRiseRateSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode }
+                        join item3 in Singleton.Instance._SharesHisRiseRateSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into a from ai in a.DefaultIfEmpty()
                         select new AccountTradeHoldInfo
                         {
                             SharesCode = item.SharesCode,
@@ -2908,18 +2907,19 @@ namespace MealTicket_Web_Handler
                             ParValidCount = item.ParValidCount,
                             PlateList = item.PlateList,
                             CirculatingCapital = item2.CirculatingCapital,
-                            DaysAvgDealAmount = item3.DaysAvgDealAmount,
-                            DaysAvgDealCount = item3.DaysAvgDealCount,
-                            LimitDownCount = item3.LimitDownCount,
-                            LimitUpCount = item3.LimitUpCount,
-                            LimitUpDay = item3.LimitUpDay,
-                            PreDayDealAmount = item3.PreDayDealAmount,
-                            PreDayDealCount = item3.PreDayDealCount,
+                            DaysAvgDealAmount = ai==null?0: ai.DaysAvgDealAmount,
+                            DaysAvgDealCount = ai == null ? 0 : ai.DaysAvgDealCount,
+                            LimitDownCount = ai == null ? 0 : ai.LimitDownCount,
+                            LimitUpCount = ai == null ? 0 : ai.LimitUpCount,
+                            LimitUpDay = ai == null ? "" : ai.LimitUpDay,
+                            PreDayDealAmount = ai == null ? 0 : ai.PreDayDealAmount,
+                            PreDayDealCount = ai == null ? 0 : ai.PreDayDealCount,
                             TotalCapital = item2.TotalCapital,
                             TodayDealAmount = item.TodayDealAmount,
                             TodayDealCount = item.TodayDealCount
                         }).ToList();
 
+                ts.Complete();
                 return new PageRes<AccountTradeHoldInfo>
                 {
                     MaxId = 0,
@@ -20004,27 +20004,27 @@ select @buyId;";
                 var result = from item in db.t_shares_securitybarsdata_1min
                              where item.Market == request.Market && item.SharesCode == request.SharesCode
                              select item;
-                if (request.MaxTime != null)
+                if (request.MaxGroupTimeKey != -1)
                 {
                     result = from item in result
-                             where item.Time >= request.MaxTime.Value
-                             orderby item.Time
+                             where item.GroupTimeKey >= request.MaxGroupTimeKey
+                             orderby item.GroupTimeKey
                              select item;
                     resType = 2;
 
                 }
-                else if (request.MinTime != null)
+                else if (request.MinGroupTimeKey != -1)
                 {
                     result = from item in result
-                             where item.Time < request.MinTime.Value
-                             orderby item.Time descending
+                             where item.GroupTimeKey < request.MinGroupTimeKey
+                             orderby item.GroupTimeKey descending
                              select item;
                     resType = 3;
                 }
                 else
                 {
                     result = from item in result
-                             orderby item.Time descending
+                             orderby item.GroupTimeKey descending
                              select item;
                     resType = 1;
                 }
@@ -20039,16 +20039,19 @@ select @buyId;";
                                 orderby item.Time
                                 select new SharesKLineInfo
                                 {
-                                    TradeStock = item.TradeStock.ToNumString(),
+                                    TradeStockNum = item.TradeStock + item.LastTradeStock,
+                                    TradeStock = (item.TradeStock + item.LastTradeStock).ToNumString(),
                                     ClosedPrice = (item.ClosedPrice * 1.0 / 10000).ToString("F2"),
+                                    PreClosedPrice = (item.PreClosePrice * 1.0 / 10000).ToString("F2"),
                                     OpenedPrice = (item.OpenedPrice * 1.0 / 10000).ToString("F2"),
                                     MaxPrice = (item.MaxPrice * 1.0 / 10000).ToString("F2"),
                                     MinPrice = (item.MinPrice * 1.0 / 10000).ToString("F2"),
-                                    DateKey = item.Time.ToString("yyyy-MM-dd HH:mm"),
+                                    DateKey = DateTime.ParseExact(item.GroupTimeKey.ToString(),"yyyyMMddHHmm", System.Globalization.CultureInfo.CurrentCulture).ToString("yyyy/MM/dd HH:mm"),
                                     Time = item.Time,
-                                    TradeAmount = (item.TradeAmount * 1.0 / 10000).ToNumString(),
+                                    GroupTimeKey = item.GroupTimeKey,
+                                    TradeAmount = ((item.TradeAmount + item.LastTradeAmount) * 1.0 / 10000).ToNumString(),
                                     Tradable = item.Tradable.ToNumString(),
-                                    TradableRate = (item.TradeStock * 1.0 / item.Tradable * 100).ToString("F2"),
+                                    TradableRate = ((item.TradeStock + item.LastTradeStock) * 1.0 / item.Tradable * 100).ToString("F2"),
                                     RiseRate = ((item.ClosedPrice - item.PreClosePrice) * 1.0 / item.PreClosePrice * 100).ToString("F2")
                                 }).ToList()
                 };
@@ -20065,27 +20068,27 @@ select @buyId;";
                 var result = from item in db.t_shares_securitybarsdata_5min
                              where item.Market == request.Market && item.SharesCode == request.SharesCode
                              select item;
-                if (request.MaxTime != null)
+                if (request.MaxGroupTimeKey != -1)
                 {
                     result = from item in result
-                             where item.GroupTime >= request.MaxTime.Value
-                             orderby item.GroupTime
+                             where item.GroupTimeKey >= request.MaxGroupTimeKey
+                             orderby item.GroupTimeKey
                              select item;
                     resType = 2;
 
                 }
-                else if (request.MinTime != null)
+                else if (request.MinGroupTimeKey != -1)
                 {
                     result = from item in result
-                             where item.GroupTime < request.MinTime.Value
-                             orderby item.GroupTime descending
+                             where item.GroupTimeKey < request.MinGroupTimeKey
+                             orderby item.GroupTimeKey descending
                              select item;
                     resType = 3;
                 }
                 else
                 {
                     result = from item in result
-                             orderby item.GroupTime descending
+                             orderby item.GroupTimeKey descending
                              select item;
                     resType = 1;
                 }
@@ -20093,22 +20096,25 @@ select @buyId;";
                 var dataResult = (from item in result
                                   select item).Take(request.GetCount).ToList();
 
-                var res= new GetSharesKLineListRes
+                var res = new GetSharesKLineListRes
                 {
                     Type = resType,
                     DataList = (from item in dataResult
                                 orderby item.Time
                                 select new SharesKLineInfo
                                 {
-                                    TradeStock = (item.TradeStock + item.LastTradeStock).ToString(),
+                                    TradeStockNum = item.TradeStock + item.LastTradeStock,
+                                    TradeStock = (item.TradeStock + item.LastTradeStock).ToNumString(),
                                     ClosedPrice = (item.ClosedPrice * 1.0 / 10000).ToString("F2"),
+                                    PreClosedPrice = (item.PreClosePrice * 1.0 / 10000).ToString("F2"),
                                     OpenedPrice = (item.OpenedPrice * 1.0 / 10000).ToString("F2"),
                                     MaxPrice = (item.MaxPrice * 1.0 / 10000).ToString("F2"),
                                     MinPrice = (item.MinPrice * 1.0 / 10000).ToString("F2"),
-                                    DateKey = item.GroupTime.ToString("yyyy-MM-dd HH:mm"),
+                                    DateKey = DateTime.ParseExact(item.GroupTimeKey.ToString(), "yyyyMMddHHmm", System.Globalization.CultureInfo.CurrentCulture).ToString("yyyy/MM/dd HH:mm"),
                                     Time = item.Time,
-                                    TradeAmount = ((item.TradeAmount + item.LastTradeAmount) * 1.0 / 10000).ToString("F2"),
-                                    Tradable = item.Tradable.ToString(),
+                                    GroupTimeKey = item.GroupTimeKey,
+                                    TradeAmount = ((item.TradeAmount + item.LastTradeAmount) * 1.0 / 10000).ToNumString(),
+                                    Tradable = item.Tradable.ToNumString(),
                                     TradableRate = ((item.TradeStock + item.LastTradeStock) * 1.0 / item.Tradable * 100).ToString("F2"),
                                     RiseRate = ((item.ClosedPrice - item.PreClosePrice) * 1.0 / item.PreClosePrice * 100).ToString("F2")
                                 }).ToList()
@@ -20126,27 +20132,27 @@ select @buyId;";
                 var result = from item in db.t_shares_securitybarsdata_15min
                              where item.Market == request.Market && item.SharesCode == request.SharesCode
                              select item;
-                if (request.MaxTime != null)
+                if (request.MaxGroupTimeKey != -1)
                 {
                     result = from item in result
-                             where item.GroupTime >= request.MaxTime.Value
-                             orderby item.GroupTime
+                             where item.GroupTimeKey >= request.MaxGroupTimeKey
+                             orderby item.GroupTimeKey
                              select item;
                     resType = 2;
 
                 }
-                else if (request.MinTime != null)
+                else if (request.MinGroupTimeKey != -1)
                 {
                     result = from item in result
-                             where item.GroupTime < request.MinTime.Value
-                             orderby item.GroupTime descending
+                             where item.GroupTimeKey < request.MinGroupTimeKey
+                             orderby item.GroupTimeKey descending
                              select item;
                     resType = 3;
                 }
                 else
                 {
                     result = from item in result
-                             orderby item.GroupTime descending
+                             orderby item.GroupTimeKey descending
                              select item;
                     resType = 1;
                 }
@@ -20154,22 +20160,25 @@ select @buyId;";
                 var dataResult = (from item in result
                                   select item).Take(request.GetCount).ToList();
 
-                var res= new GetSharesKLineListRes
+                var res = new GetSharesKLineListRes
                 {
                     Type = resType,
                     DataList = (from item in dataResult
                                 orderby item.Time
                                 select new SharesKLineInfo
                                 {
-                                    TradeStock = (item.TradeStock + item.LastTradeStock).ToString(),
+                                    TradeStockNum = item.TradeStock + item.LastTradeStock,
+                                    TradeStock = (item.TradeStock + item.LastTradeStock).ToNumString(),
                                     ClosedPrice = (item.ClosedPrice * 1.0 / 10000).ToString("F2"),
+                                    PreClosedPrice = (item.PreClosePrice * 1.0 / 10000).ToString("F2"),
                                     OpenedPrice = (item.OpenedPrice * 1.0 / 10000).ToString("F2"),
                                     MaxPrice = (item.MaxPrice * 1.0 / 10000).ToString("F2"),
                                     MinPrice = (item.MinPrice * 1.0 / 10000).ToString("F2"),
-                                    DateKey = item.GroupTime.ToString("yyyy-MM-dd HH:mm"),
+                                    DateKey = DateTime.ParseExact(item.GroupTimeKey.ToString(), "yyyyMMddHHmm", System.Globalization.CultureInfo.CurrentCulture).ToString("yyyy/MM/dd HH:mm"),
                                     Time = item.Time,
-                                    TradeAmount = ((item.TradeAmount + item.LastTradeAmount) * 1.0 / 10000).ToString("F2"),
-                                    Tradable = item.Tradable.ToString(),
+                                    GroupTimeKey = item.GroupTimeKey,
+                                    TradeAmount = ((item.TradeAmount + item.LastTradeAmount) * 1.0 / 10000).ToNumString(),
+                                    Tradable = item.Tradable.ToNumString(),
                                     TradableRate = ((item.TradeStock + item.LastTradeStock) * 1.0 / item.Tradable * 100).ToString("F2"),
                                     RiseRate = ((item.ClosedPrice - item.PreClosePrice) * 1.0 / item.PreClosePrice * 100).ToString("F2")
                                 }).ToList()
@@ -20187,27 +20196,27 @@ select @buyId;";
                 var result = from item in db.t_shares_securitybarsdata_30min
                              where item.Market == request.Market && item.SharesCode == request.SharesCode
                              select item;
-                if (request.MaxTime != null)
+                if (request.MaxGroupTimeKey != -1)
                 {
                     result = from item in result
-                             where item.GroupTime >= request.MaxTime.Value
-                             orderby item.GroupTime
+                             where item.GroupTimeKey >= request.MaxGroupTimeKey
+                             orderby item.GroupTimeKey
                              select item;
                     resType = 2;
 
                 }
-                else if (request.MinTime != null)
+                else if (request.MinGroupTimeKey != -1)
                 {
                     result = from item in result
-                             where item.GroupTime < request.MinTime.Value
-                             orderby item.GroupTime descending
+                             where item.GroupTimeKey < request.MinGroupTimeKey
+                             orderby item.GroupTimeKey descending
                              select item;
                     resType = 3;
                 }
                 else
                 {
                     result = from item in result
-                             orderby item.GroupTime descending
+                             orderby item.GroupTimeKey descending
                              select item;
                     resType = 1;
                 }
@@ -20215,22 +20224,25 @@ select @buyId;";
                 var dataResult = (from item in result
                                   select item).Take(request.GetCount).ToList();
 
-                var res= new GetSharesKLineListRes
+                var res = new GetSharesKLineListRes
                 {
                     Type = resType,
                     DataList = (from item in dataResult
                                 orderby item.Time
                                 select new SharesKLineInfo
                                 {
-                                    TradeStock = (item.TradeStock + item.LastTradeStock).ToString(),
+                                    TradeStockNum = item.TradeStock + item.LastTradeStock,
+                                    TradeStock = (item.TradeStock + item.LastTradeStock).ToNumString(),
                                     ClosedPrice = (item.ClosedPrice * 1.0 / 10000).ToString("F2"),
+                                    PreClosedPrice = (item.PreClosePrice * 1.0 / 10000).ToString("F2"),
                                     OpenedPrice = (item.OpenedPrice * 1.0 / 10000).ToString("F2"),
                                     MaxPrice = (item.MaxPrice * 1.0 / 10000).ToString("F2"),
                                     MinPrice = (item.MinPrice * 1.0 / 10000).ToString("F2"),
-                                    DateKey = item.GroupTime.ToString("yyyy-MM-dd HH:mm"),
+                                    DateKey = DateTime.ParseExact(item.GroupTimeKey.ToString(), "yyyyMMddHHmm", System.Globalization.CultureInfo.CurrentCulture).ToString("yyyy/MM/dd HH:mm"),
                                     Time = item.Time,
-                                    TradeAmount = ((item.TradeAmount + item.LastTradeAmount) * 1.0 / 10000).ToString("F2"),
-                                    Tradable = item.Tradable.ToString(),
+                                    GroupTimeKey = item.GroupTimeKey,
+                                    TradeAmount = ((item.TradeAmount + item.LastTradeAmount) * 1.0 / 10000).ToNumString(),
+                                    Tradable = item.Tradable.ToNumString(),
                                     TradableRate = ((item.TradeStock + item.LastTradeStock) * 1.0 / item.Tradable * 100).ToString("F2"),
                                     RiseRate = ((item.ClosedPrice - item.PreClosePrice) * 1.0 / item.PreClosePrice * 100).ToString("F2")
                                 }).ToList()
@@ -20248,27 +20260,27 @@ select @buyId;";
                 var result = from item in db.t_shares_securitybarsdata_60min
                              where item.Market == request.Market && item.SharesCode == request.SharesCode
                              select item;
-                if (request.MaxTime != null)
+                if (request.MaxGroupTimeKey != -1)
                 {
                     result = from item in result
-                             where item.GroupTime >= request.MaxTime.Value
-                             orderby item.GroupTime
+                             where item.GroupTimeKey >= request.MaxGroupTimeKey
+                             orderby item.GroupTimeKey
                              select item;
                     resType = 2;
 
                 }
-                else if (request.MinTime != null)
+                else if (request.MinGroupTimeKey != -1)
                 {
                     result = from item in result
-                             where item.GroupTime < request.MinTime.Value
-                             orderby item.GroupTime descending
+                             where item.GroupTimeKey < request.MinGroupTimeKey
+                             orderby item.GroupTimeKey descending
                              select item;
                     resType = 3;
                 }
                 else
                 {
                     result = from item in result
-                             orderby item.GroupTime descending
+                             orderby item.GroupTimeKey descending
                              select item;
                     resType = 1;
                 }
@@ -20276,22 +20288,25 @@ select @buyId;";
                 var dataResult = (from item in result
                                   select item).Take(request.GetCount).ToList();
 
-                var res= new GetSharesKLineListRes
+                var res = new GetSharesKLineListRes
                 {
                     Type = resType,
                     DataList = (from item in dataResult
                                 orderby item.Time
                                 select new SharesKLineInfo
                                 {
-                                    TradeStock = (item.TradeStock + item.LastTradeStock).ToString(),
+                                    TradeStockNum = item.TradeStock + item.LastTradeStock,
+                                    TradeStock = (item.TradeStock + item.LastTradeStock).ToNumString(),
                                     ClosedPrice = (item.ClosedPrice * 1.0 / 10000).ToString("F2"),
+                                    PreClosedPrice = (item.PreClosePrice * 1.0 / 10000).ToString("F2"),
                                     OpenedPrice = (item.OpenedPrice * 1.0 / 10000).ToString("F2"),
                                     MaxPrice = (item.MaxPrice * 1.0 / 10000).ToString("F2"),
                                     MinPrice = (item.MinPrice * 1.0 / 10000).ToString("F2"),
-                                    DateKey = item.GroupTime.ToString("yyyy-MM-dd HH:mm"),
+                                    DateKey = DateTime.ParseExact(item.GroupTimeKey.ToString(), "yyyyMMddHHmm", System.Globalization.CultureInfo.CurrentCulture).ToString("yyyy/MM/dd HH:mm"),
                                     Time = item.Time,
-                                    TradeAmount = ((item.TradeAmount + item.LastTradeAmount) * 1.0 / 10000).ToString("F2"),
-                                    Tradable = item.Tradable.ToString(),
+                                    GroupTimeKey = item.GroupTimeKey,
+                                    TradeAmount = ((item.TradeAmount + item.LastTradeAmount) * 1.0 / 10000).ToNumString(),
+                                    Tradable = item.Tradable.ToNumString(),
                                     TradableRate = ((item.TradeStock + item.LastTradeStock) * 1.0 / item.Tradable * 100).ToString("F2"),
                                     RiseRate = ((item.ClosedPrice - item.PreClosePrice) * 1.0 / item.PreClosePrice * 100).ToString("F2")
                                 }).ToList()
@@ -20309,27 +20324,27 @@ select @buyId;";
                 var result = from item in db.t_shares_securitybarsdata_1day
                              where item.Market == request.Market && item.SharesCode == request.SharesCode
                              select item;
-                if (request.MaxTime != null)
+                if (request.MaxGroupTimeKey != -1)
                 {
                     result = from item in result
-                             where item.GroupTime >= request.MaxTime.Value
-                             orderby item.GroupTime
+                             where item.GroupTimeKey >= request.MaxGroupTimeKey
+                             orderby item.GroupTimeKey
                              select item;
                     resType = 2;
 
                 }
-                else if (request.MinTime != null)
+                else if (request.MinGroupTimeKey != -1)
                 {
                     result = from item in result
-                             where item.GroupTime < request.MinTime.Value
-                             orderby item.GroupTime descending
+                             where item.GroupTimeKey < request.MinGroupTimeKey
+                             orderby item.GroupTimeKey descending
                              select item;
                     resType = 3;
                 }
                 else
                 {
                     result = from item in result
-                             orderby item.GroupTime descending
+                             orderby item.GroupTimeKey descending
                              select item;
                     resType = 1;
                 }
@@ -20337,22 +20352,25 @@ select @buyId;";
                 var dataResult = (from item in result
                                   select item).Take(request.GetCount).ToList();
 
-                var res= new GetSharesKLineListRes
+                var res = new GetSharesKLineListRes
                 {
                     Type = resType,
                     DataList = (from item in dataResult
                                 orderby item.Time
                                 select new SharesKLineInfo
                                 {
-                                    TradeStock = (item.TradeStock + item.LastTradeStock).ToString(),
+                                    TradeStockNum = item.TradeStock + item.LastTradeStock,
+                                    TradeStock = (item.TradeStock + item.LastTradeStock).ToNumString(),
                                     ClosedPrice = (item.ClosedPrice * 1.0 / 10000).ToString("F2"),
+                                    PreClosedPrice = (item.PreClosePrice * 1.0 / 10000).ToString("F2"),
                                     OpenedPrice = (item.OpenedPrice * 1.0 / 10000).ToString("F2"),
                                     MaxPrice = (item.MaxPrice * 1.0 / 10000).ToString("F2"),
                                     MinPrice = (item.MinPrice * 1.0 / 10000).ToString("F2"),
-                                    DateKey = item.GroupTime.ToString("yyyy-MM-dd"),
+                                    DateKey = DateTime.ParseExact(item.GroupTimeKey.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture).ToString("yyyy/MM/dd"),
                                     Time = item.Time,
-                                    TradeAmount = ((item.TradeAmount + item.LastTradeAmount) * 1.0 / 10000).ToString("F2"),
-                                    Tradable = item.Tradable.ToString(),
+                                    GroupTimeKey = item.GroupTimeKey,
+                                    TradeAmount = ((item.TradeAmount + item.LastTradeAmount) * 1.0 / 10000).ToNumString(),
+                                    Tradable = item.Tradable.ToNumString(),
                                     TradableRate = ((item.TradeStock + item.LastTradeStock) * 1.0 / item.Tradable * 100).ToString("F2"),
                                     RiseRate = ((item.ClosedPrice - item.PreClosePrice) * 1.0 / item.PreClosePrice * 100).ToString("F2")
                                 }).ToList()
@@ -20370,27 +20388,27 @@ select @buyId;";
                 var result = from item in db.t_shares_securitybarsdata_1week
                              where item.Market == request.Market && item.SharesCode == request.SharesCode
                              select item;
-                if (request.MaxTime != null)
+                if (request.MaxGroupTimeKey != -1)
                 {
                     result = from item in result
-                             where item.GroupTime >= request.MaxTime.Value
-                             orderby item.GroupTime
+                             where item.GroupTimeKey >= request.MaxGroupTimeKey
+                             orderby item.GroupTimeKey
                              select item;
                     resType = 2;
 
                 }
-                else if (request.MinTime != null)
+                else if (request.MinGroupTimeKey != -1)
                 {
                     result = from item in result
-                             where item.GroupTime < request.MinTime.Value
-                             orderby item.GroupTime descending
+                             where item.GroupTimeKey < request.MinGroupTimeKey
+                             orderby item.GroupTimeKey descending
                              select item;
                     resType = 3;
                 }
                 else
                 {
                     result = from item in result
-                             orderby item.GroupTime descending
+                             orderby item.GroupTimeKey descending
                              select item;
                     resType = 1;
                 }
@@ -20398,22 +20416,25 @@ select @buyId;";
                 var dataResult = (from item in result
                                   select item).Take(request.GetCount).ToList();
 
-                var res= new GetSharesKLineListRes
+                var res = new GetSharesKLineListRes
                 {
                     Type = resType,
                     DataList = (from item in dataResult
                                 orderby item.Time
                                 select new SharesKLineInfo
                                 {
-                                    TradeStock = (item.TradeStock + item.LastTradeStock).ToString(),
+                                    TradeStockNum = item.TradeStock + item.LastTradeStock,
+                                    TradeStock = (item.TradeStock + item.LastTradeStock).ToNumString(),
                                     ClosedPrice = (item.ClosedPrice * 1.0 / 10000).ToString("F2"),
+                                    PreClosedPrice = (item.PreClosePrice * 1.0 / 10000).ToString("F2"),
                                     OpenedPrice = (item.OpenedPrice * 1.0 / 10000).ToString("F2"),
                                     MaxPrice = (item.MaxPrice * 1.0 / 10000).ToString("F2"),
                                     MinPrice = (item.MinPrice * 1.0 / 10000).ToString("F2"),
-                                    DateKey = item.GroupTime.ToString("yyyy-MM-dd"),
+                                    DateKey = item.GroupTimeKey/100+"/"+ (item.GroupTimeKey % 100).ToString("00"),
                                     Time = item.Time,
-                                    TradeAmount = ((item.TradeAmount + item.LastTradeAmount) * 1.0 / 10000).ToString("F2"),
-                                    Tradable = item.Tradable.ToString(),
+                                    GroupTimeKey = item.GroupTimeKey,
+                                    TradeAmount = ((item.TradeAmount + item.LastTradeAmount) * 1.0 / 10000).ToNumString(),
+                                    Tradable = item.Tradable.ToNumString(),
                                     TradableRate = ((item.TradeStock + item.LastTradeStock) * 1.0 / item.Tradable * 100).ToString("F2"),
                                     RiseRate = ((item.ClosedPrice - item.PreClosePrice) * 1.0 / item.PreClosePrice * 100).ToString("F2")
                                 }).ToList()
@@ -20431,27 +20452,27 @@ select @buyId;";
                 var result = from item in db.t_shares_securitybarsdata_1month
                              where item.Market == request.Market && item.SharesCode == request.SharesCode
                              select item;
-                if (request.MaxTime != null)
+                if (request.MaxGroupTimeKey != -1)
                 {
                     result = from item in result
-                             where item.GroupTime >= request.MaxTime.Value
-                             orderby item.GroupTime
+                             where item.GroupTimeKey >= request.MaxGroupTimeKey
+                             orderby item.GroupTimeKey
                              select item;
                     resType = 2;
 
                 }
-                else if (request.MinTime != null)
+                else if (request.MinGroupTimeKey != -1)
                 {
                     result = from item in result
-                             where item.GroupTime < request.MinTime.Value
-                             orderby item.GroupTime descending
+                             where item.GroupTimeKey < request.MinGroupTimeKey
+                             orderby item.GroupTimeKey descending
                              select item;
                     resType = 3;
                 }
                 else
                 {
                     result = from item in result
-                             orderby item.GroupTime descending
+                             orderby item.GroupTimeKey descending
                              select item;
                     resType = 1;
                 }
@@ -20459,22 +20480,25 @@ select @buyId;";
                 var dataResult = (from item in result
                                   select item).Take(request.GetCount).ToList();
 
-                var res= new GetSharesKLineListRes
+                var res = new GetSharesKLineListRes
                 {
                     Type = resType,
                     DataList = (from item in dataResult
                                 orderby item.Time
                                 select new SharesKLineInfo
                                 {
-                                    TradeStock = (item.TradeStock + item.LastTradeStock).ToString(),
+                                    TradeStockNum = item.TradeStock + item.LastTradeStock,
+                                    TradeStock = (item.TradeStock + item.LastTradeStock).ToNumString(),
                                     ClosedPrice = (item.ClosedPrice * 1.0 / 10000).ToString("F2"),
+                                    PreClosedPrice = (item.PreClosePrice * 1.0 / 10000).ToString("F2"),
                                     OpenedPrice = (item.OpenedPrice * 1.0 / 10000).ToString("F2"),
                                     MaxPrice = (item.MaxPrice * 1.0 / 10000).ToString("F2"),
                                     MinPrice = (item.MinPrice * 1.0 / 10000).ToString("F2"),
-                                    DateKey = item.GroupTime.ToString("yyyy-MM-dd"),
+                                    DateKey = item.GroupTimeKey / 100 + "/" + (item.GroupTimeKey % 100).ToString("00"),
                                     Time = item.Time,
-                                    TradeAmount = ((item.TradeAmount + item.LastTradeAmount) * 1.0 / 10000).ToString("F2"),
-                                    Tradable = item.Tradable.ToString(),
+                                    GroupTimeKey = item.GroupTimeKey,
+                                    TradeAmount = ((item.TradeAmount + item.LastTradeAmount) * 1.0 / 10000).ToNumString(),
+                                    Tradable = item.Tradable.ToNumString(),
                                     TradableRate = ((item.TradeStock + item.LastTradeStock) * 1.0 / item.Tradable * 100).ToString("F2"),
                                     RiseRate = ((item.ClosedPrice - item.PreClosePrice) * 1.0 / item.PreClosePrice * 100).ToString("F2")
                                 }).ToList()
@@ -20492,27 +20516,27 @@ select @buyId;";
                 var result = from item in db.t_shares_securitybarsdata_1quarter
                              where item.Market == request.Market && item.SharesCode == request.SharesCode
                              select item;
-                if (request.MaxTime != null)
+                if (request.MaxGroupTimeKey != -1)
                 {
                     result = from item in result
-                             where item.GroupTime >= request.MaxTime.Value
-                             orderby item.GroupTime
+                             where item.GroupTimeKey >= request.MaxGroupTimeKey
+                             orderby item.GroupTimeKey
                              select item;
                     resType = 2;
 
                 }
-                else if (request.MinTime != null)
+                else if (request.MinGroupTimeKey != -1)
                 {
                     result = from item in result
-                             where item.GroupTime < request.MinTime.Value
-                             orderby item.GroupTime descending
+                             where item.GroupTimeKey < request.MinGroupTimeKey
+                             orderby item.GroupTimeKey descending
                              select item;
                     resType = 3;
                 }
                 else
                 {
                     result = from item in result
-                             orderby item.GroupTime descending
+                             orderby item.GroupTimeKey descending
                              select item;
                     resType = 1;
                 }
@@ -20527,15 +20551,18 @@ select @buyId;";
                                 orderby item.Time
                                 select new SharesKLineInfo
                                 {
-                                    TradeStock = (item.TradeStock + item.LastTradeStock).ToString(),
+                                    TradeStockNum = item.TradeStock + item.LastTradeStock,
+                                    TradeStock = (item.TradeStock + item.LastTradeStock).ToNumString(),
                                     ClosedPrice = (item.ClosedPrice * 1.0 / 10000).ToString("F2"),
+                                    PreClosedPrice = (item.PreClosePrice * 1.0 / 10000).ToString("F2"),
                                     OpenedPrice = (item.OpenedPrice * 1.0 / 10000).ToString("F2"),
                                     MaxPrice = (item.MaxPrice * 1.0 / 10000).ToString("F2"),
                                     MinPrice = (item.MinPrice * 1.0 / 10000).ToString("F2"),
-                                    DateKey = item.GroupTime.ToString("yyyy-MM-dd"),
+                                    DateKey = item.GroupTimeKey / 100 + "/" + (item.GroupTimeKey % 100).ToString("00"),
                                     Time = item.Time,
-                                    TradeAmount = ((item.TradeAmount + item.LastTradeAmount) * 1.0 / 10000).ToString("F2"),
-                                    Tradable = item.Tradable.ToString(),
+                                    GroupTimeKey = item.GroupTimeKey,
+                                    TradeAmount = ((item.TradeAmount + item.LastTradeAmount) * 1.0 / 10000).ToNumString(),
+                                    Tradable = item.Tradable.ToNumString(),
                                     TradableRate = ((item.TradeStock + item.LastTradeStock) * 1.0 / item.Tradable * 100).ToString("F2"),
                                     RiseRate = ((item.ClosedPrice - item.PreClosePrice) * 1.0 / item.PreClosePrice * 100).ToString("F2")
                                 }).ToList()
@@ -20553,27 +20580,27 @@ select @buyId;";
                 var result = from item in db.t_shares_securitybarsdata_1year
                              where item.Market == request.Market && item.SharesCode == request.SharesCode
                              select item;
-                if (request.MaxTime != null)
+                if (request.MaxGroupTimeKey != -1)
                 {
                     result = from item in result
-                             where item.GroupTime >= request.MaxTime.Value
-                             orderby item.GroupTime
+                             where item.GroupTimeKey >= request.MaxGroupTimeKey
+                             orderby item.GroupTimeKey
                              select item;
                     resType = 2;
 
                 }
-                else if (request.MinTime != null)
+                else if (request.MinGroupTimeKey != -1)
                 {
                     result = from item in result
-                             where item.GroupTime < request.MinTime.Value
-                             orderby item.GroupTime descending
+                             where item.GroupTimeKey < request.MinGroupTimeKey
+                             orderby item.GroupTimeKey descending
                              select item;
                     resType = 3;
                 }
                 else
                 {
                     result = from item in result
-                             orderby item.GroupTime descending
+                             orderby item.GroupTimeKey descending
                              select item;
                     resType = 1;
                 }
@@ -20588,15 +20615,18 @@ select @buyId;";
                                 orderby item.Time
                                 select new SharesKLineInfo
                                 {
-                                    TradeStock = (item.TradeStock+item.LastTradeStock).ToString(),
+                                    TradeStockNum = item.TradeStock + item.LastTradeStock,
+                                    TradeStock = (item.TradeStock + item.LastTradeStock).ToNumString(),
                                     ClosedPrice = (item.ClosedPrice * 1.0 / 10000).ToString("F2"),
+                                    PreClosedPrice = (item.PreClosePrice * 1.0 / 10000).ToString("F2"),
                                     OpenedPrice = (item.OpenedPrice * 1.0 / 10000).ToString("F2"),
                                     MaxPrice = (item.MaxPrice * 1.0 / 10000).ToString("F2"),
                                     MinPrice = (item.MinPrice * 1.0 / 10000).ToString("F2"),
-                                    DateKey = item.GroupTime.ToString("yyyy-MM-dd"),
-                                    Time=item.Time,
-                                    TradeAmount = ((item.TradeAmount+item.LastTradeAmount) * 1.0 / 10000).ToString("F2"),
-                                    Tradable = item.Tradable.ToString(),
+                                    DateKey = item.GroupTimeKey.ToString(),
+                                    Time = item.Time,
+                                    GroupTimeKey = item.GroupTimeKey,
+                                    TradeAmount = ((item.TradeAmount + item.LastTradeAmount) * 1.0 / 10000).ToNumString(),
+                                    Tradable = item.Tradable.ToNumString(),
                                     TradableRate = ((item.TradeStock + item.LastTradeStock) * 1.0 / item.Tradable * 100).ToString("F2"),
                                     RiseRate = ((item.ClosedPrice - item.PreClosePrice) * 1.0 / item.PreClosePrice * 100).ToString("F2")
                                 }).ToList()
@@ -20612,15 +20642,25 @@ select @buyId;";
         /// <param name="request"></param>
         /// <param name="basedata"></param>
         /// <returns></returns>
-        public List<SharesMinutetimedata> GetSharesMinutetimedataList(GetSharesMinutetimedataListRequest request, HeadBase basedata)
+        public GetSharesMinutetimedataListRes GetSharesMinutetimedataList(GetSharesMinutetimedataListRequest request, HeadBase basedata)
         {
+            DateTime startDate;
+            if (request.Date != null)
+            {
+                startDate = request.Date.Value.Date;
+            }
+            else
+            {
+                startDate = Helper.GetLastTradeDate(-9, 0, 0, 0);
+            }
+            DateTime endDate = startDate.AddDays(1);
             using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
             using (var db = new meal_ticketEntities())
             {
-                DateTime dateNow = DateTime.Now.Date;
                 var result = (from item in db.t_shares_minutetimedata
-                             where item.Market == request.Market && item.SharesCode == request.SharesCode && item.Time > dateNow
-                             select item).ToList();
+                              where item.Market == request.Market && item.SharesCode == request.SharesCode && item.Time > startDate && item.Time < endDate
+                              select item).ToList();
+
                 if (request.MaxTime != null)
                 {
                     result = (from item in result
@@ -20635,15 +20675,19 @@ select @buyId;";
                                ClosedPrice=(item.ClosedPrice*1.0/10000).ToString("F2"),
                                TradeStock = item.TradeStock.ToNumString(),
                                TradeAmount = (item.TradeAmount * 1.0 / 10000).ToNumString(),
-                               AvgPrice = (item.AvgPrice * 1.0 / 10000).ToString("F2"),
+                               AvgPrice = ((item.TradeAmount+item.TotalTradeAmount)/(item.TradeStock+item.TotalTradeStock) * 1.0 / 10000).ToString("F2"),
                                Price = (item.Price * 1.0 / 10000).ToString("F2"),
                                Time = item.Time,
-                               RiseRate = ((item.Price - item.ClosedPrice) * 1.0 / item.ClosedPrice * 100).ToString("F2"),
+                               RiseRate = item.ClosedPrice==0? "0.00" : ((item.Price - item.ClosedPrice) * 1.0 / item.ClosedPrice * 100).ToString("F2"),
                                RiseAmount = ((item.Price - item.ClosedPrice) * 1.0 / 10000).ToString("F2")
                            }).ToList();
 
                 scope.Complete();
-                return res;
+                return new GetSharesMinutetimedataListRes
+                {
+                    List = res,
+                    IsToday = startDate == DateTime.Now.Date ? true : false
+                };
             }
         }
     }

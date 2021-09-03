@@ -111,6 +111,8 @@ namespace SecurityBarsDataUpdate
             StartSysparUpdateThread();
             StartHqClientRetryThread();
             StartHeartbeatThread();
+
+            _DimTimeSession.StartUpdate(3600000);
         }
 
         /// <summary>
@@ -382,5 +384,8 @@ namespace SecurityBarsDataUpdate
             mqHandler.ListenQueueName = listenQueueName;//设置监听队列
             return mqHandler;
         }
+
+
+        public DimTimeSession _DimTimeSession = new DimTimeSession();
     }
 }

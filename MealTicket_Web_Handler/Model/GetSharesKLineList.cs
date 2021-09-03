@@ -30,12 +30,12 @@ namespace MealTicket_Web_Handler.Model
         /// <summary>
         /// 最小时间
         /// </summary>
-        public DateTime? MinTime { get; set; }
+        public long MinGroupTimeKey { get; set; }
 
         /// <summary>
         /// 最大时间
         /// </summary>
-        public DateTime? MaxTime { get; set; }
+        public long MaxGroupTimeKey { get; set; }
 
         /// <summary>
         /// 获取条数
@@ -63,6 +63,8 @@ namespace MealTicket_Web_Handler.Model
         /// </summary>
         public string DateKey { get; set; }
 
+        public long GroupTimeKey { get; set; }
+
         /// <summary>
         /// 时间
         /// </summary>
@@ -79,6 +81,12 @@ namespace MealTicket_Web_Handler.Model
         public string ClosedPrice { get; set; }
 
         /// <summary>
+        /// 上一时段收盘价
+        /// </summary>
+        public string PreClosedPrice { get; set; }
+
+
+        /// <summary>
         /// 最低价
         /// </summary>
         public string MinPrice { get; set; }
@@ -87,6 +95,11 @@ namespace MealTicket_Web_Handler.Model
         /// 最高价
         /// </summary>
         public string MaxPrice { get; set; }
+
+        /// <summary>
+        /// 成交量
+        /// </summary>
+        public long TradeStockNum { get; set; }
 
         /// <summary>
         /// 成交量

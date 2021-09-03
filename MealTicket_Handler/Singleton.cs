@@ -115,9 +115,9 @@ namespace MealTicket_Handler
 
         #region====K线数据参数====
         public int SecurityBarsIntervalTime = 3000;//间隔时间(毫秒)
-        public int SecurityBarsTaskTimeout = 15000;//任务超时时间(毫秒)
-        public int SecurityBarsBatchCount = 64;//每批次处理股票数量
-        public int SecurityBarsUpdateCountOnce = 10000;//每次写入数据库数据量
+        public int SecurityBarsTaskTimeout = 300000;//任务超时时间(毫秒)
+        public int SecurityBarsBatchCount = 128;//每批次处理股票数量
+        public int SecurityBarsUpdateCountOnce = 20000;//每次写入数据库数据量
         #endregion
 
         // 显式静态构造函数告诉C＃编译器
@@ -157,21 +157,9 @@ namespace MealTicket_Handler
             {
                 mqHandler_SecurityBarsData.Dispose();
             }
-            if (mqHandler_SecurityBarsData_Date != null)
-            {
-                mqHandler_SecurityBarsData_Date.Dispose();
-            }
             if (mqHandler != null)
             {
                 mqHandler.Dispose();
-            }
-            if (_securityBarsDataTask != null)
-            {
-                _securityBarsDataTask.Dispose();
-            }
-            if (_securityBarsData_DateTask != null)
-            {
-                _securityBarsData_DateTask.Dispose();
             }
             if (_sharesBaseSession != null)
             {
@@ -189,10 +177,48 @@ namespace MealTicket_Handler
             {
                 _SharesLimitDateSession.Dispose();
             }
-            if (_SecurityBarsData_1minSession != null)
+            #region====K线数据处理任务====
+            if (_securityBarsDataTask_1min != null)
             {
-                _SecurityBarsData_1minSession.Dispose();
+                _securityBarsDataTask_1min.Dispose();
             }
+            if (_securityBarsDataTask_5min != null)
+            {
+                _securityBarsDataTask_5min.Dispose();
+            }
+            if (_securityBarsDataTask_15min != null)
+            {
+                _securityBarsDataTask_15min.Dispose();
+            }
+            if (_securityBarsDataTask_30min != null)
+            {
+                _securityBarsDataTask_30min.Dispose();
+            }
+            if (_securityBarsDataTask_60min != null)
+            {
+                _securityBarsDataTask_60min.Dispose();
+            }
+            if (_securityBarsDataTask_1day != null)
+            {
+                _securityBarsDataTask_1day.Dispose();
+            }
+            if (_securityBarsDataTask_1week != null)
+            {
+                _securityBarsDataTask_1week.Dispose();
+            }
+            if (_securityBarsDataTask_1month != null)
+            {
+                _securityBarsDataTask_1month.Dispose();
+            }
+            if (_securityBarsDataTask_1quarter != null)
+            {
+                _securityBarsDataTask_1quarter.Dispose();
+            }
+            if (_securityBarsDataTask_1year != null)
+            {
+                _securityBarsDataTask_1year.Dispose();
+            }
+            #endregion
         }
 
         /// <summary>
@@ -439,66 +465,120 @@ namespace MealTicket_Handler
             return mqHandler_SecurityBarsData;
         }
 
-
-        /// <summary>
-        /// K线队列对象(整天数据)
-        /// </summary>
-        public MQHandler_SecurityBarsData_Date mqHandler_SecurityBarsData_Date;
-        /// <summary>
-        /// 启动K线Mq队列(整天数据)
-        /// </summary>
-        public MQHandler_SecurityBarsData_Date StartMqHandler_SecurityBarsData_Date()
+        #region====K线数据处理任务====
+        public SecurityBarsDataTask _securityBarsDataTask_1min;
+        public SecurityBarsDataTask StartSecurityBarsDataTask_1min()
         {
-            string hostName = ConfigurationManager.AppSettings["MQ_HostName"];
-            int port = int.Parse(ConfigurationManager.AppSettings["MQ_Port"]);
-            string userName = ConfigurationManager.AppSettings["MQ_UserName"];
-            string password = ConfigurationManager.AppSettings["MQ_Password"];
-            string virtualHost = ConfigurationManager.AppSettings["MQ_VirtualHost"];
-            mqHandler_SecurityBarsData_Date = new MQHandler_SecurityBarsData_Date(hostName, port, userName, password, virtualHost);
-            mqHandler_SecurityBarsData_Date.ListenQueueName = "SecurityBars_Update_1min_date";//设置监听队列
-            return mqHandler_SecurityBarsData_Date;
+            _securityBarsDataTask_1min = new SecurityBarsDataTask();
+            _securityBarsDataTask_1min.Init(2, SecurityBarsIntervalTime);
+            return _securityBarsDataTask_1min;
         }
 
-        /// <summary>
-        /// K线数据处理任务
-        /// </summary>
-        public SecurityBarsDataTask _securityBarsDataTask;
-
-        public SecurityBarsDataTask StartSecurityBarsDataTask()
+        public SecurityBarsDataTask _securityBarsDataTask_5min;
+        public SecurityBarsDataTask StartSecurityBarsDataTask_5min()
         {
-            _securityBarsDataTask = new SecurityBarsDataTask();
-            _securityBarsDataTask.Init();
-            return _securityBarsDataTask;
+            _securityBarsDataTask_5min = new SecurityBarsDataTask();
+            _securityBarsDataTask_5min.Init(3, SecurityBarsIntervalTime);
+            return _securityBarsDataTask_5min;
         }
-        /// <summary>
-        /// K线数据处理任务(整天)
-        /// </summary>
-        public SecurityBarsData_DateTask _securityBarsData_DateTask;
 
-        public SecurityBarsData_DateTask StartSecurityBarsData_DateTask()
+        public SecurityBarsDataTask _securityBarsDataTask_15min;
+        public SecurityBarsDataTask StartSecurityBarsDataTask_15min()
         {
-            _securityBarsData_DateTask = new SecurityBarsData_DateTask();
-            _securityBarsData_DateTask.Init();
-            return _securityBarsData_DateTask;
+            _securityBarsDataTask_15min = new SecurityBarsDataTask();
+            _securityBarsDataTask_15min.Init(4, SecurityBarsIntervalTime);
+            return _securityBarsDataTask_15min;
         }
+
+        public SecurityBarsDataTask _securityBarsDataTask_30min;
+        public SecurityBarsDataTask StartSecurityBarsDataTask_30min()
+        {
+            _securityBarsDataTask_30min = new SecurityBarsDataTask();
+            _securityBarsDataTask_30min.Init(5, SecurityBarsIntervalTime);
+            return _securityBarsDataTask_30min;
+        }
+
+        public SecurityBarsDataTask _securityBarsDataTask_60min;
+        public SecurityBarsDataTask StartSecurityBarsDataTask_60min()
+        {
+            _securityBarsDataTask_60min = new SecurityBarsDataTask();
+            _securityBarsDataTask_60min.Init(6, SecurityBarsIntervalTime);
+            return _securityBarsDataTask_60min;
+        }
+
+        public SecurityBarsDataTask _securityBarsDataTask_1day;
+        public SecurityBarsDataTask StartSecurityBarsDataTask_1day()
+        {
+            _securityBarsDataTask_1day = new SecurityBarsDataTask();
+            _securityBarsDataTask_1day.Init(7, SecurityBarsIntervalTime);
+            return _securityBarsDataTask_1day;
+        }
+
+        public SecurityBarsDataTask _securityBarsDataTask_1week;
+        public SecurityBarsDataTask StartSecurityBarsDataTask_1week()
+        {
+            _securityBarsDataTask_1week = new SecurityBarsDataTask();
+            _securityBarsDataTask_1week.Init(8, SecurityBarsIntervalTime);
+            return _securityBarsDataTask_1week;
+        }
+
+        public SecurityBarsDataTask _securityBarsDataTask_1month;
+        public SecurityBarsDataTask StartSecurityBarsDataTask_1month()
+        {
+            _securityBarsDataTask_1month = new SecurityBarsDataTask();
+            _securityBarsDataTask_1month.Init(9, SecurityBarsIntervalTime);
+            return _securityBarsDataTask_1month;
+        }
+
+        public SecurityBarsDataTask _securityBarsDataTask_1quarter;
+        public SecurityBarsDataTask StartSecurityBarsDataTask_1quarter()
+        {
+            _securityBarsDataTask_1quarter = new SecurityBarsDataTask();
+            _securityBarsDataTask_1quarter.Init(10, SecurityBarsIntervalTime);
+            return _securityBarsDataTask_1quarter;
+        }
+
+        public SecurityBarsDataTask _securityBarsDataTask_1year;
+        public SecurityBarsDataTask StartSecurityBarsDataTask_1year()
+        {
+            _securityBarsDataTask_1year = new SecurityBarsDataTask();
+            _securityBarsDataTask_1year.Init(11, SecurityBarsIntervalTime);
+            return _securityBarsDataTask_1year;
+        }
+        #endregion
 
         public void Init()
         {
-            _SecurityBarsData_1minSession.UpdateSessionManual();
             var mqHandler = StartMqHandler("");
             var mqHandler_SecurityBarsData = StartMqHandler_SecurityBarsData();//生成Mq队列对象
-            var mqHandler_SecurityBarsData_Date = StartMqHandler_SecurityBarsData_Date();//生成Mq队列对象
-            var securityBarsDataTask = StartSecurityBarsDataTask();
-            securityBarsDataTask.DoTask();
-            var securityBarsData_DateTask = StartSecurityBarsData_DateTask();
-            securityBarsData_DateTask.DoTask();
-            mqHandler_SecurityBarsData.StartListen();//启动队列监听
-            mqHandler_SecurityBarsData_Date.StartListen();
             _sharesBaseSession.StartUpdate(600000);
             _SharesLimitTimeSession.StartUpdate(600000);
             _DimTimeSession.StartUpdate(3600000);
             _SharesLimitDateSession.StartUpdate(600000);
-            _SecurityBarsData_1minSession.StartUpdate(TimeSpan.Parse("01:30:00"), TimeSpan.Parse("03:30:00"));
+
+            #region====K线数据处理====
+            //var securityBarsDataTask_1min = StartSecurityBarsDataTask_1min();
+            //var securityBarsDataTask_5min = StartSecurityBarsDataTask_5min();
+            //var securityBarsDataTask_15min = StartSecurityBarsDataTask_15min();
+            //var securityBarsDataTask_30min = StartSecurityBarsDataTask_30min();
+            //var securityBarsDataTask_60min = StartSecurityBarsDataTask_60min();
+            //var securityBarsDataTask_1day = StartSecurityBarsDataTask_1day();
+            //var securityBarsDataTask_1week = StartSecurityBarsDataTask_1week();
+            //var securityBarsDataTask_1month = StartSecurityBarsDataTask_1month();
+            //var securityBarsDataTask_1quarter = StartSecurityBarsDataTask_1quarter();
+            //var securityBarsDataTask_1year = StartSecurityBarsDataTask_1year();
+            //securityBarsDataTask_5min.DoTask();
+            //securityBarsDataTask_15min.DoTask();
+            //securityBarsDataTask_30min.DoTask();
+            //securityBarsDataTask_60min.DoTask();
+            //securityBarsDataTask_1day.DoTask();
+            //securityBarsDataTask_1week.DoTask();
+            //securityBarsDataTask_1month.DoTask();
+            //securityBarsDataTask_1quarter.DoTask();
+            //securityBarsDataTask_1year.DoTask();
+            //securityBarsDataTask_1min.DoTask();
+            mqHandler_SecurityBarsData.StartListen();//启动队列监听
+            #endregion
         }
 
         #region===缓存===
@@ -506,7 +586,6 @@ namespace MealTicket_Handler
         public SharesLimitTimeSession _SharesLimitTimeSession = new SharesLimitTimeSession();
         public DimTimeSession _DimTimeSession = new DimTimeSession();
         public SharesLimitDateSession _SharesLimitDateSession = new SharesLimitDateSession();
-        public SecurityBarsData_1minSession _SecurityBarsData_1minSession = new SecurityBarsData_1minSession(); 
         #endregion
     }
 }

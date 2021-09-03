@@ -38,7 +38,7 @@ namespace SecurityBarsDataUpdate
         /// 获取K线数据
         /// </summary>
         /// <returns></returns>
-        public static List<SecurityBarsDataInfo> TdxHq_GetSecurityBarsData(List<SecurityBarsDataPar> sharesList, short defaultGetCount,DateTime date)
+        public static List<SecurityBarsDataInfo> TdxHq_GetSecurityBarsData(List<SecurityBarsDataPar> sharesList, short defaultGetCount,int datatype)
         {
             ThreadMsgTemplate<SecurityBarsDataPar> data = new ThreadMsgTemplate<SecurityBarsDataPar>();
             data.Init();
@@ -67,7 +67,7 @@ namespace SecurityBarsDataUpdate
                             }
 
                             bool isReconnectClient = false;
-                            var tempList = TdxHq_GetSecurityBarsData_byShares(hqClient, tempData, defaultGetCount, date,(TRANSACTION_DATA_STRING)ref_string, ref isReconnectClient);
+                            var tempList = TdxHq_GetSecurityBarsData_byShares(hqClient, tempData, defaultGetCount, datatype,(TRANSACTION_DATA_STRING)ref_string, ref isReconnectClient);
 
                             if (isReconnectClient)
                             {
@@ -102,14 +102,49 @@ namespace SecurityBarsDataUpdate
         /// 获取某只股票K线数据
         /// </summary>
         /// <returns></returns>
-        public static List<SecurityBarsDataInfo> TdxHq_GetSecurityBarsData_byShares(int hqClient, SecurityBarsDataPar sharesData, short defaultGetCount,DateTime date, TRANSACTION_DATA_STRING result_info, ref bool isReconnectClient)
+        private static List<SecurityBarsDataInfo> TdxHq_GetSecurityBarsData_byShares(int hqClient, SecurityBarsDataPar sharesData, short defaultGetCount, int datatype, TRANSACTION_DATA_STRING result_info, ref bool isReconnectClient)
         {
-            List<SecurityBarsDataInfo> resultlist = new List<SecurityBarsDataInfo>();
-  
+            Dictionary<string, SecurityBarsDataInfo> tempResultDic = new Dictionary<string, SecurityBarsDataInfo>();
+
             short nStart = 0; 
             short nCount = 0;
             bool isContinue = true;
-
+            byte category = 0;
+            switch (datatype)
+            {
+                case 2:
+                    category = 7;
+                    break;
+                case 3:
+                    category = 0;
+                    break;
+                case 4:
+                    category = 1;
+                    break;
+                case 5:
+                    category = 2;
+                    break;
+                case 6:
+                    category = 3;
+                    break;
+                case 7:
+                    category = 4;
+                    break;
+                case 8:
+                    category = 5;
+                    break;
+                case 9:
+                    category = 6;
+                    break;
+                case 10:
+                    category = 10;
+                    break;
+                case 11:
+                    category = 11;
+                    break;
+                default:
+                    return new List<SecurityBarsDataInfo>();
+            }
             do
             {
                 StringBuilder sErrInfo = result_info.sErrInfo;
@@ -118,7 +153,7 @@ namespace SecurityBarsDataUpdate
                 sResult.Clear();
                 nCount = defaultGetCount;
 
-                bool bRet = TradeX_M.TdxHq_GetSecurityBars(hqClient, 7, (byte)sharesData.Market, sharesData.SharesCode, nStart, ref nCount, sResult, sErrInfo);
+                bool bRet = TradeX_M.TdxHq_GetSecurityBars(hqClient, category, (byte)sharesData.Market, sharesData.SharesCode, nStart, ref nCount, sResult, sErrInfo);
                 if (!bRet)
                 {
                     isReconnectClient = true;
@@ -130,8 +165,6 @@ namespace SecurityBarsDataUpdate
                     string result = sResult.ToString();
                     string[] rows = result.Split('\n');
                     Array.Reverse(rows);
-
-                    List<SecurityBarsDataInfo> tempResultlist = new List<SecurityBarsDataInfo>();
 
                     for (int i = 0; i < rows.Length-1; i++)
                     {
@@ -147,34 +180,22 @@ namespace SecurityBarsDataUpdate
                             int Market = sharesData.Market;//市场代码
                             string SharesCode = sharesData.SharesCode;//股票代码
                             string TimeStr = column[0];
-                            DateTime Time;
-                            if (TimeStr.Length != 18)
+
+                            DateTime Time=DateTime.Parse("1991-01-01 00:00:00");
+                            long timeKey = 0;
+                            if (!ParseTime(datatype, TimeStr, ref Time,ref timeKey))
                             {
-                                Time = DateTime.Parse(TimeStr);
+                                return new List<SecurityBarsDataInfo>();
                             }
-                            else
-                            {
-                                //1989--15--20
-                                Int32 lYear = 31 + Int32.Parse(TimeStr.Substring(0, 4));
-                                Int32 lMonth = 20 - Int32.Parse(TimeStr.Substring(6, 2));
-                                Int32 lDay = 48 - Int32.Parse(TimeStr.Substring(10, 2));
-                                Int32 lHour = Int32.Parse(TimeStr.Substring(13, 2));
-                                Int32 lMinute = Int32.Parse(TimeStr.Substring(16, 2));
-                                if (lHour == 13 && lMinute == 0)
-                                {
-                                    lHour = 11;
-                                    lMinute = 30;
-                                }
-                                Time = new DateTime(lYear, lMonth, lDay, lHour, lMinute, 0);
-                            }
-                            if (Time.Date != date)
-                            {
-                                continue;
-                            }
-                            if (sharesData.Time!=null && sharesData.Time.Value > Time)
+
+                            if (timeKey<sharesData.StartTimeKey && sharesData.StartTimeKey!=-1)
                             {
                                 isContinue = false;
                                 break;
+                            }
+                            if (timeKey > sharesData.EndTimeKey && sharesData.EndTimeKey != -1)
+                            {
+                                continue;
                             }
 
                             long ClosedPrice = (long)(Math.Round(float.Parse(column[2]) * 10000, 0));//收盘
@@ -184,8 +205,8 @@ namespace SecurityBarsDataUpdate
                             int Volume = int.Parse(column[5]);//成交量
                             long Turnover = (long)(Math.Round(float.Parse(column[6]) * 10000, 0));//成交额
 
-
-                            tempResultlist.Add(new SecurityBarsDataInfo
+                            string key = SharesCode+ Market+ timeKey;
+                            tempResultDic[key] = new SecurityBarsDataInfo
                             {
                                 SharesCode = SharesCode,
                                 TimeStr = TimeStr,
@@ -195,10 +216,10 @@ namespace SecurityBarsDataUpdate
                                 MinPrice = MinPrice,
                                 OpenedPrice = OpenedPrice,
                                 Time = Time,
-                                Date = Time.Date,
+                                GroupTimeKey = timeKey,
                                 TradeStock = Volume,
                                 TradeAmount = Turnover
-                            });
+                            };
                         }
                         catch (Exception ex)
                         {
@@ -206,12 +227,16 @@ namespace SecurityBarsDataUpdate
                             return new List<SecurityBarsDataInfo>();
                         }
                     }
-                    resultlist = resultlist.Concat(tempResultlist).ToList();
                     nStart = (short)(nStart + nCount);
                 }
             } while (nCount >=defaultGetCount && isContinue);
 
-            resultlist = resultlist.OrderBy(e => e.Time).ToList();
+            if (tempResultDic.Count() <= 0)
+            {
+                return new List<SecurityBarsDataInfo>();
+            }
+
+            var resultlist = tempResultDic.Values.OrderBy(e => e.Time).ToList();
             long preClosePrice = sharesData.PreClosePrice;
             foreach (var item in resultlist)
             {
@@ -219,6 +244,126 @@ namespace SecurityBarsDataUpdate
                 preClosePrice = item.ClosedPrice;
             }
             return resultlist;
+        }
+
+        /// <summary>
+        /// K线时间解析
+        /// </summary>
+        /// <param name="dataType"></param>
+        /// <param name="timeStr"></param>
+        /// <returns></returns>
+        private static bool ParseTime(int dataType,string timeStr,ref DateTime time,ref long groupTimeKey)
+        {
+            int lYear = 0, lMonth = 0, lDay = 0, lHour = 0, lMinute = 0;
+            try
+            {
+                //1分钟/5分钟/15分钟/30分钟/60分钟K线
+                if (dataType == 2 || dataType == 3 || dataType == 4 || dataType == 5 || dataType == 6)
+                {
+                    if (timeStr.Length != 18)
+                    {
+                        lYear = int.Parse(timeStr.Substring(0, 4));
+                        lMonth = int.Parse(timeStr.Substring(4, 2));
+                        lDay = int.Parse(timeStr.Substring(6, 2));
+                        lHour = int.Parse(timeStr.Substring(8, 2));
+                        lMinute = int.Parse(timeStr.Substring(10, 2));
+                    }
+                    else
+                    {
+                        lYear = 31 + int.Parse(timeStr.Substring(0, 4));
+                        lMonth = 20 - int.Parse(timeStr.Substring(6, 2));
+                        lDay = 48 - int.Parse(timeStr.Substring(10, 2));
+                        lHour = int.Parse(timeStr.Substring(13, 2));
+                        lMinute = int.Parse(timeStr.Substring(16, 2));
+                    }
+                    if (lHour == 13 && lMinute == 0)
+                    {
+                        lHour = 11;
+                        lMinute = 30;
+                    }
+                    time = new DateTime(lYear, lMonth, lDay, lHour, lMinute, 0);
+                    groupTimeKey = long.Parse(time.ToString("yyyyMMddHHmm"));
+                    return true;
+                }
+                //日
+                else if (dataType == 7)
+                {
+                    int tempTime = int.Parse(timeStr);
+                    lYear = tempTime / 10000;
+                    lMonth = (tempTime / 100) % 100;
+                    lDay = tempTime % 100;
+                    time = new DateTime(lYear, lMonth, lDay, 15, 0, 0);
+                    groupTimeKey = long.Parse(time.ToString("yyyyMMdd"));
+                    return true;
+                }
+                //周
+                else if (dataType == 8)
+                {
+                    int tempTime = int.Parse(timeStr);
+                    lYear = tempTime / 10000;
+                    lMonth = (tempTime / 100) % 100;
+                    lDay = tempTime % 100;
+                    time = new DateTime(lYear, lMonth, lDay, 15, 0, 0);
+                    int timeInt = int.Parse(time.ToString("yyyyMMdd"));
+                    groupTimeKey = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                    where item.the_date == timeInt
+                                    select item.the_week).FirstOrDefault() ?? 0;
+                    if (groupTimeKey == 0)
+                    {
+                        throw new Exception("获取周数据有误");
+                    }
+                    return true;
+                }
+                //月/季度/年
+                else if (dataType == 9)
+                {
+                    int tempTime = int.Parse(timeStr);
+                    lYear = tempTime / 10000;
+                    lMonth = (tempTime / 100) % 100;
+                    lDay = tempTime % 100;
+                    time = new DateTime(lYear, lMonth, lDay, 15, 0, 0);
+                    groupTimeKey = long.Parse(time.ToString("yyyyMM"));
+                    return true;
+                }
+                //季度
+                else if (dataType == 10)
+                {
+                    int tempTime = int.Parse(timeStr);
+                    lYear = tempTime / 10000;
+                    lMonth = (tempTime / 100) % 100;
+                    lDay = tempTime % 100;
+                    time = new DateTime(lYear, lMonth, lDay, 15, 0, 0);
+                    int timeInt = int.Parse(time.ToString("yyyyMMdd"));
+                    groupTimeKey = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                    where item.the_date == timeInt
+                                    select item.the_quarter).FirstOrDefault() ?? 0;
+                    if (groupTimeKey == 0)
+                    {
+                        throw new Exception("获取季度据有误");
+                    }
+                    return true;
+                }
+                //年
+                else if (dataType == 11)
+                {
+                    int tempTime = int.Parse(timeStr);
+                    lYear = tempTime / 10000;
+                    lMonth = (tempTime / 100) % 100;
+                    lDay = tempTime % 100;
+                    time = new DateTime(lYear, lMonth, lDay, 15, 0, 0);
+                    groupTimeKey = lYear;
+                    return true;
+                }
+                else
+                {
+                    throw new Exception("参数dataType有误");
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("时间解析有误,错误时间:"+ timeStr,ex);
+                return false;
+            }
         }
     }
 }

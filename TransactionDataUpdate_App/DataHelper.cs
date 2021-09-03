@@ -1,7 +1,9 @@
 ﻿using FXCommon.Common;
+using FXCommon.Database;
 using MealTicket_DBCommon;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -296,7 +298,7 @@ where t.num=1", SharesInfoNumArr);
         {
             //分批次更新
             int totalCount = dataList.Count();
-            int onceCount = 50000;
+            int onceCount = 5000;
             int batchCount = totalCount / onceCount;
             if (totalCount % onceCount != 0)
             {
@@ -352,6 +354,112 @@ where t.num=1", SharesInfoNumArr);
                     {
                         tran.Rollback();
                         throw ex;
+                    }
+                }
+            }
+
+            using (var db = new meal_ticketEntities())
+            {
+                string sql = "update t_shares_transactiondata_update set [Type]=0";
+                db.Database.ExecuteSqlCommand(sql);
+            }
+        }
+
+
+        /// <summary>
+        /// 数据更新到数据库(通过temp表)
+        /// </summary>
+        /// <returns></returns>
+        public static void UpdateToDataBaseByTemp(List<SharesTransactionDataInfo> dataList)
+        {
+            //分批次更新
+            int totalCount = dataList.Count();
+            int onceCount = 10000;
+            int batchCount = totalCount / onceCount;
+            if (totalCount % onceCount != 0)
+            {
+                batchCount = batchCount + 1;
+            }
+
+            for (int i = 0; i < batchCount; i++)
+            {
+                var tempDataList = dataList.Skip(i * onceCount).Take(onceCount).ToList();
+
+                DataTable table = new DataTable();
+                table.Columns.Add("Market", typeof(int));
+                table.Columns.Add("SharesCode", typeof(string));
+                table.Columns.Add("Time", typeof(DateTime));
+                table.Columns.Add("TimeStr", typeof(string));
+                table.Columns.Add("Price", typeof(long));
+                table.Columns.Add("Volume", typeof(int));
+                table.Columns.Add("Stock", typeof(int));
+                table.Columns.Add("Type", typeof(int));
+                table.Columns.Add("OrderIndex", typeof(int));
+                table.Columns.Add("LastModified", typeof(DateTime));
+                foreach (var item in tempDataList)
+                {
+                    DataRow row = table.NewRow();
+                    row["Market"] = item.Market;
+                    row["SharesCode"] = item.SharesCode;
+                    row["Time"] = item.Time;
+                    row["TimeStr"] = item.TimeStr;
+                    row["Price"] = item.Price;
+                    row["Volume"] = item.Volume;
+                    row["Stock"] = item.Stock;
+                    row["Type"] = item.Type;
+                    row["OrderIndex"] = item.OrderIndex;
+                    row["LastModified"] = DateTime.Now;
+                    table.Rows.Add(row);
+                }
+
+                var bulk = BulkFactory.CreateBulkCopy(DatabaseType.SqlServer);
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+                dic.Add("Market", "Market");
+                dic.Add("SharesCode", "SharesCode");
+                dic.Add("Time", "Time");
+                dic.Add("TimeStr", "TimeStr");
+                dic.Add("Price", "Price");
+                dic.Add("Volume", "Volume");
+                dic.Add("Stock", "Stock");
+                dic.Add("Type", "Type");
+                dic.Add("OrderIndex", "OrderIndex");
+                dic.Add("LastModified", "LastModified");
+                bulk.ColumnMappings = dic;
+                bulk.BatchSize = onceCount;
+
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
+                {
+                    if (conn.State != ConnectionState.Open)
+                    {
+                        conn.Open();
+                    }
+                    string sql = "truncate table t_shares_transactiondata_temp";
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = sql;   //sql语句
+                        cmd.ExecuteNonQuery();
+                    }
+                    using (SqlTransaction tran = conn.BeginTransaction())//开启事务
+                    {
+                        try
+                        {
+                            bulk.BulkWriteToServer(conn, table, "t_shares_transactiondata_temp", tran);
+                            sql = "exec P_Shares_Transactiondata_Update_Temp";
+                            using (var cmd = conn.CreateCommand())
+                            {
+                                cmd.CommandType = CommandType.Text;
+                                cmd.CommandText = sql;   //sql语句
+                                cmd.Transaction = tran;
+                                cmd.ExecuteNonQuery();
+                            }
+                            tran.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.WriteFileLog("更新K线数据出错", ex);
+                            tran.Rollback();
+                        }
                     }
                 }
             }

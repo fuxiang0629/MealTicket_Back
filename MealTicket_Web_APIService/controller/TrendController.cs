@@ -8158,7 +8158,7 @@ namespace MealTicket_Web_APIService.controller
         [Description("获取股票分时数据")]
         [Route("shares/minutetimedata/list"), HttpPost]
         [CheckUserLoginFilter]
-        public List<SharesMinutetimedata> GetSharesMinutetimedataList(GetSharesMinutetimedataListRequest request)
+        public GetSharesMinutetimedataListRes GetSharesMinutetimedataList(GetSharesMinutetimedataListRequest request)
         {
             if (request == null)
             {

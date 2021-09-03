@@ -17,7 +17,7 @@ namespace MealTicket_DBCommon
         public long Id { get; set; }
         public int Market { get; set; }
         public string SharesCode { get; set; }
-        public System.DateTime Date { get; set; }
+        public long GroupTimeKey { get; set; }
         public System.DateTime Time { get; set; }
         public string TimeStr { get; set; }
         public long OpenedPrice { get; set; }
@@ -25,8 +25,10 @@ namespace MealTicket_DBCommon
         public long PreClosePrice { get; set; }
         public long MinPrice { get; set; }
         public long MaxPrice { get; set; }
-        public int TradeStock { get; set; }
+        public long TradeStock { get; set; }
         public long TradeAmount { get; set; }
+        public long LastTradeStock { get; set; }
+        public long LastTradeAmount { get; set; }
         public long Tradable { get; set; }
         public long TotalCapital { get; set; }
         public int HandCount { get; set; }

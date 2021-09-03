@@ -23,14 +23,19 @@ namespace MealTicket_Admin_Handler.Model
         public string SharesCode { get; set; }
 
         /// <summary>
+        /// 数据类型 1.分时 2.1分 3.5分 4.15分 5.30分 6.60分 7.日 8.周 9.月 10.季 11.年
+        /// </summary>
+        public int DateType { get; set; }
+
+        /// <summary>
         /// 查询起始时间
         /// </summary>
-        public DateTime? StartTime { get; set; }
+        public long StartGroupTimeKey { get; set; }
 
         /// <summary>
         /// 查询截止时间
         /// </summary>
-        public DateTime? EndTime { get; set; }
+        public long EndGroupTimeKey { get; set; }
     }
 
     public class SharesKlineInfo

@@ -29,11 +29,6 @@ namespace MealTicket_Handler.SecurityBarsData
         public DateTime? StartTime { get; set; }
 
         /// <summary>
-        /// 数据日期
-        /// </summary>
-        public DateTime Date { get; set; }
-
-        /// <summary>
         /// 超时时间
         /// </summary>
         public int TaskTimeOut { get; set; }
@@ -42,6 +37,16 @@ namespace MealTicket_Handler.SecurityBarsData
         /// 数据列表最大下标
         /// </summary>
         public int DataIndex { get; set; }
+
+        /// <summary>
+        /// 数据类型 2.1分钟K线 3.5分钟K线 4.15分钟K线 5.30分钟K线 6.60分钟K线 7.日K 8.周K 9.月K 10.季度K 11.年K
+        /// </summary>
+        public int DataType { get; set; }
+
+        /// <summary>
+        /// 处理类型1当天实时数据 2历史补充数据
+        /// </summary>
+        public int HandlerType { get; set; }
 
         /// <summary>
         /// 数据列表
@@ -62,9 +67,9 @@ namespace MealTicket_Handler.SecurityBarsData
         public string SharesCode { get; set; }
 
         /// <summary>
-        /// 日期
+        /// 分组时段
         /// </summary>
-        public DateTime Date { get; set; }
+        public long GroupTimeKey { get; set; }
 
         /// <summary>
         /// 时间
@@ -75,6 +80,18 @@ namespace MealTicket_Handler.SecurityBarsData
         /// 时间
         /// </summary>
         public string TimeStr { get; set; }
+
+        public DateTime? Date 
+        {
+            get
+            {
+                if (Time == null)
+                {
+                    return null;
+                }
+                return Time.Value.Date;
+            }
+        }
 
         /// <summary>
         /// 开盘价

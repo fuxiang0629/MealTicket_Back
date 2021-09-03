@@ -19,9 +19,9 @@ namespace SecurityBarsDataUpdate
         public string SharesCode { get; set; }
 
         /// <summary>
-        /// 日期
+        /// 时间段
         /// </summary>
-        public DateTime Date { get; set; }
+        public long GroupTimeKey { get; set; }
 
         /// <summary>
         /// 时间
@@ -77,27 +77,55 @@ namespace SecurityBarsDataUpdate
         public string TaskGuid { get; set; }
 
         /// <summary>
-        /// 队列绑定key（指示将结果数据扔往哪个队列）
-        /// </summary>
-        public string QueueRouteKey { get; set; }
-
-        /// <summary>
         /// 每次获取数量（最大800）
         /// </summary>
         public int SecurityBarsGetCount { get; set; }
 
         /// <summary>
-        /// 获取数据日期
+        /// 处理类型1当天实时数据 2历史补充数据
         /// </summary>
-        public DateTime Date { get; set; }
+        public int HandlerType { get; set; }
+
+        /// <summary>
+        /// 数据类型 2.1分钟K线 3.5分钟K线 4.15分钟K线 5.30分钟K线 6.60分钟K线 7.日K 8.周K 9.月K 10.季度K 11.年K
+        /// </summary>
+        public int DataType { get; set; }
 
         /// <summary>
         /// 股票数据列表
         /// </summary>
-         public List<SecurityBarsDataPar> DataList { get; set; }
+        public List<SecurityBarsDataPar> DataList { get; set; }
     }
 
     public class SecurityBarsDataPar
+    {
+        /// <summary>
+        /// 市场代码
+        /// </summary>
+        public int Market { get; set; }
+
+        /// <summary>
+        /// 股票代码
+        /// </summary>
+        public string SharesCode { get; set; }
+
+        /// <summary>
+        /// 获取数据起始时间（-1表示无开始时间）
+        /// </summary>
+        public long StartTimeKey { get; set; }
+
+        /// <summary>
+        /// 获取数据截止时间（-1表示无截止时间）
+        /// </summary>
+        public long EndTimeKey { get; set; }
+
+        /// <summary>
+        /// 上一时段收盘价
+        /// </summary>
+        public long PreClosePrice { get; set; }
+    }
+
+    public class MinutetimeData
     {
         /// <summary>
         /// 市场代码
@@ -115,8 +143,33 @@ namespace SecurityBarsDataUpdate
         public DateTime? Time { get; set; }
 
         /// <summary>
-        /// 上一时段收盘价
+        /// 时间
         /// </summary>
-        public long PreClosePrice { get; set; }
+        public string TimeStr { get; set; }
+
+        /// <summary>
+        /// 价格
+        /// </summary>
+        public long Price { get; set; }
+
+        /// <summary>
+        /// 均价
+        /// </summary>
+        public long AvgPrice { get; set; }
+
+        /// <summary>
+        /// 昨日收盘价
+        /// </summary>
+        public long ClosedPrice { get; set; }
+
+        /// <summary>
+        /// 成交量
+        /// </summary>
+        public long TradeStock { get; set; }
+
+        /// <summary>
+        /// 成交额
+        /// </summary>
+        public long TradeAmount { get; set; }
     }
 }

@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace MealTicket_Admin_Handler
 {
@@ -9556,38 +9557,451 @@ namespace MealTicket_Admin_Handler
         /// <returns></returns>
         public PageRes<SharesKlineInfo> GetSharesKlineList(GetSharesKlineListRequest request) 
         {
+            switch (request.DateType)
+            {
+                case 1:
+                    return null;
+                case 2:
+                    return GetSharesKline_1minList(request);
+                case 3:
+                    return GetSharesKline_5minList(request);
+                case 4:
+                    return GetSharesKline_15minList(request);
+                case 5:
+                    return GetSharesKline_30minList(request);
+                case 6:
+                    return GetSharesKline_60minList(request);
+                case 7:
+                    return GetSharesKline_1dayList(request);
+                case 8:
+                    return GetSharesKline_1weekList(request);
+                case 9:
+                    return GetSharesKline_1monthList(request);
+                case 10:
+                    return GetSharesKline_1quarterList(request);
+                case 11:
+                    return GetSharesKline_1yearList(request);
+                default:
+                    throw new WebApiException(400,"参数有误");
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesKline_1minList(GetSharesKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
             using (var db = new meal_ticketEntities())
             {
                 var result = from item in db.t_shares_securitybarsdata_1min
                              where item.Market == request.Market && item.SharesCode == request.SharesCode
                              select item;
-                if (request.StartTime != null && request.EndTime != null)
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
                 {
                     result = from item in result
-                             where item.Time >= request.StartTime && item.Time < request.EndTime
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
                              select item;
                 }
 
                 int totalCount = result.Count();
 
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
                 return new PageRes<SharesKlineInfo>
                 {
                     MaxId = 0,
                     TotalCount = totalCount,
-                    List = (from item in result
-                            orderby item.Time descending
-                            select new SharesKlineInfo
-                            {
-                                TradeStock = item.TradeStock,
-                                ClosedPrice = item.ClosedPrice,
-                                Id = item.Id,
-                                LastModified = item.LastModified,
-                                MaxPrice = item.MaxPrice,
-                                MinPrice = item.MinPrice,
-                                OpenedPrice = item.OpenedPrice,
-                                Time = item.Time,
-                                TradeAmount = item.TradeAmount
-                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesKline_5minList(GetSharesKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_securitybarsdata_5min
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesKline_15minList(GetSharesKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_securitybarsdata_15min
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesKline_30minList(GetSharesKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_securitybarsdata_30min
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesKline_60minList(GetSharesKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_securitybarsdata_60min
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesKline_1dayList(GetSharesKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_securitybarsdata_1day
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesKline_1weekList(GetSharesKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_securitybarsdata_1week
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesKline_1monthList(GetSharesKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_securitybarsdata_1month
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesKline_1quarterList(GetSharesKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_securitybarsdata_1quarter
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesKline_1yearList(GetSharesKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_securitybarsdata_1year
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
                 };
             }
         }
@@ -9598,45 +10012,106 @@ namespace MealTicket_Admin_Handler
         /// <param name="request"></param>
         public void ResetSharesKLine(ResetSharesKLineRequest request)
         {
-            DateTime startTime = request.StartDate.Date;
-            DateTime endTime = request.EndDate.Date.AddDays(1);
+            DateTime tempDate = DateTime.Parse("1991-01-01 00:00:00");
+            switch (request.DataType)
+            {
+                case 2:
+                    tempDate= DateTime.ParseExact((request.StartGroupTimeKey/10000).ToString(),"yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 3:
+                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 4:
+                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 5:
+                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 6:
+                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 7:
+                    tempDate = DateTime.ParseExact(request.StartGroupTimeKey.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 8:
+                    var temp1 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                where item.the_week == request.StartGroupTimeKey
+                                orderby item.the_date
+                                select item).FirstOrDefault();
+                    if (temp1 == null)
+                    {
+                        throw new WebApiException(400,"时间超出界限");
+                    }
+                    tempDate = DateTime.ParseExact(temp1.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 9:
+                    var temp2 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                where item.the_month == request.StartGroupTimeKey
+                                orderby item.the_date
+                                select item).FirstOrDefault();
+                    if (temp2 == null)
+                    {
+                        throw new WebApiException(400, "时间超出界限");
+                    }
+                    tempDate = DateTime.ParseExact(temp2.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 10:
+                    var temp3 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                 where item.the_quarter == request.StartGroupTimeKey
+                                 orderby item.the_date
+                                 select item).FirstOrDefault();
+                    if (temp3 == null)
+                    {
+                        throw new WebApiException(400, "时间超出界限");
+                    }
+                    tempDate = DateTime.ParseExact(temp3.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 11:
+                    var temp4 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                 where item.the_year == request.StartGroupTimeKey
+                                 orderby item.the_date
+                                 select item).FirstOrDefault();
+                    if (temp4 == null)
+                    {
+                        throw new WebApiException(400, "时间超出界限");
+                    }
+                    tempDate = DateTime.ParseExact(temp4.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                default:
+                    throw new WebApiException(400, "参数错误");
+            }
 
-            List<t_shares_quotes_date> quoteDateList = new List<t_shares_quotes_date>();
+            long PreClosePrice = 0;
             using (var db = new meal_ticketEntities())
             {
-                quoteDateList = (from item in db.t_shares_quotes_date
-                                 where item.Market == request.Market && item.SharesCode == request.SharesCode && item.LastModified >= startTime && item.LastModified <= endTime
-                                 select item).ToList();
+                var quoteDate = (from item in db.t_shares_quotes_date
+                                 where item.Market == request.Market && item.SharesCode == request.SharesCode && item.LastModified >= tempDate
+                                 orderby item.LastModified
+                                 select item).FirstOrDefault();
+                if (quoteDate != null)
+                {
+                    PreClosePrice = quoteDate.ClosedPrice;
+                }
             }
-            while (startTime < endTime)
+            int SecurityBarsGetCount = int.Parse(ConfigurationManager.AppSettings["SecurityBarsGetCount"]);
+
+            List<dynamic> list = new List<dynamic>();
+            list.Add(new
             {
-                try
-                {
-                    string startDate = startTime.ToString("yyyy-MM-dd");
-                    long PreClosePrice = quoteDateList.Where(e => e.Date == startDate).Select(e => e.ClosedPrice).FirstOrDefault();
-                    List<dynamic> list = new List<dynamic>();
-                    list.Add(new
-                    {
-                        SharesCode = request.SharesCode,
-                        Market = request.Market,
-                        Time = startTime.Date,
-                        PreClosePrice = PreClosePrice
-                    });
-                    var sendData = new
-                    {
-                        QueueRouteKey= "update_1min_date",
-                        SecurityBarsGetCount=240,
-                        Date = startTime.Date,
-                        DataList = list
-                    };
-                    Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SecurityBars", "1min");
-                }
-                catch (Exception ex)
-                {
-                    Logger.WriteFileLog("重置K线数据有误", ex);
-                }
-                startTime = startTime.AddDays(1);
-            }
+                SharesCode = request.SharesCode,
+                Market = request.Market,
+                StartTimeKey = request.StartGroupTimeKey,
+                EndTimeKey = request.EndGroupTimeKey,
+                PreClosePrice = PreClosePrice
+            });
+            var sendData = new
+            {
+                HandlerType = 2,
+                DataType = request.DataType,
+                SecurityBarsGetCount = SecurityBarsGetCount,
+                DataList = list
+            };
+            Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SecurityBars", "1min");
         }
     }
 }

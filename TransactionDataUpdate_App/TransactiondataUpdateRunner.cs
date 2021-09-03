@@ -48,7 +48,7 @@ namespace TransactionDataUpdate_App
                 var list=DataHelper.TdxHq_GetTransactionData();
                 if (list.Count() > 0)
                 {
-                    DataHelper.UpdateToDataBase(list);
+                    DataHelper.UpdateToDataBaseByTemp(list);
                 }
             }
             catch (Exception ex)

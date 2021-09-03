@@ -23,11 +23,28 @@ namespace MealTicket_Web_Handler.Model
         public string SharesCode { get; set; }
 
         /// <summary>
+        /// 日期
+        /// </summary>
+        public DateTime? Date { get; set; }
+
+        /// <summary>
         /// 最大时间
         /// </summary>
         public DateTime? MaxTime { get; set; }
     }
 
+    public class GetSharesMinutetimedataListRes
+    {
+        /// <summary>
+        /// 是否今日数据
+        /// </summary>
+        public bool IsToday { get; set; }
+
+        /// <summary>
+        /// 数据列表
+        /// </summary>
+        public List<SharesMinutetimedata> List { get; set; }
+    }
     public class SharesMinutetimedata
     {
         /// <summary>

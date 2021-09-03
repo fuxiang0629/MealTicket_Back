@@ -10,4 +10,3 @@ D:\项目\饭票\后端\SharesHqService_Level2\bin\Debug\SharesHqService_Level2.
 D:\项目\饭票\后端\SharesHqService_Level2\obj\Debug\SharesHqService_Level2.csproj.CoreCompileInputs.cache
 D:\项目\饭票\后端\SharesHqService_Level2\obj\Debug\SharesHqService_Level2.exe
 D:\项目\饭票\后端\SharesHqService_Level2\obj\Debug\SharesHqService_Level2.pdb
-F:\项目\饭票后端\SharesHqService_Level2\obj\Debug\SharesHqService_Level2.csprojAssemblyReference.cache

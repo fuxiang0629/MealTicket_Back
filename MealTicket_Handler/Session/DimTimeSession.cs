@@ -21,7 +21,7 @@ namespace MealTicket_Handler
                 string sql = @"declare @currTime datetime;
 set @currTime=getdate();
 select * from t_dim_time with(nolock)
-where the_date>=convert(varchar(10),@currTime,112) and the_year=datepart(YEAR,@currTime);";
+where the_year<=datepart(YEAR,@currTime) and the_year>=datepart(YEAR,@currTime)-1;";
                 var result = db.Database.SqlQuery<t_dim_time>(sql).ToList();
                 return result;
             }

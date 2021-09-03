@@ -17,14 +17,14 @@ namespace MealTicket_DBCommon
         public long Id { get; set; }
         public int Market { get; set; }
         public string SharesCode { get; set; }
-        public System.DateTime Date { get; set; }
         public System.DateTime Time { get; set; }
         public string TimeStr { get; set; }
         public long Price { get; set; }
-        public long AvgPrice { get; set; }
         public long ClosedPrice { get; set; }
-        public int TradeStock { get; set; }
+        public long TradeStock { get; set; }
         public long TradeAmount { get; set; }
+        public long TotalTradeStock { get; set; }
+        public long TotalTradeAmount { get; set; }
         public long Tradable { get; set; }
         public long TotalCapital { get; set; }
         public int HandCount { get; set; }
