@@ -42,6 +42,7 @@ namespace SharesHqService
                 {
                     Instance.GetLastSharesQuotesList();
                     Instance.StartSysPar();
+                    var mqHandler=Instance.StartMqHandler();
                     var runners = _kernel.GetAll<Runner>().ToList();
                     runners.ForEach((e) => e.Run());
                     break;

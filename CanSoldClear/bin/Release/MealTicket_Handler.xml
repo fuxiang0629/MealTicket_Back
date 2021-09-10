@@ -3089,7 +3089,7 @@
             K线数据回调队列
             </summary>
         </member>
-        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.Init(System.Int32,System.Int32)">
+        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.Init">
             <summary>
             任务初始化
             </summary>
@@ -3125,11 +3125,15 @@
             需要更新K线的股票数据扔到队列
             </summary>
         </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.PushToDataUpDateAll">
+            <summary>
+            每天全部股票补充
+            </summary>
+        </member>
         <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.DoBusiness(MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo,System.Int32)">
             <summary>
             执行业务
             </summary>
-            <param name="dataObj"></param>
             <returns></returns>
         </member>
         <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.UpdateToDataBase(System.Boolean@)">
@@ -3138,25 +3142,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.UpdateToDataBaseByTempTable(System.Boolean@)">
-            <summary>
-            数据更新到数据库(通过temp表)
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.UpdateMinutetimeToDataBasebak(System.Int32)">
-            <summary>
-            更新分时数据
-            </summary>
-            <param name="dataList"></param>
-        </member>
-        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.UpdateMinutetimeToDataBase(System.Int32)">
-            <summary>
-            更新分时数据
-            </summary>
-            <param name="dataList"></param>
-        </member>
-        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.SendTransactionShares(System.String,System.Int32)">
+        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.SendTransactionShares(System.String)">
             <summary>
             推送需要获取K线的股票到队列
             </summary>
@@ -3193,22 +3179,27 @@
             超时时间
             </summary>
         </member>
-        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo.DataIndex">
-            <summary>
-            数据列表最大下标
-            </summary>
-        </member>
-        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo.DataType">
-            <summary>
-            数据类型 2.1分钟K线 3.5分钟K线 4.15分钟K线 5.30分钟K线 6.60分钟K线 7.日K 8.周K 9.月K 10.季度K 11.年K
-            </summary>
-        </member>
         <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo.HandlerType">
             <summary>
             处理类型1当天实时数据 2历史补充数据
             </summary>
         </member>
-        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo.DataList">
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo.PackageList">
+            <summary>
+            数据包列表
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataType.DataType">
+            <summary>
+            数据类型 2.1分钟K线 3.5分钟K线 4.15分钟K线 5.30分钟K线 6.60分钟K线 7.日K 8.周K 9.月K 10.季度K 11.年K
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataType.DataIndex">
+            <summary>
+            数据列表最大下标
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataType.DataList">
             <summary>
             数据列表
             </summary>
@@ -3271,6 +3262,26 @@
         <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataInfo.PreClosePrice">
             <summary>
             上一时段收盘价
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataInfo.IsLast">
+            <summary>
+            是否最后一条
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataInfo.LastTradeStock">
+            <summary>
+            前一分钟成交量之和
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataInfo.LastTradeAmount">
+            <summary>
+            前一分钟成交额之和
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataInfo.YestodayClosedPrice">
+            <summary>
+            昨日收盘价
             </summary>
         </member>
         <member name="P:MealTicket_Handler.SecurityBarsData.QueueMsgObj.MsgId">

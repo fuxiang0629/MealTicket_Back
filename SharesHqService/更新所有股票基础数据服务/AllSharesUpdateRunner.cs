@@ -52,17 +52,14 @@ namespace SharesHqService
         {
             try
             {
-                var list=ShareHelper.TdxHq_GetSecurityList(0);
-                if (list != null && list.Count()>0)
-                {
-                    DataBaseHelper.UpdateAllShares(list, 0);
-                }
-                list = ShareHelper.TdxHq_GetSecurityList(1);
-                if (list != null && list.Count() > 0)
-                {
-                    DataBaseHelper.UpdateAllShares(list, 1);
-                }
+                var list1=ShareHelper.TdxHq_GetSecurityList(0);
+                var list2 = ShareHelper.TdxHq_GetSecurityList(1);
 
+                var list = list1.Concat(list2).ToList();
+                if (list.Count()>0)
+                {
+                    DataBaseHelper.UpdateAllShares(list);
+                }
                 LastExecuteDate = DateTime.Now.Date;
             }
             catch (Exception ex)

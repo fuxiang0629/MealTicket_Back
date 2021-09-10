@@ -3673,6 +3673,13 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.BatchResetSharesKLine(MealTicket_Admin_Handler.Model.BatchResetSharesKLineRequest)">
+            <summary>
+            批量重置K线数据
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.ExtensionHelper.GetAllWebApi(System.Web.Http.HttpConfiguration)">
             <summary>
             获取当前配置内的所有web api

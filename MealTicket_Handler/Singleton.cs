@@ -118,6 +118,12 @@ namespace MealTicket_Handler
         public int SecurityBarsTaskTimeout = 300000;//任务超时时间(毫秒)
         public int SecurityBarsBatchCount = 128;//每批次处理股票数量
         public int SecurityBarsUpdateCountOnce = 20000;//每次写入数据库数据量
+        public List<int> SecurityBarsDataTypeList = new List<int>() 
+        {
+            2,3,4,5,6,7,8,9
+        };
+        public TimeSpan SecurityBarsDataUpdateStartTime = TimeSpan.Parse("20:00:00");
+        public TimeSpan SecurityBarsDataUpdateEndTime = TimeSpan.Parse("23:00:00");
         #endregion
 
         // 显式静态构造函数告诉C＃编译器
@@ -178,45 +184,9 @@ namespace MealTicket_Handler
                 _SharesLimitDateSession.Dispose();
             }
             #region====K线数据处理任务====
-            if (_securityBarsDataTask_1min != null)
+            if (_securityBarsDataTask != null)
             {
-                _securityBarsDataTask_1min.Dispose();
-            }
-            if (_securityBarsDataTask_5min != null)
-            {
-                _securityBarsDataTask_5min.Dispose();
-            }
-            if (_securityBarsDataTask_15min != null)
-            {
-                _securityBarsDataTask_15min.Dispose();
-            }
-            if (_securityBarsDataTask_30min != null)
-            {
-                _securityBarsDataTask_30min.Dispose();
-            }
-            if (_securityBarsDataTask_60min != null)
-            {
-                _securityBarsDataTask_60min.Dispose();
-            }
-            if (_securityBarsDataTask_1day != null)
-            {
-                _securityBarsDataTask_1day.Dispose();
-            }
-            if (_securityBarsDataTask_1week != null)
-            {
-                _securityBarsDataTask_1week.Dispose();
-            }
-            if (_securityBarsDataTask_1month != null)
-            {
-                _securityBarsDataTask_1month.Dispose();
-            }
-            if (_securityBarsDataTask_1quarter != null)
-            {
-                _securityBarsDataTask_1quarter.Dispose();
-            }
-            if (_securityBarsDataTask_1year != null)
-            {
-                _securityBarsDataTask_1year.Dispose();
+                _securityBarsDataTask.Dispose();
             }
             #endregion
         }
@@ -421,6 +391,41 @@ namespace MealTicket_Handler
                         {
                             SecurityBarsUpdateCountOnce = tempSecurityBarsUpdateCountOnce;
                         }
+                        string tempSecurityBarsDataUpdateStartTime = sysValue.SecurityBarsDataUpdateStartTime;
+                        if (!TimeSpan.TryParse(tempSecurityBarsDataUpdateStartTime, out SecurityBarsDataUpdateStartTime))
+                        {
+                            SecurityBarsDataUpdateStartTime = TimeSpan.Parse("20:00:00");
+                        }
+                        string tempSecurityBarsDataUpdateEndTime = sysValue.SecurityBarsDataUpdateEndTime;
+                        if (!TimeSpan.TryParse(tempSecurityBarsDataUpdateEndTime, out SecurityBarsDataUpdateEndTime))
+                        {
+                            SecurityBarsDataUpdateEndTime = TimeSpan.Parse("23:00:00");
+                        }
+                    }
+                }
+                catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "SecurityBarsDataType"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                        List<int> tempSecurityBarsDataTypeList = new List<int>();
+                        foreach (var item in sysValue.SecurityBarsDataTypeList)
+                        {
+                            int temp = item;
+                            tempSecurityBarsDataTypeList.Add(temp);
+                        }
+                        if (tempSecurityBarsDataTypeList.Count()>0)
+                        {
+                            SecurityBarsDataTypeList = tempSecurityBarsDataTypeList;
+                            if (_securityBarsDataTask != null)
+                            {
+                                _securityBarsDataTask.LoadSecurityBarsLastData();
+                            }
+                        }
                     }
                 }
                 catch { }
@@ -466,84 +471,12 @@ namespace MealTicket_Handler
         }
 
         #region====K线数据处理任务====
-        public SecurityBarsDataTask _securityBarsDataTask_1min;
-        public SecurityBarsDataTask StartSecurityBarsDataTask_1min()
+        public SecurityBarsDataTask _securityBarsDataTask;
+        public SecurityBarsDataTask StartSecurityBarsDataTask()
         {
-            _securityBarsDataTask_1min = new SecurityBarsDataTask();
-            _securityBarsDataTask_1min.Init(2, SecurityBarsIntervalTime);
-            return _securityBarsDataTask_1min;
-        }
-
-        public SecurityBarsDataTask _securityBarsDataTask_5min;
-        public SecurityBarsDataTask StartSecurityBarsDataTask_5min()
-        {
-            _securityBarsDataTask_5min = new SecurityBarsDataTask();
-            _securityBarsDataTask_5min.Init(3, SecurityBarsIntervalTime);
-            return _securityBarsDataTask_5min;
-        }
-
-        public SecurityBarsDataTask _securityBarsDataTask_15min;
-        public SecurityBarsDataTask StartSecurityBarsDataTask_15min()
-        {
-            _securityBarsDataTask_15min = new SecurityBarsDataTask();
-            _securityBarsDataTask_15min.Init(4, SecurityBarsIntervalTime);
-            return _securityBarsDataTask_15min;
-        }
-
-        public SecurityBarsDataTask _securityBarsDataTask_30min;
-        public SecurityBarsDataTask StartSecurityBarsDataTask_30min()
-        {
-            _securityBarsDataTask_30min = new SecurityBarsDataTask();
-            _securityBarsDataTask_30min.Init(5, SecurityBarsIntervalTime);
-            return _securityBarsDataTask_30min;
-        }
-
-        public SecurityBarsDataTask _securityBarsDataTask_60min;
-        public SecurityBarsDataTask StartSecurityBarsDataTask_60min()
-        {
-            _securityBarsDataTask_60min = new SecurityBarsDataTask();
-            _securityBarsDataTask_60min.Init(6, SecurityBarsIntervalTime);
-            return _securityBarsDataTask_60min;
-        }
-
-        public SecurityBarsDataTask _securityBarsDataTask_1day;
-        public SecurityBarsDataTask StartSecurityBarsDataTask_1day()
-        {
-            _securityBarsDataTask_1day = new SecurityBarsDataTask();
-            _securityBarsDataTask_1day.Init(7, SecurityBarsIntervalTime);
-            return _securityBarsDataTask_1day;
-        }
-
-        public SecurityBarsDataTask _securityBarsDataTask_1week;
-        public SecurityBarsDataTask StartSecurityBarsDataTask_1week()
-        {
-            _securityBarsDataTask_1week = new SecurityBarsDataTask();
-            _securityBarsDataTask_1week.Init(8, SecurityBarsIntervalTime);
-            return _securityBarsDataTask_1week;
-        }
-
-        public SecurityBarsDataTask _securityBarsDataTask_1month;
-        public SecurityBarsDataTask StartSecurityBarsDataTask_1month()
-        {
-            _securityBarsDataTask_1month = new SecurityBarsDataTask();
-            _securityBarsDataTask_1month.Init(9, SecurityBarsIntervalTime);
-            return _securityBarsDataTask_1month;
-        }
-
-        public SecurityBarsDataTask _securityBarsDataTask_1quarter;
-        public SecurityBarsDataTask StartSecurityBarsDataTask_1quarter()
-        {
-            _securityBarsDataTask_1quarter = new SecurityBarsDataTask();
-            _securityBarsDataTask_1quarter.Init(10, SecurityBarsIntervalTime);
-            return _securityBarsDataTask_1quarter;
-        }
-
-        public SecurityBarsDataTask _securityBarsDataTask_1year;
-        public SecurityBarsDataTask StartSecurityBarsDataTask_1year()
-        {
-            _securityBarsDataTask_1year = new SecurityBarsDataTask();
-            _securityBarsDataTask_1year.Init(11, SecurityBarsIntervalTime);
-            return _securityBarsDataTask_1year;
+            _securityBarsDataTask = new SecurityBarsDataTask();
+            _securityBarsDataTask.Init();
+            return _securityBarsDataTask;
         }
         #endregion
 
@@ -557,26 +490,9 @@ namespace MealTicket_Handler
             _SharesLimitDateSession.StartUpdate(600000);
 
             #region====K线数据处理====
-            //var securityBarsDataTask_1min = StartSecurityBarsDataTask_1min();
-            //var securityBarsDataTask_5min = StartSecurityBarsDataTask_5min();
-            //var securityBarsDataTask_15min = StartSecurityBarsDataTask_15min();
-            //var securityBarsDataTask_30min = StartSecurityBarsDataTask_30min();
-            //var securityBarsDataTask_60min = StartSecurityBarsDataTask_60min();
-            //var securityBarsDataTask_1day = StartSecurityBarsDataTask_1day();
-            //var securityBarsDataTask_1week = StartSecurityBarsDataTask_1week();
-            //var securityBarsDataTask_1month = StartSecurityBarsDataTask_1month();
-            //var securityBarsDataTask_1quarter = StartSecurityBarsDataTask_1quarter();
-            //var securityBarsDataTask_1year = StartSecurityBarsDataTask_1year();
-            //securityBarsDataTask_5min.DoTask();
-            //securityBarsDataTask_15min.DoTask();
-            //securityBarsDataTask_30min.DoTask();
-            //securityBarsDataTask_60min.DoTask();
-            //securityBarsDataTask_1day.DoTask();
-            //securityBarsDataTask_1week.DoTask();
-            //securityBarsDataTask_1month.DoTask();
-            //securityBarsDataTask_1quarter.DoTask();
-            //securityBarsDataTask_1year.DoTask();
-            //securityBarsDataTask_1min.DoTask();
+            var securityBarsDataTask = StartSecurityBarsDataTask();
+            securityBarsDataTask.LoadSecurityBarsLastData();
+            securityBarsDataTask.DoTask();
             mqHandler_SecurityBarsData.StartListen();//启动队列监听
             #endregion
         }

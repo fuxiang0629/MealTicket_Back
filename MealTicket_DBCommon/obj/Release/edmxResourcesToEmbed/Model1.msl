@@ -4033,30 +4033,10 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="t_shares_minutetimedata">
-      <EntityTypeMapping TypeName="meal_ticketModel.t_shares_minutetimedata">
-        <MappingFragment StoreEntitySet="t_shares_minutetimedata">
-          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
-          <ScalarProperty Name="HandCount" ColumnName="HandCount" />
-          <ScalarProperty Name="TotalCapital" ColumnName="TotalCapital" />
-          <ScalarProperty Name="Tradable" ColumnName="Tradable" />
-          <ScalarProperty Name="TotalTradeAmount" ColumnName="TotalTradeAmount" />
-          <ScalarProperty Name="TotalTradeStock" ColumnName="TotalTradeStock" />
-          <ScalarProperty Name="TradeAmount" ColumnName="TradeAmount" />
-          <ScalarProperty Name="TradeStock" ColumnName="TradeStock" />
-          <ScalarProperty Name="ClosedPrice" ColumnName="ClosedPrice" />
-          <ScalarProperty Name="Price" ColumnName="Price" />
-          <ScalarProperty Name="TimeStr" ColumnName="TimeStr" />
-          <ScalarProperty Name="Time" ColumnName="Time" />
-          <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
-          <ScalarProperty Name="Market" ColumnName="Market" />
-          <ScalarProperty Name="Id" ColumnName="Id" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="t_shares_securitybarsdata_15min">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_securitybarsdata_15min">
         <MappingFragment StoreEntitySet="t_shares_securitybarsdata_15min">
+          <ScalarProperty Name="IsLast" ColumnName="IsLast" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="HandCount" ColumnName="HandCount" />
           <ScalarProperty Name="TotalCapital" ColumnName="TotalCapital" />
@@ -4082,6 +4062,7 @@
     <EntitySetMapping Name="t_shares_securitybarsdata_1day">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_securitybarsdata_1day">
         <MappingFragment StoreEntitySet="t_shares_securitybarsdata_1day">
+          <ScalarProperty Name="IsLast" ColumnName="IsLast" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="HandCount" ColumnName="HandCount" />
           <ScalarProperty Name="TotalCapital" ColumnName="TotalCapital" />
@@ -4107,6 +4088,8 @@
     <EntitySetMapping Name="t_shares_securitybarsdata_1min">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_securitybarsdata_1min">
         <MappingFragment StoreEntitySet="t_shares_securitybarsdata_1min">
+          <ScalarProperty Name="YestodayClosedPrice" ColumnName="YestodayClosedPrice" />
+          <ScalarProperty Name="IsLast" ColumnName="IsLast" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="HandCount" ColumnName="HandCount" />
           <ScalarProperty Name="TotalCapital" ColumnName="TotalCapital" />
@@ -4132,6 +4115,7 @@
     <EntitySetMapping Name="t_shares_securitybarsdata_1month">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_securitybarsdata_1month">
         <MappingFragment StoreEntitySet="t_shares_securitybarsdata_1month">
+          <ScalarProperty Name="IsLast" ColumnName="IsLast" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="HandCount" ColumnName="HandCount" />
           <ScalarProperty Name="TotalCapital" ColumnName="TotalCapital" />
@@ -4157,6 +4141,7 @@
     <EntitySetMapping Name="t_shares_securitybarsdata_1quarter">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_securitybarsdata_1quarter">
         <MappingFragment StoreEntitySet="t_shares_securitybarsdata_1quarter">
+          <ScalarProperty Name="IsLast" ColumnName="IsLast" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="HandCount" ColumnName="HandCount" />
           <ScalarProperty Name="TotalCapital" ColumnName="TotalCapital" />
@@ -4182,6 +4167,7 @@
     <EntitySetMapping Name="t_shares_securitybarsdata_1week">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_securitybarsdata_1week">
         <MappingFragment StoreEntitySet="t_shares_securitybarsdata_1week">
+          <ScalarProperty Name="IsLast" ColumnName="IsLast" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="HandCount" ColumnName="HandCount" />
           <ScalarProperty Name="TotalCapital" ColumnName="TotalCapital" />
@@ -4207,6 +4193,7 @@
     <EntitySetMapping Name="t_shares_securitybarsdata_1year">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_securitybarsdata_1year">
         <MappingFragment StoreEntitySet="t_shares_securitybarsdata_1year">
+          <ScalarProperty Name="IsLast" ColumnName="IsLast" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="HandCount" ColumnName="HandCount" />
           <ScalarProperty Name="TotalCapital" ColumnName="TotalCapital" />
@@ -4232,6 +4219,7 @@
     <EntitySetMapping Name="t_shares_securitybarsdata_30min">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_securitybarsdata_30min">
         <MappingFragment StoreEntitySet="t_shares_securitybarsdata_30min">
+          <ScalarProperty Name="IsLast" ColumnName="IsLast" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="HandCount" ColumnName="HandCount" />
           <ScalarProperty Name="TotalCapital" ColumnName="TotalCapital" />
@@ -4257,6 +4245,7 @@
     <EntitySetMapping Name="t_shares_securitybarsdata_5min">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_securitybarsdata_5min">
         <MappingFragment StoreEntitySet="t_shares_securitybarsdata_5min">
+          <ScalarProperty Name="IsLast" ColumnName="IsLast" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="HandCount" ColumnName="HandCount" />
           <ScalarProperty Name="TotalCapital" ColumnName="TotalCapital" />
@@ -4282,6 +4271,7 @@
     <EntitySetMapping Name="t_shares_securitybarsdata_60min">
       <EntityTypeMapping TypeName="meal_ticketModel.t_shares_securitybarsdata_60min">
         <MappingFragment StoreEntitySet="t_shares_securitybarsdata_60min">
+          <ScalarProperty Name="IsLast" ColumnName="IsLast" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="HandCount" ColumnName="HandCount" />
           <ScalarProperty Name="TotalCapital" ColumnName="TotalCapital" />

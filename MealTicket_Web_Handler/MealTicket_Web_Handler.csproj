@@ -186,6 +186,7 @@
     <Compile Include="Model\GetSharesConditionSearch.cs" />
     <Compile Include="Model\GetSharesConditionTrendList.cs" />
     <Compile Include="Model\GetSharesKLineList.cs" />
+    <Compile Include="Model\GetSharesKLineTypeList.cs" />
     <Compile Include="Model\GetSharesListQuotes.cs" />
     <Compile Include="Model\GetSharesMinutetimedataList.cs" />
     <Compile Include="Model\GetSharesPlateList.cs" />

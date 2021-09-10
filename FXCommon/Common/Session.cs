@@ -65,16 +65,17 @@ namespace FXCommon.Common
         public void StartUpdate(int sleepTime)
         {
             UpdateWait.Init();
+            UpdateSessionWithLock();
             UpdateThread = new Thread(() =>
             {
                 do
                 {
-                    UpdateSessionWithLock();
                     int msgId = 0;
                     if (UpdateWait.WaitMessage(ref msgId, sleepTime))
                     {
                         break;
                     }
+                    UpdateSessionWithLock();
                 } while (true);
             });
             UpdateThread.Start();

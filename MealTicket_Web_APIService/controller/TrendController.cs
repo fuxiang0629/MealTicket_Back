@@ -8167,6 +8167,19 @@ namespace MealTicket_Web_APIService.controller
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.GetSharesMinutetimedataList(request, basedata);
         }
+
+        /// <summary>
+        /// 获取股票K线展示分组列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取股票K线展示分组列表")]
+        [Route("shares/kline/type/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public GetSharesKLineTypeListRes GetSharesKLineTypeList()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesKLineTypeList();
+        }
         #endregion
     }
 }

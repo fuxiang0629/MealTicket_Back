@@ -24,13 +24,14 @@ namespace SecurityBarsDataUpdate
         }
 
         static TRANSACTION_DATA_STRING[] sm_td_string = new TRANSACTION_DATA_STRING[Singleton.Instance.hqClientCount];
+
         static DataHelper()
         {
             for (int idx = 0; idx < Singleton.Instance.hqClientCount; idx++)
             {
                 sm_td_string[idx] = new TRANSACTION_DATA_STRING();
                 sm_td_string[idx].sErrInfo = new StringBuilder(256);
-                sm_td_string[idx].sResult = new StringBuilder(512 * Singleton.Instance.SecurityBarsGetCount);
+                sm_td_string[idx].sResult = new StringBuilder(512 * 800);
             }
         }
 
@@ -38,22 +39,37 @@ namespace SecurityBarsDataUpdate
         /// 获取K线数据
         /// </summary>
         /// <returns></returns>
-        public static List<SecurityBarsDataInfo> TdxHq_GetSecurityBarsData(List<SecurityBarsDataPar> sharesList, short defaultGetCount,int datatype)
+        public static Dictionary<int,SecurityBarsDataRes> TdxHq_GetSecurityBarsData(List<SecurityBarsDataParList> sharesList)
         {
             ThreadMsgTemplate<SecurityBarsDataPar> data = new ThreadMsgTemplate<SecurityBarsDataPar>();
             data.Init();
             foreach (var item in sharesList)
             {
-                data.AddMessage(item);
+                foreach (var item2 in item.DataList)
+                {
+                    data.AddMessage(new SecurityBarsDataPar
+                    {
+                        SecurityBarsGetCount= item.SecurityBarsGetCount,
+                        DataType = item.DataType,
+                        SharesCode =item2.SharesCode,
+                        StartTimeKey=item2.StartTimeKey,
+                        EndTimeKey=item2.EndTimeKey,
+                        Market=item2.Market,
+                        PreClosePrice=item2.PreClosePrice,
+                        YestodayClosedPrice=item2.YestodayClosedPrice,
+                        LastTradeStock=item2.LastTradeStock,
+                        LastTradeAmount=item2.LastTradeAmount
+                    });
+                }
             }
 
-            List<SecurityBarsDataInfo> resultList = new List<SecurityBarsDataInfo>();
+            Dictionary<int, SecurityBarsDataRes> resultList = new Dictionary<int, SecurityBarsDataRes>();
             object resultLock = new object();
 
             Task[] tArr = new Task[Singleton.Instance.hqClientCount];
             for (int i = 0; i < Singleton.Instance.hqClientCount; i++)
             {
-                tArr[i] = new Task((ref_string) =>
+                tArr[i] = Task.Factory.StartNew((ref_string) =>
                 {
                     int hqClient = Singleton.Instance.GetHqClient();
                     try
@@ -67,7 +83,7 @@ namespace SecurityBarsDataUpdate
                             }
 
                             bool isReconnectClient = false;
-                            var tempList = TdxHq_GetSecurityBarsData_byShares(hqClient, tempData, defaultGetCount, datatype,(TRANSACTION_DATA_STRING)ref_string, ref isReconnectClient);
+                            var tempList = TdxHq_GetSecurityBarsData_byShares(hqClient, tempData,(TRANSACTION_DATA_STRING)ref_string, ref isReconnectClient);
 
                             if (isReconnectClient)
                             {
@@ -77,7 +93,18 @@ namespace SecurityBarsDataUpdate
 
                             lock (resultLock)
                             {
-                                resultList.AddRange(tempList);
+                                if (resultList.ContainsKey(tempData.DataType)) 
+                                {
+                                    resultList[tempData.DataType].DataList.AddRange(tempList);
+                                }
+                                else 
+                                {
+                                    resultList.Add(tempData.DataType, new SecurityBarsDataRes 
+                                    {
+                                        DataType= tempData.DataType,
+                                        DataList= tempList
+                                    });
+                                }
                             }
                         } while (true);
                     }
@@ -89,8 +116,7 @@ namespace SecurityBarsDataUpdate
                     {
                         Singleton.Instance.AddHqClient(hqClient);
                     }
-                }, sm_td_string[i], TaskCreationOptions.LongRunning);
-                tArr[i].Start();
+                }, sm_td_string[i]);
             }
             Task.WaitAll(tArr);
             data.Release();
@@ -102,56 +128,38 @@ namespace SecurityBarsDataUpdate
         /// 获取某只股票K线数据
         /// </summary>
         /// <returns></returns>
-        private static List<SecurityBarsDataInfo> TdxHq_GetSecurityBarsData_byShares(int hqClient, SecurityBarsDataPar sharesData, short defaultGetCount, int datatype, TRANSACTION_DATA_STRING result_info, ref bool isReconnectClient)
+        private static List<SecurityBarsDataInfo> TdxHq_GetSecurityBarsData_byShares(int hqClient, SecurityBarsDataPar sharesData, TRANSACTION_DATA_STRING result_info, ref bool isReconnectClient)
         {
-            Dictionary<string, SecurityBarsDataInfo> tempResultDic = new Dictionary<string, SecurityBarsDataInfo>();
+            int datatype = sharesData.DataType;
+            if (!CheckDataType(datatype))
+            {
+                return new List<SecurityBarsDataInfo>();
+            }
+
+            int defaultGetCount = sharesData.SecurityBarsGetCount;
+            if (!CheckDefaultGetCount(ref defaultGetCount))
+            {
+                return new List<SecurityBarsDataInfo>();
+            }
+
+            byte category = 0;
+            if (!CheckCategory(datatype, ref category))
+            {
+                return new List<SecurityBarsDataInfo>();
+            }
+
+            Dictionary<long, SecurityBarsDataInfo> tempResultDic = new Dictionary<long, SecurityBarsDataInfo>();
 
             short nStart = 0; 
             short nCount = 0;
             bool isContinue = true;
-            byte category = 0;
-            switch (datatype)
-            {
-                case 2:
-                    category = 7;
-                    break;
-                case 3:
-                    category = 0;
-                    break;
-                case 4:
-                    category = 1;
-                    break;
-                case 5:
-                    category = 2;
-                    break;
-                case 6:
-                    category = 3;
-                    break;
-                case 7:
-                    category = 4;
-                    break;
-                case 8:
-                    category = 5;
-                    break;
-                case 9:
-                    category = 6;
-                    break;
-                case 10:
-                    category = 10;
-                    break;
-                case 11:
-                    category = 11;
-                    break;
-                default:
-                    return new List<SecurityBarsDataInfo>();
-            }
             do
             {
                 StringBuilder sErrInfo = result_info.sErrInfo;
                 StringBuilder sResult = result_info.sResult;
                 sErrInfo.Clear();
                 sResult.Clear();
-                nCount = defaultGetCount;
+                nCount = (short)defaultGetCount;
 
                 bool bRet = TradeX_M.TdxHq_GetSecurityBars(hqClient, category, (byte)sharesData.Market, sharesData.SharesCode, nStart, ref nCount, sResult, sErrInfo);
                 if (!bRet)
@@ -205,8 +213,7 @@ namespace SecurityBarsDataUpdate
                             int Volume = int.Parse(column[5]);//成交量
                             long Turnover = (long)(Math.Round(float.Parse(column[6]) * 10000, 0));//成交额
 
-                            string key = SharesCode+ Market+ timeKey;
-                            tempResultDic[key] = new SecurityBarsDataInfo
+                            tempResultDic[timeKey] = new SecurityBarsDataInfo
                             {
                                 SharesCode = SharesCode,
                                 TimeStr = TimeStr,
@@ -216,9 +223,10 @@ namespace SecurityBarsDataUpdate
                                 MinPrice = MinPrice,
                                 OpenedPrice = OpenedPrice,
                                 Time = Time,
+                                DataType= datatype,
                                 GroupTimeKey = timeKey,
                                 TradeStock = Volume,
-                                TradeAmount = Turnover
+                                TradeAmount = Turnover,
                             };
                         }
                         catch (Exception ex)
@@ -236,12 +244,32 @@ namespace SecurityBarsDataUpdate
                 return new List<SecurityBarsDataInfo>();
             }
 
-            var resultlist = tempResultDic.Values.OrderBy(e => e.Time).ToList();
+            var resultlist = (from item in tempResultDic
+                              orderby item.Key
+                              select item.Value).ToList();
             long preClosePrice = sharesData.PreClosePrice;
+            int totalCount = resultlist.Count();
+            int j = 0;
+            long lastTradeStock = sharesData.LastTradeStock;
+            long lastTradeAmount = sharesData.LastTradeAmount;
             foreach (var item in resultlist)
             {
+                j++;
                 item.PreClosePrice = preClosePrice;
                 preClosePrice = item.ClosedPrice;
+                if (j == totalCount)
+                {
+                    item.IsLast = true;
+                }
+                else
+                {
+                    item.IsLast = false;
+                }
+                item.YestodayClosedPrice = sharesData.YestodayClosedPrice;
+                item.LastTradeStock = lastTradeStock;
+                item.LastTradeAmount = lastTradeAmount;
+                lastTradeStock = lastTradeStock+item.TradeStock;
+                lastTradeAmount = lastTradeAmount+item.TradeAmount;
             }
             return resultlist;
         }
@@ -364,6 +392,64 @@ namespace SecurityBarsDataUpdate
                 Logger.WriteFileLog("时间解析有误,错误时间:"+ timeStr,ex);
                 return false;
             }
+        }
+
+        private static bool CheckDataType(int dataType)
+        {
+            if (dataType < 2 || dataType > 11)
+            {
+                return false;
+            }
+            return true;
+        }
+
+        private static bool CheckDefaultGetCount(ref int defaultGetCount)
+        {
+            if (defaultGetCount <= 0)
+            {
+                defaultGetCount=Singleton.Instance.SecurityBarsGetCount;
+            }
+            return true;
+        }
+
+        private static bool CheckCategory(int dataType,ref byte category)
+        {
+            switch (dataType)
+            {
+                case 2:
+                    category = 7;
+                    break;
+                case 3:
+                    category = 0;
+                    break;
+                case 4:
+                    category = 1;
+                    break;
+                case 5:
+                    category = 2;
+                    break;
+                case 6:
+                    category = 3;
+                    break;
+                case 7:
+                    category = 4;
+                    break;
+                case 8:
+                    category = 5;
+                    break;
+                case 9:
+                    category = 6;
+                    break;
+                case 10:
+                    category = 10;
+                    break;
+                case 11:
+                    category = 11;
+                    break;
+                default:
+                    return false;
+            }
+            return true;
         }
     }
 }

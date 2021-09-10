@@ -181,9 +181,14 @@ namespace FXCommon.Common
         {
             bool isExists=false;
             m_event.WaitOne();
-            if (m_msgQueue.Contains(obj))
+
+            foreach (var item in m_msgQueue)
             {
-                isExists = true;
+                if (obj.Equals(item))
+                {
+                    isExists = true;
+                    break;
+                }
             }
             m_event.Set();
             return isExists;

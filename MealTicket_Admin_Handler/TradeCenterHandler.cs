@@ -10102,16 +10102,161 @@ namespace MealTicket_Admin_Handler
                 Market = request.Market,
                 StartTimeKey = request.StartGroupTimeKey,
                 EndTimeKey = request.EndGroupTimeKey,
-                PreClosePrice = PreClosePrice
+                PreClosePrice = PreClosePrice,
+                YestodayClosedPrice = PreClosePrice,
+                LastTradeStock = 0,
+                LastTradeAmount = 0
+            });
+
+
+            var packageList = new List<dynamic>();
+            packageList.Add(new
+            {
+                DataList = list,
+                DataType = request.DataType,
+                SecurityBarsGetCount = SecurityBarsGetCount
             });
             var sendData = new
             {
                 HandlerType = 2,
-                DataType = request.DataType,
-                SecurityBarsGetCount = SecurityBarsGetCount,
-                DataList = list
+                PackageList = packageList
             };
             Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SecurityBars", "1min");
+        }
+
+        /// <summary>
+        /// 批量重置K线数据
+        /// </summary>
+        /// <param name="request"></param>
+        public void BatchResetSharesKLine(BatchResetSharesKLineRequest request)
+        {
+            DateTime tempDate = DateTime.Parse("1991-01-01 00:00:00");
+            switch (request.DataType)
+            {
+                case 2:
+                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 3:
+                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 4:
+                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 5:
+                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 6:
+                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 7:
+                    tempDate = DateTime.ParseExact(request.StartGroupTimeKey.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 8:
+                    var temp1 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                 where item.the_week == request.StartGroupTimeKey
+                                 orderby item.the_date
+                                 select item).FirstOrDefault();
+                    if (temp1 == null)
+                    {
+                        throw new WebApiException(400, "时间超出界限");
+                    }
+                    tempDate = DateTime.ParseExact(temp1.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 9:
+                    var temp2 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                 where item.the_month == request.StartGroupTimeKey
+                                 orderby item.the_date
+                                 select item).FirstOrDefault();
+                    if (temp2 == null)
+                    {
+                        throw new WebApiException(400, "时间超出界限");
+                    }
+                    tempDate = DateTime.ParseExact(temp2.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 10:
+                    var temp3 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                 where item.the_quarter == request.StartGroupTimeKey
+                                 orderby item.the_date
+                                 select item).FirstOrDefault();
+                    if (temp3 == null)
+                    {
+                        throw new WebApiException(400, "时间超出界限");
+                    }
+                    tempDate = DateTime.ParseExact(temp3.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 11:
+                    var temp4 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                 where item.the_year == request.StartGroupTimeKey
+                                 orderby item.the_date
+                                 select item).FirstOrDefault();
+                    if (temp4 == null)
+                    {
+                        throw new WebApiException(400, "时间超出界限");
+                    }
+                    tempDate = DateTime.ParseExact(temp4.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                default:
+                    throw new WebApiException(400, "参数错误");
+            }
+
+            using (var db = new meal_ticketEntities())
+            {
+                var quoteDate = (from item in db.t_shares_quotes_date
+                                 where item.LastModified >= tempDate
+                                 group item by new { item.Market, item.SharesCode } into g
+                                 select new
+                                 {
+                                     Market = g.Key.Market,
+                                     SharesCode = g.Key.SharesCode,
+                                     PreClosePrice = g.OrderBy(e => e.LastModified).Select(e => e.ClosedPrice).FirstOrDefault()
+                                 }).ToList();
+                int SecurityBarsGetCount = int.Parse(ConfigurationManager.AppSettings["SecurityBarsGetCount"]);
+
+
+
+                int totalCount = quoteDate.Count();
+                int finishCount = 0;
+                int batchCount = 500;
+                do 
+                {
+                    if (finishCount >= totalCount)
+                    {
+                        break;
+                    }
+                    var packageList = new List<dynamic>();
+                    List<dynamic> list = new List<dynamic>();
+                    var batchList = quoteDate.Skip(finishCount).Take(batchCount).ToList();
+                    int currCount = batchList.Count();
+                    foreach (var item in batchList)
+                    {
+                        list.Add(new
+                        {
+                            SharesCode = item.SharesCode,
+                            Market = item.Market,
+                            StartTimeKey = request.StartGroupTimeKey,
+                            EndTimeKey = request.EndGroupTimeKey,
+                            PreClosePrice = item.PreClosePrice,
+                            YestodayClosedPrice = item.PreClosePrice,
+                            LastTradeStock = 0,
+                            LastTradeAmount = 0
+                        });
+                    }
+
+                    packageList.Add(new
+                    {
+                        DataList = list,
+                        DataType = request.DataType,
+                        SecurityBarsGetCount = SecurityBarsGetCount
+                    });
+                    var sendData = new
+                    {
+                        HandlerType = 2,
+                        PackageList = packageList
+                    };
+                    Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SecurityBars", "1min");
+                    finishCount = finishCount + currCount;
+                } while (true);
+            }
         }
     }
 }

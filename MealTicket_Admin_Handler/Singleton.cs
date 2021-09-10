@@ -86,6 +86,10 @@ namespace MealTicket_Admin_Handler
                 SysparUpdateThread.Join();
                 UpdateWait.Release();
             }
+            if (_DimTimeSession != null)
+            {
+                _DimTimeSession.Dispose();
+            }
         }
 
         /// <summary>

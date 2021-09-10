@@ -6,8 +6,26 @@ using System.Threading.Tasks;
 
 namespace SecurityBarsDataUpdate
 {
+    public class SecurityBarsDataRes
+    {
+        /// <summary>
+        /// 数据类型 2.1分钟K线 3.5分钟K线 4.15分钟K线 5.30分钟K线 6.60分钟K线 7.日K 8.周K 9.月K 10.季度K 11.年K
+        /// </summary>
+        public int DataType { get; set; }
+
+        /// <summary>
+        /// 数据列表
+        /// </summary>
+        public List<SecurityBarsDataInfo> DataList { get; set; }
+    }
+
     public class SecurityBarsDataInfo
     {
+        /// <summary>
+        /// 数据类型 2.1分钟K线 3.5分钟K线 4.15分钟K线 5.30分钟K线 6.60分钟K线 7.日K 8.周K 9.月K 10.季度K 11.年K
+        /// </summary>
+        public int DataType { get; set; }
+
         /// <summary>
         /// 市场代码
         /// </summary>
@@ -67,6 +85,26 @@ namespace SecurityBarsDataUpdate
         /// 上一时段收盘价
         /// </summary>
         public long PreClosePrice { get; set; }
+
+        /// <summary>
+        /// 是否最后一条
+        /// </summary>
+        public bool IsLast { get; set; }
+
+        /// <summary>
+        /// 昨日收盘价
+        /// </summary>
+        public long YestodayClosedPrice { get; set; }
+
+        /// <summary>
+        /// 前一分钟成交量之和
+        /// </summary>
+        public long LastTradeStock { get; set; }
+
+        /// <summary>
+        /// 前一分钟成交额之和
+        /// </summary>
+        public long LastTradeAmount { get; set; }
     }
 
     public class SecurityBarsDataTaskInfo
@@ -77,14 +115,22 @@ namespace SecurityBarsDataUpdate
         public string TaskGuid { get; set; }
 
         /// <summary>
-        /// 每次获取数量（最大800）
-        /// </summary>
-        public int SecurityBarsGetCount { get; set; }
-
-        /// <summary>
         /// 处理类型1当天实时数据 2历史补充数据
         /// </summary>
         public int HandlerType { get; set; }
+
+        /// <summary>
+        /// 数据包列表
+        /// </summary>
+        public List<SecurityBarsDataParList> PackageList { get; set; }
+    }
+
+    public class SecurityBarsDataParList
+    {
+        /// <summary>
+        /// 每次获取数量（最大800）
+        /// </summary>
+        public int SecurityBarsGetCount { get; set; }
 
         /// <summary>
         /// 数据类型 2.1分钟K线 3.5分钟K线 4.15分钟K线 5.30分钟K线 6.60分钟K线 7.日K 8.周K 9.月K 10.季度K 11.年K
@@ -110,6 +156,16 @@ namespace SecurityBarsDataUpdate
         public string SharesCode { get; set; }
 
         /// <summary>
+        /// 数据类型 2.1分钟K线 3.5分钟K线 4.15分钟K线 5.30分钟K线 6.60分钟K线 7.日K 8.周K 9.月K 10.季度K 11.年K
+        /// </summary>
+        public int DataType { get; set; }
+
+        /// <summary>
+        /// 每次获取数量（最大800）
+        /// </summary>
+        public int SecurityBarsGetCount { get; set; }
+
+        /// <summary>
         /// 获取数据起始时间（-1表示无开始时间）
         /// </summary>
         public long StartTimeKey { get; set; }
@@ -123,6 +179,21 @@ namespace SecurityBarsDataUpdate
         /// 上一时段收盘价
         /// </summary>
         public long PreClosePrice { get; set; }
+
+        /// <summary>
+        /// 昨日收盘价
+        /// </summary>
+        public long YestodayClosedPrice { get; set; }
+
+        /// <summary>
+        /// 前一分钟成交量之和
+        /// </summary>
+        public long LastTradeStock { get; set; }
+
+        /// <summary>
+        /// 前一分钟成交额之和
+        /// </summary>
+        public long LastTradeAmount { get; set; }
     }
 
     public class MinutetimeData

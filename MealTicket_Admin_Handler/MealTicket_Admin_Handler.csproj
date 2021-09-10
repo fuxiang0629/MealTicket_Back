@@ -122,6 +122,7 @@
     <Compile Include="Model\BackAccount\ModifyBackAccountPosition.cs" />
     <Compile Include="Model\BackAccount\ModifyBackAccountRole.cs" />
     <Compile Include="Model\BaseResponse.cs" />
+    <Compile Include="Model\BatchResetSharesKLine.cs" />
     <Compile Include="Model\Business\AddBanner.cs" />
     <Compile Include="Model\Business\AddCustomerServiceSetting.cs" />
     <Compile Include="Model\Business\AddInformation.cs" />

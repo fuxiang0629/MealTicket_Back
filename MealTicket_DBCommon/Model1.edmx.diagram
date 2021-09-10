@@ -263,7 +263,6 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_template_join_other_trend_par" Width="1.5" PointX="47.375" PointY="38.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_sys_conditiontrade_template_search" Width="1.5" PointX="38.375" PointY="47.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_conditiontrade_template_search" Width="1.5" PointX="7.375" PointY="48.75" />
-        <EntityTypeShape EntityType="meal_ticketModel.t_shares_minutetimedata" Width="1.5" PointX="48.75" PointY="41.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_securitybarsdata_15min" Width="1.5" PointX="45.75" PointY="48.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_securitybarsdata_1day" Width="1.5" PointX="48.75" PointY="46.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_securitybarsdata_1min" Width="1.5" PointX="49.75" PointY="0.75" />

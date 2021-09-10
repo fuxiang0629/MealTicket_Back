@@ -1,8 +1,10 @@
 ﻿using FXCommon.Common;
+using FXCommon.MqQueue;
 using MealTicket_DBCommon;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -57,12 +59,22 @@ namespace SharesHqService
         /// <summary>
         /// 股票基本信息列表
         /// </summary>
-        public Dictionary<int, List<SharesBaseInfo>> SharesBaseInfoList=new Dictionary<int, List<SharesBaseInfo>>();
-
-        /// <summary>
-        /// 股票基本信息列表
-        /// </summary>
-        public Dictionary<int, Dictionary<string, SharesBaseInfo>> SharesBaseInfoDic=new Dictionary<int, Dictionary<string, SharesBaseInfo>>();
+        private List<SharesBaseInfo> SharesBaseInfoList=new List<SharesBaseInfo>();
+        private ReaderWriterLock _readWriteLock_SharesBaseInfoList = new ReaderWriterLock();
+        public List<SharesBaseInfo> _getSharesBaseInfoList() 
+        {
+            List<SharesBaseInfo> _sharesBaseInfoList = new List<SharesBaseInfo>();
+            _readWriteLock_SharesBaseInfoList.AcquireReaderLock(-1);
+            _sharesBaseInfoList = SharesBaseInfoList;
+            _readWriteLock_SharesBaseInfoList.ReleaseReaderLock();
+            return _sharesBaseInfoList;
+        }
+        public void _setSharesBaseInfoList(List<SharesBaseInfo> list)
+        {
+            _readWriteLock_SharesBaseInfoList.AcquireWriterLock(-1);
+            SharesBaseInfoList = list;
+            _readWriteLock_SharesBaseInfoList.ReleaseWriterLock();
+        }
 
         /// <summary>
         /// 上一次五档行情数据
@@ -363,33 +375,17 @@ namespace SharesHqService
         {
             using (var db = new meal_ticketEntities())
             {
-                var result = (from item in db.t_shares_all
-                              group item by item.Market into g
-                              select new
+                var result = (from x in db.t_shares_all
+                              select new SharesBaseInfo
                               {
-                                  Key = g.Key,
-                                  Value = (from x in g
-                                           select new SharesBaseInfo
-                                           {
-                                               ShareCode = x.SharesCode,
-                                               ShareHandCount = x.SharesHandCount,
-                                               ShareName = x.SharesName,
-                                               ShareClosedPrice = x.ShareClosedPrice,
-                                               Market = x.Market
-                                           }).ToList()
-                              }).ToDictionary(e => e.Key, e => e.Value);
-                SharesBaseInfoList = result;
-
-                foreach (var item in result)
-                {
-                    Dictionary<string, SharesBaseInfo> dicInfo = new Dictionary<string, SharesBaseInfo>();
-                    foreach (var k in item.Value)
-                    {
-                        dicInfo.Add(k.ShareCode, k);
-                    }
-
-                    SharesBaseInfoDic.Add(item.Key, dicInfo);
-                }
+                                  ShareCode = x.SharesCode,
+                                  ShareHandCount = x.SharesHandCount,
+                                  ShareName = x.SharesName,
+                                  Pyjc=x.SharesPyjc,
+                                  ShareClosedPrice = x.ShareClosedPrice,
+                                  Market = x.Market
+                              }).ToList();
+                _setSharesBaseInfoList(result);
             }
         }
 
@@ -748,5 +744,20 @@ namespace SharesHqService
         #region====五档行情数据结构====
         public TdxHq_Result[] tdxHq_Result;//行情内存空间
         #endregion
+
+        public MQHandler mqHandler;
+        /// <summary>
+        /// 启动Mq队列
+        /// </summary>
+        public MQHandler StartMqHandler()
+        {
+            string hostName = ConfigurationManager.AppSettings["MQ_HostName"];
+            int port = int.Parse(ConfigurationManager.AppSettings["MQ_Port"]);
+            string userName = ConfigurationManager.AppSettings["MQ_UserName"];
+            string password = ConfigurationManager.AppSettings["MQ_Password"];
+            string virtualHost = ConfigurationManager.AppSettings["MQ_VirtualHost"];
+            mqHandler = new MQHandler(hostName, port, userName, password, virtualHost);
+            return mqHandler;
+        }
     }
 }

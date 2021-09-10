@@ -74,11 +74,27 @@ namespace TransactionDataUpdate_App
   where (LastModified>dateadd(SECOND,-{0},getdate()) and [Type]=0) or (LastModified>convert(varchar(10),getdate(),120) and [Type]=1)
   group by Market,SharesCode",Singleton.Instance.StopPeriodTime/1000);
                 var list = db.Database.SqlQuery<SharesInfo>(sql).ToList();
+
+                List<SharesTransactionDataInfo> resultList = new List<SharesTransactionDataInfo>();
+
                 if (list.Count() > 0)
                 {
-                    return TdxHq_GetTransactionData(list);
+                    //分批次更新
+                    int totalCount = list.Count();
+                    int onceCount = 32;
+                    int batchCount = totalCount / onceCount;
+                    if (totalCount % onceCount != 0)
+                    {
+                        batchCount = batchCount + 1;
+                    }
+
+                    for (int i = 0; i < batchCount; i++)
+                    {
+                        var tempList = list.Skip(i * onceCount).Take(onceCount).ToList();
+                        resultList.AddRange(TdxHq_GetTransactionData(tempList));
+                    }
                 }
-                return new List<SharesTransactionDataInfo>();
+                return resultList;
             }
         }
 
@@ -92,8 +108,6 @@ namespace TransactionDataUpdate_App
 
             ThreadMsgTemplate<SharesInfo> data = new ThreadMsgTemplate<SharesInfo>();
             data.Init();
-
-            DateTime dateNow = DateTime.Now.Date;
 
             string SharesInfoNumArr = string.Empty;
             foreach (var item in sharesList)
@@ -116,7 +130,7 @@ from
 (
 	select SharesInfoNum,[Time],OrderIndex,row_number() over(partition by SharesInfoNum order by [Time] desc,OrderIndex) num
 	from t_shares_transactiondata with(nolock)
-	where SharesInfoNum in ({0})
+	where [Time]>convert(varchar(10),getdate(),120) and SharesInfoNum in ({0})
 )t
 where t.num=1", SharesInfoNumArr);
                 lastList = db.Database.SqlQuery<LastData>(sql).ToList();

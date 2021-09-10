@@ -22,111 +22,11 @@ namespace MealTicket_Handler
             try
             {
                 var resultData = JsonConvert.DeserializeObject<SecurityBarsDataTaskQueueInfo>(data);
-                switch (resultData.DataType)
+                Singleton.Instance._securityBarsDataTask.SecurityBarsDataQueue.AddMessage(new QueueMsgObj
                 {
-                    case 2:
-                        if (Singleton.Instance._securityBarsDataTask_1min != null)
-                        {
-                            Singleton.Instance._securityBarsDataTask_1min.SecurityBarsDataQueue.AddMessage(new QueueMsgObj
-                            {
-                                MsgId = 1,
-                                MsgObj = resultData
-                            });
-                        }
-                        break;
-                    case 3:
-                        if (Singleton.Instance._securityBarsDataTask_5min != null)
-                        {
-                            Singleton.Instance._securityBarsDataTask_5min.SecurityBarsDataQueue.AddMessage(new QueueMsgObj
-                            {
-                                MsgId = 1,
-                                MsgObj = resultData
-                            });
-                        }
-                        break;
-                    case 4:
-                        if (Singleton.Instance._securityBarsDataTask_15min != null)
-                        {
-                            Singleton.Instance._securityBarsDataTask_15min.SecurityBarsDataQueue.AddMessage(new QueueMsgObj
-                            {
-                                MsgId = 1,
-                                MsgObj = resultData
-                            });
-                        }
-                        break;
-                    case 5:
-                        if (Singleton.Instance._securityBarsDataTask_30min != null)
-                        {
-                            Singleton.Instance._securityBarsDataTask_30min.SecurityBarsDataQueue.AddMessage(new QueueMsgObj
-                            {
-                                MsgId = 1,
-                                MsgObj = resultData
-                            });
-                        }
-                        break;
-                    case 6:
-                        if (Singleton.Instance._securityBarsDataTask_60min != null)
-                        {
-                            Singleton.Instance._securityBarsDataTask_60min.SecurityBarsDataQueue.AddMessage(new QueueMsgObj
-                            {
-                                MsgId = 1,
-                                MsgObj = resultData
-                            });
-                        }
-                        break;
-                    case 7:
-                        if (Singleton.Instance._securityBarsDataTask_1day != null)
-                        {
-                            Singleton.Instance._securityBarsDataTask_1day.SecurityBarsDataQueue.AddMessage(new QueueMsgObj
-                            {
-                                MsgId = 1,
-                                MsgObj = resultData
-                            });
-                        }
-                        break;
-                    case 8:
-                        if (Singleton.Instance._securityBarsDataTask_1week != null)
-                        {
-                            Singleton.Instance._securityBarsDataTask_1week.SecurityBarsDataQueue.AddMessage(new QueueMsgObj
-                            {
-                                MsgId = 1,
-                                MsgObj = resultData
-                            });
-                        }
-                        break;
-                    case 9:
-                        if (Singleton.Instance._securityBarsDataTask_1month != null)
-                        {
-                            Singleton.Instance._securityBarsDataTask_1month.SecurityBarsDataQueue.AddMessage(new QueueMsgObj
-                            {
-                                MsgId = 1,
-                                MsgObj = resultData
-                            });
-                        }
-                        break;
-                    case 10:
-                        if (Singleton.Instance._securityBarsDataTask_1quarter != null)
-                        {
-                            Singleton.Instance._securityBarsDataTask_1quarter.SecurityBarsDataQueue.AddMessage(new QueueMsgObj
-                            {
-                                MsgId = 1,
-                                MsgObj = resultData
-                            });
-                        }
-                        break;
-                    case 11:
-                        if (Singleton.Instance._securityBarsDataTask_1year != null)
-                        {
-                            Singleton.Instance._securityBarsDataTask_1year.SecurityBarsDataQueue.AddMessage(new QueueMsgObj
-                            {
-                                MsgId = 1,
-                                MsgObj = resultData
-                            });
-                        }
-                        break;
-                    default:
-                        break;
-                }
+                    MsgId = 1,
+                    MsgObj = resultData
+                });
                 
             }
             catch (Exception ex)

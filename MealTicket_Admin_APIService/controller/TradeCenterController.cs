@@ -5736,5 +5736,22 @@ namespace MealTicket_Admin_APIService.controller
             tradeCenterHandler.ResetSharesKLine(request);
             return null;
         }
+
+        /// <summary>
+        /// 批量重置K线数据
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("shares/kline/reset/batch"), HttpPost]
+        [Description("批量重置K线数据")]
+        public object BatchResetSharesKLine(BatchResetSharesKLineRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.BatchResetSharesKLine(request);
+            return null;
+        }
     }
 }
