@@ -12,5 +12,10 @@ namespace MealTicket_Web_Handler.Enum
         /// 同步买入默认状态 0关闭 1开启
         /// </summary>
         public static int DefaultBuyStatus = 0;
+
+        /// <summary>
+        /// 跟投是否默认卖出 0否 1是
+        /// </summary>
+        public static int DefaultSellChild = 0;
     }
 }

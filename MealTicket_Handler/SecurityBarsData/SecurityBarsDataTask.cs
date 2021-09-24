@@ -122,7 +122,10 @@ namespace MealTicket_Handler.SecurityBarsData
                         if (CheckTaskTimeout(dataObj))
                         {
                             ClearTaskInfo(dataObj);//超时则清空任务
-                            PushToDataUpDate(dataObj);
+                            if (Singleton.Instance.SecurityBarsIsOpen == 1)
+                            {
+                                PushToDataUpDate(dataObj);
+                            }
                         }
                         continue;
                     }
@@ -199,10 +202,12 @@ namespace MealTicket_Handler.SecurityBarsData
                 DateTime timeNow = DateTime.Now;
                 if (!RunnerHelper.CheckTradeDate(timeNow))
                 {
+                    dataObj.TaskTimeOut = Singleton.Instance.SecurityBarsTaskTimeout;
                     return false;
                 }
                 if (!RunnerHelper.CheckTradeTime2(timeNow, false, true, false) && !RunnerHelper.CheckTradeTime2(timeNow.AddSeconds(-600), false, true, false))
                 {
+                    dataObj.TaskTimeOut = Singleton.Instance.SecurityBarsTaskTimeout;
                     //每天21-23点执行
                     TimeSpan tpNow = TimeSpan.Parse(timeNow.ToString("HH:mm:ss"));
                     if (tpNow < Singleton.Instance.SecurityBarsDataUpdateStartTime || tpNow > Singleton.Instance.SecurityBarsDataUpdateEndTime)

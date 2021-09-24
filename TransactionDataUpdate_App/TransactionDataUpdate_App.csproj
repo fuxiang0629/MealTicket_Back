@@ -63,6 +63,7 @@
     <Compile Include="ServiceModule.cs" />
     <Compile Include="SharesTransactionDataInfo.cs" />
     <Compile Include="Singleton.cs" />
+    <Compile Include="TdxHq_Result.cs" />
     <Compile Include="TransactiondataUpdateRunner.cs" />
   </ItemGroup>
   <ItemGroup>

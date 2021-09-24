@@ -71,6 +71,8 @@ namespace MealTicket_Handler
         #endregion
 
         #region=====分笔数据更新参数====
+        public int TransactiondataIsOpen = 1;
+
         /// <summary>
         /// 分笔数据更新定时器执行起始小时
         /// </summary>
@@ -114,6 +116,7 @@ namespace MealTicket_Handler
         public long PriceFormat = 10000;
 
         #region====K线数据参数====
+        public int SecurityBarsIsOpen = 1;
         public int SecurityBarsIntervalTime = 3000;//间隔时间(毫秒)
         public int SecurityBarsTaskTimeout = 300000;//任务超时时间(毫秒)
         public int SecurityBarsBatchCount = 128;//每批次处理股票数量
@@ -320,6 +323,11 @@ namespace MealTicket_Handler
                     if (sysPar10 != null)
                     {
                         var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar10.ParamValue);
+                        int? tempTransactiondataIsOpen = sysValue.IsOpen;
+                        if (tempTransactiondataIsOpen>0)
+                        {
+                            TransactiondataIsOpen = tempTransactiondataIsOpen.Value;
+                        }
                         string tempTransactiondataStartHour = sysValue.TransactiondataStartHour;
                         if (!TimeSpan.TryParse(tempTransactiondataStartHour, out TransactiondataStartHour))
                         {
@@ -371,6 +379,11 @@ namespace MealTicket_Handler
                     if (sysPar != null)
                     {
                         var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                        int? tempSecurityBarsIsOpen= sysValue.IsOpen;
+                        if (tempSecurityBarsIsOpen > 0)
+                        {
+                            SecurityBarsIsOpen = tempSecurityBarsIsOpen.Value;
+                        }
                         int tempSecurityBarsIntervalTime = sysValue.SecurityBarsIntervalTime;
                         if (tempSecurityBarsIntervalTime>0)
                         {

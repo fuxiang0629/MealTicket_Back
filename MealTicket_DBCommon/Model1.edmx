@@ -3830,18 +3830,21 @@
             <PropertyRef Name="PlateType" />
             <PropertyRef Name="CalType" />
             <PropertyRef Name="ChooseStatus" />
+            <PropertyRef Name="BaseStatus" />
             <PropertyRef Name="Status" />
             <PropertyRef Name="SharesType" />
             <PropertyRef Name="LimitSharesMarket" />
             <PropertyRef Name="CreateTime" />
             <PropertyRef Name="WeightMarket" />
             <PropertyRef Name="NoWeightMarket" />
+            <PropertyRef Name="SharesMarket" />
           </Key>
           <Property Name="PlateId" Type="bigint" Nullable="false" />
           <Property Name="PlateName" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="PlateType" Type="int" Nullable="false" />
           <Property Name="CalType" Type="int" Nullable="false" />
           <Property Name="ChooseStatus" Type="int" Nullable="false" />
+          <Property Name="BaseStatus" Type="int" Nullable="false" />
           <Property Name="Status" Type="int" Nullable="false" />
           <Property Name="SharesType" Type="int" Nullable="false" />
           <Property Name="LimitSharesMarket" Type="int" Nullable="false" />
@@ -3858,6 +3861,8 @@
           <Property Name="RiseIndex" Type="bigint" />
           <Property Name="WeightRiseRate" Type="bigint" />
           <Property Name="RiseRate" Type="bigint" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="50" />
+          <Property Name="SharesMarket" Type="int" Nullable="false" />
         </EntityType>
         <!--生成过程中发现错误:
 警告 6002: 表/视图“meal_ticket.dbo.v_plate_shares”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
@@ -3870,11 +3875,13 @@
             <PropertyRef Name="SharesType" />
             <PropertyRef Name="CalType" />
             <PropertyRef Name="ChooseStatus" />
+            <PropertyRef Name="BaseStatus" />
             <PropertyRef Name="LimitSharesMarket" />
             <PropertyRef Name="CreateTime" />
             <PropertyRef Name="WeightMarket" />
             <PropertyRef Name="NoWeightMarket" />
           </Key>
+          <Property Name="RelId" Type="bigint" />
           <Property Name="PlateId" Type="bigint" Nullable="false" />
           <Property Name="PlateName" Type="nvarchar" MaxLength="200" Nullable="false" />
           <Property Name="PlateType" Type="int" Nullable="false" />
@@ -3882,6 +3889,7 @@
           <Property Name="SharesType" Type="int" Nullable="false" />
           <Property Name="CalType" Type="int" Nullable="false" />
           <Property Name="ChooseStatus" Type="int" Nullable="false" />
+          <Property Name="BaseStatus" Type="int" Nullable="false" />
           <Property Name="LimitSharesMarket" Type="int" Nullable="false" />
           <Property Name="LimitSharesCode" Type="varchar" MaxLength="50" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
@@ -4834,6 +4842,7 @@
     [v_plate].[PlateType] AS [PlateType], 
     [v_plate].[CalType] AS [CalType], 
     [v_plate].[ChooseStatus] AS [ChooseStatus], 
+    [v_plate].[BaseStatus] AS [BaseStatus], 
     [v_plate].[Status] AS [Status], 
     [v_plate].[SharesType] AS [SharesType], 
     [v_plate].[LimitSharesMarket] AS [LimitSharesMarket], 
@@ -4849,11 +4858,14 @@
     [v_plate].[WeightRiseIndex] AS [WeightRiseIndex], 
     [v_plate].[RiseIndex] AS [RiseIndex], 
     [v_plate].[WeightRiseRate] AS [WeightRiseRate], 
-    [v_plate].[RiseRate] AS [RiseRate]
+    [v_plate].[RiseRate] AS [RiseRate], 
+    [v_plate].[SharesCode] AS [SharesCode], 
+    [v_plate].[SharesMarket] AS [SharesMarket]
     FROM [dbo].[v_plate] AS [v_plate]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="v_plate_shares" EntityType="Self.v_plate_shares" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
+    [v_plate_shares].[RelId] AS [RelId], 
     [v_plate_shares].[PlateId] AS [PlateId], 
     [v_plate_shares].[PlateName] AS [PlateName], 
     [v_plate_shares].[PlateType] AS [PlateType], 
@@ -4861,6 +4873,7 @@
     [v_plate_shares].[SharesType] AS [SharesType], 
     [v_plate_shares].[CalType] AS [CalType], 
     [v_plate_shares].[ChooseStatus] AS [ChooseStatus], 
+    [v_plate_shares].[BaseStatus] AS [BaseStatus], 
     [v_plate_shares].[LimitSharesMarket] AS [LimitSharesMarket], 
     [v_plate_shares].[LimitSharesCode] AS [LimitSharesCode], 
     [v_plate_shares].[CreateTime] AS [CreateTime], 
@@ -8111,6 +8124,8 @@
             <PropertyRef Name="CreateTime" />
             <PropertyRef Name="WeightMarket" />
             <PropertyRef Name="NoWeightMarket" />
+            <PropertyRef Name="BaseStatus" />
+            <PropertyRef Name="SharesMarket" />
           </Key>
           <Property Name="PlateId" Type="Int64" Nullable="false" />
           <Property Name="PlateName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
@@ -8133,6 +8148,9 @@
           <Property Name="RiseIndex" Type="Int64" />
           <Property Name="WeightRiseRate" Type="Int64" />
           <Property Name="RiseRate" Type="Int64" />
+          <Property Name="BaseStatus" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="SharesMarket" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="v_plate_shares">
           <Key>
@@ -8147,6 +8165,7 @@
             <PropertyRef Name="CreateTime" />
             <PropertyRef Name="WeightMarket" />
             <PropertyRef Name="NoWeightMarket" />
+            <PropertyRef Name="BaseStatus" />
           </Key>
           <Property Name="PlateId" Type="Int64" Nullable="false" />
           <Property Name="PlateName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
@@ -8169,6 +8188,8 @@
           <Property Name="NoWeightMarket" Type="Int32" Nullable="false" />
           <Property Name="NoWeightSharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="PriceType" Type="Int32" />
+          <Property Name="BaseStatus" Type="Int32" Nullable="false" />
+          <Property Name="RelId" Type="Int64" />
         </EntityType>
         <EntityType Name="v_shares_baseinfo">
           <Key>
@@ -13102,6 +13123,9 @@
           <EntitySetMapping Name="v_plate">
             <EntityTypeMapping TypeName="meal_ticketModel.v_plate">
               <MappingFragment StoreEntitySet="v_plate">
+                <ScalarProperty Name="SharesMarket" ColumnName="SharesMarket" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="BaseStatus" ColumnName="BaseStatus" />
                 <ScalarProperty Name="PlateId" ColumnName="PlateId" />
                 <ScalarProperty Name="PlateName" ColumnName="PlateName" />
                 <ScalarProperty Name="PlateType" ColumnName="PlateType" />
@@ -13129,6 +13153,8 @@
           <EntitySetMapping Name="v_plate_shares">
             <EntityTypeMapping TypeName="meal_ticketModel.v_plate_shares">
               <MappingFragment StoreEntitySet="v_plate_shares">
+                <ScalarProperty Name="RelId" ColumnName="RelId" />
+                <ScalarProperty Name="BaseStatus" ColumnName="BaseStatus" />
                 <ScalarProperty Name="PlateId" ColumnName="PlateId" />
                 <ScalarProperty Name="PlateName" ColumnName="PlateName" />
                 <ScalarProperty Name="PlateType" ColumnName="PlateType" />

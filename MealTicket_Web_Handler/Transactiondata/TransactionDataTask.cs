@@ -152,6 +152,7 @@ namespace MealTicket_Web_Handler.Transactiondata
                 DateTime timeNow = DateTime.Now;
                 if (!Helper.CheckTradeTime(timeNow.AddSeconds(-Singleton.Instance.NewTransactionDataRunStartTime)) && !Helper.CheckTradeTime(timeNow.AddSeconds(-Singleton.Instance.NewTransactionDataRunEndTime)))
                 {
+                    dataObj.TaskTimeOut = Singleton.Instance.NewTransactiondataTaskTimeOut;
                     return false;
                 }
                 var tempGuid = Guid.NewGuid().ToString("N");
@@ -712,13 +713,19 @@ order by SharesInfoNum,[Time]", DateTime.Now.ToString("yyyy-MM-dd"));
                         if (CheckTaskTimeout(dataObj0))
                         {
                             ClearTaskInfo(dataObj0);//超时则清空任务
-                            PushToDataUpDate(dataObj0);
+                            if (Singleton.Instance.IsOpen == 1)
+                            {
+                                PushToDataUpDate(dataObj0);
+                            }
                         }
 
                         if (CheckTaskTimeout(dataObj1))
                         {
                             ClearTaskInfo(dataObj1);//超时则清空任务
-                            PushToDataUpDate(dataObj1);
+                            if (Singleton.Instance.IsOpen == 1)
+                            {
+                                PushToDataUpDate(dataObj1);
+                            }
                         }
                         continue;
                     }

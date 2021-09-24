@@ -301,8 +301,8 @@ namespace SharesHqService
             {
                 tdxHq_Result[i] = new TdxHq_Result
                 {
-                    sErrInfo = new StringBuilder(256),
-                    sResult = new StringBuilder(1024 * QuotesCount)
+                    sErrInfo = new StringBuilder(512),
+                    sResult = new StringBuilder(2048 * QuotesCount)
                 };
             }
 
@@ -341,7 +341,8 @@ namespace SharesHqService
                 TradeX_M.TdxHq_Disconnect(hqClient);
                 hqClient = -1;
             }
-            StringBuilder sResult = new StringBuilder(1024 * 1024);
+
+            StringBuilder sResult = new StringBuilder(1024);
             StringBuilder sErrInfo = new StringBuilder(256);
 
             Random rd = new Random();
@@ -586,7 +587,6 @@ namespace SharesHqService
                     {
                         break;
                     }
-
                     if (!Helper.CheckTradeTime())
                     {
                         HeartbeatMsgPump();
@@ -606,9 +606,8 @@ namespace SharesHqService
                 {
                     break;
                 };
-
-                short nCount = 0;
                 StringBuilder sErrInfo = new StringBuilder(256);
+                short nCount = 0;
                 if (TradeX_M.TdxHq_GetSecurityCount(clientId, 0, ref nCount, sErrInfo))
                 {
                     clientSuccess.Add(clientId);

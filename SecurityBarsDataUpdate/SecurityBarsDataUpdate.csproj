@@ -61,6 +61,7 @@
     <Compile Include="SecurityBarsDataTaskModel.cs" />
     <Compile Include="Session\DimTimeSession.cs" />
     <Compile Include="Singleton.cs" />
+    <Compile Include="TdxHq_Result.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

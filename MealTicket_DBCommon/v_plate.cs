@@ -35,5 +35,8 @@ namespace MealTicket_DBCommon
         public Nullable<long> RiseIndex { get; set; }
         public Nullable<long> WeightRiseRate { get; set; }
         public Nullable<long> RiseRate { get; set; }
+        public int BaseStatus { get; set; }
+        public string SharesCode { get; set; }
+        public int SharesMarket { get; set; }
     }
 }

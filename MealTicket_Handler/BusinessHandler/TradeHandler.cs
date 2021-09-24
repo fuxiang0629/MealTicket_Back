@@ -941,6 +941,17 @@ end", request.Market, request.SharesCode);
             {
                 try
                 {
+                    string serverId = "s1";
+                    var server = (from x in db.t_server_broker_account_rel
+                                  join x2 in db.t_server on x.ServerId equals x2.ServerId
+                                  orderby x2.OrderIndex
+                                  select x).FirstOrDefault();
+                    if (server == null)
+                    {
+                        throw new WebApiException(400, "服务器配置有误");
+                    }
+                    serverId = server.ServerId;
+
                     ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                     ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
                     ObjectParameter buyIdDb = new ObjectParameter("buyId", 0);
@@ -967,7 +978,7 @@ end", request.Market, request.SharesCode);
                         BuyCount = entrust.EntrustCount,
                         BuyTime = DateTime.Now.ToString("yyyy-MM-dd")
                     };
-                    bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesBuy", "s1");
+                    bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesBuy", serverId);
                     if (!isSendSuccess)
                     {
                         throw new WebApiException(400, "买入失败,请重试");

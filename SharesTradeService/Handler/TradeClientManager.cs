@@ -95,13 +95,11 @@ namespace SharesTradeService.Handler
         {
             if (tradeLoginInfo.TradeClientId0 >= 0)
             {
-                //TradeX_M.Logoff(tradeLoginInfo.TradeClientId0);
                 Trade_Helper.Logoff(tradeLoginInfo.TradeClientId0);
                 tradeLoginInfo.TradeClientId0 = -1;
             }
             if (tradeLoginInfo.TradeClientId1 >= 0)
             {
-                //TradeX_M.Logoff(tradeLoginInfo.TradeClientId1);
                 Trade_Helper.Logoff(tradeLoginInfo.TradeClientId1);
                 tradeLoginInfo.TradeClientId1 = -1;
             }
@@ -125,17 +123,15 @@ namespace SharesTradeService.Handler
                 TradeLoginHostList = tradeLoginInfo.TradeLoginHostList,
                 InitialFunding = tradeLoginInfo.InitialFunding
             };
-            StringBuilder sErrInfo = new StringBuilder(256);
             Random rd = new Random();
             int index = rd.Next(tempClient.TradeLoginHostList.Count);
             var tradeLoginHost = tempClient.TradeLoginHostList[index];
             string HostIp = tradeLoginHost.QsHost;
             int HostPort = tradeLoginHost.QsPort;
 
-            //int clientId0 = TradeX_M.Logon(tempClient.QsId, HostIp, (short)HostPort,
-            //        tempClient.Version, (short)tempClient.YybId, (char)tempClient.AccountType, tempClient.AccountNo, tempClient.TradeAccountNo0, tempClient.JyPassword, tempClient.TxPassword, sErrInfo); 
+            tdxConnect_Result.sErrInfo.Clear();
             int clientId0 = Trade_Helper.Logon(HostIp, (short)HostPort,
-                    tempClient.Version, (short)tempClient.YybId, tempClient.AccountNo, tempClient.TradeAccountNo0, tempClient.JyPassword, tempClient.TxPassword, sErrInfo);
+                    tempClient.Version, (short)tempClient.YybId, tempClient.AccountNo, tempClient.TradeAccountNo0, tempClient.JyPassword, tempClient.TxPassword, tdxConnect_Result.sErrInfo);
             if (clientId0 < 0)
             {
                 AddRetryClient(tempClient);
@@ -150,15 +146,12 @@ namespace SharesTradeService.Handler
             }
             else
             {
-                // clientId1 = TradeX_M.Logon(tempClient.QsId, HostIp, (short)HostPort,
-                //tempClient.Version, (short)tempClient.YybId, (char)tempClient.AccountType, tempClient.AccountNo, tempClient.TradeAccountNo1, tempClient.JyPassword, tempClient.TxPassword, sErrInfo);
-
+                tdxConnect_Result.sErrInfo.Clear();
                 clientId1 = Trade_Helper.Logon(HostIp, (short)HostPort,
-                        tempClient.Version, (short)tempClient.YybId, tempClient.AccountNo, tempClient.TradeAccountNo1, tempClient.JyPassword, tempClient.TxPassword, sErrInfo);
+                        tempClient.Version, (short)tempClient.YybId, tempClient.AccountNo, tempClient.TradeAccountNo1, tempClient.JyPassword, tempClient.TxPassword, tdxConnect_Result.sErrInfo);
             }
             if (clientId1 < 0)
             {
-                //TradeX_M.Logoff(clientId0);
                 Trade_Helper.Logoff(clientId0);
 
                 AddRetryClient(tempClient);
@@ -191,7 +184,8 @@ namespace SharesTradeService.Handler
                     do
                     {
                         TradeLoginInfo client = null;
-                        if (!ReClient.GetMessage(ref client, true))                        {
+                        if (!ReClient.GetMessage(ref client, true))                        
+                        {
                             break;
                         };
 
@@ -219,8 +213,6 @@ namespace SharesTradeService.Handler
 
                     if (Helper.CheckTradeDate())
                     {
-                        StringBuilder sErrInfo = new StringBuilder(256);
-                        StringBuilder sResult = new StringBuilder(1024 * 1024);
                         foreach (var item in ClientDic)
                         {
                             List<TradeLoginInfo> clientFails = new List<TradeLoginInfo>();
@@ -233,35 +225,22 @@ namespace SharesTradeService.Handler
                                     break;
                                 };
 
-                                //int isSuccess = 0;
-                                sErrInfo = new StringBuilder(256); 
-                                sResult = new StringBuilder(1024 * 1024);
-                                //isSuccess=TradeX_M.QueryData(client.TradeClientId0,0, sResult, sErrInfo);
-                                Trade_Helper.QueryData(client.TradeClientId0, 0, sResult, sErrInfo);
-                                if (sErrInfo.Length > 0) 
+                                tdxHeartbeat_Result.sResult.Clear();
+                                tdxHeartbeat_Result.sErrInfo.Clear();
+                                Trade_Helper.QueryData(client.TradeClientId0, 0, tdxHeartbeat_Result.sResult, tdxHeartbeat_Result.sErrInfo);
+                                if (tdxHeartbeat_Result.sErrInfo.Length > 0) 
                                 {
                                     clientFails.Add(client);
                                     continue;
                                 }
-                                //if (isSuccess < 0)
-                                //{
-                                //    clientFails.Add(client);
-                                //    continue;
-                                //}
-                                sErrInfo = new StringBuilder(256);
-                                sResult = new StringBuilder(1024 * 1024);
-                                //isSuccess=TradeX_M.QueryData(client.TradeClientId1, 0, sResult, sErrInfo);
-                                Trade_Helper.QueryData(client.TradeClientId1, 0, sResult, sErrInfo);
-                                if (sErrInfo.Length > 0)
+                                tdxHeartbeat_Result.sErrInfo.Clear();
+                                tdxHeartbeat_Result.sResult.Clear();
+                                Trade_Helper.QueryData(client.TradeClientId1, 0, tdxHeartbeat_Result.sResult, tdxHeartbeat_Result.sErrInfo);
+                                if (tdxHeartbeat_Result.sErrInfo.Length > 0)
                                 {
                                     clientFails.Add(client);
                                     continue;
                                 }
-                                //if (isSuccess < 0)
-                                //{
-                                //    clientFails.Add(client);
-                                //    continue;
-                                //}
                                 clientSuccess.Add(client);
                             } while (true);
 
@@ -286,6 +265,17 @@ namespace SharesTradeService.Handler
         public void Init(List<TradeLoginInfo> TradeLoginList,string accountCode="")
         {
             Dispose();
+
+            tdxConnect_Result = new TdxHq_Result
+            {
+                sErrInfo = new StringBuilder(256),
+                sResult = new StringBuilder(1024)
+            };
+            tdxHeartbeat_Result = new TdxHq_Result
+            {
+                sErrInfo = new StringBuilder(256),
+                sResult = new StringBuilder(1024)
+            };
 
             ReClient.Init();
             RetryWait.Init();
@@ -330,8 +320,6 @@ namespace SharesTradeService.Handler
                         if (!item.Value.GetMessage(ref client, true))
                         { break; }
 
-                        //TradeX_M.Logoff(client.TradeClientId0);
-                        //TradeX_M.Logoff(client.TradeClientId1);
                         Trade_Helper.Logoff(client.TradeClientId0);
                         Trade_Helper.Logoff(client.TradeClientId1);
                     } while (true);
@@ -365,5 +353,9 @@ namespace SharesTradeService.Handler
                 heartbeatWait.Release();
             }
         }
+
+
+        TdxHq_Result tdxConnect_Result;//链接内存空间
+        TdxHq_Result tdxHeartbeat_Result;//心跳链接内存空间
     }
 }

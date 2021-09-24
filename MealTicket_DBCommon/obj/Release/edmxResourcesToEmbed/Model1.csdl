@@ -3162,6 +3162,8 @@
       <PropertyRef Name="CreateTime" />
       <PropertyRef Name="WeightMarket" />
       <PropertyRef Name="NoWeightMarket" />
+      <PropertyRef Name="BaseStatus" />
+      <PropertyRef Name="SharesMarket" />
     </Key>
     <Property Name="PlateId" Type="Int64" Nullable="false" />
     <Property Name="PlateName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
@@ -3184,6 +3186,9 @@
     <Property Name="RiseIndex" Type="Int64" />
     <Property Name="WeightRiseRate" Type="Int64" />
     <Property Name="RiseRate" Type="Int64" />
+    <Property Name="BaseStatus" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="SharesMarket" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="v_plate_shares">
     <Key>
@@ -3198,6 +3203,7 @@
       <PropertyRef Name="CreateTime" />
       <PropertyRef Name="WeightMarket" />
       <PropertyRef Name="NoWeightMarket" />
+      <PropertyRef Name="BaseStatus" />
     </Key>
     <Property Name="PlateId" Type="Int64" Nullable="false" />
     <Property Name="PlateName" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
@@ -3220,6 +3226,8 @@
     <Property Name="NoWeightMarket" Type="Int32" Nullable="false" />
     <Property Name="NoWeightSharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
     <Property Name="PriceType" Type="Int32" />
+    <Property Name="BaseStatus" Type="Int32" Nullable="false" />
+    <Property Name="RelId" Type="Int64" />
   </EntityType>
   <EntityType Name="v_shares_baseinfo">
     <Key>

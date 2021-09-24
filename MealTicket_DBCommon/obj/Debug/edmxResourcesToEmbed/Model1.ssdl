@@ -3825,18 +3825,21 @@
       <PropertyRef Name="PlateType" />
       <PropertyRef Name="CalType" />
       <PropertyRef Name="ChooseStatus" />
+      <PropertyRef Name="BaseStatus" />
       <PropertyRef Name="Status" />
       <PropertyRef Name="SharesType" />
       <PropertyRef Name="LimitSharesMarket" />
       <PropertyRef Name="CreateTime" />
       <PropertyRef Name="WeightMarket" />
       <PropertyRef Name="NoWeightMarket" />
+      <PropertyRef Name="SharesMarket" />
     </Key>
     <Property Name="PlateId" Type="bigint" Nullable="false" />
     <Property Name="PlateName" Type="nvarchar" MaxLength="200" Nullable="false" />
     <Property Name="PlateType" Type="int" Nullable="false" />
     <Property Name="CalType" Type="int" Nullable="false" />
     <Property Name="ChooseStatus" Type="int" Nullable="false" />
+    <Property Name="BaseStatus" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="SharesType" Type="int" Nullable="false" />
     <Property Name="LimitSharesMarket" Type="int" Nullable="false" />
@@ -3853,6 +3856,8 @@
     <Property Name="RiseIndex" Type="bigint" />
     <Property Name="WeightRiseRate" Type="bigint" />
     <Property Name="RiseRate" Type="bigint" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="50" />
+    <Property Name="SharesMarket" Type="int" Nullable="false" />
   </EntityType>
   <!--生成过程中发现错误:
 警告 6002: 表/视图“meal_ticket.dbo.v_plate_shares”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
@@ -3865,11 +3870,13 @@
       <PropertyRef Name="SharesType" />
       <PropertyRef Name="CalType" />
       <PropertyRef Name="ChooseStatus" />
+      <PropertyRef Name="BaseStatus" />
       <PropertyRef Name="LimitSharesMarket" />
       <PropertyRef Name="CreateTime" />
       <PropertyRef Name="WeightMarket" />
       <PropertyRef Name="NoWeightMarket" />
     </Key>
+    <Property Name="RelId" Type="bigint" />
     <Property Name="PlateId" Type="bigint" Nullable="false" />
     <Property Name="PlateName" Type="nvarchar" MaxLength="200" Nullable="false" />
     <Property Name="PlateType" Type="int" Nullable="false" />
@@ -3877,6 +3884,7 @@
     <Property Name="SharesType" Type="int" Nullable="false" />
     <Property Name="CalType" Type="int" Nullable="false" />
     <Property Name="ChooseStatus" Type="int" Nullable="false" />
+    <Property Name="BaseStatus" Type="int" Nullable="false" />
     <Property Name="LimitSharesMarket" Type="int" Nullable="false" />
     <Property Name="LimitSharesCode" Type="varchar" MaxLength="50" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
@@ -4829,6 +4837,7 @@
     [v_plate].[PlateType] AS [PlateType], 
     [v_plate].[CalType] AS [CalType], 
     [v_plate].[ChooseStatus] AS [ChooseStatus], 
+    [v_plate].[BaseStatus] AS [BaseStatus], 
     [v_plate].[Status] AS [Status], 
     [v_plate].[SharesType] AS [SharesType], 
     [v_plate].[LimitSharesMarket] AS [LimitSharesMarket], 
@@ -4844,11 +4853,14 @@
     [v_plate].[WeightRiseIndex] AS [WeightRiseIndex], 
     [v_plate].[RiseIndex] AS [RiseIndex], 
     [v_plate].[WeightRiseRate] AS [WeightRiseRate], 
-    [v_plate].[RiseRate] AS [RiseRate]
+    [v_plate].[RiseRate] AS [RiseRate], 
+    [v_plate].[SharesCode] AS [SharesCode], 
+    [v_plate].[SharesMarket] AS [SharesMarket]
     FROM [dbo].[v_plate] AS [v_plate]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="v_plate_shares" EntityType="Self.v_plate_shares" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 
+    [v_plate_shares].[RelId] AS [RelId], 
     [v_plate_shares].[PlateId] AS [PlateId], 
     [v_plate_shares].[PlateName] AS [PlateName], 
     [v_plate_shares].[PlateType] AS [PlateType], 
@@ -4856,6 +4868,7 @@
     [v_plate_shares].[SharesType] AS [SharesType], 
     [v_plate_shares].[CalType] AS [CalType], 
     [v_plate_shares].[ChooseStatus] AS [ChooseStatus], 
+    [v_plate_shares].[BaseStatus] AS [BaseStatus], 
     [v_plate_shares].[LimitSharesMarket] AS [LimitSharesMarket], 
     [v_plate_shares].[LimitSharesCode] AS [LimitSharesCode], 
     [v_plate_shares].[CreateTime] AS [CreateTime], 

@@ -71,7 +71,9 @@ namespace SecurityBarsDataUpdate
             {
                 tArr[i] = Task.Factory.StartNew((ref_string) =>
                 {
-                    int hqClient = Singleton.Instance.GetHqClient();
+                    int hqClient = Singleton.Instance.GetHqClient(); 
+                    StringBuilder sErrInfo = new StringBuilder(256);
+                    StringBuilder sResult = new StringBuilder(512 * 800);
                     try
                     {
                         do
@@ -83,7 +85,7 @@ namespace SecurityBarsDataUpdate
                             }
 
                             bool isReconnectClient = false;
-                            var tempList = TdxHq_GetSecurityBarsData_byShares(hqClient, tempData,(TRANSACTION_DATA_STRING)ref_string, ref isReconnectClient);
+                            var tempList = TdxHq_GetSecurityBarsData_byShares(hqClient, tempData,(TRANSACTION_DATA_STRING)ref_string, ref isReconnectClient, ref sResult, ref sErrInfo);
 
                             if (isReconnectClient)
                             {
@@ -128,7 +130,7 @@ namespace SecurityBarsDataUpdate
         /// 获取某只股票K线数据
         /// </summary>
         /// <returns></returns>
-        private static List<SecurityBarsDataInfo> TdxHq_GetSecurityBarsData_byShares(int hqClient, SecurityBarsDataPar sharesData, TRANSACTION_DATA_STRING result_info, ref bool isReconnectClient)
+        private static List<SecurityBarsDataInfo> TdxHq_GetSecurityBarsData_byShares(int hqClient, SecurityBarsDataPar sharesData, TRANSACTION_DATA_STRING result_info, ref bool isReconnectClient, ref StringBuilder sResult,ref StringBuilder sErrInfo)
         {
             int datatype = sharesData.DataType;
             if (!CheckDataType(datatype))
@@ -155,12 +157,9 @@ namespace SecurityBarsDataUpdate
             bool isContinue = true;
             do
             {
-                StringBuilder sErrInfo = result_info.sErrInfo;
-                StringBuilder sResult = result_info.sResult;
-                sErrInfo.Clear();
-                sResult.Clear();
                 nCount = (short)defaultGetCount;
-
+                sResult.Clear();
+                sErrInfo.Clear();
                 bool bRet = TradeX_M.TdxHq_GetSecurityBars(hqClient, category, (byte)sharesData.Market, sharesData.SharesCode, nStart, ref nCount, sResult, sErrInfo);
                 if (!bRet)
                 {

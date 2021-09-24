@@ -36,6 +36,11 @@ namespace MealTicket_Admin_Handler.Model
         public int AccountCount { get; set; }
 
         /// <summary>
+        /// 排序值
+        /// </summary>
+        public int OrderIndex { get; set; }
+
+        /// <summary>
         /// 数据创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }

@@ -229,6 +229,7 @@ namespace MealTicket_Admin_Handler
                             {
                                 ServerDes = item.ServerDes,
                                 ServerId = item.ServerId,
+                                OrderIndex=item.OrderIndex,
                                 AccountCount = (from x in db.t_server_broker_account_rel
                                                 where x.ServerId == item.ServerId
                                                 select x).Count(),
@@ -258,7 +259,8 @@ namespace MealTicket_Admin_Handler
                     ServerDes = request.ServerDes,
                     CreateTime = DateTime.Now,
                     LastModified = DateTime.Now,
-                    ServerId = request.ServerId
+                    ServerId = request.ServerId,
+                    OrderIndex=request.OrderIndex
                 });
                 db.SaveChanges();
             }
@@ -280,6 +282,7 @@ namespace MealTicket_Admin_Handler
                 }
 
                 server.ServerDes = request.ServerDes;
+                server.OrderIndex = request.OrderIndex;
                 server.LastModified = DateTime.Now;
                 db.SaveChanges();
             }

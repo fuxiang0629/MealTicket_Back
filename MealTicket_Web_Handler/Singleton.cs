@@ -92,19 +92,13 @@ namespace MealTicket_Web_Handler
         #endregion
 
         #region====新分笔成交数据====
+        public int IsOpen = 1;
         public int NewTransactionDataSendPeriodTime = 0;//更新间隔
         public int NewTransactionDataRunStartTime = -180;//运行时间比交易时间提前秒数
         public int NewTransactionDataRunEndTime = 180;//运行时间比交易时间滞后秒数
         public int NewTransactiondataTaskTimeOut = 15000;//任务超时时间
         public int NewTransactiondataTaskTimeOut2 = 45000;//任务超时时间2
         public int NewTransactiondataTaskUpdateCountOnce = 5000;//单次写分时数据数量
-        #endregion
-
-        #region====K线数据参数====
-        public int SecurityBarsIntervalTime = 3000;//间隔时间(毫秒)
-        public int SecurityBarsTaskTimeout = 15000;//任务超时时间(毫秒)
-        public int SecurityBarsBatchCount = 64;//每批次处理股票数量
-        public int SecurityBarsUpdateCountOnce = 5000;//每次写入数据库数据量
         #endregion
 
 
@@ -270,6 +264,10 @@ namespace MealTicket_Web_Handler
             {
                 _SharesHisRiseRateSession.Dispose();
             }
+            if (quotesMQHandler != null)
+            {
+                quotesMQHandler.Dispose();
+            }
         }
 
         /// <summary>
@@ -394,6 +392,12 @@ namespace MealTicket_Web_Handler
                     if (sysPar != null)
                     {
                         var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                        
+                        int? tempIsOpen = sysValue.IsOpen;
+                        if (tempIsOpen>0)
+                        {
+                            IsOpen = tempIsOpen.Value;
+                        }
                         int tempSendPeriodTime = sysValue.SendPeriodTime;
                         if (tempSendPeriodTime != null)
                         {
@@ -601,6 +605,25 @@ namespace MealTicket_Web_Handler
             return mqHandler;
         }
 
+        /// <summary>
+        /// 队列对象
+        /// </summary>
+        public SharesQuotesMQHandler quotesMQHandler;
+        /// <summary>
+        /// 启动Mq队列
+        /// </summary>
+        public SharesQuotesMQHandler StartQuotesMQHandler()
+        {
+            string hostName = ConfigurationManager.AppSettings["MQ_HostName"];
+            int port = int.Parse(ConfigurationManager.AppSettings["MQ_Port"]);
+            string userName = ConfigurationManager.AppSettings["MQ_UserName"];
+            string password = ConfigurationManager.AppSettings["MQ_Password"];
+            string virtualHost = ConfigurationManager.AppSettings["MQ_VirtualHost"];
+            quotesMQHandler = new SharesQuotesMQHandler(hostName, port, userName, password, virtualHost);
+            quotesMQHandler.ListenQueueName = "TransactionDataQuotes";//设置监听队列
+            return quotesMQHandler;
+        }
+
 
         /// <summary>
         /// 分笔数据处理任务
@@ -620,6 +643,10 @@ namespace MealTicket_Web_Handler
             var transactionDataTask = StartTransactionDataTask();
             transactionDataTask.DoTask();
             mqHandler.StartListen();//启动队列监听
+
+
+            var quotesMQHandler = StartQuotesMQHandler();//生成Mq队列对象
+            quotesMQHandler.StartListen();
 
             _SharesQuotesSession.StartUpdate(3000);
             _SharesBaseSession.StartUpdate(600000);

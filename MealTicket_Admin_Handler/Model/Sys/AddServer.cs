@@ -21,5 +21,10 @@ namespace MealTicket_Admin_Handler.Model
         /// 【选填】描述
         /// </summary>
         public string ServerDes { get; set; }
+
+        /// <summary>
+        /// 排序值
+        /// </summary>
+        public int OrderIndex { get; set; }
     }
 }

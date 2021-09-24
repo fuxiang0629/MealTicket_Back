@@ -866,14 +866,13 @@ namespace MealTicket_Admin_Handler
         {
             using (var db = new meal_ticketEntities())
             {
-                var list = from item2 in db.t_shares_plate 
-                           join item in db.t_shares_plate_riserate_last on item2.Id equals item.PlateId into a from ai in a.DefaultIfEmpty()
-                           select new { ai, item2 };
+                var list = from item in db.v_plate
+                           select item;
 
                 if (request.Type != 0)
                 {
                     list = from item in list
-                           where item.item2.Type == request.Type
+                           where item.PlateType == request.Type
                            select item;
                 }
                 if (request.ChooseStatus != 0)
@@ -881,21 +880,21 @@ namespace MealTicket_Admin_Handler
                     if (request.Level == 1)
                     {
                         list = from item in list
-                               join item2 in db.t_shares_plate_type_business on item.item2.Type equals item2.Id
-                               where item.item2.ChooseStatus == request.ChooseStatus || (item2.IsBasePlate == 1 && item.item2.BaseStatus == 1)
+                               join item2 in db.t_shares_plate_type_business on item.PlateType equals item2.Id
+                               where item.ChooseStatus == request.ChooseStatus || (item2.IsBasePlate == 1 && item.BaseStatus == 1)
                                select item;
                     }
                     else
                     {
                         list = from item in list
-                               where item.item2.ChooseStatus == request.ChooseStatus
+                               where item.ChooseStatus == request.ChooseStatus
                                select item;
                     }
                 }
                 if (!string.IsNullOrEmpty(request.Name))
                 {
                     list = from item in list
-                           where item.item2.Name.Contains(request.Name)
+                           where item.PlateName.Contains(request.Name)
                            select item;
                 }
                 if (request.Level == 1)
@@ -905,19 +904,19 @@ namespace MealTicket_Admin_Handler
                         MaxId = 0,
                         TotalCount = 0,
                         List = (from item in list
-                                orderby item.item2.Name
+                                orderby item.PlateName
                                 select new SharesPlateInfo
                                 {
-                                    Id = item.item2.Id,
-                                    Type = item.item2.Type,
-                                    Name = item.item2.Name
+                                    Id = item.PlateId,
+                                    Type = item.PlateType,
+                                    Name = item.PlateName
                                 }).ToList()
                     };
                 }
 
                 int totalCount = list.Count();
-                int validCount = list.Where(e => e.item2.Status == 1).Count();
-                int baseCount= list.Where(e => e.item2.Status == 1 && e.item2.BaseStatus==1).Count();
+                int validCount = list.Where(e => e.Status == 1).Count();
+                int baseCount= list.Where(e => e.Status == 1 && e.BaseStatus==1).Count();
 
                 List<SharesPlateInfo> result = new List<SharesPlateInfo>();
                 if (request.OrderType == 1)
@@ -925,103 +924,101 @@ namespace MealTicket_Admin_Handler
                     if (request.OrderMethod == "ascending")
                     {
                         result = (from item in list
-                                  join item2 in db.t_shares_all on new { Market = item.item2.WeightMarket, SharesCode = item.item2.WeightSharesCode } equals new { item2.Market, item2.SharesCode } into a
+                                  join item2 in db.t_shares_all on new { Market = item.WeightMarket, SharesCode = item.WeightSharesCode } equals new { item2.Market, item2.SharesCode } into a
                                   from ai in a.DefaultIfEmpty()
-                                  join item3 in db.t_shares_all on new { Market = item.item2.NoWeightMarket, SharesCode = item.item2.NoWeightSharesCode } equals new { item3.Market, item3.SharesCode } into b
+                                  join item3 in db.t_shares_all on new { Market = item.NoWeightMarket, SharesCode = item.NoWeightSharesCode } equals new { item3.Market, item3.SharesCode } into b
                                   from bi in b.DefaultIfEmpty()
-                                  let riseRate = item.ai == null ? 0 : item.ai.RiseRate
-                                  orderby riseRate
+                                  orderby item.RiseRate
                                   select new SharesPlateInfo
                                   {
-                                      Status = item.item2.Status,
-                                      CreateTime = item.item2.CreateTime,
-                                      Id = item.item2.Id,
-                                      Type = item.item2.Type,
-                                      SharesCount = item.ai == null ? 0 : item.ai.SharesCount,
-                                      Name = item.item2.Name,
-                                      SharesCode = item.item2.SharesCode,
-                                      SharesMarket = item.item2.SharesMarket,
-                                      SharesType = item.item2.SharesType,
-                                      WeightSharesCode = item.item2.WeightSharesCode,
-                                      NoWeightSharesCode = item.item2.NoWeightSharesCode,
-                                      NoWeightMarket = item.item2.NoWeightMarket,
-                                      WeightMarket = item.item2.WeightMarket,
+                                      Status = item.Status,
+                                      CreateTime = item.CreateTime,
+                                      Id = item.PlateId,
+                                      Type = item.PlateType,
+                                      SharesCount = item.SharesCount??0,
+                                      Name = item.PlateName,
+                                      SharesCode = item.SharesCode,
+                                      SharesMarket = item.SharesMarket,
+                                      SharesType = item.SharesType,
+                                      WeightSharesCode = item.WeightSharesCode,
+                                      NoWeightSharesCode = item.NoWeightSharesCode,
+                                      NoWeightMarket = item.NoWeightMarket,
+                                      WeightMarket = item.WeightMarket,
                                       WeightSharesName = ai == null ? "" : ai.SharesName,
                                       NoWeightSharesName = bi == null ? "" : bi.SharesName,
-                                      RiseRate = item.ai == null ? 0 : item.ai.RiseRate,
-                                      BaseStatus = item.item2.BaseStatus,
-                                      RiseIndex = item.ai == null ? 0 : item.ai.RiseIndex,
-                                      WeightRiseIndex = item.ai == null ? 0 : item.ai.WeightRiseIndex,
-                                      WeightRiseRate = item.ai == null ? 0 : item.ai.WeightRiseRate,
-                                      CalType = item.item2.CalType
+                                      RiseRate = item.RiseRate,
+                                      BaseStatus = item.BaseStatus,
+                                      RiseIndex = item.RiseIndex,
+                                      WeightRiseIndex = item.WeightRiseIndex,
+                                      WeightRiseRate = item.WeightRiseRate,
+                                      CalType = item.CalType
                                   }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                     }
                     else
                     {
                         result = (from item in list
-                                  join item2 in db.t_shares_all on new { Market = item.item2.WeightMarket, SharesCode = item.item2.WeightSharesCode } equals new { item2.Market, item2.SharesCode } into a
+                                  join item2 in db.t_shares_all on new { Market = item.WeightMarket, SharesCode = item.WeightSharesCode } equals new { item2.Market, item2.SharesCode } into a
                                   from ai in a.DefaultIfEmpty()
-                                  join item3 in db.t_shares_all on new { Market = item.item2.NoWeightMarket, SharesCode = item.item2.NoWeightSharesCode } equals new { item3.Market, item3.SharesCode } into b
+                                  join item3 in db.t_shares_all on new { Market = item.NoWeightMarket, SharesCode = item.NoWeightSharesCode } equals new { item3.Market, item3.SharesCode } into b
                                   from bi in b.DefaultIfEmpty()
-                                  let riseRate = item.ai == null ? 0 : item.ai.RiseRate
-                                  orderby riseRate descending
+                                  orderby item.RiseRate descending
                                   select new SharesPlateInfo
                                   {
-                                      Status = item.item2.Status,
-                                      CreateTime = item.item2.CreateTime,
-                                      Id = item.item2.Id,
-                                      Type = item.item2.Type,
-                                      SharesCount = item.ai == null ? 0 : item.ai.SharesCount,
-                                      Name = item.item2.Name,
-                                      SharesCode = item.item2.SharesCode,
-                                      SharesMarket = item.item2.SharesMarket,
-                                      SharesType = item.item2.SharesType,
-                                      WeightSharesCode = item.item2.WeightSharesCode,
-                                      NoWeightSharesCode = item.item2.NoWeightSharesCode,
-                                      NoWeightMarket = item.item2.NoWeightMarket,
-                                      WeightMarket = item.item2.WeightMarket,
+                                      Status = item.Status,
+                                      CreateTime = item.CreateTime,
+                                      Id = item.PlateId,
+                                      Type = item.PlateType,
+                                      SharesCount = item.SharesCount ?? 0,
+                                      Name = item.PlateName,
+                                      SharesCode = item.SharesCode,
+                                      SharesMarket = item.SharesMarket,
+                                      SharesType = item.SharesType,
+                                      WeightSharesCode = item.WeightSharesCode,
+                                      NoWeightSharesCode = item.NoWeightSharesCode,
+                                      NoWeightMarket = item.NoWeightMarket,
+                                      WeightMarket = item.WeightMarket,
                                       WeightSharesName = ai == null ? "" : ai.SharesName,
                                       NoWeightSharesName = bi == null ? "" : bi.SharesName,
-                                      RiseRate = item.ai == null ? 0 : item.ai.RiseRate,
-                                      BaseStatus = item.item2.BaseStatus,
-                                      RiseIndex = item.ai == null ? 0 : item.ai.RiseIndex,
-                                      WeightRiseIndex = item.ai == null ? 0 : item.ai.WeightRiseIndex,
-                                      WeightRiseRate = item.ai == null ? 0 : item.ai.WeightRiseRate,
-                                      CalType = item.item2.CalType
+                                      RiseRate = item.RiseRate,
+                                      BaseStatus = item.BaseStatus,
+                                      RiseIndex = item.RiseIndex,
+                                      WeightRiseIndex = item.WeightRiseIndex,
+                                      WeightRiseRate = item.WeightRiseRate,
+                                      CalType = item.CalType
                                   }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                     }
                 }
                 else
                 {
                     result = (from item in list
-                              join item2 in db.t_shares_all on new { Market = item.item2.WeightMarket, SharesCode = item.item2.WeightSharesCode } equals new { item2.Market, item2.SharesCode } into a
+                              join item2 in db.t_shares_all on new { Market = item.WeightMarket, SharesCode = item.WeightSharesCode } equals new { item2.Market, item2.SharesCode } into a
                               from ai in a.DefaultIfEmpty()
-                              join item3 in db.t_shares_all on new { Market = item.item2.NoWeightMarket, SharesCode = item.item2.NoWeightSharesCode } equals new { item3.Market, item3.SharesCode } into b
+                              join item3 in db.t_shares_all on new { Market = item.NoWeightMarket, SharesCode = item.NoWeightSharesCode } equals new { item3.Market, item3.SharesCode } into b
                               from bi in b.DefaultIfEmpty()
-                              orderby item.item2.CreateTime descending, item.item2.Id descending
+                              orderby item.CreateTime descending, item.PlateId descending
                               select new SharesPlateInfo
                               {
-                                  Status = item.item2.Status,
-                                  CreateTime = item.item2.CreateTime,
-                                  Id = item.item2.Id,
-                                  Type = item.item2.Type,
-                                  SharesCount = item.ai == null ? 0 : item.ai.SharesCount,
-                                  Name = item.item2.Name,
-                                  SharesCode = item.item2.SharesCode,
-                                  SharesMarket = item.item2.SharesMarket,
-                                  SharesType = item.item2.SharesType,
-                                  WeightSharesCode = item.item2.WeightSharesCode,
-                                  NoWeightSharesCode = item.item2.NoWeightSharesCode,
-                                  NoWeightMarket = item.item2.NoWeightMarket,
-                                  WeightMarket = item.item2.WeightMarket,
+                                  Status = item.Status,
+                                  CreateTime = item.CreateTime,
+                                  Id = item.PlateId,
+                                  Type = item.PlateType,
+                                  SharesCount = item.SharesCount ?? 0,
+                                  Name = item.PlateName,
+                                  SharesCode = item.SharesCode,
+                                  SharesMarket = item.SharesMarket,
+                                  SharesType = item.SharesType,
+                                  WeightSharesCode = item.WeightSharesCode,
+                                  NoWeightSharesCode = item.NoWeightSharesCode,
+                                  NoWeightMarket = item.NoWeightMarket,
+                                  WeightMarket = item.WeightMarket,
                                   WeightSharesName = ai == null ? "" : ai.SharesName,
                                   NoWeightSharesName = bi == null ? "" : bi.SharesName,
-                                  RiseRate = item.ai == null ? 0 : item.ai.RiseRate,
-                                  BaseStatus = item.item2.BaseStatus,
-                                  RiseIndex = item.ai == null ? 0 : item.ai.RiseIndex,
-                                  WeightRiseIndex = item.ai == null ? 0 : item.ai.WeightRiseIndex,
-                                  WeightRiseRate = item.ai == null ? 0 : item.ai.WeightRiseRate,
-                                  CalType = item.item2.CalType
+                                  RiseRate = item.RiseRate,
+                                  BaseStatus = item.BaseStatus,
+                                  RiseIndex = item.RiseIndex,
+                                  WeightRiseIndex = item.WeightRiseIndex,
+                                  WeightRiseRate = item.WeightRiseRate,
+                                  CalType = item.CalType
                               }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                 }
 
@@ -1454,7 +1451,7 @@ namespace MealTicket_Admin_Handler
                             orderby item.item.CreateTime descending
                             select new SharesInfo
                             {
-                                Id = item.item.PlateId,
+                                Id = item.item.RelId??0,
                                 SharesCode = item.item.SharesCode,
                                 SharesName = item.item2.SharesName,
                                 SharesNamePY = item.item2.SharesPyjc,

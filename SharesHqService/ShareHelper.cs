@@ -61,6 +61,8 @@ namespace SharesHqService
             int failCount = 0;//失败次数
             while (totalCount > realCount)
             {
+                sResult.Clear();
+                sErrInfo.Clear();
                 bool bRet = TradeX_M.TdxHq_GetSecurityList(hqClient, nMarket, realCount, ref nCount, sResult, sErrInfo);
                 if (!bRet)
                 {
@@ -178,6 +180,10 @@ namespace SharesHqService
             {
                 tArr[i] = new Task((tdx_result) =>
                 {
+                    StringBuilder sErrInfo = new StringBuilder(256);
+                    StringBuilder sResult = new StringBuilder(2048*Singleton.Instance.QuotesCount);
+                    byte[] nMarketArr = new byte[Singleton.Instance.QuotesCount];
+                    string[] pszZqdmArr = new string[Singleton.Instance.QuotesCount];
                     int hqClient = Singleton.Instance.GetHqClient();
                     try
                     {
@@ -188,15 +194,11 @@ namespace SharesHqService
                             {
                                 break;
                             }
-                            var temp_tdx_result = tdx_result as TdxHq_Result;
-                            StringBuilder sErrInfo = temp_tdx_result.sErrInfo;
-                            StringBuilder sResult = temp_tdx_result.sResult;
+
                             sErrInfo.Clear();
                             sResult.Clear();
 
                             short nCount = (short)tempData.Count();
-                            byte[] nMarketArr = new byte[nCount];
-                            string[] pszZqdmArr = new string[nCount];
                             for (int j = 0; j < nCount; j++)
                             {
                                 nMarketArr[j] = (byte)tempData[j].Market;
@@ -211,6 +213,7 @@ namespace SharesHqService
                                 Console.WriteLine(errDes);
                                 continue;
                             }
+
                             string result = sResult.ToString();
                             string[] rows = result.Split('\n');
                             for (int j = 0; j < rows.Length; j++)
@@ -219,6 +222,7 @@ namespace SharesHqService
                                 {
                                     continue;
                                 }
+
                                 string[] column = rows[j].Split('\t');
                                 if (column.Length < 43)
                                 {

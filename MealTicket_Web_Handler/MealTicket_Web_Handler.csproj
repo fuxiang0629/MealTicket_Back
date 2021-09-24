@@ -264,6 +264,7 @@
     <Compile Include="Model\RelIdInfo.cs" />
     <Compile Include="ModifyStatusRequest.cs" />
     <Compile Include="MQ\MQHandler.cs" />
+    <Compile Include="MQ\SharesQuotesMQHandler.cs" />
     <Compile Include="OptionalTrend.cs" />
     <Compile Include="PageRequest.cs" />
     <Compile Include="PageRes.cs" />

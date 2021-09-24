@@ -6406,6 +6406,11 @@
             【选填】描述
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddServerRequest.OrderIndex">
+            <summary>
+            排序值
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.AddHelpcenterQuestionRequest.Name">
             <summary>
             问题名称
@@ -7286,6 +7291,11 @@
             账号数量
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ServerInfo.OrderIndex">
+            <summary>
+            排序值
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.ServerInfo.CreateTime">
             <summary>
             数据创建时间
@@ -8109,6 +8119,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.ModifyServerRequest.ServerDes">
             <summary>
             【选填】描述
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyServerRequest.OrderIndex">
+            <summary>
+            排序值
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.ModifySmsChannelAppRequest.Id">

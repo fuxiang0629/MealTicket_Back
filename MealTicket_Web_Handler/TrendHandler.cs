@@ -2521,39 +2521,41 @@ namespace MealTicket_Web_Handler
                                       AccountName = item2.NickName,
                                       Deposit= item3.Deposit,
                                   }).ToList();
-                if (!string.IsNullOrEmpty(request.SharesCode))
+                
+                foreach (var follow in followList)
                 {
-                    foreach (var follow in followList)
+                    var accountSetting = (from x in buySetting
+                                          where x.AccountId == follow.AccountId
+                                          select x).FirstOrDefault();
+                    if (accountSetting != null)
                     {
-                        var accountSetting = (from x in buySetting
-                                              where x.AccountId == follow.AccountId
-                                              select x).FirstOrDefault();
-                        if (accountSetting != null)
-                        {
-                            var valueObj = JsonConvert.DeserializeObject<dynamic>(accountSetting.ParValueJson);
-                            long parValue = valueObj.Value;
-                            follow.MaxDeposit = follow.Deposit - parValue;
-                        }
-                        //计算杠杆倍数
-                        var accountRules = from item in db.t_shares_limit_fundmultiple_account
-                                           where item.AccountId == follow.AccountId
-                                           select item;
+                        var valueObj = JsonConvert.DeserializeObject<dynamic>(accountSetting.ParValueJson);
+                        long parValue = valueObj.Value;
+                        follow.MaxDeposit = follow.Deposit - parValue;
+                    }
+                    else
+                    {
+                        follow.MaxDeposit = follow.Deposit;
+                    }
+                    //计算杠杆倍数
+                    var accountRules = from item in db.t_shares_limit_fundmultiple_account
+                                       where item.AccountId == follow.AccountId
+                                       select item;
 
 
-                        var rules = (from item in db.t_shares_limit_fundmultiple
-                                     join item2 in accountRules on item.Id equals item2.FundmultipleId into a
-                                     from ai in a.DefaultIfEmpty()
-                                     where (item.LimitMarket == request.Market || item.LimitMarket == -1) && (request.SharesCode.StartsWith(item.LimitKey))
-                                     orderby item.Priority descending, item.FundMultiple
-                                     select new { item, ai }).FirstOrDefault();
-                        if (rules == null)
-                        {
-                            follow.MaxFundMultiple = 0;
-                        }
-                        else
-                        {
-                            follow.MaxFundMultiple = (rules.ai == null|| rules.item.FundMultiple< rules.ai.FundMultiple) ? rules.item.FundMultiple : rules.ai.FundMultiple;
-                        }
+                    var rules = (from item in db.t_shares_limit_fundmultiple
+                                 join item2 in accountRules on item.Id equals item2.FundmultipleId into a
+                                 from ai in a.DefaultIfEmpty()
+                                 where (item.LimitMarket == request.Market || item.LimitMarket == -1) && (request.SharesCode.StartsWith(item.LimitKey))
+                                 orderby item.Priority descending, item.FundMultiple
+                                 select new { item, ai }).FirstOrDefault();
+                    if (rules == null)
+                    {
+                        follow.MaxFundMultiple = 0;
+                    }
+                    else
+                    {
+                        follow.MaxFundMultiple = (rules.ai == null || rules.item.FundMultiple < rules.ai.FundMultiple) ? rules.item.FundMultiple : rules.ai.FundMultiple;
                     }
                 }
                 return followList;
@@ -3458,6 +3460,17 @@ inner
 
         private void TradeToBuy(meal_ticketEntities db, List<dynamic> buyList, long mainAccountId, int market, string sharesCode, long buyPrice, long autoDetailsId)
         {
+            string serverId = "s1";
+            var server = (from x in db.t_server_broker_account_rel
+                          join x2 in db.t_server on x.ServerId equals x2.ServerId
+                          orderby x2.OrderIndex
+                          select x).FirstOrDefault();
+            if (server == null)
+            {
+                throw new WebApiException(400, "服务器配置有误");
+            }
+            serverId = server.ServerId;
+
             long mainEntrustId = 0;
 
             List<dynamic> sendDataList = new List<dynamic>();
@@ -3546,7 +3559,7 @@ inner
             {
                 throw new WebApiException(400, error);
             }
-            bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new { type = 1, data = sendDataList })), "SharesBuy", "s1");
+            bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new { type = 1, data = sendDataList })), "SharesBuy", serverId);
             if (!isSendSuccess)
             {
                 throw new WebApiException(400, "买入失败,请撤销重试");
@@ -3563,88 +3576,20 @@ inner
             {
                 request.MainAccountId = basedata.AccountId;
             }
+            var sellList=CalSellInfo(request.MainAccountId, request.HoldId, request.SellCount, request.FollowList);
+
             using (var db = new meal_ticketEntities())
             {
-                //查询跟投人员
-                var followList = (from item in db.t_account_follow_rel
-                                  join item2 in db.t_account_baseinfo on item.FollowAccountId equals item2.Id
-                                  join item3 in db.t_account_wallet on item.FollowAccountId equals item3.AccountId
-                                  where item.AccountId == basedata.AccountId && item2.Status == 1
-                                  select item3).ToList();
-                //查询持仓
-                var hold = (from item in db.t_account_shares_hold
-                            where item.Id == request.HoldId
-                            select item).FirstOrDefault();
-                if (hold == null)
-                {
-                    throw new WebApiException(400, "持仓不存在");
-                }
-                List<dynamic> sellList = new List<dynamic>();
-                if (hold.AccountId == basedata.AccountId)//自己卖
-                {
-                    sellList.Add(new
-                    {
-                        AccountId = hold.AccountId,
-                        HoldId = hold.Id,
-                        SellCount = request.SellCount,
-                    });
-                    //计算本人卖出仓位比
-                    var sellRate = request.SellCount * 1.0 / hold.CanSoldCount;
-                    foreach (var account in request.FollowList)
-                    {
-                        var temp = followList.Where(e => e.AccountId == account).FirstOrDefault();
-                        if (temp == null)
-                        {
-                            continue;
-                        }
-                        var followHold = (from item in db.t_account_shares_hold
-                                          where item.AccountId == account && item.SharesCode == hold.SharesCode && item.Market == hold.Market && item.Status == 1 && item.CanSoldCount > 0
-                                          select item).FirstOrDefault();
-                        if (followHold == null)
-                        {
-                            continue;
-                        }
-                        int sellCount = (int)(followHold.CanSoldCount * sellRate);
-                        sellCount = sellCount / 100 * 100;
-                        sellList.Add(new
-                        {
-                            AccountId = account,
-                            HoldId = followHold.Id,
-                            SellCount = sellCount
-                        });
-                    }
-                }
-                else//给跟投人卖
-                {
-                    if (followList.Where(e => e.AccountId == hold.AccountId).FirstOrDefault() == null)
-                    {
-                        throw new WebApiException(400, "无权操作");
-                    }
-                    sellList.Add(new
-                    {
-                        AccountId = hold.AccountId,
-                        HoldId = hold.Id,
-                        SellCount = request.SellCount,
-                    });
-                }
-
-                long mainEntrustId = 0;
-
                 Dictionary<string, List<dynamic>> sendDataDic = new Dictionary<string, List<dynamic>>();
+                long firstEntrustId = 0;
                 using (var tran = db.Database.BeginTransaction())
                 {
                     try
                     {
+                        int i = 0;
+                        long mainEntrustId = 0;
                         foreach (var sell in sellList)
                         {
-                            if (sell.SellCount <= 0)
-                            {
-                                if (sell.AccountId == basedata.AccountId)
-                                {
-                                    throw new WebApiException(400,"卖出数量不足");
-                                }
-                                continue;
-                            }
                             ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                             ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
                             ObjectParameter sellIdDb = new ObjectParameter("sellId", 0);
@@ -3656,13 +3601,18 @@ inner
                                 throw new WebApiException(errorCode, errorMessage);
                             }
                             long sellId = (long)sellIdDb.Value;
+                            if (i == 0)
+                            {
+                                firstEntrustId = sellId;
+                                i = 1;
+                            }
 
-                            if (sell.AccountId != basedata.AccountId)//不是自己卖，绑定跟卖关系
+                            if (sell.AccountId != sell.MainAccountId)//不是自己卖，绑定跟卖关系
                             {
                                 db.t_account_shares_entrust_follow.Add(new t_account_shares_entrust_follow
                                 {
                                     CreateTime = DateTime.Now,
-                                    MainAccountId = basedata.AccountId,
+                                    MainAccountId = sell.MainAccountId,
                                     MainEntrustId = mainEntrustId,
                                     FollowAccountId = sell.AccountId,
                                     FollowEntrustId = sellId,
@@ -3718,22 +3668,112 @@ inner
                     }
                     catch (Exception ex)
                     {
-                        Logger.WriteFileLog("卖出失败",ex);
+                        Logger.WriteFileLog("卖出失败", ex);
                         sendDataDic = new Dictionary<string, List<dynamic>>();
                         tran.Rollback();
                     }
                 }
                 if (sendDataDic.Count() <= 0)
                 {
-                    throw new WebApiException(400,"卖出操作失败");
+                    throw new WebApiException(400, "卖出操作失败");
                 }
                 foreach (var item in sendDataDic)
                 {
                     Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new { type = 1, data = item.Value })), "SharesSell", item.Key);
                 }
-                return mainEntrustId;
+                return firstEntrustId;
             }
         }
+
+        private List<dynamic> CalSellInfo(long mainAccountId,long holdId, int sellCount,List<long> chooseFollowAccountId)
+        {
+            List<dynamic> sellList = new List<dynamic>();
+            using (var db = new meal_ticketEntities())
+            {  
+                //查询持仓
+                var hold = (from item in db.t_account_shares_hold
+                            where item.Id == holdId
+                            select item).FirstOrDefault();
+                if (hold == null)
+                {
+                    return sellList;
+                }
+                if (mainAccountId != hold.AccountId)
+                {
+                    chooseFollowAccountId = null;
+                }
+                sellList.Add(new
+                {
+                    MainAccountId = mainAccountId,
+                    AccountId = hold.AccountId,
+                    HoldId = holdId,
+                    SellCount = sellCount,
+                });
+
+                if (chooseFollowAccountId == null)
+                {
+                    //判断是否卖出自己跟投的账户
+                    var accountSetting = DbHelper.GetAccountBuySetting(hold.AccountId, 6).FirstOrDefault();
+                    if (accountSetting == null)
+                    {
+                        return sellList;
+                    }
+                    var accountSettingValue = JsonConvert.DeserializeObject<dynamic>(accountSetting.ParValueJson);
+                    int tempValue = accountSettingValue.Value;
+                    if (tempValue != 1)
+                    {
+                        return sellList;
+                    }
+                }
+
+                //查询跟投人员
+                var followList = (from item in db.t_account_follow_rel
+                                  join item2 in db.t_account_baseinfo on item.FollowAccountId equals item2.Id
+                                  join item3 in db.t_account_wallet on item.FollowAccountId equals item3.AccountId
+                                  where item.AccountId == hold.AccountId && item2.Status == 1
+                                  select item3.AccountId).ToList();
+                if (chooseFollowAccountId != null)
+                {
+                    followList = (from item in followList
+                                  where chooseFollowAccountId.Contains(item)
+                                  select item).ToList();
+                }
+                //计算本人卖出仓位比
+                var sellRate = sellCount * 1.0 / hold.CanSoldCount;
+
+                foreach (var account in followList)
+                {
+                    var followHold = (from item in db.t_account_shares_hold
+                                      where item.AccountId == account && item.SharesCode == hold.SharesCode && item.Market == hold.Market && item.Status == 1 && item.CanSoldCount > 0
+                                      select item).FirstOrDefault();
+                    if (followHold == null)
+                    {
+                        continue;
+                    }
+                    int followSellCount = (int)(followHold.CanSoldCount * sellRate);
+                    followSellCount = followSellCount / 100 * 100;
+                    if (followSellCount > 0)
+                    {
+                        if (mainAccountId == hold.AccountId)
+                        {
+                            sellList.AddRange(CalSellInfo(mainAccountId, followHold.Id, followSellCount, null));
+                        }
+                        else
+                        {
+                            sellList.Add(new
+                            {
+                                MainAccountId = hold.AccountId,
+                                AccountId = account,
+                                HoldId = followHold.Id,
+                                SellCount = followSellCount
+                            });
+                        }
+                    }
+                }
+                return sellList;
+            }
+        }
+
 
         /// <summary>
         /// 股票申请撤单
@@ -14564,6 +14604,13 @@ select @buyId;";
                 Name = "同步交易默认买入",
                 Description = "同步交易默认买入",
                 ParValueJson = "{\"Value\":"+CommonEnum.DefaultBuyStatus+"}"
+            });
+            tempList.Add(new AccountBuySettingInfo
+            {
+                Type = 6,
+                Name = "跟投账户是否默认卖出",
+                Description = "一级主账户被卖出时，跟投用户是否默认卖出",
+                ParValueJson = "{\"Value\":" + CommonEnum.DefaultSellChild + "}"
             });
             bool IsMain = false;
             if (request.AccountId == 0)

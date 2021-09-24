@@ -107,9 +107,6 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="runner\ClearTransactiondataRunner.cs" />
-    <Compile Include="runner\SharesAutoJoinRunner.cs" />
-    <Compile Include="runner\TradeAutoBuyRunner.cs" />
-    <Compile Include="runner\TradeAutoRunner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

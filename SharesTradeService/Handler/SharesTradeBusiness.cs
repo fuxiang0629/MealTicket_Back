@@ -221,11 +221,11 @@ namespace SharesTradeService.Handler
                     }
                     //取不到连接，直接退出
                     var client = Singleton.instance.buyTradeClient.GetTradeClient(accounrCodeList[takeCount]);
+                    takeCount++;
                     if (client == null)
                     {
-                        break;
+                        continue;
                     }
-                    takeCount++;
                     //连接已被取过
                     if (accountList.Contains(client.AccountCode))
                     {
@@ -352,7 +352,10 @@ namespace SharesTradeService.Handler
                                            where x.ServerId == Singleton.instance.ServerId
                                            select x.OrderIndex).FirstOrDefault();
                         var nextServer = (from x in db.t_server
-                                          where x.OrderIndex > serverIndex
+                                          join x2 in db.t_server_broker_account_rel on x.ServerId equals x2.ServerId
+                                          join x3 in db.t_broker_account_info on x2.BrokerAccountId equals x3.Id
+                                          where x.OrderIndex > serverIndex && accounrCodeList.Contains(x3.AccountCode)
+                                          orderby x.OrderIndex
                                           select x).FirstOrDefault();
                         if (nextServer == null)
                         {

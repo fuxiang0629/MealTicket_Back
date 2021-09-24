@@ -3355,6 +3355,9 @@
     <EntitySetMapping Name="v_plate">
       <EntityTypeMapping TypeName="meal_ticketModel.v_plate">
         <MappingFragment StoreEntitySet="v_plate">
+          <ScalarProperty Name="SharesMarket" ColumnName="SharesMarket" />
+          <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+          <ScalarProperty Name="BaseStatus" ColumnName="BaseStatus" />
           <ScalarProperty Name="PlateId" ColumnName="PlateId" />
           <ScalarProperty Name="PlateName" ColumnName="PlateName" />
           <ScalarProperty Name="PlateType" ColumnName="PlateType" />
@@ -3382,6 +3385,8 @@
     <EntitySetMapping Name="v_plate_shares">
       <EntityTypeMapping TypeName="meal_ticketModel.v_plate_shares">
         <MappingFragment StoreEntitySet="v_plate_shares">
+          <ScalarProperty Name="RelId" ColumnName="RelId" />
+          <ScalarProperty Name="BaseStatus" ColumnName="BaseStatus" />
           <ScalarProperty Name="PlateId" ColumnName="PlateId" />
           <ScalarProperty Name="PlateName" ColumnName="PlateName" />
           <ScalarProperty Name="PlateType" ColumnName="PlateType" />

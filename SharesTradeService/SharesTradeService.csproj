@@ -104,6 +104,7 @@
     <Compile Include="Runner\QueryTradeResultRunner.cs" />
     <Compile Include="ServiceModule.cs" />
     <Compile Include="Singleton.cs" />
+    <Compile Include="TdxHq_Result.cs" />
     <Compile Include="Test\TestHelper.cs" />
     <Compile Include="TradeService.cs">
       <SubType>Component</SubType>
