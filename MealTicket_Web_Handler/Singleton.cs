@@ -84,6 +84,7 @@ namespace MealTicket_Web_Handler
         #region===再触发设置===
         public int MinPushTimeInterval = 180;
         public int MinPushRateInterval = 60;
+        public int MinPushTodayPrice = 0; 
         #endregion
 
         #region===清理分笔数据参数===
@@ -339,6 +340,12 @@ namespace MealTicket_Web_Handler
                         {
                             MinPushRateInterval = tempMinPushRateInterval;
                         }
+                        int tempMinPushTodayPrice = sysValue.MinPushTodayPrice;
+                        if (tempMinPushTodayPrice >= 0 || tempMinPushTodayPrice == -1)
+                        {
+                            MinPushTodayPrice = tempMinPushTodayPrice;
+                        }
+                        
                         int tempHandlerThreadCount = sysValue.HandlerThreadCount;
                         if (tempHandlerThreadCount > 0 && tempHandlerThreadCount <= 100)
                         {

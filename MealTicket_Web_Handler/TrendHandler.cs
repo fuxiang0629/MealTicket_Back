@@ -240,6 +240,64 @@ namespace MealTicket_Web_Handler
                                       orderby x.RiseRate descending
                                       select x).ToList();
                 }
+
+                DateTime timeNow = DateTime.Now;
+                long dateAbs = int.Parse(timeNow.ToString("yyyyMMdd"));
+                long minDateAbs = int.Parse(Helper.GetLastTradeDate(-9, 0, 0, Singleton.Instance.QuotesDaysShow).ToString("yyyyMMdd"));
+                long timeAbs = int.Parse(timeNow.ToString("HHmm"));
+
+                List<string> sharesCodeList = quotes.Select(e => e.SharesCode).ToList();
+
+                var kline1min = (from item in db.t_shares_securitybarsdata_1min
+                                 where sharesCodeList.Contains(item.SharesCode) && item.GroupTimeKey > minDateAbs * 10000 && (item.GroupTimeKey % 10000) <= timeAbs
+                                 group item by new { item.Market, item.SharesCode, Date = item.GroupTimeKey / 10000 } into g
+                                 select new
+                                 {
+                                     Market = g.Key.Market,
+                                     SharesCode = g.Key.SharesCode,
+                                     Date = g.Key.Date,
+                                     NowAvgDealCount = g.Count() <= 0 ? 0 : g.Sum(e => e.TradeStock),
+                                     NowAvgDealAmount = g.Count() <= 0 ? 0 : g.Sum(e => e.TradeAmount)
+                                 }).ToList();
+                var prekline1min = (from item in kline1min
+                                    group item by new { item.Market, item.SharesCode } into g
+                                    select new
+                                    {
+                                        Market = g.Key.Market,
+                                        SharesCode = g.Key.SharesCode,
+                                        PreNowAvgDealCount = g.Count() <= 0 ? 0 : g.OrderByDescending(e => e.Date).Select(e => e.NowAvgDealCount).FirstOrDefault(),
+                                        PreNowAvgDealAmount = g.Count() <= 0 ? 0 : g.OrderByDescending(e => e.Date).Select(e => e.NowAvgDealAmount).FirstOrDefault(),
+                                        DaysNowAvgDealCount = g.Count() <= 0 ? 0 : (long)g.Average(e => e.NowAvgDealCount),
+                                        DaysNowAvgDealAmount = g.Count() <= 0 ? 0 : (long)g.Average(e => e.NowAvgDealAmount),
+                                    }).ToList();
+                quotes = (from item in quotes
+                          join item2 in prekline1min on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
+                          from ai in a.DefaultIfEmpty()
+                          select new SharesListQuotesInfo
+                          {
+                              PushTime = item.PushTime,
+                              SharesCode = item.SharesCode,
+                              Market = item.Market,
+                              CurrPrice = item.CurrPrice,
+                              RisePrice = item.RisePrice,
+                              RiseRate = item.RiseRate,
+                              TodayDealCount = item.TodayDealCount,
+                              TodayDealAmount = item.TodayDealAmount,
+                              CirculatingCapital = item.CirculatingCapital,
+                              DaysAvgDealAmount = item.DaysAvgDealAmount,
+                              DaysAvgDealCount = item.DaysAvgDealCount,
+                              LimitDownCount = item.LimitDownCount,
+                              LimitUpCount = item.LimitUpCount,
+                              LimitUpDay = item.LimitUpDay,
+                              PreDayDealAmount = item.PreDayDealAmount,
+                              PreDayDealCount = item.PreDayDealCount,
+                              TotalCapital = item.TotalCapital,
+                              PlateList = item.PlateList,
+                              DaysNowAvgDealAmount = ai == null ? 0 : ai.DaysNowAvgDealAmount,
+                              DaysNowAvgDealCount = ai == null ? 0 : ai.DaysNowAvgDealCount,
+                              PreNowAvgDealAmount = ai == null ? 0 : ai.PreNowAvgDealAmount,
+                              PreNowAvgDealCount = ai == null ? 0 : ai.PreNowAvgDealCount,
+                          }).ToList();
                 return quotes;
             }
         }
@@ -488,7 +546,7 @@ namespace MealTicket_Web_Handler
                                 command.CommandText = sql;
                                 command.ExecuteNonQuery();
 
-                                sql = string.Format("insert into t_account_shares_optional_trend_rel_tri(RelId,LastPushTime,LastPushRiseRate,LastPushPrice,TriCountToday,MinPushTimeInterval,MinPushRateInterval,MinTodayPrice,CreateTime,LastModified) values({0},null,null,null,0,{2},{3},-1,'{1}','{1}')", relId, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), Singleton.Instance.MinPushTimeInterval, Singleton.Instance.MinPushRateInterval);
+                                sql = string.Format("insert into t_account_shares_optional_trend_rel_tri(RelId,LastPushTime,LastPushRiseRate,LastPushPrice,TriCountToday,MinPushTimeInterval,MinPushRateInterval,MinTodayPrice,CreateTime,LastModified) values({0},null,null,null,0,{2},{3},{4},'{1}','{1}')", relId, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), Singleton.Instance.MinPushTimeInterval, Singleton.Instance.MinPushRateInterval,Singleton.Instance.MinPushTodayPrice);
                                 command.CommandText = sql;
                                 command.ExecuteNonQuery();
                             }
@@ -1793,7 +1851,78 @@ namespace MealTicket_Web_Handler
                                   TwoDaysRiseRate = item2.TwoDaysRiseRate,
                                   YestodayRiseRate = item2.YestodayRiseRate
                               }).ToList();
+                DateTime timeNow = DateTime.Now;
+                long dateAbs = int.Parse(timeNow.ToString("yyyyMMdd"));
+                long minDateAbs = int.Parse(Helper.GetLastTradeDate(-9, 0, 0, Singleton.Instance.QuotesDaysShow).ToString("yyyyMMdd"));
+                long timeAbs = int.Parse(timeNow.ToString("HHmm"));
 
+                List<string> sharesCodeList = resultList.Select(e => e.SharesCode).ToList();
+
+                var kline1min = (from item in db.t_shares_securitybarsdata_1min
+                                 where sharesCodeList.Contains(item.SharesCode) && item.GroupTimeKey > minDateAbs * 10000 && (item.GroupTimeKey % 10000) <= timeAbs
+                                 group item by new { item.Market, item.SharesCode, Date = item.GroupTimeKey / 10000 } into g
+                                 select new
+                                 {
+                                     Market = g.Key.Market,
+                                     SharesCode = g.Key.SharesCode,
+                                     Date = g.Key.Date,
+                                     NowAvgDealCount = g.Count() <= 0 ? 0 : g.Sum(e => e.TradeStock),
+                                     NowAvgDealAmount = g.Count() <= 0 ? 0 : g.Sum(e => e.TradeAmount)
+                                 }).ToList();
+                var prekline1min = (from item in kline1min
+                                    group item by new { item.Market, item.SharesCode } into g
+                                    select new
+                                    {
+                                        Market = g.Key.Market,
+                                        SharesCode = g.Key.SharesCode,
+                                        PreNowAvgDealCount = g.Count() <= 0 ? 0 : g.OrderByDescending(e => e.Date).Select(e => e.NowAvgDealCount).FirstOrDefault(),
+                                        PreNowAvgDealAmount = g.Count() <= 0 ? 0 : g.OrderByDescending(e => e.Date).Select(e => e.NowAvgDealAmount).FirstOrDefault(),
+                                        DaysNowAvgDealCount = g.Count() <= 0 ? 0 : (long)g.Average(e => e.NowAvgDealCount),
+                                        DaysNowAvgDealAmount = g.Count() <= 0 ? 0 : (long)g.Average(e => e.NowAvgDealAmount),
+                                    }).ToList();
+                resultList = (from item in resultList
+                              join item2 in prekline1min on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
+                              from ai in a.DefaultIfEmpty()
+                              select new AccountTrendTriInfo
+                              {
+                                  PushTime = item.PushTime,
+                                  SharesCode = item.SharesCode,
+                                  Market = item.Market,
+                                  TodayDealCount = item.TodayDealCount,
+                                  TodayDealAmount = item.TodayDealAmount,
+                                  CirculatingCapital = item.CirculatingCapital,
+                                  DaysAvgDealAmount = item.DaysAvgDealAmount,
+                                  DaysAvgDealCount = item.DaysAvgDealCount,
+                                  LimitDownCount = item.LimitDownCount,
+                                  LimitUpCount = item.LimitUpCount,
+                                  LimitUpDay = item.LimitUpDay,
+                                  PreDayDealAmount = item.PreDayDealAmount,
+                                  PreDayDealCount = item.PreDayDealCount,
+                                  TotalCapital = item.TotalCapital,
+                                  SharesName = item.SharesName,
+                                  ConditionStatus = item.ConditionStatus,
+                                  AccountId = item.AccountId,
+                                  Business = item.Business,
+                                  ClosedPrice = item.ClosedPrice,
+                                  ConditionId = item.ConditionId,
+                                  GroupList = item.GroupList,
+                                  Industry = item.Industry,
+                                  OpenedPrice = item.OpenedPrice,
+                                  OptionalId = item.OptionalId,
+                                  PlateList = item.PlateList,
+                                  PresentPrice = item.PresentPrice,
+                                  RelId = item.RelId,
+                                  ThreeDaysRiseRate = item.ThreeDaysRiseRate,
+                                  TrendId = item.TrendId,
+                                  TriCountToday = item.TriCountToday,
+                                  TriDesc = item.TriDesc,
+                                  TwoDaysRiseRate = item.TwoDaysRiseRate,
+                                  YestodayRiseRate = item.YestodayRiseRate,
+                                  DaysNowAvgDealAmount=ai==null?0:ai.DaysNowAvgDealAmount,
+                                  DaysNowAvgDealCount= ai == null ? 0 : ai.DaysNowAvgDealCount,
+                                  PreNowAvgDealAmount= ai == null ? 0 : ai.PreNowAvgDealAmount,
+                                  PreNowAvgDealCount= ai == null ? 0 : ai.PreNowAvgDealCount,
+                              }).ToList();
                 return resultList;
             }
         }
@@ -2000,6 +2129,78 @@ namespace MealTicket_Web_Handler
                                   Fundmultiple = item.Fundmultiple,
                                   Range = item.Range,
                                   Type = item.Type
+                              }).ToList();
+
+                DateTime timeNow = DateTime.Now;
+                long dateAbs = int.Parse(timeNow.ToString("yyyyMMdd"));
+                long minDateAbs = int.Parse(Helper.GetLastTradeDate(-9, 0, 0, Singleton.Instance.QuotesDaysShow).ToString("yyyyMMdd"));
+                long timeAbs = int.Parse(timeNow.ToString("HHmm"));
+
+                List<string> sharesCodeList = resultList.Select(e => e.SharesCode).ToList();
+
+                var kline1min = (from item in db.t_shares_securitybarsdata_1min
+                                 where sharesCodeList.Contains(item.SharesCode) && item.GroupTimeKey > minDateAbs * 10000 && (item.GroupTimeKey % 10000) <= timeAbs
+                                 group item by new { item.Market, item.SharesCode, Date = item.GroupTimeKey / 10000 } into g
+                                 select new
+                                 {
+                                     Market = g.Key.Market,
+                                     SharesCode = g.Key.SharesCode,
+                                     Date = g.Key.Date,
+                                     NowAvgDealCount = g.Count()<=0?0: g.Sum(e => e.TradeStock),
+                                     NowAvgDealAmount = g.Count() <= 0 ? 0 : g.Sum(e => e.TradeAmount)
+                                 }).ToList();
+                var prekline1min = (from item in kline1min
+                                    group item by new { item.Market, item.SharesCode } into g
+                                    select new
+                                    {
+                                        Market = g.Key.Market,
+                                        SharesCode = g.Key.SharesCode,
+                                        PreNowAvgDealCount = g.Count() <= 0 ? 0 : g.OrderByDescending(e => e.Date).Select(e => e.NowAvgDealCount).FirstOrDefault(),
+                                        PreNowAvgDealAmount = g.Count() <= 0 ? 0 : g.OrderByDescending(e => e.Date).Select(e => e.NowAvgDealAmount).FirstOrDefault(),
+                                        DaysNowAvgDealCount = g.Count() <= 0 ? 0 : (long)g.Average(e => e.NowAvgDealCount),
+                                        DaysNowAvgDealAmount = g.Count() <= 0 ? 0 : (long)g.Average(e => e.NowAvgDealAmount),
+                                    }).ToList();
+                resultList = (from item in resultList
+                              join item2 in prekline1min on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
+                              from ai in a.DefaultIfEmpty()
+                              select new AccountRiseLimitTriInfo
+                              {
+                                  PushTime = item.PushTime,
+                                  SharesCode = item.SharesCode,
+                                  Market = item.Market,
+                                  TodayDealCount = item.TodayDealCount,
+                                  TodayDealAmount = item.TodayDealAmount,
+                                  CirculatingCapital = item.CirculatingCapital,
+                                  DaysAvgDealAmount = item.DaysAvgDealAmount,
+                                  DaysAvgDealCount = item.DaysAvgDealCount,
+                                  LimitDownCount = item.LimitDownCount,
+                                  LimitUpCount = item.LimitUpCount,
+                                  LimitUpDay = item.LimitUpDay,
+                                  PreDayDealAmount = item.PreDayDealAmount,
+                                  PreDayDealCount = item.PreDayDealCount,
+                                  TotalCapital = item.TotalCapital,
+                                  SharesName = item.SharesName,
+                                  ConditionStatus = item.ConditionStatus,
+                                  Business = item.Business,
+                                  ClosedPrice = item.ClosedPrice,
+                                  ConditionId = item.ConditionId,
+                                  GroupList = item.GroupList,
+                                  Industry = item.Industry,
+                                  OpenedPrice = item.OpenedPrice,
+                                  PlateList = item.PlateList,
+                                  PresentPrice = item.PresentPrice,
+                                  RelId = item.RelId,
+                                  ThreeDaysRiseRate = item.ThreeDaysRiseRate,
+                                  TriCountToday = item.TriCountToday,
+                                  TwoDaysRiseRate = item.TwoDaysRiseRate,
+                                  YestodayRiseRate = item.YestodayRiseRate,
+                                  Fundmultiple = item.Fundmultiple,
+                                  Range = item.Range,
+                                  Type = item.Type,
+                                  DaysNowAvgDealAmount = ai == null ? 0 : ai.DaysNowAvgDealAmount,
+                                  DaysNowAvgDealCount = ai == null ? 0 : ai.DaysNowAvgDealCount,
+                                  PreNowAvgDealAmount = ai == null ? 0 : ai.PreNowAvgDealAmount,
+                                  PreNowAvgDealCount = ai == null ? 0 : ai.PreNowAvgDealCount,
                               }).ToList();
                 return resultList;
             }
@@ -2331,7 +2532,7 @@ namespace MealTicket_Web_Handler
                 }
 
                 var record = from item in db.t_shares_quotes_history
-                             where ((request.Type == 1 && item.Type == 5) || (request.Type == 2 && item.Type == 1 && item.BusinessType == 1) || (request.Type == 3 && item.Type == 3 && item.BusinessType == 1) || (request.Type == 4 && item.Type == 6) || (request.Type == 5 && item.Type == 2 && item.BusinessType == 1) || (request.Type == 6 && item.Type == 4 && item.BusinessType == 1)) && sharesInfo.Contains(item.SharesInfo)
+                             where ((request.Type == 1 && item.Type == 5) || (request.Type == 2 && item.Type == 1 && item.BusinessType == 1) || (request.Type == 3 && item.Type == 3 && item.BusinessType == 1) || (request.Type == 4 && item.Type == 6) || (request.Type == 5 && item.Type == 2 && item.BusinessType == 1) || (request.Type == 6 && item.Type == 4 && item.BusinessType == 1))
                              select item;
 
                 if (request.Date != null)
@@ -2343,7 +2544,8 @@ namespace MealTicket_Web_Handler
                 }
 
                 var result = from item in record
-                             group item by new { item.Market, item.SharesCode, item.Date } into g
+                             where sharesInfo.Contains(item.SharesInfo)
+                             group item by new { item.Market, item.SharesCode, item.Date, item.SharesInfo } into g
                              select g;
                 int totalCount = result.Count();
 
@@ -2362,7 +2564,6 @@ namespace MealTicket_Web_Handler
                                 CurrPrice = item2.PresentPrice,
                                 TriCount = item.Count()
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
-
                 foreach (var item in list)
                 {
                     item.SharesName = totalShares.Where(e => e.Market == item.Market && e.SharesCode == item.SharesCode).Select(e => e.SharesName).FirstOrDefault();
@@ -16198,7 +16399,8 @@ select @buyId;";
                         orderby item2.RiseRate descending
                         select new SharesPlateInfo
                         { 
-                            Name=item.PlateName,
+                            TotalCount=item2.SharesCount,
+                            Name =item.PlateName,
                             Id=item.PlateId,
                             DownLimitCount=item2.DownLimitCount,
                             RiseLimitCount=item2.RiseLimitCount,
@@ -20726,7 +20928,8 @@ select @buyId;";
                            orderby item.Time
                            select new SharesMinutetimedata
                            {
-                               ClosedPrice=(item.ClosedPrice*1.0/10000).ToString("F2"),
+                               TradeStockLong = item.TradeStock,
+                               ClosedPrice =(item.ClosedPrice*1.0/10000).ToString("F2"),
                                TradeStock = item.TradeStock.ToNumString(),
                                TradeAmount = (item.TradeAmount * 1.0 / 10000).ToNumString(),
                                AvgPrice = ((item.TradeAmount+item.LastTradeAmount)/(item.TradeStock+item.LastTradeStock) * 1.0 / 10000).ToString("F2"),
@@ -20740,6 +20943,7 @@ select @buyId;";
                 return new GetSharesMinutetimedataListRes
                 {
                     List = res,
+                    Date= startDate.ToString("yyyy-MM-dd"),
                     IsToday = startDate == DateTime.Now.Date ? true : false
                 };
             }

@@ -484,10 +484,15 @@ update t_shares_monitor set DataType=0 where DataType=1 and SharesInfo in ({0});
 
 
                 var error = Singleton.Instance.m_stockMonitor.LoadTradePriceInfoBat(tempList);
+                if (error <= 0)
+                {
+                    Logger.WriteFileLog("走势分笔数据内存加载报错" + error, null);
+                }
                 return error > 0;
             }
             catch (Exception ex)
             {
+                Logger.WriteFileLog("走势分笔数据内存加载失败", ex);
                 return false;
             }
         }

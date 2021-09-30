@@ -185,5 +185,55 @@ namespace MealTicket_Web_Handler.Model
         /// 最近几个交易日涨停过
         /// </summary>
         public string LimitUpDay { get; set; }
+
+        /// <summary>
+        /// 上一日当前时刻平均成交量
+        /// </summary>
+        public long PreNowAvgDealCount { get; set; }
+
+        /// <summary>
+        /// 上一日当前时刻平均成交额
+        /// </summary>
+        public long PreNowAvgDealAmount { get; set; }
+
+        /// <summary>
+        /// 上一日当前时刻平均换手率
+        /// </summary>
+        public int PreNowAvgHandsRate
+        {
+            get
+            {
+                if (CirculatingCapital <= 0)
+                {
+                    return 0;
+                }
+                return (int)(PreNowAvgDealCount * 100 * 1.0 / CirculatingCapital * 10000);
+            }
+        }
+
+        /// <summary>
+        /// x日当前时刻平均成交量
+        /// </summary>
+        public long DaysNowAvgDealCount { get; set; }
+
+        /// <summary>
+        /// x日当前时刻平均成交额
+        /// </summary>
+        public long DaysNowAvgDealAmount { get; set; }
+
+        /// <summary>
+        /// x日当前时刻平均换手率
+        /// </summary>
+        public int DaysNowAvgHandsRate
+        {
+            get
+            {
+                if (CirculatingCapital <= 0)
+                {
+                    return 0;
+                }
+                return (int)(DaysNowAvgDealCount * 100 * 1.0 / CirculatingCapital * 10000);
+            }
+        }
     }
 }

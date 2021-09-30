@@ -41,6 +41,11 @@ namespace MealTicket_Web_Handler.Model
         public bool IsToday { get; set; }
 
         /// <summary>
+        /// 数据日期
+        /// </summary>
+        public string Date { get; set; }
+
+        /// <summary>
         /// 数据列表
         /// </summary>
         public List<SharesMinutetimedata> List { get; set; }
@@ -86,5 +91,10 @@ namespace MealTicket_Web_Handler.Model
         /// 成交额
         /// </summary>
         public string TradeAmount { get; set; }
+
+        /// <summary>
+        /// 成交量
+        /// </summary>
+        public long TradeStockLong { get; set; }
     }
 }

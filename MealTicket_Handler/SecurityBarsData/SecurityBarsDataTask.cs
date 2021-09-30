@@ -517,6 +517,9 @@ namespace MealTicket_Handler.SecurityBarsData
                                          join item2 in Singleton.Instance._sharesBaseSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
                                          from ai in a.DefaultIfEmpty()
                                          select new { item, ai }).ToList();
+                    disResultList = (from item in disResultList
+                                     group item by new { item.item.Market, item.item.SharesCode, item.item.GroupTimeKey } into g
+                                     select g.FirstOrDefault()).ToList();
                     try
                     {
                         DataTable table = new DataTable();
@@ -604,6 +607,19 @@ namespace MealTicket_Handler.SecurityBarsData
                         {
                             finishCount++;
                         }
+                        var lastData = (from x in disList
+                                        group x by new { x.Market, x.SharesCode } into g
+                                        let temp=g.OrderByDescending(e=>e.GroupTimeKey).FirstOrDefault()
+                                        select new SecurityBarsLastData
+                                        {
+                                            SharesCode = g.Key.SharesCode,
+                                            Market = g.Key.Market,
+                                            GroupTimeKey = temp.GroupTimeKey,
+                                            LastTradeStock= temp.LastTradeStock,
+                                            LastTradeAmount= temp.LastTradeAmount,
+                                            PreClosePrice= temp.PreClosePrice
+                                        }).ToList();
+                        SetSecurityBarsLastData_Session(dataType, lastData);
                     }
                     else
                     {

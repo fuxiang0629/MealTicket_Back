@@ -1,0 +1,6 @@
+F:\项目\饭票后端\StockMarket\bin\Release\StockMarket.dll
+F:\项目\饭票后端\StockMarket\bin\Release\StockMarket.pdb
+F:\项目\饭票后端\StockMarket\obj\Release\StockMarket.csproj.CoreCompileInputs.cache
+F:\项目\饭票后端\StockMarket\obj\Release\StockMarket.dll
+F:\项目\饭票后端\StockMarket\obj\Release\StockMarket.pdb
+F:\项目\饭票后端\StockMarket\obj\Release\StockMarket.csprojAssemblyReference.cache

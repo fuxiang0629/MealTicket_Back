@@ -3,3 +3,4 @@ F:\项目\饭票后端\StockMarket\bin\Debug\StockMarket.pdb
 F:\项目\饭票后端\StockMarket\obj\Debug\StockMarket.csproj.CoreCompileInputs.cache
 F:\项目\饭票后端\StockMarket\obj\Debug\StockMarket.dll
 F:\项目\饭票后端\StockMarket\obj\Debug\StockMarket.pdb
+F:\项目\饭票后端\StockMarket\obj\Debug\StockMarket.csprojAssemblyReference.cache
