@@ -405,5 +405,59 @@ namespace FXCommon.Common
             return Encoding.Default.GetString(depressBytes);
         }
 
+
+        public static string ToNumString(this int num)
+        {
+            if (num >= 100000000)
+            {
+                return (num * 1.0 / 100000000).ToString("F2")+"亿";
+            }
+            if (num > 10000)
+            {
+                return (num * 1.0 / 10000).ToString("F2")+"万";
+            }
+            return num.ToString();
+        }
+        public static string ToNumString(this long num)
+        {
+            if (num >= 100000000)
+            {
+                return (num * 1.0 / 100000000).ToString("F2") + "亿";
+            }
+            if (num > 10000)
+            {
+                return (num * 1.0 / 10000).ToString("F2") + "万";
+            }
+            return num.ToString();
+        }
+        public static string ToNumString(this double num)
+        {
+            if (num >= 100000000)
+            {
+                return (num / 100000000).ToString("F2") + "亿";
+            }
+            if (num > 10000)
+            {
+                return (num / 10000).ToString("F2") + "万";
+            }
+            return num.ToString("F2");
+        }
+
+
+        /// <summary>
+        /// 16进制字符串转字节数组
+        /// </summary>
+        /// <param name="hexString"></param>
+        /// <returns></returns>
+        public static byte[] HexToByte(string hexString)
+        {
+            hexString = hexString.Replace(" ", "");
+            if ((hexString.Length % 2) != 0)
+                hexString += " ";
+            byte[] returnBytes = new byte[hexString.Length / 2];
+            for (int i = 0; i < returnBytes.Length; i++)
+                returnBytes[i] = Convert.ToByte(hexString.Substring(i * 2, 2), 16);
+            return returnBytes;
+        }
     }
 }

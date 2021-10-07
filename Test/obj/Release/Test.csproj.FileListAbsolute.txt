@@ -11,7 +11,6 @@ D:\项目\饭票\后端\Test\obj\Release\Test.csproj.CoreCompileInputs.cache
 D:\项目\饭票\后端\Test\obj\Release\Test.exe
 D:\项目\饭票\后端\Test\obj\Release\Test.pdb
 D:\项目\饭票\后端\Test\obj\Release\Test.csprojAssemblyReference.cache
-F:\项目\饭票后端\Test\obj\Release\Test.csprojAssemblyReference.cache
 F:\项目\饭票后端\Test\bin\Release\FXCommon.dll
 F:\项目\饭票后端\Test\bin\Release\Newtonsoft.Json.dll
 F:\项目\饭票后端\Test\bin\Release\Qiniu.dll
@@ -34,7 +33,6 @@ F:\项目\饭票后端\Test\bin\Release\System.Threading.Tasks.Extensions.xml
 F:\项目\饭票后端\Test\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
 F:\项目\饭票后端\Test\bin\Release\System.Buffers.xml
 F:\项目\饭票后端\Test\bin\Release\System.Numerics.Vectors.xml
-F:\项目\饭票后端\Test\obj\Release\Test.exe.config
 F:\项目\饭票后端\Test\obj\Release\Test.csproj.CopyComplete
 D:\项目\饭票\后端\Test\bin\Release\FXCommon.dll
 D:\项目\饭票\后端\Test\bin\Release\Newtonsoft.Json.dll
@@ -60,3 +58,14 @@ D:\项目\饭票\后端\Test\bin\Release\System.Buffers.xml
 D:\项目\饭票\后端\Test\bin\Release\System.Numerics.Vectors.xml
 D:\项目\饭票\后端\Test\obj\Release\Test.exe.config
 D:\项目\饭票\后端\Test\obj\Release\Test.csproj.CopyComplete
+F:\项目\饭票后端\Test\bin\Release\EntityFramework.dll
+F:\项目\饭票后端\Test\bin\Release\EntityFramework.SqlServer.dll
+F:\项目\饭票后端\Test\bin\Release\MealTicket_DBCommon.dll
+F:\项目\饭票后端\Test\bin\Release\MealTicket_DBCommon.pdb
+F:\项目\饭票后端\Test\bin\Release\MealTicket_DBCommon.dll.config
+F:\项目\饭票后端\Test\bin\Release\EntityFramework.xml
+F:\项目\饭票后端\Test\bin\Release\EntityFramework.SqlServer.xml
+F:\项目\饭票后端\Test\bin\Release\Newtonsoft.Json.xml
+F:\项目\饭票后端\Test\bin\Release\zh-Hans\EntityFramework.resources.dll
+F:\项目\饭票后端\Test\bin\Release\zh-Hans\EntityFramework.SqlServer.resources.dll
+F:\项目\饭票后端\Test\obj\Release\Test.csprojAssemblyReference.cache

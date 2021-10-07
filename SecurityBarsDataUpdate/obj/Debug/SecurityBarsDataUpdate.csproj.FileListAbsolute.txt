@@ -37,7 +37,6 @@ F:\项目\饭票后端\SecurityBarsDataUpdate\bin\Debug\zh-Hans\EntityFramework.
 F:\项目\饭票后端\SecurityBarsDataUpdate\obj\Debug\SecurityBarsDataUpdate.csproj.CopyComplete
 F:\项目\饭票后端\SecurityBarsDataUpdate\obj\Debug\SecurityBarsDataUpdate.exe
 F:\项目\饭票后端\SecurityBarsDataUpdate\obj\Debug\SecurityBarsDataUpdate.pdb
-F:\项目\饭票后端\SecurityBarsDataUpdate\obj\Debug\SecurityBarsDataUpdate.csprojAssemblyReference.cache
 D:\项目\饭票\后端\SecurityBarsDataUpdate\bin\Debug\SecurityBarsDataUpdate.exe.config
 D:\项目\饭票\后端\SecurityBarsDataUpdate\bin\Debug\SecurityBarsDataUpdate.exe
 D:\项目\饭票\后端\SecurityBarsDataUpdate\bin\Debug\SecurityBarsDataUpdate.pdb
@@ -78,3 +77,4 @@ D:\项目\饭票\后端\SecurityBarsDataUpdate\obj\Debug\SecurityBarsDataUpdate.
 D:\项目\饭票\后端\SecurityBarsDataUpdate\obj\Debug\SecurityBarsDataUpdate.csproj.CopyComplete
 D:\项目\饭票\后端\SecurityBarsDataUpdate\obj\Debug\SecurityBarsDataUpdate.exe
 D:\项目\饭票\后端\SecurityBarsDataUpdate\obj\Debug\SecurityBarsDataUpdate.pdb
+F:\项目\饭票后端\SecurityBarsDataUpdate\obj\Debug\SecurityBarsDataUpdate.csprojAssemblyReference.cache

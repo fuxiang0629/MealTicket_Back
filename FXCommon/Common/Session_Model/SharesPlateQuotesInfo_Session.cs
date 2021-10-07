@@ -47,5 +47,10 @@ namespace FXCommon.Common
         /// 跌停数量
         /// </summary>
         public int DownLimitCount { get; set; }
+
+        /// <summary>
+        /// 涨跌幅排名
+        /// </summary>
+        public int Rank { get; set; }
     }
 }

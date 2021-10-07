@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace MealTicket_Admin_Handler
 {
@@ -865,14 +866,13 @@ namespace MealTicket_Admin_Handler
         {
             using (var db = new meal_ticketEntities())
             {
-                var list = from item2 in db.t_shares_plate 
-                           join item in db.t_shares_plate_riserate_last on item2.Id equals item.PlateId into a from ai in a.DefaultIfEmpty()
-                           select new { ai, item2 };
+                var list = from item in db.v_plate
+                           select item;
 
                 if (request.Type != 0)
                 {
                     list = from item in list
-                           where item.item2.Type == request.Type
+                           where item.PlateType == request.Type
                            select item;
                 }
                 if (request.ChooseStatus != 0)
@@ -880,21 +880,21 @@ namespace MealTicket_Admin_Handler
                     if (request.Level == 1)
                     {
                         list = from item in list
-                               join item2 in db.t_shares_plate_type_business on item.item2.Type equals item2.Id
-                               where item.item2.ChooseStatus == request.ChooseStatus || (item2.IsBasePlate == 1 && item.item2.BaseStatus == 1)
+                               join item2 in db.t_shares_plate_type_business on item.PlateType equals item2.Id
+                               where item.ChooseStatus == request.ChooseStatus || (item2.IsBasePlate == 1 && item.BaseStatus == 1)
                                select item;
                     }
                     else
                     {
                         list = from item in list
-                               where item.item2.ChooseStatus == request.ChooseStatus
+                               where item.ChooseStatus == request.ChooseStatus
                                select item;
                     }
                 }
                 if (!string.IsNullOrEmpty(request.Name))
                 {
                     list = from item in list
-                           where item.item2.Name.Contains(request.Name)
+                           where item.PlateName.Contains(request.Name)
                            select item;
                 }
                 if (request.Level == 1)
@@ -904,19 +904,19 @@ namespace MealTicket_Admin_Handler
                         MaxId = 0,
                         TotalCount = 0,
                         List = (from item in list
-                                orderby item.item2.Name
+                                orderby item.PlateName
                                 select new SharesPlateInfo
                                 {
-                                    Id = item.item2.Id,
-                                    Type = item.item2.Type,
-                                    Name = item.item2.Name
+                                    Id = item.PlateId,
+                                    Type = item.PlateType,
+                                    Name = item.PlateName
                                 }).ToList()
                     };
                 }
 
                 int totalCount = list.Count();
-                int validCount = list.Where(e => e.item2.Status == 1).Count();
-                int baseCount= list.Where(e => e.item2.Status == 1 && e.item2.BaseStatus==1).Count();
+                int validCount = list.Where(e => e.Status == 1).Count();
+                int baseCount= list.Where(e => e.Status == 1 && e.BaseStatus==1).Count();
 
                 List<SharesPlateInfo> result = new List<SharesPlateInfo>();
                 if (request.OrderType == 1)
@@ -924,103 +924,101 @@ namespace MealTicket_Admin_Handler
                     if (request.OrderMethod == "ascending")
                     {
                         result = (from item in list
-                                  join item2 in db.t_shares_all on new { Market = item.item2.WeightMarket, SharesCode = item.item2.WeightSharesCode } equals new { item2.Market, item2.SharesCode } into a
+                                  join item2 in db.t_shares_all on new { Market = item.WeightMarket, SharesCode = item.WeightSharesCode } equals new { item2.Market, item2.SharesCode } into a
                                   from ai in a.DefaultIfEmpty()
-                                  join item3 in db.t_shares_all on new { Market = item.item2.NoWeightMarket, SharesCode = item.item2.NoWeightSharesCode } equals new { item3.Market, item3.SharesCode } into b
+                                  join item3 in db.t_shares_all on new { Market = item.NoWeightMarket, SharesCode = item.NoWeightSharesCode } equals new { item3.Market, item3.SharesCode } into b
                                   from bi in b.DefaultIfEmpty()
-                                  let riseRate = item.ai == null ? 0 : item.ai.RiseRate
-                                  orderby riseRate
+                                  orderby item.RiseRate
                                   select new SharesPlateInfo
                                   {
-                                      Status = item.item2.Status,
-                                      CreateTime = item.item2.CreateTime,
-                                      Id = item.item2.Id,
-                                      Type = item.item2.Type,
-                                      SharesCount = item.ai == null ? 0 : item.ai.SharesCount,
-                                      Name = item.item2.Name,
-                                      SharesCode = item.item2.SharesCode,
-                                      SharesMarket = item.item2.SharesMarket,
-                                      SharesType = item.item2.SharesType,
-                                      WeightSharesCode = item.item2.WeightSharesCode,
-                                      NoWeightSharesCode = item.item2.NoWeightSharesCode,
-                                      NoWeightMarket = item.item2.NoWeightMarket,
-                                      WeightMarket = item.item2.WeightMarket,
+                                      Status = item.Status,
+                                      CreateTime = item.CreateTime,
+                                      Id = item.PlateId,
+                                      Type = item.PlateType,
+                                      SharesCount = item.SharesCount??0,
+                                      Name = item.PlateName,
+                                      SharesCode = item.SharesCode,
+                                      SharesMarket = item.SharesMarket,
+                                      SharesType = item.SharesType,
+                                      WeightSharesCode = item.WeightSharesCode,
+                                      NoWeightSharesCode = item.NoWeightSharesCode,
+                                      NoWeightMarket = item.NoWeightMarket,
+                                      WeightMarket = item.WeightMarket,
                                       WeightSharesName = ai == null ? "" : ai.SharesName,
                                       NoWeightSharesName = bi == null ? "" : bi.SharesName,
-                                      RiseRate = item.ai == null ? 0 : item.ai.RiseRate,
-                                      BaseStatus = item.item2.BaseStatus,
-                                      RiseIndex = item.ai == null ? 0 : item.ai.RiseIndex,
-                                      WeightRiseIndex = item.ai == null ? 0 : item.ai.WeightRiseIndex,
-                                      WeightRiseRate = item.ai == null ? 0 : item.ai.WeightRiseRate,
-                                      CalType = item.item2.CalType
+                                      RiseRate = item.RiseRate,
+                                      BaseStatus = item.BaseStatus,
+                                      RiseIndex = item.RiseIndex,
+                                      WeightRiseIndex = item.WeightRiseIndex,
+                                      WeightRiseRate = item.WeightRiseRate,
+                                      CalType = item.CalType
                                   }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                     }
                     else
                     {
                         result = (from item in list
-                                  join item2 in db.t_shares_all on new { Market = item.item2.WeightMarket, SharesCode = item.item2.WeightSharesCode } equals new { item2.Market, item2.SharesCode } into a
+                                  join item2 in db.t_shares_all on new { Market = item.WeightMarket, SharesCode = item.WeightSharesCode } equals new { item2.Market, item2.SharesCode } into a
                                   from ai in a.DefaultIfEmpty()
-                                  join item3 in db.t_shares_all on new { Market = item.item2.NoWeightMarket, SharesCode = item.item2.NoWeightSharesCode } equals new { item3.Market, item3.SharesCode } into b
+                                  join item3 in db.t_shares_all on new { Market = item.NoWeightMarket, SharesCode = item.NoWeightSharesCode } equals new { item3.Market, item3.SharesCode } into b
                                   from bi in b.DefaultIfEmpty()
-                                  let riseRate = item.ai == null ? 0 : item.ai.RiseRate
-                                  orderby riseRate descending
+                                  orderby item.RiseRate descending
                                   select new SharesPlateInfo
                                   {
-                                      Status = item.item2.Status,
-                                      CreateTime = item.item2.CreateTime,
-                                      Id = item.item2.Id,
-                                      Type = item.item2.Type,
-                                      SharesCount = item.ai == null ? 0 : item.ai.SharesCount,
-                                      Name = item.item2.Name,
-                                      SharesCode = item.item2.SharesCode,
-                                      SharesMarket = item.item2.SharesMarket,
-                                      SharesType = item.item2.SharesType,
-                                      WeightSharesCode = item.item2.WeightSharesCode,
-                                      NoWeightSharesCode = item.item2.NoWeightSharesCode,
-                                      NoWeightMarket = item.item2.NoWeightMarket,
-                                      WeightMarket = item.item2.WeightMarket,
+                                      Status = item.Status,
+                                      CreateTime = item.CreateTime,
+                                      Id = item.PlateId,
+                                      Type = item.PlateType,
+                                      SharesCount = item.SharesCount ?? 0,
+                                      Name = item.PlateName,
+                                      SharesCode = item.SharesCode,
+                                      SharesMarket = item.SharesMarket,
+                                      SharesType = item.SharesType,
+                                      WeightSharesCode = item.WeightSharesCode,
+                                      NoWeightSharesCode = item.NoWeightSharesCode,
+                                      NoWeightMarket = item.NoWeightMarket,
+                                      WeightMarket = item.WeightMarket,
                                       WeightSharesName = ai == null ? "" : ai.SharesName,
                                       NoWeightSharesName = bi == null ? "" : bi.SharesName,
-                                      RiseRate = item.ai == null ? 0 : item.ai.RiseRate,
-                                      BaseStatus = item.item2.BaseStatus,
-                                      RiseIndex = item.ai == null ? 0 : item.ai.RiseIndex,
-                                      WeightRiseIndex = item.ai == null ? 0 : item.ai.WeightRiseIndex,
-                                      WeightRiseRate = item.ai == null ? 0 : item.ai.WeightRiseRate,
-                                      CalType = item.item2.CalType
+                                      RiseRate = item.RiseRate,
+                                      BaseStatus = item.BaseStatus,
+                                      RiseIndex = item.RiseIndex,
+                                      WeightRiseIndex = item.WeightRiseIndex,
+                                      WeightRiseRate = item.WeightRiseRate,
+                                      CalType = item.CalType
                                   }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                     }
                 }
                 else
                 {
                     result = (from item in list
-                              join item2 in db.t_shares_all on new { Market = item.item2.WeightMarket, SharesCode = item.item2.WeightSharesCode } equals new { item2.Market, item2.SharesCode } into a
+                              join item2 in db.t_shares_all on new { Market = item.WeightMarket, SharesCode = item.WeightSharesCode } equals new { item2.Market, item2.SharesCode } into a
                               from ai in a.DefaultIfEmpty()
-                              join item3 in db.t_shares_all on new { Market = item.item2.NoWeightMarket, SharesCode = item.item2.NoWeightSharesCode } equals new { item3.Market, item3.SharesCode } into b
+                              join item3 in db.t_shares_all on new { Market = item.NoWeightMarket, SharesCode = item.NoWeightSharesCode } equals new { item3.Market, item3.SharesCode } into b
                               from bi in b.DefaultIfEmpty()
-                              orderby item.item2.CreateTime descending, item.item2.Id descending
+                              orderby item.CreateTime descending, item.PlateId descending
                               select new SharesPlateInfo
                               {
-                                  Status = item.item2.Status,
-                                  CreateTime = item.item2.CreateTime,
-                                  Id = item.item2.Id,
-                                  Type = item.item2.Type,
-                                  SharesCount = item.ai == null ? 0 : item.ai.SharesCount,
-                                  Name = item.item2.Name,
-                                  SharesCode = item.item2.SharesCode,
-                                  SharesMarket = item.item2.SharesMarket,
-                                  SharesType = item.item2.SharesType,
-                                  WeightSharesCode = item.item2.WeightSharesCode,
-                                  NoWeightSharesCode = item.item2.NoWeightSharesCode,
-                                  NoWeightMarket = item.item2.NoWeightMarket,
-                                  WeightMarket = item.item2.WeightMarket,
+                                  Status = item.Status,
+                                  CreateTime = item.CreateTime,
+                                  Id = item.PlateId,
+                                  Type = item.PlateType,
+                                  SharesCount = item.SharesCount ?? 0,
+                                  Name = item.PlateName,
+                                  SharesCode = item.SharesCode,
+                                  SharesMarket = item.SharesMarket,
+                                  SharesType = item.SharesType,
+                                  WeightSharesCode = item.WeightSharesCode,
+                                  NoWeightSharesCode = item.NoWeightSharesCode,
+                                  NoWeightMarket = item.NoWeightMarket,
+                                  WeightMarket = item.WeightMarket,
                                   WeightSharesName = ai == null ? "" : ai.SharesName,
                                   NoWeightSharesName = bi == null ? "" : bi.SharesName,
-                                  RiseRate = item.ai == null ? 0 : item.ai.RiseRate,
-                                  BaseStatus = item.item2.BaseStatus,
-                                  RiseIndex = item.ai == null ? 0 : item.ai.RiseIndex,
-                                  WeightRiseIndex = item.ai == null ? 0 : item.ai.WeightRiseIndex,
-                                  WeightRiseRate = item.ai == null ? 0 : item.ai.WeightRiseRate,
-                                  CalType = item.item2.CalType
+                                  RiseRate = item.RiseRate,
+                                  BaseStatus = item.BaseStatus,
+                                  RiseIndex = item.RiseIndex,
+                                  WeightRiseIndex = item.WeightRiseIndex,
+                                  WeightRiseRate = item.WeightRiseRate,
+                                  CalType = item.CalType
                               }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                 }
 
@@ -1453,7 +1451,7 @@ namespace MealTicket_Admin_Handler
                             orderby item.item.CreateTime descending
                             select new SharesInfo
                             {
-                                Id = item.item.PlateId,
+                                Id = item.item.RelId??0,
                                 SharesCode = item.item.SharesCode,
                                 SharesName = item.item2.SharesName,
                                 SharesNamePY = item.item2.SharesPyjc,
@@ -3119,6 +3117,57 @@ namespace MealTicket_Admin_Handler
                                     select item).ToList();
 
                     db.t_shares_monitor.Remove(monitor);
+                    if (monitorTrend.Count() > 0)
+                    {
+                        db.t_shares_monitor_trend_rel.RemoveRange(monitorTrend);
+                    }
+                    if (trendPar.Count() > 0)
+                    {
+                        db.t_shares_monitor_trend_rel_par.RemoveRange(trendPar);
+                    }
+                    db.SaveChanges();
+
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 批量删除行情监控
+        /// </summary>
+        /// <param name="request"></param>
+        public void BatchDeleteSharesMonitor(BatchDeleteSharesMonitorRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var monitor = (from item in db.t_shares_monitor
+                                   where request.IdList.Contains(item.Id)
+                                   select item).ToList();
+                    if (monitor.Count()<=0)
+                    {
+                        return;
+                    }
+                    List<long> monitorId = monitor.Select(e => e.Id).ToList();
+
+                    var monitorTrend = (from item in db.t_shares_monitor_trend_rel
+                                        where monitorId.Contains(item.MonitorId)
+                                        select item).ToList();
+                    List<long> relIdList = monitorTrend.Select(e => e.Id).ToList();
+
+                    var trendPar = (from item in db.t_shares_monitor_trend_rel_par
+                                    where relIdList.Contains(item.RelId)
+                                    select item).ToList();
+
+                    db.t_shares_monitor.RemoveRange(monitor);
                     if (monitorTrend.Count() > 0)
                     {
                         db.t_shares_monitor_trend_rel.RemoveRange(monitorTrend);
@@ -9497,5 +9546,714 @@ namespace MealTicket_Admin_Handler
             }
         }
         #endregion
+
+        /// <summary>
+        /// 获取k线数据
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<SharesKlineInfo> GetSharesKlineList(GetSharesKlineListRequest request) 
+        {
+            switch (request.DateType)
+            {
+                case 1:
+                    return null;
+                case 2:
+                    return GetSharesKline_1minList(request);
+                case 3:
+                    return GetSharesKline_5minList(request);
+                case 4:
+                    return GetSharesKline_15minList(request);
+                case 5:
+                    return GetSharesKline_30minList(request);
+                case 6:
+                    return GetSharesKline_60minList(request);
+                case 7:
+                    return GetSharesKline_1dayList(request);
+                case 8:
+                    return GetSharesKline_1weekList(request);
+                case 9:
+                    return GetSharesKline_1monthList(request);
+                case 10:
+                    return GetSharesKline_1quarterList(request);
+                case 11:
+                    return GetSharesKline_1yearList(request);
+                default:
+                    throw new WebApiException(400,"参数有误");
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesKline_1minList(GetSharesKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_securitybarsdata_1min
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesKline_5minList(GetSharesKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_securitybarsdata_5min
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesKline_15minList(GetSharesKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_securitybarsdata_15min
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesKline_30minList(GetSharesKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_securitybarsdata_30min
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesKline_60minList(GetSharesKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_securitybarsdata_60min
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesKline_1dayList(GetSharesKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_securitybarsdata_1day
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesKline_1weekList(GetSharesKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_securitybarsdata_1week
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesKline_1monthList(GetSharesKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_securitybarsdata_1month
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesKline_1quarterList(GetSharesKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_securitybarsdata_1quarter
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesKline_1yearList(GetSharesKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_securitybarsdata_1year
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        /// <summary>
+        /// 重置K线数据
+        /// </summary>
+        /// <param name="request"></param>
+        public void ResetSharesKLine(ResetSharesKLineRequest request)
+        {
+            DateTime tempDate = DateTime.Parse("1991-01-01 00:00:00");
+            switch (request.DataType)
+            {
+                case 2:
+                    tempDate= DateTime.ParseExact((request.StartGroupTimeKey/10000).ToString(),"yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 3:
+                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 4:
+                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 5:
+                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 6:
+                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 7:
+                    tempDate = DateTime.ParseExact(request.StartGroupTimeKey.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 8:
+                    var temp1 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                where item.the_week == request.StartGroupTimeKey
+                                orderby item.the_date
+                                select item).FirstOrDefault();
+                    if (temp1 == null)
+                    {
+                        throw new WebApiException(400,"时间超出界限");
+                    }
+                    tempDate = DateTime.ParseExact(temp1.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 9:
+                    var temp2 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                where item.the_month == request.StartGroupTimeKey
+                                orderby item.the_date
+                                select item).FirstOrDefault();
+                    if (temp2 == null)
+                    {
+                        throw new WebApiException(400, "时间超出界限");
+                    }
+                    tempDate = DateTime.ParseExact(temp2.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 10:
+                    var temp3 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                 where item.the_quarter == request.StartGroupTimeKey
+                                 orderby item.the_date
+                                 select item).FirstOrDefault();
+                    if (temp3 == null)
+                    {
+                        throw new WebApiException(400, "时间超出界限");
+                    }
+                    tempDate = DateTime.ParseExact(temp3.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 11:
+                    var temp4 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                 where item.the_year == request.StartGroupTimeKey
+                                 orderby item.the_date
+                                 select item).FirstOrDefault();
+                    if (temp4 == null)
+                    {
+                        throw new WebApiException(400, "时间超出界限");
+                    }
+                    tempDate = DateTime.ParseExact(temp4.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                default:
+                    throw new WebApiException(400, "参数错误");
+            }
+
+            long PreClosePrice = 0;
+            using (var db = new meal_ticketEntities())
+            {
+                var quoteDate = (from item in db.t_shares_quotes_date
+                                 where item.Market == request.Market && item.SharesCode == request.SharesCode && item.LastModified >= tempDate
+                                 orderby item.LastModified
+                                 select item).FirstOrDefault();
+                if (quoteDate != null)
+                {
+                    PreClosePrice = quoteDate.ClosedPrice;
+                }
+            }
+            int SecurityBarsGetCount = int.Parse(ConfigurationManager.AppSettings["SecurityBarsGetCount"]);
+
+            List<dynamic> list = new List<dynamic>();
+            list.Add(new
+            {
+                SharesCode = request.SharesCode,
+                Market = request.Market,
+                StartTimeKey = request.StartGroupTimeKey,
+                EndTimeKey = request.EndGroupTimeKey,
+                PreClosePrice = PreClosePrice,
+                YestodayClosedPrice = PreClosePrice,
+                LastTradeStock = 0,
+                LastTradeAmount = 0
+            });
+
+
+            var packageList = new List<dynamic>();
+            packageList.Add(new
+            {
+                DataList = list,
+                DataType = request.DataType,
+                SecurityBarsGetCount = SecurityBarsGetCount
+            });
+            var sendData = new
+            {
+                HandlerType = 2,
+                PackageList = packageList
+            };
+            Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SecurityBars", "1min");
+        }
+
+        /// <summary>
+        /// 批量重置K线数据
+        /// </summary>
+        /// <param name="request"></param>
+        public void BatchResetSharesKLine(BatchResetSharesKLineRequest request)
+        {
+            DateTime tempDate = DateTime.Parse("1991-01-01 00:00:00");
+            switch (request.DataType)
+            {
+                case 2:
+                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 3:
+                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 4:
+                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 5:
+                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 6:
+                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 7:
+                    tempDate = DateTime.ParseExact(request.StartGroupTimeKey.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 8:
+                    var temp1 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                 where item.the_week == request.StartGroupTimeKey
+                                 orderby item.the_date
+                                 select item).FirstOrDefault();
+                    if (temp1 == null)
+                    {
+                        throw new WebApiException(400, "时间超出界限");
+                    }
+                    tempDate = DateTime.ParseExact(temp1.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 9:
+                    var temp2 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                 where item.the_month == request.StartGroupTimeKey
+                                 orderby item.the_date
+                                 select item).FirstOrDefault();
+                    if (temp2 == null)
+                    {
+                        throw new WebApiException(400, "时间超出界限");
+                    }
+                    tempDate = DateTime.ParseExact(temp2.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 10:
+                    var temp3 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                 where item.the_quarter == request.StartGroupTimeKey
+                                 orderby item.the_date
+                                 select item).FirstOrDefault();
+                    if (temp3 == null)
+                    {
+                        throw new WebApiException(400, "时间超出界限");
+                    }
+                    tempDate = DateTime.ParseExact(temp3.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                case 11:
+                    var temp4 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                 where item.the_year == request.StartGroupTimeKey
+                                 orderby item.the_date
+                                 select item).FirstOrDefault();
+                    if (temp4 == null)
+                    {
+                        throw new WebApiException(400, "时间超出界限");
+                    }
+                    tempDate = DateTime.ParseExact(temp4.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                    break;
+                default:
+                    throw new WebApiException(400, "参数错误");
+            }
+
+            using (var db = new meal_ticketEntities())
+            {
+                var quoteDate = (from item in db.t_shares_quotes_date
+                                 where item.LastModified >= tempDate
+                                 group item by new { item.Market, item.SharesCode } into g
+                                 select new
+                                 {
+                                     Market = g.Key.Market,
+                                     SharesCode = g.Key.SharesCode,
+                                     PreClosePrice = g.OrderBy(e => e.LastModified).Select(e => e.ClosedPrice).FirstOrDefault()
+                                 }).ToList();
+                int SecurityBarsGetCount = int.Parse(ConfigurationManager.AppSettings["SecurityBarsGetCount"]);
+
+
+
+                int totalCount = quoteDate.Count();
+                int finishCount = 0;
+                int batchCount = 500;
+                do 
+                {
+                    if (finishCount >= totalCount)
+                    {
+                        break;
+                    }
+                    var packageList = new List<dynamic>();
+                    List<dynamic> list = new List<dynamic>();
+                    var batchList = quoteDate.Skip(finishCount).Take(batchCount).ToList();
+                    int currCount = batchList.Count();
+                    foreach (var item in batchList)
+                    {
+                        list.Add(new
+                        {
+                            SharesCode = item.SharesCode,
+                            Market = item.Market,
+                            StartTimeKey = request.StartGroupTimeKey,
+                            EndTimeKey = request.EndGroupTimeKey,
+                            PreClosePrice = item.PreClosePrice,
+                            YestodayClosedPrice = item.PreClosePrice,
+                            LastTradeStock = 0,
+                            LastTradeAmount = 0
+                        });
+                    }
+
+                    packageList.Add(new
+                    {
+                        DataList = list,
+                        DataType = request.DataType,
+                        SecurityBarsGetCount = SecurityBarsGetCount
+                    });
+                    var sendData = new
+                    {
+                        HandlerType = 2,
+                        PackageList = packageList
+                    };
+                    Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SecurityBars", "1min");
+                    finishCount = finishCount + currCount;
+                } while (true);
+            }
+        }
     }
 }

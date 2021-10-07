@@ -45,10 +45,14 @@ namespace TransactionDataUpdate_App
         {
             try
             {
+                Logger.WriteFileLog("===开始获取数据===", null);
                 var list=DataHelper.TdxHq_GetTransactionData();
+                Logger.WriteFileLog("===结束获取数据===", null);
                 if (list.Count() > 0)
                 {
+                    Logger.WriteFileLog("===开始更新数据===", null);
                     DataHelper.UpdateToDataBase(list);
+                    Logger.WriteFileLog("===结束更新数据===", null);
                 }
             }
             catch (Exception ex)

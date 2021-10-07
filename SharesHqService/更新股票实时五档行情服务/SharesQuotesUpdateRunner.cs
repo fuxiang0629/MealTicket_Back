@@ -88,6 +88,8 @@ namespace SharesHqService
                     if (list != null && list.Count() > 0)
                     {
                         DataBaseHelper.UpdateSharesQuotes(list);
+                        //Singleton.Instance.mqHandler.ClearQueueData("TransactionDataQuotes");
+                        Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), "TransactionData", "quotes");
                     }
                     stopwatch.Stop();
                     Console.WriteLine("=====五档行情更新结束:" + stopwatch.ElapsedMilliseconds + "============");

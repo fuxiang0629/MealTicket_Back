@@ -71,6 +71,8 @@ namespace MealTicket_Handler
         #endregion
 
         #region=====分笔数据更新参数====
+        public int TransactiondataIsOpen = 1;
+
         /// <summary>
         /// 分笔数据更新定时器执行起始小时
         /// </summary>
@@ -114,10 +116,17 @@ namespace MealTicket_Handler
         public long PriceFormat = 10000;
 
         #region====K线数据参数====
+        public int SecurityBarsIsOpen = 1;
         public int SecurityBarsIntervalTime = 3000;//间隔时间(毫秒)
-        public int SecurityBarsTaskTimeout = 15000;//任务超时时间(毫秒)
-        public int SecurityBarsBatchCount = 64;//每批次处理股票数量
-        public int SecurityBarsUpdateCountOnce = 10000;//每次写入数据库数据量
+        public int SecurityBarsTaskTimeout = 300000;//任务超时时间(毫秒)
+        public int SecurityBarsBatchCount = 128;//每批次处理股票数量
+        public int SecurityBarsUpdateCountOnce = 20000;//每次写入数据库数据量
+        public List<int> SecurityBarsDataTypeList = new List<int>() 
+        {
+            2,3,4,5,6,7,8,9
+        };
+        public TimeSpan SecurityBarsDataUpdateStartTime = TimeSpan.Parse("20:00:00");
+        public TimeSpan SecurityBarsDataUpdateEndTime = TimeSpan.Parse("23:00:00");
         #endregion
 
         // 显式静态构造函数告诉C＃编译器
@@ -161,14 +170,28 @@ namespace MealTicket_Handler
             {
                 mqHandler.Dispose();
             }
-            if (_securityBarsDataTask != null)
-            {
-                _securityBarsDataTask.Dispose();
-            }
             if (_sharesBaseSession != null)
             {
                 _sharesBaseSession.Dispose();
             }
+            if (_SharesLimitTimeSession != null)
+            {
+                _SharesLimitTimeSession.Dispose();
+            }
+            if (_DimTimeSession != null)
+            {
+                _DimTimeSession.Dispose();
+            }
+            if (_SharesLimitDateSession != null)
+            {
+                _SharesLimitDateSession.Dispose();
+            }
+            #region====K线数据处理任务====
+            if (_securityBarsDataTask != null)
+            {
+                _securityBarsDataTask.Dispose();
+            }
+            #endregion
         }
 
         /// <summary>
@@ -300,6 +323,11 @@ namespace MealTicket_Handler
                     if (sysPar10 != null)
                     {
                         var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar10.ParamValue);
+                        int? tempTransactiondataIsOpen = sysValue.IsOpen;
+                        if (tempTransactiondataIsOpen>0)
+                        {
+                            TransactiondataIsOpen = tempTransactiondataIsOpen.Value;
+                        }
                         string tempTransactiondataStartHour = sysValue.TransactiondataStartHour;
                         if (!TimeSpan.TryParse(tempTransactiondataStartHour, out TransactiondataStartHour))
                         {
@@ -351,6 +379,11 @@ namespace MealTicket_Handler
                     if (sysPar != null)
                     {
                         var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                        int? tempSecurityBarsIsOpen= sysValue.IsOpen;
+                        if (tempSecurityBarsIsOpen > 0)
+                        {
+                            SecurityBarsIsOpen = tempSecurityBarsIsOpen.Value;
+                        }
                         int tempSecurityBarsIntervalTime = sysValue.SecurityBarsIntervalTime;
                         if (tempSecurityBarsIntervalTime>0)
                         {
@@ -370,6 +403,41 @@ namespace MealTicket_Handler
                         if (tempSecurityBarsUpdateCountOnce > 0)
                         {
                             SecurityBarsUpdateCountOnce = tempSecurityBarsUpdateCountOnce;
+                        }
+                        string tempSecurityBarsDataUpdateStartTime = sysValue.SecurityBarsDataUpdateStartTime;
+                        if (!TimeSpan.TryParse(tempSecurityBarsDataUpdateStartTime, out SecurityBarsDataUpdateStartTime))
+                        {
+                            SecurityBarsDataUpdateStartTime = TimeSpan.Parse("20:00:00");
+                        }
+                        string tempSecurityBarsDataUpdateEndTime = sysValue.SecurityBarsDataUpdateEndTime;
+                        if (!TimeSpan.TryParse(tempSecurityBarsDataUpdateEndTime, out SecurityBarsDataUpdateEndTime))
+                        {
+                            SecurityBarsDataUpdateEndTime = TimeSpan.Parse("23:00:00");
+                        }
+                    }
+                }
+                catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "SecurityBarsDataType"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                        List<int> tempSecurityBarsDataTypeList = new List<int>();
+                        foreach (var item in sysValue.SecurityBarsDataTypeList)
+                        {
+                            int temp = item;
+                            tempSecurityBarsDataTypeList.Add(temp);
+                        }
+                        if (tempSecurityBarsDataTypeList.Count()>0)
+                        {
+                            SecurityBarsDataTypeList = tempSecurityBarsDataTypeList;
+                            if (_securityBarsDataTask != null)
+                            {
+                                _securityBarsDataTask.LoadSecurityBarsLastData();
+                            }
                         }
                     }
                 }
@@ -415,30 +483,38 @@ namespace MealTicket_Handler
             return mqHandler_SecurityBarsData;
         }
 
-        /// <summary>
-        /// K线数据处理任务
-        /// </summary>
+        #region====K线数据处理任务====
         public SecurityBarsDataTask _securityBarsDataTask;
-
         public SecurityBarsDataTask StartSecurityBarsDataTask()
         {
             _securityBarsDataTask = new SecurityBarsDataTask();
             _securityBarsDataTask.Init();
             return _securityBarsDataTask;
         }
+        #endregion
 
-        public void Init() 
+        public void Init()
         {
             var mqHandler = StartMqHandler("");
             var mqHandler_SecurityBarsData = StartMqHandler_SecurityBarsData();//生成Mq队列对象
+            _sharesBaseSession.StartUpdate(600000);
+            _SharesLimitTimeSession.StartUpdate(600000);
+            _DimTimeSession.StartUpdate(3600000);
+            _SharesLimitDateSession.StartUpdate(600000);
+
+            #region====K线数据处理====
             var securityBarsDataTask = StartSecurityBarsDataTask();
+            securityBarsDataTask.LoadSecurityBarsLastData();
             securityBarsDataTask.DoTask();
             mqHandler_SecurityBarsData.StartListen();//启动队列监听
-            _sharesBaseSession.StartUpdate(600000);
+            #endregion
         }
 
         #region===缓存===
         public SharesBaseSession _sharesBaseSession = new SharesBaseSession();
+        public SharesLimitTimeSession _SharesLimitTimeSession = new SharesLimitTimeSession();
+        public DimTimeSession _DimTimeSession = new DimTimeSession();
+        public SharesLimitDateSession _SharesLimitDateSession = new SharesLimitDateSession();
         #endregion
     }
 }

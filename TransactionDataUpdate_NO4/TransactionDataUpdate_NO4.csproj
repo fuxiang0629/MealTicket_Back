@@ -91,6 +91,7 @@
     <Compile Include="SharesInfo.cs" />
     <Compile Include="SharesTransactionDataInfo.cs" />
     <Compile Include="Singleton.cs" />
+    <Compile Include="TdxHq_Result.cs" />
     <Compile Include="TransactiondataAnalyseInfo.cs" />
   </ItemGroup>
   <ItemGroup>

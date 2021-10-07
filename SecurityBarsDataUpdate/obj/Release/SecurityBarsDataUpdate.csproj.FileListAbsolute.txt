@@ -37,7 +37,6 @@ F:\项目\饭票后端\SecurityBarsDataUpdate\obj\Release\SecurityBarsDataUpdate
 F:\项目\饭票后端\SecurityBarsDataUpdate\obj\Release\SecurityBarsDataUpdate.csproj.CopyComplete
 F:\项目\饭票后端\SecurityBarsDataUpdate\obj\Release\SecurityBarsDataUpdate.exe
 F:\项目\饭票后端\SecurityBarsDataUpdate\obj\Release\SecurityBarsDataUpdate.pdb
-F:\项目\饭票后端\SecurityBarsDataUpdate\obj\Release\SecurityBarsDataUpdate.csprojAssemblyReference.cache
 D:\项目\饭票\后端\SecurityBarsDataUpdate\bin\Release\SecurityBarsDataUpdate.exe.config
 D:\项目\饭票\后端\SecurityBarsDataUpdate\bin\Release\SecurityBarsDataUpdate.exe
 D:\项目\饭票\后端\SecurityBarsDataUpdate\bin\Release\SecurityBarsDataUpdate.pdb

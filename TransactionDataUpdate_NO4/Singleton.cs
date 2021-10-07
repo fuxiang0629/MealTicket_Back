@@ -133,9 +133,8 @@ namespace TransactionDataUpdate_NO4
                 TradeX_M.TdxHq_Disconnect(hqClient);
                 hqClient = -1;
             }
-            StringBuilder sResult = new StringBuilder(1024 * 1024);
+            StringBuilder sResult = new StringBuilder(1024);
             StringBuilder sErrInfo = new StringBuilder(256);
-
             Random rd = new Random();
             int index = rd.Next(HostList.Count);
             var hqHost = HostList[index];

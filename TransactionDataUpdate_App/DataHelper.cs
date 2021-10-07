@@ -1,7 +1,9 @@
 ﻿using FXCommon.Common;
+using FXCommon.Database;
 using MealTicket_DBCommon;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -72,7 +74,27 @@ namespace TransactionDataUpdate_App
   where (LastModified>dateadd(SECOND,-{0},getdate()) and [Type]=0) or (LastModified>convert(varchar(10),getdate(),120) and [Type]=1)
   group by Market,SharesCode",Singleton.Instance.StopPeriodTime/1000);
                 var list = db.Database.SqlQuery<SharesInfo>(sql).ToList();
-                return TdxHq_GetTransactionData(list);
+
+                List<SharesTransactionDataInfo> resultList = new List<SharesTransactionDataInfo>();
+
+                if (list.Count() > 0)
+                {
+                    //分批次更新
+                    int totalCount = list.Count();
+                    int onceCount = 32;
+                    int batchCount = totalCount / onceCount;
+                    if (totalCount % onceCount != 0)
+                    {
+                        batchCount = batchCount + 1;
+                    }
+
+                    for (int i = 0; i < batchCount; i++)
+                    {
+                        var tempList = list.Skip(i * onceCount).Take(onceCount).ToList();
+                        resultList.AddRange(TdxHq_GetTransactionData(tempList));
+                    }
+                }
+                return resultList;
             }
         }
 
@@ -86,8 +108,6 @@ namespace TransactionDataUpdate_App
 
             ThreadMsgTemplate<SharesInfo> data = new ThreadMsgTemplate<SharesInfo>();
             data.Init();
-
-            DateTime dateNow = DateTime.Now.Date;
 
             string SharesInfoNumArr = string.Empty;
             foreach (var item in sharesList)
@@ -110,7 +130,7 @@ from
 (
 	select SharesInfoNum,[Time],OrderIndex,row_number() over(partition by SharesInfoNum order by [Time] desc,OrderIndex) num
 	from t_shares_transactiondata with(nolock)
-	where SharesInfoNum in ({0})
+	where [Time]>convert(varchar(10),getdate(),120) and SharesInfoNum in ({0})
 )t
 where t.num=1", SharesInfoNumArr);
                 lastList = db.Database.SqlQuery<LastData>(sql).ToList();
@@ -290,52 +310,178 @@ where t.num=1", SharesInfoNumArr);
         /// <returns></returns>
         public static void UpdateToDataBase(List<SharesTransactionDataInfo> dataList)
         {
-            DataTable table = new DataTable();
-            table.Columns.Add("Market", typeof(int));
-            table.Columns.Add("SharesCode", typeof(string));
-            table.Columns.Add("Time", typeof(DateTime));
-            table.Columns.Add("TimeStr", typeof(string));
-            table.Columns.Add("Price", typeof(long));
-            table.Columns.Add("Volume", typeof(int));
-            table.Columns.Add("Stock", typeof(int));
-            table.Columns.Add("Type", typeof(int));
-            table.Columns.Add("OrderIndex", typeof(int));
-            table.Columns.Add("LastModified", typeof(DateTime));
-            foreach (var item in dataList)
+            //分批次更新
+            int totalCount = dataList.Count();
+            int onceCount = 5000;
+            int batchCount = totalCount / onceCount;
+            if (totalCount % onceCount != 0)
             {
-                DataRow row = table.NewRow();
-                row["Market"] = item.Market;
-                row["SharesCode"] = item.SharesCode;
-                row["Time"] = item.Time;
-                row["TimeStr"] = item.TimeStr;
-                row["Price"] = item.Price;
-                row["Volume"] = item.Volume;
-                row["Stock"] = item.Stock;
-                row["Type"] = item.Type;
-                row["OrderIndex"] = item.OrderIndex;
-                row["LastModified"] = DateTime.Now;
-                table.Rows.Add(row);
+                batchCount = batchCount + 1;
+            }
+
+            for (int i = 0; i < batchCount; i++)
+            {
+                var tempDataList=dataList.Skip(i * onceCount).Take(onceCount).ToList();
+
+                DataTable table = new DataTable();
+                table.Columns.Add("Market", typeof(int));
+                table.Columns.Add("SharesCode", typeof(string));
+                table.Columns.Add("Time", typeof(DateTime));
+                table.Columns.Add("TimeStr", typeof(string));
+                table.Columns.Add("Price", typeof(long));
+                table.Columns.Add("Volume", typeof(int));
+                table.Columns.Add("Stock", typeof(int));
+                table.Columns.Add("Type", typeof(int));
+                table.Columns.Add("OrderIndex", typeof(int));
+                table.Columns.Add("LastModified", typeof(DateTime));
+                foreach (var item in tempDataList)
+                {
+                    DataRow row = table.NewRow();
+                    row["Market"] = item.Market;
+                    row["SharesCode"] = item.SharesCode;
+                    row["Time"] = item.Time;
+                    row["TimeStr"] = item.TimeStr;
+                    row["Price"] = item.Price;
+                    row["Volume"] = item.Volume;
+                    row["Stock"] = item.Stock;
+                    row["Type"] = item.Type;
+                    row["OrderIndex"] = item.OrderIndex;
+                    row["LastModified"] = DateTime.Now;
+                    table.Rows.Add(row);
+                }
+
+                using (var db = new meal_ticketEntities())
+                using (var tran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        //关键是类型
+                        SqlParameter parameter = new SqlParameter("@sharesTransactiondata", SqlDbType.Structured);
+                        //必须指定表类型名
+                        parameter.TypeName = "dbo.SharesTransactiondata";
+                        //赋值
+                        parameter.Value = table;
+                        db.Database.ExecuteSqlCommand("exec P_Shares_Transactiondata_Update @sharesTransactiondata", parameter);
+                        tran.Commit();
+                    }
+                    catch (Exception ex)
+                    {
+                        tran.Rollback();
+                        throw ex;
+                    }
+                }
             }
 
             using (var db = new meal_ticketEntities())
-            using (var tran = db.Database.BeginTransaction())
             {
-                try
+                string sql = "update t_shares_transactiondata_update set [Type]=0";
+                db.Database.ExecuteSqlCommand(sql);
+            }
+        }
+
+
+        /// <summary>
+        /// 数据更新到数据库(通过temp表)
+        /// </summary>
+        /// <returns></returns>
+        public static void UpdateToDataBaseByTemp(List<SharesTransactionDataInfo> dataList)
+        {
+            //分批次更新
+            int totalCount = dataList.Count();
+            int onceCount = 10000;
+            int batchCount = totalCount / onceCount;
+            if (totalCount % onceCount != 0)
+            {
+                batchCount = batchCount + 1;
+            }
+
+            for (int i = 0; i < batchCount; i++)
+            {
+                var tempDataList = dataList.Skip(i * onceCount).Take(onceCount).ToList();
+
+                DataTable table = new DataTable();
+                table.Columns.Add("Market", typeof(int));
+                table.Columns.Add("SharesCode", typeof(string));
+                table.Columns.Add("Time", typeof(DateTime));
+                table.Columns.Add("TimeStr", typeof(string));
+                table.Columns.Add("Price", typeof(long));
+                table.Columns.Add("Volume", typeof(int));
+                table.Columns.Add("Stock", typeof(int));
+                table.Columns.Add("Type", typeof(int));
+                table.Columns.Add("OrderIndex", typeof(int));
+                table.Columns.Add("LastModified", typeof(DateTime));
+                foreach (var item in tempDataList)
                 {
-                    //关键是类型
-                    SqlParameter parameter = new SqlParameter("@sharesTransactiondata", SqlDbType.Structured);
-                    //必须指定表类型名
-                    parameter.TypeName = "dbo.SharesTransactiondata";
-                    //赋值
-                    parameter.Value = table;
-                    db.Database.ExecuteSqlCommand("exec P_Shares_Transactiondata_Update @sharesTransactiondata", parameter);
-                    tran.Commit();
+                    DataRow row = table.NewRow();
+                    row["Market"] = item.Market;
+                    row["SharesCode"] = item.SharesCode;
+                    row["Time"] = item.Time;
+                    row["TimeStr"] = item.TimeStr;
+                    row["Price"] = item.Price;
+                    row["Volume"] = item.Volume;
+                    row["Stock"] = item.Stock;
+                    row["Type"] = item.Type;
+                    row["OrderIndex"] = item.OrderIndex;
+                    row["LastModified"] = DateTime.Now;
+                    table.Rows.Add(row);
                 }
-                catch (Exception ex)
+
+                var bulk = BulkFactory.CreateBulkCopy(DatabaseType.SqlServer);
+                Dictionary<string, string> dic = new Dictionary<string, string>();
+                dic.Add("Market", "Market");
+                dic.Add("SharesCode", "SharesCode");
+                dic.Add("Time", "Time");
+                dic.Add("TimeStr", "TimeStr");
+                dic.Add("Price", "Price");
+                dic.Add("Volume", "Volume");
+                dic.Add("Stock", "Stock");
+                dic.Add("Type", "Type");
+                dic.Add("OrderIndex", "OrderIndex");
+                dic.Add("LastModified", "LastModified");
+                bulk.ColumnMappings = dic;
+                bulk.BatchSize = onceCount;
+
+                using (SqlConnection conn = new SqlConnection(ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString))
                 {
-                    tran.Rollback();
-                    throw ex;
+                    if (conn.State != ConnectionState.Open)
+                    {
+                        conn.Open();
+                    }
+                    string sql = "truncate table t_shares_transactiondata_temp";
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandType = CommandType.Text;
+                        cmd.CommandText = sql;   //sql语句
+                        cmd.ExecuteNonQuery();
+                    }
+                    using (SqlTransaction tran = conn.BeginTransaction())//开启事务
+                    {
+                        try
+                        {
+                            bulk.BulkWriteToServer(conn, table, "t_shares_transactiondata_temp", tran);
+                            sql = "exec P_Shares_Transactiondata_Update_Temp";
+                            using (var cmd = conn.CreateCommand())
+                            {
+                                cmd.CommandType = CommandType.Text;
+                                cmd.CommandText = sql;   //sql语句
+                                cmd.Transaction = tran;
+                                cmd.ExecuteNonQuery();
+                            }
+                            tran.Commit();
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.WriteFileLog("更新K线数据出错", ex);
+                            tran.Rollback();
+                        }
+                    }
                 }
+            }
+
+            using (var db = new meal_ticketEntities())
+            {
+                string sql = "update t_shares_transactiondata_update set [Type]=0";
+                db.Database.ExecuteSqlCommand(sql);
             }
         }
     }

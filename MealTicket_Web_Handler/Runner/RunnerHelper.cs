@@ -381,91 +381,13 @@ namespace MealTicket_Web_Handler.Runner
         /// <summary>
         /// 自动买入交易
         /// </summary>
-        public static void TradeAutoBuyBak()
-        {
-            ThreadMsgTemplate<TradeAutoBuyConditionGroup> conditionData = new ThreadMsgTemplate<TradeAutoBuyConditionGroup>();
-            conditionData.Init();
-            List<TradeAutoBuyConditionGroup> groupList = new List<TradeAutoBuyConditionGroup>();
-            using (var db = new meal_ticketEntities())
-            {
-                List<TradeAutoBuyCondition> disResult = new List<TradeAutoBuyCondition>();
-                //查询价格条件达标的数据
-                string sql = @"select t.Id,t.CreateAccountId,t1.AccountId,t1.SharesCode,t1.Market,t2.PresentPrice,t2.ClosedPrice,t2.LastModified,t.LimitUp,t2.LimitUpPrice,t2.LimitDownPrice,
-t.ForbidType,t.FirstExecTime,t2.BuyPrice1,t2.BuyPrice2,t2.BuyPrice3,t2.BuyPrice4,t2.BuyPrice5,t2.SellPrice1,t2.SellPrice2,t2.SellPrice3,
-t2.SellPrice4,t2.SellPrice5,t.ConditionPrice,t.ConditionType,t.ConditionRelativeType,t.ConditionRelativeRate,t.IsGreater,t.OtherConditionRelative,
-t.BusinessStatus,t.TriggerTime,t.ExecStatus,t.BuyAuto,t.EntrustPriceGear,t.EntrustType,t.EntrustAmount,t.IsHold,t.FollowType
-from t_account_shares_conditiontrade_buy_details t with(nolock)
-inner join t_account_shares_conditiontrade_buy t1 with(nolock) on t.ConditionId=t1.Id
-inner join v_shares_quotes_last t2 with(nolock) on t1.Market=t2.Market and t1.SharesCode=t2.SharesCode
-where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
-                disResult = db.Database.SqlQuery<TradeAutoBuyCondition>(sql).ToList();
-
-                if (disResult.Count() <= 0)
-                {
-                    conditionData.Release();
-                    return;
-                }
-                foreach (var item in disResult)
-                {
-                    var groupInfo = groupList.Where(e => e.AccountId == item.AccountId && e.Market == item.Market && e.SharesCode == item.SharesCode).FirstOrDefault();
-                    if (groupInfo == null)
-                    {
-                        groupList.Add(new TradeAutoBuyConditionGroup
-                        {
-                            SharesCode = item.SharesCode,
-                            AccountId = item.AccountId,
-                            Market = item.Market,
-                            List = new List<TradeAutoBuyCondition>
-                            {
-                                JsonConvert.DeserializeObject<TradeAutoBuyCondition>(JsonConvert.SerializeObject(item))
-                            }
-                        });
-                    }
-                    else
-                    {
-                        groupInfo.List.Add(JsonConvert.DeserializeObject<TradeAutoBuyCondition>(JsonConvert.SerializeObject(item)));
-                    }
-                }
-                foreach (var item in groupList)
-                {
-                    conditionData.AddMessage(JsonConvert.DeserializeObject<TradeAutoBuyConditionGroup>(JsonConvert.SerializeObject(item)), false);
-                }
-            }
-            int taskCount = groupList.Count();
-            if (Singleton.Instance.AutoBuyTaskMaxCount < taskCount)
-            {
-                taskCount = Singleton.Instance.AutoBuyTaskMaxCount;
-            }
-            Task[] tArr = new Task[taskCount];
-
-            for (int i = 0; i < taskCount; i++)
-            {
-                tArr[i] = new Task(() =>
-                {
-                    while (true)
-                    {
-                        TradeAutoBuyConditionGroup temp = new TradeAutoBuyConditionGroup();
-                        if (!conditionData.GetMessage(ref temp, true))
-                        {
-                            break;
-                        }
-                        foreach (var item in temp.List)
-                        {
-                            doAutoBuyTask(item);
-                        }
-                    }
-                });
-                tArr[i].Start();
-            }
-            Task.WaitAll(tArr);
-            conditionData.Release();
-        }
-
         public static void TradeAutoBuy()
         {
+            StringBuilder sb = new StringBuilder();
             List<TradeAutoBuyCondition> disResult = new List<TradeAutoBuyCondition>();
             using (var db = new meal_ticketEntities())
             {
+                sb.AppendLine("===查询需要自动买入的数据===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
                 string sql = @"select t.Id,t1.Id ConditionId,t1.AccountId,t1.SharesCode,t1.Market,t2.PresentPrice,t2.ClosedPrice,t2.LastModified,t.LimitUp,t2.LimitUpPrice,t2.LimitDownPrice,
 t.ForbidType,t.FirstExecTime,t2.BuyPrice1,t2.BuyPrice2,t2.BuyPrice3,t2.BuyPrice4,t2.BuyPrice5,t2.SellPrice1,t2.SellPrice2,t2.SellPrice3,
 t2.SellPrice4,t2.SellPrice5,t.ConditionPrice,t.ConditionType,t.ConditionRelativeType,t.ConditionRelativeRate,t.IsGreater,t.OtherConditionRelative,
@@ -475,9 +397,17 @@ inner join t_account_shares_conditiontrade_buy t1 with(nolock) on t.ConditionId=
 inner join v_shares_quotes_last t2 with(nolock) on t1.Market=t2.Market and t1.SharesCode=t2.SharesCode
 where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                 disResult = db.Database.SqlQuery<TradeAutoBuyCondition>(sql).ToList();
+                sb.AppendLine("===查询结束===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
             }
-
+            if (disResult.Count() <= 0)
+            {
+                return;
+            }
+            Logger.WriteFileLog(sb.ToString(), null);
+            Logger.WriteFileLog("===开始自动买入判断（总）===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             TodoTradeAutoBuy(disResult);
+            Logger.WriteFileLog("===结束自动买入判断（总）===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            Logger.WriteFileLog("==================================", null);
         }
 
         private static void TodoTradeAutoBuy(List<TradeAutoBuyCondition> disResult, bool isSyncro = false)
@@ -502,20 +432,18 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                         SharesCode = item.SharesCode,
                         AccountId = item.AccountId,
                         Market = item.Market,
-                        List = new List<TradeAutoBuyCondition>
-                            {
-                                JsonConvert.DeserializeObject<TradeAutoBuyCondition>(JsonConvert.SerializeObject(item))
-                            }
+                        List = new List<TradeAutoBuyCondition>() { item }
+
                     });
                 }
                 else
                 {
-                    groupInfo.List.Add(JsonConvert.DeserializeObject<TradeAutoBuyCondition>(JsonConvert.SerializeObject(item)));
+                    groupInfo.List.Add(item);
                 }
             }
             foreach (var item in groupList)
             {
-                conditionData.AddMessage(JsonConvert.DeserializeObject<TradeAutoBuyConditionGroup>(JsonConvert.SerializeObject(item)), false);
+                conditionData.AddMessage(item);
             }
 
             int taskCount = groupList.Count();
@@ -550,7 +478,9 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
             var list = Singleton.Instance.GetSyncroList();
             if (list.Count() > 0)
             {
+                Logger.WriteFileLog("===开始同步买入判断===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                 TodoTradeAutoBuy(list, true);
+                Logger.WriteFileLog("===结束同步买入判断===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             }
         }
 
@@ -559,6 +489,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
             DateTime timeNow = DateTime.Now;
             using (var db = new meal_ticketEntities())
             {
+                Logger.WriteFileLog("1"+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"),null);
                 string sql = "";
                 StringBuilder logRecord = new StringBuilder();//判断日志
                 logRecord.AppendLine("===" + item.AccountId + "开始执行条件" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
@@ -668,6 +599,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                     }
                 }
 
+                Logger.WriteFileLog("2" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                 //判断板块限制
                 sql = string.Format("select top 1 ParValueJson from t_account_shares_buy_setting with(nolock) where AccountId={0} and [Type]=4", item.AccountId);
                 string ParValueJson = db.Database.SqlQuery<string>(sql).FirstOrDefault();
@@ -689,6 +621,7 @@ where t.Market={0} and t.SharesCode='{1}' and AccountId={2} and t2.[Status]=1 an
                     }
                 }
 
+                Logger.WriteFileLog("3" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                 //判断是否存在持仓
                 if (item.IsHold)
                 {
@@ -1508,6 +1441,7 @@ where t.Market={0} and t.SharesCode='{1}' and AccountId={2} and t2.[Status]=1 an
                     }
                 }
 
+                Logger.WriteFileLog("4" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                 if (isAuto && isTri)//自动买入且条件满足
                 {
                     try
@@ -1621,6 +1555,7 @@ inner
                         }
 
 
+                        Logger.WriteFileLog("5" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                         //查询跟投人员
                         var followList = (from x in db.t_account_follow_rel
                                           join x2 in db.t_account_baseinfo on x.FollowAccountId equals x2.Id
@@ -1663,6 +1598,7 @@ inner
                             IsFollow=false
                         });
 
+                        Logger.WriteFileLog("6" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                         var buyRate = EntrustAmount * 1.0 / (Deposit - RemainDeposit);//仓位占比
                         foreach (var account in FollowList)
                         {
@@ -1689,6 +1625,7 @@ inner
                             });
                         }
 
+                        Logger.WriteFileLog("7" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                         SqlParameter[] parameter = new SqlParameter[8];
                         //市场
                         var marketPar = new SqlParameter("@market", SqlDbType.Int);
@@ -1751,6 +1688,7 @@ inner
 
                         var resultList=db.Database.SqlQuery<ApplyTradeBuyInfo>("exec P_ApplyTradeBuy_Batch @market,@sharesCode,@entrustPrice,@mainAccountId,@autoBuyDetailsId,@applyTradeBuyInfo,@errorCode out,@errorMessage out", parameter).ToList();
 
+                        Logger.WriteFileLog("8" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                         if ((int)parameter[6].Value != 0)
                         {
                             throw new WebApiException(400, parameter[7].Value.ToString());
@@ -1777,7 +1715,17 @@ inner
                         }
                         if (sendDataList.Count() > 0)
                         {
-                            bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new { type = 1, data = sendDataList })), "SharesBuy", "s1");
+                            string serverId = "s1";
+                            var server = (from x in db.t_server_broker_account_rel
+                                          join x2 in db.t_server on x.ServerId equals x2.ServerId
+                                          orderby x2.OrderIndex
+                                          select x).FirstOrDefault();
+                            if (server == null)
+                            {
+                                throw new WebApiException(400, "服务器配置有误");
+                            }
+                            serverId = server.ServerId;
+                            bool isSendSuccess = Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new { type = 1, data = sendDataList })), "SharesBuy", serverId);
                             if (!isSendSuccess)
                             {
                                 throw new WebApiException(400, "买入失败,请撤销重试");
@@ -1789,6 +1737,7 @@ inner
                         Logger.WriteFileLog("自动买入这里出错", ex);
                     }
 
+                    Logger.WriteFileLog("9" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                     if (!isSyncro)
                     {
                         TradeAutoBuyCondition conditionInfo = new TradeAutoBuyCondition();
@@ -1797,6 +1746,7 @@ inner
                                              join x2 in db.t_account_shares_conditiontrade_buy_group_rel on x.Id equals x2.GroupId
                                              where x.AccountId == item.AccountId && x2.Market == item.Market && x2.SharesCode == item.SharesCode
                                              select x).ToList();
+                        Logger.WriteFileLog("10" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                         List<long> authorized_group_id_list = new List<long>();
                         foreach (var groupInfo in tempGroupList)
                         {
@@ -1816,6 +1766,7 @@ inner
                             db.SaveChanges();
                         }
 
+                        Logger.WriteFileLog("11" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                         //导入条件数据
                         //1.查询股票所属自定义分组
                         //2.查询分组配置同步用户及参数
@@ -1835,6 +1786,7 @@ inner
                                                            where y.SettingId == x2.Id
                                                            select y.GroupId).ToList()
                                           }).ToList();
+                        Logger.WriteFileLog("12" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                         foreach (var data in syncroList)
                         {
                             try
@@ -1877,6 +1829,7 @@ inner
                                 Logger.WriteFileLog("同步出错",ex);
                             }
                         }
+                        Logger.WriteFileLog("13" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                     }
                 }
             }

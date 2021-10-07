@@ -232,6 +232,24 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 批量删除自选股
+        /// </summary>
+        /// <returns></returns>
+        [Description("批量删除自选股")]
+        [Route("account/optional/delete/batch"), HttpPost]
+        [CheckUserLoginFilter]
+        public object BatchDeleteAccountOptional(BatchDeleteAccountOptionalRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BatchDeleteAccountOptional(request, basedata);
+            return null;
+        }
+
+        /// <summary>
         /// 绑定自选股席位
         /// </summary>
         /// <returns></returns>
@@ -8114,6 +8132,53 @@ namespace MealTicket_Web_APIService.controller
             }
             trendHandler.ModifyConditiontradeTemplateSearchDetails(request);
             return null;
+        }
+
+        /// <summary>
+        /// 获取股票K线数据
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取股票K线数据")]
+        [Route("shares/kline/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public GetSharesKLineListRes GetSharesKLineList(GetSharesKLineListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesKLineList(request,basedata);
+        }
+
+        /// <summary>
+        /// 获取股票分时数据
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取股票分时数据")]
+        [Route("shares/minutetimedata/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public GetSharesMinutetimedataListRes GetSharesMinutetimedataList(GetSharesMinutetimedataListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesMinutetimedataList(request, basedata);
+        }
+
+        /// <summary>
+        /// 获取股票K线展示分组列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取股票K线展示分组列表")]
+        [Route("shares/kline/type/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public GetSharesKLineTypeListRes GetSharesKLineTypeList()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesKLineTypeList();
         }
         #endregion
     }

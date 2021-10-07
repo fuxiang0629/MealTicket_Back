@@ -9,9 +9,9 @@ namespace FXCommon.Common
 {
     public abstract class Session<T>
     {
-        private ReaderWriterLock _readWriteLock = new ReaderWriterLock();
+        protected ReaderWriterLock _readWriteLock = new ReaderWriterLock();
 
-        private T SessionData = default(T);
+        protected T SessionData = default(T);
 
         public string Name = "";
 
@@ -28,19 +28,54 @@ namespace FXCommon.Common
         /// <summary>
         /// 启动更新
         /// </summary>
-        public void StartUpdate(int sleepTime)
+        public void StartUpdate(TimeSpan startTime,TimeSpan endTime)
         {
             UpdateWait.Init();
             UpdateThread = new Thread(() =>
             {
+                DateTime lastTime = DateTime.Now;
                 do
                 {
-                    UpdateSessionWithLock();
+                    DateTime timeNow = DateTime.Now;
+                    if (timeNow.Date > lastTime.Date)
+                    {
+                        TimeSpan timeSpanNow = TimeSpan.Parse(timeNow.ToString("HH:mm:ss"));
+                        if (timeSpanNow >= startTime && timeSpanNow < endTime)
+                        {
+                            bool IsSuccess=UpdateSessionWithLock();
+                            if (IsSuccess)
+                            {
+                                lastTime = timeNow;
+                            }
+                        }
+                    }
+                    int msgId = 0;
+                    if (UpdateWait.WaitMessage(ref msgId,600000))
+                    {
+                        break;
+                    }
+                } while (true);
+            });
+            UpdateThread.Start();
+        }
+
+        /// <summary>
+        /// 启动更新
+        /// </summary>
+        public void StartUpdate(int sleepTime)
+        {
+            UpdateWait.Init();
+            UpdateSessionWithLock();
+            UpdateThread = new Thread(() =>
+            {
+                do
+                {
                     int msgId = 0;
                     if (UpdateWait.WaitMessage(ref msgId, sleepTime))
                     {
                         break;
                     }
+                    UpdateSessionWithLock();
                 } while (true);
             });
             UpdateThread.Start();

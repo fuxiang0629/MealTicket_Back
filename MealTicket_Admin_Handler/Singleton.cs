@@ -63,6 +63,8 @@ namespace MealTicket_Admin_Handler
             SysparUpdate();
             UpdateWait.Init();
             StartSysparUpdateThread();
+
+            _DimTimeSession.StartUpdate(3600000);
         }
 
         public static Singleton Instance
@@ -83,6 +85,10 @@ namespace MealTicket_Admin_Handler
                 UpdateWait.AddMessage(0);
                 SysparUpdateThread.Join();
                 UpdateWait.Release();
+            }
+            if (_DimTimeSession != null)
+            {
+                _DimTimeSession.Dispose();
             }
         }
 
@@ -180,5 +186,8 @@ namespace MealTicket_Admin_Handler
             mqHandler = new MQHandler(hostName, port, userName, password, virtualHost);
             return mqHandler;
         }
+
+
+        public DimTimeSession _DimTimeSession = new DimTimeSession();
     }
 }

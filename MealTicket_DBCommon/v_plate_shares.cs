@@ -35,5 +35,7 @@ namespace MealTicket_DBCommon
         public int NoWeightMarket { get; set; }
         public string NoWeightSharesCode { get; set; }
         public Nullable<int> PriceType { get; set; }
+        public int BaseStatus { get; set; }
+        public Nullable<long> RelId { get; set; }
     }
 }

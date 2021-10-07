@@ -37,7 +37,6 @@ F:\项目\饭票后端\CanSoldClear\bin\Debug\System.Numerics.Vectors.xml
 F:\项目\饭票后端\CanSoldClear\bin\Debug\zh-Hans\EntityFramework.resources.dll
 F:\项目\饭票后端\CanSoldClear\bin\Debug\zh-Hans\EntityFramework.SqlServer.resources.dll
 F:\项目\饭票后端\CanSoldClear\obj\Debug\CanSoldClear.csprojAssemblyReference.cache
-F:\项目\饭票后端\CanSoldClear\obj\Debug\CanSoldClear.exe.config
 F:\项目\饭票后端\CanSoldClear\obj\Debug\CanSoldClear.csproj.CoreCompileInputs.cache
 F:\项目\饭票后端\CanSoldClear\obj\Debug\CanSoldClear.csproj.CopyComplete
 F:\项目\饭票后端\CanSoldClear\obj\Debug\CanSoldClear.exe

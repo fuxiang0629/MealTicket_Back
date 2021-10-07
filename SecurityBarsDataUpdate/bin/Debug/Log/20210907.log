@@ -1,0 +1,4641 @@
+2021/9/7 15:05:07
+k线配置
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: S. Path '', line 0, position 0.
+   在 Newtonsoft.Json.JsonTextReader.ParseValue()
+   在 Newtonsoft.Json.JsonTextReader.Read()
+   在 Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   在 Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   在 Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   在 Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   在 Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   在 Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   在 SecurityBarsDataUpdate.Singleton.SysparUpdate() 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\Singleton.cs:行号 354
+
+2021/9/7 15:06:06
+监听队列已链接
+
+
+2021/9/7 15:06:21
+接受数据回调处理出错
+System.ArgumentNullException: 值不能为 null。
+参数名: source
+   在 System.Linq.Enumerable.Count[TSource](IEnumerable`1 source)
+   在 SecurityBarsDataUpdate.MQHandler.ReceivedExecute(String data) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\MQHandler.cs:行号 27
+
+2021/9/7 15:07:59
+监听队列已链接
+
+
+2021/9/7 15:09:01
+监听队列已链接
+
+
+2021/9/7 15:12:18
+监听队列已链接
+
+
+2021/9/7 15:14:24
+监听队列已链接
+
+
+2021/9/7 15:21:05
+获取K线数据出错，原因：接收数据失败, 连接断开, 请重连服务器! errCode=10054
+
+
+2021/9/7 15:21:05
+获取K线数据出错，原因：接收数据失败, 连接断开, 请重连服务器! errCode=10054
+
+
+2021/9/7 15:21:05
+获取K线数据出错，原因：接收数据失败, 连接断开, 请重连服务器! errCode=10054
+
+
+2021/9/7 15:21:05
+获取K线数据出错，原因：接收数据失败, 连接断开, 请重连服务器! errCode=10054
+
+
+2021/9/7 15:21:05
+获取K线数据出错，原因：接收数据失败, 连接断开, 请重连服务器! errCode=10054
+
+
+2021/9/7 15:21:17
+获取K线数据出错，原因：接收数据失败, 连接断开, 请重连服务器! errCode=10054
+
+
+2021/9/7 15:21:43
+获取K线数据出错，原因：接收数据失败, 连接断开, 请重连服务器! errCode=10054
+
+
+2021/9/7 15:21:48
+获取K线数据出错，原因：接收数据失败, 连接断开, 请重连服务器! errCode=10054
+
+
+2021/9/7 15:22:14
+获取K线数据出错，原因：接收数据失败, 连接断开, 请重连服务器! errCode=10054
+
+
+2021/9/7 15:22:14
+获取K线数据出错，原因：发送数据失败, 连接断开, 请重连服务器! errCode=10053
+
+
+2021/9/7 15:22:19
+获取K线数据出错，原因：发送数据失败, 连接断开, 请重连服务器! errCode=10053
+
+
+2021/9/7 15:22:21
+获取K线数据出错，原因：发送数据失败, 连接断开, 请重连服务器! errCode=10053
+
+
+2021/9/7 15:22:22
+获取K线数据出错，原因：发送数据失败, 连接断开, 请重连服务器! errCode=10053
+
+
+2021/9/7 15:24:12
+监听队列已链接
+
+
+2021/9/7 15:26:18
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:26:18
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:26:18
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:26:18
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:26:18
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:26:18
+时间解析有误,错误时间:20190426
+System.Exception: 获取周数据有误
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 328
+
+2021/9/7 15:26:19
+时间解析有误,错误时间:20190426
+System.Exception: 获取季度据有误
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 357
+
+2021/9/7 15:26:54
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:26:54
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:26:54
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:26:55
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:26:55
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:26:55
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:26:55
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:26:55
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:26:55
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:26:55
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:27:04
+时间解析有误,错误时间:1998--06--89 375:28
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 281
+
+2021/9/7 15:27:04
+时间解析有误,错误时间:2004-16-25 13:31
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:04
+时间解析有误,错误时间:1997--19--74 11:29
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 299
+
+2021/9/7 15:27:04
+时间解析有误,错误时间:2004-00-00 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:04
+时间解析有误,错误时间:2009-00-78 42:40
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:04
+时间解析有误,错误时间:2004-00-75 262:51
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:04
+时间解析有误,错误时间:2004-05-85 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:04
+时间解析有误,错误时间:1997--05--70 01:18
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 299
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2014-01-41 27:05
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2004-00-02 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2004-00-88 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2013-18-84 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2004-00-40 00:10
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2013-08-20 -97:-36
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 289
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2014-00-20 03:25
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2004-06-77 50:56
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2015-00-00 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2000--12--90 331:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 281
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2014-00-38 02:37
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:1993--20--47 08:06
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 299
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2004-16-25 13:31
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2004-00-01 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:1990--19--83 10:59
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 299
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2004-00-00 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2013-19-80 02:37
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2004-05-52 07:18
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2014-01-04 00:40
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2014-03-32 03:25
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2004-00-00 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2012-09-09 93:18
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2016-19-60 310:46
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2014-04-25 27:05
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2014-01-49 09:12
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2014-02-98 22:38
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2014-02-23 03:25
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2004-12-34 250:51
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2004-00-40 00:10
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2013-18-73 02:37
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2014-03-26 27:05
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:05
+时间解析有误,错误时间:2014-00-36 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:-1186262980
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:27:06
+获取K线数据出错
+System.OverflowException: 值对于 Int32 太大或太小。
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.TdxHq_GetSecurityBarsData_byShares(Int32 hqClient, SecurityBarsDataPar sharesData, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 208
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:5379803
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:-1308375422
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:-850214264
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:1308792394
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:-850214264
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:-37085689
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:0
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:306914094
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:-1738745854
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:-1771419087
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:15356746
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:1618407425
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:15356746
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:1211883392
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:732
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:-446532593
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:-729227231
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:1301749509
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:1301749509
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:0
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:4063367
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:1602360477
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:-552339709
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:27:06
+时间解析有误,错误时间:0
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 350
+
+2021/9/7 15:27:59
+监听队列已链接
+
+
+2021/9/7 15:28:22
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:28:22
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:28:22
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:28:22
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:28:22
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:28:38
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:28:38
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:28:38
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:28:38
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:31:10
+监听队列已链接
+
+
+2021/9/7 15:32:38
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:32:38
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:32:38
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:32:38
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:32:39
+时间解析有误,错误时间:20190426
+System.Exception: 获取周数据有误
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 328
+
+2021/9/7 15:32:39
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:32:39
+时间解析有误,错误时间:20190426
+System.Exception: 获取季度据有误
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 357
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:2004-16-25 13:31
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:2004-05-85 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:2004-00-00 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:1997--19--74 11:29
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 299
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:2004-00-75 262:51
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:1997--05--70 01:18
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 299
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:2009-00-78 42:40
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:1998--06--89 375:28
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 281
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:2013-08-20 -97:-36
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 289
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:2014-01-41 27:05
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:2004-00-88 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:2004-00-40 00:10
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:2004-06-77 50:56
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:2013-18-84 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:2004-00-02 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:2014-00-20 03:25
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:2013-19-80 02:37
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:2014-01-04 00:40
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:2012-09-09 93:18
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:2014-04-25 27:05
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:2004-05-52 07:18
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:2016-19-60 310:46
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:2014-03-32 03:25
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:20
+时间解析有误,错误时间:2004-00-00 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:1990--19--83 10:59
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 299
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:2000--12--90 331:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 281
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:2004-00-00 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:2004-16-25 13:31
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:2015-00-00 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:2004-00-01 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:2014-00-38 02:37
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:1993--20--47 08:06
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 299
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:-37085689
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:1308792394
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:33:21
+获取K线数据出错
+System.OverflowException: 值对于 Int32 太大或太小。
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.TdxHq_GetSecurityBarsData_byShares(Int32 hqClient, SecurityBarsDataPar sharesData, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 208
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:-850214264
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:-850214264
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:-1186262980
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:0
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:5379803
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:-1308375422
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:1618407425
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:-1738745854
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:306914094
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:732
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:15356746
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:1211883392
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:-1771419087
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:33:21
+时间解析有误,错误时间:15356746
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:2014-02-23 03:25
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:2014-02-98 22:38
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:2004-00-40 00:10
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:2004-12-34 250:51
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:2014-03-26 27:05
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:2014-01-49 09:12
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:2014-00-36 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:2013-18-73 02:37
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:741690511
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 350
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:-1944938527
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 350
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:-2111797780
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 350
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:0
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 350
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:-2008700453
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 350
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:0
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 350
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:-1337948858
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 350
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:-1337948858
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 350
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:1301749509
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:0
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:1301749509
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:-446532593
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:-729227231
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:-552339709
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:4063367
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:33:22
+时间解析有误,错误时间:1602360477
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:37:46
+监听队列已链接
+
+
+2021/9/7 15:38:18
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:38:19
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:38:19
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:38:19
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:38:19
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:38:19
+时间解析有误,错误时间:20190426
+System.Exception: 获取季度据有误
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 357
+
+2021/9/7 15:38:19
+时间解析有误,错误时间:20190426
+System.Exception: 获取周数据有误
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 328
+
+2021/9/7 15:39:02
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:02
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:05
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:05
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:05
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:05
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:05
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:05
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:05
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:05
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:05
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:05
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:06
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:06
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:06
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:06
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:06
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:06
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:06
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:06
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:06
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:06
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:06
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:06
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:06
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:06
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:07
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:07
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:07
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:07
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:11
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:11
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:11
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:11
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:11
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:11
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:11
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:11
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:11
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:12
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:12
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:12
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:12
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:12
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:12
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:12
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:12
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:12
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:13
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:13
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:13
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:14
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:14
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:14
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:14
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:16
+时间解析有误,错误时间:2014-02-98 22:38
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:16
+时间解析有误,错误时间:2004-00-40 00:10
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:16
+时间解析有误,错误时间:2014-02-23 03:25
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:16
+时间解析有误,错误时间:2013-18-73 02:37
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:16
+时间解析有误,错误时间:2004-12-34 250:51
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:16
+时间解析有误,错误时间:2014-00-36 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:16
+时间解析有误,错误时间:2014-01-49 08:40
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:16
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:17
+时间解析有误,错误时间:2004-16-25 13:31
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:17
+时间解析有误,错误时间:2009-00-78 42:40
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:17
+时间解析有误,错误时间:1998--06--89 375:28
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 281
+
+2021/9/7 15:39:17
+时间解析有误,错误时间:2004-00-00 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:17
+时间解析有误,错误时间:1997--19--74 11:29
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 299
+
+2021/9/7 15:39:17
+时间解析有误,错误时间:2004-05-85 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:17
+时间解析有误,错误时间:1997--05--70 01:18
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 299
+
+2021/9/7 15:39:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:18
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:2013-04-08 329:25
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:2004-00-40 00:10
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:2014-00-20 03:25
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:2013-18-84 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:18
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:2013-08-20 -97:-36
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 289
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:2004-00-88 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:2004-00-02 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:18
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:2004-00-01 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:2015-00-00 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:2004-00-00 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:2000--12--90 331:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 281
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:1990--19--83 10:59
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 299
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:2014-00-38 02:37
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:1993--20--47 08:06
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 299
+
+2021/9/7 15:39:18
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:18
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:1995--15--33 -473:-16
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 281
+
+2021/9/7 15:39:18
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:18
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:5379803
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:-850214264
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:0
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:-37085689
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:-1274820988
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:-850214264
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:-1186262980
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:39:18
+时间解析有误,错误时间:1308792394
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 310
+
+2021/9/7 15:39:18
+获取K线数据出错
+System.OverflowException: 值对于 Int32 太大或太小。
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.TdxHq_GetSecurityBarsData_byShares(Int32 hqClient, SecurityBarsDataPar sharesData, TRANSACTION_DATA_STRING result_info, Boolean& isReconnectClient) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 208
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:2016-19-60 310:46
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:2014-02-50 08:22
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:19
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:2014-04-25 25:32
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:2014-01-04 00:40
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:2012-09-09 93:18
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:2013-19-80 02:37
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:2014-03-32 03:25
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:2004-00-00 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:0
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 350
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:-2111797780
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 350
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:741690511
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 350
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:-1944938527
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 350
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:-2008700452
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 350
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:-1337948858
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 350
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:-1337948858
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 350
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:0
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 350
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:28791626
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:1618407425
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:-1738745854
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:1211883392
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:1543
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:-1771419087
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:306914094
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:15356746
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 321
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:1602360477
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:39:19
+时间解析有误,错误时间:1301749509
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:39:20
+时间解析有误,错误时间:0
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:39:20
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:20
+时间解析有误,错误时间:-446532593
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:39:20
+时间解析有误,错误时间:-729227231
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:39:20
+时间解析有误,错误时间:4063367
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:39:20
+时间解析有误,错误时间:1301749509
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:39:20
+时间解析有误,错误时间:-552339709
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 339
+
+2021/9/7 15:39:22
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:22
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:22
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:22
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:22
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:22
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:22
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:22
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:22
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:22
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:22
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:22
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:22
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:22
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:22
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:23
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:23
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:23
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:23
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:23
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:32
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:39:33
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:11
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:11
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:11
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:12
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:12
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:12
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:12
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:12
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:13
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:13
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:13
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:13
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:13
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:13
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:16
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:16
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:16
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:16
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:16
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:16
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:16
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:16
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:16
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:16
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:16
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:27
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:27
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:27
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:27
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:27
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:27
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:28
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:28
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:28
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:28
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:28
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:28
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:30
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:30
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:30
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:30
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:30
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:31
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:32
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:32
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:32
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:32
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:33
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:33
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:33
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:33
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:33
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:33
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:34
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:34
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:34
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:34
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:34
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:34
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:34
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:35
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:35
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:35
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:40
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:40
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:40
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:40
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:40
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:40
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:45
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:45
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:45
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:45
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:40:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:41:11
+k线配置
+Newtonsoft.Json.JsonReaderException: Unexpected character encountered while parsing value: S. Path '', line 0, position 0.
+   在 Newtonsoft.Json.JsonTextReader.ParseValue()
+   在 Newtonsoft.Json.JsonTextReader.Read()
+   在 Newtonsoft.Json.JsonReader.ReadForType(JsonContract contract, Boolean hasConverter)
+   在 Newtonsoft.Json.Serialization.JsonSerializerInternalReader.Deserialize(JsonReader reader, Type objectType, Boolean checkAdditionalContent)
+   在 Newtonsoft.Json.JsonSerializer.DeserializeInternal(JsonReader reader, Type objectType)
+   在 Newtonsoft.Json.JsonConvert.DeserializeObject(String value, Type type, JsonSerializerSettings settings)
+   在 Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value, JsonSerializerSettings settings)
+   在 Newtonsoft.Json.JsonConvert.DeserializeObject[T](String value)
+   在 SecurityBarsDataUpdate.Singleton.SysparUpdate() 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\Singleton.cs:行号 354
+
+2021/9/7 15:41:42
+监听队列已链接
+
+
+2021/9/7 15:42:03
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:03
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:03
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:04
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:04
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:04
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:04
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:05
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:05
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:08
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:08
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:08
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:08
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:08
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:08
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:08
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:11
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:11
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:12
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:14
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:14
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:14
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:14
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:15
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:15
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:15
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:15
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:15
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:15
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:15
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:15
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:15
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:15
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:15
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:15
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:15
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:16
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:16
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:16
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:16
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:16
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:16
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:16
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:18
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:20
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:21
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:42:21
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:42:21
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:42:21
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:42:21
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:42:22
+时间解析有误,错误时间:20190426
+System.Exception: 获取季度据有误
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 357
+
+2021/9/7 15:42:22
+时间解析有误,错误时间:20190426
+System.Exception: 获取周数据有误
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 328
+
+2021/9/7 15:42:22
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:22
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:23
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:23
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:23
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:23
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:23
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:23
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:26
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:26
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:26
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:26
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:26
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:26
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:26
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:26
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:27
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:27
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:27
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:27
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:30
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:30
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:30
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:30
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:30
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:30
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:33
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:33
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:33
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:33
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:33
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:33
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:34
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:34
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:34
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:34
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:34
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:34
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:34
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:34
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:34
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:34
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:35
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:42:35
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:50:13
+监听队列已链接
+
+
+2021/9/7 15:51:38
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:51:43
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:51:51
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:51:51
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:51:51
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:52:35
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:52:36
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:52:37
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:53:23
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:53:37
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:53:38
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:53:47
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:53:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:53:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:53:50
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:53:59
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:53:59
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:53:59
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:53:59
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:56:35
+监听队列已链接
+
+
+2021/9/7 15:57:13
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:13
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:13
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:33
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 15:57:41
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:46
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:46
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:46
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:47
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:47
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:47
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:53
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:53
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:53
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:53
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:53
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:53
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:54
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:54
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:54
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:54
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:54
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:54
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:54
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:54
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:54
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:54
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:54
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:54
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:54
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:54
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:54
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:54
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:54
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:54
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:56
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:56
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:57
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:57
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:57
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:59
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:59
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:59
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:59
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:57:59
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:58:01
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:58:01
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:58:01
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:58:01
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:58:02
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:58:02
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:58:02
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:58:04
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:58:04
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:58:04
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:58:04
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:58:04
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 15:58:04
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:45
+获取K线数据出错，原因：发送数据失败, 连接断开, 请重连服务器! errCode=10053
+
+
+2021/9/7 16:00:45
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:48
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:48
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:48
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:48
+获取K线数据出错，原因：发送数据失败, 连接断开, 请重连服务器! errCode=10053
+
+
+2021/9/7 16:00:48
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:48
+获取K线数据出错，原因：发送数据失败, 连接断开, 请重连服务器! errCode=10053
+
+
+2021/9/7 16:00:48
+获取K线数据出错，原因：发送数据失败, 连接断开, 请重连服务器! errCode=10053
+
+
+2021/9/7 16:00:48
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:48
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:48
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:48
+获取K线数据出错，原因：发送数据失败, 连接断开, 请重连服务器! errCode=10053
+
+
+2021/9/7 16:00:48
+获取K线数据出错，原因：发送数据失败, 连接断开, 请重连服务器! errCode=10053
+
+
+2021/9/7 16:00:48
+获取K线数据出错，原因：发送数据失败, 连接断开, 请重连服务器! errCode=10053
+
+
+2021/9/7 16:00:48
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:48
+获取K线数据出错，原因：发送数据失败, 连接断开, 请重连服务器! errCode=10053
+
+
+2021/9/7 16:00:48
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:48
+获取K线数据出错，原因：发送数据失败, 连接断开, 请重连服务器! errCode=10053
+
+
+2021/9/7 16:00:52
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:52
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:53
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:53
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:53
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:55
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:55
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:56
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:56
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:56
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:56
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:56
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:56
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:56
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:56
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:56
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:58
+时间解析有误,错误时间:2004-16-25 13:31
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 16:00:58
+时间解析有误,错误时间:1997--19--74 11:29
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 299
+
+2021/9/7 16:00:58
+时间解析有误,错误时间:2004-00-75 262:51
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 16:00:58
+时间解析有误,错误时间:2004-05-85 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 16:00:58
+时间解析有误,错误时间:2004-00-00 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 16:00:58
+时间解析有误,错误时间:2009-00-78 42:40
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 16:00:58
+时间解析有误,错误时间:1997--05--70 01:18
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 299
+
+2021/9/7 16:00:58
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:58
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:58
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:59
+时间解析有误,错误时间:1998--06--89 375:28
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 281
+
+2021/9/7 16:00:59
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:59
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:59
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:59
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:59
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:00:59
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:01:01
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:01:01
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:01:01
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:01:01
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:01:01
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:01:01
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:01:02
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:01:02
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:01:02
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:01:04
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:01:11
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:01:11
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:01:11
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:01:11
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:01:14
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:01:14
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:01:14
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:01:14
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:01:14
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:01:14
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:01:14
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:07:38
+监听队列已链接
+
+
+2021/9/7 16:07:43
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:07:43
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:07:43
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:07:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:07:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:07:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:07:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:07:54
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 16:07:55
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:07:55
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:07:55
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:07:58
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:07:58
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:01
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:04
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:10
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:12
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:12
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:12
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:13
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:13
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:13
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:13
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:13
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:13
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:13
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:13
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:17
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:20
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:24
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:24
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:24
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:27
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:27
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:27
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:27
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:27
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:29
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:29
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:29
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:29
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:29
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:30
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:30
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:30
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:30
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:30
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:31
+时间解析有误,错误时间:1997--19--74 11:29
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 299
+
+2021/9/7 16:08:31
+时间解析有误,错误时间:2004-00-00 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 16:08:31
+时间解析有误,错误时间:2004-05-85 00:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 16:08:31
+时间解析有误,错误时间:2004-00-75 262:51
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 16:08:31
+时间解析有误,错误时间:2009-00-78 42:40
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 16:08:31
+时间解析有误,错误时间:1997--05--70 01:18
+System.ArgumentOutOfRangeException: 年、月和日参数描述无法表示的 DateTime。
+   在 System.DateTime.DateToTicks(Int32 year, Int32 month, Int32 day)
+   在 System.DateTime..ctor(Int32 year, Int32 month, Int32 day, Int32 hour, Int32 minute, Int32 second)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 299
+
+2021/9/7 16:08:31
+时间解析有误,错误时间:1998--06--89 375:28
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 281
+
+2021/9/7 16:08:31
+时间解析有误,错误时间:2004-16-25 13:31
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 282
+
+2021/9/7 16:08:32
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:32
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:32
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:37
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:37
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:37
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:39
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:39
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:44
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:46
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:46
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:49
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:51
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:52
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:52
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:52
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:52
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:52
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:52
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:52
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:54
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:55
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:55
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:55
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:55
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:57
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:57
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:08:57
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:09:00
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:09:00
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:09:00
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:09:00
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:09:00
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:09:00
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:09:00
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:09:00
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:09:00
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:09:00
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:09:00
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:09:00
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/9/7 16:58:10
+监听队列已链接
+
+

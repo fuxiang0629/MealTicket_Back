@@ -111,6 +111,8 @@ namespace SecurityBarsDataUpdate
             StartSysparUpdateThread();
             StartHqClientRetryThread();
             StartHeartbeatThread();
+
+            _DimTimeSession.StartUpdate(3600000);
         }
 
         /// <summary>
@@ -126,7 +128,6 @@ namespace SecurityBarsDataUpdate
             }
             StringBuilder sResult = new StringBuilder(1024);
             StringBuilder sErrInfo = new StringBuilder(256);
-
             Random rd = new Random();
             int index = rd.Next(HostList.Count);
             var hqHost = HostList[index];
@@ -382,5 +383,8 @@ namespace SecurityBarsDataUpdate
             mqHandler.ListenQueueName = listenQueueName;//设置监听队列
             return mqHandler;
         }
+
+
+        public DimTimeSession _DimTimeSession = new DimTimeSession();
     }
 }

@@ -61,6 +61,8 @@ namespace SharesHqService
             int failCount = 0;//失败次数
             while (totalCount > realCount)
             {
+                sResult.Clear();
+                sErrInfo.Clear();
                 bool bRet = TradeX_M.TdxHq_GetSecurityList(hqClient, nMarket, realCount, ref nCount, sResult, sErrInfo);
                 if (!bRet)
                 {
@@ -73,7 +75,7 @@ namespace SharesHqService
                         hqClient = Singleton.Instance.GetHqClient();
                         continue;
                     }
-                    return null;
+                    throw new Exception(errDes);
                 }
                 realCount += nCount;
                 string result = sResult.ToString();
@@ -90,7 +92,7 @@ namespace SharesHqService
                     {
                         //归还行情链接
                         Singleton.Instance.AddHqClient(hqClient);
-                        return null;
+                        throw new Exception("数据结构有误");
                     }
                     string ShareCode;//股票代码
                     int ShareHandCount;//股票一手数量
@@ -140,25 +142,17 @@ namespace SharesHqService
         {
             List<SharesBaseInfo> list = new List<SharesBaseInfo>();
             //拼接所有股票
-            List<SharesBaseInfo> tempList = new List<SharesBaseInfo>();
+            List<SharesBaseInfo> tempList = Singleton.Instance._getSharesBaseInfoList();
+            Regex regex0 = new Regex(Singleton.Instance.SharesCodeMatch0);
+            Regex regex1 = new Regex(Singleton.Instance.SharesCodeMatch1);
+            tempList = (from item in tempList
+                        where regex0.IsMatch(item.ShareCode) || regex1.IsMatch(item.ShareCode)
+                        select item).ToList();
+            list.AddRange(tempList);
+
             object resultLock = new object();
             List<SharesQuotesInfo> resultlist = new List<SharesQuotesInfo>();
-            if (Singleton.Instance.SharesBaseInfoList.TryGetValue(0, out tempList))
-            {
-                Regex regex = new Regex(Singleton.Instance.SharesCodeMatch0);
-                tempList = (from item in tempList
-                            where regex.IsMatch(item.ShareCode)
-                            select item).ToList();
-                list.AddRange(tempList);
-            }
-            if (Singleton.Instance.SharesBaseInfoList.TryGetValue(1, out tempList))
-            {
-                Regex regex = new Regex(Singleton.Instance.SharesCodeMatch1);
-                tempList = (from item in tempList
-                            where regex.IsMatch(item.ShareCode)
-                            select item).ToList();
-                list.AddRange(tempList);
-            }
+          
             //计算分页数量
             int QuotesCount = Singleton.Instance.QuotesCount;
             int totalCount = list.Count();
@@ -186,6 +180,10 @@ namespace SharesHqService
             {
                 tArr[i] = new Task((tdx_result) =>
                 {
+                    StringBuilder sErrInfo = new StringBuilder(256);
+                    StringBuilder sResult = new StringBuilder(2048*Singleton.Instance.QuotesCount);
+                    byte[] nMarketArr = new byte[Singleton.Instance.QuotesCount];
+                    string[] pszZqdmArr = new string[Singleton.Instance.QuotesCount];
                     int hqClient = Singleton.Instance.GetHqClient();
                     try
                     {
@@ -196,15 +194,11 @@ namespace SharesHqService
                             {
                                 break;
                             }
-                            var temp_tdx_result = tdx_result as TdxHq_Result;
-                            StringBuilder sErrInfo = temp_tdx_result.sErrInfo;
-                            StringBuilder sResult = temp_tdx_result.sResult;
+
                             sErrInfo.Clear();
                             sResult.Clear();
 
                             short nCount = (short)tempData.Count();
-                            byte[] nMarketArr = new byte[nCount];
-                            string[] pszZqdmArr = new string[nCount];
                             for (int j = 0; j < nCount; j++)
                             {
                                 nMarketArr[j] = (byte)tempData[j].Market;
@@ -219,6 +213,7 @@ namespace SharesHqService
                                 Console.WriteLine(errDes);
                                 continue;
                             }
+
                             string result = sResult.ToString();
                             string[] rows = result.Split('\n');
                             for (int j = 0; j < rows.Length; j++)
@@ -227,6 +222,7 @@ namespace SharesHqService
                                 {
                                     continue;
                                 }
+
                                 string[] column = rows[j].Split('\t');
                                 if (column.Length < 43)
                                 {
@@ -332,564 +328,6 @@ namespace SharesHqService
 
             Task.WaitAll(tArr);
             data.Release();
-            return resultlist;
-        }
-
-        /// <summary>
-        /// 获取证券 K 线数据
-        /// </summary>
-        /// <param name="nCategory"></param>
-        public static void TdxHq_GetSecurityBars(byte nCategory)
-        {
-            List<SharesBaseInfo> list = new List<SharesBaseInfo>();
-            //拼接所有股票
-            List<SharesBaseInfo> tempList = new List<SharesBaseInfo>();
-            if (Singleton.Instance.SharesBaseInfoList.TryGetValue(0, out tempList))
-            {
-                Regex regex = new Regex(Singleton.Instance.SharesCodeMatch0);
-                tempList = (from item in tempList
-                            where regex.IsMatch(item.ShareCode)
-                            select item).ToList();
-                list.AddRange(tempList);
-            }
-            if (Singleton.Instance.SharesBaseInfoList.TryGetValue(1, out tempList))
-            {
-                Regex regex = new Regex(Singleton.Instance.SharesCodeMatch1);
-                tempList = (from item in tempList
-                            where regex.IsMatch(item.ShareCode)
-                            select item).ToList();
-                list.AddRange(tempList);
-            }
-           
-            ThreadMsgTemplate<SharesBaseInfo> data = new ThreadMsgTemplate<SharesBaseInfo>();
-            data.Init();
-            foreach (var item in list)
-            {
-                data.AddMessage(item);
-            }
-
-            Task[] taskArr = new Task[Singleton.Instance.hqClientCount];
-         
-        }
-
-        /// <summary>
-        /// 获取证券 K 线数据执行线程
-        /// </summary>
-        private static void GetSecurityBars(byte nCategory, List<SharesBaseInfo> list, int size)
-        {
-            short nCount = 10;
-            StringBuilder sErrInfo = new StringBuilder(256);
-            StringBuilder sResult = new StringBuilder(1024 * 1024);
-            List<SharesBarsInfo> resultList = new List<SharesBarsInfo>();
-            int hqClient = Singleton.Instance.GetHqClient();
-            foreach (var item in list)
-            {
-                bool bRet = TradeX_M.TdxHq_GetSecurityBars(hqClient, nCategory, (byte)item.Market, item.ShareCode, 0, ref nCount, sResult, sErrInfo);
-                if (!bRet)
-                {
-                    Singleton.Instance.AddRetryClient(hqClient);
-                    hqClient = Singleton.Instance.GetHqClient();
-                    string errDes = string.Format("获取股票的证券K线数据出错，原因：{0}", sErrInfo.ToString());
-                    Console.WriteLine(errDes);
-                    Console.WriteLine(errDes);
-                    continue;
-                }
-                if (nCount <= 0)
-                {
-                    continue;
-                }
-                string result = sResult.ToString();
-                string[] rows = result.Split('\n');
-                for (int i = 0; i < rows.Length; i++)
-                {
-                    if (i == 0)
-                    {
-                        continue;
-                    }
-                    string[] column = rows[i].Split('\t');
-                    if (column.Length != 7)
-                    {
-                        string errDes = "获取股票的证券K线数据结构有误";
-                        Console.WriteLine(errDes);
-                        break;
-                    }
-
-                    try
-                    {
-                        int Market = item.Market;//市场代码
-                        string SharesCode = item.ShareCode;//股票代码
-                        string TimeStr = column[0];
-                        DateTime Time;
-                        if (TimeStr.Length == 18)
-                        {
-                            //1989--15--20
-                            Int32 lYear = 4009 - Int32.Parse(TimeStr.Substring(0, 4));
-                            Int32 lMonth = 20 - Int32.Parse(TimeStr.Substring(6, 2));
-                            Int32 lDay = 48 - Int32.Parse(TimeStr.Substring(10, 2));
-                            Int32 lHour = Int32.Parse(TimeStr.Substring(13, 2));
-                            Int32 lMinute = Int32.Parse(TimeStr.Substring(16, 2));
-                            Time = new DateTime(lYear, lMonth, lDay, lHour, lMinute, 0);
-                        }
-                        else
-                        {
-                            Time = DateTime.ParseExact(TimeStr, "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
-                        }
-                        int Type = nCategory;
-                        long ClosedPrice = (long)(Math.Round(float.Parse(column[2]) * Singleton.Instance.PriceFormat, 0));//收盘
-                        long OpenedPrice = (long)(Math.Round(float.Parse(column[1]) * Singleton.Instance.PriceFormat, 0));//开盘
-                        long MaxPrice = (long)(Math.Round(float.Parse(column[3]) * Singleton.Instance.PriceFormat, 0));//最高
-                        long MinPrice = (long)(Math.Round(float.Parse(column[4]) * Singleton.Instance.PriceFormat, 0));//最低
-                        int Volume = int.Parse(column[5]);//成交量
-                        long Turnover = (long)(Math.Round(float.Parse(column[6]) * Singleton.Instance.PriceFormat, 0));//成交额
-
-                        resultList.Add(new SharesBarsInfo
-                        {
-                            SharesCode = SharesCode,
-                            TimeStr = TimeStr,
-                            ClosedPrice = ClosedPrice,
-                            Market = Market,
-                            MaxPrice = MaxPrice,
-                            MinPrice = MinPrice,
-                            OpenedPrice = OpenedPrice,
-                            Time = Time,
-                            Turnover = Turnover,
-                            Type = Type,
-                            Volume = Volume
-                        });
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-                }
-            }
-            //归还行情链接
-            Singleton.Instance.AddHqClient(hqClient);
-
-            string timeNow = DateTime.Now.ToString("yyyyMMddHHmmss") + nCategory + size;
-            lock (Singleton.Instance.SecurityBarsLocked)
-            {
-                DataBaseHelper.UpdateSharesBars(resultList, timeNow);
-            }
-        }
-
-        /// <summary>
-        /// 获取指数k线数据
-        /// </summary>
-        /// <param name="nCategory"></param>
-        public static void TdxHq_GetIndexBars(byte nCategory)
-        {
-            List<SharesBaseInfo> list = new List<SharesBaseInfo>();
-            //拼接所有股票
-            List<SharesBaseInfo> tempList = new List<SharesBaseInfo>();
-            if (Singleton.Instance.SharesBaseInfoList.TryGetValue(0, out tempList))
-            {
-                Regex regex = new Regex(Singleton.Instance.SharesCodeMatch0);
-                tempList = (from item in tempList
-                            where regex.IsMatch(item.ShareCode)
-                            select item).ToList();
-                list.AddRange(tempList);
-            }
-            if (Singleton.Instance.SharesBaseInfoList.TryGetValue(1, out tempList))
-            {
-                Regex regex = new Regex(Singleton.Instance.SharesCodeMatch1);
-                tempList = (from item in tempList
-                            where regex.IsMatch(item.ShareCode)
-                            select item).ToList();
-                list.AddRange(tempList);
-            }
-            //list = list.Take(200).ToList();
-            //计算分页数量
-            int IndexBarsCount = Singleton.Instance.IndexBarsCount;
-            int totalCount = list.Count();
-            int pageSize;
-            if (totalCount % IndexBarsCount == 0)
-            {
-                pageSize = totalCount / IndexBarsCount;
-            }
-            else
-            {
-                pageSize = totalCount / IndexBarsCount + 1;
-            }
-            list = list.OrderBy(e => e.ShareCode).ToList();
-
-            for (int size = 0; size < pageSize; size++)
-            {
-                int temSize = size;
-                var temp = list.Skip(size * IndexBarsCount).Take(IndexBarsCount).ToList();
-                WaitCallback method = (t) => GetSecurityIndexBars(nCategory, temp, temSize);
-                ThreadPool.QueueUserWorkItem(method);
-            }
-        }
-
-        /// <summary>
-        /// 获取指数 K 线数据执行线程
-        /// </summary>
-        private static void GetSecurityIndexBars(byte nCategory, List<SharesBaseInfo> list, int size)
-        {
-            short nCount = 10;
-            StringBuilder sErrInfo = new StringBuilder(256);
-            StringBuilder sResult = new StringBuilder(1024 * 1024);
-            List<SharesIndexBarsInfo> resultList = new List<SharesIndexBarsInfo>();
-            int hqClient = Singleton.Instance.GetHqClient();
-            foreach (var item in list)
-            {
-                bool bRet = TradeX_M.TdxHq_GetIndexBars(hqClient, nCategory, (byte)item.Market, item.ShareCode, 0, ref nCount, sResult, sErrInfo);
-                if (!bRet)
-                {
-                    Singleton.Instance.AddRetryClient(hqClient);
-                    hqClient = Singleton.Instance.GetHqClient();
-                    string errDes = string.Format("获取股票的指数K线数据出错，原因：{0}", sErrInfo.ToString());
-                    Console.WriteLine(errDes);
-                    Console.WriteLine(errDes);
-                    continue;
-                }
-                if (nCount <= 0)
-                {
-                    continue;
-                }
-                string result = sResult.ToString();
-                string[] rows = result.Split('\n');
-                for (int i = 0; i < rows.Length; i++)
-                {
-                    if (i == 0)
-                    {
-                        continue;
-                    }
-                    string[] column = rows[i].Split('\t');
-                    if (column.Length != 9)
-                    {
-                        string errDes = "获取股票的证券K线数据结构有误";
-                        Console.WriteLine(errDes);
-                        break;
-                    }
-
-                    try
-                    {
-                        int Market = item.Market;//市场代码
-                        string SharesCode = item.ShareCode;//股票代码
-                        string TimeStr = column[0];
-                        DateTime Time;
-                        if (TimeStr.Length == 18)
-                        {
-                            //1989--15--20
-                            Int32 lYear = 4009 - Int32.Parse(TimeStr.Substring(0, 4));
-                            Int32 lMonth = 20 - Int32.Parse(TimeStr.Substring(6, 2));
-                            Int32 lDay = 48 - Int32.Parse(TimeStr.Substring(10, 2));
-                            Int32 lHour = Int32.Parse(TimeStr.Substring(13, 2));
-                            Int32 lMinute = Int32.Parse(TimeStr.Substring(16, 2));
-                            Time = new DateTime(lYear, lMonth, lDay, lHour, lMinute, 0);
-                        }
-                        else
-                        {
-                            Time = DateTime.ParseExact(TimeStr, "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture);
-                        }
-                        int Type = nCategory;
-                        long ClosedPrice = (long)(Math.Round(float.Parse(column[2]) * Singleton.Instance.PriceFormat, 0));//收盘
-                        long OpenedPrice = (long)(Math.Round(float.Parse(column[1]) * Singleton.Instance.PriceFormat, 0));//开盘
-                        long MaxPrice = (long)(Math.Round(float.Parse(column[3]) * Singleton.Instance.PriceFormat, 0));//最高
-                        long MinPrice = (long)(Math.Round(float.Parse(column[4]) * Singleton.Instance.PriceFormat, 0));//最低
-                        int Volume = int.Parse(column[5]);//成交量
-                        long Turnover = (long)(Math.Round(float.Parse(column[6]) * Singleton.Instance.PriceFormat, 0));//成交额
-                        int RiseCount = int.Parse(column[7]);//涨家数
-                        int FallCount = int.Parse(column[8]);//跌家数
-
-                        resultList.Add(new SharesIndexBarsInfo
-                        {
-                            SharesCode = SharesCode,
-                            TimeStr = TimeStr,
-                            ClosedPrice = ClosedPrice,
-                            Market = Market,
-                            MaxPrice = MaxPrice,
-                            MinPrice = MinPrice,
-                            OpenedPrice = OpenedPrice,
-                            Time = Time,
-                            Turnover = Turnover,
-                            Type = Type,
-                            Volume = Volume,
-                            FallCount = FallCount,
-                            RiseCount = RiseCount
-                        });
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-                }
-            }
-            //归还行情链接
-            Singleton.Instance.AddHqClient(hqClient);
-
-            string timeNow = DateTime.Now.ToString("yyyyMMddHHmmss") + nCategory + size;
-            lock (Singleton.Instance.SecurityIndexBarsLocked)
-            {
-                DataBaseHelper.UpdateSharesIndexBars(resultList, timeNow);
-            }
-        }
-
-        /// <summary>
-        /// 获取分时行情数据
-        /// </summary>
-        public static void TdxHq_GetMinuteTimeData()
-        {
-            List<SharesBaseInfo> list = new List<SharesBaseInfo>();
-            //拼接所有股票
-            List<SharesBaseInfo> tempList = new List<SharesBaseInfo>();
-            if (Singleton.Instance.SharesBaseInfoList.TryGetValue(0, out tempList))
-            {
-                Regex regex = new Regex(Singleton.Instance.SharesCodeMatch0);
-                tempList = (from item in tempList
-                            where regex.IsMatch(item.ShareCode)
-                            select item).ToList();
-                list.AddRange(tempList);
-            }
-            if (Singleton.Instance.SharesBaseInfoList.TryGetValue(1, out tempList))
-            {
-                Regex regex = new Regex(Singleton.Instance.SharesCodeMatch1);
-                tempList = (from item in tempList
-                            where regex.IsMatch(item.ShareCode)
-                            select item).ToList();
-                list.AddRange(tempList);
-            }
-            //list = list.Take(200).ToList();
-            //计算分页数量
-            int MinuteTimeDataCount = Singleton.Instance.MinuteTimeDataCount;
-            int totalCount = list.Count();
-            int pageSize;
-            if (totalCount % MinuteTimeDataCount == 0)
-            {
-                pageSize = totalCount / MinuteTimeDataCount;
-            }
-            else
-            {
-                pageSize = totalCount / MinuteTimeDataCount + 1;
-            }
-            list = list.OrderBy(e => e.ShareCode).ToList();
-
-            for (int size = 0; size < pageSize; size++)
-            {
-                int temSize = size;
-                var temp = list.Skip(size * MinuteTimeDataCount).Take(MinuteTimeDataCount).ToList();
-                WaitCallback method = (t) => GetMinuteTimeData(temp, temSize);
-                ThreadPool.QueueUserWorkItem(method);
-            }
-        }
-
-        /// <summary>
-        /// 获取分时行情数据执行线程
-        /// </summary>
-        private static void GetMinuteTimeData(List<SharesBaseInfo> list, int size)
-        {
-            StringBuilder sErrInfo = new StringBuilder(256);
-            StringBuilder sResult = new StringBuilder(1024 * 1024);
-            List<SharesMinuteTimeData> resultList = new List<SharesMinuteTimeData>();
-            int hqClient = Singleton.Instance.GetHqClient();
-            foreach (var item in list)
-            {
-                bool bRet = TradeX_M.TdxHq_GetMinuteTimeData(hqClient, (byte)item.Market, item.ShareCode, sResult, sErrInfo);
-                if (!bRet)
-                {
-                    Singleton.Instance.AddRetryClient(hqClient);
-                    hqClient = Singleton.Instance.GetHqClient();
-                    string errDes = string.Format("获取分时行情数据出错，原因：{0}", sErrInfo.ToString());
-                    Console.WriteLine(errDes);
-                    continue;
-                }
-                string result = sResult.ToString();
-                string[] rows = result.Split('\n');
-                DateTime tempTime = DateTime.Now.Date.AddHours(9).AddMinutes(30);
-                for (int i = 0; i < rows.Length; i++)
-                {
-                    if (i == 0)
-                    {
-                        continue;
-                    }
-                    string[] column = rows[i].Split('\t');
-                    if (column.Length != 3)
-                    {
-                        string errDes = "获取分时行情数据结构有误";
-                        Console.WriteLine(errDes);
-                        break;
-                    }
-
-                    try
-                    {
-                        int Market = item.Market;//市场代码
-                        string SharesCode = item.ShareCode;//股票代码
-                        int Volume = int.Parse(column[1]);
-                        long Price = (long)(Math.Round(float.Parse(column[0]) * Singleton.Instance.PriceFormat, 0));//现价
-                        if (i == 120)
-                        {
-                            tempTime = tempTime.AddHours(1).AddMinutes(30);
-                        }
-                        DateTime Time = tempTime.AddMinutes(i);
-
-                        resultList.Add(new SharesMinuteTimeData
-                        {
-                            SharesCode = SharesCode,
-                            Market = Market,
-                            Price = Price,
-                            Volume = Volume,
-                            Time = Time
-                        });
-                    }
-                    catch (Exception ex)
-                    {
-
-                    }
-                }
-            }
-            //归还行情链接
-            Singleton.Instance.AddHqClient(hqClient);
-
-            string timeNow = DateTime.Now.ToString("yyyyMMddHHmmss") + size;
-            lock (Singleton.Instance.MinuteTimeDataLocked)
-            {
-                DataBaseHelper.UpdateMinuteTimeData(resultList, timeNow);
-            }
-        }
-
-        /// <summary>
-        /// 获取分笔成交数据
-        /// </summary>
-        public static List<SharesTransactionDataInfo> TdxHq_GetTransactionData()
-        {
-            List<SharesBaseInfo> list = new List<SharesBaseInfo>();
-            //拼接所有股票
-            List<SharesBaseInfo> tempList = new List<SharesBaseInfo>();
-            if (Singleton.Instance.SharesBaseInfoList.TryGetValue(0, out tempList))
-            {
-                Regex regex = new Regex(Singleton.Instance.SharesCodeMatch0);
-                tempList = (from item in tempList
-                            where regex.IsMatch(item.ShareCode)
-                            select item).ToList();
-                list.AddRange(tempList);
-            }
-            if (Singleton.Instance.SharesBaseInfoList.TryGetValue(1, out tempList))
-            {
-                Regex regex = new Regex(Singleton.Instance.SharesCodeMatch1);
-                tempList = (from item in tempList
-                            where regex.IsMatch(item.ShareCode)
-                            select item).ToList();
-                list.AddRange(tempList);
-            }
-            //计算分页数量
-            int TransactionDataCount = Singleton.Instance.TransactionDataCount;
-            int totalCount = list.Count();
-            int pageSize;
-            if (totalCount % TransactionDataCount == 0)
-            {
-                pageSize = totalCount / TransactionDataCount;
-            }
-            else
-            {
-                pageSize = totalCount / TransactionDataCount + 1;
-            }
-            list = list.OrderBy(e => e.ShareCode).ToList();
-
-            List<SharesTransactionDataInfo> resultlist = new List<SharesTransactionDataInfo>();
-            Thread[] arrayThread = new Thread[pageSize];
-            AutoResetEvent eventObj = new AutoResetEvent(true);
-
-            string date = DateTime.Now.ToString("yyyy-MM-dd");
-            for (int size = 0; size < pageSize; size++)
-            {
-                var batchList = list.Skip(size * TransactionDataCount).Take(TransactionDataCount).ToList();
-                arrayThread[size] = new Thread(() =>
-                {
-                    int hqClient = Singleton.Instance.GetHqClient();
-                    try
-                    {
-                        var temp = batchList;//股票列表
-                        foreach (var share in temp)
-                        {
-                            StringBuilder sErrInfo = new StringBuilder(256);
-                            StringBuilder sResult = new StringBuilder(1024 * 2048);
-                            byte nMarket = (byte)share.Market;//市场代码
-                            string shareCode = share.ShareCode;//股票代码
-                            short nStart = 0;
-                            short nCount;
-                            do
-                            {
-                                nCount = 50;
-                                int tempClient = hqClient;
-                                bool bRet = TradeX_M.TdxHq_GetTransactionData(tempClient, nMarket, shareCode, nStart, ref nCount, sResult, sErrInfo);
-                                if (!bRet)
-                                {
-                                    Singleton.Instance.AddRetryClient(hqClient);
-                                    hqClient = -1;
-                                    string errDes = string.Format("获取分笔成交数据出错，原因：{0}", sErrInfo.ToString());
-                                    Console.WriteLine(errDes);
-                                    hqClient = Singleton.Instance.GetHqClient();
-                                    break;
-                                }
-                                else
-                                {
-                                    string result = sResult.ToString();
-                                    string[] rows = result.Split('\n');
-                                    for (int i = 0; i < rows.Length; i++)
-                                    {
-                                        if (i == 0)
-                                        {
-                                            continue;
-                                        }
-                                        string[] column = rows[i].Split('\t');
-                                        if (column.Length != 6)
-                                        {
-                                            string errDes = "获取分笔成交数据结构有误";
-                                            Console.WriteLine(errDes);
-                                            break;
-                                        }
-                                        eventObj.WaitOne();
-                                        try
-                                        {
-                                            DateTime Time = DateTime.Parse(date + " " + column[0] + ":00");
-                                            string TimeStr = column[0];
-                                            long Price = (long)(Math.Round(float.Parse(column[1]) * Singleton.Instance.PriceFormat, 0));//现价
-                                            int Volume = int.Parse(column[2]);
-                                            int Stock = int.Parse(column[3]);
-                                            int Type = int.Parse(column[4]);
-                                            resultlist.Add(new SharesTransactionDataInfo
-                                            {
-                                                SharesCode = shareCode,
-                                                Market = nMarket,
-                                                Price = Price,
-                                                Volume = Volume,
-                                                Time = Time,
-                                                TimeStr = TimeStr,
-                                                Stock = Stock,
-                                                Type = Type
-                                            });
-                                        }
-                                        finally
-                                        {
-                                            eventObj.Set();
-                                        }
-                                    }
-                                    nStart = (short)(nStart + nCount);
-                                }
-                            } while (nCount >= 1000);
-                        }
-                    }
-                    finally
-                    {
-                        if (hqClient != -1)
-                        {
-                            //归还行情链接
-                            Singleton.Instance.AddHqClient(hqClient);
-                        }
-                    }
-                });
-                arrayThread[size].Start();
-            }
-
-            for (int size = 0; size < pageSize; size++)
-            {
-                arrayThread[size].Join();
-                arrayThread[size] = null;
-            }
-
-            eventObj.Close();
             return resultlist;
         }
     }

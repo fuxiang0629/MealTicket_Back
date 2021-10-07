@@ -34,5 +34,14 @@ F:\项目\饭票后端\Test\bin\Debug\System.Threading.Tasks.Extensions.xml
 F:\项目\饭票后端\Test\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 F:\项目\饭票后端\Test\bin\Debug\System.Buffers.xml
 F:\项目\饭票后端\Test\bin\Debug\System.Numerics.Vectors.xml
-F:\项目\饭票后端\Test\obj\Debug\Test.exe.config
 F:\项目\饭票后端\Test\obj\Debug\Test.csproj.CopyComplete
+F:\项目\饭票后端\Test\bin\Debug\EntityFramework.dll
+F:\项目\饭票后端\Test\bin\Debug\EntityFramework.SqlServer.dll
+F:\项目\饭票后端\Test\bin\Debug\MealTicket_DBCommon.dll
+F:\项目\饭票后端\Test\bin\Debug\MealTicket_DBCommon.pdb
+F:\项目\饭票后端\Test\bin\Debug\MealTicket_DBCommon.dll.config
+F:\项目\饭票后端\Test\bin\Debug\EntityFramework.xml
+F:\项目\饭票后端\Test\bin\Debug\EntityFramework.SqlServer.xml
+F:\项目\饭票后端\Test\bin\Debug\Newtonsoft.Json.xml
+F:\项目\饭票后端\Test\bin\Debug\zh-Hans\EntityFramework.resources.dll
+F:\项目\饭票后端\Test\bin\Debug\zh-Hans\EntityFramework.SqlServer.resources.dll

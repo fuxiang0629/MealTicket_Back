@@ -152,6 +152,7 @@ namespace MealTicket_Web_Handler.Transactiondata
                 DateTime timeNow = DateTime.Now;
                 if (!Helper.CheckTradeTime(timeNow.AddSeconds(-Singleton.Instance.NewTransactionDataRunStartTime)) && !Helper.CheckTradeTime(timeNow.AddSeconds(-Singleton.Instance.NewTransactionDataRunEndTime)))
                 {
+                    dataObj.TaskTimeOut = Singleton.Instance.NewTransactiondataTaskTimeOut;
                     return false;
                 }
                 var tempGuid = Guid.NewGuid().ToString("N");
@@ -483,10 +484,15 @@ update t_shares_monitor set DataType=0 where DataType=1 and SharesInfo in ({0});
 
 
                 var error = Singleton.Instance.m_stockMonitor.LoadTradePriceInfoBat(tempList);
+                if (error <= 0)
+                {
+                    Logger.WriteFileLog("走势分笔数据内存加载报错" + error, null);
+                }
                 return error > 0;
             }
             catch (Exception ex)
             {
+                Logger.WriteFileLog("走势分笔数据内存加载失败", ex);
                 return false;
             }
         }
@@ -712,13 +718,19 @@ order by SharesInfoNum,[Time]", DateTime.Now.ToString("yyyy-MM-dd"));
                         if (CheckTaskTimeout(dataObj0))
                         {
                             ClearTaskInfo(dataObj0);//超时则清空任务
-                            PushToDataUpDate(dataObj0);
+                            if (Singleton.Instance.IsOpen == 1)
+                            {
+                                PushToDataUpDate(dataObj0);
+                            }
                         }
 
                         if (CheckTaskTimeout(dataObj1))
                         {
                             ClearTaskInfo(dataObj1);//超时则清空任务
-                            PushToDataUpDate(dataObj1);
+                            if (Singleton.Instance.IsOpen == 1)
+                            {
+                                PushToDataUpDate(dataObj1);
+                            }
                         }
                         continue;
                     }

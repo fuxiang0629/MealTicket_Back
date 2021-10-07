@@ -94,6 +94,11 @@ namespace MealTicket_Web_Handler
         public int DownLimitCount { get; set; }
 
         /// <summary>
+        /// 股票总数量
+        /// </summary>
+        public int TotalCount { get; set; }
+
+        /// <summary>
         /// 涨跌幅排名
         /// </summary>
         public int Rank { get; set; }
