@@ -89,7 +89,6 @@ D:\项目\饭票\后端\SharesHqService\obj\Release\SharesHqService.csproj.CoreC
 D:\项目\饭票\后端\SharesHqService\obj\Release\SharesHqService.csproj.CopyComplete
 D:\项目\饭票\后端\SharesHqService\obj\Release\SharesHqService.exe
 D:\项目\饭票\后端\SharesHqService\obj\Release\SharesHqService.pdb
-D:\项目\饭票\后端\SharesHqService\obj\Release\SharesHqService.csprojAssemblyReference.cache
 F:\项目\饭票后端\SharesHqService\bin\Release\SharesHqService.exe.config
 F:\项目\饭票后端\SharesHqService\bin\Release\SharesHqService.exe
 F:\项目\饭票后端\SharesHqService\bin\Release\SharesHqService.pdb
@@ -152,3 +151,4 @@ D:\项目\饭票\后端\SharesHqService\bin\Release\System.Runtime.CompilerServi
 D:\项目\饭票\后端\SharesHqService\bin\Release\System.Buffers.xml
 D:\项目\饭票\后端\SharesHqService\bin\Release\System.Numerics.Vectors.xml
 F:\项目\饭票后端\SharesHqService\obj\Release\SharesHqService.csprojAssemblyReference.cache
+D:\项目\饭票\后端\SharesHqService\obj\Release\SharesHqService.csprojAssemblyReference.cache
