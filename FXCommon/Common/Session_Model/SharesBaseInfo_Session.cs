@@ -78,5 +78,10 @@ namespace FXCommon.Common
         /// </summary>
         public int MarketStatus { get; set; }
 
+        /// <summary>
+        /// 上市时间
+        /// </summary>
+        public DateTime? MarketTime { get; set; }
+
     }
 }

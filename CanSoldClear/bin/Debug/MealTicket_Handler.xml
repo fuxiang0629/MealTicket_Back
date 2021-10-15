@@ -2994,6 +2994,12 @@
             更新持仓计算服务费金额
             </summary>
         </member>
+        <member name="M:MealTicket_Handler.RunnerHandler.RunnerHelper.GetTradeDate(System.DateTime@,System.Int32)">
+            <summary>
+            获取交易日日期
+            </summary>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Handler.RunnerHandler.RunnerHelper.CheckTradeDate(System.Nullable{System.DateTime})">
             <summary>
             检查是否交易日期
@@ -3078,6 +3084,180 @@
             <summary>
             更新股票分笔数据
             </summary>
+        </member>
+        <member name="F:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.TaskThread">
+            <summary>
+            任务线程
+            </summary>
+        </member>
+        <member name="F:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.SecurityBarsDataQueue">
+            <summary>
+            K线数据回调队列
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.Init">
+            <summary>
+            任务初始化
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.DoTask">
+            <summary>
+            启动任务
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.CalcIntervalTime(System.Nullable{System.DateTime},System.Int32)">
+            <summary>
+            计算间隔时间
+            </summary>
+            <param name="dtTime"></param>
+            <param name="timeout"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.CheckTaskTimeout(MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo)">
+            <summary>
+            判断任务是否超时
+            </summary>
+            <param name="dataObj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.ClearTaskInfo(MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo)">
+            <summary>
+            清空任务信息
+            </summary>
+            <param name="dataObj"></param>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.PushToDataUpDate(MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo)">
+            <summary>
+            需要更新K线的股票数据扔到队列
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.PushToDataUpDateAll">
+            <summary>
+            每天全部股票补充
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.DoBusiness(MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo,System.Int32)">
+            <summary>
+            执行业务
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.UpdateToDataBase(System.Boolean@)">
+            <summary>
+            数据更新到数据库
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.SendTransactionShares(System.String)">
+            <summary>
+            推送需要获取K线的股票到队列
+            </summary>
+            <param name="taskGuid"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.Dispose">
+            <summary>
+            资源回收
+            </summary>
+        </member>
+        <member name="F:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask._plateRelSnapshotSession">
+            <summary>
+            今日快照缓存
+            </summary>
+        </member>
+        <member name="F:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.securityBarsLastData_Session">
+            <summary>
+            K线数据缓存
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.DoPlateRelSnapshotUpdateTask">
+            <summary>
+            启动快照更新任务
+            每天凌晨执行一次
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.LoadPlateRelSnapshotSession">
+            <summary>
+            更新快照缓存(1.启动时调用 2.更新今日快照时调用)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="F:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.PlateRelSnapshotUpdateLastTime">
+            <summary>
+            今日快照是否更新
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot">
+            <summary>
+            更新当天板块内股票快照
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.UpdateHisPlateRelSnapshot">
+            <summary>
+            更新历史板块内股票快照
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.GetInstructions">
+            <summary>
+            获取重置指令数据
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.CalculateInstructions(MealTicket_DBCommon.t_shares_plate_rel_snapshot_instructions)">
+            <summary>
+            执行指令
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.ResetAllPlate(System.Collections.Generic.List{FXCommon.Common.SharesPlateInfo_Session},System.Int32,System.Int64,System.Int64,MealTicket_DBCommon.meal_ticketEntities)">
+            <summary>
+            重置所有板块
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.ResetPlate(FXCommon.Common.SharesPlateInfo_Session,System.Int32,System.Int64,System.Int64,MealTicket_DBCommon.meal_ticketEntities)">
+            <summary>
+            重置某个板块
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.GetPlateClosePrice(System.Int32,System.Collections.Generic.List{System.Int64},System.Int64)">
+            <summary>
+            查询板块昨日收盘价
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.CalculateKLine(System.Int64,System.DateTime,System.Int32,System.Int32,System.Int64,System.Int64,MealTicket_DBCommon.meal_ticketEntities,System.Boolean)">
+            <summary>
+            计算K线数据
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.CalculateKLine_1min_real(System.Int64,System.Int32,MealTicket_DBCommon.meal_ticketEntities)">
+            <summary>
+            实时计算一分钟K线
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.CalculateKLine_1min(System.Int64,System.DateTime,System.Int32,System.Int64,System.Int64,MealTicket_DBCommon.meal_ticketEntities)">
+            <summary>
+            计算板块1分钟K线
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.SendToGetPlateKLine(System.Collections.Generic.List{System.Object},System.Int32,System.String)">
+            <summary>
+            发送指令获取券商板块K线数据
+            </summary>
+            <param name="list"></param>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.ParseTimeGroupKey(System.DateTime,System.Int32,System.Int64@)">
+            <summary>
+            解析时间值
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.ParseTableName(System.Int32,System.String@)">
+            <summary>
+            获取数据表名称
+            </summary>
+            <returns></returns>
         </member>
         <member name="F:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.TaskThread">
             <summary>
@@ -3292,6 +3472,21 @@
         <member name="P:MealTicket_Handler.SecurityBarsData.QueueMsgObj.MsgObj">
             <summary>
             消息内容
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.PlateRelSnapshotInfo.PlateId">
+            <summary>
+            板块Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.PlateRelSnapshotInfo.Market">
+            <summary>
+            市场代码
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.PlateRelSnapshotInfo.SharesCode">
+            <summary>
+            股票代码
             </summary>
         </member>
         <member name="T:MealTicket_Handler.SharesBaseSession">

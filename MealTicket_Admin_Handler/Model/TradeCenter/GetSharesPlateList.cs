@@ -146,6 +146,11 @@ namespace MealTicket_Admin_Handler.Model
         public int CalType { get; set; }
 
         /// <summary>
+        /// 基准日期
+        /// </summary>
+        public DateTime? BaseDate { get; set; }
+
+        /// <summary>
         /// 数据创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }

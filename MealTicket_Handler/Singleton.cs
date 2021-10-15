@@ -186,10 +186,22 @@ namespace MealTicket_Handler
             {
                 _SharesLimitDateSession.Dispose();
             }
+            if (_SharesPlateSession != null)
+            {
+                _SharesPlateSession.Dispose();
+            }
+            if (_SharesQuotesSession != null)
+            {
+                _SharesQuotesSession.Dispose();
+            }
             #region====K线数据处理任务====
             if (_securityBarsDataTask != null)
             {
                 _securityBarsDataTask.Dispose();
+            }
+            if (_newIindexSecurityBarsDataTask != null)
+            {
+                _newIindexSecurityBarsDataTask.Dispose();
             }
             #endregion
         }
@@ -434,10 +446,6 @@ namespace MealTicket_Handler
                         if (tempSecurityBarsDataTypeList.Count()>0)
                         {
                             SecurityBarsDataTypeList = tempSecurityBarsDataTypeList;
-                            if (_securityBarsDataTask != null)
-                            {
-                                _securityBarsDataTask.LoadSecurityBarsLastData();
-                            }
                         }
                     }
                 }
@@ -488,8 +496,15 @@ namespace MealTicket_Handler
         public SecurityBarsDataTask StartSecurityBarsDataTask()
         {
             _securityBarsDataTask = new SecurityBarsDataTask();
-            _securityBarsDataTask.Init();
             return _securityBarsDataTask;
+        }
+        #endregion
+        #region====新指数K线数据处理任务====
+        public New_IndexSecurityBarsDataTask _newIindexSecurityBarsDataTask;
+        public New_IndexSecurityBarsDataTask StartNewIndexSecurityBarsDataTask()
+        {
+            _newIindexSecurityBarsDataTask = new New_IndexSecurityBarsDataTask();
+            return _newIindexSecurityBarsDataTask;
         }
         #endregion
 
@@ -501,11 +516,23 @@ namespace MealTicket_Handler
             _SharesLimitTimeSession.StartUpdate(600000);
             _DimTimeSession.StartUpdate(3600000);
             _SharesLimitDateSession.StartUpdate(600000);
+            _SharesPlateSession.StartUpdate(600000);
+            _SharesQuotesSession.StartUpdate(3000);
 
             #region====K线数据处理====
             var securityBarsDataTask = StartSecurityBarsDataTask();
-            securityBarsDataTask.LoadSecurityBarsLastData();
+            var newIndexSecurityBarsDataTask = StartNewIndexSecurityBarsDataTask();
+
+            newIndexSecurityBarsDataTask.LoadSecurityBarsLastData();
+            newIndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot();
+            newIndexSecurityBarsDataTask.LoadPlateKlineSession();
+            newIndexSecurityBarsDataTask.LoadPlateBaseDateSession();
+
+            securityBarsDataTask.Init();
+            newIndexSecurityBarsDataTask.Init();
+
             securityBarsDataTask.DoTask();
+
             mqHandler_SecurityBarsData.StartListen();//启动队列监听
             #endregion
         }
@@ -515,6 +542,8 @@ namespace MealTicket_Handler
         public SharesLimitTimeSession _SharesLimitTimeSession = new SharesLimitTimeSession();
         public DimTimeSession _DimTimeSession = new DimTimeSession();
         public SharesLimitDateSession _SharesLimitDateSession = new SharesLimitDateSession();
+        public SharesPlateSession _SharesPlateSession = new SharesPlateSession();
+        public SharesQuotesSession _SharesQuotesSession = new SharesQuotesSession();
         #endregion
     }
 }

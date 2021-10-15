@@ -28,7 +28,7 @@ namespace SecurityBarsDataUpdate
                 {
                     throw new Exception("更新至少需要一只股票数据");
                 }
-                if (resultData.HandlerType != 1 && resultData.HandlerType != 2)
+                if (resultData.HandlerType != 1 && resultData.HandlerType != 2 && resultData.HandlerType != 3 && resultData.HandlerType != 4)
                 {
                     throw new Exception("处理类型参数错误");
                 }
@@ -38,7 +38,7 @@ namespace SecurityBarsDataUpdate
                 stopwatch.Start();
 
                 Console.WriteLine("==========开始获取K线数据======" + resultData.TaskGuid + "===");
-                list = DataHelper.TdxHq_GetSecurityBarsData(resultData.PackageList);
+                list = DataHelper.TdxHq_GetSecurityBarsData(resultData.PackageList, resultData.HandlerType);
                 stopwatch.Stop();
                 Console.WriteLine("=====获取K线数据结束:" + stopwatch.ElapsedMilliseconds + "============");
 

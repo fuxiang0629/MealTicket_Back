@@ -66,6 +66,26 @@ namespace MealTicket_Handler.SecurityBarsData
 
     public class SecurityBarsDataInfo
     {
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+            if ((obj.GetType().Equals(this.GetType())) == false)
+            {
+                return false;
+            }
+            SecurityBarsDataInfo temp = (SecurityBarsDataInfo)obj;
+
+            return this.Market.Equals(temp.Market) && this.SharesCode.Equals(temp.SharesCode) && this.GroupTimeKey.Equals(temp.GroupTimeKey);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.Market.GetHashCode() + this.SharesCode.GetHashCode() + this.GroupTimeKey.GetHashCode();
+        }
+
         /// <summary>
         /// 市场代码
         /// </summary>
@@ -126,7 +146,7 @@ namespace MealTicket_Handler.SecurityBarsData
         /// <summary>
         /// 成交量(笔)
         /// </summary>
-        public int TradeStock { get; set; }
+        public long TradeStock { get; set; }
 
         /// <summary>
         /// 成交额(元*10000)
@@ -157,6 +177,14 @@ namespace MealTicket_Handler.SecurityBarsData
         /// 昨日收盘价
         /// </summary>
         public long YestodayClosedPrice { get; set; }
+
+        public long PlateId { get; set; }
+
+        public int WeightType { get; set; }
+
+        public long Tradable { get; set; }
+
+        public long TotalCapital { get; set; }
     }
 
     public class SecurityBarsData_1minInfo
@@ -280,5 +308,107 @@ namespace MealTicket_Handler.SecurityBarsData
         public int HandCount { get; set; }
 
         public DateTime LastModified { get; set; }
+    }
+
+    public class MinutetimeToDataBaseInfo
+    {
+        public int Market { get; set; }
+
+        public string SharesCode { get; set; }
+
+        public string Date { get; set; }
+
+        public int HandlerType { get; set; }
+
+        public override int GetHashCode()
+        {
+            return this.Market.GetHashCode() + this.SharesCode.GetHashCode() + this.Date.GetHashCode() + this.HandlerType.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+            if ((obj.GetType().Equals(this.GetType())) == false)
+            {
+                return false;
+            }
+            MinutetimeToDataBaseInfo temp = (MinutetimeToDataBaseInfo)obj;
+            return this.Market.Equals(temp.Market) && this.SharesCode.Equals(temp.SharesCode) && this.Date.Equals(temp.Date) && this.HandlerType.Equals(temp.HandlerType);
+        }
+    }
+
+    public class SecurityBarsLastData
+    {
+        public override bool Equals(object obj)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+            if ((obj.GetType().Equals(this.GetType())) == false)
+            {
+                return false;
+            }
+            SecurityBarsDataInfo temp = (SecurityBarsDataInfo)obj;
+
+            return this.PlateId.Equals(temp.PlateId) && this.WeightType.Equals(temp.WeightType);
+        }
+
+        public override int GetHashCode()
+        {
+            return this.PlateId.GetHashCode() + this.WeightType.GetHashCode();
+        }
+        public long PlateId { get; set; }
+        public int WeightType { get; set; }
+        public int Market { get; set; }
+        public string SharesCode { get; set; }
+        public long GroupTimeKey { get; set; }
+        public long PreClosePrice { get; set; }
+        public long YestodayClosedPrice { get; set; }
+        public long LastTradeStock { get; set; }
+        public long LastTradeAmount { get; set; }
+    }
+
+    public class SecurityBarsLastDataGroup
+    {
+        public int DataType { get; set; }
+
+        public long GroupTimeKey { get; set; }
+
+        public List<SecurityBarsLastData> DataList { get; set; }
+    }
+
+
+    /// <summary>
+    /// 板块内股票快照缓存
+    /// </summary>
+    public class PlateRelSnapshotInfo
+    {
+        /// <summary>
+        /// 板块Id
+        /// </summary>
+        public long PlateId { get; set; }
+
+        /// <summary>
+        /// 市场代码
+        /// </summary>
+        public int Market { get; set; }
+
+        /// <summary>
+        /// 股票代码
+        /// </summary>
+        public string SharesCode { get; set; }
+    }
+
+    public class PlateCloseInfo
+    {
+        public long PlateId { get; set; }
+
+        public int WeightType { get; set; }
+
+        public long ClosePrice { get; set; }
     }
 }

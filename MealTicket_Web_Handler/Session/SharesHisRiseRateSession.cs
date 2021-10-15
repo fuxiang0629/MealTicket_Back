@@ -82,10 +82,10 @@ namespace MealTicket_Web_Handler
                             ThreeDaysRiseRate = ThreeDaysRiseRate,
                             TwoDaysRiseRate = TwoDaysRiseRate,
                             YestodayRiseRate = YestodayRiseRate,
-                            PreDayDealCount=PreDayDealCount,
+                            PreDayDealCount=PreDayDealCount*100,
                             PreDayDealAmount=PreDayDealAmount,
                             DaysAvgDealAmount= DaysAvgDealAmount,
-                            DaysAvgDealCount= DaysAvgDealCount,
+                            DaysAvgDealCount= DaysAvgDealCount*100,
                             LimitDownCount=LimitDownCount,
                             LimitUpCount=LimitUpCount,
                             LimitUpDay=LimitUpDay

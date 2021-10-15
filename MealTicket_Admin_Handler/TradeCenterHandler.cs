@@ -951,7 +951,8 @@ namespace MealTicket_Admin_Handler
                                       RiseIndex = item.RiseIndex,
                                       WeightRiseIndex = item.WeightRiseIndex,
                                       WeightRiseRate = item.WeightRiseRate,
-                                      CalType = item.CalType
+                                      CalType = item.CalType,
+                                      BaseDate=item.BaseDate
                                   }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                     }
                     else
@@ -984,7 +985,8 @@ namespace MealTicket_Admin_Handler
                                       RiseIndex = item.RiseIndex,
                                       WeightRiseIndex = item.WeightRiseIndex,
                                       WeightRiseRate = item.WeightRiseRate,
-                                      CalType = item.CalType
+                                      CalType = item.CalType,
+                                      BaseDate = item.BaseDate
                                   }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                     }
                 }
@@ -1018,7 +1020,8 @@ namespace MealTicket_Admin_Handler
                                   RiseIndex = item.RiseIndex,
                                   WeightRiseIndex = item.WeightRiseIndex,
                                   WeightRiseRate = item.WeightRiseRate,
-                                  CalType = item.CalType
+                                  CalType = item.CalType,
+                                  BaseDate = item.BaseDate
                               }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                 }
 
@@ -1418,6 +1421,66 @@ namespace MealTicket_Admin_Handler
                         db.t_shares_plate_rel.RemoveRange(plateRel);
                         db.SaveChanges();
                     }
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 重置板块基准日
+        /// </summary>
+        /// <param name="request"></param>
+        public void ResetSharesPlateBaseDate(ResetSharesPlateBaseDateRequest request) 
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran=db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "SecurityBarsDataType"
+                                  select item).FirstOrDefault();
+                    if (sysPar == null)
+                    {
+                        throw new WebApiException(400,"K线类型参数未设置");
+                    }
+
+                    var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                    List<int> tempSecurityBarsDataTypeList = new List<int>();
+                    foreach (var item in sysValue.SecurityBarsDataTypeList)
+                    {
+                        int temp = item;
+                        tempSecurityBarsDataTypeList.Add(temp);
+                    }
+
+                    var plate = (from item in db.t_shares_plate
+                                 where item.Id == request.Id
+                                 select item).FirstOrDefault();
+                    if (plate == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+
+                    if (plate.BaseDate != request.BaseDate)
+                    {
+                        foreach (int type in tempSecurityBarsDataTypeList)
+                        {
+                            var context = new
+                            {
+                                StartDate = -1,
+                                EndDate = -1
+                            };
+                            BuildInstructions(DateTime.Now.Date.AddDays(1), 3, request.Id, 0, "", type, JsonConvert.SerializeObject(context),0, db);
+                        }
+                    }
+                    plate.BaseDate = request.BaseDate;
+                    db.SaveChanges();
 
                     tran.Commit();
                 }
@@ -10254,6 +10317,518 @@ namespace MealTicket_Admin_Handler
                     finishCount = finishCount + currCount;
                 } while (true);
             }
+        }
+
+        /// <summary>
+        /// 获取板块k线数据
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public PageRes<SharesKlineInfo> GetSharesPlateKlineList(GetSharesPlateKlineListRequest request)
+        {
+            switch (request.DateType)
+            {
+                case 1:
+                    return null;
+                case 2:
+                    return GetSharesPlateKline_1minList(request);
+                case 3:
+                    return GetSharesPlateKline_5minList(request);
+                case 4:
+                    return GetSharesPlateKline_15minList(request);
+                case 5:
+                    return GetSharesPlateKline_30minList(request);
+                case 6:
+                    return GetSharesPlateKline_60minList(request);
+                case 7:
+                    return GetSharesPlateKline_1dayList(request);
+                case 8:
+                    return GetSharesPlateKline_1weekList(request);
+                case 9:
+                    return GetSharesPlateKline_1monthList(request);
+                case 10:
+                    return GetSharesPlateKline_1quarterList(request);
+                case 11:
+                    return GetSharesPlateKline_1yearList(request);
+                default:
+                    throw new WebApiException(400, "参数有误");
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesPlateKline_1minList(GetSharesPlateKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_plate_securitybarsdata_1min
+                             where item.PlateId==request.PlateId
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesPlateKline_5minList(GetSharesPlateKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_plate_securitybarsdata_5min
+                             where item.PlateId==request.PlateId
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesPlateKline_15minList(GetSharesPlateKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_plate_securitybarsdata_15min
+                             where item.PlateId==request.PlateId
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesPlateKline_30minList(GetSharesPlateKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_plate_securitybarsdata_30min
+                             where item.PlateId==request.PlateId
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesPlateKline_60minList(GetSharesPlateKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_plate_securitybarsdata_60min
+                             where item.PlateId==request.PlateId
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesPlateKline_1dayList(GetSharesPlateKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_plate_securitybarsdata_1day
+                             where item.PlateId==request.PlateId
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesPlateKline_1weekList(GetSharesPlateKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_plate_securitybarsdata_1week
+                             where item.PlateId==request.PlateId
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesPlateKline_1monthList(GetSharesPlateKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_plate_securitybarsdata_1month
+                             where item.PlateId==request.PlateId
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesPlateKline_1quarterList(GetSharesPlateKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_plate_securitybarsdata_1quarter
+                             where item.PlateId==request.PlateId
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        private PageRes<SharesKlineInfo> GetSharesPlateKline_1yearList(GetSharesPlateKlineListRequest request)
+        {
+            using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_shares_plate_securitybarsdata_1year
+                             where item.PlateId==request.PlateId
+                             select item;
+                if (request.StartGroupTimeKey != -1 && request.EndGroupTimeKey != -1)
+                {
+                    result = from item in result
+                             where item.GroupTimeKey >= request.StartGroupTimeKey && item.GroupTimeKey <= request.EndGroupTimeKey
+                             select item;
+                }
+
+                int totalCount = result.Count();
+
+                var resultList = (from item in result
+                                  orderby item.Time descending
+                                  select new SharesKlineInfo
+                                  {
+                                      TradeStock = item.TradeStock,
+                                      ClosedPrice = item.ClosedPrice,
+                                      Id = item.Id,
+                                      LastModified = item.LastModified,
+                                      MaxPrice = item.MaxPrice,
+                                      MinPrice = item.MinPrice,
+                                      OpenedPrice = item.OpenedPrice,
+                                      Time = item.Time,
+                                      TradeAmount = item.TradeAmount
+                                  }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                scope.Complete();
+                return new PageRes<SharesKlineInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = resultList
+                };
+            }
+        }
+
+        /// <summary>
+        /// 重置板块K线数据
+        /// </summary>
+        /// <param name="request"></param>
+        public void ResetSharesPlateKLine(ResetSharesPlateKLineRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var context = new
+                {
+                    StartDate = request.StartGroupTimeKey,
+                    EndDate = request.EndGroupTimeKey
+                };
+                BuildInstructions(DateTime.Now.Date.AddDays(1), 3, request.PlateId, 0, "", request.DataType, JsonConvert.SerializeObject(context),0, db);
+            }
+        }
+
+        /// <summary>
+        /// 批量重置板块K线数据
+        /// </summary>
+        /// <param name="request"></param>
+        public void BatchResetSharesPlateKLine(BatchResetSharesPlateKLineRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var context = new
+                {
+                    StartDate = request.StartGroupTimeKey,
+                    EndDate = request.EndGroupTimeKey
+                };
+                BuildInstructions(DateTime.Now.Date.AddDays(1), 2, 0, 0, "", request.DataType, JsonConvert.SerializeObject(context), request.PlateType, db);
+            }
+        }
+
+        private void BuildInstructions(DateTime date, int type, long plateId, int market, string sharesCode, int dataType, string context,int plateType, meal_ticketEntities db)
+        {
+            string sql = "";
+            if (type == 1)
+            {
+                sql = string.Format("merge into t_shares_plate_rel_snapshot_instructions t using (select '{0}' [Date],{1} [Type],{2} PlateId,{3} Market,'{4}' SharesCode,'{5}' Context) t1 on t.[Date] = t1.[Date] and t.[Type]= t1.[Type] and t.PlateId = t1.PlateId and t.Market=t1.Market and t.SharesCode=t1.SharesCode when matched then update set Context = t1.Context, IsExcute = 0, ExcuteTime = null, LastModified = getdate() when not matched then insert([Date],[Type],PlateId,Market,SharesCode,DataType,Context,PlateType,IsExcute,ExcuteTime,CreateTime,LastModified) values(t1.[Date], t1.[Type], t1.PlateId, t1.Market, t1.SharesCode,0, t1.Context,0, 0, null, getdate(), getdate()); ", date, type, plateId, market, sharesCode, context);
+            }
+            else if (type == 2)
+            {
+                sql = string.Format("merge into t_shares_plate_rel_snapshot_instructions t using (select '{0}' [Date],{1} [Type],'{2}' Context, {3} DataType,{4} PlateType) t1 on t.[Date] = t1.[Date] and t.[Type]= t1.[Type] and t.DataType=t1.DataType and t.PlateType=t1.PlateType when matched then update set Context = t1.Context, IsExcute = 0, ExcuteTime = null, LastModified = getdate() when not matched then insert([Date],[Type],PlateId,Market,SharesCode,DataType,Context,PlateType,IsExcute,ExcuteTime,CreateTime,LastModified) values(t1.[Date], t1.[Type], 0, 0, '',t1.DataType, t1.Context,t1.PlateType, 0, null, getdate(), getdate()); ", date, type, context, dataType, plateType);
+            }
+            else if (type == 3)
+            {
+                sql = string.Format("merge into t_shares_plate_rel_snapshot_instructions t using (select '{0}' [Date],{1} [Type],{2} PlateId,'{3}' Context, {4} DataType) t1 on t.[Date] = t1.[Date] and t.[Type]= t1.[Type] and t.PlateId=t1.PlateId and t.DataType=t1.DataType when matched then update set Context = t1.Context, IsExcute = 0, ExcuteTime = null, LastModified = getdate() when not matched then insert([Date],[Type],PlateId,Market,SharesCode,DataType,Context,PlateType,IsExcute,ExcuteTime,CreateTime,LastModified) values(t1.[Date], t1.[Type], t1.PlateId, 0, '',t1.DataType, t1.Context,0, 0, null, getdate(), getdate()); ", date, type, plateId, context, dataType);
+            }
+            else
+            {
+                throw new WebApiException(400, "参数不正确");
+            }
+            db.Database.ExecuteSqlCommand(sql);
         }
     }
 }

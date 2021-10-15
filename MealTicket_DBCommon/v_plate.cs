@@ -38,5 +38,6 @@ namespace MealTicket_DBCommon
         public int BaseStatus { get; set; }
         public string SharesCode { get; set; }
         public int SharesMarket { get; set; }
+        public Nullable<System.DateTime> BaseDate { get; set; }
     }
 }

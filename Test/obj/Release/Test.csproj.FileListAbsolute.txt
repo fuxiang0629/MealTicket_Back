@@ -67,7 +67,6 @@ F:\项目\饭票后端\Test\bin\Release\EntityFramework.SqlServer.xml
 F:\项目\饭票后端\Test\bin\Release\Newtonsoft.Json.xml
 F:\项目\饭票后端\Test\bin\Release\zh-Hans\EntityFramework.resources.dll
 F:\项目\饭票后端\Test\bin\Release\zh-Hans\EntityFramework.SqlServer.resources.dll
-F:\项目\饭票后端\Test\obj\Release\Test.csprojAssemblyReference.cache
 D:\项目\饭票\后端\Test\bin\Release\EntityFramework.dll
 D:\项目\饭票\后端\Test\bin\Release\EntityFramework.SqlServer.dll
 D:\项目\饭票\后端\Test\bin\Release\MealTicket_DBCommon.dll
@@ -78,3 +77,4 @@ D:\项目\饭票\后端\Test\bin\Release\EntityFramework.SqlServer.xml
 D:\项目\饭票\后端\Test\bin\Release\Newtonsoft.Json.xml
 D:\项目\饭票\后端\Test\bin\Release\zh-Hans\EntityFramework.resources.dll
 D:\项目\饭票\后端\Test\bin\Release\zh-Hans\EntityFramework.SqlServer.resources.dll
+F:\项目\饭票后端\Test\obj\Release\Test.csprojAssemblyReference.cache

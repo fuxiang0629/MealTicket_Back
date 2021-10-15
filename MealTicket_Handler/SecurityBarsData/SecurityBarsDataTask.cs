@@ -16,55 +16,6 @@ using System.Threading.Tasks;
 
 namespace MealTicket_Handler.SecurityBarsData
 {
-    public class MinutetimeToDataBaseInfo 
-    {
-        public int Market { get; set; }
-
-        public string SharesCode { get; set; }
-
-        public string Date { get; set; }
-
-        public int HandlerType { get; set; }
-
-        public override int GetHashCode()
-        {
-            return this.Market.GetHashCode() + this.SharesCode.GetHashCode() + this.Date.GetHashCode() + this.HandlerType.GetHashCode();
-        }
-
-        public override bool Equals(object obj)
-        {
-            if (obj == null)
-            {
-                return false;
-            }
-            if ((obj.GetType().Equals(this.GetType())) == false)
-            {
-                return false;
-            }
-            MinutetimeToDataBaseInfo temp = (MinutetimeToDataBaseInfo)obj;
-            return this.Market.Equals(temp.Market) && this.SharesCode.Equals(temp.SharesCode) && this.Date.Equals(temp.Date) && this.HandlerType.Equals(temp.HandlerType);
-        }
-    }
-
-    public class SecurityBarsLastData
-    {
-        public int Market { get; set; }
-        public string SharesCode { get; set; }
-        public long GroupTimeKey { get; set; }
-        public long PreClosePrice { get; set; }
-        public long LastTradeStock { get; set; }
-        public long LastTradeAmount { get; set; }
-    }
-
-    public class SecurityBarsLastDataGroup
-    {
-        public int DataType { get; set; }
-
-        public long GroupTimeKey { get; set; }
-
-        public List<SecurityBarsLastData> DataList { get; set; }
-    }
-
     public class SecurityBarsDataTask
     {
         /// <summary>
@@ -607,19 +558,31 @@ namespace MealTicket_Handler.SecurityBarsData
                         {
                             finishCount++;
                         }
-                        var lastData = (from x in disList
-                                        group x by new { x.Market, x.SharesCode } into g
-                                        let temp=g.OrderByDescending(e=>e.GroupTimeKey).FirstOrDefault()
-                                        select new SecurityBarsLastData
-                                        {
-                                            SharesCode = g.Key.SharesCode,
-                                            Market = g.Key.Market,
-                                            GroupTimeKey = temp.GroupTimeKey,
-                                            LastTradeStock= temp.LastTradeStock,
-                                            LastTradeAmount= temp.LastTradeAmount,
-                                            PreClosePrice= temp.PreClosePrice
-                                        }).ToList();
-                        SetSecurityBarsLastData_Session(dataType, lastData);
+                        var sessionDataList = (from item in disResultList
+                                               select new SharesKlineData
+                                               {
+                                                   SharesCode = item.item.SharesCode,
+                                                   LastTradeStock = item.item.LastTradeStock,
+                                                   ClosedPrice = item.item.ClosedPrice,
+                                                   GroupTimeKey = item.item.GroupTimeKey,
+                                                   TradeStock = item.item.TradeStock,
+                                                   LastTradeAmount = item.item.LastTradeAmount,
+                                                   Market = item.item.Market,
+                                                   MaxPrice = item.item.MaxPrice,
+                                                   MinPrice = item.item.MinPrice,
+                                                   OpenedPrice = item.item.OpenedPrice,
+                                                   PreClosePrice = item.item.PreClosePrice,
+                                                   Time = item.item.Time,
+                                                   TotalCapital = item.ai == null ? 0 : item.ai.TotalCapital,
+                                                   Tradable = item.ai == null ? 0 : item.ai.CirculatingCapital,
+                                                   TradeAmount = item.item.TradeAmount,
+                                                   YestodayClosedPrice = item.item.YestodayClosedPrice
+                                               }).ToList();
+                        Singleton.Instance._newIindexSecurityBarsDataTask.ToPushData(new SharesKlineDataContain
+                        {
+                            DataType = dataType,
+                            SharesKlineData = sessionDataList
+                        });
                     }
                     else
                     {
@@ -656,7 +619,6 @@ namespace MealTicket_Handler.SecurityBarsData
                 list.Add(new SecurityBarsLastDataGroup
                 {
                     DataType = dataType,
-                    DataList = GetSecurityBarsLastData_Session(dataType),
                     GroupTimeKey= groupTimeKey
                 });
             }
@@ -677,32 +639,34 @@ namespace MealTicket_Handler.SecurityBarsData
                 batchSize = batchSize + 1;
             }
 
-            Singleton.Instance.mqHandler.ClearQueueData("SecurityBars_1min");
+            //Singleton.Instance.mqHandler.ClearQueueData("SecurityBars_1min");
             for (int size = 0; size < batchSize; size++)
             {
                 var batchList = allSharesList.Skip(size * HandlerCount).Take(HandlerCount).ToList();
-
                 List<dynamic> sendList = new List<dynamic>();
                 foreach (var item in list)
                 {
+                    List<dynamic> dataList = new List<dynamic>();
+                    foreach (var x in batchList)
+                    {
+                        var lastData=Singleton.Instance._newIindexSecurityBarsDataTask.GetSharesKlineLastSession(x.Market+","+x.SharesCode+","+ item.DataType);
+                        dataList.Add(new 
+                        {
+                            SharesCode = x.SharesCode,
+                            Market = x.Market,
+                            StartTimeKey = lastData == null ? item.GroupTimeKey : lastData.GroupTimeKey,
+                            EndTimeKey = -1,
+                            PreClosePrice = lastData == null ? x.PreClosePrice : lastData.PreClosePrice,
+                            YestodayClosedPrice = x.PreClosePrice,
+                            LastTradeStock = lastData == null ? 0 : lastData.LastTradeStock,
+                            LastTradeAmount = lastData == null ? 0 : lastData.LastTradeAmount
+                        });
+                    }
                     sendList.Add(new
                     {
                         DataType = item.DataType,
                         SecurityBarsGetCount = 0,
-                        DataList = (from x in batchList
-                                    join x2 in item.DataList on new { x.Market, x.SharesCode } equals new { x2.Market, x2.SharesCode } into a
-                                    from ai in a.DefaultIfEmpty()
-                                    select new
-                                    {
-                                        SharesCode = x.SharesCode,
-                                        Market = x.Market,
-                                        StartTimeKey = ai == null ? item.GroupTimeKey : ai.GroupTimeKey,
-                                        EndTimeKey = -1,
-                                        PreClosePrice = ai == null ? x.PreClosePrice : ai.PreClosePrice,
-                                        YestodayClosedPrice = x.PreClosePrice,
-                                        LastTradeStock = ai == null ? 0 : ai.LastTradeStock,
-                                        LastTradeAmount = ai == null ? 0 : ai.LastTradeAmount
-                                    }).ToList()
+                        DataList = dataList
                     });
                 }
                 Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new
@@ -788,63 +752,6 @@ namespace MealTicket_Handler.SecurityBarsData
             {
                 SecurityBarsDataQueue.Release();
             }
-        }
-
-        //K线最后一条数据缓存
-        private Dictionary<int, List<SecurityBarsLastData>> securityBarsLastData_Session=new Dictionary<int, List<SecurityBarsLastData>>();
-
-        private ReaderWriterLock _securityBarsLastData_SessionLock = new ReaderWriterLock();
-
-        private List<SecurityBarsLastData> GetSecurityBarsLastData_Session(int dataType)
-        {
-            List<SecurityBarsLastData> tempData = new List<SecurityBarsLastData>();
-            _securityBarsLastData_SessionLock.AcquireReaderLock(Timeout.Infinite);
-            if (!securityBarsLastData_Session.TryGetValue(dataType, out tempData))
-            {
-                tempData = new List<SecurityBarsLastData>();
-            }
-            _securityBarsLastData_SessionLock.ReleaseReaderLock();
-            return tempData;
-        }
-
-        private void SetSecurityBarsLastData_Session(int dataType, List<SecurityBarsLastData> dataList)
-        {
-            _securityBarsLastData_SessionLock.AcquireWriterLock(Timeout.Infinite);
-            securityBarsLastData_Session[dataType] = dataList;
-            _securityBarsLastData_SessionLock.ReleaseWriterLock();
-        }
-
-        public void LoadSecurityBarsLastData()
-        {
-            List<int> dataTypeList = Singleton.Instance.SecurityBarsDataTypeList;
-            int taskCount = dataTypeList.Count();
-            Task[] taskArr = new Task[taskCount];
-
-            for (int i = 0; i < taskCount; i++)
-            {
-                int dataType = dataTypeList[i];
-                taskArr[i] = new Task(() =>
-                {
-                    string tableName = "";
-                    long groupTimeKey = 0;
-                    if (!CheckDataType(dataType, ref tableName, ref groupTimeKey))
-                    {
-                        return;
-                    }
-                    List<SecurityBarsLastData> lastData = new List<SecurityBarsLastData>();
-                    using (var db = new meal_ticketEntities())
-                    {
-                        string sql = string.Format(@"select Market,SharesCode,GroupTimeKey,PreClosePrice,LastTradeStock,LastTradeAmount
-  from {0} with(nolock)
-  where GroupTimeKey >= {1} and IsLast=1", tableName, groupTimeKey);
-                        lastData=db.Database.SqlQuery<SecurityBarsLastData>(sql).ToList();
-                    }
-
-                    SetSecurityBarsLastData_Session(dataType, lastData);
-                }, TaskCreationOptions.LongRunning);
-                taskArr[i].Start();
-            }
-            Task.WaitAll(taskArr);
         }
     }
 }

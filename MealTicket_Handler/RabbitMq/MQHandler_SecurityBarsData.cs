@@ -22,12 +22,14 @@ namespace MealTicket_Handler
             try
             {
                 var resultData = JsonConvert.DeserializeObject<SecurityBarsDataTaskQueueInfo>(data);
-                Singleton.Instance._securityBarsDataTask.SecurityBarsDataQueue.AddMessage(new QueueMsgObj
+                if (resultData.HandlerType == 1 || resultData.HandlerType == 2)
                 {
-                    MsgId = 1,
-                    MsgObj = resultData
-                });
-                
+                    Singleton.Instance._securityBarsDataTask.SecurityBarsDataQueue.AddMessage(new QueueMsgObj
+                    {
+                        MsgId = 1,
+                        MsgObj = resultData
+                    });
+                }
             }
             catch (Exception ex)
             {

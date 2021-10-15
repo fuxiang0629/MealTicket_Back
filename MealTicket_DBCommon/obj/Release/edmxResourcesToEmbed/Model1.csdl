@@ -2404,6 +2404,7 @@
     <Property Name="ChooseStatus" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="BaseDate" Type="DateTime" Precision="3" />
   </EntityType>
   <EntityType Name="t_shares_plate_rel">
     <Key>
@@ -3189,6 +3190,7 @@
     <Property Name="BaseStatus" Type="Int32" Nullable="false" />
     <Property Name="SharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
     <Property Name="SharesMarket" Type="Int32" Nullable="false" />
+    <Property Name="BaseDate" Type="DateTime" Precision="3" />
   </EntityType>
   <EntityType Name="v_plate_shares">
     <Key>
@@ -4123,6 +4125,20 @@
     <EntitySet Name="t_shares_securitybarsdata_30min" EntityType="meal_ticketModel.t_shares_securitybarsdata_30min" />
     <EntitySet Name="t_shares_securitybarsdata_5min" EntityType="meal_ticketModel.t_shares_securitybarsdata_5min" />
     <EntitySet Name="t_shares_securitybarsdata_60min" EntityType="meal_ticketModel.t_shares_securitybarsdata_60min" />
+    <EntitySet Name="t_shares_plate_rel_his" EntityType="meal_ticketModel.t_shares_plate_rel_his" />
+    <EntitySet Name="t_shares_plate_securitybarsdata_15min" EntityType="meal_ticketModel.t_shares_plate_securitybarsdata_15min" />
+    <EntitySet Name="t_shares_plate_securitybarsdata_1day" EntityType="meal_ticketModel.t_shares_plate_securitybarsdata_1day" />
+    <EntitySet Name="t_shares_plate_securitybarsdata_1min" EntityType="meal_ticketModel.t_shares_plate_securitybarsdata_1min" />
+    <EntitySet Name="t_shares_plate_securitybarsdata_1month" EntityType="meal_ticketModel.t_shares_plate_securitybarsdata_1month" />
+    <EntitySet Name="t_shares_plate_securitybarsdata_1quarter" EntityType="meal_ticketModel.t_shares_plate_securitybarsdata_1quarter" />
+    <EntitySet Name="t_shares_plate_securitybarsdata_1week" EntityType="meal_ticketModel.t_shares_plate_securitybarsdata_1week" />
+    <EntitySet Name="t_shares_plate_securitybarsdata_1year" EntityType="meal_ticketModel.t_shares_plate_securitybarsdata_1year" />
+    <EntitySet Name="t_shares_plate_securitybarsdata_30min" EntityType="meal_ticketModel.t_shares_plate_securitybarsdata_30min" />
+    <EntitySet Name="t_shares_plate_securitybarsdata_5min" EntityType="meal_ticketModel.t_shares_plate_securitybarsdata_5min" />
+    <EntitySet Name="t_shares_plate_securitybarsdata_60min" EntityType="meal_ticketModel.t_shares_plate_securitybarsdata_60min" />
+    <EntitySet Name="t_shares_plate_rel_snapshot" EntityType="meal_ticketModel.t_shares_plate_rel_snapshot" />
+    <EntitySet Name="t_shares_plate_rel_snapshot_catalogue" EntityType="meal_ticketModel.t_shares_plate_rel_snapshot_catalogue" />
+    <EntitySet Name="t_shares_plate_rel_snapshot_instructions" EntityType="meal_ticketModel.t_shares_plate_rel_snapshot_instructions" />
   </EntityContainer>
   <EntityType Name="t_account_baseinfo">
     <Key>
@@ -4800,5 +4816,303 @@
     <Property Name="HandCount" Type="Int32" Nullable="false" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="IsLast" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_rel_his">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_securitybarsdata_15min">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="WeightType" Type="Int32" Nullable="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
+    <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
+    <Property Name="ClosedPrice" Type="Int64" Nullable="false" />
+    <Property Name="PreClosePrice" Type="Int64" Nullable="false" />
+    <Property Name="MinPrice" Type="Int64" Nullable="false" />
+    <Property Name="MaxPrice" Type="Int64" Nullable="false" />
+    <Property Name="TradeStock" Type="Int64" Nullable="false" />
+    <Property Name="TradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="LastTradeStock" Type="Int64" Nullable="false" />
+    <Property Name="LastTradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="Tradable" Type="Int64" Nullable="false" />
+    <Property Name="TotalCapital" Type="Int64" Nullable="false" />
+    <Property Name="IsLast" Type="Boolean" Nullable="false" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_securitybarsdata_1day">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="WeightType" Type="Int32" Nullable="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
+    <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
+    <Property Name="ClosedPrice" Type="Int64" Nullable="false" />
+    <Property Name="PreClosePrice" Type="Int64" Nullable="false" />
+    <Property Name="MinPrice" Type="Int64" Nullable="false" />
+    <Property Name="MaxPrice" Type="Int64" Nullable="false" />
+    <Property Name="TradeStock" Type="Int64" Nullable="false" />
+    <Property Name="TradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="LastTradeStock" Type="Int64" Nullable="false" />
+    <Property Name="LastTradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="Tradable" Type="Int64" Nullable="false" />
+    <Property Name="TotalCapital" Type="Int64" Nullable="false" />
+    <Property Name="IsLast" Type="Boolean" Nullable="false" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_securitybarsdata_1min">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="WeightType" Type="Int32" Nullable="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
+    <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
+    <Property Name="ClosedPrice" Type="Int64" Nullable="false" />
+    <Property Name="PreClosePrice" Type="Int64" Nullable="false" />
+    <Property Name="YestodayClosedPrice" Type="Int64" Nullable="false" />
+    <Property Name="MinPrice" Type="Int64" Nullable="false" />
+    <Property Name="MaxPrice" Type="Int64" Nullable="false" />
+    <Property Name="TradeStock" Type="Int64" Nullable="false" />
+    <Property Name="TradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="LastTradeStock" Type="Int64" Nullable="false" />
+    <Property Name="LastTradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="Tradable" Type="Int64" Nullable="false" />
+    <Property Name="TotalCapital" Type="Int64" Nullable="false" />
+    <Property Name="IsLast" Type="Boolean" Nullable="false" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_securitybarsdata_1month">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="WeightType" Type="Int32" Nullable="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
+    <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
+    <Property Name="ClosedPrice" Type="Int64" Nullable="false" />
+    <Property Name="PreClosePrice" Type="Int64" Nullable="false" />
+    <Property Name="MinPrice" Type="Int64" Nullable="false" />
+    <Property Name="MaxPrice" Type="Int64" Nullable="false" />
+    <Property Name="TradeStock" Type="Int64" Nullable="false" />
+    <Property Name="TradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="LastTradeStock" Type="Int64" Nullable="false" />
+    <Property Name="LastTradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="Tradable" Type="Int64" Nullable="false" />
+    <Property Name="TotalCapital" Type="Int64" Nullable="false" />
+    <Property Name="IsLast" Type="Boolean" Nullable="false" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_securitybarsdata_1quarter">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="WeightType" Type="Int32" Nullable="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
+    <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
+    <Property Name="ClosedPrice" Type="Int64" Nullable="false" />
+    <Property Name="PreClosePrice" Type="Int64" Nullable="false" />
+    <Property Name="MinPrice" Type="Int64" Nullable="false" />
+    <Property Name="MaxPrice" Type="Int64" Nullable="false" />
+    <Property Name="TradeStock" Type="Int64" Nullable="false" />
+    <Property Name="TradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="LastTradeStock" Type="Int64" Nullable="false" />
+    <Property Name="LastTradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="Tradable" Type="Int64" Nullable="false" />
+    <Property Name="TotalCapital" Type="Int64" Nullable="false" />
+    <Property Name="IsLast" Type="Boolean" Nullable="false" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_securitybarsdata_1week">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="WeightType" Type="Int32" Nullable="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
+    <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
+    <Property Name="ClosedPrice" Type="Int64" Nullable="false" />
+    <Property Name="PreClosePrice" Type="Int64" Nullable="false" />
+    <Property Name="MinPrice" Type="Int64" Nullable="false" />
+    <Property Name="MaxPrice" Type="Int64" Nullable="false" />
+    <Property Name="TradeStock" Type="Int64" Nullable="false" />
+    <Property Name="TradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="LastTradeStock" Type="Int64" Nullable="false" />
+    <Property Name="LastTradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="Tradable" Type="Int64" Nullable="false" />
+    <Property Name="TotalCapital" Type="Int64" Nullable="false" />
+    <Property Name="IsLast" Type="Boolean" Nullable="false" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_securitybarsdata_1year">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="WeightType" Type="Int32" Nullable="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
+    <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
+    <Property Name="ClosedPrice" Type="Int64" Nullable="false" />
+    <Property Name="PreClosePrice" Type="Int64" Nullable="false" />
+    <Property Name="MinPrice" Type="Int64" Nullable="false" />
+    <Property Name="MaxPrice" Type="Int64" Nullable="false" />
+    <Property Name="TradeStock" Type="Int64" Nullable="false" />
+    <Property Name="TradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="LastTradeStock" Type="Int64" Nullable="false" />
+    <Property Name="LastTradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="Tradable" Type="Int64" Nullable="false" />
+    <Property Name="TotalCapital" Type="Int64" Nullable="false" />
+    <Property Name="IsLast" Type="Boolean" Nullable="false" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_securitybarsdata_30min">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="WeightType" Type="Int32" Nullable="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
+    <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
+    <Property Name="ClosedPrice" Type="Int64" Nullable="false" />
+    <Property Name="PreClosePrice" Type="Int64" Nullable="false" />
+    <Property Name="MinPrice" Type="Int64" Nullable="false" />
+    <Property Name="MaxPrice" Type="Int64" Nullable="false" />
+    <Property Name="TradeStock" Type="Int64" Nullable="false" />
+    <Property Name="TradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="LastTradeStock" Type="Int64" Nullable="false" />
+    <Property Name="LastTradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="Tradable" Type="Int64" Nullable="false" />
+    <Property Name="TotalCapital" Type="Int64" Nullable="false" />
+    <Property Name="IsLast" Type="Boolean" Nullable="false" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_securitybarsdata_5min">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="WeightType" Type="Int32" Nullable="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
+    <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
+    <Property Name="ClosedPrice" Type="Int64" Nullable="false" />
+    <Property Name="PreClosePrice" Type="Int64" Nullable="false" />
+    <Property Name="MinPrice" Type="Int64" Nullable="false" />
+    <Property Name="MaxPrice" Type="Int64" Nullable="false" />
+    <Property Name="TradeStock" Type="Int64" Nullable="false" />
+    <Property Name="TradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="LastTradeStock" Type="Int64" Nullable="false" />
+    <Property Name="LastTradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="Tradable" Type="Int64" Nullable="false" />
+    <Property Name="TotalCapital" Type="Int64" Nullable="false" />
+    <Property Name="IsLast" Type="Boolean" Nullable="false" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_securitybarsdata_60min">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="WeightType" Type="Int32" Nullable="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
+    <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
+    <Property Name="ClosedPrice" Type="Int64" Nullable="false" />
+    <Property Name="PreClosePrice" Type="Int64" Nullable="false" />
+    <Property Name="MinPrice" Type="Int64" Nullable="false" />
+    <Property Name="MaxPrice" Type="Int64" Nullable="false" />
+    <Property Name="TradeStock" Type="Int64" Nullable="false" />
+    <Property Name="TradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="LastTradeStock" Type="Int64" Nullable="false" />
+    <Property Name="LastTradeAmount" Type="Int64" Nullable="false" />
+    <Property Name="Tradable" Type="Int64" Nullable="false" />
+    <Property Name="TotalCapital" Type="Int64" Nullable="false" />
+    <Property Name="IsLast" Type="Boolean" Nullable="false" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_rel_snapshot">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_rel_snapshot_catalogue">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_rel_snapshot_instructions">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Context" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="IsExcute" Type="Boolean" Nullable="false" />
+    <Property Name="ExcuteTime" Type="DateTime" Precision="3" />
+    <Property Name="PlateType" Type="Int32" Nullable="false" />
+    <Property Name="DataType" Type="Int32" Nullable="false" />
   </EntityType>
 </Schema>

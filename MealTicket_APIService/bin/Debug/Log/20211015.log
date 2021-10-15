@@ -1,0 +1,188 @@
+2021/10/15 16:06:39
+监听队列已链接
+
+
+2021/10/15 16:06:42
+===开始数据扔入队列===2021-10-15 16:06:42.380
+
+
+2021/10/15 16:06:43
+===结束数据扔入队列===2021-10-15 16:06:43.146
+
+
+2021/10/15 16:06:50
+警戒线通知异常
+System.InvalidOperationException: 可为空的对象必须具有一个值。
+   在 System.ThrowHelper.ThrowInvalidOperationException(ExceptionResource resource)
+   在 System.Nullable`1.get_Value()
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.ClosingForce() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 776
+
+2021/10/15 16:06:51
+警戒线通知异常
+System.InvalidOperationException: 可为空的对象必须具有一个值。
+   在 System.ThrowHelper.ThrowInvalidOperationException(ExceptionResource resource)
+   在 System.Nullable`1.get_Value()
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.ClosingForce() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 776
+
+2021/10/15 16:06:51
+警戒线通知异常
+System.InvalidOperationException: 可为空的对象必须具有一个值。
+   在 System.ThrowHelper.ThrowInvalidOperationException(ExceptionResource resource)
+   在 System.Nullable`1.get_Value()
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.ClosingForce() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 776
+
+2021/10/15 16:06:52
+警戒线通知异常
+System.InvalidOperationException: 可为空的对象必须具有一个值。
+   在 System.ThrowHelper.ThrowInvalidOperationException(ExceptionResource resource)
+   在 System.Nullable`1.get_Value()
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.ClosingForce() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 776
+
+2021/10/15 16:06:53
+警戒线通知异常
+System.InvalidOperationException: 可为空的对象必须具有一个值。
+   在 System.ThrowHelper.ThrowInvalidOperationException(ExceptionResource resource)
+   在 System.Nullable`1.get_Value()
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.ClosingForce() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 776
+
+2021/10/15 16:06:53
+警戒线通知异常
+System.InvalidOperationException: 可为空的对象必须具有一个值。
+   在 System.ThrowHelper.ThrowInvalidOperationException(ExceptionResource resource)
+   在 System.Nullable`1.get_Value()
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.ClosingForce() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 776
+
+2021/10/15 16:06:54
+警戒线通知异常
+System.InvalidOperationException: 可为空的对象必须具有一个值。
+   在 System.ThrowHelper.ThrowInvalidOperationException(ExceptionResource resource)
+   在 System.Nullable`1.get_Value()
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.ClosingForce() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 776
+
+2021/10/15 16:06:55
+警戒线通知异常
+System.InvalidOperationException: 可为空的对象必须具有一个值。
+   在 System.ThrowHelper.ThrowInvalidOperationException(ExceptionResource resource)
+   在 System.Nullable`1.get_Value()
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.ClosingForce() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 776
+
+2021/10/15 16:06:56
+警戒线通知异常
+System.InvalidOperationException: 可为空的对象必须具有一个值。
+   在 System.ThrowHelper.ThrowInvalidOperationException(ExceptionResource resource)
+   在 System.Nullable`1.get_Value()
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.ClosingForce() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 776
+
+2021/10/15 16:06:58
+警戒线通知异常
+System.InvalidOperationException: 可为空的对象必须具有一个值。
+   在 System.ThrowHelper.ThrowInvalidOperationException(ExceptionResource resource)
+   在 System.Nullable`1.get_Value()
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.ClosingForce() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 776
+
+2021/10/15 16:06:59
+警戒线通知异常
+System.InvalidOperationException: 可为空的对象必须具有一个值。
+   在 System.ThrowHelper.ThrowInvalidOperationException(ExceptionResource resource)
+   在 System.Nullable`1.get_Value()
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.ClosingForce() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 776
+
+2021/10/15 16:07:00
+警戒线通知异常
+System.InvalidOperationException: 可为空的对象必须具有一个值。
+   在 System.ThrowHelper.ThrowInvalidOperationException(ExceptionResource resource)
+   在 System.Nullable`1.get_Value()
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.ClosingForce() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 776
+
+2021/10/15 16:11:05
+监听队列已链接
+
+
+2021/10/15 16:11:07
+===开始数据扔入队列===2021-10-15 16:11:07.102
+
+
+2021/10/15 16:11:07
+===结束数据扔入队列===2021-10-15 16:11:07.515
+
+
+2021/10/15 16:12:07
+===开始数据扔入队列===2021-10-15 16:12:07.628
+
+
+2021/10/15 16:12:07
+===结束数据扔入队列===2021-10-15 16:12:07.978
+
+
+2021/10/15 16:14:08
+===开始数据扔入队列===2021-10-15 16:14:08.430
+
+
+2021/10/15 16:14:08
+===结束数据扔入队列===2021-10-15 16:14:08.880
+
+
+2021/10/15 16:18:09
+===开始数据扔入队列===2021-10-15 16:18:09.396
+
+
+2021/10/15 16:18:09
+===结束数据扔入队列===2021-10-15 16:18:09.869
+
+
+2021/10/15 16:26:10
+===开始数据扔入队列===2021-10-15 16:26:10.373
+
+
+2021/10/15 16:26:10
+===结束数据扔入队列===2021-10-15 16:26:10.713
+
+
+2021/10/15 16:32:55
+SharesQuotesSession缓存加载失败
+System.ComponentModel.Win32Exception (0x80004005): 等待的操作过时。
+
+2021/10/15 16:34:28
+SharesQuotesSession缓存加载失败
+System.ComponentModel.Win32Exception (0x80004005): 等待的操作过时。
+
+2021/10/15 16:42:13
+===开始数据扔入队列===2021-10-15 16:42:13.076
+
+
+2021/10/15 16:42:13
+===结束数据扔入队列===2021-10-15 16:42:13.427
+
+
+2021/10/15 16:53:41
+===开始处理数据===2021-10-15 16:53:40.980
+
+
+2021/10/15 17:32:01
+监听队列已链接
+
+
+2021/10/15 17:32:04
+===开始数据扔入队列===2021-10-15 17:32:04.118
+
+
+2021/10/15 17:32:04
+===结束数据扔入队列===2021-10-15 17:32:04.618
+
+
+2021/10/15 17:33:04
+===开始数据扔入队列===2021-10-15 17:33:04.832
+
+
+2021/10/15 17:33:05
+===结束数据扔入队列===2021-10-15 17:33:05.231
+
+
+2021/10/15 17:35:05
+===开始数据扔入队列===2021-10-15 17:35:05.700
+
+
+2021/10/15 17:35:28
+===结束数据扔入队列===2021-10-15 17:35:28.440
+
+

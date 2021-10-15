@@ -37,5 +37,15 @@ namespace FXCommon.Common
         /// 是否包含基础板块
         /// </summary>
         public int IsBasePlate { get; set; }
+
+        public int WeightMarket { get; set; }
+
+        public string WeightSharesCode { get; set; }
+        
+        public int NoWeightMarket { get; set; }
+
+        public string NoWeightSharesCode { get; set; }
+
+        public DateTime? BaseDate { get; set; }
     }
 }

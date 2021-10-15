@@ -295,6 +295,20 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_shares_securitybarsdata_30min> t_shares_securitybarsdata_30min { get; set; }
         public virtual DbSet<t_shares_securitybarsdata_5min> t_shares_securitybarsdata_5min { get; set; }
         public virtual DbSet<t_shares_securitybarsdata_60min> t_shares_securitybarsdata_60min { get; set; }
+        public virtual DbSet<t_shares_plate_rel_his> t_shares_plate_rel_his { get; set; }
+        public virtual DbSet<t_shares_plate_securitybarsdata_15min> t_shares_plate_securitybarsdata_15min { get; set; }
+        public virtual DbSet<t_shares_plate_securitybarsdata_1day> t_shares_plate_securitybarsdata_1day { get; set; }
+        public virtual DbSet<t_shares_plate_securitybarsdata_1min> t_shares_plate_securitybarsdata_1min { get; set; }
+        public virtual DbSet<t_shares_plate_securitybarsdata_1month> t_shares_plate_securitybarsdata_1month { get; set; }
+        public virtual DbSet<t_shares_plate_securitybarsdata_1quarter> t_shares_plate_securitybarsdata_1quarter { get; set; }
+        public virtual DbSet<t_shares_plate_securitybarsdata_1week> t_shares_plate_securitybarsdata_1week { get; set; }
+        public virtual DbSet<t_shares_plate_securitybarsdata_1year> t_shares_plate_securitybarsdata_1year { get; set; }
+        public virtual DbSet<t_shares_plate_securitybarsdata_30min> t_shares_plate_securitybarsdata_30min { get; set; }
+        public virtual DbSet<t_shares_plate_securitybarsdata_5min> t_shares_plate_securitybarsdata_5min { get; set; }
+        public virtual DbSet<t_shares_plate_securitybarsdata_60min> t_shares_plate_securitybarsdata_60min { get; set; }
+        public virtual DbSet<t_shares_plate_rel_snapshot> t_shares_plate_rel_snapshot { get; set; }
+        public virtual DbSet<t_shares_plate_rel_snapshot_catalogue> t_shares_plate_rel_snapshot_catalogue { get; set; }
+        public virtual DbSet<t_shares_plate_rel_snapshot_instructions> t_shares_plate_rel_snapshot_instructions { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)

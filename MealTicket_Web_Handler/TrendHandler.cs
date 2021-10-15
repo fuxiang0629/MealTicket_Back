@@ -188,7 +188,7 @@ namespace MealTicket_Web_Handler
                                   CurrPrice = item.PresentPrice,
                                   RisePrice = item.PresentPrice - item.ClosedPrice,
                                   RiseRate = (int)Math.Round(((item.PresentPrice - item.ClosedPrice) * 1.0 / item.ClosedPrice) * 10000, 0),
-                                  TodayDealCount = item.TotalCount,
+                                  TodayDealCount = item.TotalCount*100,
                                   TodayDealAmount = item.TotalAmount
                               }).ToList();
                 var plateList = (from x in Singleton.Instance._SharesPlateSession.GetSessionData()
@@ -244,12 +244,17 @@ namespace MealTicket_Web_Handler
                 DateTime timeNow = DateTime.Now;
                 long dateAbs = int.Parse(timeNow.ToString("yyyyMMdd"));
                 long minDateAbs = int.Parse(Helper.GetLastTradeDate(-9, 0, 0, Singleton.Instance.QuotesDaysShow).ToString("yyyyMMdd"));
-                long timeAbs = int.Parse(timeNow.ToString("HHmm"));
+                long maxDateAbs = int.Parse(Helper.GetLastTradeDate(-9, 0, 0).ToString("yyyyMMdd"));
+                long timeAbs = 9999;
+                if (dateAbs == maxDateAbs)
+                {
+                    timeAbs = int.Parse(timeNow.ToString("HHmm"));
+                }
 
                 List<string> sharesCodeList = quotes.Select(e => e.SharesCode).ToList();
 
                 var kline1min = (from item in db.t_shares_securitybarsdata_1min
-                                 where sharesCodeList.Contains(item.SharesCode) && item.GroupTimeKey > minDateAbs * 10000 && (item.GroupTimeKey % 10000) <= timeAbs
+                                 where sharesCodeList.Contains(item.SharesCode) && item.GroupTimeKey > (minDateAbs * 10000) && item.GroupTimeKey< (maxDateAbs * 10000) && (item.GroupTimeKey % 10000) <= timeAbs
                                  group item by new { item.Market, item.SharesCode, Date = item.GroupTimeKey / 10000 } into g
                                  select new
                                  {
@@ -1794,7 +1799,7 @@ namespace MealTicket_Web_Handler
                                         ConditionId = g.Key.ci == null ? 0 : g.Key.ci.Id,
                                         AccountId = g.Key.item.AccountId,
                                         TodayDealAmount = g.Key.item6.TotalAmount,
-                                        TodayDealCount = g.Key.item6.TotalCount,
+                                        TodayDealCount = g.Key.item6.TotalCount*100,
                                         TotalCapital=g.Key.item3.TotalCapital,
                                         CirculatingCapital=g.Key.item3.CirculatingCapital
                                     }).ToList();
@@ -1854,12 +1859,17 @@ namespace MealTicket_Web_Handler
                 DateTime timeNow = DateTime.Now;
                 long dateAbs = int.Parse(timeNow.ToString("yyyyMMdd"));
                 long minDateAbs = int.Parse(Helper.GetLastTradeDate(-9, 0, 0, Singleton.Instance.QuotesDaysShow).ToString("yyyyMMdd"));
-                long timeAbs = int.Parse(timeNow.ToString("HHmm"));
+                long maxDateAbs = int.Parse(Helper.GetLastTradeDate(-9, 0, 0).ToString("yyyyMMdd"));
+                long timeAbs = 9999;
+                if (dateAbs == maxDateAbs)
+                {
+                    timeAbs = int.Parse(timeNow.ToString("HHmm"));
+                }
 
                 List<string> sharesCodeList = resultList.Select(e => e.SharesCode).ToList();
 
                 var kline1min = (from item in db.t_shares_securitybarsdata_1min
-                                 where sharesCodeList.Contains(item.SharesCode) && item.GroupTimeKey > minDateAbs * 10000 && (item.GroupTimeKey % 10000) <= timeAbs
+                                 where sharesCodeList.Contains(item.SharesCode) && item.GroupTimeKey > (minDateAbs * 10000) && item.GroupTimeKey< (maxDateAbs*10000) && (item.GroupTimeKey % 10000) <= timeAbs
                                  group item by new { item.Market, item.SharesCode, Date = item.GroupTimeKey / 10000 } into g
                                  select new
                                  {
@@ -2033,7 +2043,7 @@ namespace MealTicket_Web_Handler
                             ConditionId = ai == null ? 0 : ai.Id,
                             ConditionStatus = ai == null ? 0 : ai.Status,
                             TodayDealAmount = item4.TotalAmount,
-                            TodayDealCount = item4.TotalCount,
+                            TodayDealCount = item4.TotalCount*100,
                             TotalCapital=item3.TotalCapital,
                             CirculatingCapital=item3.CirculatingCapital,
                         }).ToList();
@@ -2134,12 +2144,17 @@ namespace MealTicket_Web_Handler
                 DateTime timeNow = DateTime.Now;
                 long dateAbs = int.Parse(timeNow.ToString("yyyyMMdd"));
                 long minDateAbs = int.Parse(Helper.GetLastTradeDate(-9, 0, 0, Singleton.Instance.QuotesDaysShow).ToString("yyyyMMdd"));
-                long timeAbs = int.Parse(timeNow.ToString("HHmm"));
+                long maxDateAbs = int.Parse(Helper.GetLastTradeDate(-9, 0, 0).ToString("yyyyMMdd"));
+                long timeAbs = 9999;
+                if (dateAbs == maxDateAbs)
+                {
+                    timeAbs = int.Parse(timeNow.ToString("HHmm"));
+                }
 
                 List<string> sharesCodeList = resultList.Select(e => e.SharesCode).ToList();
 
                 var kline1min = (from item in db.t_shares_securitybarsdata_1min
-                                 where sharesCodeList.Contains(item.SharesCode) && item.GroupTimeKey > minDateAbs * 10000 && (item.GroupTimeKey % 10000) <= timeAbs
+                                 where sharesCodeList.Contains(item.SharesCode) && item.GroupTimeKey > (minDateAbs * 10000) && item.GroupTimeKey<(maxDateAbs*10000) && (item.GroupTimeKey % 10000) <= timeAbs
                                  group item by new { item.Market, item.SharesCode, Date = item.GroupTimeKey / 10000 } into g
                                  select new
                                  {
@@ -19885,7 +19900,7 @@ select @buyId;";
                                     ConditionId = item.ai == null ? 0 : item.ai.Id,
                                     ConditionStatus = item.ai == null ? 0 : item.ai.Status,
                                     TodayDealAmount = item.item4.TotalAmount,
-                                    TodayDealCount = item.item4.TotalCount,
+                                    TodayDealCount = item.item4.TotalCount*100,
                                     CirculatingCapital = item.item3.CirculatingCapital,
                                     DaysAvgDealAmount = item.item5.DaysAvgDealAmount,
                                     DaysAvgDealCount = item.item5.DaysAvgDealCount,

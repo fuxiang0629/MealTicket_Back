@@ -2231,6 +2231,13 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ResetSharesPlateBaseDate(MealTicket_Admin_Handler.Model.ResetSharesPlateBaseDateRequest)">
+            <summary>
+            重置板块基准日
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetSharesPlateSharesList(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
             <summary>
             获取板块股票列表
@@ -3676,6 +3683,27 @@
         <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.BatchResetSharesKLine(MealTicket_Admin_Handler.Model.BatchResetSharesKLineRequest)">
             <summary>
             批量重置K线数据
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetSharesPlateKlineList(MealTicket_Admin_Handler.Model.GetSharesPlateKlineListRequest)">
+            <summary>
+            获取板块k线数据
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ResetSharesPlateKLine(MealTicket_Admin_Handler.Model.ResetSharesPlateKLineRequest)">
+            <summary>
+            重置板块K线数据
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.BatchResetSharesPlateKLine(MealTicket_Admin_Handler.Model.BatchResetSharesPlateKLineRequest)">
+            <summary>
+            批量重置板块K线数据
             </summary>
             <param name="request"></param>
             <returns></returns>

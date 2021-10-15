@@ -351,6 +351,7 @@
     <Compile Include="Model\TradeCenter\BatchDeleteConditiontradeTemplateBuyOtherPar.cs" />
     <Compile Include="Model\TradeCenter\BatchDeleteConditiontradeTemplateBuyOtherPar_Other.cs" />
     <Compile Include="Model\TradeCenter\BatchDeleteSharesMonitor.cs" />
+    <Compile Include="Model\TradeCenter\BatchResetSharesPlateKLine.cs" />
     <Compile Include="Model\TradeCenter\BatchUpdateMonitorTrendPar.cs" />
     <Compile Include="Model\TradeCenter\GetConditiontradeTemplateBuyAutoGroupList.cs" />
     <Compile Include="Model\TradeCenter\GetConditiontradeTemplateBuyAutoList.cs" />
@@ -370,6 +371,7 @@
     <Compile Include="Model\TradeCenter\GetSharesMonitorTrendList.cs" />
     <Compile Include="Model\TradeCenter\GetSharesMonitorTrendPar.cs" />
     <Compile Include="Model\TradeCenter\GetSharesMonitorTrendRelList.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesPlateKlineList.cs" />
     <Compile Include="Model\TradeCenter\GetSharesPlateList.cs" />
     <Compile Include="Model\TradeCenter\GetSharesPlateTypeCount.cs" />
     <Compile Include="Model\TradeCenter\GetSharesPriorityAutoBuyList.cs" />
@@ -431,6 +433,8 @@
     <Compile Include="Model\TradeCenter\ModifySharesTradeTimeGroup.cs" />
     <Compile Include="Model\TradeCenter\ModifyTodayShares.cs" />
     <Compile Include="Model\TradeCenter\ResetSharesKLine.cs" />
+    <Compile Include="Model\TradeCenter\ResetSharesPlateBaseDate.cs" />
+    <Compile Include="Model\TradeCenter\ResetSharesPlateKLine.cs" />
     <Compile Include="Model\TradeCenter\ResetSharesTransactionData.cs" />
     <Compile Include="Model\TradeCenter\SuspensionInfo.cs" />
     <Compile Include="Model\TradeCenter\UpdateBrokerAccountPositionInfo.cs" />

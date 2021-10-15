@@ -117,7 +117,7 @@ namespace MealTicket_Web_Handler.Model
                 {
                     return 0;
                 }
-                return (int)(DaysAvgDealCount * 100 * 1.0 / CirculatingCapital * 10000);
+                return (int)(DaysAvgDealCount * 1.0 / CirculatingCapital * 10000);
             }
         }
 
@@ -142,7 +142,7 @@ namespace MealTicket_Web_Handler.Model
                 {
                     return 0;
                 }
-                return (int)(PreDayDealCount * 1.0 / CirculatingCapital * 100 * 10000);
+                return (int)(PreDayDealCount * 1.0 / CirculatingCapital * 10000);
             }
         }
 
@@ -167,7 +167,7 @@ namespace MealTicket_Web_Handler.Model
                 {
                     return 0;
                 }
-                return (int)(TodayDealCount * 100 * 1.0 / CirculatingCapital * 10000);
+                return (int)(TodayDealCount * 1.0 / CirculatingCapital * 10000);
             }
         }
 
@@ -207,7 +207,7 @@ namespace MealTicket_Web_Handler.Model
                 {
                     return 0;
                 }
-                return (int)(PreNowAvgDealCount * 100 * 1.0 / CirculatingCapital * 10000);
+                return (int)(PreNowAvgDealCount * 1.0 / CirculatingCapital * 10000);
             }
         }
 
@@ -232,7 +232,7 @@ namespace MealTicket_Web_Handler.Model
                 {
                     return 0;
                 }
-                return (int)(DaysNowAvgDealCount * 100 * 1.0 / CirculatingCapital * 10000);
+                return (int)(DaysNowAvgDealCount * 1.0 / CirculatingCapital * 10000);
             }
         }
     }

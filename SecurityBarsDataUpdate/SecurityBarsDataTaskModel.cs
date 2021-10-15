@@ -105,6 +105,16 @@ namespace SecurityBarsDataUpdate
         /// 前一分钟成交额之和
         /// </summary>
         public long LastTradeAmount { get; set; }
+
+        /// <summary>
+        /// 板块Id
+        /// </summary>
+        public long PlateId { get; set; }
+
+        /// <summary>
+        /// 加权类型1不加权 2总股本加权
+        /// </summary>
+        public int WeightType { get; set; }
     }
 
     public class SecurityBarsDataTaskInfo
@@ -115,7 +125,7 @@ namespace SecurityBarsDataUpdate
         public string TaskGuid { get; set; }
 
         /// <summary>
-        /// 处理类型1当天实时数据 2历史补充数据
+        /// 处理类型1当天实时数据 2历史补充数据 3指数当天实时数据 4指数历史补充数据
         /// </summary>
         public int HandlerType { get; set; }
 
@@ -194,6 +204,16 @@ namespace SecurityBarsDataUpdate
         /// 前一分钟成交额之和
         /// </summary>
         public long LastTradeAmount { get; set; }
+
+        /// <summary>
+        /// 板块Id
+        /// </summary>
+        public long PlateId { get; set; }
+
+        /// <summary>
+        /// 加权类型1不加权 2总股本加权
+        /// </summary>
+        public int WeightType { get; set; }
     }
 
     public class MinutetimeData

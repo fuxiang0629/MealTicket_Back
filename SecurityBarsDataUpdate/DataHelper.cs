@@ -39,7 +39,7 @@ namespace SecurityBarsDataUpdate
         /// 获取K线数据
         /// </summary>
         /// <returns></returns>
-        public static Dictionary<int,SecurityBarsDataRes> TdxHq_GetSecurityBarsData(List<SecurityBarsDataParList> sharesList)
+        public static Dictionary<int,SecurityBarsDataRes> TdxHq_GetSecurityBarsData(List<SecurityBarsDataParList> sharesList,int handlerType)
         {
             ThreadMsgTemplate<SecurityBarsDataPar> data = new ThreadMsgTemplate<SecurityBarsDataPar>();
             data.Init();
@@ -51,6 +51,8 @@ namespace SecurityBarsDataUpdate
                     {
                         SecurityBarsGetCount= item.SecurityBarsGetCount,
                         DataType = item.DataType,
+                        PlateId=item2.PlateId,
+                        WeightType=item2.WeightType,
                         SharesCode =item2.SharesCode,
                         StartTimeKey=item2.StartTimeKey,
                         EndTimeKey=item2.EndTimeKey,
@@ -85,7 +87,7 @@ namespace SecurityBarsDataUpdate
                             }
 
                             bool isReconnectClient = false;
-                            var tempList = TdxHq_GetSecurityBarsData_byShares(hqClient, tempData,(TRANSACTION_DATA_STRING)ref_string, ref isReconnectClient, ref sResult, ref sErrInfo);
+                            var tempList = TdxHq_GetSecurityBarsData_byShares(hqClient, handlerType, tempData,(TRANSACTION_DATA_STRING)ref_string, ref isReconnectClient, ref sResult, ref sErrInfo);
 
                             if (isReconnectClient)
                             {
@@ -130,7 +132,7 @@ namespace SecurityBarsDataUpdate
         /// 获取某只股票K线数据
         /// </summary>
         /// <returns></returns>
-        private static List<SecurityBarsDataInfo> TdxHq_GetSecurityBarsData_byShares(int hqClient, SecurityBarsDataPar sharesData, TRANSACTION_DATA_STRING result_info, ref bool isReconnectClient, ref StringBuilder sResult,ref StringBuilder sErrInfo)
+        private static List<SecurityBarsDataInfo> TdxHq_GetSecurityBarsData_byShares(int hqClient,int handlerType, SecurityBarsDataPar sharesData, TRANSACTION_DATA_STRING result_info, ref bool isReconnectClient, ref StringBuilder sResult,ref StringBuilder sErrInfo)
         {
             int datatype = sharesData.DataType;
             if (!CheckDataType(datatype))
@@ -160,7 +162,17 @@ namespace SecurityBarsDataUpdate
                 nCount = (short)defaultGetCount;
                 sResult.Clear();
                 sErrInfo.Clear();
-                bool bRet = TradeX_M.TdxHq_GetSecurityBars(hqClient, category, (byte)sharesData.Market, sharesData.SharesCode, nStart, ref nCount, sResult, sErrInfo);
+
+                bool bRet = false;
+                if (handlerType == 1 || handlerType == 2)
+                {
+                    bRet = TradeX_M.TdxHq_GetSecurityBars(hqClient, category, (byte)sharesData.Market, sharesData.SharesCode, nStart, ref nCount, sResult, sErrInfo);
+                }
+                else
+                {
+                    bRet = TradeX_M.TdxHq_GetIndexBars(hqClient, category, (byte)sharesData.Market, sharesData.SharesCode, nStart, ref nCount, sResult, sErrInfo);
+                }
+
                 if (!bRet)
                 {
                     isReconnectClient = true;
@@ -226,6 +238,8 @@ namespace SecurityBarsDataUpdate
                                 GroupTimeKey = timeKey,
                                 TradeStock = Volume,
                                 TradeAmount = Turnover,
+                                PlateId= sharesData.PlateId,
+                                WeightType = sharesData.WeightType
                             };
                         }
                         catch (Exception ex)

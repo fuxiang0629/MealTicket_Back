@@ -1,0 +1,198 @@
+2021/10/10 14:57:43
+监听队列已链接
+
+
+2021/10/10 14:58:43
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 307
+
+2021/10/10 14:58:46
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 307
+
+2021/10/10 14:58:46
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 307
+
+2021/10/10 14:58:46
+时间解析有误,错误时间:20190426
+System.Exception: 获取周数据有误
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 353
+
+2021/10/10 14:58:47
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 307
+
+2021/10/10 14:58:47
+时间解析有误,错误时间:2019-04-26 15:00
+System.FormatException: 输入字符串的格式不正确。
+   在 System.Number.StringToNumber(String str, NumberStyles options, NumberBuffer& number, NumberFormatInfo info, Boolean parseDecimal)
+   在 System.Number.ParseInt32(String s, NumberStyles style, NumberFormatInfo info)
+   在 System.Int32.Parse(String s)
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 307
+
+2021/10/10 14:58:47
+时间解析有误,错误时间:20190426
+System.Exception: 获取季度据有误
+   在 SecurityBarsDataUpdate.DataHelper.ParseTime(Int32 dataType, String timeStr, DateTime& time, Int64& groupTimeKey) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\DataHelper.cs:行号 382
+
+2021/10/10 15:02:27
+监听队列已链接
+
+
+2021/10/10 15:12:04
+监听队列已链接
+
+
+2021/10/10 15:14:42
+监听队列已链接
+
+
+2021/10/10 15:20:51
+获取K线数据出错，原因：发送数据失败, 连接断开, 请重连服务器! errCode=10053
+
+
+2021/10/10 15:20:51
+获取K线数据出错，原因：发送数据失败, 连接断开, 请重连服务器! errCode=10053
+
+
+2021/10/10 15:20:55
+获取K线数据出错，原因：发送数据失败, 连接断开, 请重连服务器! errCode=10053
+
+
+2021/10/10 15:20:58
+获取K线数据出错，原因：发送数据失败, 连接断开, 请重连服务器! errCode=10053
+
+
+2021/10/10 15:21:00
+获取K线数据出错，原因：发送数据失败, 连接断开, 请重连服务器! errCode=10053
+
+
+2021/10/10 15:21:02
+获取K线数据出错，原因：发送数据失败, 连接断开, 请重连服务器! errCode=10053
+
+
+2021/10/10 15:21:09
+获取K线数据出错，原因：接收数据失败, 连接断开, 请重连服务器! errCode=10054
+
+
+2021/10/10 15:27:23
+监听队列已链接
+
+
+2021/10/10 15:30:40
+监听队列已链接
+
+
+2021/10/10 15:37:14
+监听队列已链接
+
+
+2021/10/10 15:54:34
+获取K线数据出错，原因：发送数据失败, 连接断开, 请重连服务器! errCode=10053
+
+
+2021/10/10 15:54:34
+获取K线数据出错，原因：发送数据失败, 连接断开, 请重连服务器! errCode=10053
+
+
+2021/10/10 15:54:34
+获取K线数据出错，原因：接收数据失败, 连接断开, 请重连服务器! errCode=10054
+
+
+2021/10/10 15:54:34
+获取K线数据出错，原因：接收数据失败, 连接断开, 请重连服务器! errCode=10054
+
+
+2021/10/10 15:54:34
+获取K线数据出错，原因：接收数据失败, 连接断开, 请重连服务器! errCode=10054
+
+
+2021/10/10 15:54:34
+获取K线数据出错，原因：接收数据失败, 连接断开, 请重连服务器! errCode=10054
+
+
+2021/10/10 15:54:34
+获取K线数据出错，原因：接收数据失败, 连接断开, 请重连服务器! errCode=10054
+
+
+2021/10/10 15:54:34
+获取K线数据出错，原因：接收数据失败, 连接断开, 请重连服务器! errCode=10054
+
+
+2021/10/10 15:54:35
+获取K线数据出错，原因：接收数据失败, 连接断开, 请重连服务器! errCode=10054
+
+
+2021/10/10 15:54:35
+获取K线数据出错，原因：接收数据失败, 连接断开, 请重连服务器! errCode=10054
+
+
+2021/10/10 16:14:36
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/10/10 16:14:36
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/10/10 16:14:36
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/10/10 16:14:36
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/10/10 16:14:36
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/10/10 16:14:36
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/10/10 16:14:36
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/10/10 16:14:40
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/10/10 16:14:40
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/10/10 16:14:40
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/10/10 16:14:40
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/10/10 16:14:40
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+
+2021/10/10 16:14:40
+获取K线数据出错，原因：接收数据超时, 连接断开, 请重连服务器!
+
+

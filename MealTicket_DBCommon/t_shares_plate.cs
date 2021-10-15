@@ -30,5 +30,6 @@ namespace MealTicket_DBCommon
         public int ChooseStatus { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
+        public Nullable<System.DateTime> BaseDate { get; set; }
     }
 }

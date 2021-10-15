@@ -967,6 +967,24 @@ namespace MealTicket_Admin_APIService.controller
         }
 
         /// <summary>
+        /// 重置板块基准日
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/plate/basedate/reset"), HttpPost]
+        [Description("重置板块基准日")]
+        public object ResetSharesPlateBaseDate(ResetSharesPlateBaseDateRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ResetSharesPlateBaseDate(request);
+            return null;
+        }
+
+        /// <summary>
         /// 获取板块股票列表
         /// </summary>
         /// <param name="request"></param>
@@ -5751,6 +5769,58 @@ namespace MealTicket_Admin_APIService.controller
                 throw new WebApiException(400, "参数错误");
             }
             tradeCenterHandler.BatchResetSharesKLine(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取板块k线数据
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/plate/kline/list"), HttpPost]
+        [Description("获取板块k线数据")]
+        public PageRes<SharesKlineInfo> GetSharesPlateKlineList(GetSharesPlateKlineListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            return tradeCenterHandler.GetSharesPlateKlineList(request);
+        }
+
+        /// <summary>
+        /// 重置板块K线数据
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/plate/kline/reset"), HttpPost]
+        [Description("重置板块K线数据")]
+        public object ResetSharesPlateKLine(ResetSharesPlateKLineRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.ResetSharesPlateKLine(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量重置板块K线数据
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("shares/plate/kline/reset/batch"), HttpPost]
+        [Description("批量重置板块K线数据")]
+        public object BatchResetSharesPlateKLine(BatchResetSharesPlateKLineRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            tradeCenterHandler.BatchResetSharesPlateKLine(request);
             return null;
         }
     }

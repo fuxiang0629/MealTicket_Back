@@ -180,6 +180,35 @@ namespace MealTicket_Handler.RunnerHandler
         }
 
         /// <summary>
+        /// 获取交易日日期
+        /// </summary>
+        /// <returns></returns>
+        public static void GetTradeDate(ref DateTime date,int day = 0)
+        {
+            int absDay = Math.Abs(day);
+            int i = 0;
+            while (true)
+            {
+                if (CheckTradeDate(date))
+                {
+                    if (i >= absDay)
+                    {
+                        break;
+                    }
+                    i++;
+                }
+                if (day > 0)
+                {
+                    date = date.AddDays(1);
+                }
+                else
+                {
+                    date = date.AddDays(-1);
+                }
+            }
+        }
+
+        /// <summary>
         /// 检查是否交易日期
         /// </summary>
         /// <returns></returns>
