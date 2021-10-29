@@ -183,7 +183,9 @@
     <Compile Include="Model\FrontAccount\AddFrontAccountSharesAllot.cs" />
     <Compile Include="Model\FrontAccount\AddFrontAccountSharesTradeAbnormalRecordDetails.cs" />
     <Compile Include="Model\FrontAccount\AddFrontAccountTradeParSetting.cs" />
+    <Compile Include="Model\FrontAccount\ApplySharesToBuyBySys.cs" />
     <Compile Include="Model\FrontAccount\BatchAddFrontAccountSeat.cs" />
+    <Compile Include="Model\FrontAccount\BatchDeleteFrontAccountOptional.cs" />
     <Compile Include="Model\FrontAccount\BatchUpdateOptionalMonitorTrendPar.cs" />
     <Compile Include="Model\FrontAccount\BindFrontAccountOptionalSeat.cs" />
     <Compile Include="Model\FrontAccount\CancelFrontAccountSharesTrade.cs" />

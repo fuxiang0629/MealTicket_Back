@@ -22,5 +22,6 @@ namespace MealTicket_DBCommon
         public int Status { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
+        public bool IsSpecial { get; set; }
     }
 }

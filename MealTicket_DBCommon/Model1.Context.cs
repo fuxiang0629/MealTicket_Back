@@ -309,6 +309,7 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_shares_plate_rel_snapshot> t_shares_plate_rel_snapshot { get; set; }
         public virtual DbSet<t_shares_plate_rel_snapshot_catalogue> t_shares_plate_rel_snapshot_catalogue { get; set; }
         public virtual DbSet<t_shares_plate_rel_snapshot_instructions> t_shares_plate_rel_snapshot_instructions { get; set; }
+        public virtual DbSet<v_plate_new> v_plate_new { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)
@@ -1623,6 +1624,43 @@ namespace MealTicket_DBCommon
                 new ObjectParameter("mainAccountId", typeof(long));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_ApplyTradeCancel", accountIdParameter, entrustIdParameter, mainAccountIdParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_ApplyTradeBuy_sys(Nullable<long> accountId, Nullable<int> market, string sharesCode, Nullable<int> dealCount, Nullable<long> dealPrice, Nullable<int> realFundMultiple, Nullable<System.DateTime> createTime, string tradeAccountCode, ObjectParameter errorCode, ObjectParameter errorMessage)
+        {
+            var accountIdParameter = accountId.HasValue ?
+                new ObjectParameter("accountId", accountId) :
+                new ObjectParameter("accountId", typeof(long));
+    
+            var marketParameter = market.HasValue ?
+                new ObjectParameter("market", market) :
+                new ObjectParameter("market", typeof(int));
+    
+            var sharesCodeParameter = sharesCode != null ?
+                new ObjectParameter("sharesCode", sharesCode) :
+                new ObjectParameter("sharesCode", typeof(string));
+    
+            var dealCountParameter = dealCount.HasValue ?
+                new ObjectParameter("dealCount", dealCount) :
+                new ObjectParameter("dealCount", typeof(int));
+    
+            var dealPriceParameter = dealPrice.HasValue ?
+                new ObjectParameter("dealPrice", dealPrice) :
+                new ObjectParameter("dealPrice", typeof(long));
+    
+            var realFundMultipleParameter = realFundMultiple.HasValue ?
+                new ObjectParameter("realFundMultiple", realFundMultiple) :
+                new ObjectParameter("realFundMultiple", typeof(int));
+    
+            var createTimeParameter = createTime.HasValue ?
+                new ObjectParameter("createTime", createTime) :
+                new ObjectParameter("createTime", typeof(System.DateTime));
+    
+            var tradeAccountCodeParameter = tradeAccountCode != null ?
+                new ObjectParameter("tradeAccountCode", tradeAccountCode) :
+                new ObjectParameter("tradeAccountCode", typeof(string));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_ApplyTradeBuy_sys", accountIdParameter, marketParameter, sharesCodeParameter, dealCountParameter, dealPriceParameter, realFundMultipleParameter, createTimeParameter, tradeAccountCodeParameter, errorCode, errorMessage);
         }
     }
 }

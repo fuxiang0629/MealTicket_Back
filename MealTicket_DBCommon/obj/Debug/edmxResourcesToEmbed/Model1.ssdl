@@ -40,6 +40,7 @@
     <Property Name="ForbidStatus" Type="int" Nullable="false" />
     <Property Name="CashStatus" Type="int" Nullable="false" />
     <Property Name="MonitorStatus" Type="int" Nullable="false" />
+    <Property Name="TrendStatus" Type="int" Nullable="false" />
     <Property Name="MultipleChangeStatus" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="QrCodeUrl" Type="varchar" MaxLength="200" />
@@ -2531,6 +2532,8 @@
     <Property Name="Priority" Type="int" Nullable="false" />
     <Property Name="Range" Type="int" Nullable="false" />
     <Property Name="NearLimitRange" Type="int" Nullable="false" />
+    <Property Name="HighOpenRange" Type="int" Nullable="false" />
+    <Property Name="LowOpenRange" Type="int" Nullable="false" />
     <Property Name="FundMultiple" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
@@ -2654,6 +2657,7 @@
     <Property Name="SharesInfo" Type="nvarchar" MaxLength="61" StoreGeneratedPattern="Computed" />
     <Property Name="DataType" Type="int" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="IsSpecial" Type="bit" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
@@ -2725,6 +2729,8 @@
     <Property Name="NoWeightMarket" Type="int" Nullable="false" />
     <Property Name="NoWeightSharesCode" Type="varchar" MaxLength="50" />
     <Property Name="BaseDate" Type="datetime" />
+    <Property Name="BaseDateWeightPrice" Type="bigint" />
+    <Property Name="BaseDateNoWeightPrice" Type="bigint" />
     <Property Name="BaseStatus" Type="int" Nullable="false" />
     <Property Name="ChooseStatus" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
@@ -2756,7 +2762,7 @@
     <Key>
       <PropertyRef Name="Id" />
     </Key>
-    <Property Name="Id" Type="bigint" Nullable="false" />
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="Date" Type="datetime" Nullable="false" />
     <Property Name="PlateId" Type="bigint" Nullable="false" />
     <Property Name="Market" Type="int" Nullable="false" />
@@ -4160,6 +4166,50 @@
     <Property Name="BaseDate" Type="datetime" />
   </EntityType>
   <!--生成过程中发现错误:
+警告 6002: 表/视图“meal_ticket.dbo.v_plate_new”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
+  <EntityType Name="v_plate_new">
+    <Key>
+      <PropertyRef Name="PlateId" />
+      <PropertyRef Name="PlateName" />
+      <PropertyRef Name="PlateType" />
+      <PropertyRef Name="CalType" />
+      <PropertyRef Name="ChooseStatus" />
+      <PropertyRef Name="BaseStatus" />
+      <PropertyRef Name="Status" />
+      <PropertyRef Name="SharesType" />
+      <PropertyRef Name="LimitSharesMarket" />
+      <PropertyRef Name="CreateTime" />
+      <PropertyRef Name="WeightMarket" />
+      <PropertyRef Name="NoWeightMarket" />
+      <PropertyRef Name="SharesMarket" />
+    </Key>
+    <Property Name="PlateId" Type="bigint" Nullable="false" />
+    <Property Name="PlateName" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="PlateType" Type="int" Nullable="false" />
+    <Property Name="CalType" Type="int" Nullable="false" />
+    <Property Name="ChooseStatus" Type="int" Nullable="false" />
+    <Property Name="BaseStatus" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="SharesType" Type="int" Nullable="false" />
+    <Property Name="LimitSharesMarket" Type="int" Nullable="false" />
+    <Property Name="LimitSharesCode" Type="varchar" MaxLength="50" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="WeightMarket" Type="int" Nullable="false" />
+    <Property Name="WeightSharesCode" Type="varchar" MaxLength="50" />
+    <Property Name="NoWeightMarket" Type="int" Nullable="false" />
+    <Property Name="NoWeightSharesCode" Type="varchar" MaxLength="50" />
+    <Property Name="SharesCount" Type="int" />
+    <Property Name="RiseLimitCount" Type="int" />
+    <Property Name="DownLimitCount" Type="int" />
+    <Property Name="WeightRiseIndex" Type="bigint" />
+    <Property Name="RiseIndex" Type="bigint" />
+    <Property Name="WeightRiseRate" Type="bigint" />
+    <Property Name="RiseRate" Type="bigint" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="50" />
+    <Property Name="SharesMarket" Type="int" Nullable="false" />
+    <Property Name="BaseDate" Type="datetime" />
+  </EntityType>
+  <!--生成过程中发现错误:
 警告 6002: 表/视图“meal_ticket.dbo.v_plate_shares”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
   <EntityType Name="v_plate_shares">
     <Key>
@@ -4571,6 +4621,18 @@
     <Parameter Name="errorCode" Type="int" Mode="InOut" />
     <Parameter Name="errorMessage" Type="nvarchar" Mode="InOut" />
     <Parameter Name="buyId" Type="bigint" Mode="InOut" />
+  </Function>
+  <Function Name="P_ApplyTradeBuy_sys" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+    <Parameter Name="accountId" Type="bigint" Mode="In" />
+    <Parameter Name="market" Type="int" Mode="In" />
+    <Parameter Name="sharesCode" Type="varchar" Mode="In" />
+    <Parameter Name="dealCount" Type="int" Mode="In" />
+    <Parameter Name="dealPrice" Type="bigint" Mode="In" />
+    <Parameter Name="realFundMultiple" Type="int" Mode="In" />
+    <Parameter Name="createTime" Type="datetime" Mode="In" />
+    <Parameter Name="tradeAccountCode" Type="varchar" Mode="In" />
+    <Parameter Name="errorCode" Type="int" Mode="InOut" />
+    <Parameter Name="errorMessage" Type="nvarchar" Mode="InOut" />
   </Function>
   <Function Name="P_ApplyTradeCancel" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="accountId" Type="bigint" Mode="In" />
@@ -5172,6 +5234,35 @@
     [v_plate].[SharesMarket] AS [SharesMarket], 
     [v_plate].[BaseDate] AS [BaseDate]
     FROM [dbo].[v_plate] AS [v_plate]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="v_plate_new" EntityType="Self.v_plate_new" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [v_plate_new].[PlateId] AS [PlateId], 
+    [v_plate_new].[PlateName] AS [PlateName], 
+    [v_plate_new].[PlateType] AS [PlateType], 
+    [v_plate_new].[CalType] AS [CalType], 
+    [v_plate_new].[ChooseStatus] AS [ChooseStatus], 
+    [v_plate_new].[BaseStatus] AS [BaseStatus], 
+    [v_plate_new].[Status] AS [Status], 
+    [v_plate_new].[SharesType] AS [SharesType], 
+    [v_plate_new].[LimitSharesMarket] AS [LimitSharesMarket], 
+    [v_plate_new].[LimitSharesCode] AS [LimitSharesCode], 
+    [v_plate_new].[CreateTime] AS [CreateTime], 
+    [v_plate_new].[WeightMarket] AS [WeightMarket], 
+    [v_plate_new].[WeightSharesCode] AS [WeightSharesCode], 
+    [v_plate_new].[NoWeightMarket] AS [NoWeightMarket], 
+    [v_plate_new].[NoWeightSharesCode] AS [NoWeightSharesCode], 
+    [v_plate_new].[SharesCount] AS [SharesCount], 
+    [v_plate_new].[RiseLimitCount] AS [RiseLimitCount], 
+    [v_plate_new].[DownLimitCount] AS [DownLimitCount], 
+    [v_plate_new].[WeightRiseIndex] AS [WeightRiseIndex], 
+    [v_plate_new].[RiseIndex] AS [RiseIndex], 
+    [v_plate_new].[WeightRiseRate] AS [WeightRiseRate], 
+    [v_plate_new].[RiseRate] AS [RiseRate], 
+    [v_plate_new].[SharesCode] AS [SharesCode], 
+    [v_plate_new].[SharesMarket] AS [SharesMarket], 
+    [v_plate_new].[BaseDate] AS [BaseDate]
+    FROM [dbo].[v_plate_new] AS [v_plate_new]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="v_plate_shares" EntityType="Self.v_plate_shares" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 

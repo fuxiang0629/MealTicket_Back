@@ -47,5 +47,15 @@ namespace FXCommon.Common
         /// 今日触发次数
         /// </summary>
         public int TriCountToday { get; set; }
+
+        /// <summary>
+        /// 标记
+        /// </summary>
+        public string Mark { get; set; }
+
+        /// <summary>
+        /// 昨日涨跌停时间
+        /// </summary>
+        public DateTime? YesLimitTime { get; set; }
     }
 }

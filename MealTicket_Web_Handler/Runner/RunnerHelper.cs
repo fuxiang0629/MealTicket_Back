@@ -403,11 +403,11 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
             {
                 return;
             }
-            Logger.WriteFileLog(sb.ToString(), null);
-            Logger.WriteFileLog("===开始自动买入判断（总）===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            //Logger.WriteFileLog(sb.ToString(), null);
+            //Logger.WriteFileLog("===开始自动买入判断（总）===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             TodoTradeAutoBuy(disResult);
-            Logger.WriteFileLog("===结束自动买入判断（总）===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
-            Logger.WriteFileLog("==================================", null);
+            //Logger.WriteFileLog("===结束自动买入判断（总）===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            //Logger.WriteFileLog("==================================", null);
         }
 
         private static void TodoTradeAutoBuy(List<TradeAutoBuyCondition> disResult, bool isSyncro = false)
@@ -478,9 +478,9 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
             var list = Singleton.Instance.GetSyncroList();
             if (list.Count() > 0)
             {
-                Logger.WriteFileLog("===开始同步买入判断===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                //Logger.WriteFileLog("===开始同步买入判断===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                 TodoTradeAutoBuy(list, true);
-                Logger.WriteFileLog("===结束同步买入判断===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                //Logger.WriteFileLog("===结束同步买入判断===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             }
         }
 
@@ -489,7 +489,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
             DateTime timeNow = DateTime.Now;
             using (var db = new meal_ticketEntities())
             {
-                Logger.WriteFileLog("1"+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"),null);
+                //Logger.WriteFileLog("1"+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"),null);
                 string sql = "";
                 StringBuilder logRecord = new StringBuilder();//判断日志
                 logRecord.AppendLine("===" + item.AccountId + "开始执行条件" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
@@ -599,7 +599,7 @@ where t.[Status]=1 and t1.[Status]=1 and t.BusinessStatus=0";
                     }
                 }
 
-                Logger.WriteFileLog("2" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                //Logger.WriteFileLog("2" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                 //判断板块限制
                 sql = string.Format("select top 1 ParValueJson from t_account_shares_buy_setting with(nolock) where AccountId={0} and [Type]=4", item.AccountId);
                 string ParValueJson = db.Database.SqlQuery<string>(sql).FirstOrDefault();
@@ -621,7 +621,7 @@ where t.Market={0} and t.SharesCode='{1}' and AccountId={2} and t2.[Status]=1 an
                     }
                 }
 
-                Logger.WriteFileLog("3" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                //Logger.WriteFileLog("3" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                 //判断是否存在持仓
                 if (item.IsHold)
                 {
@@ -1441,7 +1441,7 @@ where t.Market={0} and t.SharesCode='{1}' and AccountId={2} and t2.[Status]=1 an
                     }
                 }
 
-                Logger.WriteFileLog("4" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                //Logger.WriteFileLog("4" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                 if (isAuto && isTri)//自动买入且条件满足
                 {
                     try
@@ -1555,7 +1555,7 @@ inner
                         }
 
 
-                        Logger.WriteFileLog("5" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                        //Logger.WriteFileLog("5" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                         //查询跟投人员
                         var followList = (from x in db.t_account_follow_rel
                                           join x2 in db.t_account_baseinfo on x.FollowAccountId equals x2.Id
@@ -1598,7 +1598,7 @@ inner
                             IsFollow=false
                         });
 
-                        Logger.WriteFileLog("6" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                        //Logger.WriteFileLog("6" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                         var buyRate = EntrustAmount * 1.0 / (Deposit - RemainDeposit);//仓位占比
                         foreach (var account in FollowList)
                         {
@@ -1625,7 +1625,7 @@ inner
                             });
                         }
 
-                        Logger.WriteFileLog("7" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                        //Logger.WriteFileLog("7" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                         SqlParameter[] parameter = new SqlParameter[8];
                         //市场
                         var marketPar = new SqlParameter("@market", SqlDbType.Int);
@@ -1688,7 +1688,7 @@ inner
 
                         var resultList=db.Database.SqlQuery<ApplyTradeBuyInfo>("exec P_ApplyTradeBuy_Batch @market,@sharesCode,@entrustPrice,@mainAccountId,@autoBuyDetailsId,@applyTradeBuyInfo,@errorCode out,@errorMessage out", parameter).ToList();
 
-                        Logger.WriteFileLog("8" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                        //Logger.WriteFileLog("8" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                         if ((int)parameter[6].Value != 0)
                         {
                             throw new WebApiException(400, parameter[7].Value.ToString());
@@ -1737,7 +1737,7 @@ inner
                         Logger.WriteFileLog("自动买入这里出错", ex);
                     }
 
-                    Logger.WriteFileLog("9" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                    //Logger.WriteFileLog("9" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                     if (!isSyncro)
                     {
                         TradeAutoBuyCondition conditionInfo = new TradeAutoBuyCondition();

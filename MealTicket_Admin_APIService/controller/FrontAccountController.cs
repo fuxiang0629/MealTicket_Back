@@ -151,6 +151,24 @@ namespace MealTicket_Admin_APIService.controller
         }
 
         /// <summary>
+        /// 修改前端账户走势权限状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("trend/status/modify")]
+        [Description("修改前端账户走势权限状态")]
+        public object ModifyFrontAccountTrendStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            frontAccountHandler.ModifyFrontAccountTrendStatus(request);
+            return null;
+        }
+
+        /// <summary>
         /// 修改前端账户提现状态
         /// </summary>
         /// <param name="request"></param>
@@ -748,6 +766,24 @@ namespace MealTicket_Admin_APIService.controller
                 throw new WebApiException(400, "参数错误");
             }
             frontAccountHandler.DeleteFrontAccountOptional(request);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量删除用户自选股
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("optional/delete/batch"), HttpPost]
+        [Description("批量删除用户自选股")]
+        [CheckUserPowerFilter]
+        public object BatchDeleteFrontAccountOptional(BatchDeleteFrontAccountOptionalRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            frontAccountHandler.BatchDeleteFrontAccountOptional(request);
             return null;
         }
 
@@ -1936,6 +1972,23 @@ namespace MealTicket_Admin_APIService.controller
                 throw new WebApiException(400, "参数错误");
             }
             return frontAccountHandler.GetFrontAccountSharesAllotDetails(request);
+        }
+
+        /// <summary>
+        /// 系统开仓
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/tobuy/sys"), HttpPost]
+        [Description("系统开仓")]
+        public object ApplySharesToBuyBySys(ApplySharesToBuyBySysRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            frontAccountHandler.ApplySharesToBuyBySys(request);
+            return null;
         }
         #endregion
     }

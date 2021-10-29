@@ -6340,10 +6340,10 @@ namespace MealTicket_Web_APIService.controller
         [Description("获取板块涨跌幅排行")]
         [Route("plate/riserate/rank/list"), HttpPost]
         [CheckUserLoginFilter]
-        public List<SharesPlateInfo> GetPlateRiseRateRankList()
+        public List<SharesPlateInfo> GetPlateRiseRateRankList(DetailsRequest request)
         {
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
-            return trendHandler.GetPlateRiseRateRankList(basedata);
+            return trendHandler.GetPlateRiseRateRankList(request,basedata);
         }
 
         #region====自动选票====

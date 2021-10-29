@@ -1,5 +1,6 @@
 ﻿using FXCommon.Common;
 using MealTicket_DBCommon;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -16,69 +17,109 @@ namespace MealTicket_Handler.SecurityBarsData
     /// </summary>
     public class New_IndexSecurityBarsDataTask
     {
+        /// <summary>
+        /// 板块缓存
+        /// </summary>
+        private Dictionary<long, SharesPlateInfo_Session> _SharesPlateSessionDic = new Dictionary<long, SharesPlateInfo_Session>();
+
+        public void LoadPlateSession()
+        {
+            _SharesPlateSessionDic = Singleton.Instance._SharesPlateSession.GetSessionData().ToDictionary(k => k.PlateId, v => v);
+            foreach (var x in Singleton.Instance._SharesPlateSession.GetSessionData())
+            {
+                if (x.BaseDate != null && x.BaseDate == DateTime.Now.AddDays(-1).Date && x.BaseDateWeightPrice == 0 && x.BaseDateNoWeightPrice == 0)
+                {
+                    using (var db = new meal_ticketEntities())
+                    {
+                        var plate = (from item in db.t_shares_plate
+                                     where item.Id == x.PlateId
+                                     select item).FirstOrDefault();
+                        if (plate == null)
+                        {
+                            continue;
+                        }
+
+                        string date = x.BaseDate.Value.ToString("yyyy-MM-dd");
+                        var quoteDate = from item in db.t_shares_quotes_date
+                                        where item.Date == date
+                                        select item;
+                        var snapshot = (from item in db.t_shares_plate_rel_snapshot
+                                        join item2 in quoteDate on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                                        join item3 in db.t_shares_markettime on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode }
+                                        where item.PlateId == x.PlateId && item.Date == x.BaseDate
+                                        select new { item, item2, item3 }).ToList();
+
+                        long BaseDateWeightPrice = 0;
+                        long BaseDateNoWeightPrice = 0;
+                        if (snapshot.Count() > 0)
+                        {
+                            BaseDateWeightPrice = (long)snapshot.Average(e => e.item2.PresentPrice * e.item3.TotalCapital);
+                            BaseDateNoWeightPrice = (long)snapshot.Average(e => e.item2.PresentPrice);
+                        }
+
+                        plate.BaseDate = x.BaseDate;
+                        plate.BaseDateWeightPrice = BaseDateWeightPrice;
+                        plate.BaseDateNoWeightPrice = BaseDateNoWeightPrice;
+                        db.SaveChanges();
+                    }
+                }
+            }
+        }
+
         #region===板块计算结果缓存===
         /// <summary>
-        /// 板块Id,K线类型=>计算结果
+        /// 板块Id*100+K线类型=>计算结果
+        /// GroupTimeKey*10+WeightType
         /// </summary>
-        private Dictionary<string, List<PlateKlineSession>> PlateKlineSession = new Dictionary<string, List<PlateKlineSession>>();
-        private ReaderWriterLock PlateKlineSessionLock = new ReaderWriterLock();
+        private Dictionary<long,Dictionary<long, PlateKlineSession>> PlateKlineSession = new Dictionary<long, Dictionary<long, PlateKlineSession>>();
 
         /// <summary>
         /// 获取所有键
         /// </summary>
         /// <returns></returns>
-        private List<string> GetPlateKlineSessionAllKey() 
+        private List<long> GetPlateKlineSessionAllKey() 
         {
-            List<string> temp = new List<string>();
-            PlateKlineSessionLock.AcquireReaderLock(Timeout.Infinite);
-            temp = PlateKlineSession.Keys.ToList();
-            PlateKlineSessionLock.ReleaseReaderLock();
+            List<long> temp = PlateKlineSession.Keys.ToList();
             return temp;
         }
 
         /// <summary>
-        /// 移除
+        /// 重置是否更新
         /// </summary>
-        private void RemovePlateKlineSession(Dictionary<string, long> data) 
+        private void ResetPlateKlineSessionIsUpdate() 
         {
-            PlateKlineSessionLock.AcquireWriterLock(-1);
-            foreach (var item in data)
+            foreach (var item in PlateKlineSession)
             {
-                if (!PlateKlineSession.ContainsKey(item.Key))
+                foreach (var item2 in item.Value)
                 {
-                    continue;
+                    if (item2.Value.IsUpdate == true)
+                    {
+                        item2.Value.IsUpdate = false;
+                    }
                 }
-                var tempData = PlateKlineSession[item.Key];
-                tempData = tempData.Where(e => e.GroupTimeKey >= item.Value).ToList();
-                PlateKlineSession[item.Key] = tempData;
             }
-            PlateKlineSessionLock.ReleaseWriterLock();
         }
 
         /// <summary>
         /// 获取板块计算结果缓存
         /// </summary>
         /// <returns></returns>
-        private List<PlateKlineSession> GetPlateKlineSession(string key) 
+        private Dictionary<long, PlateKlineSession> GetPlateKlineSession(long key) 
         {
-            List<PlateKlineSession> temp = new List<PlateKlineSession>();
-            PlateKlineSessionLock.AcquireReaderLock(Timeout.Infinite);
+            Dictionary<long, PlateKlineSession> temp = new Dictionary<long, PlateKlineSession>();
             if (PlateKlineSession.ContainsKey(key))
             {
                 temp = PlateKlineSession[key];
             }
-            PlateKlineSessionLock.ReleaseReaderLock();
             return temp;
         }
 
         /// <summary>
         /// 设置板块计算结果缓存
         /// </summary>
-        private void SetPlateKlineSession(string key, List<PlateKlineSession> data)
+        private void SetPlateKlineSession(long key,Dictionary<long, PlateKlineSession> data)
         {
-            PlateKlineSessionLock.AcquireWriterLock(-1);
             PlateKlineSession[key] = data;
-            PlateKlineSessionLock.ReleaseWriterLock();
         }
 
         /// <summary>
@@ -87,7 +128,9 @@ namespace MealTicket_Handler.SecurityBarsData
         /// <returns></returns>
         public void LoadPlateKlineSession()
         {
+            Logger.WriteFileLog("===开始加载板块计算结果缓存===", null);
             List<int> dataTypeList = Singleton.Instance.SecurityBarsDataTypeList;
+            dataTypeList = dataTypeList.Where(e => e <= 7).ToList();
             Task[] taskArr = new Task[dataTypeList.Count];
 
             for (int i = 0; i < dataTypeList.Count; i++)
@@ -113,154 +156,124 @@ namespace MealTicket_Handler.SecurityBarsData
                         return;
                     }
 
-                    string sql = "";
-                    if (dataType == 2)
-                    {
-                        sql = string.Format(@"select t1.PlateId,t1.BaseDate,1 WeightType,t.GroupTimeKey,t.[Time],SUM(t.OpenedPrice)TotalOpenedPrice,SUM(t.ClosedPrice)TotalClosedPrice,SUM(t.PreClosePrice)TotalPreClosePrice,
-  SUM(t.YestodayClosedPrice)TotalYestodayClosedPrice,SUM(t.MinPrice)TotalMinPrice,SUM(t.MaxPrice)TotalMaxPrice,SUM(t.TradeStock)TotalTradeStock,SUM(t.TradeAmount)TotalTradeAmount,
-  SUM(t.LastTradeStock)TotalLastTradeStock,SUM(t.LastTradeAmount)TotalLastTradeAmount,count(*)CalCount
-  from t_shares_securitybarsdata_1min t
+                    string sql = string.Format(@"declare @date datetime,@groupTimeKey bigint;
+  set @date='{1}';
+  set @groupTimeKey={0};
+  select t1.PlateId,1 WeightType,t.GroupTimeKey,t.[Time],SUM(t.OpenedPrice)TotalOpenedPrice,SUM(t.ClosedPrice)TotalClosedPrice,SUM(t.PreClosePrice)TotalPreClosePrice,
+  {3}SUM(t.MinPrice)TotalMinPrice,SUM(t.MaxPrice)TotalMaxPrice,SUM(t.TradeStock)TotalTradeStock,SUM(t.TradeAmount)TotalTradeAmount,
+  SUM(t.LastTradeStock)TotalLastTradeStock,SUM(t.LastTradeAmount)TotalLastTradeAmount,count(*)CalCount,convert(bit,1) IsUpdate
+  from {2} t with(nolock)
   inner join
   (
-	  select t.PlateId,t.Market,t.SharesCode,isnull(t1.GroupTimeKey,{0})GroupTimeKey,t2.BaseDate
-	  from t_shares_plate_rel_snapshot t
+	  select t.PlateId,t.Market,t.SharesCode
+	  from t_shares_plate_rel_snapshot t with(nolock)
 	  inner join 
 	  (
-		  select * from t_shares_plate where BaseDate is not null and BaseDate<convert(varchar(10),getdate(),120)
+		  select * from t_shares_plate with(nolock) where BaseDate is not null and BaseDate<convert(varchar(10),getdate(),120)
 	  )
 	  t2 on t.PlateId=t2.Id
-	  left join  
-	  (
-		  select PlateId,GroupTimeKey 
-		  from t_shares_plate_securitybarsdata_1min
-		  where GroupTimeKey>{0} and IsLast=1
-	  )t1  on t.PlateId=t1.PlateId
-	  where t.[Date]='{1}'
-  )t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode and t.GroupTimeKey>=t1.GroupTimeKey
-  where t.GroupTimeKey>{0}
-  group by t.GroupTimeKey,t.[Time],t1.PlateId,t1.BaseDate
-  union all
-  select t1.PlateId,t1.BaseDate,2 WeightType,t.GroupTimeKey,t.[Time],SUM(t.OpenedPrice*t.TotalCapital)TotalOpenedPrice,SUM(t.ClosedPrice*t.TotalCapital)TotalClosedPrice,SUM(t.PreClosePrice*t.TotalCapital)TotalPreClosePrice,
-  SUM(t.YestodayClosedPrice*t.TotalCapital)TotalYestodayClosedPrice,SUM(t.MinPrice*t.TotalCapital)TotalMinPrice,SUM(t.MaxPrice*t.TotalCapital)TotalMaxPrice,SUM(t.TradeStock)TotalTradeStock,SUM(t.TradeAmount)TotalTradeAmount,
-  SUM(t.LastTradeStock)TotalLastTradeStock,SUM(t.LastTradeAmount)TotalLastTradeAmount,count(*)CalCount
-  from t_shares_securitybarsdata_1min t
+	  where t.[Date]=@date
+  )t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode
+  where t.GroupTimeKey>=@groupTimeKey
+  group by t.GroupTimeKey,t.[Time],t1.PlateId
+  union all 
+  select t1.PlateId,2 WeightType,t.GroupTimeKey,t.[Time],SUM(t.OpenedPrice*t.TotalCapital)TotalOpenedPrice,SUM(t.ClosedPrice*t.TotalCapital)TotalClosedPrice,SUM(t.PreClosePrice*t.TotalCapital)TotalPreClosePrice,
+  {4}SUM(t.MinPrice*t.TotalCapital)TotalMinPrice,SUM(t.MaxPrice*t.TotalCapital)TotalMaxPrice,SUM(t.TradeStock)TotalTradeStock,SUM(t.TradeAmount)TotalTradeAmount,
+  SUM(t.LastTradeStock)TotalLastTradeStock,SUM(t.LastTradeAmount)TotalLastTradeAmount,count(*)CalCount,convert(bit,1) IsUpdate
+  from {2} t with(nolock)
   inner join
   (
-	  select t.PlateId,t.Market,t.SharesCode,isnull(t1.GroupTimeKey,{0})GroupTimeKey,t2.BaseDate
-	  from t_shares_plate_rel_snapshot t
+	  select t.PlateId,t.Market,t.SharesCode
+	  from t_shares_plate_rel_snapshot t with(nolock)
 	  inner join 
 	  (
-		  select * from t_shares_plate where BaseDate is not null and BaseDate<convert(varchar(10),getdate(),120)
+		  select * from t_shares_plate with(nolock) where BaseDate is not null and BaseDate<convert(varchar(10),getdate(),120)
 	  )
 	  t2 on t.PlateId=t2.Id
-	  left join  
-	  (
-		  select PlateId,GroupTimeKey 
-		  from t_shares_plate_securitybarsdata_1min
-		  where GroupTimeKey>{0} and IsLast=1
-	  )t1  on t.PlateId=t1.PlateId
-	  where t.[Date]='{1}'
-  )t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode and t.GroupTimeKey>=t1.GroupTimeKey
-  where t.GroupTimeKey>{0}
-  group by t.GroupTimeKey,t.[Time],t1.PlateId,t1.BaseDate", groupTimeKey, DateTime.Now.Date);
-                    }
-                    else
-                    {
-                        sql = string.Format(@"select t1.PlateId,t1.BaseDate,1 WeightType,t.GroupTimeKey,t.[Time],SUM(t.OpenedPrice)TotalOpenedPrice,SUM(t.ClosedPrice)TotalClosedPrice,SUM(t.PreClosePrice)TotalPreClosePrice,
-  convert(bigint,0) TotalYestodayClosedPrice,SUM(t.MinPrice)TotalMinPrice,SUM(t.MaxPrice)TotalMaxPrice,SUM(t.TradeStock)TotalTradeStock,SUM(t.TradeAmount)TotalTradeAmount,
-  convert(bigint,0)TotalLastTradeStock,convert(bigint,0)TotalLastTradeAmount,count(*)CalCount
-  from {2} t
-  inner join
-  (
-	  select t.PlateId,t.Market,t.SharesCode,isnull(t1.GroupTimeKey,{0})GroupTimeKey,t2.BaseDate
-	  from t_shares_plate_rel_snapshot t
-	  inner join 
-	  (
-		  select * from t_shares_plate where BaseDate is not null and BaseDate<convert(varchar(10),getdate(),120)
-	  )
-	  t2 on t.PlateId=t2.Id
-	  left join  
-	  (
-		  select PlateId,GroupTimeKey 
-		  from {3}
-		  where GroupTimeKey>{0} and IsLast=1
-	  )t1  on t.PlateId=t1.PlateId
-	  where t.[Date]='{1}'
-  )t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode and t.GroupTimeKey>=t1.GroupTimeKey
-  where t.GroupTimeKey>{0}
-  group by t.GroupTimeKey,t.[Time],t1.PlateId,t1.BaseDate
-  union all
-  select t1.PlateId,t1.BaseDate,2 WeightType,t.GroupTimeKey,t.[Time],SUM(t.OpenedPrice*t.TotalCapital)TotalOpenedPrice,SUM(t.ClosedPrice*t.TotalCapital)TotalClosedPrice,SUM(t.PreClosePrice*t.TotalCapital)TotalPreClosePrice,
-  convert(bigint,0)TotalYestodayClosedPrice,SUM(t.MinPrice*t.TotalCapital)TotalMinPrice,SUM(t.MaxPrice*t.TotalCapital)TotalMaxPrice,SUM(t.TradeStock)TotalTradeStock,SUM(t.TradeAmount)TotalTradeAmount,
-  convert(bigint,0)TotalLastTradeStock,convert(bigint,0)TotalLastTradeAmount,count(*)CalCount
-  from {2} t
-  inner join
-  (
-	  select t.PlateId,t.Market,t.SharesCode,isnull(t1.GroupTimeKey,{0})GroupTimeKey,t2.BaseDate
-	  from t_shares_plate_rel_snapshot t
-	  inner join 
-	  (
-		  select * from t_shares_plate where BaseDate is not null and BaseDate<convert(varchar(10),getdate(),120)
-	  )
-	  t2 on t.PlateId=t2.Id
-	  left join  
-	  (
-		  select PlateId,GroupTimeKey 
-		  from {3}
-		  where GroupTimeKey>{0} and IsLast=1
-	  )t1  on t.PlateId=t1.PlateId
-	  where t.[Date]='{1}'
-  )t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode and t.GroupTimeKey>=t1.GroupTimeKey
-  where t.GroupTimeKey>{0}
-  group by t.GroupTimeKey,t.[Time],t1.PlateId,t1.BaseDate", groupTimeKey,DateTime.Now.Date, tableName, plateTableName);
-                    }
-
+	  where t.[Date]=@date
+  )t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode
+  where t.GroupTimeKey>=@groupTimeKey
+  group by t.GroupTimeKey,t.[Time],t1.PlateId", groupTimeKey, DateTime.Now.Date, tableName, dataType == 2 ? "SUM(t.YestodayClosedPrice) TotalYestodayClosedPrice," : "", dataType == 2 ? "SUM(t.YestodayClosedPrice*t.TotalCapital) TotalYestodayClosedPrice," : "");
+               
                     using (var db = new meal_ticketEntities())
                     {
-                        var resultList = db.Database.SqlQuery<PlateKlineSession>(sql).ToList();
-                        var resultGroup = resultList.GroupBy(e => e.PlateId).ToDictionary(k => k.Key, v => v.ToList());
-                        foreach (var item in resultGroup)
+                        try
                         {
-                            SetPlateKlineSession(item.Key + "," + dataType, item.Value);
+                            db.Database.CommandTimeout = 600;
+                            var resultList = db.Database.SqlQuery<PlateKlineSession>(sql).ToList();
+                            var resultGroup = resultList.GroupBy(e => e.PlateId).ToDictionary(k => k.Key, v => v.ToList());
+                            foreach (var item in resultGroup)
+                            {
+                                SetPlateKlineSession(item.Key*100 + dataType, item.Value.ToDictionary(k=>k.GroupTimeKey*10+k.WeightType,v=>v));
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.WriteFileLog("计算结果缓存加载错误,datatype="+ dataType, ex);
+                            throw ex;
                         }
                     }
                 });
             }
             Task.WaitAll(taskArr);
+            Logger.WriteFileLog("===结束加载板块计算结果缓存===", null);
         }
         #endregion
 
         #region===今日板块股票快照缓存===
         /// <summary>
-        /// Market,SharesCode=>板块Id
+        /// PlateId*100+DataType=>股票最后一条k先数据
+        /// SharesCode*1000+Market*100+datatype
         /// </summary>
-        Dictionary<string,List<long>> SharesPlateSession=new Dictionary<string, List<long>>();
-        ReaderWriterLock SharesPlateSessionLock = new ReaderWriterLock();
+        Dictionary<long, Dictionary<long, SharesKlineData>> SharesByPlateSession = new Dictionary<long, Dictionary<long, SharesKlineData>>();
+
+        /// <summary>
+        /// 获取今日快照缓存(根据板块)
+        /// </summary>
+        /// <returns></returns>
+        private Dictionary<long, SharesKlineData> GetSharesByPlateSession(long key)
+        {
+            Dictionary<long, SharesKlineData> result = new Dictionary<long, SharesKlineData>();
+            if (SharesByPlateSession.ContainsKey(key))
+            {
+                result = SharesByPlateSession[key];
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// 设置今日快照缓存(根据板块)
+        /// </summary>
+        private void SetSharesByPlateSession(long key, Dictionary<long, SharesKlineData> sharesInfo)
+        {
+            SharesByPlateSession[key] = sharesInfo;
+        }
+
+        /// <summary>
+        /// SharesCode*10+Market=>板块Id
+        /// </summary>
+        Dictionary<long, List<long>> SharesPlateSession=new Dictionary<long, List<long>>();
 
         /// <summary>
         /// 获取今日快照缓存
         /// </summary>
         /// <returns></returns>
-        private List<long> GetSharesPlateSession(string key)
+        private List<long> GetSharesPlateSession(long key)
         {
             List<long> plateId=new List<long>();
-            SharesPlateSessionLock.AcquireReaderLock(Timeout.Infinite);
             if (SharesPlateSession.ContainsKey(key))
             {
                 plateId = SharesPlateSession[key];
             }
-            SharesPlateSessionLock.ReleaseReaderLock();
             return plateId;
         }
 
         /// <summary>
         /// 设置今日快照缓存
         /// </summary>
-        private void SetSharesPlateSession(string key, List<long> plateId)
+        private void SetSharesPlateSession(long key, List<long> plateId)
         {
-            SharesPlateSessionLock.AcquireWriterLock(-1);
             SharesPlateSession[key] = plateId;
-            SharesPlateSessionLock.ReleaseWriterLock();
         }
 
         /// <summary>
@@ -272,13 +285,32 @@ namespace MealTicket_Handler.SecurityBarsData
             DateTime dateNow = DateTime.Now.Date;
             using (var db = new meal_ticketEntities())
             {
+                db.Database.CommandTimeout = 600;
                 var list = (from item in db.t_shares_plate_rel_snapshot
                             where item.Date == dateNow
                             group item by new { item.Market, item.SharesCode } into g
                             select g).ToList();
                 foreach (var item in list)
                 {
-                    SetSharesPlateSession(item.Key.Market+","+item.Key.SharesCode,item.Select(e=>e.PlateId).ToList());
+                    SetSharesPlateSession(long.Parse(item.Key.SharesCode) * 10 + item.Key.Market, item.Select(e => e.PlateId).ToList());
+                }
+                var list2 = (from item in db.t_shares_plate_rel_snapshot
+                            where item.Date == dateNow
+                            group item by item.PlateId into g
+                            select g).ToList();
+                List<int> dataTypeList = Singleton.Instance.SecurityBarsDataTypeList;
+                foreach (var item in list2)
+                {
+                    foreach (int dataType in dataTypeList)
+                    {
+                        Dictionary<long, SharesKlineData> dic = new Dictionary<long, SharesKlineData>();
+                        foreach (var share in item)
+                        {
+                            long key = long.Parse(share.SharesCode) * 1000 + share.Market * 100 + dataType;
+                            dic.Add(key, GetSharesKlineLastSession(key));
+                        }
+                        SetSharesByPlateSession(item.Key * 100 + dataType, dic);
+                    }
                 }
             }
         }
@@ -294,6 +326,7 @@ namespace MealTicket_Handler.SecurityBarsData
         /// <returns></returns>
         public void UpdateTodayPlateRelSnapshot()
         {
+            Logger.WriteFileLog("===开始当天板块内股票快照缓存===", null);
             DateTime dateNow = DateTime.Now.Date;
             if (dateNow <= PlateRelSnapshotUpdateLastTime)
             {
@@ -322,10 +355,10 @@ namespace MealTicket_Handler.SecurityBarsData
 insert into t_shares_plate_rel_snapshot
 ([Date], PlateId, Market, SharesCode)
 select '{0}',t.PlateId,t.Market,t.SharesCode
-from t_shares_plate_rel t
+from t_shares_plate_rel t with(nolock)
 inner join 
 (
-	select Market,SharesCode from t_shares_markettime
+	select Market,SharesCode from t_shares_markettime with(nolock)
 	where MarketTime is not null and MarketTime<@marketTime
 ) t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode", dateNow);
                     db.Database.ExecuteSqlCommand(sql);
@@ -341,40 +374,36 @@ inner join
                     tran.Rollback();
                 }
             }
+            Logger.WriteFileLog("===结束当天板块内股票快照缓存===", null);
         }
         #endregion
 
         #region===股票最后一条数据缓存===
         /// <summary>
-        /// 股票Market,SharesCode,DataType=>K线信息
+        /// 股票SharesCode*1000+Market*100+DataType=>K线信息
         /// </summary>
-        Dictionary<string, SharesKlineData> SharesKlineLastSession = new Dictionary<string, SharesKlineData>();
-        ReaderWriterLock SharesKlineLastSessionLock = new ReaderWriterLock();
+        Dictionary<long, SharesKlineData> SharesKlineLastSession = new Dictionary<long, SharesKlineData>();
 
         /// <summary>
         /// 获取股票最后一条数据缓存
         /// </summary>
         /// <returns></returns>
-        public SharesKlineData GetSharesKlineLastSession(string key)
+        public SharesKlineData GetSharesKlineLastSession(long key)
         {
             SharesKlineData temp = null;
-            SharesKlineLastSessionLock.AcquireReaderLock(Timeout.Infinite);
             if (SharesKlineLastSession.ContainsKey(key))
             {
                 temp = SharesKlineLastSession[key];
             }
-            SharesKlineLastSessionLock.ReleaseReaderLock();
             return temp;
         }
 
         /// <summary>
         /// 设置股票最后一条数据缓存
         /// </summary>
-        public void SetSharesKlineLastSession(string key, SharesKlineData data)
+        public void SetSharesKlineLastSession(long key, SharesKlineData data)
         {
-            SharesKlineLastSessionLock.AcquireWriterLock(-1);
             SharesKlineLastSession[key] = data;
-            SharesKlineLastSessionLock.ReleaseWriterLock();
         }
 
         /// <summary>
@@ -382,6 +411,7 @@ inner join
         /// </summary>
         public void LoadSecurityBarsLastData()
         {
+            Logger.WriteFileLog("===开始初始化最后一条数据缓存===", null);
             List<int> dataTypeList = Singleton.Instance.SecurityBarsDataTypeList;
             int taskCount = dataTypeList.Count();
             Task[] taskArr = new Task[taskCount];
@@ -407,89 +437,41 @@ inner join
                         db.Database.CommandTimeout = 600;
                         if (dataType == 2)
                         {
-                            string sql = string.Format(@" select Market,SharesCode,GroupTimeKey,PreClosePrice,LastTradeStock,LastTradeAmount,ClosedPrice,TradeStock,MaxPrice,MinPrice,OpenedPrice,
-  Time,TotalCapital,Tradable,TradeAmount,YestodayClosedPrice
-  from t_shares_securitybarsdata_1min with(nolock) where GroupTimeKey >= {0} and IsLast=1", groupTimeKey);
+                            string sql = @"select t.Market,t.SharesCode,t.GroupTimeKey,t.PreClosePrice,t.LastTradeStock,t.LastTradeAmount,t.ClosedPrice,t.TradeStock,t.MaxPrice,t.MinPrice,t.OpenedPrice,
+  t.[Time],t.TotalCapital,t.Tradable,t.TradeAmount,t.YestodayClosedPrice 
+from t_shares_securitybarsdata_1min t with(nolock)
+inner join 
+(
+	select Market,SharesCode,Max(GroupTimeKey)GroupTimeKey
+	from t_shares_securitybarsdata_1min with(nolock)
+	where [Time]<convert(varchar(10),dateadd(DAY,1,getdate()),120)
+	group by Market,SharesCode
+)t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode and t.GroupTimeKey=t1.GroupTimeKey";
                             lastData = db.Database.SqlQuery<SharesKlineData>(sql).ToList();
                         }
                         else
                         {
-                            string sql = string.Format(@"select Market,SharesCode,GroupTimeKey,PreClosePrice,LastTradeStock,LastTradeAmount,ClosedPrice,TradeStock,MaxPrice,MinPrice,OpenedPrice,
-  Time,TotalCapital,Tradable,TradeAmount,convert(bigint,0) YestodayClosedPrice
-  from {0} with(nolock) where GroupTimeKey >= {1} and IsLast=1", tableName, groupTimeKey);
+                            string sql = string.Format(@"select t.Market,t.SharesCode,t.GroupTimeKey,t.PreClosePrice,t.LastTradeStock,t.LastTradeAmount,t.ClosedPrice,t.TradeStock,t.MaxPrice,t.MinPrice,t.OpenedPrice,
+  t.[Time],t.TotalCapital,t.Tradable,t.TradeAmount
+from {0} t with(nolock)
+inner join 
+(
+	select Market,SharesCode,Max(GroupTimeKey)GroupTimeKey
+	from {0} with(nolock)
+	where [Time]<convert(varchar(10),dateadd(DAY,1,getdate()),120)
+	group by Market,SharesCode
+)t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode and t.GroupTimeKey=t1.GroupTimeKey", tableName);
                             lastData = db.Database.SqlQuery<SharesKlineData>(sql).ToList();
                         }
                     }
                     foreach (var item in lastData)
                     {
-                        SetSharesKlineLastSession(item.Market + "," + item.SharesCode + "," + dataType, item);
+                        SetSharesKlineLastSession(item.SharesCodeNum * 1000 + item.Market * 100 + dataType, item);
                     }
                 });
             }
             Task.WaitAll(taskArr);
-        }
-        #endregion
-
-        #region===板块基准日信息缓存===
-        /// <summary>
-        /// 板块Id=>结果信息
-        /// </summary>
-        private Dictionary<long, PlateBaseDataSession> PlateBaseDateSession = new Dictionary<long, PlateBaseDataSession>();
-        private ReaderWriterLock PlateBaseDateSessionLock = new ReaderWriterLock();
-
-        /// <summary>
-        /// 获取板块计算结果缓存
-        /// </summary>
-        /// <returns></returns>
-        private PlateBaseDataSession GetPlateBaseDateSession(long plateId)
-        {
-            PlateBaseDataSession temp = null;
-            PlateBaseDateSessionLock.AcquireReaderLock(Timeout.Infinite);
-            if (PlateBaseDateSession.ContainsKey(plateId))
-            {
-                temp = PlateBaseDateSession[plateId];
-            }
-            PlateBaseDateSessionLock.ReleaseReaderLock();
-            return temp;
-        }
-
-        /// <summary>
-        /// 设置板块计算结果缓存
-        /// </summary>
-        private void SetPlateBaseDateSession(long plateId, PlateBaseDataSession data)
-        {
-            PlateBaseDateSessionLock.AcquireWriterLock(-1);
-            PlateBaseDateSession[plateId] = data;
-            PlateBaseDateSessionLock.ReleaseWriterLock();
-        }
-
-        /// <summary>
-        /// 更新板块计算结果缓存
-        /// </summary>
-        /// <returns></returns>
-        public void LoadPlateBaseDateSession()
-        {
-            using (var db = new meal_ticketEntities())
-            {
-                string sql = @"select t.PlateId,t.BaseDate,AVG(t2.ClosedPrice*isnull(t4.TotalCapital,1)) WeightPrice,AVG(t2.ClosedPrice) NoWeightPrice,
-	  AVG(t3.ClosedPrice*isnull(t4.TotalCapital,1)) CurrWeightPrice,AVG(t3.ClosedPrice) CurrNoWeightPrice
-	  from
-	  (
-		  select Id PlateId,BaseDate
-		  from t_shares_plate
-		  where BaseDate is not null and BaseDate<convert(varchar(10),getdate(),120)
-	  )t
-	  inner join t_shares_plate_rel_snapshot t1 on t.PlateId=t1.PlateId and t1.[Date]=t.BaseDate
-	  inner join t_shares_quotes_date t2 on t1.Market=t2.Market and t1.SharesCode=t2.SharesCode and t1.[Date]=t2.[Date]
-	  inner join t_shares_quotes_date t3 on t1.Market=t2.Market and t1.SharesCode=t2.SharesCode and t3.[Date]=dbo.f_getTradeDate(convert(varchar(10),getdate(),120),-1)
-	  left join t_shares_markettime t4 on t1.Market=t4.Market and t1.SharesCode=t4.SharesCode
-	  group by t.PlateId,t.BaseDate";
-                var result=db.Database.SqlQuery<PlateBaseDataSession>(sql).ToList();
-                foreach (var item in result)
-                {
-                    SetPlateBaseDateSession(item.PlateId, item);
-                }
-            }
+            Logger.WriteFileLog("===结束初始化最后一条数据缓存===", null);
         }
         #endregion
 
@@ -499,9 +481,19 @@ inner join
         private ThreadMsgTemplate<SharesKlineDataContain> SharesKlineQueue;
 
         /// <summary>
-        /// 日志
+        /// k线计算线程
         /// </summary>
         public Thread KlineThread;
+
+        /// <summary>
+        /// 每天初始化等待队列
+        /// </summary>
+        private ThreadMsgTemplate<int> DailyInitWaitQueue;
+
+        /// <summary>
+        /// 每天初始化线程
+        /// </summary>
+        public Thread DailyInitThread;
 
         /// <summary>
         /// 初始化
@@ -510,18 +502,86 @@ inner join
         {
             SharesKlineQueue = new ThreadMsgTemplate<SharesKlineDataContain>();
             SharesKlineQueue.Init();
+            DailyInitWaitQueue = new ThreadMsgTemplate<int>();
+            DailyInitWaitQueue.Init();
 
+            DoBusiness();
+            DoTask();
+        }
+
+        /// <summary>
+        /// 每天任务
+        /// </summary>
+        private void DoTask() 
+        {
+            DailyInitThread = new Thread(()=>
+            { 
+                DateTime TaskSuccessLastTime = DateTime.Parse("1990-01-01");
+                while (true)
+                {
+                    try 
+                    {
+                        int obj = 0;
+                        if (DailyInitWaitQueue.WaitMessage(ref obj, 600000))
+                        {
+                            break;
+                        }
+                        TimeSpan spanNow = TimeSpan.Parse(DateTime.Now.ToString("HH:mm:ss"));
+                        if (spanNow < TimeSpan.Parse("00:30:00") || spanNow > TimeSpan.Parse("05:30:00"))
+                        {
+                            continue;
+                        }
+                        if (DateTime.Now.Date <= TaskSuccessLastTime)
+                        {
+                            continue;
+                        }
+                        LoadPlateSession();
+                        UpdateTodayPlateRelSnapshot();
+                        LoadPlateKlineSession();
+                        TaskSuccessLastTime = DateTime.Now;
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteFileLog("每天任务意外出错,继续执行", ex);
+                    }
+                }
+            });
+            DailyInitThread.Start();
+        }
+
+        /// <summary>
+        /// 业务处理
+        /// </summary>
+        private void DoBusiness()
+        {
             KlineThread = new Thread(() =>
             {
                 while (true)
                 {
-                    SharesKlineDataContain data = new SharesKlineDataContain();
-                    SharesKlineQueue.WaitMessage(ref data);
-                    if (data == null)
+                    try
                     {
-                        break;
+                        SharesKlineDataContain data = new SharesKlineDataContain();
+                        SharesKlineQueue.WaitMessage(ref data);
+                        if (data == null)
+                        {
+                            break;
+                        }
+                        Logger.WriteFileLog("===1.收到数据,数据类型:" + data.DataType + "，开始处理,总数量" + data.SharesKlineData.Count() + "===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+
+                        ToHandler(data);
+
+                        Logger.WriteFileLog("===2.处理完成，开始导入===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                        InsertToDatabase();
+                        Logger.WriteFileLog("===3.导入完成===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                        Logger.WriteFileLog("============================", null);
+                        Logger.WriteFileLog("============================", null);
+                        Logger.WriteFileLog("============================", null);
+                        Logger.WriteFileLog("============================", null);
                     }
-                    ToHandler(data);
+                    catch (Exception ex)
+                    {
+                        Logger.WriteFileLog("业务处理意外出错,继续执行", ex);
+                    }
                 }
             });
             KlineThread.Start();
@@ -530,31 +590,33 @@ inner join
         /// <summary>
         /// 处理数据
         /// </summary>
-        private void ToHandler(SharesKlineDataContain data) 
+        private void ToHandler(SharesKlineDataContain data)
         {
             foreach (var item in data.SharesKlineData)
             {
                 //2查询原最后一条股票数据缓存
-                var lastSharesData = GetSharesKlineLastSession(item.Market + "," + item.SharesCode + "," + data.DataType);
+                long key = item.SharesCodeNum * 1000 + item.Market * 100 + data.DataType;
+                var lastSharesData = GetSharesKlineLastSession(key);
                 //设置股票最后一调数据缓存
-                SetSharesKlineLastSession(item.Market + "," + item.SharesCode + "," + data.DataType, item);
+                SetSharesKlineLastSession(key, item);
 
                 //日K以上不需要计算
-                if (data.DataType > 7)
-                {
-                    continue;
-                }
+                //if (data.DataType > 7)
+                //{
+                //    continue;
+                //}
                 //1.查询股票所属板块
                 List<long> plateIdArr = new List<long>();
-                var _sharesPlateSession = GetSharesPlateSession(item.Market + "," + item.SharesCode);
-                if (_sharesPlateSession.Count()<=0)
+                plateIdArr = GetSharesPlateSession(item.SharesCodeNum * 10 + item.Market);
+                if (plateIdArr.Count()<=0)
                 {
                     continue;
                 }
+
                 //3.板块循环
                 foreach (var plateId in plateIdArr)
                 {
-                    CalPlateKlineResult(item,plateId,data.DataType,lastSharesData);
+                    CalPlateKlineResult(item, plateId, data.DataType, lastSharesData);
                 }
             }
         }
@@ -562,20 +624,19 @@ inner join
         /// <summary>
         /// 计算板块k线结果
         /// </summary>
-        private void CalPlateKlineResult(SharesKlineData data,long plateId,int dataType,SharesKlineData lastSharesData) 
+        private void CalPlateKlineResult(SharesKlineData data,long plateId,int dataType,SharesKlineData lastSharesData)
         {
-            //1.查询原板块计算结果
-            var calResult = GetPlateKlineSession(plateId + "," + dataType);
-            //2.判断当前数据在原结果中是否存在
-            var sourceResult = calResult.Where(e =>e.GroupTimeKey == data.GroupTimeKey).ToList();
             if (lastSharesData != null && lastSharesData.GroupTimeKey > data.GroupTimeKey)
             {
                 return;
             }
-
-            var plate = (from item in Singleton.Instance._SharesPlateSession.GetSessionData()
-                         where item.PlateId == plateId
-                         select item).FirstOrDefault();
+            //1.查询原板块计算结果
+            var calResult = GetPlateKlineSession(plateId*100+dataType);
+            if (!_SharesPlateSessionDic.ContainsKey(plateId))
+            {
+                return;
+            }
+            var plate = _SharesPlateSessionDic[plateId];
             if (plate == null)
             {
                 return;
@@ -595,35 +656,66 @@ inner join
                 isCalNoWeight = false;
             }
 
+            var sharesDic = GetSharesByPlateSession(plateId * 100 + dataType);
+
             #region===不加权===
             if (isCalWeight)
             {
-                var noWeightResult = sourceResult.Where(e => e.WeightType == 1).FirstOrDefault();
-                if (noWeightResult == null)
+                if (!calResult.ContainsKey(data.GroupTimeKey*100+1))
                 {
-                    calResult.Add(new PlateKlineSession
+                    var temp = new PlateKlineSession
                     {
-                        PlateId= plateId,
-                        CalCount = 1,
-                        TotalLastTradeStock = data.LastTradeStock,
-                        TotalLastTradeAmount = data.LastTradeAmount,
-                        TotalTradeStock = data.TradeStock,
-                        TotalTradeAmount = data.TradeAmount,
+                        PlateId = plateId,
+                        CalCount = 0,
+                        TotalLastTradeStock = 0,
+                        TotalLastTradeAmount = 0,
+                        TotalTradeStock = 0,
+                        TotalTradeAmount = 0,
                         GroupTimeKey = data.GroupTimeKey,
                         Time = data.Time.Value,
-                        TotalClosedPrice = data.ClosedPrice,
-                        TotalMaxPrice = data.MaxPrice,
-                        TotalMinPrice = data.MinPrice,
-                        TotalOpenedPrice = data.OpenedPrice,
-                        TotalPreClosePrice = data.PreClosePrice,
-                        TotalYestodayClosedPrice = data.YestodayClosedPrice,
+                        TotalClosedPrice = 0,
+                        TotalMaxPrice = 0,
+                        TotalMinPrice = 0,
+                        TotalOpenedPrice = 0,
+                        TotalPreClosePrice = 0,
+                        TotalYestodayClosedPrice = 0,
                         WeightType = 1,
-                        BaseDate= plate.BaseDate
-                    });
+                        IsUpdate=true
+                    };
+                    //计算该板块所有股票
+                    foreach (var item in sharesDic)
+                    {
+                        SharesKlineData last = new SharesKlineData();
+                        if (item.Key == data.SharesCodeNum * 1000+ data.Market*100 +dataType)
+                        {
+                            last = lastSharesData;
+                        }
+                        else
+                        {
+                            last = item.Value;
+                        }
+                        if (last != null)
+                        {
+                            temp.CalCount = temp.CalCount + 1;
+                            temp.TotalLastTradeStock = temp.TotalLastTradeStock + last.LastTradeStock;
+                            temp.TotalLastTradeAmount = temp.TotalLastTradeAmount + last.LastTradeAmount;
+                            temp.TotalTradeStock = temp.TotalTradeStock + last.TradeStock;
+                            temp.TotalTradeAmount = temp.TotalTradeAmount + last.TradeAmount;
+                            temp.TotalClosedPrice = temp.TotalClosedPrice + last.ClosedPrice;
+                            temp.TotalMaxPrice = temp.TotalMaxPrice + last.MaxPrice;
+                            temp.TotalMinPrice = temp.TotalMinPrice + last.MinPrice;
+                            temp.TotalOpenedPrice = temp.TotalOpenedPrice + last.OpenedPrice;
+                            temp.TotalPreClosePrice = temp.TotalPreClosePrice + last.PreClosePrice;
+                            temp.TotalYestodayClosedPrice = temp.TotalYestodayClosedPrice + last.YestodayClosedPrice;
+                            temp.IsUpdate = true;
+                        }
+                    }
+                    calResult.Add(data.GroupTimeKey*100+1,temp);
                 }
                 else
                 {
-                    if (lastSharesData == null || lastSharesData.GroupTimeKey != data.GroupTimeKey)
+                    PlateKlineSession noWeightResult = calResult[data.GroupTimeKey * 100 + 1];
+                    if (lastSharesData == null)
                     {
                         noWeightResult.TotalClosedPrice = noWeightResult.TotalClosedPrice + data.ClosedPrice;
                         noWeightResult.TotalLastTradeAmount = noWeightResult.TotalLastTradeAmount + data.LastTradeAmount;
@@ -635,6 +727,8 @@ inner join
                         noWeightResult.TotalTradeAmount = noWeightResult.TotalTradeAmount + data.TradeAmount;
                         noWeightResult.TotalTradeStock = noWeightResult.TotalTradeStock + data.TradeStock;
                         noWeightResult.TotalYestodayClosedPrice = noWeightResult.TotalYestodayClosedPrice + data.YestodayClosedPrice;
+                        noWeightResult.CalCount = noWeightResult.CalCount + 1;
+                        noWeightResult.IsUpdate = true;
                     }
                     else
                     {
@@ -648,6 +742,7 @@ inner join
                         noWeightResult.TotalTradeAmount = noWeightResult.TotalTradeAmount + data.TradeAmount - lastSharesData.TradeAmount;
                         noWeightResult.TotalTradeStock = noWeightResult.TotalTradeStock + data.TradeStock - lastSharesData.TradeStock;
                         noWeightResult.TotalYestodayClosedPrice = noWeightResult.TotalYestodayClosedPrice + data.YestodayClosedPrice - lastSharesData.YestodayClosedPrice;
+                        noWeightResult.IsUpdate = true;
                     }
                 }
             }
@@ -656,32 +751,61 @@ inner join
             #region===加权===
             if (isCalNoWeight)
             {
-                var weightResult = sourceResult.Where(e => e.WeightType == 2).FirstOrDefault();
-                if (weightResult == null)
+                if (!calResult.ContainsKey(data.GroupTimeKey*100+2))
                 {
-                    calResult.Add(new PlateKlineSession
+                    var temp = new PlateKlineSession
                     {
                         PlateId = plateId,
-                        CalCount = 1,
-                        TotalLastTradeStock = data.LastTradeStock,
-                        TotalLastTradeAmount = data.LastTradeAmount,
-                        TotalTradeStock = data.TradeStock,
-                        TotalTradeAmount = data.TradeAmount,
+                        CalCount = 0,
+                        TotalLastTradeStock = 0,
+                        TotalLastTradeAmount = 0,
+                        TotalTradeStock = 0,
+                        TotalTradeAmount = 0,
                         GroupTimeKey = data.GroupTimeKey,
                         Time = data.Time.Value,
-                        TotalClosedPrice = data.ClosedPrice * data.TotalCapital,
-                        TotalMaxPrice = data.MaxPrice * data.TotalCapital,
-                        TotalMinPrice = data.MinPrice * data.TotalCapital,
-                        TotalOpenedPrice = data.OpenedPrice * data.TotalCapital,
-                        TotalPreClosePrice = data.PreClosePrice * data.TotalCapital,
-                        TotalYestodayClosedPrice = data.YestodayClosedPrice * data.TotalCapital,
+                        TotalClosedPrice = 0,
+                        TotalMaxPrice = 0,
+                        TotalMinPrice = 0,
+                        TotalOpenedPrice = 0,
+                        TotalPreClosePrice = 0,
+                        TotalYestodayClosedPrice = 0,
                         WeightType = 2,
-                        BaseDate = plate.BaseDate
-                    });
+                        IsUpdate=true
+                    };
+                    //计算该板块所有股票
+                    foreach (var item in sharesDic)
+                    {
+                        SharesKlineData last = new SharesKlineData();
+                        if (item.Key == data.SharesCodeNum * 1000 + data.Market * 100 + dataType)
+                        {
+                            last = lastSharesData;
+                        }
+                        else
+                        {
+                            last = item.Value;
+                        }
+                        if (last != null)
+                        {
+                            temp.CalCount = temp.CalCount + 1;
+                            temp.TotalLastTradeStock = temp.TotalLastTradeStock + last.LastTradeStock;
+                            temp.TotalLastTradeAmount = temp.TotalLastTradeAmount + last.LastTradeAmount;
+                            temp.TotalTradeStock = temp.TotalTradeStock + last.TradeStock;
+                            temp.TotalTradeAmount = temp.TotalTradeAmount + last.TradeAmount;
+                            temp.TotalClosedPrice = temp.TotalClosedPrice + last.ClosedPrice * last.TotalCapital;
+                            temp.TotalMaxPrice = temp.TotalMaxPrice + last.MaxPrice * last.TotalCapital;
+                            temp.TotalMinPrice = temp.TotalMinPrice + last.MinPrice * last.TotalCapital;
+                            temp.TotalOpenedPrice = temp.TotalOpenedPrice + last.OpenedPrice * last.TotalCapital;
+                            temp.TotalPreClosePrice = temp.TotalPreClosePrice + last.PreClosePrice * last.TotalCapital;
+                            temp.TotalYestodayClosedPrice = temp.TotalYestodayClosedPrice + last.YestodayClosedPrice * last.TotalCapital;
+                            temp.IsUpdate = true;
+                        }
+                    }
+                    calResult.Add(data.GroupTimeKey*100+2, temp);
                 }
                 else
                 {
-                    if (lastSharesData == null || lastSharesData.GroupTimeKey != data.GroupTimeKey)
+                    var weightResult = calResult[data.GroupTimeKey * 100 + 2];
+                    if (lastSharesData == null)
                     {
                         weightResult.TotalClosedPrice = weightResult.TotalClosedPrice + data.ClosedPrice * data.TotalCapital;
                         weightResult.TotalLastTradeAmount = weightResult.TotalLastTradeAmount + data.LastTradeAmount;
@@ -693,6 +817,8 @@ inner join
                         weightResult.TotalTradeAmount = weightResult.TotalTradeAmount + data.TradeAmount;
                         weightResult.TotalTradeStock = weightResult.TotalTradeStock + data.TradeStock;
                         weightResult.TotalYestodayClosedPrice = weightResult.TotalYestodayClosedPrice + data.YestodayClosedPrice * data.TotalCapital;
+                        weightResult.CalCount = weightResult.CalCount + 1;
+                        weightResult.IsUpdate = true;
                     }
                     else
                     {
@@ -706,13 +832,14 @@ inner join
                         weightResult.TotalTradeAmount = weightResult.TotalTradeAmount + data.TradeAmount - lastSharesData.TradeAmount;
                         weightResult.TotalTradeStock = weightResult.TotalTradeStock + data.TradeStock - lastSharesData.TradeStock;
                         weightResult.TotalYestodayClosedPrice = weightResult.TotalYestodayClosedPrice + data.YestodayClosedPrice * data.TotalCapital - lastSharesData.YestodayClosedPrice * data.TotalCapital;
+                        weightResult.IsUpdate = true;
                     }
                 }
             }
             #endregion
 
             //设置结果集
-            SetPlateKlineSession(plateId + "," + dataType, calResult);
+            SetPlateKlineSession(plateId * 100 + dataType, calResult);
         }
 
         /// <summary>
@@ -720,16 +847,15 @@ inner join
         /// </summary>
         private void InsertToDatabase() 
         {
-            List<string> allKeys = GetPlateKlineSessionAllKey();
-            Dictionary<string, long> tempDic = new Dictionary<string, long>();
+            List<long> allKeys = GetPlateKlineSessionAllKey();
 
             Dictionary<int, List<PlateKlineSession>> dataDic = new Dictionary<int, List<PlateKlineSession>>();
-            foreach (string key in allKeys)
+            foreach (long key in allKeys)
             {
                 //解析板块Id和K线类型
-                long plateId = long.Parse(key.Split(',')[0]);
-                int dataType = int.Parse(key.Split(',')[1]);
-                var tempData = GetPlateKlineSession(key);
+                long plateId = key / 100;
+                int dataType = (int)(key % 100);
+                var tempData = GetPlateKlineSession(key).Values.ToList();
 
                 List<PlateKlineSession> dataList = new List<PlateKlineSession>();
                 if (!dataDic.TryGetValue(dataType, out dataList))
@@ -741,12 +867,11 @@ inner join
                     dataList.AddRange(tempData);
                     dataDic[dataType] = dataList;
                 }
-                tempDic[key] = tempData.Max(e => e.GroupTimeKey);
             }
-
             if (BulkData(dataDic))
             {
-                RemovePlateKlineSession(tempDic);
+                //RemovePlateKlineSession(tempDic);
+                ResetPlateKlineSessionIsUpdate();
             }
         }
 
@@ -763,7 +888,20 @@ inner join
                 {
                     foreach (var item in dataDic)
                     {
-                        _bulkData(item.Key,item.Value, db);
+                        var tempValue = item.Value.Where(e => e.IsUpdate == true).ToList();
+                        if (tempValue.Count() <= 0)
+                        {
+                            continue;
+                        }
+                        try
+                        {
+                            _bulkData(item.Key, tempValue, db);
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.WriteFileLog("数据导入数据库失败,datatype=" + item.Key, ex);
+                            throw ex;
+                        }
                     }
                     tran.Commit();
 
@@ -783,6 +921,10 @@ inner join
         /// </summary>
         private void _bulkData(int dataType, List<PlateKlineSession> list, meal_ticketEntities db)
         {
+            list = (from item in list
+                    group item by new { item.PlateId, item.WeightType, item.GroupTimeKey } into g
+                    select g.FirstOrDefault()).ToList();
+
             DataTable table = new DataTable();
             table.Columns.Add("WeightType", typeof(int));
             table.Columns.Add("PlateId", typeof(long));
@@ -805,6 +947,8 @@ inner join
             table.Columns.Add("IsLast", typeof(bool));
             table.Columns.Add("LastModified", typeof(DateTime));
             table.Columns.Add("BaseDate", typeof(DateTime));
+            table.Columns.Add("BasePrice", typeof(long));
+            table.Columns.Add("CalCount", typeof(int));
 
             var weightList = list.Where(e => e.WeightType == 2).ToList();
             var noWeightList = list.Where(e => e.WeightType == 1).ToList();
@@ -818,16 +962,25 @@ inner join
             {
                 noWeightMaxGroupKey = noWeightList.Max(e => e.GroupTimeKey);
             }
+
             foreach (var item in list)
             {
-                var baseDateInfo=GetPlateBaseDateSession(item.PlateId);
+                var baseDateInfo = (from x in Singleton.Instance._SharesPlateSession.GetSessionData()
+                                    where x.PlateId == item.PlateId && x.BaseDate != null && x.BaseDate < DateTime.Now && x.BaseDateNoWeightPrice>0 && x.BaseDateWeightPrice>0
+                                    select new PlateBaseDataSession
+                                    {
+                                        PlateId = x.PlateId,
+                                        BaseDate = x.BaseDate.Value,
+                                        NoWeightPrice = x.BaseDateNoWeightPrice,
+                                        WeightPrice = x.BaseDateWeightPrice
+                                    }).FirstOrDefault();
+
                 if (baseDateInfo == null)
                 {
                     continue;
                 }
 
                 long basePrice = item.WeightType == 1 ? baseDateInfo.NoWeightPrice : baseDateInfo.WeightPrice;
-                long currBasePrice= item.WeightType == 1 ? baseDateInfo.CurrNoWeightPrice : baseDateInfo.CurrWeightPrice;
 
                 DataRow row = table.NewRow();
                 row["WeightType"] = item.WeightType;
@@ -836,12 +989,12 @@ inner join
                 row["SharesCode"] = "";
                 row["GroupTimeKey"] = item.GroupTimeKey;
                 row["Time"] = item.Time;
-                row["OpenedPrice"] = (item.TotalOpenedPrice / item.CalCount)*1.0/ basePrice * 1000;
-                row["ClosedPrice"] = item.TotalClosedPrice / item.CalCount;
-                row["PreClosePrice"] = item.TotalPreClosePrice / item.CalCount;
-                row["YestodayClosedPrice"] = item.TotalYestodayClosedPrice / item.CalCount;
-                row["MinPrice"] = item.TotalYestodayClosedPrice / item.CalCount;
-                row["MaxPrice"] = item.TotalMinPrice / item.CalCount;
+                row["OpenedPrice"] = item.TotalOpenedPrice;
+                row["ClosedPrice"] = item.TotalClosedPrice;
+                row["PreClosePrice"] = item.TotalPreClosePrice;
+                row["YestodayClosedPrice"] = item.TotalYestodayClosedPrice;
+                row["MinPrice"] = item.TotalMinPrice;
+                row["MaxPrice"] = item.TotalMaxPrice;
                 row["TradeStock"] = item.TotalTradeStock;
                 row["TradeAmount"] = item.TotalTradeAmount;
                 row["LastTradeStock"] = item.TotalLastTradeStock;
@@ -850,7 +1003,9 @@ inner join
                 row["TotalCapital"] = 0;
                 row["IsLast"] = (item.WeightType == 2 && item.GroupTimeKey == weightMaxGroupKey) || (item.WeightType == 1 && item.GroupTimeKey == noWeightMaxGroupKey) ? true : false;
                 row["LastModified"] = DateTime.Now;
-                row["BaseDate"] = item.BaseDate;
+                row["BaseDate"] = baseDateInfo.BaseDate;
+                row["BasePrice"] = basePrice;
+                row["CalCount"] = item.CalCount;
                 table.Rows.Add(row);
             }
 
@@ -1022,6 +1177,12 @@ inner join
                 SharesKlineQueue.AddMessage(null, true, 0);
                 KlineThread.Join();
                 SharesKlineQueue.Release();
+            }
+            if (DailyInitThread != null)
+            {
+                DailyInitWaitQueue.AddMessage(-1);
+                DailyInitThread.Join();
+                DailyInitWaitQueue.Release();
             }
         }
     }

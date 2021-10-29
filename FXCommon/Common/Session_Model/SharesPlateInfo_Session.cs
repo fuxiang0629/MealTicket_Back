@@ -47,5 +47,9 @@ namespace FXCommon.Common
         public string NoWeightSharesCode { get; set; }
 
         public DateTime? BaseDate { get; set; }
+
+        public long BaseDateWeightPrice { get; set; }
+
+        public long BaseDateNoWeightPrice { get; set; }
     }
 }

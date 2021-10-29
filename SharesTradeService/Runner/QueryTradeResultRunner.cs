@@ -378,11 +378,15 @@ namespace SharesTradeService
                                                 NoticeSender.SendExecute("NoticeSend.SellSharesFinish", entrust.x.AccountId, tempPara);
                                             }
                                         }
-                                        if (entrust.x.Type == 1)//自动平仓
+                                        else if (entrust.x.Type == 1 && entrust.x.TradeType == 1)//自动买入
+                                        {
+                                            NoticeSender.SendExecute("NoticeSend.BuySharesFinish", entrust.x.AccountId, tempPara);
+                                        }
+                                        else if (entrust.x.Type == 1 && entrust.x.TradeType == 2)//自动平仓
                                         {
                                             NoticeSender.SendExecute("NoticeSend.ClosingAuto", entrust.x.AccountId, tempPara);
                                         }
-                                        if (entrust.x.Type == 2)//强制平仓
+                                        else if (entrust.x.Type == 2)//强制平仓
                                         {
                                             NoticeSender.SendExecute("NoticeSend.ClosingForce", entrust.x.AccountId, tempPara);
                                             //警戒线通知清除

@@ -31,5 +31,7 @@ namespace MealTicket_DBCommon
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
         public Nullable<System.DateTime> BaseDate { get; set; }
+        public Nullable<long> BaseDateWeightPrice { get; set; }
+        public Nullable<long> BaseDateNoWeightPrice { get; set; }
     }
 }

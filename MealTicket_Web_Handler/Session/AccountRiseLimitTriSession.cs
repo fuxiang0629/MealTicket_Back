@@ -10,9 +10,6 @@ namespace MealTicket_Web_Handler
 { 
     public class AccountRiseLimitTriSession:Session<List<AccountRiseLimitTriInfo_Session>>
     {
-        DateTime? lastDataTime;
-        List<AccountRiseLimitTriInfo_Session> lastList = new List<AccountRiseLimitTriInfo_Session>();
-
         public AccountRiseLimitTriSession() 
         {
             Name = "AccountRiseLimitTriSession";
@@ -21,68 +18,353 @@ namespace MealTicket_Web_Handler
         public override List<AccountRiseLimitTriInfo_Session> UpdateSession()
         {
             DateTime dateNow = Helper.GetLastTradeDate(-9, 0, 0);
-            if (lastDataTime == null || lastDataTime.Value < dateNow)
-            {
-                lastList = new List<AccountRiseLimitTriInfo_Session>();
-                lastDataTime = dateNow;
-            }
+            DateTime yesDateNow = Helper.GetLastTradeDate(-9, 0, 0,1);
+            DateTime yes2DateNow = Helper.GetLastTradeDate(-9, 0, 0, 2);
+            string dateNowStr = dateNow.ToString("yyyy-MM-dd");
+            string yesDateNowStr = yesDateNow.ToString("yyyy-MM-dd");
+            string yes2DateNowStr = yes2DateNow.ToString("yyyy-MM-dd");
+            DateTime InitPushTime = dateNow.AddSeconds(1);
 
             using (var db = new meal_ticketEntities())
             {
-                string sql = string.Format(@"select t.SharesCode RelId, t.Market,t.SharesCode,t.ClosedPrice,t.PresentPrice,t.[Type],t2.PushTime,t2.TriCountToday
-  from
-  (
-  select Market, SharesCode, ClosedPrice, PresentPrice, -1[Type]
-  from t_shares_quotes_date with(nolock)
-  where [Date] = '{0}' and PriceType = 1--涨停池
-  union all
-  select Market, SharesCode, ClosedPrice, PresentPrice, -2[Type]
-  from t_shares_quotes_date with(nolock)
-  where [Date] = '{0}' and PriceType = 2--跌停池
-  union all
-  select Market, SharesCode, ClosedPrice, PresentPrice, -3[Type]
-  from t_shares_quotes_date with(nolock)
-  where [Date] = '{0}' and PriceType = 0 and LimitUpCount > 0--炸板池
-  union all
-  select Market, SharesCode, ClosedPrice, PresentPrice, -4[Type]
-  from t_shares_quotes_date with(nolock)
-  where [Date] = '{0}' and PriceType = 0 and LimitDownCount > 0--翘板池
-  union all
-  select Market, SharesCode, ClosedPrice, PresentPrice, -5[Type]
-  from t_shares_quotes_date with(nolock)
-  where [Date] = '{0}' and TriNearLimitType = 1 and LimitUpCount = 0--即将涨停池
-  union all
-  select Market, SharesCode, ClosedPrice, PresentPrice, -6[Type]
-  from t_shares_quotes_date with(nolock)
-  where [Date] = '{0}' and TriNearLimitType = 2 and LimitDownCount = 0--即将跌停池
-  )t
-  left join
-  (
-    select Market, SharesCode,
-	case when[Type] = 1 and BusinessType = 1 then - 1 when[Type] = 2 and BusinessType = 1 then - 2 when[Type] = 3 and BusinessType = 1 then - 3
+                //昨日涨停股票
+                var yesDic = (from item in db.t_shares_quotes_date
+                              where item.Date == yesDateNowStr && (item.PriceType == 1 || item.PriceType == 2)
+                              select new
+                              {
+                                  PriceType = item.PriceType,
+                                  Market = item.Market,
+                                  SharesCode = item.SharesCode,
+                              }).ToList().ToDictionary(k => k.PriceType*10000000 + int.Parse(k.SharesCode) * 10 + k.Market, v => v);
+                var yesHisDic = (from item in db.t_shares_quotes_history
+                                 where item.Date == yesDateNowStr && (item.Type == 1 || item.Type == 2) && item.BusinessType == 1
+                                 group item by new
+                                 {
+                                     item.Market,
+                                     item.SharesCode,
+                                     item.Type
+                                 } into g
+                                 select new
+                                 {
+                                     Market = g.Key.Market,
+                                     SharesCode = g.Key.SharesCode,
+                                     PriceType = g.Key.Type,
+                                     PushTime = g.Min(e => e.CreateTime)
+                                 }).ToList().ToDictionary(k => k.PriceType * 10000000 + int.Parse(k.SharesCode) * 10 + k.Market, v => v);
+                //前日涨停股票
+                var yes2Dic = (from item in db.t_shares_quotes_date
+                               where item.Date == yes2DateNowStr && (item.PriceType == 1 || item.PriceType == 2)
+                               select new
+                               {
+                                   PriceType = item.PriceType,
+                                   Market = item.Market,
+                                   SharesCode = item.SharesCode,
+                               }).ToList().ToDictionary(k => k.PriceType * 10000000 + int.Parse(k.SharesCode) * 10 + k.Market, v => v);
+                //历史数据
+                var hisDic = (from item in db.t_shares_quotes_history
+                              where item.Date == dateNowStr
+                              group item by new
+                              {
+                                  item.Market,
+                                  item.SharesCode,
+                                  item.Type,
+                                  item.BusinessType
+                              } into g
+                              select new
+                              {
+                                  Market = g.Key.Market,
+                                  SharesCode = g.Key.SharesCode,
+                                  Type = (g.Key.Type == 1 && g.Key.BusinessType == 1) ? -1 : (g.Key.Type == 2 && g.Key.BusinessType == 1) ? -2 : (g.Key.Type == 3 && g.Key.BusinessType == 1) ? -3 : (g.Key.Type == 4 && g.Key.BusinessType == 1) ? -4 : (g.Key.Type == 5 && g.Key.BusinessType == 2) ? -5 : (g.Key.Type == 6 && g.Key.BusinessType == 2) ? -6 : 0,
+                                  BusinessType = g.Key.BusinessType,
+                                  TriCountToday = g.Count(),
+                                  PushTime = g.Max(e => e.CreateTime)
+                              }).Where(e=>e.Type!=0).ToDictionary(k => -k.Type * 10000000 + int.Parse(k.SharesCode) * 10 + k.Market);
+                //配置信息
+                var setting = (from item in db.t_shares_limit_fundmultiple
+                               select item).ToList();
 
-    when[Type] = 4 and BusinessType = 1 then - 4 when[Type] = 5 and BusinessType = 2 then - 5
+                var result = (from item in db.t_shares_quotes_date
+                              where item.Date == dateNowStr
+                              select new
+                              {
+                                  Market = item.Market,
+                                  SharesCode = item.SharesCode,
+                                  ClosedPrice = item.ClosedPrice,
+                                  OpenPrice=item.OpenedPrice,
+                                  PresentPrice = item.PresentPrice,
+                                  PriceType = item.PriceType,
+                                  LimitUpCount = item.LimitUpCount,
+                                  LimitDownCount = item.TriLimitDownCount,
+                                  TriNearLimitType = item.TriNearLimitType
+                              }).ToList();
+                //当前是否交易时间
+                bool isTradeTime = Helper.CheckTradeTime();
 
-    when[Type] = 6 and BusinessType = 2 then - 6 else 0 end[Type],
-	BusinessType,count(*) TriCountToday,Max(CreateTime) PushTime
-    from t_shares_quotes_history with(nolock)
-    where [Date]= '{0}'
-
-    group by Market,SharesCode,[Type],BusinessType
-  )t2 on t.Market = t2.Market and t.SharesCode = t2.SharesCode and t.[Type]= t2.[Type]
-  where convert(varchar(20),t2.PushTime,120)> '{1}'
-  order by t2.PushTime desc, t.SharesCode", dateNow.ToString("yyyy-MM-dd"), lastDataTime.Value.ToString("yyyy-MM-dd HH:mm:ss"));
-                var list = db.Database.SqlQuery<AccountRiseLimitTriInfo_Session>(sql).ToList();
-                if (list.Count() > 0)
+                List<AccountRiseLimitTriInfo_Session> tempList = new List<AccountRiseLimitTriInfo_Session>();
+                foreach (var item in result)
                 {
-                    lastDataTime = list.Max(e => e.PushTime);
-                    foreach (var item in list)
+                    if (item.PresentPrice <= 0)
                     {
-                        lastList.RemoveAll(e => e.Market == item.Market && e.SharesCode == item.SharesCode);
+                        continue;
                     }
-                    lastList.AddRange(list);
+                    bool type11 = false;
+                    bool type12 = false;
+                    if (!isTradeTime)
+                    {
+                        type11 = true;
+                        type12 = true;
+                    }
+                    if (item.PriceType == 1)
+                    {
+                        int key = 10000000 + int.Parse(item.SharesCode) * 10 + item.Market;
+                        if (hisDic.ContainsKey(key))
+                        {
+                            tempList.Add(new AccountRiseLimitTriInfo_Session
+                            {
+                                SharesCode = item.SharesCode,
+                                Market = item.Market,
+                                PresentPrice = item.PresentPrice,
+                                Type = -1,
+                                ClosedPrice = item.ClosedPrice,
+                                Mark = "",
+                                RelId = item.SharesCode,
+                                PushTime = hisDic[key].PushTime,
+                                TriCountToday = hisDic[key].TriCountToday
+                            });
+                            if (yesDic.ContainsKey(10000000+int.Parse(item.SharesCode) * 10 + item.Market))
+                            {
+                                tempList.Add(new AccountRiseLimitTriInfo_Session
+                                {
+                                    SharesCode = item.SharesCode,
+                                    Market = item.Market,
+                                    PresentPrice = item.PresentPrice,
+                                    Type = -11,
+                                    ClosedPrice = item.ClosedPrice,
+                                    Mark = "",
+                                    RelId = item.SharesCode,
+                                    PushTime = hisDic[key].PushTime,
+                                    TriCountToday = 0
+                                });
+                                type11 = true;
+                            }
+                        }
+                    }
+                    if (item.PriceType == 2)
+                    {
+                        int key = 20000000 + int.Parse(item.SharesCode) * 10 + item.Market;
+                        if (hisDic.ContainsKey(key))
+                        {
+                            tempList.Add(new AccountRiseLimitTriInfo_Session
+                            {
+                                SharesCode = item.SharesCode,
+                                Market = item.Market,
+                                PresentPrice = item.PresentPrice,
+                                Type = -2,
+                                ClosedPrice = item.ClosedPrice,
+                                Mark = "",
+                                RelId = item.SharesCode,
+                                PushTime = hisDic[key].PushTime,
+                                TriCountToday = hisDic[key].TriCountToday
+                            });
+                            if (yesDic.ContainsKey(20000000+int.Parse(item.SharesCode) * 10 + item.Market))
+                            {
+                                tempList.Add(new AccountRiseLimitTriInfo_Session
+                                {
+                                    SharesCode = item.SharesCode,
+                                    Market = item.Market,
+                                    PresentPrice = item.PresentPrice,
+                                    Type = -12,
+                                    ClosedPrice = item.ClosedPrice,
+                                    Mark = "",
+                                    RelId = item.SharesCode,
+                                    PushTime = hisDic[key].PushTime,
+                                    TriCountToday = 0
+                                });
+                                type12 = true;
+                            }
+                        }
+                    }
+                    if (item.PriceType == 0 && item.LimitUpCount > 0)
+                    {
+                        int key = 30000000 + int.Parse(item.SharesCode) * 10 + item.Market;
+                        if (hisDic.ContainsKey(key))
+                        {
+                            tempList.Add(new AccountRiseLimitTriInfo_Session
+                            {
+                                SharesCode = item.SharesCode,
+                                Market = item.Market,
+                                PresentPrice = item.PresentPrice,
+                                Type = -3,
+                                ClosedPrice = item.ClosedPrice,
+                                Mark = "",
+                                RelId = item.SharesCode,
+                                PushTime = hisDic[key].PushTime,
+                                TriCountToday = hisDic[key].TriCountToday
+                            });
+                        }
+                    }
+                    if (item.PriceType == 0 && item.LimitDownCount > 0)
+                    {
+                        int key = 40000000+int.Parse(item.SharesCode) * 10 + item.Market;
+                        if (hisDic.ContainsKey(key))
+                        {
+                            tempList.Add(new AccountRiseLimitTriInfo_Session
+                            {
+                                SharesCode = item.SharesCode,
+                                Market = item.Market,
+                                PresentPrice = item.PresentPrice,
+                                Type = -4,
+                                ClosedPrice = item.ClosedPrice,
+                                Mark = "",
+                                RelId = item.SharesCode,
+                                PushTime = hisDic[key].PushTime,
+                                TriCountToday = hisDic[key].TriCountToday
+                            });
+                        }
+                    }
+                    if (item.TriNearLimitType == 1 && item.PriceType == 0)
+                    {
+                        int key = 50000000 + int.Parse(item.SharesCode) * 10 + item.Market;
+                        if (hisDic.ContainsKey(key))
+                        {
+                            tempList.Add(new AccountRiseLimitTriInfo_Session
+                            {
+                                SharesCode = item.SharesCode,
+                                Market = item.Market,
+                                PresentPrice = item.PresentPrice,
+                                Type = -5,
+                                ClosedPrice = item.ClosedPrice,
+                                Mark = item.LimitUpCount > 0 ? "炸" : "",
+                                RelId = item.SharesCode,
+                                PushTime = hisDic[key].PushTime,
+                                TriCountToday = hisDic[key].TriCountToday
+                            });
+                        }
+                    }
+                    if (item.TriNearLimitType == 2 && item.PriceType == 0)
+                    {
+                        int key = 60000000 + int.Parse(item.SharesCode) * 10 + item.Market;
+                        if (hisDic.ContainsKey(key))
+                        {
+                            tempList.Add(new AccountRiseLimitTriInfo_Session
+                            {
+                                SharesCode = item.SharesCode,
+                                Market = item.Market,
+                                PresentPrice = item.PresentPrice,
+                                Type = -6,
+                                ClosedPrice = item.ClosedPrice,
+                                Mark = item.LimitDownCount > 0 ? "撬" : "",
+                                RelId = item.SharesCode,
+                                PushTime = hisDic[key].PushTime,
+                                TriCountToday = hisDic[key].TriCountToday
+                            });
+                        }
+                    }
+
+                    if (yesDic.ContainsKey(10000000 + int.Parse(item.SharesCode) * 10 + item.Market))
+                    {
+                        if (yesHisDic.ContainsKey(10000000 + int.Parse(item.SharesCode) * 10 + item.Market))
+                        {
+                            tempList.Add(new AccountRiseLimitTriInfo_Session
+                            {
+                                SharesCode = item.SharesCode,
+                                Market = item.Market,
+                                PresentPrice = item.PresentPrice,
+                                Type = -7,
+                                ClosedPrice = item.ClosedPrice,
+                                Mark = "",
+                                RelId = item.SharesCode,
+                                PushTime = InitPushTime,
+                                YesLimitTime = yesHisDic[10000000 + int.Parse(item.SharesCode) * 10 + item.Market].PushTime,
+                                TriCountToday = 0
+                            });
+                            //判断连板(前日涨停)
+                            if (!type11 && yes2Dic.ContainsKey(10000000 + int.Parse(item.SharesCode) * 10 + item.Market))
+                            {
+                                tempList.Add(new AccountRiseLimitTriInfo_Session
+                                {
+                                    SharesCode = item.SharesCode,
+                                    Market = item.Market,
+                                    PresentPrice = item.PresentPrice,
+                                    Type = -11,
+                                    ClosedPrice = item.ClosedPrice,
+                                    Mark = "",
+                                    RelId = item.SharesCode,
+                                    PushTime = InitPushTime,
+                                    TriCountToday = 0
+                                });
+                            }
+                        }
+                    }
+                    if (yesDic.ContainsKey(20000000 + int.Parse(item.SharesCode) * 10 + item.Market))
+                    {
+                        if (yesHisDic.ContainsKey(20000000 + int.Parse(item.SharesCode) * 10 + item.Market))
+                        {
+                            tempList.Add(new AccountRiseLimitTriInfo_Session
+                            {
+                                SharesCode = item.SharesCode,
+                                Market = item.Market,
+                                PresentPrice = item.PresentPrice,
+                                Type = -8,
+                                ClosedPrice = item.ClosedPrice,
+                                Mark = "",
+                                RelId = item.SharesCode,
+                                PushTime = InitPushTime,
+                                YesLimitTime = yesHisDic[20000000 + int.Parse(item.SharesCode) * 10 + item.Market].PushTime,
+                                TriCountToday = 0
+                            });
+                            //判断连板(前日日跌停或今日跌停)
+                            if (!type12 && yes2Dic.ContainsKey(20000000 + int.Parse(item.SharesCode) * 10 + item.Market))
+                            {
+                                tempList.Add(new AccountRiseLimitTriInfo_Session
+                                {
+                                    SharesCode = item.SharesCode,
+                                    Market = item.Market,
+                                    PresentPrice = item.PresentPrice,
+                                    Type = -12,
+                                    ClosedPrice = item.ClosedPrice,
+                                    Mark = "",
+                                    RelId = item.SharesCode,
+                                    PushTime = InitPushTime,
+                                    TriCountToday = 0
+                                });
+                            }
+                        }
+                    }
+
+                    var thisSetting = setting.Where(e => (item.Market == e.LimitMarket || e.LimitMarket == -1) && item.SharesCode.StartsWith(e.LimitKey)).OrderByDescending(e => e.Priority).FirstOrDefault();
+                    if (thisSetting != null && item.ClosedPrice > 0 && (item.OpenPrice - item.ClosedPrice) * 10000.0 / item.ClosedPrice >= thisSetting.HighOpenRange)
+                    {
+                        tempList.Add(new AccountRiseLimitTriInfo_Session
+                        {
+                            SharesCode = item.SharesCode,
+                            Market = item.Market,
+                            PresentPrice = item.PresentPrice,
+                            Type = -9,
+                            ClosedPrice = item.ClosedPrice,
+                            Mark = "",
+                            RelId = item.SharesCode,
+                            PushTime = InitPushTime,
+                            TriCountToday = 0
+                        });
+                    }
+                    if (thisSetting != null && item.ClosedPrice > 0 && (item.OpenPrice - item.ClosedPrice) * 10000.0 / item.ClosedPrice <= thisSetting.LowOpenRange)
+                    {
+                        tempList.Add(new AccountRiseLimitTriInfo_Session
+                        {
+                            SharesCode = item.SharesCode,
+                            Market = item.Market,
+                            PresentPrice = item.PresentPrice,
+                            Type = -10,
+                            ClosedPrice = item.ClosedPrice,
+                            Mark = "",
+                            RelId = item.SharesCode,
+                            PushTime = InitPushTime,
+                            TriCountToday = 0
+                        });
+                    }
                 }
-                return lastList;
+                return tempList;
             }
         }
     }

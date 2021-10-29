@@ -35,5 +35,6 @@ namespace MealTicket_DBCommon
         public string TransactionPassword { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
+        public int TrendStatus { get; set; }
     }
 }

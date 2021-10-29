@@ -866,7 +866,7 @@ namespace MealTicket_Admin_Handler
         {
             using (var db = new meal_ticketEntities())
             {
-                var list = from item in db.v_plate
+                var list = from item in db.v_plate_new
                            select item;
 
                 if (request.Type != 0)
@@ -1439,56 +1439,42 @@ namespace MealTicket_Admin_Handler
         public void ResetSharesPlateBaseDate(ResetSharesPlateBaseDateRequest request) 
         {
             using (var db = new meal_ticketEntities())
-            using (var tran=db.Database.BeginTransaction())
             {
-                try
+                var plate = (from item in db.t_shares_plate
+                             where item.Id == request.Id
+                             select item).FirstOrDefault();
+                if (plate == null)
                 {
-                    var sysPar = (from item in db.t_system_param
-                                  where item.ParamName == "SecurityBarsDataType"
-                                  select item).FirstOrDefault();
-                    if (sysPar == null)
-                    {
-                        throw new WebApiException(400,"K线类型参数未设置");
-                    }
-
-                    var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
-                    List<int> tempSecurityBarsDataTypeList = new List<int>();
-                    foreach (var item in sysValue.SecurityBarsDataTypeList)
-                    {
-                        int temp = item;
-                        tempSecurityBarsDataTypeList.Add(temp);
-                    }
-
-                    var plate = (from item in db.t_shares_plate
-                                 where item.Id == request.Id
-                                 select item).FirstOrDefault();
-                    if (plate == null)
-                    {
-                        throw new WebApiException(400, "数据不存在");
-                    }
-
-                    if (plate.BaseDate != request.BaseDate)
-                    {
-                        foreach (int type in tempSecurityBarsDataTypeList)
-                        {
-                            var context = new
-                            {
-                                StartDate = -1,
-                                EndDate = -1
-                            };
-                            BuildInstructions(DateTime.Now.Date.AddDays(1), 3, request.Id, 0, "", type, JsonConvert.SerializeObject(context),0, db);
-                        }
-                    }
-                    plate.BaseDate = request.BaseDate;
-                    db.SaveChanges();
-
-                    tran.Commit();
+                    throw new WebApiException(400, "数据不存在");
                 }
-                catch (Exception ex)
+
+                if (plate.BaseDate == request.BaseDate)
                 {
-                    tran.Rollback();
-                    throw ex;
+                    return;
                 }
+
+                string date = request.BaseDate.ToString("yyyy-MM-dd");
+                var quoteDate = from item in db.t_shares_quotes_date
+                                where item.Date == date
+                                select item;
+                var snapshot = (from item in db.t_shares_plate_rel_snapshot
+                                join item2 in quoteDate on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                                join item3 in db.t_shares_markettime on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode }
+                                where item.PlateId == request.Id && item.Date == request.BaseDate
+                                select new { item, item2, item3 }).ToList();
+
+                long BaseDateWeightPrice = 0;
+                long BaseDateNoWeightPrice = 0;
+                if (snapshot.Count() > 0)
+                {
+                    BaseDateWeightPrice = (long)snapshot.Average(e => e.item2.PresentPrice * e.item3.TotalCapital);
+                    BaseDateNoWeightPrice = (long)snapshot.Average(e => e.item2.PresentPrice);
+                }
+
+                plate.BaseDate = request.BaseDate;
+                plate.BaseDateWeightPrice = BaseDateWeightPrice;
+                plate.BaseDateNoWeightPrice = BaseDateNoWeightPrice;
+                db.SaveChanges();
             }
         }
 
@@ -2343,6 +2329,8 @@ namespace MealTicket_Admin_Handler
                             orderby item.CreateTime descending
                             select new SharesTradeLeverInfo
                             {
+                                HighOpenRange=item.HighOpenRange,
+                                LowOpenRange = item.LowOpenRange,
                                 FundMultiple = item.FundMultiple,
                                 Priority = item.Priority,
                                 Range = item.Range,
@@ -2375,6 +2363,8 @@ namespace MealTicket_Admin_Handler
                     MarketName = request.MarketName,
                     Priority = request.Priority,
                     NearLimitRange = request.NearLimitRange,
+                    HighOpenRange=request.HighOpenRange,
+                    LowOpenRange=request.LowOpenRange,
                     Range = request.Range
                 });
                 db.SaveChanges();
@@ -2403,6 +2393,8 @@ namespace MealTicket_Admin_Handler
                 fundmultiple.Priority = request.Priority;
                 fundmultiple.Range = request.Range;
                 fundmultiple.NearLimitRange = request.NearLimitRange;
+                fundmultiple.HighOpenRange = request.HighOpenRange; 
+                fundmultiple.LowOpenRange = request.LowOpenRange;
                 fundmultiple.FundMultiple = request.FundMultiple;
                 db.SaveChanges();
             }

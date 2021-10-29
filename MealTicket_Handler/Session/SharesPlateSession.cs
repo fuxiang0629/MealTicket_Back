@@ -18,7 +18,7 @@ namespace MealTicket_Handler
         {
             using (var db = new meal_ticketEntities())
             {
-                string sql = @"select t.Id PlateId,t.Name PlateName,t.[Type] PlateType,WeightMarket,WeightSharesCode,NoWeightMarket,NoWeightSharesCode,BaseDate from t_shares_plate t with(nolock)";
+                string sql = @"select t.Id PlateId,t.Name PlateName,t.[Type] PlateType,WeightMarket,WeightSharesCode,NoWeightMarket,NoWeightSharesCode,BaseDate,isnull(BaseDateWeightPrice,0)BaseDateWeightPrice,isnull(BaseDateNoWeightPrice,0)BaseDateNoWeightPrice from t_shares_plate t with(nolock)";
                 var result = db.Database.SqlQuery<SharesPlateInfo_Session>(sql).ToList();
                 return result;
             }

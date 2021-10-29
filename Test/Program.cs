@@ -8,6 +8,7 @@ using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,17 +25,32 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            var ttt = new List<A>();
-            ttt.Add(new A { Id = 1,Id2=1, Name = "1" });
-            ttt.Add(new A { Id = 1, Id2 = 2, Name = "2" });
-            ttt.Add(new A { Id = 3, Id2 = 3, Name = "3" });
-            ttt.Add(new A { Id = 4, Id2 = 4, Name = "4" });
-            ttt.Add(new A { Id = 5, Id2 = 5, Name = "5" });
+            Regex regex = new Regex(@"{{\w*}}"); //匹配所有参数
+            var matchGroup = regex.Matches("您购买的商品：{{sharesname}}在{{time}}已签收，状态：{{dealstatus}}，感谢惠顾！");
+            foreach (var g in matchGroup)
+            {
+                
+            }
 
-            var rrr = ttt.Where(e => e.Id == 1).ToList();
-            var ggg = rrr.Where(e => e.Id2 == 1).FirstOrDefault();
-            ggg.Name="6";
-            var eee = rrr;
+
+            //Dictionary<int, A> dic1 = new Dictionary<int, A>();
+            //dic1.Add(1,new A 
+            //{
+            //    Id=1,
+            //    Name="1"
+            //});
+            //dic1.Add(2, new A
+            //{
+            //    Id = 2,
+            //    Name = "2"
+            //});
+
+            //Dictionary<string, Dictionary<int, A>> dic2 = new Dictionary<string, Dictionary<int, A>>();
+            //Dictionary<int, A> temp = new Dictionary<int, A>();
+            //temp.Add(1, dic1[1]);
+            //dic2.Add("a", temp);
+
+            //dic1[1].Name = "5";
 
             //Console.Write("url:");
             //string url = Console.ReadLine();

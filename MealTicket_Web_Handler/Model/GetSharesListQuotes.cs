@@ -43,6 +43,11 @@ namespace MealTicket_Web_Handler.Model
         public DateTime PushTime { get; set; }
 
         /// <summary>
+        /// 今日触发次数
+        /// </summary>
+        public int TriCountToday { get; set; }
+
+        /// <summary>
         /// 文字颜色
         /// </summary>
         public string TextColor
@@ -51,21 +56,43 @@ namespace MealTicket_Web_Handler.Model
             {
                 DateTime timeNow = DateTime.Now;
                 int intervalSecond = (int)(timeNow - PushTime).TotalSeconds;
-                if (intervalSecond < 60)
+                if (TriCountToday > 1)
                 {
-                    return "rgb(255, 0, 0)";
-                }
-                else if (intervalSecond < 120)
-                {
-                    return "rgb(180, 0, 0)";
-                }
-                else if (intervalSecond < 180)
-                {
-                    return "rgb(100, 0, 0)";
+                    if (intervalSecond < 60)
+                    {
+                        return "rgb(50, 0, 255)";
+                    }
+                    else if (intervalSecond < 120)
+                    {
+                        return "rgb(50, 0, 180)";
+                    }
+                    else if (intervalSecond < 180)
+                    {
+                        return "rgb(50, 0, 100)";
+                    }
+                    else
+                    {
+                        return "rgb(0, 0, 0)";
+                    }
                 }
                 else
                 {
-                    return "rgb(0, 0, 0)";
+                    if (intervalSecond < 60)
+                    {
+                        return "rgb(255, 0, 0)";
+                    }
+                    else if (intervalSecond < 120)
+                    {
+                        return "rgb(180, 0, 0)";
+                    }
+                    else if (intervalSecond < 180)
+                    {
+                        return "rgb(100, 0, 0)";
+                    }
+                    else
+                    {
+                        return "rgb(0, 0, 0)";
+                    }
                 }
             }
         }

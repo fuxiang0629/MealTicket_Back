@@ -156,7 +156,7 @@ namespace MealTicket_Handler.SecurityBarsData
                     dataObj.TaskTimeOut = Singleton.Instance.SecurityBarsTaskTimeout;
                     return false;
                 }
-                if (!RunnerHelper.CheckTradeTime2(timeNow, false, true, false) && !RunnerHelper.CheckTradeTime2(timeNow.AddSeconds(-600), false, true, false))
+                if (!RunnerHelper.CheckTradeTime2(timeNow.AddSeconds(-180)) && !RunnerHelper.CheckTradeTime2(timeNow.AddSeconds(180)))
                 {
                     dataObj.TaskTimeOut = Singleton.Instance.SecurityBarsTaskTimeout;
                     //每天21-23点执行
@@ -176,9 +176,7 @@ namespace MealTicket_Handler.SecurityBarsData
                 }
 
                 var tempGuid = Guid.NewGuid().ToString("N");
-                Logger.WriteFileLog("===开始数据扔入队列===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                 dataObj.TotalPacketCount = SendTransactionShares(tempGuid);
-                Logger.WriteFileLog("===结束数据扔入队列===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                 dataObj.TaskGuid = tempGuid;
                 dataObj.StartTime = DateTime.Now;
                 return true;
@@ -403,8 +401,6 @@ namespace MealTicket_Handler.SecurityBarsData
 
             bool isFinish = false;
 
-
-            Logger.WriteFileLog("===开始处理数据==="+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             if (UpdateToDataBase(ref isFinish))
             {
                 dataObj.TaskTimeOut = -1;
@@ -424,7 +420,6 @@ namespace MealTicket_Handler.SecurityBarsData
             {
                 ClearTaskInfo(dataObj);//超时则清空任务
                 dataObj.TaskTimeOut = Singleton.Instance.SecurityBarsTaskTimeout;
-                Logger.WriteFileLog("===结束处理数据===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             }
         }
 
@@ -558,31 +553,34 @@ namespace MealTicket_Handler.SecurityBarsData
                         {
                             finishCount++;
                         }
-                        var sessionDataList = (from item in disResultList
-                                               select new SharesKlineData
-                                               {
-                                                   SharesCode = item.item.SharesCode,
-                                                   LastTradeStock = item.item.LastTradeStock,
-                                                   ClosedPrice = item.item.ClosedPrice,
-                                                   GroupTimeKey = item.item.GroupTimeKey,
-                                                   TradeStock = item.item.TradeStock,
-                                                   LastTradeAmount = item.item.LastTradeAmount,
-                                                   Market = item.item.Market,
-                                                   MaxPrice = item.item.MaxPrice,
-                                                   MinPrice = item.item.MinPrice,
-                                                   OpenedPrice = item.item.OpenedPrice,
-                                                   PreClosePrice = item.item.PreClosePrice,
-                                                   Time = item.item.Time,
-                                                   TotalCapital = item.ai == null ? 0 : item.ai.TotalCapital,
-                                                   Tradable = item.ai == null ? 0 : item.ai.CirculatingCapital,
-                                                   TradeAmount = item.item.TradeAmount,
-                                                   YestodayClosedPrice = item.item.YestodayClosedPrice
-                                               }).ToList();
-                        Singleton.Instance._newIindexSecurityBarsDataTask.ToPushData(new SharesKlineDataContain
+                        if (dataObj.HandlerType == 1)
                         {
-                            DataType = dataType,
-                            SharesKlineData = sessionDataList
-                        });
+                            var sessionDataList = (from item in disResultList
+                                                   select new SharesKlineData
+                                                   {
+                                                       SharesCode = item.item.SharesCode,
+                                                       LastTradeStock = item.item.LastTradeStock,
+                                                       ClosedPrice = item.item.ClosedPrice,
+                                                       GroupTimeKey = item.item.GroupTimeKey,
+                                                       TradeStock = item.item.TradeStock,
+                                                       LastTradeAmount = item.item.LastTradeAmount,
+                                                       Market = item.item.Market,
+                                                       MaxPrice = item.item.MaxPrice,
+                                                       MinPrice = item.item.MinPrice,
+                                                       OpenedPrice = item.item.OpenedPrice,
+                                                       PreClosePrice = item.item.PreClosePrice,
+                                                       Time = item.item.Time,
+                                                       TotalCapital = item.ai == null ? 0 : item.ai.TotalCapital,
+                                                       Tradable = item.ai == null ? 0 : item.ai.CirculatingCapital,
+                                                       TradeAmount = item.item.TradeAmount,
+                                                       YestodayClosedPrice = item.item.YestodayClosedPrice
+                                                   }).ToList();
+                            Singleton.Instance._newIindexSecurityBarsDataTask.ToPushData(new SharesKlineDataContain
+                            {
+                                DataType = dataType,
+                                SharesKlineData = sessionDataList
+                            });
+                        }
                     }
                     else
                     {
@@ -623,11 +621,17 @@ namespace MealTicket_Handler.SecurityBarsData
                 });
             }
 
+            //List<string> sharesList = new List<string>
+            //{
+            //    "003031","002935","002544","002415","002368","002268","600562","600071","600705","600850"
+            //};
             var allSharesList = (from item in Singleton.Instance._sharesBaseSession.GetSessionData()
+                                 //where sharesList.Contains(item.SharesCode)
                                  select new
                                  {
                                      Market = item.Market,
                                      SharesCode = item.SharesCode,
+                                     SharesCodeNum=long.Parse(item.SharesCode),
                                      PreClosePrice = item.ClosedPrice
                                  }).ToList();
             int totalCount = allSharesList.Count();
@@ -649,7 +653,8 @@ namespace MealTicket_Handler.SecurityBarsData
                     List<dynamic> dataList = new List<dynamic>();
                     foreach (var x in batchList)
                     {
-                        var lastData=Singleton.Instance._newIindexSecurityBarsDataTask.GetSharesKlineLastSession(x.Market+","+x.SharesCode+","+ item.DataType);
+                        long key = x.SharesCodeNum * 1000 + x.Market * 100 + item.DataType;
+                        var lastData=Singleton.Instance._newIindexSecurityBarsDataTask.GetSharesKlineLastSession(key);
                         dataList.Add(new 
                         {
                             SharesCode = x.SharesCode,

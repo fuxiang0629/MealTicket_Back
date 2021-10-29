@@ -114,27 +114,45 @@ namespace MealTicket_Web_Handler.Model
         {
             get
             {
-                if (TriCountToday > 1)
-                {
-                    return "rgb(0, 0, 0)";
-                }
                 DateTime timeNow = DateTime.Now;
                 int intervalSecond = (int)(timeNow - PushTime).TotalSeconds;
-                if (intervalSecond < 60)
+                if (TriCountToday > 1)
                 {
-                    return "rgb(255, 0, 0)";
-                }
-                else if (intervalSecond < 120)
-                {
-                    return "rgb(180, 0, 0)";
-                }
-                else if (intervalSecond < 180)
-                {
-                    return "rgb(100, 0, 0)";
+                    if (intervalSecond < 60)
+                    {
+                        return "rgb(50, 0, 255)";
+                    }
+                    else if (intervalSecond < 120)
+                    {
+                        return "rgb(50, 0, 180)";
+                    }
+                    else if (intervalSecond < 180)
+                    {
+                        return "rgb(50, 0, 100)";
+                    }
+                    else
+                    {
+                        return "rgb(0, 0, 0)";
+                    }
                 }
                 else
                 {
-                    return "rgb(0, 0, 0)";
+                    if (intervalSecond < 60)
+                    {
+                        return "rgb(255, 0, 0)";
+                    }
+                    else if (intervalSecond < 120)
+                    {
+                        return "rgb(180, 0, 0)";
+                    }
+                    else if (intervalSecond < 180)
+                    {
+                        return "rgb(100, 0, 0)";
+                    }
+                    else
+                    {
+                        return "rgb(0, 0, 0)";
+                    }
                 }
             }
         }
@@ -338,5 +356,10 @@ namespace MealTicket_Web_Handler.Model
                 return (int)(DaysNowAvgDealCount * 1.0 / CirculatingCapital * 10000);
             }
         }
+
+        /// <summary>
+        /// 标记
+        /// </summary>
+        public string Mark { get; set; }
     }
 }

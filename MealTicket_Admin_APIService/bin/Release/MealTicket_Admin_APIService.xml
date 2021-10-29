@@ -799,6 +799,13 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.FrontAccountController.ModifyFrontAccountTrendStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改前端账户走势权限状态
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.controller.FrontAccountController.ModifyFrontAccountCashStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
             <summary>
             修改前端账户提现状态
@@ -1033,6 +1040,13 @@
         <member name="M:MealTicket_Admin_APIService.controller.FrontAccountController.DeleteFrontAccountOptional(MealTicket_Admin_Handler.Model.DeleteRequest)">
             <summary>
             删除用户自选股
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.FrontAccountController.BatchDeleteFrontAccountOptional(MealTicket_Admin_Handler.Model.BatchDeleteFrontAccountOptionalRequest)">
+            <summary>
+            批量删除用户自选股
             </summary>
             <param name="request"></param>
             <returns></returns>
@@ -1407,6 +1421,12 @@
         <member name="M:MealTicket_Admin_APIService.controller.FrontAccountController.GetFrontAccountSharesAllotDetails(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
             <summary>
             查询股票派股派息详情
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.FrontAccountController.ApplySharesToBuyBySys(MealTicket_Admin_Handler.Model.ApplySharesToBuyBySysRequest)">
+            <summary>
+            系统开仓
             </summary>
             <returns></returns>
         </member>

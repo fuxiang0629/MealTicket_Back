@@ -68,6 +68,7 @@ namespace MealTicket_Admin_Handler
                                 Status = item.item.Status,
                                 ForbidStatus = item.item.ForbidStatus,
                                 MonitorStatus = item.item.MonitorStatus,
+                                TrendStatus=item.item.TrendStatus,
                                 MultipleChangeStatus = item.item.MultipleChangeStatus,
                                 CashStatus = item.item.CashStatus,
                                 AccountId = item.item.Id,
@@ -261,6 +262,26 @@ namespace MealTicket_Admin_Handler
                     throw new WebApiException(400, "账户不存在");
                 }
                 account.MonitorStatus = request.Status;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改前端账户走势权限状态
+        /// </summary>
+        /// <param name="request"></param>
+        public void ModifyFrontAccountTrendStatus(ModifyStatusRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var account = (from item in db.t_account_baseinfo
+                               where item.Id == request.Id
+                               select item).FirstOrDefault();
+                if (account == null)
+                {
+                    throw new WebApiException(400, "账户不存在");
+                }
+                account.TrendStatus = request.Status;
                 db.SaveChanges();
             }
         }
@@ -1477,6 +1498,64 @@ namespace MealTicket_Admin_Handler
                                    where item.OptionalId == optionalId
                                    select item).ToList();
                     db.t_account_shares_optional_seat_rel.RemoveRange(seatRel);
+                    db.SaveChanges();
+
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 批量删除用户自选股
+        /// </summary>
+        /// <param name="request"></param>
+        public void BatchDeleteFrontAccountOptional(BatchDeleteFrontAccountOptionalRequest request)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var optional = (from item in db.t_account_shares_optional
+                                    where request.IdList.Contains(item.Id)
+                                    select item).ToList();
+                    if (optional.Count() <= 0)
+                    {
+                        return;
+                    }
+                    List<long> optionalId = optional.Select(e => e.Id).ToList();
+
+                    var optionalTrend = (from item in db.t_account_shares_optional_trend_rel
+                                         where optionalId.Contains(item.OptionalId)
+                                         select item).ToList();
+                    List<long> relIdList = optionalTrend.Select(e => e.Id).ToList();
+
+                    var trendPar = (from item in db.t_account_shares_optional_trend_rel_par
+                                    where relIdList.Contains(item.RelId)
+                                    select item).ToList();
+
+                    db.t_account_shares_optional.RemoveRange(optional);
+                    if (optionalTrend.Count() > 0)
+                    {
+                        db.t_account_shares_optional_trend_rel.RemoveRange(optionalTrend);
+                    }
+                    if (trendPar.Count() > 0)
+                    {
+                        db.t_account_shares_optional_trend_rel_par.RemoveRange(trendPar);
+                    }
+                    var seatRel = (from item in db.t_account_shares_optional_seat_rel
+                                   where optionalId.Contains(item.OptionalId)
+                                   select item).ToList();
+                    if (seatRel.Count() > 0)
+                    {
+                        db.t_account_shares_optional_seat_rel.RemoveRange(seatRel);
+                    }
                     db.SaveChanges();
 
 
@@ -4955,6 +5034,41 @@ namespace MealTicket_Admin_Handler
                                 AccountName = ai == null ? "" : ai.NickName
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
                 };
+            }
+        }
+
+        /// <summary>
+        /// 系统开仓
+        /// </summary>
+        /// <param name="request"></param>
+        public void ApplySharesToBuyBySys(ApplySharesToBuyBySysRequest request) 
+        {
+            if (!Helper.CheckTradeTime(request.CreateTime))
+            {
+                throw new WebApiException(400,"委托时间非交易时间");
+            }
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
+                    ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
+                    db.P_ApplyTradeBuy_sys(request.AccountId, request.Market, request.SharesCode, request.DealCount, request.DealPrice, request.RealFundMultiple, request.CreateTime, request.TradeAccountCode, errorCodeDb, errorMessageDb); 
+                    int errorCode = (int)errorCodeDb.Value;
+                    string errorMessage = errorMessageDb.Value.ToString();
+                    if (errorCode != 0)
+                    {
+                        throw new WebApiException(errorCode, errorMessage);
+                    }
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
             }
         }
         #endregion

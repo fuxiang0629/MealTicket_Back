@@ -6,6 +6,8 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
+using System.Data.Entity;
 using System.Data.Entity.Core.Objects;
 using System.Data.Entity.SqlServer;
 using System.Data.SqlClient;
@@ -52,7 +54,7 @@ namespace MealTicket_Web_Handler
                 return new AccountWalletInfo
                 {
                     DepositAmount = DepositAmount / 100 * 100,
-                    RemainDeposit= RemainDeposit / 100 * 100,
+                    RemainDeposit = RemainDeposit / 100 * 100,
                 };
             }
         }
@@ -182,32 +184,33 @@ namespace MealTicket_Web_Handler
                               where item.ClosedPrice > 0 && item.PresentPrice > 0
                               select new SharesListQuotesInfo
                               {
+                                  TriCountToday = item2.TriCountToday,
                                   PushTime = item2.PushTime,
                                   SharesCode = item.SharesCode,
                                   Market = item.Market,
                                   CurrPrice = item.PresentPrice,
                                   RisePrice = item.PresentPrice - item.ClosedPrice,
                                   RiseRate = (int)Math.Round(((item.PresentPrice - item.ClosedPrice) * 1.0 / item.ClosedPrice) * 10000, 0),
-                                  TodayDealCount = item.TotalCount*100,
+                                  TodayDealCount = item.TotalCount * 100,
                                   TodayDealAmount = item.TotalAmount
                               }).ToList();
                 var plateList = (from x in Singleton.Instance._SharesPlateSession.GetSessionData()
                                  join x2 in Singleton.Instance._SharesPlateRelSession.GetSessionData() on x.PlateId equals x2.PlateId
                                  join x3 in Singleton.Instance._SharesPlateQuotesSession.GetSessionData() on x.PlateId equals x3.PlateId
-                                 join x4 in request on new { x2.Market,x2.SharesCode} equals new { x4.Market,x4.SharesCode}
-                                 where x.ChooseStatus==1 || (x.IsBasePlate==1 && x.BaseStatus==1)
-                                 select new SharesPlateInfo 
+                                 join x4 in request on new { x2.Market, x2.SharesCode } equals new { x4.Market, x4.SharesCode }
+                                 where x.ChooseStatus == 1 || (x.IsBasePlate == 1 && x.BaseStatus == 1)
+                                 select new SharesPlateInfo
                                  {
-                                     Id=x.PlateId,
-                                     Name=x.PlateName,
-                                     SharesCode=x2.SharesCode,
-                                     SharesCount=x3.SharesCount,
-                                     Market=x2.Market,
-                                     DownLimitCount=x3.DownLimitCount,
-                                     RiseLimitCount=x3.RiseLimitCount,
-                                     Type=x.PlateType,
-                                     Rank= x3.Rank,
-                                     RiseRate =x3.RiseRate
+                                     Id = x.PlateId,
+                                     Name = x.PlateName,
+                                     SharesCode = x2.SharesCode,
+                                     SharesCount = x3.SharesCount,
+                                     Market = x2.Market,
+                                     DownLimitCount = x3.DownLimitCount,
+                                     RiseLimitCount = x3.RiseLimitCount,
+                                     Type = x.PlateType,
+                                     Rank = x3.Rank,
+                                     RiseRate = x3.RiseRate
                                  }).ToList();
                 quotes = (from item in quotes
                           join item2 in Singleton.Instance._SharesHisRiseRateSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
@@ -215,6 +218,7 @@ namespace MealTicket_Web_Handler
                           select new SharesListQuotesInfo
                           {
                               PushTime = item.PushTime,
+                              TriCountToday = item.TriCountToday,
                               SharesCode = item.SharesCode,
                               Market = item.Market,
                               CurrPrice = item.CurrPrice,
@@ -254,7 +258,7 @@ namespace MealTicket_Web_Handler
                 List<string> sharesCodeList = quotes.Select(e => e.SharesCode).ToList();
 
                 var kline1min = (from item in db.t_shares_securitybarsdata_1min
-                                 where sharesCodeList.Contains(item.SharesCode) && item.GroupTimeKey > (minDateAbs * 10000) && item.GroupTimeKey< (maxDateAbs * 10000) && (item.GroupTimeKey % 10000) <= timeAbs
+                                 where sharesCodeList.Contains(item.SharesCode) && item.GroupTimeKey > (minDateAbs * 10000) && item.GroupTimeKey < (maxDateAbs * 10000) && (item.GroupTimeKey % 10000) <= timeAbs
                                  group item by new { item.Market, item.SharesCode, Date = item.GroupTimeKey / 10000 } into g
                                  select new
                                  {
@@ -281,6 +285,7 @@ namespace MealTicket_Web_Handler
                           select new SharesListQuotesInfo
                           {
                               PushTime = item.PushTime,
+                              TriCountToday = item.TriCountToday,
                               SharesCode = item.SharesCode,
                               Market = item.Market,
                               CurrPrice = item.CurrPrice,
@@ -398,13 +403,12 @@ namespace MealTicket_Web_Handler
                 //自选股
                 var optional = from item in db.t_account_shares_optional.AsNoTracking()
                                join item2 in db.t_shares_all.AsNoTracking() on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
-                               join item4 in db.t_shares_monitor.AsNoTracking() on new { item.Market, item.SharesCode } equals new { item4.Market, item4.SharesCode }
                                join item3 in db.v_shares_quotes_last.AsNoTracking() on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into a
                                from ai in a.DefaultIfEmpty()
                                join item5 in db.t_shares_markettime.AsNoTracking() on new { item.Market, item.SharesCode } equals new { item5.Market, item5.SharesCode } into b
                                from bi in b.DefaultIfEmpty()
-                               where item.AccountId == basedata.AccountId && item4.Status == 1
-                               select new { item, item2, ai, item4, bi };
+                               where item.AccountId == basedata.AccountId
+                               select new { item, item2, ai, bi };
                 if (!string.IsNullOrEmpty(request.SharesInfo))
                 {
                     optional = from item in optional
@@ -430,7 +434,7 @@ namespace MealTicket_Web_Handler
                               select new AccountOptionalInfo
                               {
                                   SharesCode = item.item.SharesCode,
-                                  Market=item.item.Market,
+                                  Market = item.item.Market,
                                   SharesName = item.item2.SharesName,
                                   CreateTime = item.item.CreateTime,
                                   CurrPrice = currPrice,
@@ -467,106 +471,105 @@ namespace MealTicket_Web_Handler
         /// <param name="request"></param>
         public void AddAccountOptional(AddAccountOptionalRequest request, HeadBase basedata)
         {
-            using (SqlConnection conn = new SqlConnection(Singleton.Instance.ConnectionString_meal_ticket))
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
             {
-                conn.Open();
-                using (var tran = conn.BeginTransaction())
+                try
                 {
-                    try
+                    //判断自选股是否已存在
+                    var result = (from item in db.t_account_shares_optional
+                                  where item.AccountId == basedata.AccountId && item.Market == request.Market && item.SharesCode == request.SharesCode
+                                  select item).FirstOrDefault();
+                    if (result != null)
                     {
-                        using (var command = conn.CreateCommand())
+                        throw new WebApiException(400, "该自选股已添加");
+                    }
+                    //判断是否系统支持股票
+                    var monitorInfo = (from item in db.t_shares_monitor
+                                       where item.Market == request.Market && item.SharesCode == request.SharesCode
+                                       select item).FirstOrDefault();
+                    if (monitorInfo != null && monitorInfo.Status != 1)
+                    {
+                        throw new WebApiException(400, "该股票状态关闭无法加入");
+                    }
+                    long monitorId = 0;
+                    if (monitorInfo != null)
+                    {
+                        monitorId = monitorInfo.Id;
+                    }
+                    else
+                    {
+                        //判断是否有权限加入
+                        var account = (from item in db.t_account_baseinfo
+                                       where item.Id == basedata.AccountId
+                                       select item).FirstOrDefault();
+                        if (account == null)
                         {
-                            command.CommandType = CommandType.Text;
-                            command.Transaction = tran;
-
-                            //判断自选股是否已存在
-                            string sql = string.Format("select top 1 Id from t_account_shares_optional with(xlock) where AccountId={0} and Market={1} and SharesCode='{2}'", basedata.AccountId, request.Market, request.SharesCode);
-                            command.CommandText = sql;
-                            var result = command.ExecuteScalar();
-                            if (result != null)
-                            {
-                                throw new WebApiException(400, "该自选股已添加");
-                            }
-                            //查询股票名称
-                            sql = string.Format("select top 1 SharesName from t_shares_all with(nolock) where Market={0} and SharesCode='{1}'", request.Market, request.SharesCode);
-                            command.CommandText = sql;
-                            result = command.ExecuteScalar();
-                            if (result == null)
-                            {
-                                throw new WebApiException(400, "股票不存在");
-                            }
-                            string SharesName = Convert.ToString(result);
-                            //判断是否系统支持股票
-                            sql = string.Format("select top 1 Id from t_shares_monitor with(nolock) where [Status]=1 and SharesCode='{0}' and Market={1}", request.SharesCode, request.Market);
-                            command.CommandText = sql;
-                            var monitorId = command.ExecuteScalar();
-                            if (monitorId == null)
-                            {
-                                throw new WebApiException(400, "不支持的股票");
-                            }
-
-                            //添加自选股
-                            sql = string.Format("insert into t_account_shares_optional(AccountId,Market,SharesCode,CreateTime) values({0},{1},'{2}','{3}'); select @@IDENTITY;", basedata.AccountId, request.Market, request.SharesCode, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-                            command.CommandText = sql;
-                            long optionalId = Convert.ToInt64(command.ExecuteScalar());
-                            //查询走势Id列表
-                            sql = string.Format("select Id,TrendId from t_shares_monitor_trend_rel with(nolock) where MonitorId={0} and [Status]=1", Convert.ToInt64(monitorId));
-                            command.CommandText = sql;
-                            SqlDataReader reader = command.ExecuteReader();
-                            List<t_shares_monitor_trend_rel> trendList = new List<t_shares_monitor_trend_rel>();
-                            while (reader.Read())
-                            {
-                                long TrendRelId = Convert.ToInt64(reader["Id"]);
-                                long TrendId = Convert.ToInt64(reader["TrendId"]);
-                                trendList.Add(new t_shares_monitor_trend_rel
-                                {
-                                    TrendId = TrendId,
-                                    Id = TrendRelId
-                                });
-                            }
-                            reader.Close();
-                            //循环添加走势
-                            foreach (var trend in trendList)
-                            {
-                                sql = string.Format("insert into t_account_shares_optional_trend_rel(OptionalId,TrendId,[Status],[CreateTime],[LastModified]) values({0},{1},1,'{2}','{2}'); select @@IDENTITY;", optionalId, trend.TrendId, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-                                command.CommandText = sql;
-                                long relId = Convert.ToInt64(command.ExecuteScalar());
-
-                                sql = string.Format("select ParamsInfo from t_shares_monitor_trend_rel_par with(nolock) where RelId={0}", trend.Id);
-                                command.CommandText = sql;
-                                reader = command.ExecuteReader();
-                                List<string> parList = new List<string>();
-                                while (reader.Read())
-                                {
-                                    string ParamsInfo = Convert.ToString(reader["ParamsInfo"]);
-                                    parList.Add(ParamsInfo);
-                                }
-                                reader.Close();
-
-                                sql = "";
-                                foreach (string par in parList)
-                                {
-                                    sql += string.Format("insert into t_account_shares_optional_trend_rel_par(RelId,ParamsInfo,CreateTime,LastModified) values({0},'{1}','{2}','{2}');", relId, par, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
-                                }
-                                command.CommandText = sql;
-                                command.ExecuteNonQuery();
-
-                                sql = string.Format("insert into t_account_shares_optional_trend_rel_tri(RelId,LastPushTime,LastPushRiseRate,LastPushPrice,TriCountToday,MinPushTimeInterval,MinPushRateInterval,MinTodayPrice,CreateTime,LastModified) values({0},null,null,null,0,{2},{3},{4},'{1}','{1}')", relId, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), Singleton.Instance.MinPushTimeInterval, Singleton.Instance.MinPushRateInterval,Singleton.Instance.MinPushTodayPrice);
-                                command.CommandText = sql;
-                                command.ExecuteNonQuery();
-                            }
+                            throw new WebApiException(400, "账户数据有误");
                         }
-                        tran.Commit();
+                        if (account.TrendStatus != 1)
+                        {
+                            throw new WebApiException(400, "不支持的股票");
+                        }
+                        var monitorResult = BatchAddSharesMonitorFun(new List<SharesInfo> { new SharesInfo
+                        {
+                            SharesCode=request.SharesCode,
+                            Market=request.Market
+                        } }, db, tran);
+                        if (monitorResult.Count() <= 0)
+                        {
+                            throw new WebApiException(400, "发生意外错误");
+                        }
+                        monitorId = monitorResult.First().MonitorId;
                     }
-                    catch (Exception ex)
+
+                    //添加自选股
+                    t_account_shares_optional optional = new t_account_shares_optional
                     {
-                        tran.Rollback();
-                        throw ex;
-                    }
-                    finally
+                        AccountId = basedata.AccountId,
+                        Market = request.Market,
+                        SharesCode = request.SharesCode,
+                        CreateTime = DateTime.Now
+                    };
+                    db.t_account_shares_optional.Add(optional);
+                    db.SaveChanges();
+                    long optionalId = optional.Id;
+
+                    //查询走势Id列表
+                    var trendList = (from item in db.t_shares_monitor_trend_rel
+                                     where item.MonitorId == monitorId && item.Status == 1
+                                     select new
+                                     {
+                                         TrendId = item.TrendId,
+                                         Id = item.Id
+                                     }).ToList();
+                    //循环添加走势
+                    string sql = "";
+                    foreach (var trend in trendList)
                     {
-                        conn.Close();
+                        sql = string.Format("insert into t_account_shares_optional_trend_rel(OptionalId,TrendId,[Status],[CreateTime],[LastModified]) values({0},{1},1,'{2}','{2}'); select convert(bigint,@@IDENTITY);", optionalId, trend.TrendId, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+                        long relId = db.Database.SqlQuery<long>(sql).FirstOrDefault();
+
+                        sql = string.Format("select ParamsInfo from t_shares_monitor_trend_rel_par with(nolock) where RelId={0}", trend.Id);
+                        List<string> parList = db.Database.SqlQuery<string>(sql).ToList();
+                     
+                        sql = "";
+                        foreach (string par in parList)
+                        {
+                            sql += string.Format("insert into t_account_shares_optional_trend_rel_par(RelId,ParamsInfo,CreateTime,LastModified) values({0},'{1}','{2}','{2}');", relId, par, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"));
+                        }
+                        db.Database.ExecuteSqlCommand(sql);
+
+                        sql = string.Format("insert into t_account_shares_optional_trend_rel_tri(RelId,LastPushTime,LastPushRiseRate,LastPushPrice,TriCountToday,MinPushTimeInterval,MinPushRateInterval,MinTodayPrice,CreateTime,LastModified) values({0},null,null,null,0,{2},{3},{4},'{1}','{1}')", relId, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), Singleton.Instance.MinPushTimeInterval, Singleton.Instance.MinPushRateInterval, Singleton.Instance.MinPushTodayPrice);
+                        db.Database.ExecuteSqlCommand(sql);
                     }
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
                 }
             }
         }
@@ -590,13 +593,24 @@ namespace MealTicket_Web_Handler
                                     select item).ToList();
                     //判断是否在监控股票中
                     var monitor = (from item in db.t_shares_monitor
-                                   where item.Status == 1
                                    select item).ToList();
                     //查询参数
                     var parList = (from x in db.t_shares_monitor_trend_rel
                                    join x2 in db.t_shares_monitor_trend_rel_par on x.Id equals x2.RelId
                                    select new { x, x2 }).ToList();
+                    bool isPower = false;
+                    //判断是否有权限加入
+                    var account = (from item in db.t_account_baseinfo
+                                   where item.Id == accountId
+                                   select item).FirstOrDefault();
+                    if (account == null)
+                    {
+                        throw new WebApiException(400, "账户数据有误");
+                    }
+                    isPower = account.TrendStatus == 1;
+
                     List<SharesInfo> tempList = new List<SharesInfo>();
+                    List<SharesInfo> addTempList = new List<SharesInfo>();
                     foreach (var item in list)
                     {
                         if (optional.Where(e => e.Market == item.Market && e.SharesCode == item.SharesCode).FirstOrDefault() != null)
@@ -604,13 +618,26 @@ namespace MealTicket_Web_Handler
                             continue;
                         }
                         var temp = monitor.Where(e => e.Market == item.Market && e.SharesCode == item.SharesCode).FirstOrDefault();
-                        if (temp == null)
+                        if (temp != null && temp.Status != 1)
                         {
                             continue;
                         }
-                        item.MonitorId = temp.Id;
-                        tempList.Add(item);
+                        if (temp != null)
+                        {
+                            item.MonitorId = temp.Id;
+                            tempList.Add(item);
+                        }
+                        else
+                        {
+                            if (!isPower)
+                            {
+                                continue;
+                            }
+                            addTempList.Add(item);
+                        }
                     }
+
+                    tempList.AddRange(BatchAddSharesMonitorFun(addTempList, db, tran));
 
                     foreach (var item in tempList)
                     {
@@ -758,6 +785,108 @@ namespace MealTicket_Web_Handler
             }
         }
 
+        private List<SharesInfo> BatchAddSharesMonitorFun(List<SharesInfo> list, meal_ticketEntities db, DbContextTransaction tran, List<long> trendIdList = null)
+        {
+            var cmd = db.Database.Connection.CreateCommand();
+            cmd.CommandType = CommandType.Text;
+            cmd.Transaction = tran.UnderlyingTransaction;
+            var tempTrendPar = (from item in db.t_shares_monitor_trend_par
+                                select item).ToList();
+            if (trendIdList != null)
+            {
+                tempTrendPar = (from item in tempTrendPar
+                                where trendIdList.Contains(item.TrendId)
+                                select item).ToList();
+            }
+            List<SharesInfo> resultList = new List<SharesInfo>();
+            foreach (var item in list)
+            {
+                List<t_shares_monitor_trend_par> trendPar = new List<t_shares_monitor_trend_par>();
+                trendPar.AddRange(tempTrendPar);
+                if (trendIdList != null)
+                {
+                    var relPar = (from x in db.t_shares_monitor
+                                  join x2 in db.t_shares_monitor_trend_rel on x.Id equals x2.MonitorId
+                                  join x3 in db.t_shares_monitor_trend_rel_par on x2.Id equals x3.RelId
+                                  where x.Market == item.Market && x.SharesCode == item.SharesCode && !trendIdList.Contains(x2.TrendId)
+                                  select new { x2, x3 }).ToList();
+                    var tempRelPar = (from x in relPar
+                                      select new t_shares_monitor_trend_par
+                                      {
+                                          ParamsInfo = x.x3.ParamsInfo,
+                                          TrendId = x.x2.TrendId
+                                      }).ToList();
+                    trendPar.AddRange(tempRelPar);
+                }
+                string sql = string.Format("insert into t_shares_monitor ([Market],[SharesCode],[Status],[CreateTime],[LastModified],DataType,IsSpecial) values({0},'{1}',1,'{2}','{3}',1,1);select @@IDENTITY", item.Market, item.SharesCode, DateTime.Now, DateTime.Now);
+
+                cmd.CommandText = sql;   //sql语句
+                long monitorId = Convert.ToInt64(cmd.ExecuteScalar());
+                //trendId=1
+                sql = string.Format("insert into t_shares_monitor_trend_rel([MonitorId],[TrendId],[Status],[CreateTime],[LastModified]) values({0},1,1,'{1}','{2}');select @@IDENTITY", monitorId, DateTime.Now, DateTime.Now);
+
+                cmd.CommandText = sql;   //sql语句
+                long relId = Convert.ToInt64(cmd.ExecuteScalar());
+
+                sql = "";
+                var tempList = trendPar.Where(e => e.TrendId == 1).ToList();
+                foreach (var x in tempList)
+                {
+                    sql += string.Format("insert into t_shares_monitor_trend_rel_par([RelId],[ParamsInfo],[CreateTime],[LastModified]) values({0},'{1}','{2}','{3}');", relId, x.ParamsInfo, DateTime.Now, DateTime.Now);
+                }
+                if (!string.IsNullOrEmpty(sql))
+                {
+                    cmd.CommandText = sql;   //sql语句
+                    cmd.ExecuteNonQuery();
+                }
+
+
+                //trendId=2
+                sql = string.Format("insert into t_shares_monitor_trend_rel([MonitorId],[TrendId],[Status],[CreateTime],[LastModified]) values({0},2,1,'{1}','{2}');select @@IDENTITY", monitorId, DateTime.Now, DateTime.Now);
+
+                cmd.CommandText = sql;   //sql语句
+                relId = Convert.ToInt64(cmd.ExecuteScalar());
+
+                sql = "";
+                tempList = trendPar.Where(e => e.TrendId == 2).ToList();
+                foreach (var x in tempList)
+                {
+                    sql += string.Format("insert into t_shares_monitor_trend_rel_par([RelId],[ParamsInfo],[CreateTime],[LastModified]) values({0},'{1}','{2}','{3}');", relId, x.ParamsInfo, DateTime.Now, DateTime.Now);
+                }
+                if (!string.IsNullOrEmpty(sql))
+                {
+                    cmd.CommandText = sql;   //sql语句
+                    cmd.ExecuteNonQuery();
+                }
+
+
+                //trendId=3
+                sql = string.Format("insert into t_shares_monitor_trend_rel([MonitorId],[TrendId],[Status],[CreateTime],[LastModified]) values({0},3,1,'{1}','{2}');select @@IDENTITY", monitorId, DateTime.Now, DateTime.Now);
+
+                cmd.CommandText = sql;   //sql语句
+                relId = Convert.ToInt64(cmd.ExecuteScalar());
+
+                sql = "";
+                tempList = trendPar.Where(e => e.TrendId == 3).ToList();
+                foreach (var x in tempList)
+                {
+                    sql += string.Format("insert into t_shares_monitor_trend_rel_par([RelId],[ParamsInfo],[CreateTime],[LastModified]) values({0},'{1}','{2}','{3}');", relId, x.ParamsInfo, DateTime.Now, DateTime.Now);
+                }
+                if (!string.IsNullOrEmpty(sql))
+                {
+                    cmd.CommandText = sql;   //sql语句
+                    cmd.ExecuteNonQuery();
+                }
+                resultList.Add(new SharesInfo 
+                {
+                    MonitorId=monitorId,
+                    SharesCode= item.SharesCode,
+                    Market=item.Market
+                });
+            }
+            return resultList;
+        }
+
 
         /// <summary>
         /// 删除自选股
@@ -803,6 +932,34 @@ namespace MealTicket_Web_Handler
                     db.t_account_shares_optional_seat_rel.RemoveRange(seatRel);
                     db.SaveChanges();
 
+                    //判断自身是否有权限
+                    var account = (from item in db.t_account_baseinfo
+                                   where item.Id == basedata.AccountId
+                                   select item).FirstOrDefault();
+                    if (account == null)
+                    {
+                        throw new WebApiException(400,"账户信息错误");
+                    }
+                    if (account.TrendStatus == 1)
+                    {
+                        //判断是否临时指定股票
+                        var monitor = (from item in db.t_shares_monitor
+                                       where item.Market == optional.Market && item.SharesCode == optional.SharesCode && item.IsSpecial==true
+                                       select item).FirstOrDefault();
+                        if (monitor != null)
+                        {
+                            //判断是否其他人存在这只股票
+                            var tempAccount = (from item in db.t_account_baseinfo
+                                               join item2 in db.t_account_shares_optional on item.Id equals item2.AccountId
+                                               where item.TrendStatus == 1 && item2.Market == optional.Market && item2.SharesCode == optional.SharesCode
+                                               select item).FirstOrDefault();
+                            if (tempAccount == null)
+                            {
+                                db.t_shares_monitor.Remove(monitor);
+                                db.SaveChanges();
+                            }
+                        }
+                    }
 
                     tran.Commit();
                 }
@@ -859,6 +1016,39 @@ namespace MealTicket_Web_Handler
                     db.t_account_shares_optional_seat_rel.RemoveRange(seatRel);
                     db.SaveChanges();
 
+                    //判断自身是否有权限
+                    var account = (from item in db.t_account_baseinfo
+                                   where item.Id == basedata.AccountId
+                                   select item).FirstOrDefault();
+                    if (account == null)
+                    {
+                        throw new WebApiException(400, "账户信息错误");
+                    }
+                    if (account.TrendStatus == 1)
+                    {
+                        List<string> sharesList = optional.Select(e => e.SharesCode + "," + e.Market).ToList();
+                        //判断是否临时指定股票
+                        var monitor = (from item in db.t_shares_monitor
+                                       where sharesList.Contains(item.SharesInfo) && item.IsSpecial == true
+                                       select item).ToList();
+                        if (monitor.Count()>0)
+                        {
+                            sharesList = monitor.Select(e => e.SharesInfo).ToList();
+                            //判断是否其他人存在这只股票
+                            sharesList = (from item in db.t_account_baseinfo
+                                          join item2 in db.t_account_shares_optional on item.Id equals item2.AccountId
+                                          where item.TrendStatus == 1 && sharesList.Contains(item2.SharesInfo)
+                                          select item2.SharesInfo).Distinct().ToList();
+                            monitor = (from item in monitor
+                                       where !sharesList.Contains(item.SharesInfo)
+                                       select item).ToList();
+                            if (monitor.Count() > 0)
+                            {
+                                db.t_shares_monitor.RemoveRange(monitor);
+                                db.SaveChanges();
+                            }
+                        }
+                    }
 
                     tran.Commit();
                 }
@@ -1367,7 +1557,7 @@ namespace MealTicket_Web_Handler
                             orderby item.OrderIndex
                             select new SharesQuotesTodayInfo
                             {
-                                SharesName = item2.SharesName,
+                                SharesName = item.ShowName,
                                 ClosedPrice = ai == null ? 0 : ai.ClosedPrice,
                                 PresentPrice = ai == null ? 0 : ai.PresentPrice,
                                 DataTime = ai == null ? timeNow : ai.LastModified
@@ -2037,7 +2227,8 @@ namespace MealTicket_Web_Handler
                             PresentPrice = item4.PresentPrice,
                             OpenedPrice = item4.OpenedPrice,
                             Type = item.Type,
-                            PushTime = item.PushTime,
+                            PushTime = item.YesLimitTime!=null?item.YesLimitTime.Value:item.PushTime,
+                            Mark = item.Mark,
                             TriCountToday = item.TriCountToday,
                             RelId = item.RelId,
                             ConditionId = ai == null ? 0 : ai.Id,
@@ -2108,6 +2299,7 @@ namespace MealTicket_Web_Handler
                               select new AccountRiseLimitTriInfo
                               {
                                   PushTime = item.PushTime,
+                                  Mark = item.Mark,
                                   SharesCode = item.SharesCode,
                                   Market = item.Market,
                                   TodayDealCount = item.TodayDealCount,
@@ -2212,6 +2404,7 @@ namespace MealTicket_Web_Handler
                                   Fundmultiple = item.Fundmultiple,
                                   Range = item.Range,
                                   Type = item.Type,
+                                  Mark=item.Mark,
                                   DaysNowAvgDealAmount = ai == null ? 0 : ai.DaysNowAvgDealAmount,
                                   DaysNowAvgDealCount = ai == null ? 0 : ai.DaysNowAvgDealCount,
                                   PreNowAvgDealAmount = ai == null ? 0 : ai.PreNowAvgDealAmount,
@@ -2228,7 +2421,7 @@ namespace MealTicket_Web_Handler
         /// <returns></returns>
         public List<AccountRiseLimitTriDetails> GetAccountRiseLimitTriDetails(GetAccountTrendTriDetailsRequest request, HeadBase basedata)
         {
-            DateTime dateNow = DateTime.Now.Date;
+            DateTime dateNow = Helper.GetLastTradeDate(-9, 0, 0);
             if (!string.IsNullOrEmpty(request.Date))
             {
                 dateNow = DateTime.Parse(request.Date).Date;
@@ -16406,24 +16599,88 @@ select @buyId;";
         /// </summary>
         /// <param name="basedata"></param>
         /// <returns></returns>
-        public List<SharesPlateInfo> GetPlateRiseRateRankList(HeadBase basedata)
+        public List<SharesPlateInfo> GetPlateRiseRateRankList(DetailsRequest request,HeadBase basedata)
         {
-            var list = (from item in Singleton.Instance._SharesPlateSession.GetSessionData()
-                        join item2 in Singleton.Instance._SharesPlateQuotesSession.GetSessionData() on item.PlateId equals item2.PlateId
-                        where item.ChooseStatus == 1 || (item.IsBasePlate == 1 && item.BaseStatus == 1)
-                        orderby item2.RiseRate descending
-                        select new SharesPlateInfo
-                        { 
-                            TotalCount=item2.SharesCount,
-                            Name =item.PlateName,
-                            Id=item.PlateId,
-                            DownLimitCount=item2.DownLimitCount,
-                            RiseLimitCount=item2.RiseLimitCount,
-                            RiseRate=item2.RiseRate,
-                            Type=item.PlateType,
-                            Rank= item2.Rank
-                        }).Take(Singleton.Instance.PlateRankShow).ToList();
-            return list;
+            if (request.Id == 0)
+            {
+                var list = (from item in Singleton.Instance._SharesPlateSession.GetSessionData()
+                            join item2 in Singleton.Instance._SharesPlateQuotesSession.GetSessionData() on item.PlateId equals item2.PlateId
+                            where item.ChooseStatus == 1 || (item.IsBasePlate == 1 && item.BaseStatus == 1)
+                            orderby item2.RiseRate descending
+                            select new SharesPlateInfo
+                            {
+                                TotalCount = item2.SharesCount,
+                                Name = item.PlateName,
+                                Id = item.PlateId,
+                                DownLimitCount = item2.DownLimitCount,
+                                RiseLimitCount = item2.RiseLimitCount,
+                                RiseRate = item2.RiseRate,
+                                Type = item.PlateType,
+                                Rank = item2.Rank
+                            }).Take(Singleton.Instance.PlateRankShow).ToList();
+                return list;
+            }
+            else if (request.Id == 3)
+            {
+                var list = (from item in Singleton.Instance._SharesPlateSession.GetSessionData()
+                            join item2 in Singleton.Instance._SharesPlateQuotesSession.GetSessionData() on item.PlateId equals item2.PlateId
+                            where item.ChooseStatus == 1 || (item.IsBasePlate == 1 && item.BaseStatus == 1)
+                            orderby item2.RiseRate
+                            select new SharesPlateInfo
+                            {
+                                TotalCount = item2.SharesCount,
+                                Name = item.PlateName,
+                                Id = item.PlateId,
+                                DownLimitCount = item2.DownLimitCount,
+                                RiseLimitCount = item2.RiseLimitCount,
+                                RiseRate = item2.RiseRate,
+                                Type = item.PlateType,
+                                Rank = item2.Rank
+                            }).Take(Singleton.Instance.PlateRankShow).ToList();
+                return list;
+            }
+            else if (request.Id == 1)
+            {
+                var list = (from item in Singleton.Instance._SharesPlateSession.GetSessionData()
+                            join item2 in Singleton.Instance._SharesPlateQuotesSession.GetSessionData() on item.PlateId equals item2.PlateId
+                            where item.ChooseStatus == 1 || (item.IsBasePlate == 1 && item.BaseStatus == 1)
+                            orderby item2.RiseLimitCount descending
+                            select new SharesPlateInfo
+                            {
+                                TotalCount = item2.SharesCount,
+                                Name = item.PlateName,
+                                Id = item.PlateId,
+                                DownLimitCount = item2.DownLimitCount,
+                                RiseLimitCount = item2.RiseLimitCount,
+                                RiseRate = item2.RiseRate,
+                                Type = item.PlateType,
+                                Rank = item2.Rank
+                            }).Take(Singleton.Instance.PlateRankShow).ToList();
+                return list;
+            }
+            else if (request.Id == 2)
+            {
+                var list = (from item in Singleton.Instance._SharesPlateSession.GetSessionData()
+                            join item2 in Singleton.Instance._SharesPlateQuotesSession.GetSessionData() on item.PlateId equals item2.PlateId
+                            where item.ChooseStatus == 1 || (item.IsBasePlate == 1 && item.BaseStatus == 1)
+                            orderby item2.DownLimitCount descending
+                            select new SharesPlateInfo
+                            {
+                                TotalCount = item2.SharesCount,
+                                Name = item.PlateName,
+                                Id = item.PlateId,
+                                DownLimitCount = item2.DownLimitCount,
+                                RiseLimitCount = item2.RiseLimitCount,
+                                RiseRate = item2.RiseRate,
+                                Type = item.PlateType,
+                                Rank = item2.Rank
+                            }).Take(Singleton.Instance.PlateRankShow).ToList();
+                return list;
+            }
+            else 
+            {
+                return new List<SharesPlateInfo>();
+            }
         }
 
         #region====自动选票====
@@ -20265,12 +20522,13 @@ select @buyId;";
         }
         private GetSharesKLineListRes GetSharesKLine_1min(GetSharesKLineListRequest request)
         {
+            DateTime dateNow = DateTime.Now.Date;
             using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
             using (var db = new meal_ticketEntities())
             {
                 int resType = 1;
                 var result = from item in db.t_shares_securitybarsdata_1min
-                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.ClosedPrice > 0 || item.Time > dateNow)
                              select item;
                 if (request.MaxGroupTimeKey != -1)
                 {
@@ -20329,12 +20587,13 @@ select @buyId;";
         }
         private GetSharesKLineListRes GetSharesKLine_5min(GetSharesKLineListRequest request)
         {
+            DateTime dateNow = DateTime.Now.Date;
             using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
             using (var db = new meal_ticketEntities())
             {
                 int resType = 1;
                 var result = from item in db.t_shares_securitybarsdata_5min
-                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.ClosedPrice > 0 || item.Time > dateNow)
                              select item;
                 if (request.MaxGroupTimeKey != -1)
                 {
@@ -20393,12 +20652,13 @@ select @buyId;";
         }
         private GetSharesKLineListRes GetSharesKLine_15min(GetSharesKLineListRequest request)
         {
+            DateTime dateNow = DateTime.Now.Date;
             using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
             using (var db = new meal_ticketEntities())
             {
                 int resType = 1;
                 var result = from item in db.t_shares_securitybarsdata_15min
-                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.ClosedPrice > 0 || item.Time > dateNow)
                              select item;
                 if (request.MaxGroupTimeKey != -1)
                 {
@@ -20457,12 +20717,13 @@ select @buyId;";
         }
         private GetSharesKLineListRes GetSharesKLine_30min(GetSharesKLineListRequest request)
         {
+            DateTime dateNow = DateTime.Now.Date;
             using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
             using (var db = new meal_ticketEntities())
             {
                 int resType = 1;
                 var result = from item in db.t_shares_securitybarsdata_30min
-                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.ClosedPrice > 0 || item.Time > dateNow)
                              select item;
                 if (request.MaxGroupTimeKey != -1)
                 {
@@ -20521,12 +20782,13 @@ select @buyId;";
         }
         private GetSharesKLineListRes GetSharesKLine_60min(GetSharesKLineListRequest request)
         {
+            DateTime dateNow = DateTime.Now.Date;
             using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
             using (var db = new meal_ticketEntities())
             {
                 int resType = 1;
                 var result = from item in db.t_shares_securitybarsdata_60min
-                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.ClosedPrice > 0 || item.Time > dateNow)
                              select item;
                 if (request.MaxGroupTimeKey != -1)
                 {
@@ -20585,12 +20847,13 @@ select @buyId;";
         }
         private GetSharesKLineListRes GetSharesKLine_1day(GetSharesKLineListRequest request)
         {
+            DateTime dateNow = DateTime.Now.Date;
             using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
             using (var db = new meal_ticketEntities())
             {
                 int resType = 1;
                 var result = from item in db.t_shares_securitybarsdata_1day
-                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.ClosedPrice > 0 || item.Time > dateNow)
                              select item;
                 if (request.MaxGroupTimeKey != -1)
                 {
@@ -20649,12 +20912,13 @@ select @buyId;";
         }
         private GetSharesKLineListRes GetSharesKLine_1week(GetSharesKLineListRequest request)
         {
+            DateTime dateNow = DateTime.Now.Date;
             using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
             using (var db = new meal_ticketEntities())
             {
                 int resType = 1;
                 var result = from item in db.t_shares_securitybarsdata_1week
-                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.ClosedPrice > 0 || item.Time > dateNow)
                              select item;
                 if (request.MaxGroupTimeKey != -1)
                 {
@@ -20713,12 +20977,13 @@ select @buyId;";
         }
         private GetSharesKLineListRes GetSharesKLine_1month(GetSharesKLineListRequest request)
         {
+            DateTime dateNow = DateTime.Now.Date;
             using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
             using (var db = new meal_ticketEntities())
             {
                 int resType = 1;
                 var result = from item in db.t_shares_securitybarsdata_1month
-                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.ClosedPrice > 0 || item.Time > dateNow)
                              select item;
                 if (request.MaxGroupTimeKey != -1)
                 {
@@ -20777,12 +21042,13 @@ select @buyId;";
         }
         private GetSharesKLineListRes GetSharesKLine_1quarter(GetSharesKLineListRequest request)
         {
+            DateTime dateNow = DateTime.Now.Date;
             using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
             using (var db = new meal_ticketEntities())
             {
                 int resType = 1;
                 var result = from item in db.t_shares_securitybarsdata_1quarter
-                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.ClosedPrice > 0 || item.Time > dateNow)
                              select item;
                 if (request.MaxGroupTimeKey != -1)
                 {
@@ -20841,12 +21107,13 @@ select @buyId;";
         }
         private GetSharesKLineListRes GetSharesKLine_1year(GetSharesKLineListRequest request)
         {
+            DateTime dateNow = DateTime.Now.Date;
             using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
             using (var db = new meal_ticketEntities())
             {
                 int resType = 1;
                 var result = from item in db.t_shares_securitybarsdata_1year
-                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.ClosedPrice > 0 || item.Time > dateNow)
                              select item;
                 if (request.MaxGroupTimeKey != -1)
                 {
@@ -20929,7 +21196,7 @@ select @buyId;";
             using (var db = new meal_ticketEntities())
             {
                 var result = (from item in db.t_shares_securitybarsdata_1min
-                              where item.Market == request.Market && item.SharesCode == request.SharesCode && item.GroupTimeKey > startDateNum && item.GroupTimeKey < endDateNum
+                              where item.Market == request.Market && item.SharesCode == request.SharesCode && item.GroupTimeKey > startDateNum && item.GroupTimeKey < endDateNum && item.ClosedPrice>0
                               select item).ToList();
 
                 if (request.MaxTime != null)

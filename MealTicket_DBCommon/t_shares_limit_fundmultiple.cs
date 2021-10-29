@@ -24,5 +24,7 @@ namespace MealTicket_DBCommon
         public int FundMultiple { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
+        public int HighOpenRange { get; set; }
+        public int LowOpenRange { get; set; }
     }
 }

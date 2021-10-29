@@ -287,6 +287,7 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel_snapshot" Width="1.5" PointX="36.375" PointY="50.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel_snapshot_catalogue" Width="1.5" PointX="38.375" PointY="50.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel_snapshot_instructions" Width="1.5" PointX="40.375" PointY="50.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.v_plate_new" Width="1.5" PointX="42.375" PointY="50.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

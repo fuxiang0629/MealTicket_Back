@@ -1448,11 +1448,11 @@ namespace MealTicket_Handler.RunnerHandler
                     }
                     Dictionary<string, string> paraDic = new Dictionary<string, string>();
                     Regex regex = new Regex(@"{{\w*}}"); //匹配所有参数
-                    var matchGroup = regex.Match(item.SendContent).Groups;
+                    var matchGroup = regex.Matches(item.SendContent);
                     bool paraSuccess = true;
-                    for (int i = 0; i < matchGroup.Count; i++)
+                    foreach (Match g in matchGroup)
                     {
-                        string key = matchGroup[i].Value;
+                        string key = g.Value;
                         if (string.IsNullOrEmpty(key))
                         {
                             continue;

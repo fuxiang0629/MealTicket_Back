@@ -89,7 +89,6 @@ C:\Users\37863\Desktop\项目\饭票后端\SharesHqService\obj\Debug\SharesHqSer
 C:\Users\37863\Desktop\项目\饭票后端\SharesHqService\obj\Debug\SharesHqService.csproj.CopyComplete
 C:\Users\37863\Desktop\项目\饭票后端\SharesHqService\obj\Debug\SharesHqService.exe
 C:\Users\37863\Desktop\项目\饭票后端\SharesHqService\obj\Debug\SharesHqService.pdb
-F:\项目\饭票后端\SharesHqService\obj\Debug\SharesHqService.csprojAssemblyReference.cache
 D:\项目\饭票\后端\SharesHqService\bin\Debug\SharesHqService.exe.config
 D:\项目\饭票\后端\SharesHqService\bin\Debug\SharesHqService.exe
 D:\项目\饭票\后端\SharesHqService\bin\Debug\SharesHqService.pdb

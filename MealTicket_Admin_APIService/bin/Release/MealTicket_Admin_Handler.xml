@@ -668,6 +668,12 @@
             </summary>
             <param name="request"></param>
         </member>
+        <member name="M:MealTicket_Admin_Handler.FrontAccountHandler.ModifyFrontAccountTrendStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改前端账户走势权限状态
+            </summary>
+            <param name="request"></param>
+        </member>
         <member name="M:MealTicket_Admin_Handler.FrontAccountHandler.ModifyFrontAccountCashStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
             <summary>
             修改前端账户提现状态
@@ -873,6 +879,12 @@
         <member name="M:MealTicket_Admin_Handler.FrontAccountHandler.DeleteFrontAccountOptional(MealTicket_Admin_Handler.Model.DeleteRequest)">
             <summary>
             删除用户自选股
+            </summary>
+            <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.FrontAccountHandler.BatchDeleteFrontAccountOptional(MealTicket_Admin_Handler.Model.BatchDeleteFrontAccountOptionalRequest)">
+            <summary>
+            批量删除用户自选股
             </summary>
             <param name="request"></param>
         </member>
@@ -1242,6 +1254,12 @@
             </summary>
             <param name="request"></param>
             <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.FrontAccountHandler.ApplySharesToBuyBySys(MealTicket_Admin_Handler.Model.ApplySharesToBuyBySysRequest)">
+            <summary>
+            系统开仓
+            </summary>
+            <param name="request"></param>
         </member>
         <member name="M:MealTicket_Admin_Handler.Helper.CheckTradeDate(System.Nullable{System.DateTime})">
             <summary>
@@ -3896,6 +3914,46 @@
             参数值
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ApplySharesToBuyBySysRequest.AccountId">
+            <summary>
+            账户Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ApplySharesToBuyBySysRequest.Market">
+            <summary>
+            股票市场
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ApplySharesToBuyBySysRequest.SharesCode">
+            <summary>
+            股票代码
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ApplySharesToBuyBySysRequest.DealCount">
+            <summary>
+            成交数量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ApplySharesToBuyBySysRequest.DealPrice">
+            <summary>
+            成交价格
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ApplySharesToBuyBySysRequest.RealFundMultiple">
+            <summary>
+            杠杆倍数
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ApplySharesToBuyBySysRequest.CreateTime">
+            <summary>
+            委托时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ApplySharesToBuyBySysRequest.TradeAccountCode">
+            <summary>
+            证券账号
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.BatchAddFrontAccountSeatRequest.AccountId">
             <summary>
             用户Id
@@ -3909,6 +3967,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.BatchAddFrontAccountSeatRequest.ValidEndTime">
             <summary>
             有效期
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.BatchDeleteFrontAccountOptionalRequest.IdList">
+            <summary>
+            Id列表
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.BatchUpdateOptionalMonitorTrendParRequest.AccountId">
@@ -4284,6 +4347,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.FrontAccountInfo.MonitorStatus">
             <summary>
             监控状态1有效 2无效
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.FrontAccountInfo.TrendStatus">
+            <summary>
+            走势权限状态
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.FrontAccountInfo.MultipleChangeStatus">
@@ -10496,6 +10564,16 @@
             接近涨跌停幅度
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesTradeLeverRequest.HighOpenRange">
+            <summary>
+            今日高开幅度
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesTradeLeverRequest.LowOpenRange">
+            <summary>
+            今日低开幅度
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.AddSharesTradeLeverRequest.FundMultiple">
             <summary>
             杠杆倍数
@@ -11061,6 +11139,16 @@
             接近涨跌停幅度
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesTradeLeverInfo.HighOpenRange">
+            <summary>
+            今日高开幅度
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesTradeLeverInfo.LowOpenRange">
+            <summary>
+            今日低开幅度
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.SharesTradeLeverInfo.FundMultiple">
             <summary>
             杠杆倍数
@@ -11509,6 +11597,16 @@
         <member name="P:MealTicket_Admin_Handler.Model.ModifySharesTradeLeverRequest.NearLimitRange">
             <summary>
             接近涨跌停幅度
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesTradeLeverRequest.HighOpenRange">
+            <summary>
+            今日高开幅度
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesTradeLeverRequest.LowOpenRange">
+            <summary>
+            今日低开幅度
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.ModifySharesTradeLeverRequest.FundMultiple">

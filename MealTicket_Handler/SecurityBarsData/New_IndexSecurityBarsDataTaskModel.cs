@@ -87,9 +87,9 @@ namespace MealTicket_Handler.SecurityBarsData
         public int CalCount { get; set; }
 
         /// <summary>
-        /// 基准日
+        /// 是否更新变动
         /// </summary>
-        public DateTime? BaseDate { get; set; }
+        public bool IsUpdate { get; set; }
     }
 
     /// <summary>
@@ -106,6 +106,14 @@ namespace MealTicket_Handler.SecurityBarsData
         /// 股票代码
         /// </summary>
         public string SharesCode { get; set; }
+
+        public long SharesCodeNum 
+        {
+            get 
+            {
+                return long.Parse(SharesCode);
+            }
+        }
 
         /// <summary>
         /// 时间值
@@ -176,6 +184,7 @@ namespace MealTicket_Handler.SecurityBarsData
         /// 总市值
         /// </summary>
         public long TotalCapital { get; set; }
+
     }
 
     /// <summary>
@@ -234,15 +243,5 @@ namespace MealTicket_Handler.SecurityBarsData
         /// 基准日不加权价格平均
         /// </summary>
         public long NoWeightPrice { get; set; }
-
-        /// <summary>
-        /// 基准日股票在当天加权市值平均
-        /// </summary>
-        public int CurrWeightPrice { get; set; }
-
-        /// <summary>
-        /// 基准日股票在当天不加权市值平均
-        /// </summary>
-        public int CurrNoWeightPrice { get; set; }
     }
 }

@@ -43,6 +43,16 @@ namespace MealTicket_Admin_Handler.Model
         public int NearLimitRange { get; set; }
 
         /// <summary>
+        /// 今日高开幅度
+        /// </summary>
+        public int HighOpenRange { get; set; }
+
+        /// <summary>
+        /// 今日低开幅度
+        /// </summary>
+        public int LowOpenRange { get; set; }
+
+        /// <summary>
         /// 杠杆倍数
         /// </summary>
         public int FundMultiple { get; set; }
