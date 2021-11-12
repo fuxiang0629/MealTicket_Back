@@ -277,5 +277,30 @@ namespace MealTicket_Web_Handler
             }
             return dateNow;
         }
+
+        /// <summary>
+        /// 获取最近交易日日期
+        /// </summary>
+        /// <returns></returns>
+        public static DateTime GetLastTradeDate2(int hour = 0, int minute = 0, int second = 0, int day = 0)
+        {
+            DateTime dateNow = DateTime.Now.AddHours(hour).AddMinutes(minute).AddSeconds(second).Date;
+            int index = day > 0 ? 1 : -1;
+            day = Math.Abs(day);
+            int i = 0;
+            while (true)
+            {
+                if (Helper.CheckTradeDate(dateNow))
+                {
+                    if (i >= day)
+                    {
+                        break;
+                    }
+                    i++;
+                }
+                dateNow = dateNow.AddDays(index);
+            }
+            return dateNow;
+        }
     }
 }

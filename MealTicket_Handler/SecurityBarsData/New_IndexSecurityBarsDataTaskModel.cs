@@ -185,6 +185,16 @@ namespace MealTicket_Handler.SecurityBarsData
         /// </summary>
         public long TotalCapital { get; set; }
 
+        /// <summary>
+        /// 板块Id
+        /// </summary>
+        public long PlateId { get; set; }
+
+        /// <summary>
+        /// 加权类型
+        /// </summary>
+        public int WeightType { get; set; }
+
     }
 
     /// <summary>
@@ -196,6 +206,11 @@ namespace MealTicket_Handler.SecurityBarsData
         /// K线类型
         /// </summary>
         public int DataType { get; set; }
+
+        /// <summary>
+        /// 计算类型0板块需要自己计算 1板块不许计算
+        /// </summary>
+        public int CalType { get; set; }
 
         /// <summary>
         /// 数据列表
@@ -243,5 +258,18 @@ namespace MealTicket_Handler.SecurityBarsData
         /// 基准日不加权价格平均
         /// </summary>
         public long NoWeightPrice { get; set; }
+    }
+
+    public class PlateKlineData: SharesKlineData 
+    {
+        /// <summary>
+        /// 板块Id
+        /// </summary>
+        public long PlateId { get; set; }
+
+        /// <summary>
+        /// 加权类型
+        /// </summary>
+        public int WeightType { get; set; }
     }
 }

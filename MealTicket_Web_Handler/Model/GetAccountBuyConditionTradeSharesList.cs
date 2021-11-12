@@ -164,5 +164,40 @@ namespace MealTicket_Web_Handler.Model
         /// 是否存在股票监控列表
         /// </summary>
         public bool IsExists { get; set; }
+
+        /// <summary>
+        /// 开盘价
+        /// </summary>
+        public long OpenedPrice { get; set; }
+
+        /// <summary>
+        /// 换手率
+        /// </summary>
+        public int TodayHandsRate
+        {
+            get
+            {
+                if (CirculatingCapital == 0)
+                {
+                    return 0;
+                }
+                return (int)((TodayDealCount * 1.0 / CirculatingCapital) * 10000);
+            }
+        }
+
+        /// <summary>
+        /// 流通股本
+        /// </summary>
+        public long CirculatingCapital { get; set; }
+
+        /// <summary>
+        /// 成交金额
+        /// </summary>
+        public long TodayDealAmount { get; set; }
+
+        /// <summary>
+        /// 成交量
+        /// </summary>
+        public long TodayDealCount { get; set; }
     }
 }

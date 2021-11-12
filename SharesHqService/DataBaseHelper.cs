@@ -243,6 +243,11 @@ then delete;";
                 item.TriPriceType = 0;
                 item.TriNearLimitType = 0;
 
+                if (item.SharesName.Contains("ST"))
+                {
+                    item.IsST = true;
+                }
+
                 bool IsNewSharesFeatures = false;//是否新股
                 string[] ParamValue = Param.Split(',');
                 for (int i = 0; i < ParamValue.Length; i++)
@@ -925,6 +930,7 @@ values(t1.Market,t1.SharesCode,t1.PresentPrice,t1.ClosedPrice,t1.OpenedPrice,t1.
             table.Columns.Add("TriNearLimitType", typeof(int));
             table.Columns.Add("TotalAmount", typeof(long));
             table.Columns.Add("TotalCount", typeof(int));
+            table.Columns.Add("IsST", typeof(bool));
             #endregion
 
             foreach (var item in list)
@@ -998,6 +1004,7 @@ values(t1.Market,t1.SharesCode,t1.PresentPrice,t1.ClosedPrice,t1.OpenedPrice,t1.
                 row["TriNearLimitType"] = item.TriNearLimitType;
                 row["TotalAmount"] = item.TotalAmount;
                 row["TotalCount"] = item.TotalCount;
+                row["IsST"] = item.IsST;
                 table.Rows.Add(row);
             }
 

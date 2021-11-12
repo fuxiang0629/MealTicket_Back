@@ -456,6 +456,17 @@
           <Property Name="GroupId" Type="bigint" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="t_account_shares_buy_synchro_setting_opt_rel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SettingId" Type="bigint" Nullable="false" />
+          <Property Name="OptAccountId" Type="bigint" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="t_account_shares_conditiontrade_buy">
           <Key>
             <PropertyRef Name="Id" />
@@ -2247,6 +2258,52 @@
           <Property Name="RechargedTime" Type="datetime" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="t_search_tri">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountId" Type="bigint" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="LastPushTime" Type="datetime" />
+          <Property Name="LastPushMaxRate" Type="int" />
+          <Property Name="LastPushMinRate" Type="int" />
+          <Property Name="MinPushTimeInterval" Type="int" Nullable="false" />
+          <Property Name="MinPushMaxRateInterval" Type="int" Nullable="false" />
+          <Property Name="MinPushMinRateInterval" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+          <Property Name="LastPushDesc" Type="nvarchar" MaxLength="200" />
+          <Property Name="LastPushType" Type="int" Nullable="false" />
+          <Property Name="TriCount" Type="int" Nullable="false" />
+          <Property Name="MinPushRiseRateInterval" Type="int" Nullable="false" />
+          <Property Name="MinPushDownRateInterval" Type="int" Nullable="false" />
+          <Property Name="LastPushRate" Type="int" />
+        </EntityType>
+        <EntityType Name="t_search_tri_record">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountId" Type="bigint" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="PushTime" Type="datetime" Nullable="false" />
+          <Property Name="PushDesc" Type="nvarchar" MaxLength="200" />
+          <Property Name="PushType" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_search_tri_setting">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountId" Type="bigint" Nullable="false" />
+          <Property Name="TemplateId" Type="bigint" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="t_server">
           <Key>
             <PropertyRef Name="ServerId" />
@@ -3179,6 +3236,8 @@
           <Property Name="TriNearLimitType" Type="int" Nullable="false" />
           <Property Name="TotalAmount" Type="bigint" Nullable="false" />
           <Property Name="TotalCount" Type="int" Nullable="false" />
+          <Property Name="LimitUpDays" Type="int" Nullable="false" />
+          <Property Name="IsST" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_quotes_date_temp">
           <Key>
@@ -4116,6 +4175,26 @@
           <Property Name="DealCount" Type="nvarchar" MaxLength="50" />
           <Property Name="IsRead" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="t_tri_test">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="DataTime" Type="datetime" Nullable="false" />
+          <Property Name="OptionalId" Type="bigint" />
+          <Property Name="RelId" Type="bigint" />
+          <Property Name="AccountId" Type="bigint" />
+          <Property Name="Market" Type="int" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" />
+          <Property Name="SharesName" Type="nvarchar" MaxLength="50" />
+          <Property Name="TrendId" Type="bigint" />
+          <Property Name="TrendName" Type="nvarchar" MaxLength="50" />
+          <Property Name="TrendDescription" Type="nvarchar" MaxLength="500" />
+          <Property Name="TriPrice" Type="bigint" />
+          <Property Name="TriDesc" Type="nvarchar" MaxLength="200" />
+          <Property Name="PushTime" Type="datetime" />
+          <Property Name="RiseRate" Type="int" />
+        </EntityType>
         <!--生成过程中发现错误:
 警告 6002: 表/视图“meal_ticket.dbo.test”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
         <EntityType Name="test">
@@ -4963,6 +5042,7 @@
           <EntitySet Name="t_account_shares_buy_synchro_setting_authorized_group_rel" EntityType="Self.t_account_shares_buy_synchro_setting_authorized_group_rel" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_buy_synchro_setting_follow" EntityType="Self.t_account_shares_buy_synchro_setting_follow" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_buy_synchro_setting_group" EntityType="Self.t_account_shares_buy_synchro_setting_group" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_account_shares_buy_synchro_setting_opt_rel" EntityType="Self.t_account_shares_buy_synchro_setting_opt_rel" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_conditiontrade_buy" EntityType="Self.t_account_shares_conditiontrade_buy" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_conditiontrade_buy_details" EntityType="Self.t_account_shares_conditiontrade_buy_details" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_shares_conditiontrade_buy_details_auto" EntityType="Self.t_account_shares_conditiontrade_buy_details_auto" Schema="dbo" store:Type="Tables" />
@@ -5096,6 +5176,9 @@
           <EntitySet Name="t_push_template" EntityType="Self.t_push_template" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_recharge_abnormal_refund_record" EntityType="Self.t_recharge_abnormal_refund_record" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_recharge_record" EntityType="Self.t_recharge_record" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_search_tri" EntityType="Self.t_search_tri" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_search_tri_record" EntityType="Self.t_search_tri_record" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_search_tri_setting" EntityType="Self.t_search_tri_setting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_server" EntityType="Self.t_server" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_server_broker_account_rel" EntityType="Self.t_server_broker_account_rel" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_all" EntityType="Self.t_shares_all" Schema="dbo" store:Type="Tables" />
@@ -5205,6 +5288,7 @@
           <EntitySet Name="t_test" EntityType="Self.t_test" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_test_deal" EntityType="Self.t_test_deal" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_test_entrust" EntityType="Self.t_test_entrust" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_tri_test" EntityType="Self.t_tri_test" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="test" EntityType="Self.test" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [test].[Id] AS [Id], 
@@ -7919,6 +8003,8 @@
           <Property Name="TriNearLimitType" Type="Int32" Nullable="false" />
           <Property Name="TotalAmount" Type="Int64" Nullable="false" />
           <Property Name="TotalCount" Type="Int32" Nullable="false" />
+          <Property Name="LimitUpDays" Type="Int32" Nullable="false" />
+          <Property Name="IsST" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_quotes_date_temp">
           <Key>
@@ -9525,6 +9611,11 @@
             <Parameter Name="errorCode" Mode="InOut" Type="Int32" />
             <Parameter Name="errorMessage" Mode="InOut" Type="String" />
           </FunctionImport>
+          <EntitySet Name="t_account_shares_buy_synchro_setting_opt_rel" EntityType="meal_ticketModel.t_account_shares_buy_synchro_setting_opt_rel" />
+          <EntitySet Name="t_search_tri_setting" EntityType="meal_ticketModel.t_search_tri_setting" />
+          <EntitySet Name="t_search_tri" EntityType="meal_ticketModel.t_search_tri" />
+          <EntitySet Name="t_tri_test" EntityType="meal_ticketModel.t_tri_test" />
+          <EntitySet Name="t_search_tri_record" EntityType="meal_ticketModel.t_search_tri_record" />
         </EntityContainer>
         <EntityType Name="t_account_baseinfo">
           <Key>
@@ -10543,6 +10634,83 @@
           <Property Name="SharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="SharesMarket" Type="Int32" Nullable="false" />
           <Property Name="BaseDate" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_account_shares_buy_synchro_setting_opt_rel">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SettingId" Type="Int64" Nullable="false" />
+          <Property Name="OptAccountId" Type="Int64" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_search_tri_setting">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="TemplateId" Type="Int64" Nullable="false" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_search_tri">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LastPushTime" Type="DateTime" Precision="3" />
+          <Property Name="LastPushMaxRate" Type="Int32" />
+          <Property Name="LastPushMinRate" Type="Int32" />
+          <Property Name="MinPushTimeInterval" Type="Int32" Nullable="false" />
+          <Property Name="MinPushMaxRateInterval" Type="Int32" Nullable="false" />
+          <Property Name="MinPushMinRateInterval" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastPushDesc" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="LastPushType" Type="Int32" Nullable="false" />
+          <Property Name="TriCount" Type="Int32" Nullable="false" />
+          <Property Name="MinPushRiseRateInterval" Type="Int32" Nullable="false" />
+          <Property Name="MinPushDownRateInterval" Type="Int32" Nullable="false" />
+          <Property Name="LastPushRate" Type="Int32" />
+        </EntityType>
+        <EntityType Name="t_tri_test">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="DataTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="OptionalId" Type="Int64" />
+          <Property Name="RelId" Type="Int64" />
+          <Property Name="AccountId" Type="Int64" />
+          <Property Name="Market" Type="Int32" />
+          <Property Name="SharesCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SharesName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TrendId" Type="Int64" />
+          <Property Name="TrendName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TrendDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="TriPrice" Type="Int64" />
+          <Property Name="TriDesc" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="PushTime" Type="DateTime" Precision="3" />
+          <Property Name="RiseRate" Type="Int32" />
+        </EntityType>
+        <EntityType Name="t_search_tri_record">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PushTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="PushDesc" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="PushType" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -13241,6 +13409,8 @@
           <EntitySetMapping Name="t_shares_quotes_date">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes_date">
               <MappingFragment StoreEntitySet="t_shares_quotes_date">
+                <ScalarProperty Name="IsST" ColumnName="IsST" />
+                <ScalarProperty Name="LimitUpDays" ColumnName="LimitUpDays" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Market" ColumnName="Market" />
                 <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
@@ -15200,6 +15370,88 @@
             </EntityTypeMapping>
           </EntitySetMapping>
           <FunctionImportMapping FunctionImportName="P_ApplyTradeBuy_sys" FunctionName="meal_ticketModel.Store.P_ApplyTradeBuy_sys" />
+          <EntitySetMapping Name="t_account_shares_buy_synchro_setting_opt_rel">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_buy_synchro_setting_opt_rel">
+              <MappingFragment StoreEntitySet="t_account_shares_buy_synchro_setting_opt_rel">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="OptAccountId" ColumnName="OptAccountId" />
+                <ScalarProperty Name="SettingId" ColumnName="SettingId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_search_tri_setting">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_search_tri_setting">
+              <MappingFragment StoreEntitySet="t_search_tri_setting">
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="TemplateId" ColumnName="TemplateId" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_search_tri">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_search_tri">
+              <MappingFragment StoreEntitySet="t_search_tri">
+                <ScalarProperty Name="LastPushRate" ColumnName="LastPushRate" />
+                <ScalarProperty Name="MinPushDownRateInterval" ColumnName="MinPushDownRateInterval" />
+                <ScalarProperty Name="MinPushRiseRateInterval" ColumnName="MinPushRiseRateInterval" />
+                <ScalarProperty Name="TriCount" ColumnName="TriCount" />
+                <ScalarProperty Name="LastPushType" ColumnName="LastPushType" />
+                <ScalarProperty Name="LastPushDesc" ColumnName="LastPushDesc" />
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="MinPushMinRateInterval" ColumnName="MinPushMinRateInterval" />
+                <ScalarProperty Name="MinPushMaxRateInterval" ColumnName="MinPushMaxRateInterval" />
+                <ScalarProperty Name="MinPushTimeInterval" ColumnName="MinPushTimeInterval" />
+                <ScalarProperty Name="LastPushMinRate" ColumnName="LastPushMinRate" />
+                <ScalarProperty Name="LastPushMaxRate" ColumnName="LastPushMaxRate" />
+                <ScalarProperty Name="LastPushTime" ColumnName="LastPushTime" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_tri_test">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_tri_test">
+              <MappingFragment StoreEntitySet="t_tri_test">
+                <ScalarProperty Name="RiseRate" ColumnName="RiseRate" />
+                <ScalarProperty Name="PushTime" ColumnName="PushTime" />
+                <ScalarProperty Name="TriDesc" ColumnName="TriDesc" />
+                <ScalarProperty Name="TriPrice" ColumnName="TriPrice" />
+                <ScalarProperty Name="TrendDescription" ColumnName="TrendDescription" />
+                <ScalarProperty Name="TrendName" ColumnName="TrendName" />
+                <ScalarProperty Name="TrendId" ColumnName="TrendId" />
+                <ScalarProperty Name="SharesName" ColumnName="SharesName" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="RelId" ColumnName="RelId" />
+                <ScalarProperty Name="OptionalId" ColumnName="OptionalId" />
+                <ScalarProperty Name="DataTime" ColumnName="DataTime" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_search_tri_record">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_search_tri_record">
+              <MappingFragment StoreEntitySet="t_search_tri_record">
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="PushType" ColumnName="PushType" />
+                <ScalarProperty Name="PushDesc" ColumnName="PushDesc" />
+                <ScalarProperty Name="PushTime" ColumnName="PushTime" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

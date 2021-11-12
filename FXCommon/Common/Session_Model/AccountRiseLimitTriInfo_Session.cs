@@ -57,5 +57,10 @@ namespace FXCommon.Common
         /// 昨日涨跌停时间
         /// </summary>
         public DateTime? YesLimitTime { get; set; }
+
+        /// <summary>
+        /// 涨停连板次数
+        /// </summary>
+        public int LimitUpDays { get; set; }
     }
 }

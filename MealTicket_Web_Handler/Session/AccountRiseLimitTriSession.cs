@@ -82,6 +82,8 @@ namespace MealTicket_Web_Handler
                 //配置信息
                 var setting = (from item in db.t_shares_limit_fundmultiple
                                select item).ToList();
+                //当前是否交易时间
+                bool isTradeTime = Helper.CheckTradeTime();
 
                 var result = (from item in db.t_shares_quotes_date
                               where item.Date == dateNowStr
@@ -90,15 +92,14 @@ namespace MealTicket_Web_Handler
                                   Market = item.Market,
                                   SharesCode = item.SharesCode,
                                   ClosedPrice = item.ClosedPrice,
-                                  OpenPrice=item.OpenedPrice,
+                                  OpenPrice = item.OpenedPrice,
                                   PresentPrice = item.PresentPrice,
                                   PriceType = item.PriceType,
                                   LimitUpCount = item.LimitUpCount,
                                   LimitDownCount = item.TriLimitDownCount,
-                                  TriNearLimitType = item.TriNearLimitType
+                                  TriNearLimitType = item.TriNearLimitType,
+                                  LimitUpDays = (!isTradeTime && item.PriceType != 1) ? 0 : (item.LimitUpDays + (item.PriceType == 1 ? 1 : 0))
                               }).ToList();
-                //当前是否交易时间
-                bool isTradeTime = Helper.CheckTradeTime();
 
                 List<AccountRiseLimitTriInfo_Session> tempList = new List<AccountRiseLimitTriInfo_Session>();
                 foreach (var item in result)
@@ -123,6 +124,7 @@ namespace MealTicket_Web_Handler
                             {
                                 SharesCode = item.SharesCode,
                                 Market = item.Market,
+                                LimitUpDays=item.LimitUpDays,
                                 PresentPrice = item.PresentPrice,
                                 Type = -1,
                                 ClosedPrice = item.ClosedPrice,
@@ -137,6 +139,7 @@ namespace MealTicket_Web_Handler
                                 {
                                     SharesCode = item.SharesCode,
                                     Market = item.Market,
+                                    LimitUpDays = item.LimitUpDays,
                                     PresentPrice = item.PresentPrice,
                                     Type = -11,
                                     ClosedPrice = item.ClosedPrice,
@@ -158,6 +161,7 @@ namespace MealTicket_Web_Handler
                             {
                                 SharesCode = item.SharesCode,
                                 Market = item.Market,
+                                LimitUpDays = item.LimitUpDays,
                                 PresentPrice = item.PresentPrice,
                                 Type = -2,
                                 ClosedPrice = item.ClosedPrice,
@@ -172,6 +176,7 @@ namespace MealTicket_Web_Handler
                                 {
                                     SharesCode = item.SharesCode,
                                     Market = item.Market,
+                                    LimitUpDays = item.LimitUpDays,
                                     PresentPrice = item.PresentPrice,
                                     Type = -12,
                                     ClosedPrice = item.ClosedPrice,
@@ -193,6 +198,7 @@ namespace MealTicket_Web_Handler
                             {
                                 SharesCode = item.SharesCode,
                                 Market = item.Market,
+                                LimitUpDays = item.LimitUpDays,
                                 PresentPrice = item.PresentPrice,
                                 Type = -3,
                                 ClosedPrice = item.ClosedPrice,
@@ -212,6 +218,7 @@ namespace MealTicket_Web_Handler
                             {
                                 SharesCode = item.SharesCode,
                                 Market = item.Market,
+                                LimitUpDays = item.LimitUpDays,
                                 PresentPrice = item.PresentPrice,
                                 Type = -4,
                                 ClosedPrice = item.ClosedPrice,
@@ -231,6 +238,7 @@ namespace MealTicket_Web_Handler
                             {
                                 SharesCode = item.SharesCode,
                                 Market = item.Market,
+                                LimitUpDays = item.LimitUpDays,
                                 PresentPrice = item.PresentPrice,
                                 Type = -5,
                                 ClosedPrice = item.ClosedPrice,
@@ -250,6 +258,7 @@ namespace MealTicket_Web_Handler
                             {
                                 SharesCode = item.SharesCode,
                                 Market = item.Market,
+                                LimitUpDays = item.LimitUpDays,
                                 PresentPrice = item.PresentPrice,
                                 Type = -6,
                                 ClosedPrice = item.ClosedPrice,
@@ -269,6 +278,7 @@ namespace MealTicket_Web_Handler
                             {
                                 SharesCode = item.SharesCode,
                                 Market = item.Market,
+                                LimitUpDays = item.LimitUpDays,
                                 PresentPrice = item.PresentPrice,
                                 Type = -7,
                                 ClosedPrice = item.ClosedPrice,
@@ -285,6 +295,7 @@ namespace MealTicket_Web_Handler
                                 {
                                     SharesCode = item.SharesCode,
                                     Market = item.Market,
+                                    LimitUpDays = item.LimitUpDays,
                                     PresentPrice = item.PresentPrice,
                                     Type = -11,
                                     ClosedPrice = item.ClosedPrice,
@@ -304,6 +315,7 @@ namespace MealTicket_Web_Handler
                             {
                                 SharesCode = item.SharesCode,
                                 Market = item.Market,
+                                LimitUpDays = item.LimitUpDays,
                                 PresentPrice = item.PresentPrice,
                                 Type = -8,
                                 ClosedPrice = item.ClosedPrice,
@@ -320,6 +332,7 @@ namespace MealTicket_Web_Handler
                                 {
                                     SharesCode = item.SharesCode,
                                     Market = item.Market,
+                                    LimitUpDays = item.LimitUpDays,
                                     PresentPrice = item.PresentPrice,
                                     Type = -12,
                                     ClosedPrice = item.ClosedPrice,
@@ -339,6 +352,7 @@ namespace MealTicket_Web_Handler
                         {
                             SharesCode = item.SharesCode,
                             Market = item.Market,
+                            LimitUpDays = item.LimitUpDays,
                             PresentPrice = item.PresentPrice,
                             Type = -9,
                             ClosedPrice = item.ClosedPrice,
@@ -354,6 +368,7 @@ namespace MealTicket_Web_Handler
                         {
                             SharesCode = item.SharesCode,
                             Market = item.Market,
+                            LimitUpDays = item.LimitUpDays,
                             PresentPrice = item.PresentPrice,
                             Type = -10,
                             ClosedPrice = item.ClosedPrice,

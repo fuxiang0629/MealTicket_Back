@@ -1,5 +1,6 @@
 ﻿using FXCommon.Common;
 using MealTicket_DBCommon;
+using MealTicket_Handler.RunnerHandler;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -282,6 +283,7 @@ namespace MealTicket_Handler.SecurityBarsData
         /// <returns></returns>
         public void LoadSharesPlateSession()
         {
+            Logger.WriteFileLog("===加载快照缓存===", null);
             DateTime dateNow = DateTime.Now.Date;
             using (var db = new meal_ticketEntities())
             {
@@ -290,14 +292,17 @@ namespace MealTicket_Handler.SecurityBarsData
                             where item.Date == dateNow
                             group item by new { item.Market, item.SharesCode } into g
                             select g).ToList();
+                Logger.WriteFileLog("===加载快照缓存1===", null);
                 foreach (var item in list)
                 {
                     SetSharesPlateSession(long.Parse(item.Key.SharesCode) * 10 + item.Key.Market, item.Select(e => e.PlateId).ToList());
                 }
+                Logger.WriteFileLog("===加载快照缓存2===", null);
                 var list2 = (from item in db.t_shares_plate_rel_snapshot
                             where item.Date == dateNow
                             group item by item.PlateId into g
                             select g).ToList();
+                Logger.WriteFileLog("===加载快照缓存3===", null);
                 List<int> dataTypeList = Singleton.Instance.SecurityBarsDataTypeList;
                 foreach (var item in list2)
                 {
@@ -312,6 +317,7 @@ namespace MealTicket_Handler.SecurityBarsData
                         SetSharesByPlateSession(item.Key * 100 + dataType, dic);
                     }
                 }
+                Logger.WriteFileLog("===加载快照缓存4===", null);
             }
         }
 
@@ -475,6 +481,101 @@ inner join
         }
         #endregion
 
+        #region===板块最后一条数据缓存===
+        /// <summary>
+        /// PlateId*1000+WeightType*100+DataType=>K线信息
+        /// </summary>
+        Dictionary<long, PlateKlineData> PlateKlineLastSession = new Dictionary<long, PlateKlineData>();
+
+        /// <summary>
+        /// 获取板块最后一条数据缓存
+        /// </summary>
+        /// <returns></returns>
+        public PlateKlineData GetPlateKlineLastSession(long key)
+        {
+            PlateKlineData temp = null;
+            if (PlateKlineLastSession.ContainsKey(key))
+            {
+                temp = PlateKlineLastSession[key];
+            }
+            return temp;
+        }
+
+        /// <summary>
+        /// 设置板块最后一条数据缓存
+        /// </summary>
+        public void SetPlateKlineLastSession(long key, PlateKlineData data)
+        {
+            PlateKlineLastSession[key] = data;
+        }
+
+        /// <summary>
+        /// 初始化最后一条数据缓存
+        /// </summary>
+        public void LoadPlateSecurityBarsLastData()
+        {
+            List<int> dataTypeList = Singleton.Instance.SecurityBarsDataTypeList;
+            int taskCount = dataTypeList.Count();
+            Task[] taskArr = new Task[taskCount];
+
+            for (int i = 0; i < taskCount; i++)
+            {
+                int dataType = dataTypeList[i];
+                taskArr[i] = Task.Factory.StartNew(() =>
+                {
+                    string tableName = "";
+                    if (!ParsePlateTableName(dataType, ref tableName))
+                    {
+                        return;
+                    }
+                    long groupTimeKey = 0;
+                    if (!ParseTimeGroupKey(DateTime.Now.Date, dataType, ref groupTimeKey))
+                    {
+                        return;
+                    }
+                    List<PlateKlineData> lastData = new List<PlateKlineData>();
+                    using (var db = new meal_ticketEntities())
+                    {
+                        db.Database.CommandTimeout = 600;
+                        if (dataType == 2)
+                        {
+                            string sql = @"select t.PlateId,t.WeightType,t.Market,t.SharesCode,t.GroupTimeKey,t.PreClosePrice,t.LastTradeStock,t.LastTradeAmount,t.ClosedPrice,t.TradeStock,t.MaxPrice,t.MinPrice,t.OpenedPrice,
+  t.[Time],t.TotalCapital,t.Tradable,t.TradeAmount,t.YestodayClosedPrice 
+from t_shares_plate_securitybarsdata_1min t with(nolock)
+inner join 
+(
+	select PlateId,WeightType,Max(GroupTimeKey)GroupTimeKey
+	from t_shares_plate_securitybarsdata_1min with(nolock)
+	where [Time]<convert(varchar(10),dateadd(DAY,1,getdate()),120)
+	group by PlateId,WeightType
+)t1 on t.PlateId=t1.PlateId and t.WeightType=t1.WeightType and t.GroupTimeKey=t1.GroupTimeKey";
+                            lastData = db.Database.SqlQuery<PlateKlineData>(sql).ToList();
+                        }
+                        else
+                        {
+                            string sql = string.Format(@"select t.PlateId,t.WeightType,t.Market,t.SharesCode,t.GroupTimeKey,t.PreClosePrice,t.LastTradeStock,t.LastTradeAmount,t.ClosedPrice,t.TradeStock,t.MaxPrice,t.MinPrice,t.OpenedPrice,
+  t.[Time],t.TotalCapital,t.Tradable,t.TradeAmount
+from {0} t with(nolock)
+inner join 
+(
+	select PlateId,WeightType,Max(GroupTimeKey)GroupTimeKey
+	from {0} with(nolock)
+	where [Time]<convert(varchar(10),dateadd(DAY,1,getdate()),120)
+	group by PlateId,WeightType
+)t1 on t.PlateId=t1.PlateId and t.WeightType=t1.WeightType and t.GroupTimeKey=t1.GroupTimeKey", tableName);
+                            lastData = db.Database.SqlQuery<PlateKlineData>(sql).ToList();
+                        }
+                    }
+                    foreach (var item in lastData)
+                    {
+                        SetPlateKlineLastSession(item.PlateId * 1000 + item.WeightType * 100 + dataType, item);
+                    }
+                });
+            }
+            Task.WaitAll(taskArr);
+        }
+        #endregion
+
         /// <summary>
         /// 股票K线数据队列
         /// </summary>
@@ -516,29 +617,22 @@ inner join
         {
             DailyInitThread = new Thread(()=>
             { 
-                DateTime TaskSuccessLastTime = DateTime.Parse("1990-01-01");
+                DateTime DailyTaskSuccessLastTime = DateTime.Parse("1990-01-01");
                 while (true)
                 {
                     try 
                     {
                         int obj = 0;
-                        if (DailyInitWaitQueue.WaitMessage(ref obj, 600000))
+                        if (DailyInitWaitQueue.WaitMessage(ref obj, Singleton.Instance.SecurityBarsIntervalTime))
                         {
                             break;
                         }
-                        TimeSpan spanNow = TimeSpan.Parse(DateTime.Now.ToString("HH:mm:ss"));
-                        if (spanNow < TimeSpan.Parse("00:30:00") || spanNow > TimeSpan.Parse("05:30:00"))
-                        {
-                            continue;
-                        }
-                        if (DateTime.Now.Date <= TaskSuccessLastTime)
-                        {
-                            continue;
-                        }
-                        LoadPlateSession();
-                        UpdateTodayPlateRelSnapshot();
-                        LoadPlateKlineSession();
-                        TaskSuccessLastTime = DateTime.Now;
+                        DoDailyTask(ref DailyTaskSuccessLastTime);
+                        //if (!RunnerHelper.CheckTradeTime2(DateTime.Now.AddSeconds(-180)) && !RunnerHelper.CheckTradeTime2(DateTime.Now.AddSeconds(180)))
+                        //{
+                        //    continue;
+                        //}
+                        DoRealTimeTask();
                     }
                     catch (Exception ex)
                     {
@@ -547,6 +641,107 @@ inner join
                 }
             });
             DailyInitThread.Start();
+        }
+
+        /// <summary>
+        /// 每日任务
+        /// </summary>
+        private void DoDailyTask(ref DateTime TaskSuccessLastTime)
+        {
+            TimeSpan spanNow = TimeSpan.Parse(DateTime.Now.ToString("HH:mm:ss"));
+            if (spanNow < TimeSpan.Parse("00:30:00") || spanNow > TimeSpan.Parse("05:30:00"))
+            {
+                return;
+            }
+            if (DateTime.Now.Date <= TaskSuccessLastTime)
+            {
+                return;
+            }
+            //更新板块数据
+            LoadPlateSession();
+            //更新板块内股票快照数据
+            UpdateTodayPlateRelSnapshot();
+            //更新计算结果缓存数据
+            LoadPlateKlineSession();
+            //解析执行指令
+            ToParseAndDoOrder();
+            TaskSuccessLastTime = DateTime.Now;
+        }
+
+        /// <summary>
+        /// 实时任务
+        /// </summary>
+        private void DoRealTimeTask()
+        {
+            List<dynamic> sendList = new List<dynamic>();
+            foreach (int dataType in Singleton.Instance.SecurityBarsDataTypeList)
+            {
+                List<dynamic> DataList = new List<dynamic>();
+                foreach (var item in _SharesPlateSessionDic)
+                {
+                    long key = 0;
+                    if (!string.IsNullOrEmpty(item.Value.WeightSharesCode))
+                    {
+                        key = item.Value.PlateId * 1000 + 200 + dataType;
+                        var plateLast = GetPlateKlineLastSession(key);
+                        long tempGroupTimeKey=0;
+                        if (plateLast == null)
+                        {
+                            ParseTimeGroupKey(DateTime.Now.Date, dataType,ref tempGroupTimeKey);
+                        }
+
+                        DataList.Add(new
+                        {
+                            PlateId = item.Key,
+                            SharesCode = item.Value.WeightSharesCode,
+                            Market = item.Value.WeightMarket,
+                            WeightType = 2,
+                            StartTimeKey = plateLast == null ? tempGroupTimeKey : plateLast.GroupTimeKey,
+                            EndTimeKey = -1,
+                            PreClosePrice = plateLast == null ? 0 : plateLast.PreClosePrice,
+                            YestodayClosedPrice = plateLast == null ? 0 : plateLast.YestodayClosedPrice,
+                            LastTradeStock = plateLast == null ? 0 : plateLast.LastTradeStock,
+                            LastTradeAmount = plateLast == null ? 0 : plateLast.LastTradeAmount
+                        });
+                    }
+                    if (!string.IsNullOrEmpty(item.Value.NoWeightSharesCode))
+                    {
+                        key = item.Value.PlateId * 1000 + 100 + dataType;
+                        var plateLast = GetPlateKlineLastSession(key);
+                        long tempGroupTimeKey = 0;
+                        if (plateLast == null)
+                        {
+                            ParseTimeGroupKey(DateTime.Now.Date, dataType, ref tempGroupTimeKey);
+                        }
+
+                        DataList.Add(new
+                        {
+                            PlateId = item.Key,
+                            SharesCode = item.Value.NoWeightSharesCode,
+                            Market = item.Value.NoWeightMarket,
+                            WeightType = 1,
+                            StartTimeKey = plateLast == null ? tempGroupTimeKey : plateLast.GroupTimeKey,
+                            EndTimeKey = -1,
+                            PreClosePrice = plateLast == null ? 0 : plateLast.PreClosePrice,
+                            YestodayClosedPrice = plateLast == null ? 0 : plateLast.YestodayClosedPrice,
+                            LastTradeStock = plateLast == null ? 0 : plateLast.LastTradeStock,
+                            LastTradeAmount = plateLast == null ? 0 : plateLast.LastTradeAmount
+                        });
+                    }
+                }
+                sendList.Add(new
+                {
+                    DataType = dataType,
+                    SecurityBarsGetCount = 0,
+                    DataList = DataList
+                });
+                Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new
+                {
+                    TaskGuid = "",
+                    HandlerType = 3,
+                    PackageList = sendList
+                })), "SecurityBars", "1min");
+            }
         }
 
         /// <summary>
@@ -566,17 +761,39 @@ inner join
                         {
                             break;
                         }
-                        Logger.WriteFileLog("===1.收到数据,数据类型:" + data.DataType + "，开始处理,总数量" + data.SharesKlineData.Count() + "===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                        if (data.CalType == 1)
+                        {
+                            Logger.WriteFileLog(JsonConvert.SerializeObject(data),null);
+                            var list = (from item in data.SharesKlineData
+                                        select new PlateKlineSession
+                                        {
+                                            TotalLastTradeStock=item.LastTradeStock,
+                                            TotalTradeStock=item.TradeStock,
+                                            CalCount=1,
+                                            GroupTimeKey=item.GroupTimeKey,
+                                            PlateId=item.PlateId,
+                                            Time=item.Time.Value,
+                                            TotalClosedPrice=item.ClosedPrice,
+                                            TotalMaxPrice=item.MaxPrice,
+                                            TotalLastTradeAmount=item.LastTradeAmount,
+                                            TotalMinPrice=item.MinPrice,
+                                            TotalOpenedPrice=item.OpenedPrice,
+                                            TotalPreClosePrice=item.PreClosePrice,
+                                            TotalTradeAmount=item.TradeAmount,
+                                            TotalYestodayClosedPrice=item.YestodayClosedPrice,
+                                            WeightType=item.WeightType
+                                        }).ToList();
+                            using (var db = new meal_ticketEntities())
+                            {
+                                _bulkData(data.DataType, list, db,1);
+                            }
+                        }
+                        else
+                        {
+                            ToHandler(data);
 
-                        ToHandler(data);
-
-                        Logger.WriteFileLog("===2.处理完成，开始导入===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
-                        InsertToDatabase();
-                        Logger.WriteFileLog("===3.导入完成===" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
-                        Logger.WriteFileLog("============================", null);
-                        Logger.WriteFileLog("============================", null);
-                        Logger.WriteFileLog("============================", null);
-                        Logger.WriteFileLog("============================", null);
+                            InsertToDatabase();
+                        }
                     }
                     catch (Exception ex)
                     {
@@ -585,6 +802,14 @@ inner join
                 }
             });
             KlineThread.Start();
+        }
+
+        /// <summary>
+        /// 解析执行指令数据
+        /// </summary>
+        private void ToParseAndDoOrder() 
+        {
+
         }
 
         /// <summary>
@@ -870,7 +1095,6 @@ inner join
             }
             if (BulkData(dataDic))
             {
-                //RemovePlateKlineSession(tempDic);
                 ResetPlateKlineSessionIsUpdate();
             }
         }
@@ -919,7 +1143,7 @@ inner join
         /// <summary>
         /// 导入数据
         /// </summary>
-        private void _bulkData(int dataType, List<PlateKlineSession> list, meal_ticketEntities db)
+        private void _bulkData(int dataType, List<PlateKlineSession> list, meal_ticketEntities db,int type=0)
         {
             list = (from item in list
                     group item by new { item.PlateId, item.WeightType, item.GroupTimeKey } into g
@@ -949,6 +1173,7 @@ inner join
             table.Columns.Add("BaseDate", typeof(DateTime));
             table.Columns.Add("BasePrice", typeof(long));
             table.Columns.Add("CalCount", typeof(int));
+            table.Columns.Add("IndexInit", typeof(int));
 
             var weightList = list.Where(e => e.WeightType == 2).ToList();
             var noWeightList = list.Where(e => e.WeightType == 1).ToList();
@@ -963,24 +1188,30 @@ inner join
                 noWeightMaxGroupKey = noWeightList.Max(e => e.GroupTimeKey);
             }
 
+            long basePrice = 0;
+            DateTime BaseDate = DateTime.Now.Date;
             foreach (var item in list)
             {
-                var baseDateInfo = (from x in Singleton.Instance._SharesPlateSession.GetSessionData()
-                                    where x.PlateId == item.PlateId && x.BaseDate != null && x.BaseDate < DateTime.Now && x.BaseDateNoWeightPrice>0 && x.BaseDateWeightPrice>0
-                                    select new PlateBaseDataSession
-                                    {
-                                        PlateId = x.PlateId,
-                                        BaseDate = x.BaseDate.Value,
-                                        NoWeightPrice = x.BaseDateNoWeightPrice,
-                                        WeightPrice = x.BaseDateWeightPrice
-                                    }).FirstOrDefault();
-
-                if (baseDateInfo == null)
+                if (!_SharesPlateSessionDic.ContainsKey(item.PlateId))
                 {
                     continue;
                 }
+                var baseDateInfo = _SharesPlateSessionDic[item.PlateId];
+                int indexInit = Singleton.Instance.IndexInitValueDic[baseDateInfo.CalType];
+                if (type == 0)
+                {
+                    if (baseDateInfo.BaseDate == null || baseDateInfo.BaseDate > DateTime.Now || baseDateInfo.BaseDateNoWeightPrice <= 0 || baseDateInfo.BaseDateWeightPrice <= 0)
+                    {
+                        continue;
+                    }
 
-                long basePrice = item.WeightType == 1 ? baseDateInfo.NoWeightPrice : baseDateInfo.WeightPrice;
+                    basePrice = item.WeightType == 1 ? baseDateInfo.BaseDateNoWeightPrice : baseDateInfo.BaseDateWeightPrice;
+                    BaseDate = baseDateInfo.BaseDate.Value;
+                }
+                else
+                {
+                    basePrice = indexInit * 10000;
+                }
 
                 DataRow row = table.NewRow();
                 row["WeightType"] = item.WeightType;
@@ -1003,9 +1234,10 @@ inner join
                 row["TotalCapital"] = 0;
                 row["IsLast"] = (item.WeightType == 2 && item.GroupTimeKey == weightMaxGroupKey) || (item.WeightType == 1 && item.GroupTimeKey == noWeightMaxGroupKey) ? true : false;
                 row["LastModified"] = DateTime.Now;
-                row["BaseDate"] = baseDateInfo.BaseDate;
+                row["BaseDate"] = BaseDate;
                 row["BasePrice"] = basePrice;
                 row["CalCount"] = item.CalCount;
+                row["IndexInit"] = indexInit;
                 table.Rows.Add(row);
             }
 
@@ -1020,7 +1252,6 @@ inner join
             SqlParameter dataType_parameter = new SqlParameter("@dataType", SqlDbType.Int);
             dataType_parameter.Value = dataType;
             db.Database.ExecuteSqlCommand("exec P_Shares_Plate_SecurityBarsData_Update @sharesPlateSecurityBarsData,@dataType", parameter, dataType_parameter);
-
         }
 
         /// <summary>

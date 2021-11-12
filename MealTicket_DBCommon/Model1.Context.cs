@@ -310,6 +310,11 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_shares_plate_rel_snapshot_catalogue> t_shares_plate_rel_snapshot_catalogue { get; set; }
         public virtual DbSet<t_shares_plate_rel_snapshot_instructions> t_shares_plate_rel_snapshot_instructions { get; set; }
         public virtual DbSet<v_plate_new> v_plate_new { get; set; }
+        public virtual DbSet<t_account_shares_buy_synchro_setting_opt_rel> t_account_shares_buy_synchro_setting_opt_rel { get; set; }
+        public virtual DbSet<t_search_tri_setting> t_search_tri_setting { get; set; }
+        public virtual DbSet<t_search_tri> t_search_tri { get; set; }
+        public virtual DbSet<t_tri_test> t_tri_test { get; set; }
+        public virtual DbSet<t_search_tri_record> t_search_tri_record { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)

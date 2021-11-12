@@ -81,6 +81,11 @@ namespace MealTicket_Web_Handler
 
         public int MaxTrendCheckTaskCount = 32;
 
+        /// <summary>
+        /// 监控搜索间隔
+        /// </summary>
+        public int SearchInterval = 15000;
+
         #region===再触发设置===
         public int MinPushTimeInterval = 180;
         public int MinPushRateInterval = 60;
@@ -102,7 +107,10 @@ namespace MealTicket_Web_Handler
         public int NewTransactiondataTaskUpdateCountOnce = 5000;//单次写分时数据数量
         #endregion
 
-
+        /// <summary>
+        /// 板块指数加权类型
+        /// </summary>
+        public Dictionary<int, int> PlateIndexTypeDic = new Dictionary<int, int>();
 
         /// <summary>
         /// 自动买入最大任务数量
@@ -175,6 +183,11 @@ namespace MealTicket_Web_Handler
 
         private Singleton()
         {
+            PlateIndexTypeDic.Add(0, 2);
+            PlateIndexTypeDic.Add(1, 2);
+            PlateIndexTypeDic.Add(2, 1);
+            PlateIndexTypeDic.Add(3, 2);
+
             handlerThreadCount = 10;
             connString_meal_ticket = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             connString_transactiondata = ConfigurationManager.ConnectionStrings["ConnectionString_data"].ConnectionString;
@@ -260,6 +273,10 @@ namespace MealTicket_Web_Handler
             if (_AccountTrendTriSession != null)
             {
                 _AccountTrendTriSession.Dispose();
+            }
+            if (_AccountSearchTriSession != null)
+            {
+                _AccountSearchTriSession.Dispose();
             }
             if (_SharesHisRiseRateSession != null)
             {
@@ -478,6 +495,38 @@ namespace MealTicket_Web_Handler
                     }
                 }
                 catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "SearchMonitor"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                        SearchInterval = sysValue.SearchInterval;
+                    }
+                }
+                catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "IndexInitValue"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                        int OtherIndex_KLineType = sysValue.OtherIndex_KLineType;
+                        int PlateIndex_KLineType = sysValue.PlateIndex_KLineType;
+                        int MarketIndex_KLineType = sysValue.MarketIndex_KLineType;
+                        int UnitIndex_KLineType = sysValue.UnitIndex_KLineType;
+
+                        PlateIndexTypeDic[0] = OtherIndex_KLineType;
+                        PlateIndexTypeDic[1] = PlateIndex_KLineType;
+                        PlateIndexTypeDic[2] = MarketIndex_KLineType;
+                        PlateIndexTypeDic[3] = UnitIndex_KLineType;
+                    }
+                }
+                catch { }
             }
 
             _tradeTime = GetTradeCloseTime();
@@ -663,6 +712,7 @@ namespace MealTicket_Web_Handler
             _BuyTipSession.StartUpdate(1000);
             _AccountRiseLimitTriSession.StartUpdate(3000);
             _AccountTrendTriSession.StartUpdate(3000);
+            _AccountSearchTriSession.StartUpdate(15000);
             _SharesHisRiseRateSession.StartUpdate(600000);
         }
 
@@ -675,6 +725,7 @@ namespace MealTicket_Web_Handler
         public BuyTipSession _BuyTipSession = new BuyTipSession();
         public AccountRiseLimitTriSession _AccountRiseLimitTriSession = new AccountRiseLimitTriSession();
         public AccountTrendTriSession _AccountTrendTriSession = new AccountTrendTriSession();
+        public AccountSearchTriSession _AccountSearchTriSession = new AccountSearchTriSession();
         public SharesHisRiseRateSession _SharesHisRiseRateSession = new SharesHisRiseRateSession();
         # endregion
     }

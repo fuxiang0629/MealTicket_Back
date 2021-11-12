@@ -214,6 +214,11 @@ namespace SharesHqService
         public int TriNearLimitType { get; set; }
 
         /// <summary>
+        /// 是否ST
+        /// </summary>
+        public bool IsST { get; set; }
+
+        /// <summary>
         /// 数据时间
         /// </summary>
         public DateTime LastModified { get; set; }

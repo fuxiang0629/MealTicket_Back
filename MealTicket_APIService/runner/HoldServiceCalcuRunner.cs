@@ -49,6 +49,7 @@ namespace MealTicket_APIService.runner
                 RunnerHelper.JoinService();//加入计算服务费金额
                 RunnerHelper.ServiceFeeRecharge();//计算服务费
                 RunnerHelper.SharesAllot();//执行派息
+                RunnerHelper.CalLimit();//计算连板数量
             }
             catch (Exception ex)
             {

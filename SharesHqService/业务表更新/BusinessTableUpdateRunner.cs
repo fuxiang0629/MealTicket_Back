@@ -54,7 +54,7 @@ namespace SharesHqService
             ThreadMsgTemplate<int> taskData2 = new ThreadMsgTemplate<int>();
             taskData2.Init();
             taskData2.AddMessage(3);
-            //taskData2.AddMessage(4);
+            taskData2.AddMessage(4);
             int taskCount = taskData2.GetCount();
             Task[] tArr2 = new Task[taskCount];
             for (int i = 0; i < taskCount; i++)

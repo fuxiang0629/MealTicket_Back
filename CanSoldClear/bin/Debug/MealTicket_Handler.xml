@@ -3085,6 +3085,11 @@
             更新股票分笔数据
             </summary>
         </member>
+        <member name="M:MealTicket_Handler.RunnerHandler.RunnerHelper.CalLimit">
+            <summary>
+            计算当天连板数量
+            </summary>
+        </member>
         <member name="F:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.TaskThread">
             <summary>
             任务线程
@@ -3269,9 +3274,15 @@
             板块/指数任务
             </summary>
         </member>
+        <member name="F:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask._SharesPlateSessionDic">
+            <summary>
+            板块缓存
+            </summary>
+        </member>
         <member name="F:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.PlateKlineSession">
             <summary>
-            板块Id,K线类型=>计算结果
+            板块Id*100+K线类型=>计算结果
+            GroupTimeKey*10+WeightType
             </summary>
         </member>
         <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.GetPlateKlineSessionAllKey">
@@ -3280,18 +3291,18 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.RemovePlateKlineSession(System.Collections.Generic.Dictionary{System.String,System.Int64})">
+        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.ResetPlateKlineSessionIsUpdate">
             <summary>
-            移除
+            重置是否更新
             </summary>
         </member>
-        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.GetPlateKlineSession(System.String)">
+        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.GetPlateKlineSession(System.Int64)">
             <summary>
             获取板块计算结果缓存
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.SetPlateKlineSession(System.String,System.Collections.Generic.List{MealTicket_Handler.SecurityBarsData.PlateKlineSession})">
+        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.SetPlateKlineSession(System.Int64,System.Collections.Generic.Dictionary{System.Int64,MealTicket_Handler.SecurityBarsData.PlateKlineSession})">
             <summary>
             设置板块计算结果缓存
             </summary>
@@ -3302,18 +3313,35 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="F:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.SharesPlateSession">
+        <member name="F:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.SharesByPlateSession">
             <summary>
-            Market,SharesCode=>板块Id
+            PlateId*100+DataType=>股票最后一条k先数据
+            SharesCode*1000+Market*100+datatype
             </summary>
         </member>
-        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.GetSharesPlateSession(System.String)">
+        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.GetSharesByPlateSession(System.Int64)">
+            <summary>
+            获取今日快照缓存(根据板块)
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.SetSharesByPlateSession(System.Int64,System.Collections.Generic.Dictionary{System.Int64,MealTicket_Handler.SecurityBarsData.SharesKlineData})">
+            <summary>
+            设置今日快照缓存(根据板块)
+            </summary>
+        </member>
+        <member name="F:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.SharesPlateSession">
+            <summary>
+            SharesCode*10+Market=>板块Id
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.GetSharesPlateSession(System.Int64)">
             <summary>
             获取今日快照缓存
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.SetSharesPlateSession(System.String,System.Collections.Generic.List{System.Int64})">
+        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.SetSharesPlateSession(System.Int64,System.Collections.Generic.List{System.Int64})">
             <summary>
             设置今日快照缓存
             </summary>
@@ -3337,16 +3365,16 @@
         </member>
         <member name="F:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.SharesKlineLastSession">
             <summary>
-            股票Market,SharesCode,DataType=>K线信息
+            股票SharesCode*1000+Market*100+DataType=>K线信息
             </summary>
         </member>
-        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.GetSharesKlineLastSession(System.String)">
+        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.GetSharesKlineLastSession(System.Int64)">
             <summary>
             获取股票最后一条数据缓存
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.SetSharesKlineLastSession(System.String,MealTicket_Handler.SecurityBarsData.SharesKlineData)">
+        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.SetSharesKlineLastSession(System.Int64,MealTicket_Handler.SecurityBarsData.SharesKlineData)">
             <summary>
             设置股票最后一条数据缓存
             </summary>
@@ -3356,27 +3384,26 @@
             初始化最后一条数据缓存
             </summary>
         </member>
-        <member name="F:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.PlateBaseDateSession">
+        <member name="F:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.PlateKlineLastSession">
             <summary>
-            板块Id=>结果信息
+            PlateId*1000+WeightType*100+DataType=>K线信息
             </summary>
         </member>
-        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.GetPlateBaseDateSession(System.Int64)">
+        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.GetPlateKlineLastSession(System.Int64)">
             <summary>
-            获取板块计算结果缓存
+            获取板块最后一条数据缓存
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.SetPlateBaseDateSession(System.Int64,MealTicket_Handler.SecurityBarsData.PlateBaseDataSession)">
+        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.SetPlateKlineLastSession(System.Int64,MealTicket_Handler.SecurityBarsData.PlateKlineData)">
             <summary>
-            设置板块计算结果缓存
+            设置板块最后一条数据缓存
             </summary>
         </member>
-        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.LoadPlateBaseDateSession">
+        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.LoadPlateSecurityBarsLastData">
             <summary>
-            更新板块计算结果缓存
+            初始化最后一条数据缓存
             </summary>
-            <returns></returns>
         </member>
         <member name="F:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.SharesKlineQueue">
             <summary>
@@ -3388,9 +3415,39 @@
             k线计算线程
             </summary>
         </member>
+        <member name="F:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.DailyInitWaitQueue">
+            <summary>
+            每天初始化等待队列
+            </summary>
+        </member>
+        <member name="F:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.DailyInitThread">
+            <summary>
+            每天初始化线程
+            </summary>
+        </member>
         <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.Init">
             <summary>
             初始化
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.DoTask">
+            <summary>
+            每天任务
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.DoDailyTask(System.DateTime@)">
+            <summary>
+            每日任务
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.DoRealTimeTask">
+            <summary>
+            实时任务
+            </summary>
+        </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.DoBusiness">
+            <summary>
+            业务处理
             </summary>
         </member>
         <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask.ToHandler(MealTicket_Handler.SecurityBarsData.SharesKlineDataContain)">
@@ -3414,7 +3471,7 @@
             </summary>
             <returns></returns>
         </member>
-        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask._bulkData(System.Int32,System.Collections.Generic.List{MealTicket_Handler.SecurityBarsData.PlateKlineSession},MealTicket_DBCommon.meal_ticketEntities)">
+        <member name="M:MealTicket_Handler.SecurityBarsData.New_IndexSecurityBarsDataTask._bulkData(System.Int32,System.Collections.Generic.List{MealTicket_Handler.SecurityBarsData.PlateKlineSession},MealTicket_DBCommon.meal_ticketEntities,System.Int32)">
             <summary>
             导入数据
             </summary>
@@ -3527,9 +3584,9 @@
             计算股票的数量
             </summary>
         </member>
-        <member name="P:MealTicket_Handler.SecurityBarsData.PlateKlineSession.BaseDate">
+        <member name="P:MealTicket_Handler.SecurityBarsData.PlateKlineSession.IsUpdate">
             <summary>
-            基准日
+            是否更新变动
             </summary>
         </member>
         <member name="T:MealTicket_Handler.SecurityBarsData.SharesKlineData">
@@ -3617,6 +3674,16 @@
             总市值
             </summary>
         </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SharesKlineData.PlateId">
+            <summary>
+            板块Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SharesKlineData.WeightType">
+            <summary>
+            加权类型
+            </summary>
+        </member>
         <member name="T:MealTicket_Handler.SecurityBarsData.SharesKlineDataContain">
             <summary>
             股票K线实时数据容器
@@ -3625,6 +3692,11 @@
         <member name="P:MealTicket_Handler.SecurityBarsData.SharesKlineDataContain.DataType">
             <summary>
             K线类型
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SharesKlineDataContain.CalType">
+            <summary>
+            计算类型0板块需要自己计算 1板块不许计算
             </summary>
         </member>
         <member name="P:MealTicket_Handler.SecurityBarsData.SharesKlineDataContain.SharesKlineData">
@@ -3672,14 +3744,14 @@
             基准日不加权价格平均
             </summary>
         </member>
-        <member name="P:MealTicket_Handler.SecurityBarsData.PlateBaseDataSession.CurrWeightPrice">
+        <member name="P:MealTicket_Handler.SecurityBarsData.PlateKlineData.PlateId">
             <summary>
-            基准日股票在当天加权市值平均
+            板块Id
             </summary>
         </member>
-        <member name="P:MealTicket_Handler.SecurityBarsData.PlateBaseDataSession.CurrNoWeightPrice">
+        <member name="P:MealTicket_Handler.SecurityBarsData.PlateKlineData.WeightType">
             <summary>
-            基准日股票在当天不加权市值平均
+            加权类型
             </summary>
         </member>
         <member name="F:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.TaskThread">

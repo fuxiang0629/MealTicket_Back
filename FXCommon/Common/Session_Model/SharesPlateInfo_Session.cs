@@ -51,5 +51,10 @@ namespace FXCommon.Common
         public long BaseDateWeightPrice { get; set; }
 
         public long BaseDateNoWeightPrice { get; set; }
+
+        /// <summary>
+        /// 计算类型0未知 1板块指数 2市场指数 3成分指数
+        /// </summary>
+        public int CalType { get; set; }
     }
 }

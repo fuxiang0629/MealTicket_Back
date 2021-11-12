@@ -18,6 +18,11 @@ namespace MealTicket_Web_Handler.Model
         public int Type { get; set; }
 
         /// <summary>
+        /// 状态1有效 2无效
+        /// </summary>
+        public int Status { get; set; }
+
+        /// <summary>
         /// 是否获取所有模板
         /// </summary>
         public bool IsGetAll { get; set; }

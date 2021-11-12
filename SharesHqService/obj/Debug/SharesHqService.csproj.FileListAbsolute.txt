@@ -151,3 +151,4 @@ F:\项目\饭票后端\SharesHqService\bin\Debug\System.Threading.Tasks.Extensio
 F:\项目\饭票后端\SharesHqService\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 F:\项目\饭票后端\SharesHqService\bin\Debug\System.Buffers.xml
 F:\项目\饭票后端\SharesHqService\bin\Debug\System.Numerics.Vectors.xml
+F:\项目\饭票后端\SharesHqService\obj\Debug\SharesHqService.csprojAssemblyReference.cache

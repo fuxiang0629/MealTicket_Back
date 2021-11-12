@@ -36,6 +36,11 @@ namespace MealTicket_Admin_Handler.Model
         public int Status { get; set; }
 
         /// <summary>
+        /// 类型
+        /// </summary>
+        public int Type { get; set; }
+
+        /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }

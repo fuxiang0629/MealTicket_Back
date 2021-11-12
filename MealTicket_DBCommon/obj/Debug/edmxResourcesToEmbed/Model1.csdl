@@ -2551,6 +2551,8 @@
     <Property Name="TriNearLimitType" Type="Int32" Nullable="false" />
     <Property Name="TotalAmount" Type="Int64" Nullable="false" />
     <Property Name="TotalCount" Type="Int32" Nullable="false" />
+    <Property Name="LimitUpDays" Type="Int32" Nullable="false" />
+    <Property Name="IsST" Type="Boolean" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_quotes_date_temp">
     <Key>
@@ -4157,6 +4159,9 @@
       <Parameter Name="errorCode" Mode="InOut" Type="Int32" />
       <Parameter Name="errorMessage" Mode="InOut" Type="String" />
     </FunctionImport>
+    <EntitySet Name="t_account_shares_buy_synchro_setting_opt_rel" EntityType="meal_ticketModel.t_account_shares_buy_synchro_setting_opt_rel" />
+    <EntitySet Name="t_search_tri_setting" EntityType="meal_ticketModel.t_search_tri_setting" />
+    <EntitySet Name="t_search_tri" EntityType="meal_ticketModel.t_search_tri" />
   </EntityContainer>
   <EntityType Name="t_account_baseinfo">
     <Key>
@@ -5175,5 +5180,46 @@
     <Property Name="SharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
     <Property Name="SharesMarket" Type="Int32" Nullable="false" />
     <Property Name="BaseDate" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_buy_synchro_setting_opt_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SettingId" Type="Int64" Nullable="false" />
+    <Property Name="OptAccountId" Type="Int64" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_search_tri_setting">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="TemplateId" Type="Int64" Nullable="false" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_search_tri">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="LastPushTime" Type="DateTime" Precision="3" />
+    <Property Name="LastPushMaxRate" Type="Int32" />
+    <Property Name="LastPushMinRate" Type="Int32" />
+    <Property Name="MinPushTimeInterval" Type="Int32" Nullable="false" />
+    <Property Name="MinPushMaxRateInterval" Type="Int32" Nullable="false" />
+    <Property Name="MinPushMinRateInterval" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastPushDesc" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="LastPushType" Type="Int32" Nullable="false" />
+    <Property Name="TriCount" Type="Int32" Nullable="false" />
   </EntityType>
 </Schema>

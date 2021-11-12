@@ -19,6 +19,20 @@ namespace FXCommon.Common
         public string SharesCode { get; set; }
 
         public List<bool> IsSuccess { get; set; }
+
+        public bool Equals(SharesBase_Session x)
+        {
+            if (x == null)
+            {
+                return false;
+            }
+            return (x.Market == this.Market && x.SharesCode == this.SharesCode);
+        }
+
+        public int GetHashCode()
+        {
+            return this.Market.GetHashCode() + this.SharesCode.GetHashCode();
+        }
     }
 
     public class SharesBaseInfo_Session:SharesBase_Session

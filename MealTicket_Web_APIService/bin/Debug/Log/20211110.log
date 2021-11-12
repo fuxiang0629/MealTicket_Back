@@ -1,0 +1,53 @@
+2021/11/10 13:06:17
+监听队列已链接
+
+
+2021/11/10 13:06:24
+监听队列已链接
+
+
+2021/11/10 13:07:16
+SharesQuotesSession缓存加载失败
+System.ComponentModel.Win32Exception (0x80004005): 等待的操作过时。
+
+2021/11/10 13:08:21
+SharesQuotesSession缓存加载失败
+System.ComponentModel.Win32Exception (0x80004005): 等待的操作过时。
+
+2021/11/10 13:09:32
+SharesBaseSession缓存加载失败
+System.ComponentModel.Win32Exception (0x80004005): 等待的操作过时。
+
+2021/11/10 13:10:18
+SharesPlateRelSession缓存加载失败
+System.ComponentModel.Win32Exception (0x80004005): 等待的操作过时。
+
+2021/11/10 13:11:43
+SharesQuotesSession缓存加载失败
+System.ComponentModel.Win32Exception (0x80004005): 等待的操作过时。
+
+2021/11/10 13:12:12
+AccountRiseLimitTriSession缓存加载失败
+System.ComponentModel.Win32Exception (0x80004005): 等待的操作过时。
+
+2021/11/10 13:13:21
+监控搜索出错
+System.NullReferenceException: 未将对象引用设置到对象的实例。
+   在 MealTicket_Web_Handler.TrendHandler.GetEligibleSharesBatch(List`1 searchInfo) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\TrendHandler.cs:行号 20814
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.SearchMonitor() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 3995
+   在 MealTicket_Web_APIService.runner.SearchMonitorRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\SearchMonitorRunner.cs:行号 35
+
+2021/11/10 13:13:42
+监控搜索出错
+System.NullReferenceException: 未将对象引用设置到对象的实例。
+   在 MealTicket_Web_Handler.TrendHandler.GetEligibleSharesBatch(List`1 searchInfo) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\TrendHandler.cs:行号 20814
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.SearchMonitor() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 3995
+   在 MealTicket_Web_APIService.runner.SearchMonitorRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\SearchMonitorRunner.cs:行号 35
+
+2021/11/10 13:14:01
+监控搜索出错
+System.NullReferenceException: 未将对象引用设置到对象的实例。
+   在 MealTicket_Web_Handler.TrendHandler.GetEligibleSharesBatch(List`1 searchInfo) 位置 F:\项目\饭票后端\MealTicket_Web_Handler\TrendHandler.cs:行号 20814
+   在 MealTicket_Web_Handler.Runner.RunnerHelper.SearchMonitor() 位置 F:\项目\饭票后端\MealTicket_Web_Handler\Runner\RunnerHelper.cs:行号 3995
+   在 MealTicket_Web_APIService.runner.SearchMonitorRunner.Execute() 位置 F:\项目\饭票后端\MealTicket_Web_APIService\runner\SearchMonitorRunner.cs:行号 35
+

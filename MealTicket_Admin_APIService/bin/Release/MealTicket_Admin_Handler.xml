@@ -9439,6 +9439,11 @@
             状态1有效 2无效
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateInfo.Type">
+            <summary>
+            类型
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateInfo.CreateTime">
             <summary>
             创建时间

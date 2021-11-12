@@ -82,5 +82,10 @@ namespace MealTicket_Web_Handler.Model
         /// 触发时间
         /// </summary>
         public DateTime CreateTime { get; set; }
+
+        /// <summary>
+        /// 类型1新高 2新低 3涨幅 4跌幅
+        /// </summary>
+        public int PushType { get; set; }
     }
 }

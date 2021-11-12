@@ -261,6 +261,11 @@ namespace MealTicket_Web_Handler.Model
         /// 最近几个交易日涨停过
         /// </summary>
         public string LimitUpDay { get; set; }
+
+        /// <summary>
+        /// 今开
+        /// </summary>
+        public long OpenedPrice { get; set; }
     }
 
     public class ClosingLineInfo

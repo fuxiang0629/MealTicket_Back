@@ -40,5 +40,7 @@ namespace MealTicket_DBCommon
         public int TriNearLimitType { get; set; }
         public long TotalAmount { get; set; }
         public int TotalCount { get; set; }
+        public int LimitUpDays { get; set; }
+        public bool IsST { get; set; }
     }
 }

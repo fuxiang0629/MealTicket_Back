@@ -1439,42 +1439,62 @@ namespace MealTicket_Admin_Handler
         public void ResetSharesPlateBaseDate(ResetSharesPlateBaseDateRequest request) 
         {
             using (var db = new meal_ticketEntities())
+            using (var tran=db.Database.BeginTransaction())
             {
-                var plate = (from item in db.t_shares_plate
-                             where item.Id == request.Id
-                             select item).FirstOrDefault();
-                if (plate == null)
+                try
                 {
-                    throw new WebApiException(400, "数据不存在");
-                }
+                    var plate = (from item in db.t_shares_plate
+                                 where item.Id == request.Id
+                                 select item).FirstOrDefault();
+                    if (plate == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
 
-                if (plate.BaseDate == request.BaseDate)
+                    if (plate.BaseDate == request.BaseDate)
+                    {
+                        return;
+                    }
+
+                    string date = request.BaseDate.ToString("yyyy-MM-dd");
+
+                    var temp_snapshot = (from item in db.t_shares_plate_rel_snapshot
+                                         where item.PlateId == request.Id && item.Date == request.BaseDate
+                                         select item).ToList();
+                    if (temp_snapshot.Count() <= 0)
+                    {
+                        string sql = string.Format("insert into t_shares_plate_rel_snapshot([Date],PlateId,Market,SharesCode) select '{0}',PlateId,Market,SharesCode from t_shares_plate_rel_snapshot where [Date]='{1}' and PlateId={2}", request.BaseDate.ToString("yyyy-MM-dd"), DateTime.Now.Date.ToString("yyyy-MM-dd"), request.Id);
+                        db.Database.ExecuteSqlCommand(sql);
+                    }
+
+                    var quoteDate = from item in db.t_shares_quotes_date
+                                    where item.Date == date
+                                    select item;
+                    var snapshot = (from item in db.t_shares_plate_rel_snapshot
+                                    join item2 in quoteDate on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                                    join item3 in db.t_shares_markettime on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode }
+                                    where item.PlateId == request.Id && item.Date == request.BaseDate
+                                    select new { item, item2, item3 }).ToList();
+
+                    long BaseDateWeightPrice = 0;
+                    long BaseDateNoWeightPrice = 0;
+                    if (snapshot.Count() > 0)
+                    {
+                        BaseDateWeightPrice = (long)snapshot.Average(e => e.item2.PresentPrice * e.item3.TotalCapital);
+                        BaseDateNoWeightPrice = (long)snapshot.Average(e => e.item2.PresentPrice);
+                    }
+
+                    plate.BaseDate = request.BaseDate;
+                    plate.BaseDateWeightPrice = BaseDateWeightPrice;
+                    plate.BaseDateNoWeightPrice = BaseDateNoWeightPrice;
+                    db.SaveChanges();
+                    tran.Commit();
+                }
+                catch (Exception ex)
                 {
-                    return;
+                    tran.Rollback();
+                    throw ex;
                 }
-
-                string date = request.BaseDate.ToString("yyyy-MM-dd");
-                var quoteDate = from item in db.t_shares_quotes_date
-                                where item.Date == date
-                                select item;
-                var snapshot = (from item in db.t_shares_plate_rel_snapshot
-                                join item2 in quoteDate on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
-                                join item3 in db.t_shares_markettime on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode }
-                                where item.PlateId == request.Id && item.Date == request.BaseDate
-                                select new { item, item2, item3 }).ToList();
-
-                long BaseDateWeightPrice = 0;
-                long BaseDateNoWeightPrice = 0;
-                if (snapshot.Count() > 0)
-                {
-                    BaseDateWeightPrice = (long)snapshot.Average(e => e.item2.PresentPrice * e.item3.TotalCapital);
-                    BaseDateNoWeightPrice = (long)snapshot.Average(e => e.item2.PresentPrice);
-                }
-
-                plate.BaseDate = request.BaseDate;
-                plate.BaseDateWeightPrice = BaseDateWeightPrice;
-                plate.BaseDateNoWeightPrice = BaseDateNoWeightPrice;
-                db.SaveChanges();
             }
         }
 
@@ -4016,8 +4036,19 @@ namespace MealTicket_Admin_Handler
             using (var db = new meal_ticketEntities())
             {
                 var template = from item in db.t_sys_conditiontrade_template
+                               select item;
+                if (request.Type == 45)
+                {
+                    template = from item in db.t_sys_conditiontrade_template
+                               where item.Type == 4 || item.Type == 5
+                               select item;
+                }
+                else
+                {
+                    template = from item in template
                                where item.Type == request.Type
                                select item;
+                }
                 int totalCount = template.Count();
 
                 return new PageRes<ConditiontradeTemplateInfo>
@@ -4031,6 +4062,7 @@ namespace MealTicket_Admin_Handler
                                 Status = item.Status,
                                 CreateTime = item.CreateTime,
                                 Id = item.Id,
+                                Type = item.Type,
                                 Name = item.Name
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
                 };
@@ -4079,7 +4111,7 @@ namespace MealTicket_Admin_Handler
                     {
                         CopyConditiontradeTemplate_Join(request.Id, newTemplate.Id, db);
                     }
-                    else if (template.Type == 4)//自动加入模板复制
+                    else if (template.Type == 4 || template.Type==5)//自动加入模板复制
                     {
                         CopyConditiontradeTemplate_Search(request.Id, newTemplate.Id, db);
                     }

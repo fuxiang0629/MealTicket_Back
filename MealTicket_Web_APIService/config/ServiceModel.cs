@@ -19,7 +19,7 @@ namespace MealTicket_Web_APIService
             Bind<IFilter>().To<LogActionFilter>();
             Bind<IFilter>().To<AuthorizationFilter>();
             Bind<IFilter>().To<CustomExceptionFilter>();
-            //Bind<Runner>().To<ClearTransactiondataRunner>();
+            Bind<Runner>().To<SearchMonitorRunner>();
         }
     }
 }

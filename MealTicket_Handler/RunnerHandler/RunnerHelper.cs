@@ -1747,5 +1747,32 @@ then insert(Market,SharesCode,[Type],LastModified) values(t1.Market,t1.SharesCod
                 }
             }
         }
+
+        /// <summary>
+        /// 计算当天连板数量
+        /// </summary>
+        public static void CalLimit()
+        {
+            DateTime timeDate = DateTime.Now.Date;
+            if (!CheckTradeDate())
+            {
+                return;
+            }
+            using (var db = new meal_ticketEntities())
+            {
+                string sql = @"declare @lastDate datetime;
+  declare @currDate datetime;
+  set @currDate=convert(varchar(10),getdate(),120);
+  set @lastDate=dbo.f_getTradeDate(@currDate,-1);
+  merge into t_shares_quotes_date as t
+  using (select * from t_shares_quotes_date where [Date]=@lastDate) as t1
+  ON t.Market = t1.Market and t.SharesCode = t1.SharesCode and t.[Date]=@currDate
+  when not matched by target
+  then insert(Market,SharesCode,PresentPrice,ClosedPrice,OpenedPrice,MaxPrice,MinPrice,LimitUpPrice,LimitDownPrice,LastModified,[Date],LimitUpCount,LimitDownCount,LimitUpBombCount,
+  LimitDownBombCount,TriLimitUpCount,TriLimitDownCount,TriLimitUpBombCount,TriLimitDownBombCount,PriceType,TriPriceType,TriNearLimitType,TotalAmount,TotalCount,LimitUpDays) 
+  values(t1.Market,t1.SharesCode,0,0,0,0,0,0,0,getdate(),convert(varchar(10),@currDate,120),0,0,0,0,0,0,0,0,0,0,0,0,0,case when t1.PriceType=1 then t1.LimitUpDays+1 else 0 end);";
+                db.Database.ExecuteSqlCommand(sql);
+            }
+        }
     }
 }

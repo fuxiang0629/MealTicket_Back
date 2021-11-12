@@ -85,6 +85,7 @@
     <Compile Include="Common\Logger.cs" />
     <Compile Include="Common\Runner.cs" />
     <Compile Include="Common\Session_Model\AccountRiseLimitTriInfo_Session.cs" />
+    <Compile Include="Common\Session_Model\AccountSearchTriInfo_Session.cs" />
     <Compile Include="Common\Session_Model\AccountTrendTriInfo_Session.cs" />
     <Compile Include="Common\Session_Model\BuyTipInfo_Session.cs" />
     <Compile Include="Common\Session_Model\SharesBaseInfo_Session.cs" />

@@ -133,19 +133,19 @@ namespace MealTicket_Web_Handler.Model
                 {
                     if (intervalSecond < 60)
                     {
-                        return "rgb(50, 0, 255)";
+                        return "rgb(6, 88, 241)";
                     }
                     else if (intervalSecond < 120)
                     {
-                        return "rgb(50, 0, 180)";
+                        return "rgb(95, 148, 247)";
                     }
                     else if (intervalSecond < 180)
                     {
-                        return "rgb(50, 0, 100)";
+                        return "rgb(161, 190, 244)";
                     }
                     else
                     {
-                        return "rgb(0, 0, 0)";
+                        return "-1";
                     }
                 }
                 else
@@ -156,15 +156,15 @@ namespace MealTicket_Web_Handler.Model
                     }
                     else if (intervalSecond < 120)
                     {
-                        return "rgb(180, 0, 0)";
+                        return "rgb(255, 100, 100)";
                     }
                     else if (intervalSecond < 180)
                     {
-                        return "rgb(100, 0, 0)";
+                        return "rgb(255, 200, 200)";
                     }
                     else
                     {
-                        return "rgb(0, 0, 0)";
+                        return "-1";
                     }
                 }
             }

@@ -810,6 +810,100 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 查询今日触发搜索股票数据
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/search/tri/list"), HttpPost]
+        [Description("查询今日触发搜索股票数据")]
+        [CheckUserLoginFilter]
+        public List<AccountRiseLimitTriInfo> GetAccountSearchTriList(GetAccountRiseLimitTriListRequest request)
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountSearchTriList(request, basedata);
+        }
+
+        /// <summary>
+        /// 查询今日触发搜索股票数据详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/search/tri/details"), HttpPost]
+        [Description("查询今日触发搜索股票数据详情")]
+        [CheckUserLoginFilter]
+        public List<AccountRiseLimitTriDetails> GetAccountSearchTriDetails(GetAccountTrendTriDetailsRequest request)
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountSearchTriDetails(request, basedata);
+        }
+
+        /// <summary>
+        /// 查询实时监控搜索股票再触发配置
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/search/tri/retri"), HttpPost]
+        [Description("查询实时监控搜索股票再触发配置")]
+        [CheckUserLoginFilter]
+        public AccountSearchReTriInfo GetAccountSearchReTri(DetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountSearchReTri(request, basedata);
+        }
+
+        /// <summary>
+        /// 设置实时监控搜索股票再触发配置
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/search/tri/retri/set"), HttpPost]
+        [Description("设置实时监控搜索股票再触发配置")]
+        [CheckUserLoginFilter]
+        public object SetAccountSearchReTri(AccountSearchReTriInfo request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.SetAccountSearchReTri(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 查询监控搜索模板设置
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/search/tri/template/list"), HttpPost]
+        [Description("查询监控搜索模板设置")]
+        [CheckUserLoginFilter]
+        public List<long> GetAccountSearchTriTemplateList()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountSearchTriTemplateList(basedata);
+        }
+
+        /// <summary>
+        /// 设置监控搜索模板
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/search/tri/template/set"), HttpPost]
+        [Description("设置监控搜索模板")]
+        [CheckUserLoginFilter]
+        public object SetAccountSearchTriTemplate(List<long> TemplateId)
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.SetAccountSearchTriTemplate(TemplateId,basedata);
+            return null;
+        }
+
+        /// <summary>
         /// 关闭已触发股票
         /// </summary>
         /// <param name="request"></param>
@@ -1365,8 +1459,7 @@ namespace MealTicket_Web_APIService.controller
                 throw new WebApiException(400, "参数错误");
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
-            trendHandler.AddAccountBuyConditionTradeShares(request, basedata);
-            return null;
+            return trendHandler.AddAccountBuyConditionTradeShares(request, basedata);
         }
 
         /// <summary>
@@ -6026,6 +6119,94 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 获取自动买入授权买入列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取自动买入授权买入列表")]
+        [Route("account/auto/buy/synchro/optaccount/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public PageRes<AccountAutoBuySyncroOptAccountInfo> GetAccountAutoBuySyncroOptAccountList(GetAccountAutoBuySyncroOptAccountListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountAutoBuySyncroOptAccountList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加自动买入授权买入
+        /// </summary>
+        /// <returns></returns>
+        [Description("添加自动买入授权买入")]
+        [Route("account/auto/buy/synchro/optaccount/add"), HttpPost]
+        [CheckUserLoginFilter]
+        public object AddAccountAutoBuySyncroOptAccount(AddAccountAutoBuySyncroOptAccountRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountAutoBuySyncroOptAccount(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除自动买入授权买入
+        /// </summary>
+        /// <returns></returns>
+        [Description("删除自动买入授权买入")]
+        [Route("account/auto/buy/synchro/optaccount/delete"), HttpPost]
+        [CheckUserLoginFilter]
+        public object DeleteAccountAutoBuySyncroOptAccount(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountAutoBuySyncroOptAccount(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取自动买入可执行授权账户列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取自动买入可执行授权账户列表")]
+        [Route("account/auto/buy/synchro/optaccount/rel/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<AccountAutoBuySyncroOptAccountRelInfo> GetAccountAutoBuySyncroOptAccountRelList(GetAccountAutoBuySyncroOptAccountRelListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountAutoBuySyncroOptAccountRelList(request, basedata);
+        }
+
+        /// <summary>
+        /// 设置自动买入可执行授权账户
+        /// </summary>
+        /// <returns></returns>
+        [Description("设置自动买入可执行授权账户")]
+        [Route("account/auto/buy/synchro/optaccount/rel/set"), HttpPost]
+        [CheckUserLoginFilter]
+        public object SetAccountAutoBuySyncroOptAccountRel(SetAccountAutoBuySyncroOptAccountRelRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.SetAccountAutoBuySyncroOptAccountRel(request, basedata);
+            return null;
+        }
+
+        /// <summary>
         /// 根据手机号匹配用户信息
         /// </summary>
         /// <returns></returns>
@@ -8133,6 +8314,7 @@ namespace MealTicket_Web_APIService.controller
             trendHandler.ModifyConditiontradeTemplateSearchDetails(request);
             return null;
         }
+        #endregion
 
         /// <summary>
         /// 获取股票K线数据
@@ -8180,6 +8362,73 @@ namespace MealTicket_Web_APIService.controller
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.GetSharesKLineTypeList();
         }
-        #endregion
+
+        /// <summary>
+        /// 批量获取股票K线数据
+        /// </summary>
+        /// <returns></returns>
+        [Description("批量获取股票K线数据")]
+        [Route("shares/kline/list/batch"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<GetSharesKLineListRes> BatchGetSharesKLineList(BatchGetSharesKLineListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.BatchGetSharesKLineList(request, basedata);
+        }
+
+        /// <summary>
+        /// 批量获取股票分时数据
+        /// </summary>
+        /// <returns></returns>
+        [Description("批量获取股票分时数据")]
+        [Route("shares/mtline/list/batch"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<GetSharesMinutetimedataListRes> BatchGetSharesMtLineList(BatchGetSharesMtLineListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.BatchGetSharesMtLineList(request, basedata);
+        }
+
+        /// <summary>
+        /// 获取板块K线数据
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取板块K线数据")]
+        [Route("plate/kline/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public GetPlateKLineListRes GetPlateKLineList(GetPlateKLineListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetPlateKLineList(request, basedata);
+        }
+
+        /// <summary>
+        /// 获取板块分时数据
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取板块分时数据")]
+        [Route("plate/minutetimedata/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public GetPlateMinutetimedataListRes GetPlateMinutetimedataList(GetPlateMinutetimedataListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetPlateMinutetimedataList(request, basedata);
+        }
     }
 }

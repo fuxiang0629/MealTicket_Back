@@ -360,7 +360,7 @@ namespace MealTicket_Web_Handler.Runner
                                 SellType = hold.item.EntrustType,
                                 HoldId = hold.item2.Id,
                                 FollowList = followList,
-                                MainAccountId= hold.item.CreateAccountId
+                                MainAccountId = hold.item.CreateAccountId
                             }, new HeadBase
                             {
                                 AccountId = hold.item.AccountId
@@ -682,7 +682,7 @@ where t.Market={0} and t.SharesCode='{1}' and AccountId={2} and t2.[Status]=1 an
                                 string desMessage = "当前时间：" + timeNow.ToString("yyyy-MM-dd HH:mm:ss.fff") + ",条件时段：" + timeList[0].ToString() + "-" + timeList[1].ToString();
                                 if (timeNow >= DateTime.Parse(timeList[0].ToString()) && timeNow < DateTime.Parse(timeList[1].ToString()))
                                 {
-                                    logRecord.AppendLine("\t\t条件成立("+ desMessage + ")");
+                                    logRecord.AppendLine("\t\t条件成立(" + desMessage + ")");
                                     tempTri = IsGetOther(db, tr.Id, item.SharesCode, item.Market, item.PresentPrice, logRecord);
                                     if (tempTri)
                                     {
@@ -1052,7 +1052,7 @@ where t.Market={0} and t.SharesCode='{1}' and AccountId={2} and t2.[Status]=1 an
                                 logRecord.AppendLine("\t分组名称：" + th.Name);
                                 logRecord.AppendLine("\t走势名称：" + tr.TrendDescription);
                                 var temp = JsonConvert.DeserializeObject<dynamic>(par[0]);
-                                JArray timeList = temp.Times; 
+                                JArray timeList = temp.Times;
                                 string desMessage = "当前时间：" + timeNow.ToString("yyyy-MM-dd HH:mm:ss.fff") + ",条件时段：" + timeList[0].ToString() + "-" + timeList[1].ToString();
                                 if (timeNow >= DateTime.Parse(timeList[0].ToString()) && timeNow < DateTime.Parse(timeList[1].ToString()))
                                 {
@@ -1502,9 +1502,9 @@ where t.Market={0} and t.SharesCode='{1}' and AccountId={2} and t2.[Status]=1 an
                             {
                                 try
                                 {
-                                    sql = "declare @parValueJson nvarchar(max),@id bigint;select @id=Id,@parValueJson=ParValueJson from t_account_shares_buy_setting with(xlock) where AccountId=" + item.AccountId + " and [Type]=3 if(@id is null) begin insert into t_account_shares_buy_setting(AccountId,[Type],Name,[Description],ParValueJson,CreateTime,LastModified) values(" + item.AccountId+",3,'跟投分组轮序位置','跟投分组轮序位置','{\"Value\":1}',getdate(),getdate());set @parValueJson = '{\"Value\":0}';end else begin declare @parValue bigint; set @parValue = dbo.f_parseJson(@parValueJson, 'Value'); set @parValue = @parValue + 1; update t_account_shares_buy_setting set ParValueJson = '{\"Value\":' + convert(varchar(10), @parValue) + '}' where Id = @id; end select @parValueJson";
+                                    sql = "declare @parValueJson nvarchar(max),@id bigint;select @id=Id,@parValueJson=ParValueJson from t_account_shares_buy_setting with(xlock) where AccountId=" + item.AccountId + " and [Type]=3 if(@id is null) begin insert into t_account_shares_buy_setting(AccountId,[Type],Name,[Description],ParValueJson,CreateTime,LastModified) values(" + item.AccountId + ",3,'跟投分组轮序位置','跟投分组轮序位置','{\"Value\":1}',getdate(),getdate());set @parValueJson = '{\"Value\":0}';end else begin declare @parValue bigint; set @parValue = dbo.f_parseJson(@parValueJson, 'Value'); set @parValue = @parValue + 1; update t_account_shares_buy_setting set ParValueJson = '{\"Value\":' + convert(varchar(10), @parValue) + '}' where Id = @id; end select @parValueJson";
                                     string turnJson = db.Database.SqlQuery<string>(sql).FirstOrDefault();
-                                    var tempTurn=JsonConvert.DeserializeObject<dynamic>(turnJson);
+                                    var tempTurn = JsonConvert.DeserializeObject<dynamic>(turnJson);
                                     long turn = tempTurn.Value;
 
                                     //查询跟投分组信息
@@ -1538,7 +1538,7 @@ inner
                                 }
                                 catch (Exception ex)
                                 {
-                                    Logger.WriteFileLog("更新跟投分组出错",ex);
+                                    Logger.WriteFileLog("更新跟投分组出错", ex);
                                     tran.Rollback();
                                 }
                             }
@@ -1595,7 +1595,7 @@ inner
                         {
                             AccountId = item.AccountId,
                             BuyAmount = EntrustAmount,
-                            IsFollow=false
+                            IsFollow = false
                         });
 
                         //Logger.WriteFileLog("6" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
@@ -1632,7 +1632,7 @@ inner
                         marketPar.Value = item.Market;
                         parameter[0] = marketPar;
                         //股票代码
-                        var sharesCodePar = new SqlParameter("@sharesCode", SqlDbType.VarChar,20);
+                        var sharesCodePar = new SqlParameter("@sharesCode", SqlDbType.VarChar, 20);
                         sharesCodePar.Value = item.SharesCode;
                         parameter[1] = sharesCodePar;
                         //委托价格
@@ -1682,11 +1682,11 @@ inner
                         errorCodePar.Direction = ParameterDirection.Output;
                         parameter[6] = errorCodePar;
                         //errormessage
-                        var errorMessagePar = new SqlParameter("@errorMessage", SqlDbType.NVarChar,200);
+                        var errorMessagePar = new SqlParameter("@errorMessage", SqlDbType.NVarChar, 200);
                         errorMessagePar.Direction = ParameterDirection.Output;
                         parameter[7] = errorMessagePar;
 
-                        var resultList=db.Database.SqlQuery<ApplyTradeBuyInfo>("exec P_ApplyTradeBuy_Batch @market,@sharesCode,@entrustPrice,@mainAccountId,@autoBuyDetailsId,@applyTradeBuyInfo,@errorCode out,@errorMessage out", parameter).ToList();
+                        var resultList = db.Database.SqlQuery<ApplyTradeBuyInfo>("exec P_ApplyTradeBuy_Batch @market,@sharesCode,@entrustPrice,@mainAccountId,@autoBuyDetailsId,@applyTradeBuyInfo,@errorCode out,@errorMessage out", parameter).ToList();
 
                         //Logger.WriteFileLog("8" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                         if ((int)parameter[6].Value != 0)
@@ -1707,7 +1707,7 @@ inner
                                     BuyTime = x.BuyTime.ToString("yyyy-MM-dd 00:00:00"),
                                 });
                             }
-                            else 
+                            else
                             {
                                 string errorMessage = x.ErrorMessage;
                                 Logger.WriteFileLog(errorMessage, null);
@@ -1824,9 +1824,9 @@ inner
                                 var tempInfo = JsonConvert.DeserializeObject<TradeAutoBuyCondition>(JsonConvert.SerializeObject(conditionInfo));
                                 Singleton.Instance.AddSyncro(tempInfo);
                             }
-                            catch (Exception ex) 
+                            catch (Exception ex)
                             {
-                                Logger.WriteFileLog("同步出错",ex);
+                                Logger.WriteFileLog("同步出错", ex);
                             }
                         }
                         Logger.WriteFileLog("13" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
@@ -2564,7 +2564,7 @@ inner
         /// 推送股票分笔数据
         /// </summary>
         /// <returns></returns>
-        public static int SendTransactionShares(string taskGuid,int dataType)
+        public static int SendTransactionShares(string taskGuid, int dataType)
         {
             DateTime timeDate = DateTime.Now.Date;
             List<TradeSharesInfo> sharesList = new List<TradeSharesInfo>();
@@ -2648,13 +2648,13 @@ inner
                 return;
             }
             //查询每只股票判断参数
-            List<SharesAutoJoinPar> parList =ToQuerySharesAutoJoinPar(disResult);
+            List<SharesAutoJoinPar> parList = ToQuerySharesAutoJoinPar(disResult);
             if (parList.Count() <= 0)
             {
                 return;
             }
             //判断是否达到加入条件
-            List<SharesAutoJoinInfo> exportList =ToQueryNeedToExportList(parList);
+            List<SharesAutoJoinInfo> exportList = ToQueryNeedToExportList(parList);
             if (exportList.Count() <= 0)
             {
                 return;
@@ -2666,7 +2666,7 @@ inner
                 return;
             }
             //导入
-            var successList=ToExportShares(toExportList);
+            var successList = ToExportShares(toExportList);
             //记录日志
             WriteToLogRecord(successList);
         }
@@ -2734,10 +2734,10 @@ where m3.Id is null and m4.ToBuyId is null";
         /// </summary>
         /// <param name="disResult"></param>
         /// <returns></returns>
-        private static List<SharesAutoJoinPar> ToQuerySharesAutoJoinPar(List<SharesAutoJoinInfo> disResult) 
+        private static List<SharesAutoJoinPar> ToQuerySharesAutoJoinPar(List<SharesAutoJoinInfo> disResult)
         {
             //toBuyId分组
-            var dicResult = disResult.GroupBy(e=>e.ToBuyId).ToDictionary(e => e.Key, v => v.ToList());
+            var dicResult = disResult.GroupBy(e => e.ToBuyId).ToDictionary(e => e.Key, v => v.ToList());
 
             ThreadMsgTemplate<KeyValuePair<long, List<SharesAutoJoinInfo>>> conditionData = new ThreadMsgTemplate<KeyValuePair<long, List<SharesAutoJoinInfo>>>();
             conditionData.Init();
@@ -2770,7 +2770,7 @@ where m3.Id is null and m4.ToBuyId is null";
                         }
                         _ToQuerySharesAutoJoinPar(temp, parLock, parList);
                     }
-                },TaskCreationOptions.LongRunning);
+                }, TaskCreationOptions.LongRunning);
                 tArr[i].Start();
             }
             Task.WaitAll(tArr);
@@ -2792,7 +2792,7 @@ where m3.Id is null and m4.ToBuyId is null";
                 var other_trend = (from item in db.t_account_shares_auto_join_tobuy_other_trend
                                    where otherIdList.Contains(item.OtherId) && item.Status == 1
                                    select item).ToList();
-                List<long> otherTrendIdList= other_trend.Select(e => e.Id).ToList();
+                List<long> otherTrendIdList = other_trend.Select(e => e.Id).ToList();
 
                 var other_trend_par = (from item in db.t_account_shares_auto_join_tobuy_other_trend_par
                                        where otherTrendIdList.Contains(item.OtherTrendId)
@@ -2801,7 +2801,7 @@ where m3.Id is null and m4.ToBuyId is null";
                 var other_trend_other = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other
                                          where otherTrendIdList.Contains(item.OtherTrendId) && item.Status == 1
                                          select item).ToList();
-                List<long> otherTrendOtherIdList= other_trend_other.Select(e => e.Id).ToList();
+                List<long> otherTrendOtherIdList = other_trend_other.Select(e => e.Id).ToList();
 
                 var other_trend_other_par = (from item in db.t_account_shares_auto_join_tobuy_other_trend_other_par
                                              where otherTrendOtherIdList.Contains(item.OtherTrendOtherId)
@@ -2813,8 +2813,8 @@ where m3.Id is null and m4.ToBuyId is null";
                     {
                         Market = item.Market,
                         SharesCode = item.SharesCode,
-                        ToBuyId=item.ToBuyId,
-                        ToBuyName=item.ToBuyName,
+                        ToBuyId = item.ToBuyId,
+                        ToBuyName = item.ToBuyName,
                         OtherList = (from o in other
                                      select new SharesAutoJoinOther
                                      {
@@ -2860,7 +2860,7 @@ where m3.Id is null and m4.ToBuyId is null";
         /// </summary>
         /// <param name="parList"></param>
         /// <returns></returns>
-        private static List<SharesAutoJoinInfo> ToQueryNeedToExportList(List<SharesAutoJoinPar> parList) 
+        private static List<SharesAutoJoinInfo> ToQueryNeedToExportList(List<SharesAutoJoinPar> parList)
         {
             ThreadMsgTemplate<SharesAutoJoinPar> conditionData = new ThreadMsgTemplate<SharesAutoJoinPar>();
             conditionData.Init();
@@ -2901,15 +2901,15 @@ where m3.Id is null and m4.ToBuyId is null";
             return exportList;
         }
 
-        private static void _ToQueryNeedToExportList(SharesAutoJoinPar parInfo, object exportLock, List<SharesAutoJoinInfo> exportList) 
+        private static void _ToQueryNeedToExportList(SharesAutoJoinPar parInfo, object exportLock, List<SharesAutoJoinInfo> exportList)
         {
             StringBuilder logRecord = new StringBuilder();
-            logRecord.AppendLine("===开始判断条件("+ parInfo.ToBuyName+ ");"+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")+"===");
+            logRecord.AppendLine("===开始判断条件(" + parInfo.ToBuyName + ");" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
             bool success = true;
             foreach (var other in parInfo.OtherList)
             {
-                var trendSuccess=_CheckTrendConditions(false,parInfo.Market, parInfo.SharesCode, other.OtherName, other.TrendList, logRecord);
-                if (!trendSuccess) 
+                var trendSuccess = _CheckTrendConditions(false, parInfo.Market, parInfo.SharesCode, other.OtherName, other.TrendList, logRecord);
+                if (!trendSuccess)
                 {
                     success = false;
                     break;
@@ -2921,41 +2921,41 @@ where m3.Id is null and m4.ToBuyId is null";
                 {
                     exportList.Add(new SharesAutoJoinInfo
                     {
-                        SharesCode= parInfo.SharesCode,
-                        Market= parInfo.Market,
-                        ToBuyId= parInfo.ToBuyId
+                        SharesCode = parInfo.SharesCode,
+                        Market = parInfo.Market,
+                        ToBuyId = parInfo.ToBuyId
                     });
                 }
             }
             logRecord.AppendLine("===条件(" + parInfo.ToBuyName + ")判断结束;" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "===");
-            Logger.WriteFileLog(logRecord.ToString(), "AutoJoinRecord/"+parInfo.SharesCode, null);
+            Logger.WriteFileLog(logRecord.ToString(), "AutoJoinRecord/" + parInfo.SharesCode, null);
         }
 
         /// <summary>
         /// 判断走势条件是否符合
         /// </summary>
         /// <returns></returns>
-        private static bool _CheckTrendConditions(bool isother,int market,string sharesCode,string groupName,List<SharesAutoJoinOtherTrend> trendList, StringBuilder logRecord = null) 
+        private static bool _CheckTrendConditions(bool isother, int market, string sharesCode, string groupName, List<SharesAutoJoinOtherTrend> trendList, StringBuilder logRecord = null)
         {
             StringBuilder tempString = new StringBuilder();
             string tab = "\t";
-            if (isother) 
+            if (isother)
             {
                 tab = tab + "\t";
             }
-            tempString.AppendLine(tab+"分组名称:" +groupName);
+            tempString.AppendLine(tab + "分组名称:" + groupName);
 
             bool trendSuccess = true;
             foreach (var trend in trendList)
             {
                 trendSuccess = false;
-                int errorCode = _ToJudgeCondition(isother,trend.TrendId, market, sharesCode, trend.TrendDescription, trend.ParList, tempString);
+                int errorCode = _ToJudgeCondition(isother, trend.TrendId, market, sharesCode, trend.TrendDescription, trend.ParList, tempString);
                 if (errorCode == 0)
                 {
                     trendSuccess = true;
-                    if (!isother && trend.OtherTrendList.Count()>0)//判断额外参数
+                    if (!isother && trend.OtherTrendList.Count() > 0)//判断额外参数
                     {
-                        trendSuccess=_CheckTrendConditions(true, market, sharesCode,"额外参数", trend.OtherTrendList, tempString);
+                        trendSuccess = _CheckTrendConditions(true, market, sharesCode, "额外参数", trend.OtherTrendList, tempString);
                     }
                     if (trendSuccess)
                     {
@@ -3040,7 +3040,7 @@ where m3.Id is null and m4.ToBuyId is null";
         /// <summary>
         /// 构建导入数据
         /// </summary>
-        private static List<SharesAutoJoinExportInfo> QueryExportSharesInfo(List<SharesAutoJoinInfo> exportList) 
+        private static List<SharesAutoJoinExportInfo> QueryExportSharesInfo(List<SharesAutoJoinInfo> exportList)
         {
             Dictionary<long, List<SharesAutoJoinInfo>> exportDic = exportList.GroupBy(e => e.ToBuyId).ToDictionary(e => e.Key, v => v.ToList());
             ThreadMsgTemplate<KeyValuePair<long, List<SharesAutoJoinInfo>>> conditionData = new ThreadMsgTemplate<KeyValuePair<long, List<SharesAutoJoinInfo>>>();
@@ -3084,7 +3084,7 @@ where m3.Id is null and m4.ToBuyId is null";
             return toExportList;
         }
 
-        private static void _ToQueryExportSharesInfo(KeyValuePair<long, List<SharesAutoJoinInfo>> temp, object exportLock, List<SharesAutoJoinExportInfo> toExportList) 
+        private static void _ToQueryExportSharesInfo(KeyValuePair<long, List<SharesAutoJoinInfo>> temp, object exportLock, List<SharesAutoJoinExportInfo> toExportList)
         {
             using (TransactionScope scope = new TransactionScope(TransactionScopeOption.Required, new TransactionOptions { IsolationLevel = System.Transactions.IsolationLevel.ReadUncommitted }))
             using (var db = new meal_ticketEntities())
@@ -3094,7 +3094,7 @@ where m3.Id is null and m4.ToBuyId is null";
                              where item.Id == temp.Key
                              select new SharesAutoJoinExportInfo
                              {
-                                 ToBuyId= temp.Key,
+                                 ToBuyId = temp.Key,
                                  AccountId = item.AccountId,
                                  IsClear = item.IsClearOriginal,
                                  Type = item.TemplateType,
@@ -3134,7 +3134,7 @@ where m3.Id is null and m4.ToBuyId is null";
         }
 
         //导入股票
-        private static List<SharesAutoJoinExportInfo> ToExportShares(List<SharesAutoJoinExportInfo> toExportList) 
+        private static List<SharesAutoJoinExportInfo> ToExportShares(List<SharesAutoJoinExportInfo> toExportList)
         {
             List<SharesAutoJoinExportInfo> successList = new List<SharesAutoJoinExportInfo>();
             object dataLock = new object();
@@ -3166,14 +3166,14 @@ where m3.Id is null and m4.ToBuyId is null";
                         {
                             break;
                         }
-                        List<SharesBase> successShares=_ToExportShares(temp);
+                        List<SharesBase> successShares = _ToExportShares(temp);
                         lock (dataLock)
                         {
-                            successList.Add(new SharesAutoJoinExportInfo 
+                            successList.Add(new SharesAutoJoinExportInfo
                             {
-                                SharesList= successShares,
-                                ToBuyId= temp.ToBuyId,
-                                AccountId=temp.AccountId
+                                SharesList = successShares,
+                                ToBuyId = temp.ToBuyId,
+                                AccountId = temp.AccountId
                             });
                         }
                     }
@@ -3650,11 +3650,11 @@ select @buyId;";
                                 long closedPrice = 0;
                                 //计算杠杆倍数
                                 int range = 0;
-                                
+
                                 //当前行情信息
                                 var quote = (from item in db.v_shares_quotes_last
-                                                 where item.Market == market && item.SharesCode == sharesCode
-                                                 select item).FirstOrDefault();
+                                             where item.Market == market && item.SharesCode == sharesCode
+                                             select item).FirstOrDefault();
                                 if (quote == null)
                                 {
                                     throw new WebApiException(400, "暂无行情");
@@ -3687,7 +3687,7 @@ select @buyId;";
                                 foreach (var buy in template_buy)
                                 {
                                     long conditionPrice = 0;
-                                    long EntrustAmount = buy.EntrustAmountType==0? (long)(totalDeposit*1.0/10000* buy.EntrustAmount): buy.EntrustAmount;
+                                    long EntrustAmount = buy.EntrustAmountType == 0 ? (long)(totalDeposit * 1.0 / 10000 * buy.EntrustAmount) : buy.EntrustAmount;
                                     int ConditionRelativeRate = buy.ConditionPriceRate ?? 0;
                                     int ConditionRelativeType = buy.ConditionPriceType ?? 0;
                                     int ConditionPriceBase = buy.ConditionPriceBase ?? 0;
@@ -3699,7 +3699,7 @@ select @buyId;";
                                     }
                                     t_account_shares_conditiontrade_buy_details buy_details = new t_account_shares_conditiontrade_buy_details
                                     {
-                                        ToBuyId=temp.ToBuyId,
+                                        ToBuyId = temp.ToBuyId,
                                         Status = buy.Status,
                                         CreateTime = DateTime.Now,
                                         EntrustId = 0,
@@ -3918,10 +3918,10 @@ select @buyId;";
                                 tran.Commit();
                                 lock (dataLock)
                                 {
-                                    successList.Add(new SharesBase 
+                                    successList.Add(new SharesBase
                                     {
-                                        Market=market,
-                                        SharesCode=sharesCode
+                                        Market = market,
+                                        SharesCode = sharesCode
                                     });
                                 }
                             }
@@ -3941,7 +3941,7 @@ select @buyId;";
         }
 
         //记录日志
-        public static void WriteToLogRecord(List<SharesAutoJoinExportInfo> list) 
+        public static void WriteToLogRecord(List<SharesAutoJoinExportInfo> list)
         {
             using (var db = new meal_ticketEntities())
             {
@@ -3949,17 +3949,233 @@ select @buyId;";
                 {
                     foreach (var item2 in item.SharesList)
                     {
-                        db.t_account_shares_auto_join_tobuy_record.Add(new t_account_shares_auto_join_tobuy_record 
+                        db.t_account_shares_auto_join_tobuy_record.Add(new t_account_shares_auto_join_tobuy_record
                         {
-                            SharesCode= item2.SharesCode,
-                            Market=item2.Market,
-                            AccountId=item.AccountId,
-                            ToBuyId=item.ToBuyId,
-                            CreateTime=DateTime.Now
+                            SharesCode = item2.SharesCode,
+                            Market = item2.Market,
+                            AccountId = item.AccountId,
+                            ToBuyId = item.ToBuyId,
+                            CreateTime = DateTime.Now
                         });
                     }
                 }
                 db.SaveChanges();
+            }
+        }
+
+        public static void SearchMonitor()
+        {
+            TrendHandler handler = new TrendHandler();
+            using (var db = new meal_ticketEntities())
+            {
+                var searchTemplate = (from item in db.t_sys_conditiontrade_template
+                                      join item2 in db.t_sys_conditiontrade_template_search on item.Id equals item2.TemplateId
+                                      where item.Status == 1 && item.Type == 5
+                                      select item2).ToList();
+                Dictionary<long, List<SharesBase_Session>> totalDic = new Dictionary<long, List<SharesBase_Session>>();
+                foreach (var item in searchTemplate)
+                {
+                    List<dynamic> searchList = JsonConvert.DeserializeObject<List<dynamic>>(item.TemplateContent);
+                    List<searchInfo> searchPar = new List<searchInfo>();
+                    foreach (var x in searchList)
+                    {
+                        int connect = x.connect;
+                        int leftbracket = string.IsNullOrEmpty(Convert.ToString(x.leftbracket))?0:Convert.ToInt32(x.leftbracket);
+                        int rightbracket = string.IsNullOrEmpty(Convert.ToString(x.rightbracket)) ? 0 : Convert.ToInt32(x.rightbracket);
+                        int type = x.type;
+                        searchPar.Add(new searchInfo
+                        {
+                            connect = connect,
+                            content = JsonConvert.SerializeObject(x.content),
+                            leftbracket= leftbracket,
+                            rightbracket= rightbracket,
+                            type=type
+                        });
+                    }
+                    var result = handler.GetEligibleSharesBatch(searchPar);
+                    totalDic.Add(item.TemplateId, result.Distinct().ToList());
+                }
+
+                DateTime dateNow = Helper.GetLastTradeDate(-9, 0, 0);
+                foreach (var dic in totalDic)
+                {
+                    var accountSetting = (from item in db.t_search_tri_setting
+                                          where item.TemplateId == dic.Key && item.Type == -13
+                                          select item.AccountId).ToList();
+                    var tri = from item in db.t_search_tri
+                              where item.LastPushTime > dateNow
+                              select item;
+                    var search_tri = (from item in db.t_account_baseinfo
+                                      join item2 in tri on item.Id equals item2.AccountId
+                                      where item.Status == 1 && item.MonitorStatus == 1 && accountSetting.Contains(item.Id)
+                                      select new
+                                      {
+                                          AccountId = item.Id,
+                                          Market = item2.Market,
+                                          SharesCode = item2.SharesCode,
+                                          LastPushTime = item2.LastPushTime,
+                                          LastPushMaxRate = item2.LastPushMaxRate,
+                                          LastPushMinRate = item2.LastPushMinRate,
+                                          LastPushRate=item2.LastPushRate,
+                                          MinPushTimeInterval = item2.MinPushTimeInterval,
+                                          MinPushMaxRateInterval = item2.MinPushMaxRateInterval,
+                                          MinPushMinRateInterval = item2.MinPushMinRateInterval,
+                                          MinPushRiseRateInterval=item2.MinPushRiseRateInterval,
+                                          MinPushDownRateInterval=item2.MinPushDownRateInterval,
+                                          TriCount = item2.TriCount
+                                      }).ToList();
+                    var sharesList = (from item in dic.Value
+                                      join item2 in Singleton.Instance._SharesQuotesSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                                      where item2.ClosedPrice > 0 && item2.PresentPrice > 0
+                                      select new
+                                      {
+                                          Market = item.Market,
+                                          SharesCode = item.SharesCode,
+                                          Rate = (int)((item2.PresentPrice - item2.ClosedPrice) * 10000.0 / item2.ClosedPrice)
+                                      }).ToList();
+                    var search_tri_dic = search_tri.ToDictionary(k => k.AccountId * 10000000 + int.Parse(k.SharesCode) * 10 + k.Market, v => v);
+                    var resultList = new List<dynamic>();
+                    foreach (var item in sharesList)
+                    {
+                        foreach (var item2 in accountSetting)
+                        {
+                            long key = item2 * 10000000 + int.Parse(item.SharesCode) * 10 + item.Market;
+                            if (!search_tri_dic.ContainsKey(key))
+                            {
+                                resultList.Add(new
+                                {
+                                    AccountId = item2,
+                                    Market = item.Market,
+                                    SharesCode = item.SharesCode,
+                                    LastPushTime = DateTime.Now,
+                                    LastPushMaxRate = item.Rate,
+                                    LastPushMinRate = item.Rate,
+                                    LastPushRate= item.Rate,
+                                    LastPushType = 0,
+                                    TriCount = 1
+                                });
+                                continue;
+                            }
+
+                            var temp = search_tri_dic[key];
+                            if (item.Rate >= temp.LastPushMaxRate + temp.MinPushMaxRateInterval)
+                            {
+                                resultList.Add(new
+                                {
+                                    AccountId = item2,
+                                    Market = item.Market,
+                                    SharesCode = item.SharesCode,
+                                    LastPushTime = DateTime.Now,
+                                    LastPushMaxRate = item.Rate,
+                                    LastPushMinRate = temp.LastPushMinRate,
+                                    LastPushRate = item.Rate,
+                                    LastPushType = 1,
+                                    TriCount = temp.TriCount + 1
+                                });
+                            }
+                            else if (item.Rate <= temp.LastPushMinRate + temp.MinPushMinRateInterval)
+                            {
+                                resultList.Add(new
+                                {
+                                    AccountId = item2,
+                                    Market = item.Market,
+                                    SharesCode = item.SharesCode,
+                                    LastPushTime = DateTime.Now,
+                                    LastPushMaxRate = temp.LastPushMaxRate,
+                                    LastPushMinRate = item.Rate,
+                                    LastPushRate = item.Rate,
+                                    LastPushType = 2,
+                                    TriCount = temp.TriCount + 1
+                                });
+                            }
+                            else if (item.Rate >= temp.LastPushRate + temp.MinPushRiseRateInterval)
+                            {
+                                resultList.Add(new
+                                {
+                                    AccountId = item2,
+                                    Market = item.Market,
+                                    SharesCode = item.SharesCode,
+                                    LastPushTime = DateTime.Now,
+                                    LastPushMaxRate = temp.LastPushMaxRate,
+                                    LastPushMinRate = temp.LastPushMinRate,
+                                    LastPushRate = item.Rate,
+                                    LastPushType = 3,
+                                    TriCount = temp.TriCount + 1
+                                });
+                            }
+                            else if (item.Rate <= temp.LastPushRate + temp.MinPushDownRateInterval)
+                            {
+                                resultList.Add(new
+                                {
+                                    AccountId = item2,
+                                    Market = item.Market,
+                                    SharesCode = item.SharesCode,
+                                    LastPushTime = DateTime.Now,
+                                    LastPushMaxRate = temp.LastPushMaxRate,
+                                    LastPushMinRate = temp.LastPushMinRate,
+                                    LastPushRate = item.Rate,
+                                    LastPushType = 4,
+                                    TriCount = temp.TriCount + 1
+                                });
+                            }
+                        }
+                    }
+                    SearchMonitor_ToDataBase(resultList);
+                }
+            }
+        }
+
+        private static void SearchMonitor_ToDataBase(List<dynamic> list)
+        {
+            DataTable table = new DataTable();
+            #region====定义表字段数据类型====
+            table.Columns.Add("AccountId", typeof(long));
+            table.Columns.Add("Market", typeof(int));
+            table.Columns.Add("SharesCode", typeof(string));
+            table.Columns.Add("LastPushTime", typeof(DateTime));
+            table.Columns.Add("LastPushMaxRate", typeof(int));
+            table.Columns.Add("LastPushMinRate", typeof(int));
+            table.Columns.Add("LastPushRate", typeof(int));
+            table.Columns.Add("LastPushType", typeof(int));
+            table.Columns.Add("TriCount", typeof(int)); 
+            #endregion
+
+            #region====绑定数据====
+            foreach (var item in list)
+            {
+                DataRow row = table.NewRow();
+                row["AccountId"] = item.AccountId;
+                row["Market"] = item.Market;
+                row["SharesCode"] = item.SharesCode;
+                row["LastPushTime"] = item.LastPushTime;
+                row["LastPushMaxRate"] = item.LastPushMaxRate;
+                row["LastPushMinRate"] = item.LastPushMinRate;
+                row["LastPushRate"] = item.LastPushRate;
+                row["LastPushType"] = item.LastPushType;
+                row["TriCount"] = item.TriCount;
+                table.Rows.Add(row);
+            }
+            #endregion
+
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //关键是类型
+                    SqlParameter parameter = new SqlParameter("@searchMonitorList", SqlDbType.Structured);
+                    //必须指定表类型名
+                    parameter.TypeName = "dbo.SearchMonitor";
+                    //赋值
+                    parameter.Value = table;
+                    db.Database.ExecuteSqlCommand("exec P_SearchMonitor_Update @searchMonitorList", parameter);
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteFileLog("搜索结果入库失败了", ex);
+                    tran.Rollback();
+                }
             }
         }
     }

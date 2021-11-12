@@ -51,12 +51,49 @@ namespace MealTicket_Web_Handler.Model
         public int Type { get; set; }
 
         /// <summary>
+        /// 股票唯一数字
+        /// SharesCode*10+Market
+        /// </summary>
+        public int SharesNumber { get; set; }
+
+        /// <summary>
         /// 数据列表
         /// </summary>
         public List<SharesKLineInfo> DataList { get; set; }
     }
 
-    public class SharesKLineInfo 
+    public class BatchGetSharesKLineListRequest
+    {
+        /// <summary>
+        /// 获取条数
+        /// </summary>
+        public int GetCount { get; set; }
+
+        /// <summary>
+        /// 股票列表
+        /// </summary>
+        public List<BatchGetSharesKLineList_Shares> SharesList { get; set; }
+    }
+
+    public class BatchGetSharesKLineList_Shares
+    {
+        /// <summary>
+        /// 市场
+        /// </summary>
+        public int Market { get; set; }
+
+        /// <summary>
+        /// 股票代码
+        /// </summary>
+        public string SharesCode { get; set; }
+
+        /// <summary>
+        /// 最大时间
+        /// </summary>
+        public long MaxGroupTimeKey { get; set; }
+    }
+
+    public class SharesKLineInfo
     {
         /// <summary>
         /// 时间值
@@ -125,5 +162,32 @@ namespace MealTicket_Web_Handler.Model
         /// 涨跌幅
         /// </summary>
         public string RiseRate { get; set; }
+    }
+
+    public class DB_SharesKLineInfo 
+    {
+        public int Market { get; set; }
+
+        public string SharesCode { get; set; }
+
+        public long GroupTimeKey { get; set; }
+
+        public DateTime Time { get; set; }
+
+        public long OpenedPrice { get; set; }
+
+        public long ClosedPrice { get; set; }
+
+        public long PreClosePrice { get; set; }
+
+        public long MinPrice { get; set; }
+
+        public long MaxPrice { get; set; }
+
+        public long TradeStock { get; set; }
+
+        public long TradeAmount { get; set; }
+
+        public long Tradable { get; set; }
     }
 }

@@ -187,6 +187,9 @@
     <Compile Include="t_account_shares_buy_synchro_setting_group.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="t_account_shares_buy_synchro_setting_opt_rel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="t_account_shares_conditiontrade_buy.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -586,6 +589,15 @@
     <Compile Include="t_recharge_record.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="t_search_tri.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_search_tri_record.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_search_tri_setting.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="t_server.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -911,6 +923,9 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_test_entrust.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_tri_test.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="v_plate.cs">

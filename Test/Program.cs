@@ -21,17 +21,43 @@ namespace Test
 
         public string Name { get; set; }
     }
+
+    class B 
+    {
+        public int Market { get; set; }
+
+        public string SharesCode { get; set; }
+    }
+
     class Program
     {
         static void Main(string[] args)
         {
-            Regex regex = new Regex(@"{{\w*}}"); //匹配所有参数
-            var matchGroup = regex.Matches("您购买的商品：{{sharesname}}在{{time}}已签收，状态：{{dealstatus}}，感谢惠顾！");
-            foreach (var g in matchGroup)
+            List<B> b = new List<B>();
+            b.Add(new B 
             {
-                
-            }
+                Market=0,
+                SharesCode="000001"
+            });
+            b.Add(new B
+            {
+                Market = 1,
+                SharesCode = "000002"
+            });
+            b.Add(new B
+            {
+                Market = 0,
+                SharesCode = "000001"
+            });
+            b.Add(new B
+            {
+                Market = 0,
+                SharesCode = "000003"
+            });
 
+            var a = b.OrderBy(e=>e.Market).FirstOrDefault();
+            var c = b.Where(e=>e.SharesCode != a.SharesCode).ToList();
+            var d = c;
 
             //Dictionary<int, A> dic1 = new Dictionary<int, A>();
             //dic1.Add(1,new A 

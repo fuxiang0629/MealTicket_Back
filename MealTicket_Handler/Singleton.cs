@@ -100,6 +100,8 @@ namespace MealTicket_Handler
 
         public string MaxVersionName_Ios = "";
 
+        public Dictionary<int, int> IndexInitValueDic = new Dictionary<int, int>();
+
         /// <summary>
         /// 深圳股票匹配
         /// </summary>
@@ -138,6 +140,11 @@ namespace MealTicket_Handler
 
         private Singleton()
         {
+            IndexInitValueDic.Clear();
+            IndexInitValueDic.Add(0,1000);
+            IndexInitValueDic.Add(1, 1000);
+            IndexInitValueDic.Add(2, 1000);
+            IndexInitValueDic.Add(3, 1000);
             UpdateSysPar();
             UpdateWait.Init();
             StartSysparUpdateThread();
@@ -450,6 +457,25 @@ namespace MealTicket_Handler
                     }
                 }
                 catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "IndexInitValue"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                        int PlateIndex = sysValue.PlateIndex;
+                        int MarketIndex = sysValue.MarketIndex;
+                        int UnitIndex = sysValue.UnitIndex;
+                        int OtherIndex = sysValue.OtherIndex;
+                        IndexInitValueDic[0] = OtherIndex;
+                        IndexInitValueDic[1] = PlateIndex;
+                        IndexInitValueDic[2] = MarketIndex;
+                        IndexInitValueDic[3] = UnitIndex;
+                    }
+                }
+                catch { }
             }
         }
 
@@ -525,6 +551,7 @@ namespace MealTicket_Handler
 
             newIndexSecurityBarsDataTask.LoadPlateSession();
             newIndexSecurityBarsDataTask.LoadSecurityBarsLastData();
+            newIndexSecurityBarsDataTask.LoadPlateSecurityBarsLastData();
             newIndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot();
             newIndexSecurityBarsDataTask.LoadPlateKlineSession();
 

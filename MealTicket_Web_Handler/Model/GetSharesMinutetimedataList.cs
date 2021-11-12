@@ -46,10 +46,42 @@ namespace MealTicket_Web_Handler.Model
         public string Date { get; set; }
 
         /// <summary>
+        /// 股票唯一数字
+        /// </summary>
+        public long SharesNumber { get; set; }
+
+        /// <summary>
         /// 数据列表
         /// </summary>
         public List<SharesMinutetimedata> List { get; set; }
     }
+
+    public class BatchGetSharesMtLineListRequest
+    {
+        /// <summary>
+        /// 股票列表
+        /// </summary>
+        public List<BatchGetSharesMtLineList_Shares> SharesList { get; set; }
+    }
+
+    public class BatchGetSharesMtLineList_Shares
+    {
+        /// <summary>
+        /// 市场
+        /// </summary>
+        public int Market { get; set; }
+
+        /// <summary>
+        /// 股票代码
+        /// </summary>
+        public string SharesCode { get; set; }
+
+        /// <summary>
+        /// 最大时间
+        /// </summary>
+        public long MaxGroupTimeKey { get; set; }
+    }
+
     public class SharesMinutetimedata
     {
         /// <summary>
@@ -96,5 +128,28 @@ namespace MealTicket_Web_Handler.Model
         /// 成交量
         /// </summary>
         public long TradeStockLong { get; set; }
+    }
+
+    public class DB_SharesMinutetimeInfo 
+    {
+        public int Market { get; set; }
+
+        public string SharesCode { get; set; }
+
+        public long GroupTimeKey { get; set; }
+
+        public DateTime Time { get; set; }
+
+        public long ClosedPrice { get; set; }
+
+        public long YestodayClosedPrice { get; set; }
+
+        public long TradeStock { get; set; }
+
+        public long TradeAmount { get; set; }
+
+        public long LastTradeStock { get; set; }
+
+        public long LastTradeAmount { get; set; }
     }
 }
