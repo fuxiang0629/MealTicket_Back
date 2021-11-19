@@ -4031,6 +4031,7 @@ select @buyId;";
                                       {
                                           Market = item.Market,
                                           SharesCode = item.SharesCode,
+                                          PresentPrice=item2.PresentPrice,
                                           Rate = (int)((item2.PresentPrice - item2.ClosedPrice) * 10000.0 / item2.ClosedPrice)
                                       }).ToList();
                     var search_tri_dic = search_tri.ToDictionary(k => k.AccountId * 10000000 + int.Parse(k.SharesCode) * 10 + k.Market, v => v);
@@ -4047,6 +4048,7 @@ select @buyId;";
                                     AccountId = item2,
                                     Market = item.Market,
                                     SharesCode = item.SharesCode,
+                                    PresentPrice=item.PresentPrice,
                                     LastPushTime = DateTime.Now,
                                     LastPushMaxRate = item.Rate,
                                     LastPushMinRate = item.Rate,
@@ -4065,6 +4067,7 @@ select @buyId;";
                                     AccountId = item2,
                                     Market = item.Market,
                                     SharesCode = item.SharesCode,
+                                    PresentPrice = item.PresentPrice,
                                     LastPushTime = DateTime.Now,
                                     LastPushMaxRate = item.Rate,
                                     LastPushMinRate = temp.LastPushMinRate,
@@ -4080,6 +4083,7 @@ select @buyId;";
                                     AccountId = item2,
                                     Market = item.Market,
                                     SharesCode = item.SharesCode,
+                                    PresentPrice = item.PresentPrice,
                                     LastPushTime = DateTime.Now,
                                     LastPushMaxRate = temp.LastPushMaxRate,
                                     LastPushMinRate = item.Rate,
@@ -4095,6 +4099,7 @@ select @buyId;";
                                     AccountId = item2,
                                     Market = item.Market,
                                     SharesCode = item.SharesCode,
+                                    PresentPrice = item.PresentPrice,
                                     LastPushTime = DateTime.Now,
                                     LastPushMaxRate = temp.LastPushMaxRate,
                                     LastPushMinRate = temp.LastPushMinRate,
@@ -4110,6 +4115,7 @@ select @buyId;";
                                     AccountId = item2,
                                     Market = item.Market,
                                     SharesCode = item.SharesCode,
+                                    PresentPrice = item.PresentPrice,
                                     LastPushTime = DateTime.Now,
                                     LastPushMaxRate = temp.LastPushMaxRate,
                                     LastPushMinRate = temp.LastPushMinRate,
@@ -4132,6 +4138,7 @@ select @buyId;";
             table.Columns.Add("AccountId", typeof(long));
             table.Columns.Add("Market", typeof(int));
             table.Columns.Add("SharesCode", typeof(string));
+            table.Columns.Add("PresentPrice", typeof(long));
             table.Columns.Add("LastPushTime", typeof(DateTime));
             table.Columns.Add("LastPushMaxRate", typeof(int));
             table.Columns.Add("LastPushMinRate", typeof(int));
@@ -4147,6 +4154,7 @@ select @buyId;";
                 row["AccountId"] = item.AccountId;
                 row["Market"] = item.Market;
                 row["SharesCode"] = item.SharesCode;
+                row["PresentPrice"] = item.PresentPrice;
                 row["LastPushTime"] = item.LastPushTime;
                 row["LastPushMaxRate"] = item.LastPushMaxRate;
                 row["LastPushMinRate"] = item.LastPushMinRate;

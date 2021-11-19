@@ -92,6 +92,7 @@
     <Compile Include="Common\Session_Model\SharesHisRiseRateInfo_Session.cs" />
     <Compile Include="Common\Session_Model\SharesLimitDateInfo_Session.cs" />
     <Compile Include="Common\Session_Model\SharesPlateInfo_Session.cs" />
+    <Compile Include="Common\Session_Model\SharesPlateQuotesInfo_New_Session.cs" />
     <Compile Include="Common\Session_Model\SharesPlateQuotesInfo_Session.cs" />
     <Compile Include="Common\Session_Model\SharesPlateRelInfo_Session.cs" />
     <Compile Include="Common\ThreadMsgTemplate.cs" />

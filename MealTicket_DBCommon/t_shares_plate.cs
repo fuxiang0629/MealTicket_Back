@@ -26,12 +26,12 @@ namespace MealTicket_DBCommon
         public string WeightSharesCode { get; set; }
         public int NoWeightMarket { get; set; }
         public string NoWeightSharesCode { get; set; }
+        public Nullable<System.DateTime> BaseDate { get; set; }
+        public Nullable<long> BaseDateWeightPrice { get; set; }
+        public Nullable<long> BaseDateNoWeightPrice { get; set; }
         public int BaseStatus { get; set; }
         public int ChooseStatus { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
-        public Nullable<System.DateTime> BaseDate { get; set; }
-        public Nullable<long> BaseDateWeightPrice { get; set; }
-        public Nullable<long> BaseDateNoWeightPrice { get; set; }
     }
 }

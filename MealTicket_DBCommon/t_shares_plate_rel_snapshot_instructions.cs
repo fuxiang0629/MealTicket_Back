@@ -18,14 +18,14 @@ namespace MealTicket_DBCommon
         public System.DateTime Date { get; set; }
         public int Type { get; set; }
         public long PlateId { get; set; }
+        public int PlateType { get; set; }
         public int Market { get; set; }
         public string SharesCode { get; set; }
+        public int DataType { get; set; }
         public string Context { get; set; }
-        public System.DateTime CreateTime { get; set; }
-        public System.DateTime LastModified { get; set; }
         public bool IsExcute { get; set; }
         public Nullable<System.DateTime> ExcuteTime { get; set; }
-        public int PlateType { get; set; }
-        public int DataType { get; set; }
+        public System.DateTime CreateTime { get; set; }
+        public System.DateTime LastModified { get; set; }
     }
 }

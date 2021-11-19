@@ -3381,7 +3381,7 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
             catch (Exception ex)
             {
                 Logger.WriteFileLog("分析按参照价格出错了", ex);
-                logDes = string.Format(logDes, "条件不成立(异常错误)");
+                logDes = string.Format(logDes, "条件不成立(异常错误)"); 
                 return -1;
             }
             finally
@@ -4333,8 +4333,6 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
                 }
                 catch (Exception ex)
                 {
-                    Logger.WriteFileLog(JsonConvert.SerializeObject(trendResult), null);
-                    Logger.WriteFileLog(JsonConvert.SerializeObject(Singleton.Instance._SharesQuotesSession.GetSessionData()), null);
                     Logger.WriteFileLog("触发分析出错", ex);
                 }
                 finally

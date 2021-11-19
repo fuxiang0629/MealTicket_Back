@@ -25,6 +25,15 @@ namespace MealTicket_Web_Handler.Model
 
     public class SharesQuotesTodayInfo 
     {
+        /// <summary>
+        /// 市场代码
+        /// </summary>
+        public int Market { get; set; }
+
+        /// <summary>
+        /// 股票代码
+        /// </summary>
+        public string SharesCode { get; set; }
 
         /// <summary>
         /// 股票名称
@@ -60,5 +69,15 @@ namespace MealTicket_Web_Handler.Model
         /// 数据时间
         /// </summary>
         public DateTime DataTime { get; set; }
+
+        /// <summary>
+        /// 对应板块Id
+        /// </summary>
+        public long PlateId { get; set; }
+
+        /// <summary>
+        /// 板块计算类型0其他 1板块 2市场指数 3成分指数
+        /// </summary>
+        public int CalType { get; set; }
     }
 }

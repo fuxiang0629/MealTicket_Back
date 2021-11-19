@@ -265,6 +265,7 @@ namespace SecurityBarsDataUpdate
             int j = 0;
             long lastTradeStock = sharesData.LastTradeStock;
             long lastTradeAmount = sharesData.LastTradeAmount;
+            DateTime? lastDate = null;
             foreach (var item in resultlist)
             {
                 j++;
@@ -279,10 +280,19 @@ namespace SecurityBarsDataUpdate
                     item.IsLast = false;
                 }
                 item.YestodayClosedPrice = sharesData.YestodayClosedPrice;
-                item.LastTradeStock = lastTradeStock;
-                item.LastTradeAmount = lastTradeAmount;
-                lastTradeStock = lastTradeStock+item.TradeStock;
-                lastTradeAmount = lastTradeAmount+item.TradeAmount;
+                if (datatype == 2)
+                {
+                    if (lastDate != null && lastDate.Value != item.Time.Value.Date)
+                    {
+                        lastTradeStock = 0;
+                        lastTradeAmount = 0;
+                    }
+                    item.LastTradeStock = lastTradeStock;
+                    item.LastTradeAmount = lastTradeAmount;
+                    lastTradeStock = lastTradeStock + item.TradeStock;
+                    lastTradeAmount = lastTradeAmount + item.TradeAmount;
+                    lastDate = item.Time.Value.Date;
+                }
             }
             return resultlist;
         }

@@ -115,6 +115,7 @@
     <Compile Include="Model\AddAccountOptionalGroup.cs" />
     <Compile Include="Model\AddAccountOptionalGroupRel.cs" />
     <Compile Include="Model\AddAccountOptionalTrendPar.cs" />
+    <Compile Include="Model\AddAccountShareGroup.cs" />
     <Compile Include="Model\AddConditionBuyPlate.cs" />
     <Compile Include="Model\AddConditiontradeBuyGroup.cs" />
     <Compile Include="Model\AddConditiontradeBuyGroupShares.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Model\GetAccountRealTimeTabSetting.cs" />
     <Compile Include="Model\GetAccountRiseLimitTriList.cs" />
     <Compile Include="Model\GetAccountSearchReTri.cs" />
+    <Compile Include="Model\GetAccountShareGroupList.cs" />
     <Compile Include="Model\GetAccountSharesPlateSharesList.cs" />
     <Compile Include="Model\GetAuthorizeAccountSharesList.cs" />
     <Compile Include="Model\GetAutoBuySyncroAuthorizedAccountList.cs" />
@@ -189,6 +191,8 @@
     <Compile Include="Model\GetConditiontradeTemplateSellDetailsList.cs" />
     <Compile Include="Model\GetPlateKLineList.cs" />
     <Compile Include="Model\GetPlateMinutetimedataList.cs" />
+    <Compile Include="Model\GetPlateQuotesInfo.cs" />
+    <Compile Include="Model\GetShareQuotesInfo.cs" />
     <Compile Include="Model\GetSharesConditionSearch.cs" />
     <Compile Include="Model\GetSharesConditionTrendList.cs" />
     <Compile Include="Model\GetSharesKLineList.cs" />
@@ -284,6 +288,7 @@
     <Compile Include="Session\SharesBaseSession.cs" />
     <Compile Include="Session\SharesHisRiseRateSession.cs" />
     <Compile Include="Session\SharesPlateQuotesSession.cs" />
+    <Compile Include="Session\SharesPlateQuotesSession_New.cs" />
     <Compile Include="Session\SharesPlateRelSession.cs" />
     <Compile Include="Session\SharesPlateSession.cs" />
     <Compile Include="Session\SharesQuotesSession.cs" />

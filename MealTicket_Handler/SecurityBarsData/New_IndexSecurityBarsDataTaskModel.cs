@@ -82,6 +82,16 @@ namespace MealTicket_Handler.SecurityBarsData
         public long TotalLastTradeAmount { get; set; }
 
         /// <summary>
+        /// 流通股本
+        /// </summary>
+        public long Tradable { get; set; }
+
+        /// <summary>
+        /// 总股本
+        /// </summary>
+        public long TotalCapital { get; set; }
+
+        /// <summary>
         /// 计算股票的数量
         /// </summary>
         public int CalCount { get; set; }
@@ -130,20 +140,68 @@ namespace MealTicket_Handler.SecurityBarsData
         /// </summary>
         public long OpenedPrice { get; set; }
 
+        public long OpenedPriceRate
+        {
+            get
+            {
+                if (PreClosePrice == 0)
+                {
+                    return 0;
+                }
+                return (long)Math.Round((OpenedPrice - PreClosePrice) * 1.0 / PreClosePrice * 10000);
+            }
+        }
+
         /// <summary>
         /// 收盘价
         /// </summary>
         public long ClosedPrice { get; set; }
+
+        public long ClosedPriceRate
+        {
+            get
+            {
+                if (PreClosePrice == 0)
+                {
+                    return 0;
+                }
+                return (long)Math.Round((ClosedPrice - PreClosePrice) * 1.0 / PreClosePrice * 10000);
+            }
+        }
 
         /// <summary>
         /// 最低价
         /// </summary>
         public long MinPrice { get; set; }
 
+        public long MinPriceRate
+        {
+            get
+            {
+                if (PreClosePrice == 0)
+                {
+                    return 0;
+                }
+                return (long)Math.Round((MinPrice - PreClosePrice) * 1.0 / PreClosePrice * 10000);
+            }
+        }
+
         /// <summary>
         /// 最高价
         /// </summary>
         public long MaxPrice { get; set; }
+
+        public long MaxPriceRate 
+        {
+            get 
+            {
+                if (PreClosePrice == 0)
+                {
+                    return 0;
+                }
+                return (long)Math.Round((MaxPrice - PreClosePrice) * 1.0 / PreClosePrice * 10000);
+            }
+        }
 
         /// <summary>
         /// 成交量(笔)
@@ -213,6 +271,11 @@ namespace MealTicket_Handler.SecurityBarsData
         public int CalType { get; set; }
 
         /// <summary>
+        /// 是否全部完成
+        /// </summary>
+        public bool IsFinish { get; set; }
+
+        /// <summary>
         /// 数据列表
         /// </summary>
         public List<SharesKlineData> SharesKlineData { get; set; }
@@ -271,5 +334,103 @@ namespace MealTicket_Handler.SecurityBarsData
         /// 加权类型
         /// </summary>
         public int WeightType { get; set; }
+    }
+
+
+
+    /// <summary>
+    /// 板块导入数据结构
+    /// </summary>
+    public class PlateImportData 
+    {
+        /// <summary>
+        /// 板块Id
+        /// </summary>
+        public long PlateId { get; set; }
+
+        /// <summary>
+        /// 市场代码
+        /// </summary>
+        public int Market { get; set; }
+
+        /// <summary>
+        /// 指数代码
+        /// </summary>
+        public string SharesCode { get; set; }
+
+        /// <summary>
+        /// 加权类型1不加权 2总股本加权
+        /// </summary>
+        public int WeightType { get; set; }
+
+        /// <summary>
+        /// 时间值
+        /// </summary>
+        public long GroupTimeKey { get; set; }
+
+        /// <summary>
+        /// 时间
+        /// </summary>
+        public DateTime Time { get; set; }
+
+        /// <summary>
+        /// 开盘价
+        /// </summary>
+        public long OpenedPrice { get; set; }
+
+        /// <summary>
+        /// 收盘价
+        /// </summary>
+        public long ClosedPrice { get; set; }
+
+        /// <summary>
+        /// 上一笔收盘价
+        /// </summary>
+        public long PreClosePrice { get; set; }
+
+        /// <summary>
+        /// 昨日收盘价(1分钟k线用)
+        /// </summary>
+        public long YestodayClosedPrice { get; set; }
+
+        /// <summary>
+        /// 最低价
+        /// </summary>
+        public long MinPrice { get; set; }
+
+        /// <summary>
+        /// 最高价
+        /// </summary>
+        public long MaxPrice { get; set; }
+
+        /// <summary>
+        /// 成交量
+        /// </summary>
+        public long TradeStock { get; set; }
+
+        /// <summary>
+        /// 成交额
+        /// </summary>
+        public long TradeAmount { get; set; }
+
+        /// <summary>
+        /// 之前成交量之和(1分钟k线用)
+        /// </summary>
+        public long LastTradeStock { get; set; }
+
+        /// <summary>
+        /// 之前成交额之和(1分钟k线用)
+        /// </summary>
+        public long LastTradeAmount { get; set; }
+
+        /// <summary>
+        /// 流通股本
+        /// </summary>
+        public long Tradable { get; set; }
+
+        /// <summary>
+        /// 总股本
+        /// </summary>
+        public long TotalCapital { get; set; }
     }
 }

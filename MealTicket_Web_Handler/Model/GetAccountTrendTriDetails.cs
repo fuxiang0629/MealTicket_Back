@@ -87,5 +87,10 @@ namespace MealTicket_Web_Handler.Model
         /// 类型1新高 2新低 3涨幅 4跌幅
         /// </summary>
         public int PushType { get; set; }
+
+        /// <summary>
+        /// 触发时价格
+        /// </summary>
+        public long PushPrice { get; set; }
     }
 }

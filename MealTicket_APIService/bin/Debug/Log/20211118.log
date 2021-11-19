@@ -1,0 +1,1600 @@
+2021/11/18 9:43:37
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 9:43:39
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 9:43:40
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 9:43:40
+===加载快照缓存===
+
+
+2021/11/18 9:43:41
+===加载快照缓存1===
+
+
+2021/11/18 9:43:41
+===加载快照缓存2===
+
+
+2021/11/18 9:43:41
+===加载快照缓存3===
+
+
+2021/11/18 9:43:41
+===加载快照缓存4===
+
+
+2021/11/18 9:43:41
+===结束当天板块内股票快照缓存===
+
+
+2021/11/18 9:43:41
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 9:43:41
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 9:43:43
+监听队列已链接
+
+
+2021/11/18 9:44:06
+警戒线通知异常
+System.InvalidOperationException: 可为空的对象必须具有一个值。
+   在 System.ThrowHelper.ThrowInvalidOperationException(ExceptionResource resource)
+   在 System.Nullable`1.get_Value()
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.ClosingForce() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 776
+
+2021/11/18 9:44:12
+警戒线通知异常
+System.InvalidOperationException: 可为空的对象必须具有一个值。
+   在 System.ThrowHelper.ThrowInvalidOperationException(ExceptionResource resource)
+   在 System.Nullable`1.get_Value()
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.ClosingForce() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 776
+
+2021/11/18 9:44:14
+警戒线通知异常
+System.InvalidOperationException: 可为空的对象必须具有一个值。
+   在 System.ThrowHelper.ThrowInvalidOperationException(ExceptionResource resource)
+   在 System.Nullable`1.get_Value()
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.ClosingForce() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 776
+
+2021/11/18 9:44:14
+警戒线通知异常
+System.InvalidOperationException: 可为空的对象必须具有一个值。
+   在 System.ThrowHelper.ThrowInvalidOperationException(ExceptionResource resource)
+   在 System.Nullable`1.get_Value()
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.ClosingForce() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 776
+
+2021/11/18 9:44:17
+警戒线通知异常
+System.InvalidOperationException: 可为空的对象必须具有一个值。
+   在 System.ThrowHelper.ThrowInvalidOperationException(ExceptionResource resource)
+   在 System.Nullable`1.get_Value()
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.ClosingForce() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 776
+
+2021/11/18 9:44:24
+警戒线通知异常
+System.InvalidOperationException: 可为空的对象必须具有一个值。
+   在 System.ThrowHelper.ThrowInvalidOperationException(ExceptionResource resource)
+   在 System.Nullable`1.get_Value()
+   在 MealTicket_Handler.RunnerHandler.RunnerHelper.ClosingForce() 位置 F:\项目\饭票后端\MealTicket_Handler\RunnerHandler\RunnerHelper.cs:行号 776
+
+2021/11/18 9:44:45
+业务处理意外出错,继续执行
+System.ArgumentException: 已添加了具有相同键的项。
+   在 System.ThrowHelper.ThrowArgumentException(ExceptionResource resource)
+   在 System.Collections.Generic.Dictionary`2.Insert(TKey key, TValue value, Boolean add)
+   在 System.Collections.Generic.Dictionary`2.Add(TKey key, TValue value)
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.CalPlateKlineResult(SharesKlineData data, Int64 plateId, Int32 dataType, SharesKlineData lastSharesData) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1148
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask._calToday(SharesKlineDataContain data) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1060
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<DoRealTimeTask_Cal_Today>b__37_0() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1020
+
+2021/11/18 9:45:06
+业务处理意外出错,继续执行
+System.ArgumentException: 已添加了具有相同键的项。
+   在 System.ThrowHelper.ThrowArgumentException(ExceptionResource resource)
+   在 System.Collections.Generic.Dictionary`2.Insert(TKey key, TValue value, Boolean add)
+   在 System.Collections.Generic.Dictionary`2.Add(TKey key, TValue value)
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.CalPlateKlineResult(SharesKlineData data, Int64 plateId, Int32 dataType, SharesKlineData lastSharesData) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1148
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask._calToday(SharesKlineDataContain data) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1060
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<DoRealTimeTask_Cal_Today>b__37_0() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1020
+
+2021/11/18 9:45:12
+业务处理意外出错,继续执行
+System.ArgumentException: 已添加了具有相同键的项。
+   在 System.ThrowHelper.ThrowArgumentException(ExceptionResource resource)
+   在 System.Collections.Generic.Dictionary`2.Insert(TKey key, TValue value, Boolean add)
+   在 System.Collections.Generic.Dictionary`2.Add(TKey key, TValue value)
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.CalPlateKlineResult(SharesKlineData data, Int64 plateId, Int32 dataType, SharesKlineData lastSharesData) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1148
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask._calToday(SharesKlineDataContain data) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1060
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<DoRealTimeTask_Cal_Today>b__37_0() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1020
+
+2021/11/18 9:45:21
+业务处理意外出错,继续执行
+System.ArgumentException: 已添加了具有相同键的项。
+   在 System.ThrowHelper.ThrowArgumentException(ExceptionResource resource)
+   在 System.Collections.Generic.Dictionary`2.Insert(TKey key, TValue value, Boolean add)
+   在 System.Collections.Generic.Dictionary`2.Add(TKey key, TValue value)
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.CalPlateKlineResult(SharesKlineData data, Int64 plateId, Int32 dataType, SharesKlineData lastSharesData) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1148
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask._calToday(SharesKlineDataContain data) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1060
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<DoRealTimeTask_Cal_Today>b__37_0() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1020
+
+2021/11/18 9:45:27
+业务处理意外出错,继续执行
+System.ArgumentException: 已添加了具有相同键的项。
+   在 System.ThrowHelper.ThrowArgumentException(ExceptionResource resource)
+   在 System.Collections.Generic.Dictionary`2.Insert(TKey key, TValue value, Boolean add)
+   在 System.Collections.Generic.Dictionary`2.Add(TKey key, TValue value)
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.CalPlateKlineResult(SharesKlineData data, Int64 plateId, Int32 dataType, SharesKlineData lastSharesData) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1148
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask._calToday(SharesKlineDataContain data) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1060
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<DoRealTimeTask_Cal_Today>b__37_0() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1020
+
+2021/11/18 9:46:12
+业务处理意外出错,继续执行
+System.ArgumentException: 已添加了具有相同键的项。
+   在 System.ThrowHelper.ThrowArgumentException(ExceptionResource resource)
+   在 System.Collections.Generic.Dictionary`2.Insert(TKey key, TValue value, Boolean add)
+   在 System.Collections.Generic.Dictionary`2.Add(TKey key, TValue value)
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.CalPlateKlineResult(SharesKlineData data, Int64 plateId, Int32 dataType, SharesKlineData lastSharesData) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1148
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask._calToday(SharesKlineDataContain data) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1060
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<DoRealTimeTask_Cal_Today>b__37_0() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1020
+
+2021/11/18 9:46:17
+业务处理意外出错,继续执行
+System.ArgumentException: 已添加了具有相同键的项。
+   在 System.ThrowHelper.ThrowArgumentException(ExceptionResource resource)
+   在 System.Collections.Generic.Dictionary`2.Insert(TKey key, TValue value, Boolean add)
+   在 System.Collections.Generic.Dictionary`2.Add(TKey key, TValue value)
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.CalPlateKlineResult(SharesKlineData data, Int64 plateId, Int32 dataType, SharesKlineData lastSharesData) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1148
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask._calToday(SharesKlineDataContain data) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1060
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<DoRealTimeTask_Cal_Today>b__37_0() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1020
+
+2021/11/18 9:46:54
+业务处理意外出错,继续执行
+System.ArgumentException: 已添加了具有相同键的项。
+   在 System.ThrowHelper.ThrowArgumentException(ExceptionResource resource)
+   在 System.Collections.Generic.Dictionary`2.Insert(TKey key, TValue value, Boolean add)
+   在 System.Collections.Generic.Dictionary`2.Add(TKey key, TValue value)
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.CalPlateKlineResult(SharesKlineData data, Int64 plateId, Int32 dataType, SharesKlineData lastSharesData) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1148
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask._calToday(SharesKlineDataContain data) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1060
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<DoRealTimeTask_Cal_Today>b__37_0() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1020
+
+2021/11/18 9:47:17
+业务处理意外出错,继续执行
+System.ArgumentException: 已添加了具有相同键的项。
+   在 System.ThrowHelper.ThrowArgumentException(ExceptionResource resource)
+   在 System.Collections.Generic.Dictionary`2.Insert(TKey key, TValue value, Boolean add)
+   在 System.Collections.Generic.Dictionary`2.Add(TKey key, TValue value)
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.CalPlateKlineResult(SharesKlineData data, Int64 plateId, Int32 dataType, SharesKlineData lastSharesData) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1148
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask._calToday(SharesKlineDataContain data) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1060
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<DoRealTimeTask_Cal_Today>b__37_0() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1020
+
+2021/11/18 9:47:25
+业务处理意外出错,继续执行
+System.ArgumentException: 已添加了具有相同键的项。
+   在 System.ThrowHelper.ThrowArgumentException(ExceptionResource resource)
+   在 System.Collections.Generic.Dictionary`2.Insert(TKey key, TValue value, Boolean add)
+   在 System.Collections.Generic.Dictionary`2.Add(TKey key, TValue value)
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.CalPlateKlineResult(SharesKlineData data, Int64 plateId, Int32 dataType, SharesKlineData lastSharesData) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1148
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask._calToday(SharesKlineDataContain data) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1060
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<DoRealTimeTask_Cal_Today>b__37_0() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1020
+
+2021/11/18 9:49:14
+业务处理意外出错,继续执行
+System.ArgumentException: 已添加了具有相同键的项。
+   在 System.ThrowHelper.ThrowArgumentException(ExceptionResource resource)
+   在 System.Collections.Generic.Dictionary`2.Insert(TKey key, TValue value, Boolean add)
+   在 System.Collections.Generic.Dictionary`2.Add(TKey key, TValue value)
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.CalPlateKlineResult(SharesKlineData data, Int64 plateId, Int32 dataType, SharesKlineData lastSharesData) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1148
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask._calToday(SharesKlineDataContain data) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1060
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<DoRealTimeTask_Cal_Today>b__37_0() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1020
+
+2021/11/18 9:51:46
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 9:51:56
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 9:51:56
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 9:51:56
+===加载快照缓存===
+
+
+2021/11/18 9:51:56
+===加载快照缓存1===
+
+
+2021/11/18 9:51:56
+===加载快照缓存2===
+
+
+2021/11/18 9:51:56
+===加载快照缓存3===
+
+
+2021/11/18 9:51:56
+===加载快照缓存4===
+
+
+2021/11/18 9:51:56
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 519
+
+2021/11/18 9:51:56
+===结束当天板块内股票快照缓存===
+
+
+2021/11/18 9:51:56
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 9:51:57
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 9:51:57
+监听队列已链接
+
+
+2021/11/18 10:05:47
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 10:05:55
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 10:05:56
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 10:05:59
+===加载快照缓存===
+
+
+2021/11/18 10:06:00
+===加载快照缓存1===
+
+
+2021/11/18 10:06:00
+===加载快照缓存2===
+
+
+2021/11/18 10:06:00
+===加载快照缓存3===
+
+
+2021/11/18 10:06:00
+===加载快照缓存4===
+
+
+2021/11/18 10:06:00
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 519
+
+2021/11/18 10:06:00
+===结束当天板块内股票快照缓存===
+
+
+2021/11/18 10:06:00
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 10:06:00
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 10:06:00
+监听队列已链接
+
+
+2021/11/18 11:06:30
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 11:06:40
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 11:06:40
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 11:06:40
+===加载快照缓存===
+
+
+2021/11/18 11:06:41
+===加载快照缓存1===
+
+
+2021/11/18 11:06:41
+===加载快照缓存2===
+
+
+2021/11/18 11:06:41
+===加载快照缓存3===
+
+
+2021/11/18 11:06:41
+===加载快照缓存4===
+
+
+2021/11/18 11:06:41
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 519
+
+2021/11/18 11:06:41
+===结束当天板块内股票快照缓存===
+
+
+2021/11/18 11:06:41
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 11:06:41
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 11:06:51
+监听队列已链接
+
+
+2021/11/18 11:11:30
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 11:11:39
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 11:11:39
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 11:11:39
+===加载快照缓存===
+
+
+2021/11/18 11:11:40
+===加载快照缓存1===
+
+
+2021/11/18 11:11:40
+===加载快照缓存2===
+
+
+2021/11/18 11:11:40
+===加载快照缓存3===
+
+
+2021/11/18 11:11:40
+===加载快照缓存4===
+
+
+2021/11/18 11:11:40
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 519
+
+2021/11/18 11:11:40
+===结束当天板块内股票快照缓存===
+
+
+2021/11/18 11:11:40
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 11:11:41
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 11:11:55
+监听队列已链接
+
+
+2021/11/18 11:15:00
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 11:15:07
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 11:15:07
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 11:15:08
+===加载快照缓存===
+
+
+2021/11/18 11:15:08
+===加载快照缓存1===
+
+
+2021/11/18 11:15:08
+===加载快照缓存2===
+
+
+2021/11/18 11:15:08
+===加载快照缓存3===
+
+
+2021/11/18 11:15:08
+===加载快照缓存4===
+
+
+2021/11/18 11:15:08
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 519
+
+2021/11/18 11:15:08
+===结束当天板块内股票快照缓存===
+
+
+2021/11/18 11:15:08
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 11:15:08
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 11:15:14
+监听队列已链接
+
+
+2021/11/18 11:21:32
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 11:21:39
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 11:21:39
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 11:21:39
+===加载快照缓存===
+
+
+2021/11/18 11:21:39
+===加载快照缓存1===
+
+
+2021/11/18 11:21:39
+===加载快照缓存2===
+
+
+2021/11/18 11:21:39
+===加载快照缓存3===
+
+
+2021/11/18 11:21:39
+===加载快照缓存4===
+
+
+2021/11/18 11:21:39
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 519
+
+2021/11/18 11:21:40
+===结束当天板块内股票快照缓存===
+
+
+2021/11/18 11:21:40
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 11:21:40
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 11:21:48
+监听队列已链接
+
+
+2021/11/18 11:27:26
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 11:27:35
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 11:27:35
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 11:27:35
+===加载快照缓存===
+
+
+2021/11/18 11:27:35
+===加载快照缓存1===
+
+
+2021/11/18 11:27:35
+===加载快照缓存2===
+
+
+2021/11/18 11:27:35
+===加载快照缓存3===
+
+
+2021/11/18 11:27:35
+===加载快照缓存4===
+
+
+2021/11/18 11:27:35
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 519
+
+2021/11/18 11:27:35
+===结束当天板块内股票快照缓存===
+
+
+2021/11/18 11:27:35
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 11:27:36
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 11:27:44
+监听队列已链接
+
+
+2021/11/18 11:28:04
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 11:28:13
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 11:28:13
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 11:28:13
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 11:28:13
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 11:29:13
+RechargeRefundQuery出错
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2021/11/18 11:31:41
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 11:31:49
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 11:31:49
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 11:31:49
+===加载快照缓存===
+
+
+2021/11/18 11:31:49
+===加载快照缓存1===
+
+
+2021/11/18 11:31:49
+===加载快照缓存2===
+
+
+2021/11/18 11:31:49
+===加载快照缓存3===
+
+
+2021/11/18 11:31:49
+===加载快照缓存4===
+
+
+2021/11/18 11:31:49
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 519
+
+2021/11/18 11:31:49
+===结束当天板块内股票快照缓存===
+
+
+2021/11/18 11:31:49
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 11:31:49
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 11:31:56
+监听队列已链接
+
+
+2021/11/18 11:39:27
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 11:39:33
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 11:39:33
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 11:39:33
+===加载快照缓存===
+
+
+2021/11/18 11:39:34
+===加载快照缓存1===
+
+
+2021/11/18 11:39:34
+===加载快照缓存2===
+
+
+2021/11/18 11:39:34
+===加载快照缓存3===
+
+
+2021/11/18 11:39:34
+===加载快照缓存4===
+
+
+2021/11/18 11:39:34
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 519
+
+2021/11/18 11:39:34
+===结束当天板块内股票快照缓存===
+
+
+2021/11/18 11:39:34
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 11:39:34
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 11:39:40
+监听队列已链接
+
+
+2021/11/18 11:41:11
+每天任务意外出错,继续执行
+System.InvalidOperationException: 集合已修改；可能无法执行枚举操作。
+   在 System.ThrowHelper.ThrowInvalidOperationException(ExceptionResource resource)
+   在 System.Collections.Generic.Dictionary`2.Enumerator.MoveNext()
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.DoRealTimeTask_Cal_His() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 941
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.DoDailyTask(DateTime& TaskSuccessLastTime) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 639
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<DoRealTimeTask>b__30_0() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 602
+
+2021/11/18 11:55:27
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 11:55:35
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 11:55:35
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 11:55:35
+===加载快照缓存===
+
+
+2021/11/18 11:55:35
+===加载快照缓存1===
+
+
+2021/11/18 11:55:35
+===加载快照缓存2===
+
+
+2021/11/18 11:55:35
+===加载快照缓存3===
+
+
+2021/11/18 11:55:35
+===加载快照缓存4===
+
+
+2021/11/18 11:55:35
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 519
+
+2021/11/18 11:55:36
+===结束当天板块内股票快照缓存===
+
+
+2021/11/18 11:55:36
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 11:55:36
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 11:55:49
+监听队列已链接
+
+
+2021/11/18 11:56:03
+SharesQuotesSession缓存加载失败
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2021/11/18 11:56:13
+SharesQuotesSession缓存加载失败
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2021/11/18 11:56:29
+每天任务意外出错,继续执行
+System.InvalidOperationException: 集合已修改；可能无法执行枚举操作。
+   在 System.ThrowHelper.ThrowInvalidOperationException(ExceptionResource resource)
+   在 System.Collections.Generic.Dictionary`2.Enumerator.MoveNext()
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.DoRealTimeTask_Cal_His() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 941
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.DoDailyTask(DateTime& TaskSuccessLastTime) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 639
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<DoRealTimeTask>b__30_0() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 602
+
+2021/11/18 13:41:03
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 13:41:12
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 13:41:12
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 13:41:12
+===加载快照缓存===
+
+
+2021/11/18 13:41:12
+===加载快照缓存1===
+
+
+2021/11/18 13:41:12
+===加载快照缓存2===
+
+
+2021/11/18 13:41:12
+===加载快照缓存3===
+
+
+2021/11/18 13:41:12
+===加载快照缓存4===
+
+
+2021/11/18 13:41:12
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 519
+
+2021/11/18 13:41:12
+===结束当天板块内股票快照缓存===
+
+
+2021/11/18 13:41:12
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 13:41:13
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 13:41:19
+监听队列已链接
+
+
+2021/11/18 13:42:04
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 13:42:15
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 13:42:15
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 13:42:15
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 13:42:15
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 15:29:34
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 15:29:41
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 15:29:42
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 15:29:42
+===加载快照缓存===
+
+
+2021/11/18 15:29:42
+===加载快照缓存1===
+
+
+2021/11/18 15:29:42
+===加载快照缓存2===
+
+
+2021/11/18 15:29:42
+===加载快照缓存3===
+
+
+2021/11/18 15:29:42
+===加载快照缓存4===
+
+
+2021/11/18 15:29:42
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 519
+
+2021/11/18 15:29:42
+===结束当天板块内股票快照缓存===
+
+
+2021/11/18 15:29:42
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 15:29:42
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 15:29:45
+监听队列已链接
+
+
+2021/11/18 15:30:39
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 15:30:44
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 15:30:44
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 15:30:44
+===加载快照缓存===
+
+
+2021/11/18 15:30:44
+===加载快照缓存1===
+
+
+2021/11/18 15:30:44
+===加载快照缓存2===
+
+
+2021/11/18 15:30:44
+===加载快照缓存3===
+
+
+2021/11/18 15:30:44
+===加载快照缓存4===
+
+
+2021/11/18 15:30:44
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 519
+
+2021/11/18 15:30:44
+===结束当天板块内股票快照缓存===
+
+
+2021/11/18 15:30:44
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 15:30:44
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 15:30:48
+监听队列已链接
+
+
+2021/11/18 15:31:11
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 15:31:18
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 15:31:18
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 15:31:18
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 15:31:18
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 16:04:03
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 16:04:07
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 16:04:07
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 16:04:08
+===加载快照缓存===
+
+
+2021/11/18 16:04:08
+===加载快照缓存1===
+
+
+2021/11/18 16:04:08
+===加载快照缓存2===
+
+
+2021/11/18 16:04:08
+===加载快照缓存3===
+
+
+2021/11/18 16:04:08
+===加载快照缓存4===
+
+
+2021/11/18 16:04:08
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 519
+
+2021/11/18 16:04:08
+===结束当天板块内股票快照缓存===
+
+
+2021/11/18 16:04:08
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 16:04:08
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 16:04:13
+监听队列已链接
+
+
+2021/11/18 16:20:21
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 16:20:27
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 16:20:27
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 16:20:27
+===加载快照缓存===
+
+
+2021/11/18 16:20:27
+===加载快照缓存1===
+
+
+2021/11/18 16:20:27
+===加载快照缓存2===
+
+
+2021/11/18 16:20:27
+===加载快照缓存3===
+
+
+2021/11/18 16:20:27
+===加载快照缓存4===
+
+
+2021/11/18 16:20:27
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 519
+
+2021/11/18 16:20:27
+===结束当天板块内股票快照缓存===
+
+
+2021/11/18 16:20:27
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 16:20:28
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 16:20:31
+监听队列已链接
+
+
+2021/11/18 16:20:47
+执行板块K线数据补全出错
+System.Data.SqlClient.SqlException (0x80131904): 列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.<>c.<Reader>b__6_0(DbCommand t, DbCommandInterceptionContext`1 c)
+   在 System.Data.Entity.Infrastructure.Interception.InternalDispatcher`1.Dispatch[TTarget,TInterceptionContext,TResult](TTarget target, Func`3 operation, TInterceptionContext interceptionContext, Action`3 executing, Action`3 executed)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.Reader(DbCommand command, DbCommandInterceptionContext interceptionContext)
+   在 System.Data.Entity.Internal.InterceptableDbCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteStoreQueryInternal[TElement](String commandText, String entitySetName, ExecutionOptions executionOptions, Object[] parameters)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass186_0`1.<ExecuteStoreQueryReliably>b__1()
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteInTransaction[T](Func`1 func, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction, Boolean releaseConnectionOnSuccess)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass186_0`1.<ExecuteStoreQueryReliably>b__0()
+   在 System.Data.Entity.SqlServer.DefaultSqlExecutionStrategy.Execute[TResult](Func`1 operation)
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteStoreQueryReliably[TElement](String commandText, String entitySetName, ExecutionOptions executionOptions, Object[] parameters)
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteStoreQuery[TElement](String commandText, ExecutionOptions executionOptions, Object[] parameters)
+   在 System.Data.Entity.Internal.InternalContext.<>c__DisplayClass111_0`1.<ExecuteSqlQuery>b__0()
+   在 System.Data.Entity.Internal.LazyEnumerator`1.MoveNext()
+   在 System.Collections.Generic.List`1..ctor(IEnumerable`1 collection)
+   在 System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.DoRealTimeTask_Cal_His() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1042
+ClientConnectionId:423abb41-e56c-4e69-a98f-2a25788251c3
+Error Number:207,State:1,Class:16
+
+2021/11/18 16:27:33
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 16:27:38
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 16:27:39
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 16:27:39
+===加载快照缓存===
+
+
+2021/11/18 16:27:39
+===加载快照缓存1===
+
+
+2021/11/18 16:27:39
+===加载快照缓存2===
+
+
+2021/11/18 16:27:39
+===加载快照缓存3===
+
+
+2021/11/18 16:27:39
+===加载快照缓存4===
+
+
+2021/11/18 16:27:39
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 519
+
+2021/11/18 16:27:39
+===结束当天板块内股票快照缓存===
+
+
+2021/11/18 16:27:39
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 16:27:39
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 16:27:42
+监听队列已链接
+
+
+2021/11/18 16:27:57
+执行板块K线数据补全出错
+System.Data.SqlClient.SqlException (0x80131904): 列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.<>c.<Reader>b__6_0(DbCommand t, DbCommandInterceptionContext`1 c)
+   在 System.Data.Entity.Infrastructure.Interception.InternalDispatcher`1.Dispatch[TTarget,TInterceptionContext,TResult](TTarget target, Func`3 operation, TInterceptionContext interceptionContext, Action`3 executing, Action`3 executed)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.Reader(DbCommand command, DbCommandInterceptionContext interceptionContext)
+   在 System.Data.Entity.Internal.InterceptableDbCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteStoreQueryInternal[TElement](String commandText, String entitySetName, ExecutionOptions executionOptions, Object[] parameters)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass186_0`1.<ExecuteStoreQueryReliably>b__1()
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteInTransaction[T](Func`1 func, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction, Boolean releaseConnectionOnSuccess)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass186_0`1.<ExecuteStoreQueryReliably>b__0()
+   在 System.Data.Entity.SqlServer.DefaultSqlExecutionStrategy.Execute[TResult](Func`1 operation)
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteStoreQueryReliably[TElement](String commandText, String entitySetName, ExecutionOptions executionOptions, Object[] parameters)
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteStoreQuery[TElement](String commandText, ExecutionOptions executionOptions, Object[] parameters)
+   在 System.Data.Entity.Internal.InternalContext.<>c__DisplayClass111_0`1.<ExecuteSqlQuery>b__0()
+   在 System.Data.Entity.Internal.LazyEnumerator`1.MoveNext()
+   在 System.Collections.Generic.List`1..ctor(IEnumerable`1 collection)
+   在 System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.DoRealTimeTask_Cal_His() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1042
+ClientConnectionId:d3e9f775-67f1-46c4-831c-4ed59579d5bb
+Error Number:207,State:1,Class:16
+
+2021/11/18 16:27:57
+执行板块K线数据补全出错
+System.Data.SqlClient.SqlException (0x80131904): 列名 'YestodayClosedPrice' 无效。
+   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.<>c.<Reader>b__6_0(DbCommand t, DbCommandInterceptionContext`1 c)
+   在 System.Data.Entity.Infrastructure.Interception.InternalDispatcher`1.Dispatch[TTarget,TInterceptionContext,TResult](TTarget target, Func`3 operation, TInterceptionContext interceptionContext, Action`3 executing, Action`3 executed)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.Reader(DbCommand command, DbCommandInterceptionContext interceptionContext)
+   在 System.Data.Entity.Internal.InterceptableDbCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteStoreQueryInternal[TElement](String commandText, String entitySetName, ExecutionOptions executionOptions, Object[] parameters)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass186_0`1.<ExecuteStoreQueryReliably>b__1()
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteInTransaction[T](Func`1 func, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction, Boolean releaseConnectionOnSuccess)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass186_0`1.<ExecuteStoreQueryReliably>b__0()
+   在 System.Data.Entity.SqlServer.DefaultSqlExecutionStrategy.Execute[TResult](Func`1 operation)
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteStoreQueryReliably[TElement](String commandText, String entitySetName, ExecutionOptions executionOptions, Object[] parameters)
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteStoreQuery[TElement](String commandText, ExecutionOptions executionOptions, Object[] parameters)
+   在 System.Data.Entity.Internal.InternalContext.<>c__DisplayClass111_0`1.<ExecuteSqlQuery>b__0()
+   在 System.Data.Entity.Internal.LazyEnumerator`1.MoveNext()
+   在 System.Collections.Generic.List`1..ctor(IEnumerable`1 collection)
+   在 System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.DoRealTimeTask_Cal_His() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 1042
+ClientConnectionId:d3e9f775-67f1-46c4-831c-4ed59579d5bb
+Error Number:207,State:1,Class:16
+
+2021/11/18 16:43:23
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 16:43:25
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 16:43:25
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 16:43:26
+===加载快照缓存===
+
+
+2021/11/18 16:43:26
+===加载快照缓存1===
+
+
+2021/11/18 16:43:26
+===加载快照缓存2===
+
+
+2021/11/18 16:43:26
+===加载快照缓存3===
+
+
+2021/11/18 16:43:26
+===加载快照缓存4===
+
+
+2021/11/18 16:43:26
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 519
+
+2021/11/18 16:43:26
+===结束当天板块内股票快照缓存===
+
+
+2021/11/18 16:43:26
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 16:43:26
+计算结果缓存加载错误,datatype=7
+System.Data.SqlClient.SqlException (0x80131904): 列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+列名 'YestodayClosedPrice' 无效。
+   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.<>c.<Reader>b__6_0(DbCommand t, DbCommandInterceptionContext`1 c)
+   在 System.Data.Entity.Infrastructure.Interception.InternalDispatcher`1.Dispatch[TTarget,TInterceptionContext,TResult](TTarget target, Func`3 operation, TInterceptionContext interceptionContext, Action`3 executing, Action`3 executed)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.Reader(DbCommand command, DbCommandInterceptionContext interceptionContext)
+   在 System.Data.Entity.Internal.InterceptableDbCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteStoreQueryInternal[TElement](String commandText, String entitySetName, ExecutionOptions executionOptions, Object[] parameters)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass186_0`1.<ExecuteStoreQueryReliably>b__1()
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteInTransaction[T](Func`1 func, IDbExecutionStrategy executionStrategy, Boolean startLocalTransaction, Boolean releaseConnectionOnSuccess)
+   在 System.Data.Entity.Core.Objects.ObjectContext.<>c__DisplayClass186_0`1.<ExecuteStoreQueryReliably>b__0()
+   在 System.Data.Entity.SqlServer.DefaultSqlExecutionStrategy.Execute[TResult](Func`1 operation)
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteStoreQueryReliably[TElement](String commandText, String entitySetName, ExecutionOptions executionOptions, Object[] parameters)
+   在 System.Data.Entity.Core.Objects.ObjectContext.ExecuteStoreQuery[TElement](String commandText, ExecutionOptions executionOptions, Object[] parameters)
+   在 System.Data.Entity.Internal.InternalContext.<>c__DisplayClass111_0`1.<ExecuteSqlQuery>b__0()
+   在 System.Data.Entity.Internal.LazyEnumerator`1.MoveNext()
+   在 System.Collections.Generic.List`1..ctor(IEnumerable`1 collection)
+   在 System.Linq.Enumerable.ToList[TSource](IEnumerable`1 source)
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass12_0.<LoadPlateKlineSession>b__0() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 271
+ClientConnectionId:dc7f7de7-8429-4482-a41e-7923016774d4
+Error Number:207,State:1,Class:16
+
+2021/11/18 16:55:10
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 16:55:16
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 16:55:16
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 16:55:16
+===加载快照缓存===
+
+
+2021/11/18 16:55:17
+===加载快照缓存1===
+
+
+2021/11/18 16:55:17
+===加载快照缓存2===
+
+
+2021/11/18 16:55:17
+===加载快照缓存3===
+
+
+2021/11/18 16:55:17
+===加载快照缓存4===
+
+
+2021/11/18 16:55:17
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 521
+
+2021/11/18 16:55:17
+===结束当天板块内股票快照缓存===
+
+
+2021/11/18 16:55:17
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 16:55:18
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 16:56:13
+监听队列已链接
+
+
+2021/11/18 16:56:28
+执行板块K线数据补全出错
+System.Data.SqlClient.SqlException (0x80131904): 在将 varchar 值 '2020-05-01' 转换成数据类型 int 时失败。
+   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryHasMoreRows(Boolean& moreRows)
+   在 System.Data.SqlClient.SqlDataReader.TryReadInternal(Boolean setTimeout, Boolean& more)
+   在 System.Data.SqlClient.SqlDataReader.Read()
+   在 System.Data.Entity.Core.Common.Internal.Materialization.Shaper`1.StoreRead()
+ClientConnectionId:c9a25af0-71a7-4f16-954b-f6dd208c6998
+Error Number:245,State:1,Class:16
+
+2021/11/18 16:56:45
+每天任务意外出错,继续执行
+System.ArgumentNullException: 值不能为 null。
+参数名: connection
+   在 System.Data.Entity.Utilities.Check.NotNull[T](T value, String parameterName)
+   在 System.Data.Entity.Infrastructure.Interception.DbTransactionInterceptionContext.WithConnection(DbConnection connection)
+   在 System.Data.Entity.Infrastructure.Interception.DbTransactionDispatcher.Rollback(DbTransaction transaction, DbInterceptionContext interceptionContext)
+   在 System.Data.Entity.Core.EntityClient.EntityTransaction.Rollback()
+
+2021/11/18 16:59:19
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 16:59:23
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 16:59:23
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 16:59:23
+===加载快照缓存===
+
+
+2021/11/18 16:59:24
+===加载快照缓存1===
+
+
+2021/11/18 16:59:24
+===加载快照缓存2===
+
+
+2021/11/18 16:59:24
+===加载快照缓存3===
+
+
+2021/11/18 16:59:24
+===加载快照缓存4===
+
+
+2021/11/18 16:59:24
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 521
+
+2021/11/18 16:59:24
+===结束当天板块内股票快照缓存===
+
+
+2021/11/18 16:59:24
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 16:59:24
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 16:59:39
+监听队列已链接
+
+
+2021/11/18 16:59:47
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 16:59:52
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 16:59:52
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 16:59:52
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 16:59:52
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 19:25:26
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 19:25:31
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 19:25:31
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 19:25:31
+===加载快照缓存===
+
+
+2021/11/18 19:25:31
+===加载快照缓存1===
+
+
+2021/11/18 19:25:31
+===加载快照缓存2===
+
+
+2021/11/18 19:25:31
+===加载快照缓存3===
+
+
+2021/11/18 19:25:31
+===加载快照缓存4===
+
+
+2021/11/18 19:25:31
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 521
+
+2021/11/18 19:25:31
+===结束当天板块内股票快照缓存===
+
+
+2021/11/18 19:25:31
+===开始加载板块计算结果缓存===
+
+
+2021/11/18 19:25:32
+===结束加载板块计算结果缓存===
+
+
+2021/11/18 19:27:29
+===开始初始化最后一条数据缓存===
+
+
+2021/11/18 19:27:36
+===结束初始化最后一条数据缓存===
+
+
+2021/11/18 19:27:37
+===开始当天板块内股票快照缓存===
+
+
+2021/11/18 19:27:37
+===加载快照缓存===
+
+
+2021/11/18 19:27:37
+===加载快照缓存1===
+
+
+2021/11/18 19:27:37
+===加载快照缓存2===
+
+
+2021/11/18 19:27:37
+===加载快照缓存3===
+
+
+2021/11/18 19:27:37
+===加载快照缓存4===
+
+
+2021/11/18 19:27:37
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 521
+
+2021/11/18 19:27:37
+===结束当天板块内股票快照缓存===
+
+

@@ -2387,30 +2387,6 @@
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
-  <EntityType Name="t_shares_plate">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Name" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
-    <Property Name="Type" Type="Int32" Nullable="false" />
-    <Property Name="Status" Type="Int32" Nullable="false" />
-    <Property Name="SharesType" Type="Int32" Nullable="false" />
-    <Property Name="CalType" Type="Int32" Nullable="false" />
-    <Property Name="SharesMarket" Type="Int32" Nullable="false" />
-    <Property Name="SharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="WeightMarket" Type="Int32" Nullable="false" />
-    <Property Name="WeightSharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="NoWeightMarket" Type="Int32" Nullable="false" />
-    <Property Name="NoWeightSharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
-    <Property Name="BaseStatus" Type="Int32" Nullable="false" />
-    <Property Name="ChooseStatus" Type="Int32" Nullable="false" />
-    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="BaseDate" Type="DateTime" Precision="3" />
-    <Property Name="BaseDateWeightPrice" Type="Int64" />
-    <Property Name="BaseDateNoWeightPrice" Type="Int64" />
-  </EntityType>
   <EntityType Name="t_shares_plate_rel">
     <Key>
       <PropertyRef Name="Id" />
@@ -3534,7 +3510,6 @@
     <EntitySet Name="t_shares_monitor_trend_par" EntityType="Self.t_shares_monitor_trend_par" />
     <EntitySet Name="t_shares_monitor_trend_rel" EntityType="Self.t_shares_monitor_trend_rel" />
     <EntitySet Name="t_shares_monitor_trend_rel_par" EntityType="Self.t_shares_monitor_trend_rel_par" />
-    <EntitySet Name="t_shares_plate" EntityType="Self.t_shares_plate" />
     <EntitySet Name="t_shares_plate_rel" EntityType="Self.t_shares_plate_rel" />
     <EntitySet Name="t_shares_plate_riserate" EntityType="Self.t_shares_plate_riserate" />
     <EntitySet Name="t_shares_plate_riserate_last" EntityType="Self.t_shares_plate_riserate_last" />
@@ -4145,7 +4120,6 @@
     <EntitySet Name="t_shares_plate_securitybarsdata_60min" EntityType="meal_ticketModel.t_shares_plate_securitybarsdata_60min" />
     <EntitySet Name="t_shares_plate_rel_snapshot" EntityType="meal_ticketModel.t_shares_plate_rel_snapshot" />
     <EntitySet Name="t_shares_plate_rel_snapshot_catalogue" EntityType="meal_ticketModel.t_shares_plate_rel_snapshot_catalogue" />
-    <EntitySet Name="t_shares_plate_rel_snapshot_instructions" EntityType="meal_ticketModel.t_shares_plate_rel_snapshot_instructions" />
     <EntitySet Name="v_plate_new" EntityType="meal_ticketModel.v_plate_new" />
     <FunctionImport Name="P_ApplyTradeBuy_sys">
       <Parameter Name="accountId" Mode="In" Type="Int64" />
@@ -4162,6 +4136,12 @@
     <EntitySet Name="t_account_shares_buy_synchro_setting_opt_rel" EntityType="meal_ticketModel.t_account_shares_buy_synchro_setting_opt_rel" />
     <EntitySet Name="t_search_tri_setting" EntityType="meal_ticketModel.t_search_tri_setting" />
     <EntitySet Name="t_search_tri" EntityType="meal_ticketModel.t_search_tri" />
+    <EntitySet Name="t_tri_test" EntityType="meal_ticketModel.t_tri_test" />
+    <EntitySet Name="t_search_tri_record" EntityType="meal_ticketModel.t_search_tri_record" />
+    <EntitySet Name="t_shares_plate" EntityType="meal_ticketModel.t_shares_plate" />
+    <EntitySet Name="t_shares_plate_rel_snapshot_instructions" EntityType="meal_ticketModel.t_shares_plate_rel_snapshot_instructions" />
+    <EntitySet Name="t_account_shares_group" EntityType="meal_ticketModel.t_account_shares_group" />
+    <EntitySet Name="t_account_shares_group_rel" EntityType="meal_ticketModel.t_account_shares_group_rel" />
   </EntityContainer>
   <EntityType Name="t_account_baseinfo">
     <Key>
@@ -4876,6 +4856,7 @@
     <Property Name="TotalCapital" Type="Int64" Nullable="false" />
     <Property Name="IsLast" Type="Boolean" Nullable="false" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="YestodayClosedPrice" Type="Int64" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_1day">
     <Key>
@@ -4901,6 +4882,7 @@
     <Property Name="TotalCapital" Type="Int64" Nullable="false" />
     <Property Name="IsLast" Type="Boolean" Nullable="false" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="YestodayClosedPrice" Type="Int64" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_1min">
     <Key>
@@ -4952,6 +4934,7 @@
     <Property Name="TotalCapital" Type="Int64" Nullable="false" />
     <Property Name="IsLast" Type="Boolean" Nullable="false" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="YestodayClosedPrice" Type="Int64" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_1quarter">
     <Key>
@@ -4977,6 +4960,7 @@
     <Property Name="TotalCapital" Type="Int64" Nullable="false" />
     <Property Name="IsLast" Type="Boolean" Nullable="false" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="YestodayClosedPrice" Type="Int64" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_1week">
     <Key>
@@ -5002,6 +4986,7 @@
     <Property Name="TotalCapital" Type="Int64" Nullable="false" />
     <Property Name="IsLast" Type="Boolean" Nullable="false" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="YestodayClosedPrice" Type="Int64" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_1year">
     <Key>
@@ -5027,6 +5012,7 @@
     <Property Name="TotalCapital" Type="Int64" Nullable="false" />
     <Property Name="IsLast" Type="Boolean" Nullable="false" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="YestodayClosedPrice" Type="Int64" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_30min">
     <Key>
@@ -5052,6 +5038,7 @@
     <Property Name="TotalCapital" Type="Int64" Nullable="false" />
     <Property Name="IsLast" Type="Boolean" Nullable="false" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="YestodayClosedPrice" Type="Int64" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_5min">
     <Key>
@@ -5077,6 +5064,7 @@
     <Property Name="TotalCapital" Type="Int64" Nullable="false" />
     <Property Name="IsLast" Type="Boolean" Nullable="false" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="YestodayClosedPrice" Type="Int64" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_60min">
     <Key>
@@ -5102,6 +5090,7 @@
     <Property Name="TotalCapital" Type="Int64" Nullable="false" />
     <Property Name="IsLast" Type="Boolean" Nullable="false" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="YestodayClosedPrice" Type="Int64" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_plate_rel_snapshot">
     <Key>
@@ -5120,24 +5109,6 @@
     <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-  </EntityType>
-  <EntityType Name="t_shares_plate_rel_snapshot_instructions">
-    <Key>
-      <PropertyRef Name="Id" />
-    </Key>
-    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="Type" Type="Int32" Nullable="false" />
-    <Property Name="PlateId" Type="Int64" Nullable="false" />
-    <Property Name="Market" Type="Int32" Nullable="false" />
-    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
-    <Property Name="Context" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
-    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
-    <Property Name="IsExcute" Type="Boolean" Nullable="false" />
-    <Property Name="ExcuteTime" Type="DateTime" Precision="3" />
-    <Property Name="PlateType" Type="Int32" Nullable="false" />
-    <Property Name="DataType" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="v_plate_new">
     <Key>
@@ -5221,5 +5192,106 @@
     <Property Name="LastPushDesc" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
     <Property Name="LastPushType" Type="Int32" Nullable="false" />
     <Property Name="TriCount" Type="Int32" Nullable="false" />
+    <Property Name="MinPushRiseRateInterval" Type="Int32" Nullable="false" />
+    <Property Name="MinPushDownRateInterval" Type="Int32" Nullable="false" />
+    <Property Name="LastPushRate" Type="Int32" />
+  </EntityType>
+  <EntityType Name="t_tri_test">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="DataTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="OptionalId" Type="Int64" />
+    <Property Name="RelId" Type="Int64" />
+    <Property Name="AccountId" Type="Int64" />
+    <Property Name="Market" Type="Int32" />
+    <Property Name="SharesCode" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="SharesName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="TrendId" Type="Int64" />
+    <Property Name="TrendName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="TrendDescription" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="TriPrice" Type="Int64" />
+    <Property Name="TriDesc" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="PushTime" Type="DateTime" Precision="3" />
+    <Property Name="RiseRate" Type="Int32" />
+  </EntityType>
+  <EntityType Name="t_search_tri_record">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="PushTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="PushDesc" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="PushType" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="PushPrice" Type="Int64" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_plate">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="SharesType" Type="Int32" Nullable="false" />
+    <Property Name="CalType" Type="Int32" Nullable="false" />
+    <Property Name="SharesMarket" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="WeightMarket" Type="Int32" Nullable="false" />
+    <Property Name="WeightSharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="NoWeightMarket" Type="Int32" Nullable="false" />
+    <Property Name="NoWeightSharesCode" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="BaseDate" Type="DateTime" Precision="3" />
+    <Property Name="BaseDateWeightPrice" Type="Int64" />
+    <Property Name="BaseDateNoWeightPrice" Type="Int64" />
+    <Property Name="BaseStatus" Type="Int32" Nullable="false" />
+    <Property Name="ChooseStatus" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_rel_snapshot_instructions">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="PlateType" Type="Int32" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="DataType" Type="Int32" Nullable="false" />
+    <Property Name="Context" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+    <Property Name="IsExcute" Type="Boolean" Nullable="false" />
+    <Property Name="ExcuteTime" Type="DateTime" Precision="3" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_group">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="GroupName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="OrderIndex" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_group_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="GroupId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
 </Schema>

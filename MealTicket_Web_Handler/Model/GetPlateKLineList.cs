@@ -132,4 +132,55 @@ namespace MealTicket_Web_Handler.Model
         /// </summary>
         public string RiseRate { get; set; }
     }
+
+    public class BatchGetPlateKLineListRequest
+    {
+        /// <summary>
+        /// 获取条数
+        /// </summary>
+        public int GetCount { get; set; }
+
+        /// <summary>
+        /// 板块列表
+        /// </summary>
+        public List<BatchGetPlateKLineList_Plate> PlateList { get; set; }
+    }
+
+    public class BatchGetPlateKLineList_Plate
+    {
+        /// <summary>
+        /// 板块Id
+        /// </summary>
+        public long PlateId { get; set; }
+
+        /// <summary>
+        /// 最大时间
+        /// </summary>
+        public long MaxGroupTimeKey { get; set; }
+    }
+
+    public class DB_PlateKLineInfo
+    {
+        public long PlateId { get; set; }
+
+        public long GroupTimeKey { get; set; }
+
+        public DateTime Time { get; set; }
+
+        public long OpenedPrice { get; set; }
+
+        public long ClosedPrice { get; set; }
+
+        public long PreClosePrice { get; set; }
+
+        public long MinPrice { get; set; }
+
+        public long MaxPrice { get; set; }
+
+        public long TradeStock { get; set; }
+
+        public long TradeAmount { get; set; }
+
+        public long Tradable { get; set; }
+    }
 }

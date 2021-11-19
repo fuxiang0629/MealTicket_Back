@@ -22,7 +22,7 @@ namespace MealTicket_Handler
             using (var db = new meal_ticketEntities())
             {
                 db.Database.CommandTimeout = 600;
-                string sql = @"select Market,SharesCode,SharesName,SharesPyjc,SharesHandCount,Business,isnull(CirculatingCapital,0) CirculatingCapital,isnull(TotalCapital,0) TotalCapital,Industry,Area,Idea,ClosedPrice,MarketStatus,MarketTime from v_shares_baseinfo with(nolock)";
+                string sql = @"select Market,SharesCode,SharesName,SharesPyjc,SharesHandCount,Business,isnull(CirculatingCapital,0) CirculatingCapital,isnull(TotalCapital,0) TotalCapital,Industry,Area,Idea,ClosedPrice,PresentPrice,MarketStatus,MarketTime from v_shares_baseinfo with(nolock)";
                 var result = db.Database.SqlQuery<SharesBaseInfo_Session>(sql).ToList();
                 return result;
             }
