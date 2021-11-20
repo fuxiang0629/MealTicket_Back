@@ -86,6 +86,8 @@ namespace MealTicket_Web_Handler
         /// </summary>
         public int SearchInterval = 15000;
 
+        public Dictionary<int, int> IndexInitValueDic = new Dictionary<int, int>();
+
         #region===再触发设置===
         public int MinPushTimeInterval = 180;
         public int MinPushRateInterval = 60;
@@ -183,6 +185,13 @@ namespace MealTicket_Web_Handler
 
         private Singleton()
         {
+            IndexInitValueDic.Clear();
+            IndexInitValueDic.Add(0, 1);//其他
+            IndexInitValueDic.Add(1, 1);//板块指数
+            IndexInitValueDic.Add(2, 1);//市场指数
+            IndexInitValueDic.Add(3, 1);//成分指数
+
+            PlateIndexTypeDic.Clear();
             PlateIndexTypeDic.Add(0, 2);
             PlateIndexTypeDic.Add(1, 2);
             PlateIndexTypeDic.Add(2, 1);
@@ -261,6 +270,10 @@ namespace MealTicket_Web_Handler
             if (_SharesPlateQuotesSession != null)
             {
                 _SharesPlateQuotesSession.Dispose();
+            }
+            if (_SharesPlateQuotesSession_New != null)
+            {
+                _SharesPlateQuotesSession_New.Dispose();
             }
             if (_BuyTipSession != null)
             {
@@ -527,6 +540,25 @@ namespace MealTicket_Web_Handler
                     }
                 }
                 catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "IndexInitValue"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                        int PlateIndex_KLineType = sysValue.PlateIndex_KLineType;
+                        int MarketIndex_KLineType = sysValue.MarketIndex_KLineType;
+                        int UnitIndex_KLineType = sysValue.UnitIndex_KLineType;
+                        int OtherIndex_KLineType = sysValue.OtherIndex_KLineType;
+                        IndexInitValueDic[0] = PlateIndex_KLineType == 1 ? 2 : 1;
+                        IndexInitValueDic[1] = MarketIndex_KLineType == 1 ? 2 : 1;
+                        IndexInitValueDic[2] = UnitIndex_KLineType == 1 ? 2 : 1;
+                        IndexInitValueDic[3] = OtherIndex_KLineType == 1 ? 2 : 1;
+                    }
+                }
+                catch { }
             }
 
             _tradeTime = GetTradeCloseTime();
@@ -709,6 +741,7 @@ namespace MealTicket_Web_Handler
             _SharesPlateSession.StartUpdate(600000);
             _SharesPlateRelSession.StartUpdate(600000);
             _SharesPlateQuotesSession.StartUpdate(3000);
+            _SharesPlateQuotesSession_New.StartUpdate(3000);
             _BuyTipSession.StartUpdate(1000);
             _AccountRiseLimitTriSession.StartUpdate(3000);
             _AccountTrendTriSession.StartUpdate(3000);
@@ -722,6 +755,7 @@ namespace MealTicket_Web_Handler
         public SharesPlateSession _SharesPlateSession = new SharesPlateSession();
         public SharesPlateRelSession _SharesPlateRelSession = new SharesPlateRelSession();
         public SharesPlateQuotesSession _SharesPlateQuotesSession = new SharesPlateQuotesSession();
+        public SharesPlateQuotesSession_New _SharesPlateQuotesSession_New = new SharesPlateQuotesSession_New();
         public BuyTipSession _BuyTipSession = new BuyTipSession();
         public AccountRiseLimitTriSession _AccountRiseLimitTriSession = new AccountRiseLimitTriSession();
         public AccountTrendTriSession _AccountTrendTriSession = new AccountTrendTriSession();

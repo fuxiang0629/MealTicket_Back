@@ -76,6 +76,40 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 获取单只股票行情数据
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取单只股票行情数据")]
+        [Route("shares/quotes/info"), HttpPost]
+        [CheckUserLoginFilter]
+        public ShareQuotesInfo GetShareQuotesInfo(GetShareQuotesInfoRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetShareQuotesInfo(request, basedata);
+        }
+
+        /// <summary>
+        /// 获取单个板块行情数据
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取单个板块行情数据")]
+        [Route("plate/quotes/info"), HttpPost]
+        [CheckUserLoginFilter]
+        public PlateQuotesInfo GetPlateQuotesInfo(GetPlateQuotesInfoRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetPlateQuotesInfo(request, basedata);
+        }
+
+        /// <summary>
         /// 用户登入
         /// </summary>
         /// <returns></returns>
@@ -8430,5 +8464,67 @@ namespace MealTicket_Web_APIService.controller
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.GetPlateMinutetimedataList(request, basedata);
         }
+
+        /// <summary>
+        /// 批量获取板块K线数据
+        /// </summary>
+        /// <returns></returns>
+        [Description("批量获取板块K线数据")]
+        [Route("plate/kline/list/batch"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<GetPlateKLineListRes> BatchGetPlateKLineList(BatchGetPlateKLineListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.BatchGetPlateKLineList(request, basedata);
+        }
+
+        /// <summary>
+        /// 批量获取板块分时数据
+        /// </summary>
+        /// <returns></returns>
+        [Description("批量获取板块分时数据")]
+        [Route("plate/mtline/list/batch"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<GetPlateMinutetimedataListRes> BatchGetPlateMtLineList(BatchGetPlateMtLineListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.BatchGetPlateMtLineList(request, basedata);
+        }
+
+        #region===自选股===
+        /// <summary>
+        /// 获取自选股分组列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取自选股分组列表")]
+        [Route("account/shares/group/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<AccountShareGroupInfo> GetAccountShareGroupList()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountShareGroupList(basedata);
+        }
+
+        ///// <summary>
+        ///// 添加自选股分组
+        ///// </summary>
+        ///// <returns></returns>
+        //[Description("添加自选股分组")]
+        //[Route("account/shares/group/add"), HttpPost]
+        //[CheckUserLoginFilter]
+        //public object AddAccountShareGroup(AddAccountShareGroupRequest request)
+        //{
+        //    HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+        //    return trendHandler.AddAccountShareGroup(basedata);
+        //}
+        #endregion
     }
 }

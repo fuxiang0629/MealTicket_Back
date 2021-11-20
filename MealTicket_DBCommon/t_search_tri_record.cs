@@ -22,5 +22,6 @@ namespace MealTicket_DBCommon
         public string PushDesc { get; set; }
         public int PushType { get; set; }
         public System.DateTime CreateTime { get; set; }
+        public long PushPrice { get; set; }
     }
 }

@@ -177,11 +177,12 @@
     <Compile Include="RabbitMq\MQHandler.cs" />
     <Compile Include="RabbitMq\MQHandler_SecurityBarsData.cs" />
     <Compile Include="RunnerHandler\RunnerHelper.cs" />
-    <Compile Include="SecurityBarsData\IndexSecurityBarsDataTask.cs" />
-    <Compile Include="SecurityBarsData\New_IndexSecurityBarsDataTask.cs" />
+    <Compile Include="SecurityBarsData\指数K线\IndexSecurityBarsDataTask.cs" />
+    <Compile Include="SecurityBarsData\新指数K线1\New_IndexSecurityBarsDataTask.cs" />
     <Compile Include="SecurityBarsData\New_IndexSecurityBarsDataTaskModel.cs" />
-    <Compile Include="SecurityBarsData\SecurityBarsDataTask.cs" />
-    <Compile Include="SecurityBarsData\SecurityBarsDataTaskModel.cs" />
+    <Compile Include="SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs" />
+    <Compile Include="SecurityBarsData\股票K线\SecurityBarsDataTask.cs" />
+    <Compile Include="SecurityBarsData\股票K线\SecurityBarsDataTaskModel.cs" />
     <Compile Include="Session\DimTimeSession.cs" />
     <Compile Include="Session\SharesBaseSession.cs" />
     <Compile Include="Session\SharesLimitDateSession.cs" />

@@ -1110,6 +1110,28 @@
     <Property Name="DealId" Type="nvarchar" MaxLength="50" Nullable="false" />
     <Property Name="DealTime" Type="datetime" Nullable="false" />
   </EntityType>
+  <EntityType Name="t_account_shares_group">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="GroupName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="OrderIndex" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_account_shares_group_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="GroupId" Type="bigint" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_account_shares_hold">
     <Key>
       <PropertyRef Name="Id" />
@@ -2272,6 +2294,23 @@
     <Property Name="LastPushDesc" Type="nvarchar" MaxLength="200" />
     <Property Name="LastPushType" Type="int" Nullable="false" />
     <Property Name="TriCount" Type="int" Nullable="false" />
+    <Property Name="MinPushRiseRateInterval" Type="int" Nullable="false" />
+    <Property Name="MinPushDownRateInterval" Type="int" Nullable="false" />
+    <Property Name="LastPushRate" Type="int" />
+  </EntityType>
+  <EntityType Name="t_search_tri_record">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="PushTime" Type="datetime" Nullable="false" />
+    <Property Name="PushDesc" Type="nvarchar" MaxLength="200" />
+    <Property Name="PushType" Type="int" Nullable="false" />
+    <Property Name="PushPrice" Type="bigint" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="t_search_tri_setting">
     <Key>
@@ -2890,6 +2929,7 @@
     <Property Name="TotalCapital" Type="bigint" Nullable="false" />
     <Property Name="IsLast" Type="bit" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="YestodayClosedPrice" Type="bigint" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_1day">
     <Key>
@@ -2915,6 +2955,7 @@
     <Property Name="TotalCapital" Type="bigint" Nullable="false" />
     <Property Name="IsLast" Type="bit" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="YestodayClosedPrice" Type="bigint" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_1min">
     <Key>
@@ -2966,6 +3007,7 @@
     <Property Name="TotalCapital" Type="bigint" Nullable="false" />
     <Property Name="IsLast" Type="bit" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="YestodayClosedPrice" Type="bigint" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_1quarter">
     <Key>
@@ -2991,6 +3033,7 @@
     <Property Name="TotalCapital" Type="bigint" Nullable="false" />
     <Property Name="IsLast" Type="bit" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="YestodayClosedPrice" Type="bigint" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_1week">
     <Key>
@@ -3016,6 +3059,7 @@
     <Property Name="TotalCapital" Type="bigint" Nullable="false" />
     <Property Name="IsLast" Type="bit" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="YestodayClosedPrice" Type="bigint" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_1year">
     <Key>
@@ -3041,6 +3085,7 @@
     <Property Name="TotalCapital" Type="bigint" Nullable="false" />
     <Property Name="IsLast" Type="bit" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="YestodayClosedPrice" Type="bigint" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_30min">
     <Key>
@@ -3066,6 +3111,7 @@
     <Property Name="TotalCapital" Type="bigint" Nullable="false" />
     <Property Name="IsLast" Type="bit" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="YestodayClosedPrice" Type="bigint" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_5min">
     <Key>
@@ -3091,6 +3137,7 @@
     <Property Name="TotalCapital" Type="bigint" Nullable="false" />
     <Property Name="IsLast" Type="bit" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="YestodayClosedPrice" Type="bigint" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_60min">
     <Key>
@@ -3116,6 +3163,7 @@
     <Property Name="TotalCapital" Type="bigint" Nullable="false" />
     <Property Name="IsLast" Type="bit" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="YestodayClosedPrice" Type="bigint" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_plate_shares_limit">
     <Key>
@@ -4154,6 +4202,26 @@
     <Property Name="DealCount" Type="nvarchar" MaxLength="50" />
     <Property Name="IsRead" Type="bit" Nullable="false" />
   </EntityType>
+  <EntityType Name="t_tri_test">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="DataTime" Type="datetime" Nullable="false" />
+    <Property Name="OptionalId" Type="bigint" />
+    <Property Name="RelId" Type="bigint" />
+    <Property Name="AccountId" Type="bigint" />
+    <Property Name="Market" Type="int" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" />
+    <Property Name="SharesName" Type="nvarchar" MaxLength="50" />
+    <Property Name="TrendId" Type="bigint" />
+    <Property Name="TrendName" Type="nvarchar" MaxLength="50" />
+    <Property Name="TrendDescription" Type="nvarchar" MaxLength="500" />
+    <Property Name="TriPrice" Type="bigint" />
+    <Property Name="TriDesc" Type="nvarchar" MaxLength="200" />
+    <Property Name="PushTime" Type="datetime" />
+    <Property Name="RiseRate" Type="int" />
+  </EntityType>
   <!--生成过程中发现错误:
 警告 6002: 表/视图“meal_ticket.dbo.test”未定义主键。已推断出该键，并将定义创建为只读的表/视图。-->
   <EntityType Name="test">
@@ -5051,6 +5119,8 @@
     <EntitySet Name="t_account_shares_entrust_manager" EntityType="Self.t_account_shares_entrust_manager" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_entrust_manager_dealdetails" EntityType="Self.t_account_shares_entrust_manager_dealdetails" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_entrust_manager_dealdetails_real" EntityType="Self.t_account_shares_entrust_manager_dealdetails_real" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_group" EntityType="Self.t_account_shares_group" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_account_shares_group_rel" EntityType="Self.t_account_shares_group_rel" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_hold" EntityType="Self.t_account_shares_hold" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_hold_conditiontrade" EntityType="Self.t_account_shares_hold_conditiontrade" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_shares_hold_conditiontrade_child" EntityType="Self.t_account_shares_hold_conditiontrade_child" Schema="dbo" store:Type="Tables" />
@@ -5136,6 +5206,7 @@
     <EntitySet Name="t_recharge_abnormal_refund_record" EntityType="Self.t_recharge_abnormal_refund_record" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_recharge_record" EntityType="Self.t_recharge_record" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_search_tri" EntityType="Self.t_search_tri" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_search_tri_record" EntityType="Self.t_search_tri_record" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_search_tri_setting" EntityType="Self.t_search_tri_setting" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_server" EntityType="Self.t_server" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_server_broker_account_rel" EntityType="Self.t_server_broker_account_rel" Schema="dbo" store:Type="Tables" />
@@ -5246,6 +5317,7 @@
     <EntitySet Name="t_test" EntityType="Self.t_test" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_test_deal" EntityType="Self.t_test_deal" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_test_entrust" EntityType="Self.t_test_entrust" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_tri_test" EntityType="Self.t_tri_test" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="test" EntityType="Self.test" store:Type="Tables" store:Schema="dbo">
       <DefiningQuery>SELECT 
     [test].[Id] AS [Id], 

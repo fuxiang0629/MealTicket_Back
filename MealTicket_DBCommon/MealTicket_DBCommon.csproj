@@ -337,6 +337,12 @@
     <Compile Include="t_account_shares_entrust_manager_dealdetails_real.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="t_account_shares_group.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_account_shares_group_rel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="t_account_shares_hold.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

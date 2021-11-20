@@ -181,7 +181,6 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_monitor_trend_par" Width="1.5" PointX="38.75" PointY="18.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_monitor_trend_rel" Width="1.5" PointX="18.75" PointY="38.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_monitor_trend_rel_par" Width="1.5" PointX="20.75" PointY="38.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate" Width="1.5" PointX="38.75" PointY="21.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel" Width="1.5" PointX="38.75" PointY="26.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_riserate" Width="1.5" PointX="38.75" PointY="29.75" IsExpanded="true" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_riserate_last" Width="1.5" PointX="38.75" PointY="33.75" IsExpanded="true" />
@@ -286,13 +285,16 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_securitybarsdata_60min" Width="1.5" PointX="50.375" PointY="36.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel_snapshot" Width="1.5" PointX="36.375" PointY="50.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel_snapshot_catalogue" Width="1.5" PointX="38.375" PointY="50.75" />
-        <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel_snapshot_instructions" Width="1.5" PointX="40.375" PointY="50.75" />
         <EntityTypeShape EntityType="meal_ticketModel.v_plate_new" Width="1.5" PointX="42.375" PointY="50.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_buy_synchro_setting_opt_rel" Width="1.5" PointX="50.375" PointY="42.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_search_tri_setting" Width="1.5" PointX="51.375" PointY="30.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_search_tri" Width="1.5" PointX="5.375" PointY="51.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_tri_test" Width="1.5" PointX="32.375" PointY="51.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_search_tri_record" Width="1.5" PointX="51.375" PointY="45.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate" Width="1.5" PointX="51.375" PointY="49.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel_snapshot_instructions" Width="1.5" PointX="52.375" PointY="0.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_group" Width="1.5" PointX="51.375" PointY="33.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_group_rel" Width="1.5" PointX="52.375" PointY="5.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

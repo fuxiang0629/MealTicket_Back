@@ -203,7 +203,6 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_shares_monitor_trend_par> t_shares_monitor_trend_par { get; set; }
         public virtual DbSet<t_shares_monitor_trend_rel> t_shares_monitor_trend_rel { get; set; }
         public virtual DbSet<t_shares_monitor_trend_rel_par> t_shares_monitor_trend_rel_par { get; set; }
-        public virtual DbSet<t_shares_plate> t_shares_plate { get; set; }
         public virtual DbSet<t_shares_plate_rel> t_shares_plate_rel { get; set; }
         public virtual DbSet<t_shares_plate_riserate> t_shares_plate_riserate { get; set; }
         public virtual DbSet<t_shares_plate_riserate_last> t_shares_plate_riserate_last { get; set; }
@@ -308,13 +307,16 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_shares_plate_securitybarsdata_60min> t_shares_plate_securitybarsdata_60min { get; set; }
         public virtual DbSet<t_shares_plate_rel_snapshot> t_shares_plate_rel_snapshot { get; set; }
         public virtual DbSet<t_shares_plate_rel_snapshot_catalogue> t_shares_plate_rel_snapshot_catalogue { get; set; }
-        public virtual DbSet<t_shares_plate_rel_snapshot_instructions> t_shares_plate_rel_snapshot_instructions { get; set; }
         public virtual DbSet<v_plate_new> v_plate_new { get; set; }
         public virtual DbSet<t_account_shares_buy_synchro_setting_opt_rel> t_account_shares_buy_synchro_setting_opt_rel { get; set; }
         public virtual DbSet<t_search_tri_setting> t_search_tri_setting { get; set; }
         public virtual DbSet<t_search_tri> t_search_tri { get; set; }
         public virtual DbSet<t_tri_test> t_tri_test { get; set; }
         public virtual DbSet<t_search_tri_record> t_search_tri_record { get; set; }
+        public virtual DbSet<t_shares_plate> t_shares_plate { get; set; }
+        public virtual DbSet<t_shares_plate_rel_snapshot_instructions> t_shares_plate_rel_snapshot_instructions { get; set; }
+        public virtual DbSet<t_account_shares_group> t_account_shares_group { get; set; }
+        public virtual DbSet<t_account_shares_group_rel> t_account_shares_group_rel { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)

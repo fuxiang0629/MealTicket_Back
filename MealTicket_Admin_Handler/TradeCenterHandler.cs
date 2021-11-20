@@ -1456,38 +1456,43 @@ namespace MealTicket_Admin_Handler
                         return;
                     }
 
-                    string date = request.BaseDate.ToString("yyyy-MM-dd");
-
-                    var temp_snapshot = (from item in db.t_shares_plate_rel_snapshot
-                                         where item.PlateId == request.Id && item.Date == request.BaseDate
-                                         select item).ToList();
-                    if (temp_snapshot.Count() <= 0)
-                    {
-                        string sql = string.Format("insert into t_shares_plate_rel_snapshot([Date],PlateId,Market,SharesCode) select '{0}',PlateId,Market,SharesCode from t_shares_plate_rel_snapshot where [Date]='{1}' and PlateId={2}", request.BaseDate.ToString("yyyy-MM-dd"), DateTime.Now.Date.ToString("yyyy-MM-dd"), request.Id);
-                        db.Database.ExecuteSqlCommand(sql);
-                    }
-
-                    var quoteDate = from item in db.t_shares_quotes_date
-                                    where item.Date == date
-                                    select item;
-                    var snapshot = (from item in db.t_shares_plate_rel_snapshot
-                                    join item2 in quoteDate on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
-                                    join item3 in db.t_shares_markettime on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode }
-                                    where item.PlateId == request.Id && item.Date == request.BaseDate
-                                    select new { item, item2, item3 }).ToList();
-
-                    long BaseDateWeightPrice = 0;
-                    long BaseDateNoWeightPrice = 0;
-                    if (snapshot.Count() > 0)
-                    {
-                        BaseDateWeightPrice = (long)snapshot.Average(e => e.item2.PresentPrice * e.item3.TotalCapital);
-                        BaseDateNoWeightPrice = (long)snapshot.Average(e => e.item2.PresentPrice);
-                    }
-
                     plate.BaseDate = request.BaseDate;
-                    plate.BaseDateWeightPrice = BaseDateWeightPrice;
-                    plate.BaseDateNoWeightPrice = BaseDateNoWeightPrice;
                     db.SaveChanges();
+
+                    var temp = (from item in db.t_shares_plate_rel_snapshot_instructions
+                                where item.IsExcute == false && item.Type == 1 && item.PlateId == request.Id
+                                select item).FirstOrDefault();
+                    if (temp == null)
+                    {
+                        db.t_shares_plate_rel_snapshot_instructions.Add(new t_shares_plate_rel_snapshot_instructions
+                        {
+                            SharesCode="",
+                            Market=0,
+                            ExcuteTime=null,
+                            Context = JsonConvert.SerializeObject(new
+                            {
+                                Date = request.BaseDate
+                            }),
+                            CreateTime = DateTime.Now,
+                            DataType = 0,
+                            Date = DateTime.Now.Date,
+                            IsExcute = false,
+                            LastModified = DateTime.Now,
+                            PlateId = request.Id,
+                            PlateType = 0,
+                            Type = 1
+                        });
+                    }
+                    else
+                    {
+                        temp.LastModified = DateTime.Now;
+                        temp.Context = JsonConvert.SerializeObject(new
+                        {
+                            Date = request.BaseDate
+                        });
+                    }
+                    db.SaveChanges();
+
                     tran.Commit();
                 }
                 catch (Exception ex)

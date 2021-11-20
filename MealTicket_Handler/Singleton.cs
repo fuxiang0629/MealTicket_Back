@@ -100,7 +100,7 @@ namespace MealTicket_Handler
 
         public string MaxVersionName_Ios = "";
 
-        public Dictionary<int, int> IndexInitValueDic = new Dictionary<int, int>();
+        public Dictionary<int, long> IndexInitValueDic = new Dictionary<int, long>();
 
         /// <summary>
         /// 深圳股票匹配
@@ -120,7 +120,7 @@ namespace MealTicket_Handler
         #region====K线数据参数====
         public int SecurityBarsIsOpen = 1;
         public int SecurityBarsIntervalTime = 3000;//间隔时间(毫秒)
-        public int SecurityBarsTaskTimeout = 300000;//任务超时时间(毫秒)
+        public int SecurityBarsTaskTimeout = 30000;//任务超时时间(毫秒)
         public int SecurityBarsBatchCount = 128;//每批次处理股票数量
         public int SecurityBarsUpdateCountOnce = 20000;//每次写入数据库数据量
         public List<int> SecurityBarsDataTypeList = new List<int>() 
@@ -141,10 +141,10 @@ namespace MealTicket_Handler
         private Singleton()
         {
             IndexInitValueDic.Clear();
-            IndexInitValueDic.Add(0,1000);
-            IndexInitValueDic.Add(1, 1000);
-            IndexInitValueDic.Add(2, 1000);
-            IndexInitValueDic.Add(3, 1000);
+            IndexInitValueDic.Add(0,10000000);//其他
+            IndexInitValueDic.Add(1, 10000000);//板块指数
+            IndexInitValueDic.Add(2, 10000000);//市场指数
+            IndexInitValueDic.Add(3, 10000000);//成分指数
             UpdateSysPar();
             UpdateWait.Init();
             StartSysparUpdateThread();
@@ -465,14 +465,14 @@ namespace MealTicket_Handler
                     if (sysPar != null)
                     {
                         var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
-                        int PlateIndex = sysValue.PlateIndex;
-                        int MarketIndex = sysValue.MarketIndex;
-                        int UnitIndex = sysValue.UnitIndex;
-                        int OtherIndex = sysValue.OtherIndex;
-                        IndexInitValueDic[0] = OtherIndex;
-                        IndexInitValueDic[1] = PlateIndex;
-                        IndexInitValueDic[2] = MarketIndex;
-                        IndexInitValueDic[3] = UnitIndex;
+                        long PlateIndex = sysValue.PlateIndex;
+                        long MarketIndex = sysValue.MarketIndex;
+                        long UnitIndex = sysValue.UnitIndex;
+                        long OtherIndex = sysValue.OtherIndex;
+                        IndexInitValueDic[0] = OtherIndex*10000;
+                        IndexInitValueDic[1] = PlateIndex * 10000;
+                        IndexInitValueDic[2] = MarketIndex * 10000;
+                        IndexInitValueDic[3] = UnitIndex * 10000;
                     }
                 }
                 catch { }
@@ -526,10 +526,10 @@ namespace MealTicket_Handler
         }
         #endregion
         #region====新指数K线数据处理任务====
-        public New_IndexSecurityBarsDataTask _newIindexSecurityBarsDataTask;
-        public New_IndexSecurityBarsDataTask StartNewIndexSecurityBarsDataTask()
+        public New2_IndexSecurityBarsDataTask _newIindexSecurityBarsDataTask;
+        public New2_IndexSecurityBarsDataTask StartNewIndexSecurityBarsDataTask()
         {
-            _newIindexSecurityBarsDataTask = new New_IndexSecurityBarsDataTask();
+            _newIindexSecurityBarsDataTask = new New2_IndexSecurityBarsDataTask();
             return _newIindexSecurityBarsDataTask;
         }
         #endregion
@@ -551,7 +551,7 @@ namespace MealTicket_Handler
 
             newIndexSecurityBarsDataTask.LoadPlateSession();
             newIndexSecurityBarsDataTask.LoadSecurityBarsLastData();
-            newIndexSecurityBarsDataTask.LoadPlateSecurityBarsLastData();
+            newIndexSecurityBarsDataTask.LoadPlateKlineLastSession();
             newIndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot();
             newIndexSecurityBarsDataTask.LoadPlateKlineSession();
 

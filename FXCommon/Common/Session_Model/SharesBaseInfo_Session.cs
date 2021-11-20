@@ -88,6 +88,11 @@ namespace FXCommon.Common
         public long ClosedPrice { get; set; }
 
         /// <summary>
+        /// 当前价格
+        /// </summary>
+        public long PresentPrice { get; set; }
+
+        /// <summary>
         /// 上市状态
         /// </summary>
         public int MarketStatus { get; set; }
