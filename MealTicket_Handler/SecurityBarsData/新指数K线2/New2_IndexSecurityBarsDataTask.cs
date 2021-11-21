@@ -993,7 +993,7 @@ inner join
 		  from t_shares_plate_rel_snapshot
 		  where PlateId={2} and [Date]>='{1}'
 	  )
-  )t1 on t.SharesNumber=t1.SharesNumber and t.SharesCode=t1.SharesCode
+  )t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode
   inner join t_shares_quotes_date t2 on t.Market=t2.Market and t.SharesCode=t2.SharesCode and t2.[Date]='{1}'
   where t.GroupTimeKey>={3} and [Time]<'{4}'
   group by t.GroupTimeKey,t1.PlateId", tableName, lastTime.ToString("yyyy-MM-dd"), plateId, groupTimeKey, lastTime.AddDays(1).ToString("yyyy-MM-dd"));
@@ -1036,10 +1036,10 @@ inner join
                                     break;
                                 }
                                 datalist = db.Database.SqlQuery<PlateKlineSession>(sql).ToList();
-                                if (datalist.Count() <= 0)
-                                {
-                                    break;
-                                }
+                                //if (datalist.Count() <= 0)
+                                //{
+                                //    break;
+                                //}
                                 datalist = datalist.OrderBy(e => e.GroupTimeKey).ToList();
 
                                 List<PlateImportData> tempValue = new List<PlateImportData>();

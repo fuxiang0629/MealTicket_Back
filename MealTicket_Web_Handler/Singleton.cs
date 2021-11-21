@@ -86,8 +86,6 @@ namespace MealTicket_Web_Handler
         /// </summary>
         public int SearchInterval = 15000;
 
-        public Dictionary<int, int> IndexInitValueDic = new Dictionary<int, int>();
-
         #region===再触发设置===
         public int MinPushTimeInterval = 180;
         public int MinPushRateInterval = 60;
@@ -185,17 +183,11 @@ namespace MealTicket_Web_Handler
 
         private Singleton()
         {
-            IndexInitValueDic.Clear();
-            IndexInitValueDic.Add(0, 1);//其他
-            IndexInitValueDic.Add(1, 1);//板块指数
-            IndexInitValueDic.Add(2, 1);//市场指数
-            IndexInitValueDic.Add(3, 1);//成分指数
-
             PlateIndexTypeDic.Clear();
-            PlateIndexTypeDic.Add(0, 2);
-            PlateIndexTypeDic.Add(1, 2);
-            PlateIndexTypeDic.Add(2, 1);
-            PlateIndexTypeDic.Add(3, 2);
+            PlateIndexTypeDic.Add(0, 2);//其他 1加权 2不加权
+            PlateIndexTypeDic.Add(1, 2);//板块指数
+            PlateIndexTypeDic.Add(2, 1);//市场指数
+            PlateIndexTypeDic.Add(3, 2);//成分指数
 
             handlerThreadCount = 10;
             connString_meal_ticket = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
@@ -537,25 +529,6 @@ namespace MealTicket_Web_Handler
                         PlateIndexTypeDic[1] = PlateIndex_KLineType;
                         PlateIndexTypeDic[2] = MarketIndex_KLineType;
                         PlateIndexTypeDic[3] = UnitIndex_KLineType;
-                    }
-                }
-                catch { }
-                try
-                {
-                    var sysPar = (from item in db.t_system_param
-                                  where item.ParamName == "IndexInitValue"
-                                  select item).FirstOrDefault();
-                    if (sysPar != null)
-                    {
-                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
-                        int PlateIndex_KLineType = sysValue.PlateIndex_KLineType;
-                        int MarketIndex_KLineType = sysValue.MarketIndex_KLineType;
-                        int UnitIndex_KLineType = sysValue.UnitIndex_KLineType;
-                        int OtherIndex_KLineType = sysValue.OtherIndex_KLineType;
-                        IndexInitValueDic[0] = PlateIndex_KLineType == 1 ? 2 : 1;
-                        IndexInitValueDic[1] = MarketIndex_KLineType == 1 ? 2 : 1;
-                        IndexInitValueDic[2] = UnitIndex_KLineType == 1 ? 2 : 1;
-                        IndexInitValueDic[3] = OtherIndex_KLineType == 1 ? 2 : 1;
                     }
                 }
                 catch { }
