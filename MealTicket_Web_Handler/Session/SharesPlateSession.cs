@@ -18,7 +18,7 @@ namespace MealTicket_Web_Handler
         {
             using (var db = new meal_ticketEntities())
             {
-                string sql = @"select t.Id PlateId,t.Name PlateName,t.[Type] PlateType,t.BaseStatus,t.ChooseStatus,isnull(t1.IsBasePlate,2)IsBasePlate
+                string sql = @"select t.Id PlateId,t.Name PlateName,t.[Type] PlateType,t.CalType,t.BaseStatus,t.ChooseStatus,isnull(t1.IsBasePlate,2)IsBasePlate
 from t_shares_plate t with(nolock)
 inner join t_shares_plate_type_business t1 on t.[Type]= t1.Id
 where t.[Status]= 1";

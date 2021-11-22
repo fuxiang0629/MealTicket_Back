@@ -9,7 +9,6 @@ D:\项目\饭票\后端\MealTicket_DBCommon\bin\Debug\EntityFramework.SqlServer.
 D:\项目\饭票\后端\MealTicket_DBCommon\bin\Debug\Newtonsoft.Json.xml
 D:\项目\饭票\后端\MealTicket_DBCommon\bin\Debug\zh-Hans\EntityFramework.resources.dll
 D:\项目\饭票\后端\MealTicket_DBCommon\bin\Debug\zh-Hans\EntityFramework.SqlServer.resources.dll
-D:\项目\饭票\后端\MealTicket_DBCommon\obj\Debug\MealTicket_DBCommon.csprojAssemblyReference.cache
 D:\项目\饭票\后端\MealTicket_DBCommon\obj\Debug\MealTicket_DBCommon.csproj.CoreCompileInputs.cache
 D:\项目\饭票\后端\MealTicket_DBCommon\obj\Debug\MealTicket_DBCommon.csproj.CopyComplete
 D:\项目\饭票\后端\MealTicket_DBCommon\obj\Debug\MealTicket_DBCommon.dll

@@ -349,7 +349,7 @@ namespace MealTicket_Web_Handler
             {
                 return null;
             }
-            int weightType = Singleton.Instance.IndexInitValueDic[plate.CalType];
+            int weightType = Singleton.Instance.PlateIndexTypeDic[plate.CalType] == 1 ? 2 : 1;
 
 
             var result = (from item in Singleton.Instance._SharesPlateQuotesSession_New.GetSessionData()
@@ -23047,7 +23047,7 @@ select @buyId;";
                 {
                     continue;
                 }
-                int weightType = Singleton.Instance.IndexInitValueDic[plateDic[item.PlateId].CalType];
+                int weightType = Singleton.Instance.PlateIndexTypeDic[plateDic[item.PlateId].CalType] == 1 ? 2 : 1;
                 DataRow row = table.NewRow();
                 row["PlateId"] = item.PlateId;
                 row["WeightType"] = weightType;
@@ -23168,7 +23168,7 @@ select @buyId;";
                 {
                     continue;
                 }
-                int weightType = Singleton.Instance.IndexInitValueDic[plateDic[item.PlateId].CalType];
+                int weightType = Singleton.Instance.PlateIndexTypeDic[plateDic[item.PlateId].CalType] == 1 ? 2 : 1;
 
                 DataRow row = table.NewRow();
                 row["PlateId"] = item.PlateId;
