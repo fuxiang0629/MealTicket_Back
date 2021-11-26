@@ -27,6 +27,12 @@ namespace Test
         public int Market { get; set; }
 
         public string SharesCode { get; set; }
+
+        public int TrendId { get; set; }
+
+        public string Time { get; set; }
+
+        public string Des { get; set; }
     }
 
     class Program
@@ -37,30 +43,31 @@ namespace Test
             b.Add(new B 
             {
                 Market=0,
-                SharesCode="000001"
+                SharesCode="000001",
+                TrendId=1,
+                Time="13123213",
+                Des="123123"
             });
             b.Add(new B
             {
                 Market = 1,
-                SharesCode = "000002"
+                SharesCode = "000002",
+                TrendId = 2,
+                Time = "13123213",
+                Des = "123123"
             });
             b.Add(new B
             {
                 Market = 2,
-                SharesCode = "000001"
+                SharesCode = "000003",
+                TrendId = 3,
+                Time = "13123213",
+                Des = "123123"
             });
-            b.Add(new B
-            {
-                Market = 3,
-                SharesCode = "000003"
-            });
-            Dictionary<int, B> dic = new Dictionary<int, B>();
-            dic = b.ToDictionary(k=>k.Market,v=>v);
-            b = new List<B>();
-
-            var a = b.OrderBy(e=>e.Market).FirstOrDefault();
-            var c = b.Where(e=>e.SharesCode != a.SharesCode).ToList();
-            var d = c;
+            b = (from item in b
+                 group item by new { item.Market, item.SharesCode, item.TrendId } into g
+                 select g.FirstOrDefault()).ToList();
+            var d = b;
 
             //Dictionary<int, A> dic1 = new Dictionary<int, A>();
             //dic1.Add(1,new A 
