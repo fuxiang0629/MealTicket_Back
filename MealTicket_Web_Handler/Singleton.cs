@@ -89,7 +89,7 @@ namespace MealTicket_Web_Handler
         #region===再触发设置===
         public int MinPushTimeInterval = 180;
         public int MinPushRateInterval = 60;
-        public int MinPushTodayPrice = 0; 
+        public int MinPushTodayPrice = -1; 
         #endregion
 
         #region===清理分笔数据参数===
