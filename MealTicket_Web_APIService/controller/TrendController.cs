@@ -5408,8 +5408,7 @@ namespace MealTicket_Web_APIService.controller
                 throw new WebApiException(400, "参数错误");
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
-            trendHandler.ImportConditiontradeTemplateBuy(request, basedata);
-            return null;
+            return trendHandler.ImportConditiontradeTemplateBuy(request, basedata);
         }
 
         /// <summary>
@@ -8513,18 +8512,146 @@ namespace MealTicket_Web_APIService.controller
             return trendHandler.GetAccountShareGroupList(basedata);
         }
 
-        ///// <summary>
-        ///// 添加自选股分组
-        ///// </summary>
-        ///// <returns></returns>
-        //[Description("添加自选股分组")]
-        //[Route("account/shares/group/add"), HttpPost]
-        //[CheckUserLoginFilter]
-        //public object AddAccountShareGroup(AddAccountShareGroupRequest request)
-        //{
-        //    HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
-        //    return trendHandler.AddAccountShareGroup(basedata);
-        //}
+        /// <summary>
+        /// 添加自选股分组
+        /// </summary>
+        /// <returns></returns>
+        [Description("添加自选股分组")]
+        [Route("account/shares/group/add"), HttpPost]
+        [CheckUserLoginFilter]
+        public object AddAccountShareGroup(AddAccountShareGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.AddAccountShareGroup(request,basedata);
+        }
+
+        /// <summary>
+        /// 编辑自选股分组
+        /// </summary>
+        /// <returns></returns>
+        [Description("编辑自选股分组")]
+        [Route("account/shares/group/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifyAccountShareGroup(ModifyAccountShareGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountShareGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改自选股分组排序值
+        /// </summary>
+        /// <returns></returns>
+        [Description("编辑自选股分组")]
+        [Route("account/shares/group/order/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifyAccountShareGroupOrderIndex(ModifyAccountShareGroupOrderIndexRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountShareGroupOrderIndex(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除自选股分组
+        /// </summary>
+        /// <returns></returns>
+        [Description("删除自选股分组")]
+        [Route("account/shares/group/delete"), HttpPost]
+        [CheckUserLoginFilter]
+        public object DeleteAccountShareGroup(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountShareGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取自选股分组内股票列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取自选股分组内股票列表")]
+        [Route("account/shares/group/rel/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public PageRes<AccountShareGroupRelInfo> GetAccountShareGroupRelList(GetAccountShareGroupRelListPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400,"参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountShareGroupRelList(request,basedata);
+        }
+
+        /// <summary>
+        /// 添加自选股分组内股票
+        /// </summary>
+        /// <returns></returns>
+        [Description("添加自选股分组内股票")]
+        [Route("account/shares/group/rel/add"), HttpPost]
+        [CheckUserLoginFilter]
+        public object AddAccountShareGroupRel(AddAccountShareGroupRelRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountShareGroupRel(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除自选股分组内股票
+        /// </summary>
+        /// <returns></returns>
+        [Description("删除自选股分组内股票")]
+        [Route("account/shares/group/rel/delete"), HttpPost]
+        [CheckUserLoginFilter]
+        public object DeleteAccountShareGroupRel(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountShareGroupRel(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取自选股某只股票所属分组
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取自选股某只股票所属分组")]
+        [Route("account/shares/in/group/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<long> GetAccountShareInGroupList(GetAccountShareInGroupListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountShareInGroupList(request, basedata);
+        }
         #endregion
     }
 }

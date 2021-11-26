@@ -1,0 +1,2686 @@
+2021/11/22 10:26:34
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 10:26:38
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 10:26:38
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 10:26:38
+===加载快照缓存===
+
+
+2021/11/22 10:26:38
+===加载快照缓存1===
+
+
+2021/11/22 10:26:38
+===加载快照缓存2===
+
+
+2021/11/22 10:26:39
+===加载快照缓存3===
+
+
+2021/11/22 10:26:39
+===加载快照缓存4===
+
+
+2021/11/22 10:26:39
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 10:26:39
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 10:26:39
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 10:27:05
+监听队列已链接
+
+
+2021/11/22 10:35:44
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 10:35:46
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 10:35:46
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 10:35:46
+===加载快照缓存===
+
+
+2021/11/22 10:35:46
+===加载快照缓存1===
+
+
+2021/11/22 10:35:46
+===加载快照缓存2===
+
+
+2021/11/22 10:35:46
+===加载快照缓存3===
+
+
+2021/11/22 10:35:46
+===加载快照缓存4===
+
+
+2021/11/22 10:35:46
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 509
+
+2021/11/22 10:35:46
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 10:35:46
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 10:35:47
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 10:35:55
+监听队列已链接
+
+
+2021/11/22 10:51:30
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 10:51:32
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 10:51:32
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 10:51:32
+===加载快照缓存===
+
+
+2021/11/22 10:51:33
+===加载快照缓存1===
+
+
+2021/11/22 10:51:33
+===加载快照缓存2===
+
+
+2021/11/22 10:51:33
+===加载快照缓存3===
+
+
+2021/11/22 10:51:33
+===加载快照缓存4===
+
+
+2021/11/22 10:51:33
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 509
+
+2021/11/22 10:51:33
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 10:51:33
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 10:51:33
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 10:51:53
+监听队列已链接
+
+
+2021/11/22 10:52:51
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 10:52:53
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 10:52:53
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 10:52:53
+===加载快照缓存===
+
+
+2021/11/22 10:52:54
+===加载快照缓存1===
+
+
+2021/11/22 10:52:54
+===加载快照缓存2===
+
+
+2021/11/22 10:52:54
+===加载快照缓存3===
+
+
+2021/11/22 10:52:54
+===加载快照缓存4===
+
+
+2021/11/22 10:52:54
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 509
+
+2021/11/22 10:52:54
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 10:52:54
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 10:52:54
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 10:53:03
+监听队列已链接
+
+
+2021/11/22 10:58:13
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 10:58:15
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 10:58:15
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 10:58:15
+===加载快照缓存===
+
+
+2021/11/22 10:58:15
+===加载快照缓存1===
+
+
+2021/11/22 10:58:15
+===加载快照缓存2===
+
+
+2021/11/22 10:58:15
+===加载快照缓存3===
+
+
+2021/11/22 10:58:15
+===加载快照缓存4===
+
+
+2021/11/22 10:58:15
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 509
+
+2021/11/22 10:58:15
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 10:58:15
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 10:59:32
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 10:59:32
+监听队列已链接
+
+
+2021/11/22 11:04:35
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 11:04:37
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 11:04:37
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 11:04:38
+===加载快照缓存===
+
+
+2021/11/22 11:04:38
+===加载快照缓存1===
+
+
+2021/11/22 11:04:38
+===加载快照缓存2===
+
+
+2021/11/22 11:04:38
+===加载快照缓存3===
+
+
+2021/11/22 11:04:38
+===加载快照缓存4===
+
+
+2021/11/22 11:04:38
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 509
+
+2021/11/22 11:04:38
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 11:04:38
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 11:06:23
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 11:06:25
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 11:06:25
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 11:06:25
+===加载快照缓存===
+
+
+2021/11/22 11:06:25
+===加载快照缓存1===
+
+
+2021/11/22 11:06:25
+===加载快照缓存2===
+
+
+2021/11/22 11:06:25
+===加载快照缓存3===
+
+
+2021/11/22 11:06:25
+===加载快照缓存4===
+
+
+2021/11/22 11:06:25
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 509
+
+2021/11/22 11:06:25
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 11:06:25
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 11:06:42
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 11:07:02
+监听队列已链接
+
+
+2021/11/22 11:08:35
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 11:08:37
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 11:08:38
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 11:08:38
+===加载快照缓存===
+
+
+2021/11/22 11:08:38
+===加载快照缓存1===
+
+
+2021/11/22 11:08:38
+===加载快照缓存2===
+
+
+2021/11/22 11:08:38
+===加载快照缓存3===
+
+
+2021/11/22 11:08:38
+===加载快照缓存4===
+
+
+2021/11/22 11:08:38
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 509
+
+2021/11/22 11:08:38
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 11:08:38
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 11:08:40
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 11:08:45
+监听队列已链接
+
+
+2021/11/22 11:11:32
+每天任务意外出错,继续执行
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2021/11/22 11:39:32
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 11:39:34
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 11:39:34
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 11:39:34
+===加载快照缓存===
+
+
+2021/11/22 11:39:35
+===加载快照缓存1===
+
+
+2021/11/22 11:39:35
+===加载快照缓存2===
+
+
+2021/11/22 11:39:35
+===加载快照缓存3===
+
+
+2021/11/22 11:39:35
+===加载快照缓存4===
+
+
+2021/11/22 11:39:35
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 509
+
+2021/11/22 11:39:35
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 11:39:35
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 11:39:36
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 11:39:39
+监听队列已链接
+
+
+2021/11/22 11:45:14
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 11:45:16
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 11:45:16
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 11:45:16
+===加载快照缓存===
+
+
+2021/11/22 11:45:16
+===加载快照缓存1===
+
+
+2021/11/22 11:45:16
+===加载快照缓存2===
+
+
+2021/11/22 11:45:16
+===加载快照缓存3===
+
+
+2021/11/22 11:45:16
+===加载快照缓存4===
+
+
+2021/11/22 11:45:16
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 509
+
+2021/11/22 11:45:16
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 11:45:16
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 11:45:17
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 11:45:17
+监听队列已链接
+
+
+2021/11/22 11:57:33
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 11:57:36
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 11:57:36
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 11:57:36
+===加载快照缓存===
+
+
+2021/11/22 11:57:36
+===加载快照缓存1===
+
+
+2021/11/22 11:57:36
+===加载快照缓存2===
+
+
+2021/11/22 11:57:37
+===加载快照缓存3===
+
+
+2021/11/22 11:57:37
+===加载快照缓存4===
+
+
+2021/11/22 11:57:37
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 509
+
+2021/11/22 11:57:37
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 11:57:37
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 11:57:38
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 11:57:38
+监听队列已链接
+
+
+2021/11/22 12:04:51
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 12:04:53
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 12:04:54
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 12:04:54
+===加载快照缓存===
+
+
+2021/11/22 12:04:54
+===加载快照缓存1===
+
+
+2021/11/22 12:04:54
+===加载快照缓存2===
+
+
+2021/11/22 12:04:54
+===加载快照缓存3===
+
+
+2021/11/22 12:04:54
+===加载快照缓存4===
+
+
+2021/11/22 12:04:54
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 509
+
+2021/11/22 12:04:55
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 12:04:55
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 12:04:56
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 12:04:56
+监听队列已链接
+
+
+2021/11/22 12:08:27
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 12:08:29
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 12:08:29
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 12:08:30
+===加载快照缓存===
+
+
+2021/11/22 12:08:30
+===加载快照缓存1===
+
+
+2021/11/22 12:08:30
+===加载快照缓存2===
+
+
+2021/11/22 12:08:30
+===加载快照缓存3===
+
+
+2021/11/22 12:08:30
+===加载快照缓存4===
+
+
+2021/11/22 12:08:30
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 509
+
+2021/11/22 12:08:30
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 12:08:30
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 12:08:31
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 12:08:31
+监听队列已链接
+
+
+2021/11/22 12:18:26
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 12:18:28
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 12:18:28
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 12:18:28
+===加载快照缓存===
+
+
+2021/11/22 12:18:28
+===加载快照缓存1===
+
+
+2021/11/22 12:18:28
+===加载快照缓存2===
+
+
+2021/11/22 12:18:28
+===加载快照缓存3===
+
+
+2021/11/22 12:18:28
+===加载快照缓存4===
+
+
+2021/11/22 12:18:28
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 509
+
+2021/11/22 12:18:28
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 12:18:28
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 12:18:29
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 12:18:29
+监听队列已链接
+
+
+2021/11/22 12:30:09
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 12:30:12
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 12:30:13
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 12:30:13
+===加载快照缓存===
+
+
+2021/11/22 12:30:13
+===加载快照缓存1===
+
+
+2021/11/22 12:30:13
+===加载快照缓存2===
+
+
+2021/11/22 12:30:13
+===加载快照缓存3===
+
+
+2021/11/22 12:30:13
+===加载快照缓存4===
+
+
+2021/11/22 12:30:13
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 509
+
+2021/11/22 12:30:13
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 12:30:13
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 12:30:14
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 12:30:14
+监听队列已链接
+
+
+2021/11/22 12:40:58
+监听队列链接断开
+
+
+2021/11/22 12:40:59
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 12:42:32
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 12:42:41
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 12:42:51
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 12:43:02
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 12:43:33
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 12:43:44
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 12:43:56
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 12:44:09
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 12:44:19
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 12:44:31
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 12:46:03
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 13:34:17
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 13:34:20
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 13:34:20
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 13:34:20
+===加载快照缓存===
+
+
+2021/11/22 13:34:20
+===加载快照缓存1===
+
+
+2021/11/22 13:34:20
+===加载快照缓存2===
+
+
+2021/11/22 13:34:20
+===加载快照缓存3===
+
+
+2021/11/22 13:34:20
+===加载快照缓存4===
+
+
+2021/11/22 13:34:20
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 509
+
+2021/11/22 13:34:20
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 13:34:20
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 13:34:20
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 13:34:21
+监听队列已链接
+
+
+2021/11/22 13:48:13
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 13:48:15
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 13:48:16
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 13:48:16
+===加载快照缓存===
+
+
+2021/11/22 13:48:17
+===加载快照缓存1===
+
+
+2021/11/22 13:48:17
+===加载快照缓存2===
+
+
+2021/11/22 13:48:17
+===加载快照缓存3===
+
+
+2021/11/22 13:48:17
+===加载快照缓存4===
+
+
+2021/11/22 13:48:17
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 509
+
+2021/11/22 13:48:17
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 13:48:17
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 13:48:18
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 13:48:18
+监听队列已链接
+
+
+2021/11/22 13:52:59
+监听队列链接断开
+
+
+2021/11/22 13:52:59
+队列消息发送失败
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Impl.SessionBase.Transmit(Command cmd)
+   在 RabbitMQ.Client.Impl.ModelBase.ModelSend(MethodBase method, ContentHeaderBase header, ReadOnlyMemory`1 body)
+   在 RabbitMQ.Client.Framing.Impl.Model._Private_BasicPublish(String exchange, String routingKey, Boolean mandatory, IBasicProperties basicProperties, ReadOnlyMemory`1 body)
+   在 RabbitMQ.Client.Impl.ModelBase.BasicPublish(String exchange, String routingKey, Boolean mandatory, IBasicProperties basicProperties, ReadOnlyMemory`1 body)
+   在 RabbitMQ.Client.Impl.AutorecoveringModel.BasicPublish(String exchange, String routingKey, Boolean mandatory, IBasicProperties basicProperties, ReadOnlyMemory`1 body)
+   在 RabbitMQ.Client.IModelExensions.BasicPublish(IModel model, String exchange, String routingKey, IBasicProperties basicProperties, ReadOnlyMemory`1 body)
+   在 FXCommon.MqQueue.MQTask.SendMessage(Byte[] originalData, String exchange, String routekey) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 109
+
+2021/11/22 13:52:59
+发送通道连接失败
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.SendModelConnect() 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 140
+
+2021/11/22 13:53:00
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 13:53:02
+发送通道连接失败
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.SendModelConnect() 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 140
+
+2021/11/22 13:53:03
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 13:53:05
+发送通道连接失败
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.SendModelConnect() 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 140
+
+2021/11/22 13:53:06
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 13:53:08
+发送通道连接失败
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.SendModelConnect() 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 140
+
+2021/11/22 13:53:09
+监听队列已链接
+
+
+2021/11/22 13:55:58
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 13:56:00
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 13:56:00
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 13:56:00
+===加载快照缓存===
+
+
+2021/11/22 13:56:01
+===加载快照缓存1===
+
+
+2021/11/22 13:56:01
+===加载快照缓存2===
+
+
+2021/11/22 13:56:01
+===加载快照缓存3===
+
+
+2021/11/22 13:56:01
+===加载快照缓存4===
+
+
+2021/11/22 13:56:01
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 509
+
+2021/11/22 13:56:01
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 13:56:01
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 13:56:01
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 13:56:01
+监听队列已链接
+
+
+2021/11/22 14:10:28
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 14:10:30
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 14:10:30
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 14:10:31
+===加载快照缓存===
+
+
+2021/11/22 14:10:31
+===加载快照缓存1===
+
+
+2021/11/22 14:10:31
+===加载快照缓存2===
+
+
+2021/11/22 14:10:31
+===加载快照缓存3===
+
+
+2021/11/22 14:10:31
+===加载快照缓存4===
+
+
+2021/11/22 14:10:31
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 504
+
+2021/11/22 14:10:31
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 14:10:31
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 14:10:32
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 14:10:32
+监听队列已链接
+
+
+2021/11/22 14:19:40
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 14:19:42
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 14:19:42
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 14:19:42
+===加载快照缓存===
+
+
+2021/11/22 14:19:43
+===加载快照缓存1===
+
+
+2021/11/22 14:19:43
+===加载快照缓存2===
+
+
+2021/11/22 14:19:43
+===加载快照缓存3===
+
+
+2021/11/22 14:19:43
+===加载快照缓存4===
+
+
+2021/11/22 14:19:43
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 504
+
+2021/11/22 14:19:43
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 14:19:43
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 14:19:43
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 14:19:43
+监听队列已链接
+
+
+2021/11/22 14:20:22
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 14:20:24
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 14:20:24
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 14:20:25
+===加载快照缓存===
+
+
+2021/11/22 14:20:25
+===加载快照缓存1===
+
+
+2021/11/22 14:20:25
+===加载快照缓存2===
+
+
+2021/11/22 14:20:25
+===加载快照缓存3===
+
+
+2021/11/22 14:20:25
+===加载快照缓存4===
+
+
+2021/11/22 14:20:25
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 504
+
+2021/11/22 14:20:25
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 14:20:25
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 14:20:25
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 14:20:25
+监听队列已链接
+
+
+2021/11/22 14:23:39
+监听队列链接断开
+
+
+2021/11/22 14:23:39
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 14:26:33
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 14:26:35
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 14:26:36
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 14:26:36
+===加载快照缓存===
+
+
+2021/11/22 14:26:36
+===加载快照缓存1===
+
+
+2021/11/22 14:26:36
+===加载快照缓存2===
+
+
+2021/11/22 14:26:36
+===加载快照缓存3===
+
+
+2021/11/22 14:26:36
+===加载快照缓存4===
+
+
+2021/11/22 14:26:36
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 504
+
+2021/11/22 14:26:36
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 14:26:36
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 14:26:36
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 14:26:37
+监听队列已链接
+
+
+2021/11/22 14:29:18
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 14:29:20
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 14:29:20
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 14:29:20
+===加载快照缓存===
+
+
+2021/11/22 14:29:20
+===加载快照缓存1===
+
+
+2021/11/22 14:29:20
+===加载快照缓存2===
+
+
+2021/11/22 14:29:20
+===加载快照缓存3===
+
+
+2021/11/22 14:29:20
+===加载快照缓存4===
+
+
+2021/11/22 14:29:20
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 504
+
+2021/11/22 14:29:20
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 14:29:20
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 14:29:21
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 14:29:21
+监听队列已链接
+
+
+2021/11/22 14:35:48
+监听队列链接断开
+
+
+2021/11/22 14:35:48
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 14:35:59
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 14:36:01
+队列消息发送失败
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Impl.SessionBase.Transmit(Command cmd)
+   在 RabbitMQ.Client.Impl.ModelBase.ModelSend(MethodBase method, ContentHeaderBase header, ReadOnlyMemory`1 body)
+   在 RabbitMQ.Client.Framing.Impl.Model._Private_BasicPublish(String exchange, String routingKey, Boolean mandatory, IBasicProperties basicProperties, ReadOnlyMemory`1 body)
+   在 RabbitMQ.Client.Impl.ModelBase.BasicPublish(String exchange, String routingKey, Boolean mandatory, IBasicProperties basicProperties, ReadOnlyMemory`1 body)
+   在 RabbitMQ.Client.Impl.AutorecoveringModel.BasicPublish(String exchange, String routingKey, Boolean mandatory, IBasicProperties basicProperties, ReadOnlyMemory`1 body)
+   在 RabbitMQ.Client.IModelExensions.BasicPublish(IModel model, String exchange, String routingKey, IBasicProperties basicProperties, ReadOnlyMemory`1 body)
+   在 FXCommon.MqQueue.MQTask.SendMessage(Byte[] originalData, String exchange, String routekey) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 109
+
+2021/11/22 14:36:02
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 14:36:07
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 14:36:23
+监听队列已链接
+
+
+2021/11/22 14:42:48
+监听队列链接断开
+
+
+2021/11/22 14:42:49
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 14:42:50
+队列消息发送失败
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Impl.SessionBase.Transmit(Command cmd)
+   在 RabbitMQ.Client.Impl.ModelBase.ModelSend(MethodBase method, ContentHeaderBase header, ReadOnlyMemory`1 body)
+   在 RabbitMQ.Client.Framing.Impl.Model._Private_BasicPublish(String exchange, String routingKey, Boolean mandatory, IBasicProperties basicProperties, ReadOnlyMemory`1 body)
+   在 RabbitMQ.Client.Impl.ModelBase.BasicPublish(String exchange, String routingKey, Boolean mandatory, IBasicProperties basicProperties, ReadOnlyMemory`1 body)
+   在 RabbitMQ.Client.Impl.AutorecoveringModel.BasicPublish(String exchange, String routingKey, Boolean mandatory, IBasicProperties basicProperties, ReadOnlyMemory`1 body)
+   在 RabbitMQ.Client.IModelExensions.BasicPublish(IModel model, String exchange, String routingKey, IBasicProperties basicProperties, ReadOnlyMemory`1 body)
+   在 FXCommon.MqQueue.MQTask.SendMessage(Byte[] originalData, String exchange, String routekey) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 109
+
+2021/11/22 14:42:50
+发送通道连接失败
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.SendModelConnect() 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 140
+
+2021/11/22 14:42:52
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 14:42:54
+发送通道连接失败
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.SendModelConnect() 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 140
+
+2021/11/22 14:42:55
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 14:42:57
+发送通道连接失败
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.SendModelConnect() 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 140
+
+2021/11/22 14:42:58
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 14:43:01
+监听队列已链接
+
+
+2021/11/22 14:43:01
+监听队列链接断开
+
+
+2021/11/22 14:43:01
+监听队列已链接
+
+
+2021/11/22 14:43:12
+业务处理意外出错,继续执行
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2021/11/22 14:49:57
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 14:49:59
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 14:49:59
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 14:49:59
+===加载快照缓存===
+
+
+2021/11/22 14:49:59
+===加载快照缓存1===
+
+
+2021/11/22 14:49:59
+===加载快照缓存2===
+
+
+2021/11/22 14:50:00
+===加载快照缓存3===
+
+
+2021/11/22 14:50:00
+===加载快照缓存4===
+
+
+2021/11/22 14:50:00
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 504
+
+2021/11/22 14:50:00
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 14:50:00
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 14:50:00
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 14:50:01
+监听队列已链接
+
+
+2021/11/22 14:53:32
+监听队列链接断开
+
+
+2021/11/22 14:53:32
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 14:53:32
+队列消息发送失败
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Impl.SessionBase.Transmit(Command cmd)
+   在 RabbitMQ.Client.Impl.ModelBase.ModelSend(MethodBase method, ContentHeaderBase header, ReadOnlyMemory`1 body)
+   在 RabbitMQ.Client.Framing.Impl.Model._Private_BasicPublish(String exchange, String routingKey, Boolean mandatory, IBasicProperties basicProperties, ReadOnlyMemory`1 body)
+   在 RabbitMQ.Client.Impl.ModelBase.BasicPublish(String exchange, String routingKey, Boolean mandatory, IBasicProperties basicProperties, ReadOnlyMemory`1 body)
+   在 RabbitMQ.Client.Impl.AutorecoveringModel.BasicPublish(String exchange, String routingKey, Boolean mandatory, IBasicProperties basicProperties, ReadOnlyMemory`1 body)
+   在 RabbitMQ.Client.IModelExensions.BasicPublish(IModel model, String exchange, String routingKey, IBasicProperties basicProperties, ReadOnlyMemory`1 body)
+   在 FXCommon.MqQueue.MQTask.SendMessage(Byte[] originalData, String exchange, String routekey) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 109
+
+2021/11/22 14:53:32
+发送通道连接失败
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.SendModelConnect() 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 140
+
+2021/11/22 14:54:00
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect(Boolean isRetry) 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 177
+
+2021/11/22 15:01:47
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 15:01:50
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 15:01:50
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 15:01:50
+===加载快照缓存===
+
+
+2021/11/22 15:01:50
+===加载快照缓存1===
+
+
+2021/11/22 15:01:50
+===加载快照缓存2===
+
+
+2021/11/22 15:01:50
+===加载快照缓存3===
+
+
+2021/11/22 15:01:51
+===加载快照缓存4===
+
+
+2021/11/22 15:01:51
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 504
+
+2021/11/22 15:01:51
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 15:01:51
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 15:01:52
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 15:01:52
+监听队列已链接
+
+
+2021/11/22 15:04:32
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 15:04:34
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 15:04:34
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 15:04:34
+===加载快照缓存===
+
+
+2021/11/22 15:04:35
+===加载快照缓存1===
+
+
+2021/11/22 15:04:35
+===加载快照缓存2===
+
+
+2021/11/22 15:04:35
+===加载快照缓存3===
+
+
+2021/11/22 15:04:35
+===加载快照缓存4===
+
+
+2021/11/22 15:04:35
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 504
+
+2021/11/22 15:04:35
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 15:04:35
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 15:04:35
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 15:04:35
+监听队列已链接
+
+
+2021/11/22 15:05:26
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 15:05:29
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 15:06:23
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 15:06:25
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 15:06:25
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 15:06:25
+===加载快照缓存===
+
+
+2021/11/22 15:06:26
+===加载快照缓存1===
+
+
+2021/11/22 15:06:26
+===加载快照缓存2===
+
+
+2021/11/22 15:06:26
+===加载快照缓存3===
+
+
+2021/11/22 15:06:26
+===加载快照缓存4===
+
+
+2021/11/22 15:06:26
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 504
+
+2021/11/22 15:06:26
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 15:06:26
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 15:06:26
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 15:06:26
+监听队列已链接
+
+
+2021/11/22 15:08:07
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 15:08:08
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 15:08:09
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 15:08:09
+===加载快照缓存===
+
+
+2021/11/22 15:08:09
+===加载快照缓存1===
+
+
+2021/11/22 15:08:09
+===加载快照缓存2===
+
+
+2021/11/22 15:08:09
+===加载快照缓存3===
+
+
+2021/11/22 15:08:09
+===加载快照缓存4===
+
+
+2021/11/22 15:08:09
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 504
+
+2021/11/22 15:08:09
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 15:08:09
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 15:08:09
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 15:08:09
+监听队列已链接
+
+
+2021/11/22 15:11:10
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 15:11:12
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 15:11:13
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 15:11:13
+===加载快照缓存===
+
+
+2021/11/22 15:11:13
+===加载快照缓存1===
+
+
+2021/11/22 15:11:13
+===加载快照缓存2===
+
+
+2021/11/22 15:11:13
+===加载快照缓存3===
+
+
+2021/11/22 15:11:13
+===加载快照缓存4===
+
+
+2021/11/22 15:11:13
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 504
+
+2021/11/22 15:11:13
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 15:11:13
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 15:11:13
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 15:11:13
+监听队列已链接
+
+
+2021/11/22 15:14:01
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 15:14:04
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 15:14:04
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 15:14:04
+===加载快照缓存===
+
+
+2021/11/22 15:14:04
+===加载快照缓存1===
+
+
+2021/11/22 15:14:04
+===加载快照缓存2===
+
+
+2021/11/22 15:14:04
+===加载快照缓存3===
+
+
+2021/11/22 15:14:04
+===加载快照缓存4===
+
+
+2021/11/22 15:14:04
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 504
+
+2021/11/22 15:14:04
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 15:14:04
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 15:14:05
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 15:14:05
+监听队列已链接
+
+
+2021/11/22 15:21:13
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 15:21:16
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 15:21:16
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 15:21:16
+===加载快照缓存===
+
+
+2021/11/22 15:21:16
+===加载快照缓存1===
+
+
+2021/11/22 15:21:16
+===加载快照缓存2===
+
+
+2021/11/22 15:21:16
+===加载快照缓存3===
+
+
+2021/11/22 15:21:16
+===加载快照缓存4===
+
+
+2021/11/22 15:21:16
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 504
+
+2021/11/22 15:21:16
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 15:21:16
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 15:21:17
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 15:21:17
+监听队列已链接
+
+
+2021/11/22 15:28:45
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 15:28:47
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 15:28:47
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 15:28:47
+===加载快照缓存===
+
+
+2021/11/22 15:28:48
+===加载快照缓存1===
+
+
+2021/11/22 15:28:48
+===加载快照缓存2===
+
+
+2021/11/22 15:28:48
+===加载快照缓存3===
+
+
+2021/11/22 15:28:48
+===加载快照缓存4===
+
+
+2021/11/22 15:28:48
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 504
+
+2021/11/22 15:28:48
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 15:28:48
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 15:28:49
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 15:28:49
+监听队列已链接
+
+
+2021/11/22 15:30:09
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 15:30:11
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 15:30:11
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 15:30:11
+===加载快照缓存===
+
+
+2021/11/22 15:30:12
+===加载快照缓存1===
+
+
+2021/11/22 15:30:12
+===加载快照缓存2===
+
+
+2021/11/22 15:30:12
+===加载快照缓存3===
+
+
+2021/11/22 15:30:12
+===加载快照缓存4===
+
+
+2021/11/22 15:30:12
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 504
+
+2021/11/22 15:30:12
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 15:30:12
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 15:30:12
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 15:30:12
+监听队列已链接
+
+
+2021/11/22 15:39:52
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 15:39:53
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 15:39:53
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 15:39:53
+===加载快照缓存===
+
+
+2021/11/22 15:39:53
+===加载快照缓存1===
+
+
+2021/11/22 15:39:53
+===加载快照缓存2===
+
+
+2021/11/22 15:39:54
+===加载快照缓存3===
+
+
+2021/11/22 15:39:54
+===加载快照缓存4===
+
+
+2021/11/22 15:39:54
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 504
+
+2021/11/22 15:39:54
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 15:39:54
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 15:39:54
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 15:40:11
+监听队列已链接
+
+
+2021/11/22 15:41:15
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 15:41:15
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 15:41:15
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 15:41:15
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 15:41:16
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 15:41:56
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 15:41:57
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 15:41:57
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 15:41:57
+===加载快照缓存===
+
+
+2021/11/22 15:41:57
+===加载快照缓存1===
+
+
+2021/11/22 15:41:57
+===加载快照缓存2===
+
+
+2021/11/22 15:41:57
+===加载快照缓存3===
+
+
+2021/11/22 15:41:57
+===加载快照缓存4===
+
+
+2021/11/22 15:41:57
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 504
+
+2021/11/22 15:41:57
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 15:41:57
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 15:41:57
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 15:41:57
+监听队列已链接
+
+
+2021/11/22 15:42:35
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 15:42:35
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 15:42:35
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 15:42:35
+===加载快照缓存===
+
+
+2021/11/22 15:42:35
+===加载快照缓存1===
+
+
+2021/11/22 15:42:35
+===加载快照缓存2===
+
+
+2021/11/22 15:42:35
+===加载快照缓存3===
+
+
+2021/11/22 15:42:35
+===加载快照缓存4===
+
+
+2021/11/22 15:42:35
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 504
+
+2021/11/22 15:42:35
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 15:42:35
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 15:42:35
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 15:42:49
+监听队列已链接
+
+
+2021/11/22 15:47:39
+===开始初始化最后一条数据缓存===
+
+
+2021/11/22 15:47:39
+===结束初始化最后一条数据缓存===
+
+
+2021/11/22 15:47:39
+===开始当天板块内股票快照缓存===
+
+
+2021/11/22 15:47:39
+===加载快照缓存===
+
+
+2021/11/22 15:47:39
+===加载快照缓存1===
+
+
+2021/11/22 15:47:39
+===加载快照缓存2===
+
+
+2021/11/22 15:47:39
+===加载快照缓存3===
+
+
+2021/11/22 15:47:39
+===加载快照缓存4===
+
+
+2021/11/22 15:47:39
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 504
+
+2021/11/22 15:47:39
+===结束当天板块内股票快照缓存===
+
+
+2021/11/22 15:47:39
+===开始加载板块计算结果缓存===
+
+
+2021/11/22 15:47:40
+===结束加载板块计算结果缓存===
+
+
+2021/11/22 15:47:42
+监听队列已链接
+
+

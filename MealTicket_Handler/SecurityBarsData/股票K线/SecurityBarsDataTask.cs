@@ -392,11 +392,25 @@ namespace MealTicket_Handler.SecurityBarsData
                 }
             }
 
-            else if (receivedObj.HandlerType == 2)
+            else if (receivedObj.HandlerType == 2 || receivedObj.HandlerType==21)
             {
+                dataObj.TaskGuid = receivedObj.TaskGuid;
                 dataObj.TaskTimeOut = -1;
                 dataObj.HandlerType = receivedObj.HandlerType;
                 dataObj.PackageList = receivedObj.PackageList;
+                dataObj.SuccessPackageList = receivedObj.SuccessPackageList;
+                //需要重新获取的重新获取
+                if (receivedObj.FailPackageList.Count() > 0 && receivedObj.RetryCount <= receivedObj.TotalRetryCount)
+                {
+                    Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new
+                    {
+                        TaskGuid = receivedObj.TaskGuid,
+                        HandlerType = receivedObj.HandlerType,
+                        RetryCount = receivedObj.RetryCount+1,
+                        TotalRetryCount = receivedObj.TotalRetryCount,
+                        PackageList = receivedObj.FailPackageList
+                    })), "SecurityBars", "1min");
+                }
             }
 
             bool isFinish = false;
@@ -418,6 +432,15 @@ namespace MealTicket_Handler.SecurityBarsData
 
             if (isFinish)
             {
+                //通知板块
+                if (dataObj.HandlerType == 21)//当天更新，立即通知板块
+                {
+
+                }
+                else if (dataObj.HandlerType == 2)//形成通知板块指令
+                {
+
+                }
                 ClearTaskInfo(dataObj);//超时则清空任务
                 dataObj.TaskTimeOut = Singleton.Instance.SecurityBarsTaskTimeout;
             }
@@ -489,6 +512,7 @@ namespace MealTicket_Handler.SecurityBarsData
                         table.Columns.Add("LastModified", typeof(DateTime));
                         table.Columns.Add("IsLast", typeof(bool));
                         table.Columns.Add("YestodayClosedPrice", typeof(long));
+                        table.Columns.Add("IsVaild", typeof(bool));
                         foreach (var item in disResultList)
                         {
                             DataRow row = table.NewRow();
@@ -512,6 +536,7 @@ namespace MealTicket_Handler.SecurityBarsData
                             row["LastModified"] = DateTime.Now;
                             row["IsLast"] = item.item.IsLast;
                             row["YestodayClosedPrice"] = item.item.YestodayClosedPrice;
+                            row["IsVaild"] = item.item.IsVaild;
                             table.Rows.Add(row);
                         }
 
@@ -623,8 +648,23 @@ namespace MealTicket_Handler.SecurityBarsData
                     GroupTimeKey= groupTimeKey
                 });
             }
+            List<string> sharesList = new List<string>();
+            //sharesList.Add("002707");
+            //sharesList.Add("000796");
+            //sharesList.Add("000978");
+            //sharesList.Add("600640");
+            //sharesList.Add("300005");
+            //sharesList.Add("000917");
+            //sharesList.Add("000524");
+            //sharesList.Add("600138");
+            //sharesList.Add("300178");
+            //sharesList.Add("002489");
+            //sharesList.Add("600258");
+            //sharesList.Add("002558");
+            //sharesList.Add("603199");
+            //sharesList.Add("300133");
             var allSharesList = (from item in Singleton.Instance._sharesBaseSession.GetSessionData()
-                                 where item.PresentPrice>0
+                                 where item.PresentPrice>0 //&& sharesList.Contains(item.SharesCode)
                                  select new
                                  {
                                      Market = item.Market,
@@ -669,13 +709,15 @@ namespace MealTicket_Handler.SecurityBarsData
                     {
                         DataType = item.DataType,
                         SecurityBarsGetCount = 0,
-                        DataList = dataList
+                        DataList = dataList,
                     });
                 }
                 Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new
                 {
                     TaskGuid = taskGuid,
                     HandlerType = 1,
+                    RetryCount=1,
+                    TotalRetryCount=1,
                     PackageList = sendList
                 })), "SecurityBars", "1min");
             }

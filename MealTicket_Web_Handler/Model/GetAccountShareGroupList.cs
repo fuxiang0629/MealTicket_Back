@@ -21,5 +21,15 @@ namespace MealTicket_Web_Handler.Model
         /// 分组名称
         /// </summary>
         public string GroupName { get; set; }
+
+        /// <summary>
+        /// 排序值
+        /// </summary>
+        public int OrderIndex { get; set; }
+
+        /// <summary>
+        /// 数据创建时间
+        /// </summary>
+        public DateTime CreateTime { get; set; }
     }
 }

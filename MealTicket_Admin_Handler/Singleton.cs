@@ -51,6 +51,11 @@ namespace MealTicket_Admin_Handler
         public int MinPushTimeInterval = 180;
         public int MinPushRateInterval = 60;
 
+        /// <summary>
+        /// K线重置失败次数
+        /// </summary>
+        public int TotalRetryCount = 3;
+
         // 显式静态构造函数告诉C＃编译器
         // 不要将类型标记为BeforeFieldInit
         static Singleton()
@@ -162,6 +167,22 @@ namespace MealTicket_Admin_Handler
                         if (tempMinPushRateInterval > 0 || tempMinPushRateInterval == -1)
                         {
                             MinPushRateInterval = tempMinPushRateInterval;
+                        }
+                    }
+                }
+                catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "SecurityBarsPar"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                        int tempTotalRetryCount = sysValue.TotalRetryCount;
+                        if (tempTotalRetryCount > 0)
+                        {
+                            TotalRetryCount = tempTotalRetryCount;
                         }
                     }
                 }

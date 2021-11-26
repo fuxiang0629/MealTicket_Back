@@ -42,6 +42,107 @@ namespace MealTicket_Handler.SecurityBarsData
         /// 数据包列表
         /// </summary>
         public Dictionary<int,SecurityBarsDataType> PackageList { get; set; }
+
+        /// <summary>
+        /// 已重试次数
+        /// </summary>
+        public int RetryCount { get; set; }
+
+        /// <summary>
+        /// 可重试次数
+        /// </summary>
+        public int TotalRetryCount { get; set; }
+
+        /// <summary>
+        /// 重试股票数据列表
+        /// </summary>
+        public List<SecurityBarsDataParList> FailPackageList { get; set; }
+
+        /// <summary>
+        /// 成功股票数据列表
+        /// </summary>
+        public List<SecurityBarsDataParList> SuccessPackageList { get; set; }
+    }
+
+    public class SecurityBarsDataParList
+    {
+        /// <summary>
+        /// 每次获取数量（最大800）
+        /// </summary>
+        public int SecurityBarsGetCount { get; set; }
+
+        /// <summary>
+        /// 数据类型 2.1分钟K线 3.5分钟K线 4.15分钟K线 5.30分钟K线 6.60分钟K线 7.日K 8.周K 9.月K 10.季度K 11.年K
+        /// </summary>
+        public int DataType { get; set; }
+
+        /// <summary>
+        /// 股票数据列表
+        /// </summary>
+        public List<SecurityBarsDataPar> DataList { get; set; }
+    }
+
+    public class SecurityBarsDataPar
+    {
+        /// <summary>
+        /// 市场代码
+        /// </summary>
+        public int Market { get; set; }
+
+        /// <summary>
+        /// 股票代码
+        /// </summary>
+        public string SharesCode { get; set; }
+
+        /// <summary>
+        /// 数据类型 2.1分钟K线 3.5分钟K线 4.15分钟K线 5.30分钟K线 6.60分钟K线 7.日K 8.周K 9.月K 10.季度K 11.年K
+        /// </summary>
+        public int DataType { get; set; }
+
+        /// <summary>
+        /// 每次获取数量（最大800）
+        /// </summary>
+        public int SecurityBarsGetCount { get; set; }
+
+        /// <summary>
+        /// 获取数据起始时间（-1表示无开始时间）
+        /// </summary>
+        public long StartTimeKey { get; set; }
+
+        /// <summary>
+        /// 获取数据截止时间（-1表示无截止时间）
+        /// </summary>
+        public long EndTimeKey { get; set; }
+
+        /// <summary>
+        /// 上一时段收盘价
+        /// </summary>
+        public long PreClosePrice { get; set; }
+
+        /// <summary>
+        /// 昨日收盘价
+        /// </summary>
+        public long YestodayClosedPrice { get; set; }
+
+        /// <summary>
+        /// 前一分钟成交量之和
+        /// </summary>
+        public long LastTradeStock { get; set; }
+
+        /// <summary>
+        /// 前一分钟成交额之和
+        /// </summary>
+        public long LastTradeAmount { get; set; }
+
+        /// <summary>
+        /// 板块Id
+        /// </summary>
+        public long PlateId { get; set; }
+
+        /// <summary>
+        /// 加权类型1不加权 2总股本加权
+        /// </summary>
+        public int WeightType { get; set; }
     }
 
     public class SecurityBarsDataType
@@ -185,6 +286,8 @@ namespace MealTicket_Handler.SecurityBarsData
         public long Tradable { get; set; }
 
         public long TotalCapital { get; set; }
+
+        public bool IsVaild { get; set; }
     }
 
     public class SecurityBarsData_1minInfo

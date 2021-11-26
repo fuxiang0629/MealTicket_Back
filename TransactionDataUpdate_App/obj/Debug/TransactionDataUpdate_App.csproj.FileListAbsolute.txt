@@ -39,4 +39,3 @@ F:\项目\饭票后端\TransactionDataUpdate_App\obj\Debug\TransactionDataUpdate
 F:\项目\饭票后端\TransactionDataUpdate_App\obj\Debug\TransactionDataUpdate_App.csproj.CopyComplete
 F:\项目\饭票后端\TransactionDataUpdate_App\obj\Debug\TransactionDataUpdate_App.exe
 F:\项目\饭票后端\TransactionDataUpdate_App\obj\Debug\TransactionDataUpdate_App.pdb
-F:\项目\饭票后端\TransactionDataUpdate_App\obj\Debug\TransactionDataUpdate_App.csprojAssemblyReference.cache

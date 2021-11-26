@@ -344,30 +344,35 @@ namespace MealTicket_Web_Handler
         /// <returns></returns>
         public PlateQuotesInfo GetPlateQuotesInfo(GetPlateQuotesInfoRequest request, HeadBase basedata) 
         {
-            var plate=Singleton.Instance._SharesPlateSession.GetSessionData().Where(e => e.PlateId == request.PlateId).FirstOrDefault();
-            if (plate == null)
+            using (var db = new meal_ticketEntities())
             {
-                return null;
+                //判断板块类型
+                var plate = (from item in db.t_shares_plate
+                             where item.Id == request.PlateId
+                             select item).FirstOrDefault();
+                if (plate == null)
+                {
+                    return null;
+                }
+                int weightType = Singleton.Instance.PlateIndexTypeDic[plate.CalType] == 1 ? 2 : 1;
+
+                var result = (from item in Singleton.Instance._SharesPlateQuotesSession_New.GetSessionData()
+                              where item.PlateId == request.PlateId && item.WeightType == weightType
+                              select new PlateQuotesInfo
+                              {
+                                  PlateId = item.PlateId,
+                                  PlateName = plate.Name,
+                                  CirculatingCapital = item.CirculatingCapital,
+                                  ClosedPrice = item.ClosedPrice,
+                                  OpenedPrice = item.OpenedPrice,
+                                  PresentPrice = item.PresentPrice,
+                                  MaxPrice = item.MaxPrice,
+                                  MinPrice = item.MinPrice,
+                                  TodayDealCount = item.TodayDealCount,
+                                  TodayDealAmount = item.TodayDealAmount
+                              }).FirstOrDefault();
+                return result;
             }
-            int weightType = Singleton.Instance.PlateIndexTypeDic[plate.CalType] == 1 ? 2 : 1;
-
-
-            var result = (from item in Singleton.Instance._SharesPlateQuotesSession_New.GetSessionData()
-                          where item.PlateId == request.PlateId && item.WeightType== weightType
-                          select new PlateQuotesInfo
-                          {
-                              PlateId = item.PlateId,
-                              PlateName= plate.PlateName,
-                              CirculatingCapital = item.CirculatingCapital,
-                              ClosedPrice = item.ClosedPrice,
-                              OpenedPrice = item.OpenedPrice,
-                              PresentPrice = item.PresentPrice,
-                              MaxPrice=item.MaxPrice,
-                              MinPrice=item.MinPrice,
-                              TodayDealCount = item.TodayDealCount * 100,
-                              TodayDealAmount = item.TodayDealAmount
-                          }).FirstOrDefault();
-            return result;
         }
 
         /// <summary>
@@ -2071,6 +2076,9 @@ namespace MealTicket_Web_Handler
                                         TotalCapital=g.Key.item3.TotalCapital,
                                         CirculatingCapital=g.Key.item3.CirculatingCapital
                                     }).ToList();
+                var mySharesGroup = (from item in db.t_account_shares_group_rel
+                                     where item.AccountId == basedata.AccountId
+                                     select item).ToList();
                 List<AccountTrendTriInfo> resultList = new List<AccountTrendTriInfo>();
                 foreach (var item in accountTrend)
                 {
@@ -2083,6 +2091,9 @@ namespace MealTicket_Web_Handler
                                       where x.Market == item.Market && x.SharesCode == item.SharesCode
                                       orderby x.RiseRate descending
                                       select x).ToList();
+                    item.MySharesGroupList = (from x in mySharesGroup
+                                              where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                              select x.GroupId).ToList();
                     resultList.Add(item);
                 }
 
@@ -2122,7 +2133,8 @@ namespace MealTicket_Web_Handler
                                   TriCountToday = item.TriCountToday,
                                   TriDesc = item.TriDesc,
                                   TwoDaysRiseRate = item2.TwoDaysRiseRate,
-                                  YestodayRiseRate = item2.YestodayRiseRate
+                                  YestodayRiseRate = item2.YestodayRiseRate,
+                                  MySharesGroupList = item.MySharesGroupList
                               }).ToList();
                 DateTime timeNow = DateTime.Now;
                 long dateAbs = int.Parse(timeNow.ToString("yyyyMMdd"));
@@ -2200,6 +2212,7 @@ namespace MealTicket_Web_Handler
                                   DaysNowAvgDealCount= ai == null ? 0 : ai.DaysNowAvgDealCount,
                                   PreNowAvgDealAmount= ai == null ? 0 : ai.PreNowAvgDealAmount,
                                   PreNowAvgDealCount= ai == null ? 0 : ai.PreNowAvgDealCount,
+                                  MySharesGroupList = item.MySharesGroupList
                               }).ToList();
                 return resultList;
             }
@@ -2318,7 +2331,9 @@ namespace MealTicket_Web_Handler
                             TotalCapital=item3.TotalCapital,
                             CirculatingCapital=item3.CirculatingCapital,
                         }).ToList();
-
+                var mySharesGroup = (from item in db.t_account_shares_group_rel
+                                     where item.AccountId == basedata.AccountId
+                                     select item).ToList();
                 List<AccountRiseLimitTriInfo> resultList = new List<AccountRiseLimitTriInfo>();
                 foreach (var item in result_list)
                 {
@@ -2372,6 +2387,9 @@ namespace MealTicket_Web_Handler
                                       where x.Market == item.Market && x.SharesCode == item.SharesCode
                                       orderby x.RiseRate descending
                                       select x).ToList();
+                    item.MySharesGroupList = (from x in mySharesGroup
+                                              where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                              select x.GroupId).ToList();
                     resultList.Add(item);
                 }
                 resultList = (from item in resultList
@@ -2411,7 +2429,8 @@ namespace MealTicket_Web_Handler
                                   YestodayRiseRate = item2.YestodayRiseRate,
                                   Fundmultiple = item.Fundmultiple,
                                   Range = item.Range,
-                                  Type = item.Type
+                                  Type = item.Type,
+                                  MySharesGroupList = item.MySharesGroupList
                               }).ToList();
 
                 DateTime timeNow = DateTime.Now;
@@ -2491,6 +2510,7 @@ namespace MealTicket_Web_Handler
                                   DaysNowAvgDealCount = ai == null ? 0 : ai.DaysNowAvgDealCount,
                                   PreNowAvgDealAmount = ai == null ? 0 : ai.PreNowAvgDealAmount,
                                   PreNowAvgDealCount = ai == null ? 0 : ai.PreNowAvgDealCount,
+                                  MySharesGroupList = item.MySharesGroupList
                               }).ToList();
                 return resultList;
             }
@@ -2611,7 +2631,9 @@ namespace MealTicket_Web_Handler
                                        CirculatingCapital = item3.CirculatingCapital,
                                        TriDesc=item.LastPushType.ToString()
                                    }).ToList();
-
+                var mySharesGroup = (from item in db.t_account_shares_group_rel
+                                     where item.AccountId == basedata.AccountId
+                                     select item).ToList();
                 List<AccountRiseLimitTriInfo> resultList = new List<AccountRiseLimitTriInfo>();
                 foreach (var item in result_list)
                 {
@@ -2665,6 +2687,9 @@ namespace MealTicket_Web_Handler
                                       where x.Market == item.Market && x.SharesCode == item.SharesCode
                                       orderby x.RiseRate descending
                                       select x).ToList();
+                    item.MySharesGroupList = (from x in mySharesGroup
+                                              where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                              select x.GroupId).ToList();
                     resultList.Add(item);
                 }
                 resultList = (from item in resultList
@@ -2705,7 +2730,8 @@ namespace MealTicket_Web_Handler
                                   Fundmultiple = item.Fundmultiple,
                                   Range = item.Range,
                                   Type = item.Type,
-                                  TriDesc=item.TriDesc
+                                  TriDesc=item.TriDesc,
+                                  MySharesGroupList=item.MySharesGroupList
                               }).ToList();
 
                 DateTime timeNow = DateTime.Now;
@@ -2786,6 +2812,7 @@ namespace MealTicket_Web_Handler
                                   DaysNowAvgDealCount = ai == null ? 0 : ai.DaysNowAvgDealCount,
                                   PreNowAvgDealAmount = ai == null ? 0 : ai.PreNowAvgDealAmount,
                                   PreNowAvgDealCount = ai == null ? 0 : ai.PreNowAvgDealCount,
+                                  MySharesGroupList = item.MySharesGroupList
                               }).ToList();
                 return resultList;
             }
@@ -5643,7 +5670,9 @@ inner
                                      Rank = x3.Rank,
                                      RiseRate = x3.RiseRate
                                  }).ToList();
-
+                var mySharesGroup = (from item in db.t_account_shares_group_rel
+                                     where item.AccountId == basedata.AccountId
+                                     select item).ToList();
                 foreach (var item in list)
                 {
                     var details = (from x in detailsList
@@ -5685,6 +5714,9 @@ inner
                                       where x.Market == item.Market && x.SharesCode == item.SharesCode
                                       orderby x.RiseRate descending
                                       select x).ToList();
+                    item.MySharesGroupList = (from x in mySharesGroup
+                                              where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                              select x.GroupId).ToList();
                 }
                 return new PageRes<AccountBuyConditionTradeSharesInfo>
                 {
@@ -5884,6 +5916,10 @@ inner
                                      Rank = x3.Rank,
                                      RiseRate = x3.RiseRate
                                  }).ToList();
+
+                var mySharesGroup = (from item in db.t_account_shares_group_rel
+                                     where item.AccountId == basedata.AccountId
+                                     select item).ToList();
                 foreach (var item in list)
                 {
                     var rules = (from x in fundmultiple
@@ -5927,6 +5963,9 @@ inner
                                       where x.Market == item.Market && x.SharesCode == item.SharesCode
                                       orderby x.RiseRate descending
                                       select x).ToList();
+                    item.MySharesGroupList = (from x in mySharesGroup
+                                              where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                              select x.GroupId).ToList();
                 }
                 return new PageRes<AccountBuyConditionTradeSharesInfo>
                 {
@@ -13689,7 +13728,7 @@ inner
         /// </summary>
         /// <param name="request"></param>
         /// <param name="basedata"></param>
-        public void ImportConditiontradeTemplateBuy(ImportConditiontradeTemplateBuyRequest request, HeadBase basedata)
+        public long ImportConditiontradeTemplateBuy(ImportConditiontradeTemplateBuyRequest request, HeadBase basedata)
         {
             if (request.AccountId == 0)
             {
@@ -14080,6 +14119,8 @@ inner
             int taskCount = sharesCount % 10 == 0 ? (sharesCount / 10) : (sharesCount / 10 + 1);
             Task[] tArr = new Task[taskCount];
             List<string> tempResultList = new List<string>();
+
+            long resultId = 0;
             for (int i=1;i<= sharesCount; i++)
             {
                 tempResultList.Add(request.SharesList[i-1]);
@@ -14118,7 +14159,10 @@ begin
 end
 select @buyId;";
                                         long shares_buy_id = db.Database.SqlQuery<long>(string.Format(sql, request.AccountId, market, sharesCode)).FirstOrDefault();
-
+                                        if (sharesCount==1)
+                                        {
+                                            resultId = shares_buy_id;
+                                        }
                                         //是否清除原来数据
                                         if (request.IsClear)
                                         {
@@ -14432,6 +14476,7 @@ select @buyId;";
                 }
             }
             Task.WaitAll(tArr);
+            return resultId;
         }
 
         /// <summary>
@@ -17346,6 +17391,7 @@ select @buyId;";
                                 RiseLimitCount = item2.RiseLimitCount,
                                 RiseRate = item2.RiseRate,
                                 Type = item.PlateType,
+                                CalType=item.CalType,
                                 Rank = item2.Rank
                             }).Take(Singleton.Instance.PlateRankShow).ToList();
                 return list;
@@ -17365,6 +17411,7 @@ select @buyId;";
                                 RiseLimitCount = item2.RiseLimitCount,
                                 RiseRate = item2.RiseRate,
                                 Type = item.PlateType,
+                                CalType = item.CalType,
                                 Rank = item2.Rank
                             }).Take(Singleton.Instance.PlateRankShow).ToList();
                 return list;
@@ -17384,6 +17431,7 @@ select @buyId;";
                                 RiseLimitCount = item2.RiseLimitCount,
                                 RiseRate = item2.RiseRate,
                                 Type = item.PlateType,
+                                CalType = item.CalType,
                                 Rank = item2.Rank
                             }).Take(Singleton.Instance.PlateRankShow).ToList();
                 return list;
@@ -17402,6 +17450,7 @@ select @buyId;";
                                 DownLimitCount = item2.DownLimitCount,
                                 RiseLimitCount = item2.RiseLimitCount,
                                 RiseRate = item2.RiseRate,
+                                CalType = item.CalType,
                                 Type = item.PlateType,
                                 Rank = item2.Rank
                             }).Take(Singleton.Instance.PlateRankShow).ToList();
@@ -21309,7 +21358,7 @@ select @buyId;";
             {
                 int resType = 1;
                 var result = from item in db.t_shares_securitybarsdata_1min
-                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.ClosedPrice > 0 || item.Time > dateNow)
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.IsVaild || item.Time > dateNow)
                              select item;
                 if (request.MaxGroupTimeKey != -1)
                 {
@@ -21374,7 +21423,7 @@ select @buyId;";
             {
                 int resType = 1;
                 var result = from item in db.t_shares_securitybarsdata_5min
-                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.ClosedPrice > 0 || item.Time > dateNow)
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.IsVaild || item.Time > dateNow)
                              select item;
                 if (request.MaxGroupTimeKey != -1)
                 {
@@ -21439,7 +21488,7 @@ select @buyId;";
             {
                 int resType = 1;
                 var result = from item in db.t_shares_securitybarsdata_15min
-                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.ClosedPrice > 0 || item.Time > dateNow)
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.IsVaild || item.Time > dateNow)
                              select item;
                 if (request.MaxGroupTimeKey != -1)
                 {
@@ -21504,7 +21553,7 @@ select @buyId;";
             {
                 int resType = 1;
                 var result = from item in db.t_shares_securitybarsdata_30min
-                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.ClosedPrice > 0 || item.Time > dateNow)
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.IsVaild || item.Time > dateNow)
                              select item;
                 if (request.MaxGroupTimeKey != -1)
                 {
@@ -21569,7 +21618,7 @@ select @buyId;";
             {
                 int resType = 1;
                 var result = from item in db.t_shares_securitybarsdata_60min
-                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.ClosedPrice > 0 || item.Time > dateNow)
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.IsVaild || item.Time > dateNow)
                              select item;
                 if (request.MaxGroupTimeKey != -1)
                 {
@@ -21634,7 +21683,7 @@ select @buyId;";
             {
                 int resType = 1;
                 var result = from item in db.t_shares_securitybarsdata_1day
-                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.ClosedPrice > 0 || item.Time > dateNow)
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.IsVaild || item.Time > dateNow)
                              select item;
                 if (request.MaxGroupTimeKey != -1)
                 {
@@ -21699,7 +21748,7 @@ select @buyId;";
             {
                 int resType = 1;
                 var result = from item in db.t_shares_securitybarsdata_1week
-                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.ClosedPrice > 0 || item.Time > dateNow)
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.IsVaild || item.Time > dateNow)
                              select item;
                 if (request.MaxGroupTimeKey != -1)
                 {
@@ -21764,7 +21813,7 @@ select @buyId;";
             {
                 int resType = 1;
                 var result = from item in db.t_shares_securitybarsdata_1month
-                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.ClosedPrice > 0 || item.Time > dateNow)
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.IsVaild || item.Time > dateNow)
                              select item;
                 if (request.MaxGroupTimeKey != -1)
                 {
@@ -21829,7 +21878,7 @@ select @buyId;";
             {
                 int resType = 1;
                 var result = from item in db.t_shares_securitybarsdata_1quarter
-                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.ClosedPrice > 0 || item.Time > dateNow)
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.IsVaild || item.Time > dateNow)
                              select item;
                 if (request.MaxGroupTimeKey != -1)
                 {
@@ -21894,7 +21943,7 @@ select @buyId;";
             {
                 int resType = 1;
                 var result = from item in db.t_shares_securitybarsdata_1year
-                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.ClosedPrice > 0 || item.Time > dateNow)
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode && (item.IsVaild || item.Time > dateNow)
                              select item;
                 if (request.MaxGroupTimeKey != -1)
                 {
@@ -22037,8 +22086,9 @@ select @buyId;";
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public List<GetSharesKLineListRes> BatchGetSharesKLineList(BatchGetSharesKLineListRequest request, HeadBase basedata) 
+        public List<GetSharesKLineListRes> BatchGetSharesKLineList(BatchGetSharesKLineListRequest request, HeadBase basedata)
         {
+            DateTime dateNow = DateTime.Now.Date;
             DataTable table = new DataTable();
 
             #region====定义表字段数据类型====
@@ -22075,6 +22125,10 @@ select @buyId;";
 
                 foreach (var item in result)
                 {
+                    if (!item.IsVaild && item.Time.Date!= dateNow)
+                    {
+                        continue;
+                    }
                     int _market = item.Market;
                     string _sharesCode = item.SharesCode;
                     long _groupTimeKey = item.GroupTimeKey;
@@ -22266,9 +22320,17 @@ select @buyId;";
                              select item).FirstOrDefault();
                 if (plate == null)
                 {
-                    throw new WebApiException(400,"板块不存在");
+                    throw new WebApiException(400, "板块不存在");
                 }
                 request.WeightType = Singleton.Instance.PlateIndexTypeDic[plate.CalType] == 1 ? 2 : 1;
+                if ((request.WeightType == 1 && string.IsNullOrEmpty(plate.NoWeightSharesCode)) || (request.WeightType == 2 && string.IsNullOrEmpty(plate.WeightSharesCode)))
+                {
+                    request.XSJQ = true;
+                }
+                else
+                {
+                    request.XSJQ = false;
+                }
             }
             switch (request.Type)
             {
@@ -22332,7 +22394,7 @@ select @buyId;";
                 }
 
                 var dataResult = (from item in result
-                                  select item).Take(request.GetCount).ToList();
+                                  select item).OrderByDescending(e => e.GroupTimeKey).Take(request.GetCount).ToList();
 
                 var res = new GetPlateKLineListRes
                 {
@@ -22346,8 +22408,8 @@ select @buyId;";
                                     ClosedPrice = (item.ClosedPrice * 1.0 / 10000).ToString("F2"),
                                     PreClosedPrice = (item.PreClosePrice * 1.0 / 10000).ToString("F2"),
                                     OpenedPrice = (item.OpenedPrice * 1.0 / 10000).ToString("F2"),
-                                    MaxPrice = (item.MaxPrice * 1.0 / 10000).ToString("F2"),
-                                    MinPrice = (item.MinPrice * 1.0 / 10000).ToString("F2"),
+                                    MaxPrice = request.XSJQ ? (((long)Math.Round((item.OpenedPrice > item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) + (item.MaxPrice - (item.OpenedPrice > item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice)) * 1.0 / Singleton.Instance.PlateIndexRatio, 0)) * 1.0 / 10000).ToString("F2") : (item.MaxPrice * 1.0 / 10000).ToString("F2"),
+                                    MinPrice = request.XSJQ ? (((long)Math.Round((item.OpenedPrice < item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) - ((item.OpenedPrice < item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) - item.MinPrice) * 1.0 / Singleton.Instance.PlateIndexRatio, 0)) * 1.0 / 10000).ToString("F2") : (item.MinPrice * 1.0 / 10000).ToString("F2"),
                                     DateKey = DateTime.ParseExact(item.GroupTimeKey.ToString(), "yyyyMMddHHmm", System.Globalization.CultureInfo.CurrentCulture).ToString("yyyy/MM/dd HH:mm"),
                                     Time = item.Time,
                                     GroupTimeKey = item.GroupTimeKey,
@@ -22397,7 +22459,7 @@ select @buyId;";
                 }
 
                 var dataResult = (from item in result
-                                  select item).Take(request.GetCount).ToList();
+                                  select item).OrderByDescending(e => e.GroupTimeKey).Take(request.GetCount).ToList();
 
                 var res = new GetPlateKLineListRes
                 {
@@ -22411,8 +22473,8 @@ select @buyId;";
                                     ClosedPrice = (item.ClosedPrice * 1.0 / 10000).ToString("F2"),
                                     PreClosedPrice = (item.PreClosePrice * 1.0 / 10000).ToString("F2"),
                                     OpenedPrice = (item.OpenedPrice * 1.0 / 10000).ToString("F2"),
-                                    MaxPrice = (item.MaxPrice * 1.0 / 10000).ToString("F2"),
-                                    MinPrice = (item.MinPrice * 1.0 / 10000).ToString("F2"),
+                                    MaxPrice = request.XSJQ ? (((long)Math.Round((item.OpenedPrice > item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) + (item.MaxPrice - (item.OpenedPrice > item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice)) * 1.0 / Singleton.Instance.PlateIndexRatio, 0)) * 1.0 / 10000).ToString("F2") : (item.MaxPrice * 1.0 / 10000).ToString("F2"),
+                                    MinPrice = request.XSJQ ? (((long)Math.Round((item.OpenedPrice < item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) - ((item.OpenedPrice < item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) - item.MinPrice) * 1.0 / Singleton.Instance.PlateIndexRatio, 0)) * 1.0 / 10000).ToString("F2") : (item.MinPrice * 1.0 / 10000).ToString("F2"),
                                     DateKey = DateTime.ParseExact(item.GroupTimeKey.ToString(), "yyyyMMddHHmm", System.Globalization.CultureInfo.CurrentCulture).ToString("yyyy/MM/dd HH:mm"),
                                     Time = item.Time,
                                     GroupTimeKey = item.GroupTimeKey,
@@ -22462,7 +22524,7 @@ select @buyId;";
                 }
 
                 var dataResult = (from item in result
-                                  select item).Take(request.GetCount).ToList();
+                                  select item).OrderByDescending(e => e.GroupTimeKey).Take(request.GetCount).ToList();
 
                 var res = new GetPlateKLineListRes
                 {
@@ -22476,8 +22538,8 @@ select @buyId;";
                                     ClosedPrice = (item.ClosedPrice * 1.0 / 10000).ToString("F2"),
                                     PreClosedPrice = (item.PreClosePrice * 1.0 / 10000).ToString("F2"),
                                     OpenedPrice = (item.OpenedPrice * 1.0 / 10000).ToString("F2"),
-                                    MaxPrice = (item.MaxPrice * 1.0 / 10000).ToString("F2"),
-                                    MinPrice = (item.MinPrice * 1.0 / 10000).ToString("F2"),
+                                    MaxPrice = request.XSJQ ? (((long)Math.Round((item.OpenedPrice > item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) + (item.MaxPrice - (item.OpenedPrice > item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice)) * 1.0 / Singleton.Instance.PlateIndexRatio, 0)) * 1.0 / 10000).ToString("F2") : (item.MaxPrice * 1.0 / 10000).ToString("F2"),
+                                    MinPrice = request.XSJQ ? (((long)Math.Round((item.OpenedPrice < item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) - ((item.OpenedPrice < item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) - item.MinPrice) * 1.0 / Singleton.Instance.PlateIndexRatio, 0)) * 1.0 / 10000).ToString("F2") : (item.MinPrice * 1.0 / 10000).ToString("F2"),
                                     DateKey = DateTime.ParseExact(item.GroupTimeKey.ToString(), "yyyyMMddHHmm", System.Globalization.CultureInfo.CurrentCulture).ToString("yyyy/MM/dd HH:mm"),
                                     Time = item.Time,
                                     GroupTimeKey = item.GroupTimeKey,
@@ -22527,7 +22589,7 @@ select @buyId;";
                 }
 
                 var dataResult = (from item in result
-                                  select item).Take(request.GetCount).ToList();
+                                  select item).OrderByDescending(e => e.GroupTimeKey).Take(request.GetCount).ToList();
 
                 var res = new GetPlateKLineListRes
                 {
@@ -22541,8 +22603,8 @@ select @buyId;";
                                     ClosedPrice = (item.ClosedPrice * 1.0 / 10000).ToString("F2"),
                                     PreClosedPrice = (item.PreClosePrice * 1.0 / 10000).ToString("F2"),
                                     OpenedPrice = (item.OpenedPrice * 1.0 / 10000).ToString("F2"),
-                                    MaxPrice = (item.MaxPrice * 1.0 / 10000).ToString("F2"),
-                                    MinPrice = (item.MinPrice * 1.0 / 10000).ToString("F2"),
+                                    MaxPrice = request.XSJQ ? (((long)Math.Round((item.OpenedPrice > item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) + (item.MaxPrice - (item.OpenedPrice > item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice)) * 1.0 / Singleton.Instance.PlateIndexRatio, 0)) * 1.0 / 10000).ToString("F2") : (item.MaxPrice * 1.0 / 10000).ToString("F2"),
+                                    MinPrice = request.XSJQ ? (((long)Math.Round((item.OpenedPrice < item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) - ((item.OpenedPrice < item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) - item.MinPrice) * 1.0 / Singleton.Instance.PlateIndexRatio, 0)) * 1.0 / 10000).ToString("F2") : (item.MinPrice * 1.0 / 10000).ToString("F2"),
                                     DateKey = DateTime.ParseExact(item.GroupTimeKey.ToString(), "yyyyMMddHHmm", System.Globalization.CultureInfo.CurrentCulture).ToString("yyyy/MM/dd HH:mm"),
                                     Time = item.Time,
                                     GroupTimeKey = item.GroupTimeKey,
@@ -22592,7 +22654,7 @@ select @buyId;";
                 }
 
                 var dataResult = (from item in result
-                                  select item).Take(request.GetCount).ToList();
+                                  select item).OrderByDescending(e => e.GroupTimeKey).Take(request.GetCount).ToList();
 
                 var res = new GetPlateKLineListRes
                 {
@@ -22606,8 +22668,8 @@ select @buyId;";
                                     ClosedPrice = (item.ClosedPrice * 1.0 / 10000).ToString("F2"),
                                     PreClosedPrice = (item.PreClosePrice * 1.0 / 10000).ToString("F2"),
                                     OpenedPrice = (item.OpenedPrice * 1.0 / 10000).ToString("F2"),
-                                    MaxPrice = (item.MaxPrice * 1.0 / 10000).ToString("F2"),
-                                    MinPrice = (item.MinPrice * 1.0 / 10000).ToString("F2"),
+                                    MaxPrice = request.XSJQ ? (((long)Math.Round((item.OpenedPrice > item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) + (item.MaxPrice - (item.OpenedPrice > item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice)) * 1.0 / Singleton.Instance.PlateIndexRatio, 0)) * 1.0 / 10000).ToString("F2") : (item.MaxPrice * 1.0 / 10000).ToString("F2"),
+                                    MinPrice = request.XSJQ ? (((long)Math.Round((item.OpenedPrice < item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) - ((item.OpenedPrice < item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) - item.MinPrice) * 1.0 / Singleton.Instance.PlateIndexRatio, 0)) * 1.0 / 10000).ToString("F2") : (item.MinPrice * 1.0 / 10000).ToString("F2"),
                                     DateKey = DateTime.ParseExact(item.GroupTimeKey.ToString(), "yyyyMMddHHmm", System.Globalization.CultureInfo.CurrentCulture).ToString("yyyy/MM/dd HH:mm"),
                                     Time = item.Time,
                                     GroupTimeKey = item.GroupTimeKey,
@@ -22657,7 +22719,7 @@ select @buyId;";
                 }
 
                 var dataResult = (from item in result
-                                  select item).Take(request.GetCount).ToList();
+                                  select item).OrderByDescending(e=>e.GroupTimeKey).Take(request.GetCount).ToList();
 
                 var res = new GetPlateKLineListRes
                 {
@@ -22671,8 +22733,8 @@ select @buyId;";
                                     ClosedPrice = (item.ClosedPrice * 1.0 / 10000).ToString("F2"),
                                     PreClosedPrice = (item.PreClosePrice * 1.0 / 10000).ToString("F2"),
                                     OpenedPrice = (item.OpenedPrice * 1.0 / 10000).ToString("F2"),
-                                    MaxPrice = (item.MaxPrice * 1.0 / 10000).ToString("F2"),
-                                    MinPrice = (item.MinPrice * 1.0 / 10000).ToString("F2"),
+                                    MaxPrice = request.XSJQ ? (((long)Math.Round((item.OpenedPrice > item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) + (item.MaxPrice - (item.OpenedPrice > item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice)) * 1.0 / Singleton.Instance.PlateIndexRatio, 0)) * 1.0 / 10000).ToString("F2") : (item.MaxPrice * 1.0 / 10000).ToString("F2"),
+                                    MinPrice = request.XSJQ ? (((long)Math.Round((item.OpenedPrice < item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) - ((item.OpenedPrice < item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) - item.MinPrice) * 1.0 / Singleton.Instance.PlateIndexRatio, 0)) * 1.0 / 10000).ToString("F2") : (item.MinPrice * 1.0 / 10000).ToString("F2"),
                                     DateKey = DateTime.ParseExact(item.GroupTimeKey.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.CurrentCulture).ToString("yyyy/MM/dd"),
                                     Time = item.Time,
                                     GroupTimeKey = item.GroupTimeKey,
@@ -22722,7 +22784,7 @@ select @buyId;";
                 }
 
                 var dataResult = (from item in result
-                                  select item).Take(request.GetCount).ToList();
+                                  select item).OrderByDescending(e => e.GroupTimeKey).Take(request.GetCount).ToList();
 
                 var res = new GetPlateKLineListRes
                 {
@@ -22736,8 +22798,8 @@ select @buyId;";
                                     ClosedPrice = (item.ClosedPrice * 1.0 / 10000).ToString("F2"),
                                     PreClosedPrice = (item.PreClosePrice * 1.0 / 10000).ToString("F2"),
                                     OpenedPrice = (item.OpenedPrice * 1.0 / 10000).ToString("F2"),
-                                    MaxPrice = (item.MaxPrice * 1.0 / 10000).ToString("F2"),
-                                    MinPrice = (item.MinPrice * 1.0 / 10000).ToString("F2"),
+                                    MaxPrice = request.XSJQ ? (((long)Math.Round((item.OpenedPrice > item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) + (item.MaxPrice - (item.OpenedPrice > item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice)) * 1.0 / Singleton.Instance.PlateIndexRatio, 0)) * 1.0 / 10000).ToString("F2") : (item.MaxPrice * 1.0 / 10000).ToString("F2"),
+                                    MinPrice = request.XSJQ ? (((long)Math.Round((item.OpenedPrice < item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) - ((item.OpenedPrice < item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) - item.MinPrice) * 1.0 / Singleton.Instance.PlateIndexRatio, 0)) * 1.0 / 10000).ToString("F2") : (item.MinPrice * 1.0 / 10000).ToString("F2"),
                                     DateKey = item.GroupTimeKey / 100 + "/" + (item.GroupTimeKey % 100).ToString("00"),
                                     Time = item.Time,
                                     GroupTimeKey = item.GroupTimeKey,
@@ -22787,7 +22849,7 @@ select @buyId;";
                 }
 
                 var dataResult = (from item in result
-                                  select item).Take(request.GetCount).ToList();
+                                  select item).OrderByDescending(e => e.GroupTimeKey).Take(request.GetCount).ToList();
 
                 var res = new GetPlateKLineListRes
                 {
@@ -22801,8 +22863,8 @@ select @buyId;";
                                     ClosedPrice = (item.ClosedPrice * 1.0 / 10000).ToString("F2"),
                                     PreClosedPrice = (item.PreClosePrice * 1.0 / 10000).ToString("F2"),
                                     OpenedPrice = (item.OpenedPrice * 1.0 / 10000).ToString("F2"),
-                                    MaxPrice = (item.MaxPrice * 1.0 / 10000).ToString("F2"),
-                                    MinPrice = (item.MinPrice * 1.0 / 10000).ToString("F2"),
+                                    MaxPrice = request.XSJQ ? (((long)Math.Round((item.OpenedPrice > item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) + (item.MaxPrice - (item.OpenedPrice > item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice)) * 1.0 / Singleton.Instance.PlateIndexRatio, 0)) * 1.0 / 10000).ToString("F2") : (item.MaxPrice * 1.0 / 10000).ToString("F2"),
+                                    MinPrice = request.XSJQ ? (((long)Math.Round((item.OpenedPrice < item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) - ((item.OpenedPrice < item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) - item.MinPrice) * 1.0 / Singleton.Instance.PlateIndexRatio, 0)) * 1.0 / 10000).ToString("F2") : (item.MinPrice * 1.0 / 10000).ToString("F2"),
                                     DateKey = item.GroupTimeKey / 100 + "/" + (item.GroupTimeKey % 100).ToString("00"),
                                     Time = item.Time,
                                     GroupTimeKey = item.GroupTimeKey,
@@ -22852,7 +22914,7 @@ select @buyId;";
                 }
 
                 var dataResult = (from item in result
-                                  select item).Take(request.GetCount).ToList();
+                                  select item).OrderByDescending(e => e.GroupTimeKey).Take(request.GetCount).ToList();
 
                 var res = new GetPlateKLineListRes
                 {
@@ -22866,8 +22928,8 @@ select @buyId;";
                                     ClosedPrice = (item.ClosedPrice * 1.0 / 10000).ToString("F2"),
                                     PreClosedPrice = (item.PreClosePrice * 1.0 / 10000).ToString("F2"),
                                     OpenedPrice = (item.OpenedPrice * 1.0 / 10000).ToString("F2"),
-                                    MaxPrice = (item.MaxPrice * 1.0 / 10000).ToString("F2"),
-                                    MinPrice = (item.MinPrice * 1.0 / 10000).ToString("F2"),
+                                    MaxPrice = request.XSJQ ? (((long)Math.Round((item.OpenedPrice > item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) + (item.MaxPrice - (item.OpenedPrice > item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice)) * 1.0 / Singleton.Instance.PlateIndexRatio, 0)) * 1.0 / 10000).ToString("F2") : (item.MaxPrice * 1.0 / 10000).ToString("F2"),
+                                    MinPrice = request.XSJQ ? (((long)Math.Round((item.OpenedPrice < item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) - ((item.OpenedPrice < item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) - item.MinPrice) * 1.0 / Singleton.Instance.PlateIndexRatio, 0)) * 1.0 / 10000).ToString("F2") : (item.MinPrice * 1.0 / 10000).ToString("F2"),
                                     DateKey = item.GroupTimeKey / 100 + "/" + (item.GroupTimeKey % 100).ToString("00"),
                                     Time = item.Time,
                                     GroupTimeKey = item.GroupTimeKey,
@@ -22917,7 +22979,7 @@ select @buyId;";
                 }
 
                 var dataResult = (from item in result
-                                  select item).Take(request.GetCount).ToList();
+                                  select item).OrderByDescending(e => e.GroupTimeKey).Take(request.GetCount).ToList();
 
                 var res = new GetPlateKLineListRes
                 {
@@ -22931,8 +22993,8 @@ select @buyId;";
                                     ClosedPrice = (item.ClosedPrice * 1.0 / 10000).ToString("F2"),
                                     PreClosedPrice = (item.PreClosePrice * 1.0 / 10000).ToString("F2"),
                                     OpenedPrice = (item.OpenedPrice * 1.0 / 10000).ToString("F2"),
-                                    MaxPrice = (item.MaxPrice * 1.0 / 10000).ToString("F2"),
-                                    MinPrice = (item.MinPrice * 1.0 / 10000).ToString("F2"),
+                                    MaxPrice = request.XSJQ ? (((long)Math.Round((item.OpenedPrice > item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) + (item.MaxPrice - (item.OpenedPrice > item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice)) * 1.0 / Singleton.Instance.PlateIndexRatio, 0)) * 1.0 / 10000).ToString("F2"):(item.MaxPrice*1.0/10000).ToString("F2"),
+                                    MinPrice = request.XSJQ ? (((long)Math.Round((item.OpenedPrice < item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) - ((item.OpenedPrice < item.ClosedPrice ? item.OpenedPrice : item.ClosedPrice) - item.MinPrice) * 1.0 / Singleton.Instance.PlateIndexRatio, 0)) * 1.0 / 10000).ToString("F2") : (item.MinPrice * 1.0 / 10000).ToString("F2"),
                                     DateKey = item.GroupTimeKey.ToString(),
                                     Time = item.Time,
                                     GroupTimeKey = item.GroupTimeKey,
@@ -23028,6 +23090,16 @@ select @buyId;";
         /// <returns></returns>
         public List<GetPlateKLineListRes> BatchGetPlateKLineList(BatchGetPlateKLineListRequest request, HeadBase basedata) 
         {
+            var plateIdList = request.PlateList.Select(e => e.PlateId).ToList();
+            Dictionary<long,t_shares_plate> plateDic = new Dictionary<long, t_shares_plate>();
+            using (var db = new meal_ticketEntities())
+            {
+                //判断板块类型
+                plateDic = (from item in db.t_shares_plate
+                            where plateIdList.Contains(item.Id)
+                            select item).ToDictionary(k => k.Id, v => v);
+            }
+
             DataTable table = new DataTable();
 
             #region====定义表字段数据类型====
@@ -23039,7 +23111,6 @@ select @buyId;";
             DateTime maxDay = Helper.GetLastTradeDate2(-9, 0, 0, -request.GetCount);
             var maxTimeKey = long.Parse(maxDay.ToString("yyyyMMdd"));
 
-            var plateDic = Singleton.Instance._SharesPlateSession.GetSessionData().ToDictionary(k => k.PlateId, v => v);
             #region====绑定数据====
             foreach (var item in request.PlateList)
             {
@@ -23077,8 +23148,16 @@ select @buyId;";
                     long _openedPrice = item.OpenedPrice;
                     long _closedPrice = item.ClosedPrice;
                     long _preClosePrice = item.PreClosePrice;
+
                     long _minPrice = item.MinPrice;
-                    long _maxPrice = item.MaxPrice;
+                    long _maxPrice = item.MinPrice;
+                    if ((item.WeightType == 1 && string.IsNullOrEmpty(plateDic[item.PlateId].NoWeightSharesCode)) || (item.WeightType == 2 && string.IsNullOrEmpty(plateDic[item.PlateId].WeightSharesCode))) 
+                    {
+                        long tempMaxPrice = _openedPrice > _closedPrice ? _openedPrice : _closedPrice;
+                        long tempMinPrice = _openedPrice < _closedPrice ? _openedPrice : _closedPrice;
+                        _minPrice = (long)Math.Round(tempMinPrice - (tempMinPrice - _minPrice) * 1.0 / Singleton.Instance.PlateIndexRatio, 0);
+                        _maxPrice = (long)Math.Round(tempMaxPrice + (_maxPrice - tempMaxPrice) * 1.0 / Singleton.Instance.PlateIndexRatio, 0);
+                    }
                     long _tradeStock = item.TradeStock;
                     long _tradeAmount = item.TradeAmount;
                     long _tradable = item.Tradable;
@@ -23149,6 +23228,16 @@ select @buyId;";
         /// <returns></returns>
         public List<GetPlateMinutetimedataListRes> BatchGetPlateMtLineList(BatchGetPlateMtLineListRequest request, HeadBase basedata)
         {
+            var plateIdList = request.PlateList.Select(e => e.PlateId).ToList();
+            Dictionary<long, int> plateDic = new Dictionary<long, int>();
+            using (var db = new meal_ticketEntities())
+            {
+                //判断板块类型
+                plateDic = (from item in db.t_shares_plate
+                            where plateIdList.Contains(item.Id)
+                            select item).ToDictionary(k => k.Id, v => v.CalType);
+            }
+
             DataTable table = new DataTable();
 
             #region====定义表字段数据类型====
@@ -23160,7 +23249,6 @@ select @buyId;";
             DateTime maxDay = Helper.GetLastTradeDate2(-9, 0, 0, 0);
             var maxTimeKey = long.Parse(maxDay.ToString("yyyyMMdd0930"));
 
-            var plateDic = Singleton.Instance._SharesPlateSession.GetSessionData().ToDictionary(k => k.PlateId, v => v);
             #region====绑定数据====
             foreach (var item in request.PlateList)
             {
@@ -23168,7 +23256,7 @@ select @buyId;";
                 {
                     continue;
                 }
-                int weightType = Singleton.Instance.PlateIndexTypeDic[plateDic[item.PlateId].CalType] == 1 ? 2 : 1;
+                int weightType = Singleton.Instance.PlateIndexTypeDic[plateDic[item.PlateId]] == 1 ? 2 : 1;
 
                 DataRow row = table.NewRow();
                 row["PlateId"] = item.PlateId;
@@ -23263,13 +23351,380 @@ select @buyId;";
             {
                 var sharesGroup = (from item in db.t_account_shares_group
                                    where item.AccountId == basedata.AccountId
-                                   orderby item.OrderIndex
                                    select new AccountShareGroupInfo
                                    {
                                        GroupId = item.Id,
-                                       GroupName = item.GroupName
+                                       GroupName = item.GroupName,
+                                       OrderIndex=item.OrderIndex,
+                                       CreateTime=item.CreateTime
                                    }).ToList();
                 return sharesGroup;
+            }
+        }
+
+        /// <summary>
+        /// 添加自选股分组
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public object AddAccountShareGroup(AddAccountShareGroupRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var sharesGroupList = (from item in db.t_account_shares_group
+                                       where item.AccountId == basedata.AccountId
+                                       select item).ToList();
+                //判断分组是否存在
+                var groupInfo = (from item in sharesGroupList
+                                 where item.GroupName == request.GroupName
+                                 select item).FirstOrDefault();
+                if (groupInfo != null)
+                {
+                    throw new WebApiException(400, "分组已存在");
+                }
+
+                DateTime currTime = DateTime.Now;
+                t_account_shares_group addResult = new t_account_shares_group
+                {
+                    AccountId = basedata.AccountId,
+                    CreateTime = currTime,
+                    GroupName = request.GroupName,
+                    LastModified = currTime,
+                    OrderIndex = -1
+                };
+                db.t_account_shares_group.Add(addResult);
+                db.SaveChanges();
+                return new
+                {
+                    GroupId = addResult.Id,
+                    CreateTime = currTime
+                };
+            }
+        }
+
+        /// <summary>
+        /// 编辑自选股分组
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifyAccountShareGroup(ModifyAccountShareGroupRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var sharesGroupList = (from item in db.t_account_shares_group
+                                       where item.AccountId == basedata.AccountId
+                                       select item).ToList();
+                var resultGroupInfo = (from item in sharesGroupList
+                                       where item.Id == request.GroupId
+                                       select item).FirstOrDefault();
+                if (resultGroupInfo == null)
+                {
+                    throw new WebApiException(400, "目标分组不存在");
+                }
+                //判断同名分组是否存在
+                var groupInfo = (from item in sharesGroupList
+                                 where item.GroupName == request.GroupName && item.Id != request.GroupId
+                                 select item).FirstOrDefault();
+                if (groupInfo != null)
+                {
+                    throw new WebApiException(400, "分组名已存在");
+                }
+                resultGroupInfo.GroupName = request.GroupName; 
+                resultGroupInfo.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改自选股分组排序值
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifyAccountShareGroupOrderIndex(ModifyAccountShareGroupOrderIndexRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var sharesGroupList = (from item in db.t_account_shares_group
+                                       where item.AccountId == basedata.AccountId
+                                       select item).ToList();
+                var resultGroupInfo = (from item in sharesGroupList
+                                       where item.Id == request.GroupId
+                                       select item).FirstOrDefault();
+                if (resultGroupInfo == null)
+                {
+                    throw new WebApiException(400, "目标分组不存在");
+                }
+                resultGroupInfo.OrderIndex = request.OrderIndex;
+                resultGroupInfo.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除自选股分组
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void DeleteAccountShareGroup(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran=db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var resultGroupInfo = (from item in db.t_account_shares_group
+                                           where item.AccountId == basedata.AccountId && item.Id == request.Id
+                                           select item).FirstOrDefault();
+                    if (resultGroupInfo == null)
+                    {
+                        throw new WebApiException(400, "目标分组不存在");
+                    }
+                    db.t_account_shares_group.Remove(resultGroupInfo);
+                    db.SaveChanges();
+
+                    var groupRel = (from item in db.t_account_shares_group_rel
+                                    where item.AccountId == basedata.AccountId && item.GroupId == request.Id
+                                    select item).ToList();
+                    db.t_account_shares_group_rel.RemoveRange(groupRel);
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取自选股分组内股票列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<AccountShareGroupRelInfo> GetAccountShareGroupRelList(GetAccountShareGroupRelListPageRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var groupRel = (from item in db.t_account_shares_group_rel
+                                where item.AccountId == basedata.AccountId && item.GroupId == request.Id
+                                select item).ToList();
+                int totalCount = groupRel.Count();
+
+                var _resultList = (from item in groupRel
+                                   join item2 in Singleton.Instance._SharesQuotesSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
+                                   from ai in a.DefaultIfEmpty()
+                                   select new AccountShareGroupRelInfo
+                                   {
+                                       Id=item.Id,
+                                       SharesCode = item.SharesCode,
+                                       Market = item.Market,
+                                       ClosedPrice = ai == null ? 0 : ai.ClosedPrice,
+                                       CurrPrice = ai == null ? 0 : ai.PresentPrice,
+                                       CreateTime=item.CreateTime
+                                   }).ToList();
+                if (request.OrderType == 2 && request.OrderMethod == "descending")
+                {
+                    _resultList = (from item in _resultList
+                                   orderby item.RiseRate descending
+                                   select item).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+                }
+                else if (request.OrderType == 2)
+                {
+                    _resultList = (from item in _resultList
+                                   orderby item.RiseRate
+                                   select item).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+                }
+                else
+                {
+                    _resultList = (from item in _resultList
+                                   orderby item.CreateTime descending
+                                   select item).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+                }
+
+                var sharesList = _resultList.Select(e => e.SharesCode + "," + e.Market).ToList();
+                var conditionBuy = (from item in db.t_account_shares_conditiontrade_buy
+                                    where item.AccountId == basedata.AccountId && sharesList.Contains(item.SharesInfo)
+                                    select item).ToList();
+                _resultList = (from item in _resultList
+                               join item2 in conditionBuy on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
+                               from ai in a.DefaultIfEmpty()
+                               join item3 in Singleton.Instance._SharesBaseSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode }
+                               select new AccountShareGroupRelInfo
+                               {
+                                   Id=item.Id,
+                                   SharesCode = item.SharesCode,
+                                   SharesName = item3.SharesName,
+                                   Market = item.Market,
+                                   ClosedPrice = item.ClosedPrice,
+                                   CurrPrice = item.CurrPrice,
+                                   ConditionId = ai == null ? 0 : ai.Id,
+                                   ConditionStatus = ai == null ? 0 : ai.Status
+                               }).ToList();
+
+                var plateList = (from x in Singleton.Instance._SharesPlateSession.GetSessionData()
+                                 join x2 in Singleton.Instance._SharesPlateRelSession.GetSessionData() on x.PlateId equals x2.PlateId
+                                 join x3 in Singleton.Instance._SharesPlateQuotesSession.GetSessionData() on x.PlateId equals x3.PlateId
+                                 join x4 in _resultList on new { x2.Market, x2.SharesCode } equals new { x4.Market, x4.SharesCode }
+                                 where x.ChooseStatus == 1 || (x.IsBasePlate == 1 && x.BaseStatus == 1)
+                                 select new SharesPlateInfo
+                                 {
+                                     Id = x.PlateId,
+                                     Name = x.PlateName,
+                                     SharesCode = x2.SharesCode,
+                                     SharesCount = x3.SharesCount,
+                                     Market = x2.Market,
+                                     DownLimitCount = x3.DownLimitCount,
+                                     RiseLimitCount = x3.RiseLimitCount,
+                                     Type = x.PlateType,
+                                     Rank = x3.Rank,
+                                     RiseRate = x3.RiseRate
+                                 }).ToList();
+                var groupRelList = (from x in db.t_account_shares_conditiontrade_buy_group_rel
+                                    join x2 in db.t_account_shares_conditiontrade_buy_group on x.GroupId equals x2.Id
+                                    where x2.AccountId == basedata.AccountId
+                                    select x).ToList();
+                List<AccountShareGroupRelInfo> finallyResult = new List<AccountShareGroupRelInfo>();
+                foreach (var item in _resultList)
+                {
+                    if (item.ConditionStatus == 0)
+                    {
+                        item.ConditionStatus = 1;
+                    }
+                    else if (item.ConditionStatus == 1)
+                    {
+                        item.ConditionStatus = 3;
+                    }
+                    else if (item.ConditionStatus == 2)
+                    {
+                        item.ConditionStatus = 2;
+                    }
+                    var _groupRel = (from x in groupRelList
+                                    where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                    select x).ToList();
+
+                    item.GroupList = _groupRel.Select(e => e.GroupId).ToList();
+
+                    //查询股票属于哪个板块
+                    item.PlateList = (from x in plateList
+                                      where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                      orderby x.RiseRate descending
+                                      select x).ToList();
+                    finallyResult.Add(item);
+                }
+                return new PageRes<AccountShareGroupRelInfo>
+                {
+                    List= finallyResult,
+                    TotalCount=totalCount,
+                    MaxId=0
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加自选股分组内股票
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public void AddAccountShareGroupRel(AddAccountShareGroupRelRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran=db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var groupList = (from item in db.t_account_shares_group_rel
+                                     where item.Market == request.Market && item.SharesCode == request.SharesCode && item.AccountId == basedata.AccountId
+                                     select item).ToList();
+
+                    if (request.IsClearSource)
+                    {
+                        List<t_account_shares_group_rel> removeList = new List<t_account_shares_group_rel>();
+                        foreach (var groupInfo in groupList)
+                        {
+                            if (!request.GroupIdList.Contains(groupInfo.GroupId))
+                            {
+                                removeList.Add(groupInfo);
+                            }
+                        }
+                        if (removeList.Count() > 0)
+                        {
+                            db.t_account_shares_group_rel.RemoveRange(removeList);
+                            db.SaveChanges();
+                        }
+                    }
+
+                    List<long> groupIdList = groupList.Select(e => e.GroupId).ToList();
+
+                    List<t_account_shares_group_rel> addList = new List<t_account_shares_group_rel>();
+                    foreach (long groupId in request.GroupIdList)
+                    {
+                        if (!groupIdList.Contains(groupId))
+                        {
+                            addList.Add(new t_account_shares_group_rel 
+                            {
+                                SharesCode=request.SharesCode,
+                                AccountId=basedata.AccountId,
+                                CreateTime=DateTime.Now,
+                                Market=request.Market,
+                                GroupId= groupId
+                            });
+                        }
+                    }
+                    if (addList.Count() > 0)
+                    {
+                        db.t_account_shares_group_rel.AddRange(addList);
+                        db.SaveChanges();
+                    }
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 删除自选股分组内股票
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void DeleteAccountShareGroupRel(DeleteRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var groupRel = (from item in db.t_account_shares_group_rel
+                                where item.Id == request.Id && item.AccountId == basedata.AccountId
+                                select item).FirstOrDefault();
+                if (groupRel == null)
+                {
+                    throw new WebApiException(400,"数据不存在");
+                }
+                db.t_account_shares_group_rel.Remove(groupRel);
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取自选股某只股票所属分组
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public List<long> GetAccountShareInGroupList(GetAccountShareInGroupListRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var groupRel = (from item in db.t_account_shares_group_rel
+                                where item.AccountId == basedata.AccountId && item.Market == request.Market && item.SharesCode == request.SharesCode
+                                select item.GroupId).ToList();
+                return groupRel;
             }
         }
         #endregion

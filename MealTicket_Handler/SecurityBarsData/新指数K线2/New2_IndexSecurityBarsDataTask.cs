@@ -81,6 +81,7 @@ namespace MealTicket_Handler.SecurityBarsData
         /// </summary>
         public void LoadPlateKlineLastSession()
         {
+            PlateKlineLastSessionDic.Clear();
             List<int> dataTypeList = GetPlateDataType();
 
             for (int i = 0; i < dataTypeList.Count(); i++)
@@ -186,6 +187,7 @@ inner join
         /// <returns></returns>
         public void LoadPlateKlineSession()
         {
+            PlateKlineSessionDic.Clear();
             Logger.WriteFileLog("===开始加载板块计算结果缓存===", null);
             List<int> dataTypeList = GetPlateDataType();
 
@@ -320,7 +322,28 @@ inner join
         /// </summary>
         public void SetSharesKlineLastSession(long key, SharesKlineData data)
         {
-            SharesKlineLastSession[key] = data;
+            if (!SharesKlineLastSession.ContainsKey(key))
+            {
+                SharesKlineLastSession.Add(key, new SharesKlineData());
+            }
+            SharesKlineLastSession[key].ClosedPrice = data.ClosedPrice;
+            SharesKlineLastSession[key].GroupTimeKey = data.GroupTimeKey;
+            SharesKlineLastSession[key].LastTradeAmount = data.LastTradeAmount;
+            SharesKlineLastSession[key].LastTradeStock = data.LastTradeStock;
+            SharesKlineLastSession[key].Market = data.Market;
+            SharesKlineLastSession[key].MaxPrice = data.MaxPrice;
+            SharesKlineLastSession[key].MinPrice = data.MinPrice;
+            SharesKlineLastSession[key].OpenedPrice = data.OpenedPrice;
+            SharesKlineLastSession[key].PlateId = data.PlateId;
+            SharesKlineLastSession[key].PreClosePrice = data.PreClosePrice;
+            SharesKlineLastSession[key].SharesCode = data.SharesCode;
+            SharesKlineLastSession[key].Time = data.Time;
+            SharesKlineLastSession[key].TotalCapital = data.TotalCapital;
+            SharesKlineLastSession[key].Tradable = data.Tradable;
+            SharesKlineLastSession[key].TradeAmount = data.TradeAmount;
+            SharesKlineLastSession[key].TradeStock = data.TradeStock;
+            SharesKlineLastSession[key].WeightType = data.WeightType;
+            SharesKlineLastSession[key].YestodayClosedPrice = data.YestodayClosedPrice;
         }
 
         /// <summary>
@@ -328,32 +351,29 @@ inner join
         /// </summary>
         public void LoadSecurityBarsLastData()
         {
+            SharesKlineLastSession.Clear();
             Logger.WriteFileLog("===开始初始化最后一条数据缓存===", null);
             List<int> dataTypeList = Singleton.Instance.SecurityBarsDataTypeList;
-            int taskCount = dataTypeList.Count();
-            Task[] taskArr = new Task[taskCount];
 
-            for (int i = 0; i < taskCount; i++)
+            for (int i = 0; i < dataTypeList.Count(); i++)
             {
                 int dataType = dataTypeList[i];
-                taskArr[i] = Task.Factory.StartNew(() =>
+                string tableName = "";
+                if (!ParseTableName(dataType, ref tableName))
                 {
-                    string tableName = "";
-                    if (!ParseTableName(dataType, ref tableName))
-                    {
-                        return;
-                    }
-                    long groupTimeKey = 0;
-                    if (!ParseTimeGroupKey(DateTime.Now.Date, dataType, ref groupTimeKey))
-                    {
-                        return;
-                    }
-                    List<SharesKlineData> lastData = new List<SharesKlineData>();
-                    using (var db = new meal_ticketEntities())
-                    {
-                        db.Database.CommandTimeout = 600;
-                        string sql = string.Format(@"select t.Market,t.SharesCode,t.GroupTimeKey,t.PreClosePrice,t.LastTradeStock,t.LastTradeAmount,t.ClosedPrice,t.TradeStock,t.MaxPrice,t.MinPrice,t.OpenedPrice,
-  t.[Time],t.TotalCapital,t.Tradable,t.TradeAmount{1}
+                    return;
+                }
+                long groupTimeKey = 0;
+                if (!ParseTimeGroupKey(DateTime.Now.Date, dataType, ref groupTimeKey))
+                {
+                    return;
+                }
+                List<SharesKlineData> lastData = new List<SharesKlineData>();
+                using (var db = new meal_ticketEntities())
+                {
+                    db.Database.CommandTimeout = 600;
+                    string sql = string.Format(@"select t.Market,t.SharesCode,t.GroupTimeKey,t.PreClosePrice,t.LastTradeStock,t.LastTradeAmount,t.ClosedPrice,t.TradeStock,t.MaxPrice,t.MinPrice,t.OpenedPrice,
+  t.[Time],t.TotalCapital,t.Tradable,t.TradeAmount,t2.ClosedPrice YestodayClosedPrice
 from {0} t with(nolock)
 inner join 
 (
@@ -361,16 +381,15 @@ inner join
 	from {0} with(nolock)
 	where [Time]<convert(varchar(10),dateadd(DAY,1,getdate()),120) and [Time]>convert(varchar(10),getdate(),120)
 	group by Market,SharesCode
-)t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode and t.GroupTimeKey=t1.GroupTimeKey", tableName, dataType == 2 ? ",t.YestodayClosedPrice " : "");
-                        lastData = db.Database.SqlQuery<SharesKlineData>(sql).ToList();
-                    }
-                    foreach (var item in lastData)
-                    {
-                        SetSharesKlineLastSession(item.SharesCodeNum * 1000 + item.Market * 100 + dataType, item);
-                    }
-                });
+)t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode and t.GroupTimeKey=t1.GroupTimeKey
+inner join v_shares_quotes_last t2 on t.Market=t2.Market and t.SharesCode=t2.SharesCode", tableName);
+                    lastData = db.Database.SqlQuery<SharesKlineData>(sql).ToList();
+                }
+                foreach (var item in lastData)
+                {
+                    SetSharesKlineLastSession(item.SharesCodeNum * 1000 + item.Market * 100 + dataType, item);
+                }
             }
-            Task.WaitAll(taskArr);
             Logger.WriteFileLog("===结束初始化最后一条数据缓存===", null);
         }
         #endregion
@@ -437,25 +456,24 @@ inner join
         /// <returns></returns>
         public void LoadSharesPlateSession()
         {
+            SharesByPlateSession.Clear();
+            SharesPlateSession.Clear();
             Logger.WriteFileLog("===加载快照缓存===", null);
             DateTime dateNow = DateTime.Now.Date;
             using (var db = new meal_ticketEntities())
             {
-                db.Database.CommandTimeout = 600;
                 var list = (from item in db.t_shares_plate_rel_snapshot
                             where item.Date == dateNow
-                            group item by new { item.Market, item.SharesCode } into g
-                            select g).ToList();
+                            select item).ToList().GroupBy(e=>new { e.Market,e.SharesCode}).ToDictionary(k=>int.Parse(k.Key.SharesCode)*10+k.Key.Market,v=>v.Select(e=>e.PlateId).ToList());
                 Logger.WriteFileLog("===加载快照缓存1===", null);
                 foreach (var item in list)
                 {
-                    SetSharesPlateSession(long.Parse(item.Key.SharesCode) * 10 + item.Key.Market, item.Select(e => e.PlateId).ToList());
+                    SetSharesPlateSession(item.Key, item.Value);
                 }
                 Logger.WriteFileLog("===加载快照缓存2===", null);
                 var list2 = (from item in db.t_shares_plate_rel_snapshot
                              where item.Date == dateNow
-                             group item by item.PlateId into g
-                             select g).ToList();
+                             select item).ToList().GroupBy(e => e.PlateId).ToDictionary(k => k.Key, v => v.ToList());
                 Logger.WriteFileLog("===加载快照缓存3===", null);
                 List<int> dataTypeList = Singleton.Instance.SecurityBarsDataTypeList;
                 foreach (var item in list2)
@@ -463,7 +481,7 @@ inner join
                     foreach (int dataType in dataTypeList)
                     {
                         Dictionary<long, SharesKlineData> dic = new Dictionary<long, SharesKlineData>();
-                        foreach (var share in item)
+                        foreach (var share in item.Value)
                         {
                             long key = long.Parse(share.SharesCode) * 1000 + share.Market * 100 + dataType;
                             dic.Add(key, GetSharesKlineLastSession(key));
@@ -630,6 +648,8 @@ inner join
 
             //加载其他缓存
             LoadSecurityBarsLastData();
+            //加载板块最后一条K线数据
+            LoadPlateKlineLastSession();
             UpdateTodayPlateRelSnapshot();
             LoadPlateKlineSession();
             TaskSuccessLastTime = DateTime.Now;
@@ -917,6 +937,8 @@ inner join
             {
                 TaskGuid = "",
                 HandlerType = 3,
+                RetryCount = 1,
+                TotalRetryCount = Singleton.Instance.TotalRetryCount,
                 PackageList = sendList
             })), "SecurityBars", "1min");
         }
@@ -926,49 +948,74 @@ inner join
         /// </summary>
         private void DoRealTimeTask_Cal_His()
         {
+            DoRealTimeTask_Push();
             var lastDate=DbHelper.GetLastTradeDate2(0, 0, 0, -1);
             lastDate = lastDate.AddHours(15);
+
+            ThreadMsgTemplate<PlateImportData> data = new ThreadMsgTemplate<PlateImportData>();
+            data.Init();
             Dictionary<long, PlateImportData> lastKLineData = new Dictionary<long, PlateImportData>(PlateKlineLastSessionDic);
             foreach (var item in lastKLineData)
             {
-                if (item.Value.Time >= lastDate)
+                PlateImportData tempData = item.Value;
+                if (tempData.Time >= lastDate)
                 {
                     continue;
                 }
-                var lastTime = item.Value.Time.Date;
                 //PlateId*1000+WeightType*100+DataType
-                int dataType = (int)(item.Key % 100);
-                if (dataType > 7)
+                tempData.DataType = (int)(item.Key % 100);
+                if (tempData.DataType > 7)
                 {
                     continue;
                 }
-                long plateId = item.Value.PlateId;
-                string tableName = "";
-                if (!ParseTableName(dataType, ref tableName))
-                {
-                    continue;
-                }
+                data.AddMessage(item.Value);
+            }
 
-                long groupTimeKey = item.Value.GroupTimeKey;
-                long yesClosePrice = item.Value.YestodayClosedPrice;
-                long preClosePrice = item.Value.PreClosePrice;
-                using (var db = new meal_ticketEntities())
+            int taskCount = 32;
+            Task[] taskArr = new Task[taskCount];
+
+            for (int i = 0; i < taskCount; i++)
+            {
+                taskArr[i] = Task.Factory.StartNew(() =>
                 {
-                    while (true)
+                    try
                     {
-                        if (lastTime > lastDate.Date)
+                        do
                         {
-                            break;
-                        }
-                        using (var tran = db.Database.BeginTransaction())
-                        {
-                            try
+                            PlateImportData tempData = new PlateImportData();
+                            if (!data.GetMessage(ref tempData, true))
                             {
-                                List<PlateKlineSession> datalist = new List<PlateKlineSession>();
-                                string sql = "";
-                                if (item.Value.WeightType == 1)
+                                break;
+                            }
+                            string tableName = "";
+                            if (!ParseTableName(tempData.DataType, ref tableName))
+                            {
+                                break;
+                            }
+
+                            var lastTime = tempData.Time.Date;
+                            long plateId = tempData.PlateId;
+
+                            long groupTimeKey = tempData.GroupTimeKey;
+                            long yesClosePrice = tempData.YestodayClosedPrice;
+                            long preClosePrice = tempData.PreClosePrice;
+                            using (var db = new meal_ticketEntities())
+                            {
+                                while (true)
                                 {
-                                    sql = string.Format(@"select t1.PlateId,1 WeightType,t.GroupTimeKey,MAX(t.[Time])[Time],
+                                    if (lastTime > lastDate.Date)
+                                    {
+                                        break;
+                                    }
+                                    using (var tran = db.Database.BeginTransaction())
+                                    {
+                                        try
+                                        {
+                                            List<PlateKlineSession> datalist = new List<PlateKlineSession>();
+                                            string sql = "";
+                                            if (tempData.WeightType == 1)
+                                            {
+                                                sql = string.Format(@"select t1.PlateId,1 WeightType,t.GroupTimeKey,MAX(t.[Time])[Time],
   SUM(case when t2.ClosedPrice=0 then 0 else cast(round((t.OpenedPrice-t2.ClosedPrice)*1.0/t2.ClosedPrice*10000,0) as bigint) end) TotalOpenedPrice,
   SUM(case when t2.ClosedPrice=0 then 0 else cast(round((t.ClosedPrice-t2.ClosedPrice)*1.0/t2.ClosedPrice*10000,0) as bigint) end) TotalClosedPrice,
   SUM(case when t2.ClosedPrice=0 then 0 else cast(round((t.MinPrice-t2.ClosedPrice)*1.0/t2.ClosedPrice*10000,0) as bigint) end) TotalMinPrice,
@@ -998,10 +1045,10 @@ inner join
   where t.GroupTimeKey>={3} and [Time]<'{4}'
   group by t.GroupTimeKey,t1.PlateId", tableName, lastTime.ToString("yyyy-MM-dd"), plateId, groupTimeKey, lastTime.AddDays(1).ToString("yyyy-MM-dd"));
 
-                                }
-                                else if (item.Value.WeightType == 2)
-                                {
-                                    sql = string.Format(@"select t1.PlateId,2 WeightType,t.GroupTimeKey,MAX(t.[Time])[Time],
+                                            }
+                                            else if (tempData.WeightType == 2)
+                                            {
+                                                sql = string.Format(@"select t1.PlateId,2 WeightType,t.GroupTimeKey,MAX(t.[Time])[Time],
   SUM(t.OpenedPrice*t.TotalCapital) TotalOpenedPrice,
   SUM(t.ClosedPrice*t.TotalCapital) TotalClosedPrice,
   SUM(t.MinPrice*t.TotalCapital) TotalMinPrice,
@@ -1030,93 +1077,102 @@ inner join
   inner join t_shares_quotes_date t2 on t.Market=t2.Market and t.SharesCode=t2.SharesCode and t2.[Date]='{1}'
   where t.GroupTimeKey>={3} and [Time]<'{4}'
   group by t.GroupTimeKey,t1.PlateId", tableName, lastTime.ToString("yyyy-MM-dd"), plateId, groupTimeKey, lastTime.AddDays(1).ToString("yyyy-MM-dd"));
-                                }
-                                else
-                                {
-                                    break;
-                                }
-                                datalist = db.Database.SqlQuery<PlateKlineSession>(sql).ToList();
-                                //if (datalist.Count() <= 0)
-                                //{
-                                //    break;
-                                //}
-                                datalist = datalist.OrderBy(e => e.GroupTimeKey).ToList();
+                                            }
+                                            else
+                                            {
+                                                break;
+                                            }
+                                            datalist = db.Database.SqlQuery<PlateKlineSession>(sql).ToList();
+                                            //if (datalist.Count() <= 0)
+                                            //{
+                                            //    break;
+                                            //}
+                                            datalist = datalist.OrderBy(e => e.GroupTimeKey).ToList();
 
-                                List<PlateImportData> tempValue = new List<PlateImportData>();
-                                foreach (var x in datalist)
-                                {
-                                    //不加权
-                                    if (item.Value.WeightType == 1)
-                                    {
-                                        tempValue.Add(new PlateImportData
+                                            List<PlateImportData> tempValue = new List<PlateImportData>();
+                                            foreach (var x in datalist)
+                                            {
+                                                //不加权
+                                                if (tempData.WeightType == 1)
+                                                {
+                                                    tempValue.Add(new PlateImportData
+                                                    {
+                                                        LastTradeStock = x.TotalLastTradeStock,
+                                                        TradeStock = x.TotalTradeStock,
+                                                        ClosedPrice = (long)((x.TotalClosedPrice * 1.0 / x.CalCount / 10000 + 1) * yesClosePrice + 0.5),
+                                                        GroupTimeKey = x.GroupTimeKey,
+                                                        LastTradeAmount = x.TotalLastTradeAmount,
+                                                        MaxPrice = (long)((x.TotalMaxPrice * 1.0 / x.CalCount / 10000 + 1) * yesClosePrice + 0.5),
+                                                        MinPrice = (long)((x.TotalMinPrice * 1.0 / x.CalCount / 10000 + 1) * yesClosePrice + 0.5),
+                                                        OpenedPrice = (long)((x.TotalOpenedPrice * 1.0 / x.CalCount / 10000 + 1) * yesClosePrice + 0.5),
+                                                        PlateId = x.PlateId,
+                                                        PreClosePrice = preClosePrice,
+                                                        TotalCapital = x.TotalCapital,
+                                                        Time = x.Time,
+                                                        Tradable = x.Tradable,
+                                                        TradeAmount = x.TotalTradeAmount,
+                                                        YestodayClosedPrice = yesClosePrice,
+                                                        WeightType = x.WeightType,
+                                                        SharesCode = "",
+                                                        Market = 0
+                                                    });
+                                                    preClosePrice = (long)((x.TotalClosedPrice * 1.0 / x.CalCount / 10000 + 1) * yesClosePrice + 0.5);
+                                                }
+                                                //加权
+                                                else if (tempData.WeightType == 2)
+                                                {
+                                                    tempValue.Add(new PlateImportData
+                                                    {
+                                                        LastTradeStock = x.TotalLastTradeStock,
+                                                        TradeStock = x.TotalTradeStock,
+                                                        ClosedPrice = x.TotalPreClosePrice == 0 ? preClosePrice : (long)(((x.TotalClosedPrice - x.TotalPreClosePrice) * 1.0 / x.TotalPreClosePrice + 1) * yesClosePrice + 0.5),
+                                                        GroupTimeKey = x.GroupTimeKey,
+                                                        LastTradeAmount = x.TotalLastTradeAmount,
+                                                        MaxPrice = x.TotalPreClosePrice == 0 ? preClosePrice : (long)(((x.TotalMaxPrice - x.TotalPreClosePrice) * 1.0 / x.TotalPreClosePrice + 1) * yesClosePrice + 0.5),
+                                                        MinPrice = x.TotalPreClosePrice == 0 ? preClosePrice : (long)(((x.TotalMinPrice - x.TotalPreClosePrice) * 1.0 / x.TotalPreClosePrice + 1) * yesClosePrice + 0.5),
+                                                        OpenedPrice = x.TotalPreClosePrice == 0 ? preClosePrice : (long)(((x.TotalOpenedPrice - x.TotalPreClosePrice) * 1.0 / x.TotalPreClosePrice + 1) * yesClosePrice + 0.5),
+                                                        PlateId = x.PlateId,
+                                                        PreClosePrice = preClosePrice,
+                                                        TotalCapital = x.TotalCapital,
+                                                        Time = x.Time,
+                                                        Tradable = x.Tradable,
+                                                        TradeAmount = x.TotalTradeAmount,
+                                                        YestodayClosedPrice = yesClosePrice,
+                                                        WeightType = x.WeightType,
+                                                        SharesCode = "",
+                                                        Market = 0
+                                                    });
+                                                    preClosePrice = x.TotalPreClosePrice == 0 ? preClosePrice : (long)(((x.TotalClosedPrice - x.TotalPreClosePrice) * 1.0 / x.TotalPreClosePrice + 1) * yesClosePrice + 0.5);
+                                                }
+                                            }
+                                            _bulkData(tempData.DataType, tempValue, db);
+                                            tran.Commit();
+                                        }
+                                        catch (Exception ex)
                                         {
-                                            LastTradeStock = x.TotalLastTradeStock,
-                                            TradeStock = x.TotalTradeStock,
-                                            ClosedPrice = (long)((x.TotalClosedPrice * 1.0 / x.CalCount / 10000 + 1) * yesClosePrice + 0.5),
-                                            GroupTimeKey = x.GroupTimeKey,
-                                            LastTradeAmount = x.TotalLastTradeAmount,
-                                            MaxPrice = (long)((x.TotalMaxPrice * 1.0 / x.CalCount / 10000 + 1) * yesClosePrice + 0.5),
-                                            MinPrice = (long)((x.TotalMinPrice * 1.0 / x.CalCount / 10000 + 1) * yesClosePrice + 0.5),
-                                            OpenedPrice = (long)((x.TotalOpenedPrice * 1.0 / x.CalCount / 10000 + 1) * yesClosePrice + 0.5),
-                                            PlateId = x.PlateId,
-                                            PreClosePrice = preClosePrice,
-                                            TotalCapital = x.TotalCapital,
-                                            Time = x.Time,
-                                            Tradable = x.Tradable,
-                                            TradeAmount = x.TotalTradeAmount,
-                                            YestodayClosedPrice = yesClosePrice,
-                                            WeightType = x.WeightType,
-                                            SharesCode = "",
-                                            Market = 0
-                                        });
-                                        preClosePrice = (long)((x.TotalClosedPrice * 1.0 / x.CalCount / 10000 + 1) * yesClosePrice + 0.5);
+                                            Logger.WriteFileLog("执行板块K线数据补全出错", ex);
+                                            tran.Rollback();
+                                            break;
+                                        }
                                     }
-                                    //加权
-                                    else if (item.Value.WeightType == 2)
+                                    yesClosePrice = preClosePrice;
+                                    lastTime = DbHelper.GetLastTradeDate2(0, 0, 0, 1, lastTime);
+                                    if (!ParseTimeGroupKey(lastTime, tempData.DataType, ref groupTimeKey))
                                     {
-                                        tempValue.Add(new PlateImportData
-                                        {
-                                            LastTradeStock = x.TotalLastTradeStock,
-                                            TradeStock = x.TotalTradeStock,
-                                            ClosedPrice = x.TotalPreClosePrice == 0 ? preClosePrice : (long)(((x.TotalClosedPrice - x.TotalPreClosePrice) * 1.0 / x.TotalPreClosePrice + 1) * yesClosePrice + 0.5),
-                                            GroupTimeKey = x.GroupTimeKey,
-                                            LastTradeAmount = x.TotalLastTradeAmount,
-                                            MaxPrice = x.TotalPreClosePrice == 0 ? preClosePrice : (long)(((x.TotalMaxPrice - x.TotalPreClosePrice) * 1.0 / x.TotalPreClosePrice + 1) * yesClosePrice + 0.5),
-                                            MinPrice = x.TotalPreClosePrice == 0 ? preClosePrice : (long)(((x.TotalMinPrice - x.TotalPreClosePrice) * 1.0 / x.TotalPreClosePrice + 1) * yesClosePrice + 0.5),
-                                            OpenedPrice = x.TotalPreClosePrice == 0 ? preClosePrice : (long)(((x.TotalOpenedPrice - x.TotalPreClosePrice) * 1.0 / x.TotalPreClosePrice + 1) * yesClosePrice + 0.5),
-                                            PlateId = x.PlateId,
-                                            PreClosePrice = preClosePrice,
-                                            TotalCapital = x.TotalCapital,
-                                            Time = x.Time,
-                                            Tradable = x.Tradable,
-                                            TradeAmount = x.TotalTradeAmount,
-                                            YestodayClosedPrice = yesClosePrice,
-                                            WeightType = x.WeightType,
-                                            SharesCode = "",
-                                            Market = 0
-                                        });
-                                        preClosePrice = x.TotalPreClosePrice == 0 ? preClosePrice : (long)(((x.TotalClosedPrice - x.TotalPreClosePrice) * 1.0 / x.TotalPreClosePrice + 1) * yesClosePrice + 0.5);
+                                        break;
                                     }
                                 }
-                                _bulkData(dataType, tempValue, db);
-                                tran.Commit();
                             }
-                            catch (Exception ex)
-                            {
-                                Logger.WriteFileLog("执行板块K线数据补全出错",ex);
-                                tran.Rollback();
-                                break;
-                            }
-                        }
-                        yesClosePrice = preClosePrice;
-                        lastTime = DbHelper.GetLastTradeDate2(0, 0, 0, 1, lastTime);
-                        if (!ParseTimeGroupKey(lastTime, dataType, ref groupTimeKey))
-                        {
-                            break;
-                        }
+                        } while (true);
                     }
-                }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteFileLog("某板块补全数据失败", ex);
+                    }
+                });
             }
+            Task.WaitAll(taskArr);
+            data.Release();
         }
 
         /// <summary>
@@ -1202,7 +1258,6 @@ inner join
             {
                 //2查询原最后一条股票数据缓存
                 long key = item.SharesCodeNum * 1000 + item.Market * 100 + data.DataType;
-                var lastSharesData = GetSharesKlineLastSession(key);
                 //设置股票最后一调数据缓存
                 SetSharesKlineLastSession(key, item);
 
@@ -1214,9 +1269,11 @@ inner join
                     continue;
                 }
 
+                var lastSharesData = GetSharesKlineLastSession(key);
                 //3.板块循环
                 foreach (var plateId in plateIdArr)
                 {
+                    //设置板块内股票最后一条数据缓存
                     CalPlateKlineResult(item, plateId, data.DataType, lastSharesData);
                 }
             }
@@ -1276,7 +1333,8 @@ inner join
                         WeightType = 1,
                         IsUpdate = true,
                         Tradable = 0,
-                        TotalCapital = 0
+                        TotalCapital = 0,
+                        LastTempData = new Dictionary<int, SharesKlineData>()
                     };
                     //计算该板块所有股票
                     foreach (var item in sharesDic)
@@ -1303,6 +1361,34 @@ inner join
                             temp.TotalOpenedPrice = temp.TotalOpenedPrice + last.OpenedPriceRate;
                             temp.Tradable = temp.Tradable + last.Tradable;
                             temp.TotalCapital = temp.TotalCapital + last.TotalCapital;
+                            temp.IsUpdate = true;
+
+                            int key = int.Parse(last.SharesCode) * 10 + last.Market;
+                            temp.LastTempData.Add(key, new SharesKlineData
+                            {
+                                LastTradeStock = last.LastTradeStock,
+                                LastTradeAmount = last.LastTradeAmount,
+                                TradeStock = last.TradeStock,
+                                TradeAmount = last.TradeAmount,
+                                ClosedPrice = last.ClosedPrice,
+                                MaxPrice = last.MaxPrice,
+                                MinPrice = last.MinPrice,
+                                OpenedPrice = last.OpenedPrice,
+                                PreClosePrice = last.PreClosePrice,
+                                YestodayClosedPrice = last.YestodayClosedPrice,
+                                Tradable = last.Tradable,
+                                TotalCapital = last.TotalCapital,
+                                GroupTimeKey = last.GroupTimeKey,
+                                Time = last.Time,
+                                WeightType = last.WeightType,
+                                PlateId = plateId,
+                                Market = last.Market,
+                                SharesCode = last.SharesCode
+                            });
+                        }
+                        else
+                        {
+                            temp.CalCount = temp.CalCount + 1;
                         }
                     }
                     calResult.Add(data.GroupTimeKey * 10 + 1, temp);
@@ -1310,33 +1396,54 @@ inner join
                 else
                 {
                     PlateKlineSession noWeightResult = calResult[data.GroupTimeKey * 10 + 1];
-                    if (lastSharesData == null)
+                    int key = int.Parse(data.SharesCode) * 10 + data.Market;
+                    SharesKlineData tempLast = new SharesKlineData();
+                    if (noWeightResult.LastTempData == null)
                     {
-                        noWeightResult.TotalClosedPrice = noWeightResult.TotalClosedPrice + data.ClosedPriceRate;
-                        noWeightResult.TotalLastTradeAmount = noWeightResult.TotalLastTradeAmount + data.LastTradeAmount;
-                        noWeightResult.TotalLastTradeStock = noWeightResult.TotalLastTradeStock + data.LastTradeStock;
-                        noWeightResult.TotalMaxPrice = noWeightResult.TotalMaxPrice + data.MaxPriceRate;
-                        noWeightResult.TotalMinPrice = noWeightResult.TotalMinPrice + data.MinPriceRate;
-                        noWeightResult.TotalOpenedPrice = noWeightResult.TotalOpenedPrice + data.OpenedPriceRate;
-                        noWeightResult.TotalTradeAmount = noWeightResult.TotalTradeAmount + data.TradeAmount;
-                        noWeightResult.TotalTradeStock = noWeightResult.TotalTradeStock + data.TradeStock;
-                        noWeightResult.CalCount = noWeightResult.CalCount + 1;
-                        noWeightResult.IsUpdate = true;
-                        noWeightResult.Tradable = noWeightResult.Tradable + data.Tradable;
-                        noWeightResult.TotalCapital = noWeightResult.TotalCapital + data.TotalCapital;
+                        tempLast = lastSharesData;
+                        noWeightResult.LastTempData = new Dictionary<int, SharesKlineData>();
+                    }
+                    else if (noWeightResult.LastTempData.ContainsKey(key))
+                    {
+                        tempLast = noWeightResult.LastTempData[key];
                     }
                     else
                     {
-                        noWeightResult.TotalClosedPrice = noWeightResult.TotalClosedPrice + data.ClosedPriceRate - lastSharesData.ClosedPriceRate;
-                        noWeightResult.TotalLastTradeAmount = noWeightResult.TotalLastTradeAmount + data.LastTradeAmount - lastSharesData.LastTradeAmount;
-                        noWeightResult.TotalLastTradeStock = noWeightResult.TotalLastTradeStock + data.LastTradeStock - lastSharesData.LastTradeStock;
-                        noWeightResult.TotalMaxPrice = noWeightResult.TotalMaxPrice + data.MaxPriceRate - lastSharesData.MaxPriceRate;
-                        noWeightResult.TotalMinPrice = noWeightResult.TotalMinPrice + data.MinPriceRate - lastSharesData.MinPriceRate;
-                        noWeightResult.TotalOpenedPrice = noWeightResult.TotalOpenedPrice + data.OpenedPriceRate - lastSharesData.OpenedPriceRate;
-                        noWeightResult.TotalTradeAmount = noWeightResult.TotalTradeAmount + data.TradeAmount - lastSharesData.TradeAmount;
-                        noWeightResult.TotalTradeStock = noWeightResult.TotalTradeStock + data.TradeStock - lastSharesData.TradeStock;
-                        noWeightResult.IsUpdate = true;
+                        tempLast = lastSharesData;
                     }
+                    noWeightResult.TotalClosedPrice = noWeightResult.TotalClosedPrice + data.ClosedPriceRate - tempLast.ClosedPriceRate;
+                    noWeightResult.TotalLastTradeAmount = noWeightResult.TotalLastTradeAmount + data.LastTradeAmount - tempLast.LastTradeAmount;
+                    noWeightResult.TotalLastTradeStock = noWeightResult.TotalLastTradeStock + data.LastTradeStock - tempLast.LastTradeStock;
+                    noWeightResult.TotalMaxPrice = noWeightResult.TotalMaxPrice + data.MaxPriceRate - tempLast.MaxPriceRate;
+                    noWeightResult.TotalMinPrice = noWeightResult.TotalMinPrice + data.MinPriceRate - tempLast.MinPriceRate;
+                    noWeightResult.TotalOpenedPrice = noWeightResult.TotalOpenedPrice + data.OpenedPriceRate - tempLast.OpenedPriceRate;
+                    noWeightResult.TotalTradeAmount = noWeightResult.TotalTradeAmount + data.TradeAmount - tempLast.TradeAmount;
+                    noWeightResult.TotalTradeStock = noWeightResult.TotalTradeStock + data.TradeStock - tempLast.TradeStock;
+                    noWeightResult.Tradable = noWeightResult.Tradable + data.Tradable - tempLast.Tradable;
+                    noWeightResult.TotalCapital = noWeightResult.TotalCapital + data.TotalCapital - tempLast.TotalCapital;
+                    noWeightResult.IsUpdate = true;
+
+                    noWeightResult.LastTempData[key] = new SharesKlineData
+                    {
+                        LastTradeStock = data.LastTradeStock,
+                        LastTradeAmount = data.LastTradeAmount,
+                        TradeStock = data.TradeStock,
+                        TradeAmount = data.TradeAmount,
+                        ClosedPrice = data.ClosedPrice,
+                        MaxPrice = data.MaxPrice,
+                        MinPrice = data.MinPrice,
+                        OpenedPrice = data.OpenedPrice,
+                        PreClosePrice = data.PreClosePrice,
+                        YestodayClosedPrice = data.YestodayClosedPrice,
+                        Tradable = data.Tradable,
+                        TotalCapital = data.TotalCapital,
+                        GroupTimeKey = data.GroupTimeKey,
+                        Time = data.Time,
+                        WeightType = data.WeightType,
+                        PlateId = data.PlateId,
+                        Market = data.Market,
+                        SharesCode = data.SharesCode
+                    };
                 }
             }
             #endregion
@@ -1364,8 +1471,9 @@ inner join
                         TotalYestodayClosedPrice = 0,
                         WeightType = 2,
                         IsUpdate = true,
-                        Tradable=0,
-                        TotalCapital=0
+                        Tradable = 0,
+                        TotalCapital = 0,
+                        LastTempData = new Dictionary<int, SharesKlineData>()
                     };
                     //计算该板块所有股票
                     foreach (var item in sharesDic)
@@ -1391,7 +1499,36 @@ inner join
                             temp.TotalMinPrice = temp.TotalMinPrice + last.MinPrice * last.TotalCapital;
                             temp.TotalOpenedPrice = temp.TotalOpenedPrice + last.OpenedPrice * last.TotalCapital;
                             temp.TotalPreClosePrice = temp.TotalPreClosePrice + last.PreClosePrice * last.TotalCapital;
+                            temp.Tradable = temp.Tradable + last.Tradable;
+                            temp.TotalCapital = temp.TotalCapital + last.TotalCapital;
                             temp.IsUpdate = true;
+
+                            int key = int.Parse(last.SharesCode) * 10 + last.Market;
+                            temp.LastTempData.Add(key, new SharesKlineData
+                            {
+                                LastTradeStock = last.LastTradeStock,
+                                LastTradeAmount = last.LastTradeAmount,
+                                TradeStock = last.TradeStock,
+                                TradeAmount = last.TradeAmount,
+                                ClosedPrice = last.ClosedPrice,
+                                MaxPrice = last.MaxPrice,
+                                MinPrice = last.MinPrice,
+                                OpenedPrice = last.OpenedPrice,
+                                PreClosePrice = last.PreClosePrice,
+                                YestodayClosedPrice = last.YestodayClosedPrice,
+                                Tradable = last.Tradable,
+                                TotalCapital = last.TotalCapital,
+                                GroupTimeKey = last.GroupTimeKey,
+                                Time = last.Time,
+                                WeightType = last.WeightType,
+                                PlateId = plateId,
+                                Market = last.Market,
+                                SharesCode = last.SharesCode
+                            });
+                        }
+                        else
+                        {
+                            temp.CalCount = temp.CalCount + 1;
                         }
                     }
                     calResult.Add(data.GroupTimeKey * 10 + 2, temp);
@@ -1399,35 +1536,55 @@ inner join
                 else
                 {
                     var weightResult = calResult[data.GroupTimeKey * 10 + 2];
-                    if (lastSharesData == null)
+                    int key = int.Parse(data.SharesCode) * 10 + data.Market;
+                    SharesKlineData tempLast = new SharesKlineData();
+                    if (weightResult.LastTempData == null)
                     {
-                        weightResult.TotalClosedPrice = weightResult.TotalClosedPrice + data.ClosedPrice * data.TotalCapital;
-                        weightResult.TotalLastTradeAmount = weightResult.TotalLastTradeAmount + data.LastTradeAmount;
-                        weightResult.TotalLastTradeStock = weightResult.TotalLastTradeStock + data.LastTradeStock;
-                        weightResult.TotalMaxPrice = weightResult.TotalMaxPrice + data.MaxPrice * data.TotalCapital;
-                        weightResult.TotalMinPrice = weightResult.TotalMinPrice + data.MinPrice * data.TotalCapital;
-                        weightResult.TotalOpenedPrice = weightResult.TotalOpenedPrice + data.OpenedPrice * data.TotalCapital;
-                        weightResult.TotalPreClosePrice = weightResult.TotalPreClosePrice + data.PreClosePrice * data.TotalCapital;
-                        weightResult.TotalTradeAmount = weightResult.TotalTradeAmount + data.TradeAmount;
-                        weightResult.TotalTradeStock = weightResult.TotalTradeStock + data.TradeStock;
-                        weightResult.CalCount = weightResult.CalCount + 1;
-                        weightResult.IsUpdate = true;
-                        weightResult.Tradable = weightResult.Tradable + data.Tradable;
-                        weightResult.TotalCapital = weightResult.TotalCapital + data.TotalCapital;
+                        tempLast = lastSharesData;
+                        weightResult.LastTempData = new Dictionary<int, SharesKlineData>();
+                    }
+                    else if (weightResult.LastTempData.ContainsKey(key))
+                    {
+                        tempLast = weightResult.LastTempData[key];
                     }
                     else
                     {
-                        weightResult.TotalClosedPrice = weightResult.TotalClosedPrice + data.ClosedPrice * data.TotalCapital - lastSharesData.ClosedPrice * data.TotalCapital;
-                        weightResult.TotalLastTradeAmount = weightResult.TotalLastTradeAmount + data.LastTradeAmount - lastSharesData.LastTradeAmount;
-                        weightResult.TotalLastTradeStock = weightResult.TotalLastTradeStock + data.LastTradeStock - lastSharesData.LastTradeStock;
-                        weightResult.TotalMaxPrice = weightResult.TotalMaxPrice + data.MaxPrice * data.TotalCapital - lastSharesData.MaxPrice * data.TotalCapital;
-                        weightResult.TotalMinPrice = weightResult.TotalMinPrice + data.MinPrice * data.TotalCapital - lastSharesData.MinPrice * data.TotalCapital;
-                        weightResult.TotalOpenedPrice = weightResult.TotalOpenedPrice + data.OpenedPrice * data.TotalCapital - lastSharesData.OpenedPrice * data.TotalCapital;
-                        weightResult.TotalPreClosePrice = weightResult.TotalPreClosePrice + data.PreClosePrice * data.TotalCapital - lastSharesData.PreClosePrice * data.TotalCapital;
-                        weightResult.TotalTradeAmount = weightResult.TotalTradeAmount + data.TradeAmount - lastSharesData.TradeAmount;
-                        weightResult.TotalTradeStock = weightResult.TotalTradeStock + data.TradeStock - lastSharesData.TradeStock;
-                        weightResult.IsUpdate = true;
+                        tempLast = lastSharesData;
                     }
+                    weightResult.TotalClosedPrice = weightResult.TotalClosedPrice + data.ClosedPrice * data.TotalCapital - tempLast.ClosedPrice * tempLast.TotalCapital;
+                    weightResult.TotalLastTradeAmount = weightResult.TotalLastTradeAmount + data.LastTradeAmount - tempLast.LastTradeAmount;
+                    weightResult.TotalLastTradeStock = weightResult.TotalLastTradeStock + data.LastTradeStock - tempLast.LastTradeStock;
+                    weightResult.TotalMaxPrice = weightResult.TotalMaxPrice + data.MaxPrice * data.TotalCapital - tempLast.MaxPrice * tempLast.TotalCapital;
+                    weightResult.TotalMinPrice = weightResult.TotalMinPrice + data.MinPrice * data.TotalCapital - tempLast.MinPrice * tempLast.TotalCapital;
+                    weightResult.TotalOpenedPrice = weightResult.TotalOpenedPrice + data.OpenedPrice * data.TotalCapital - tempLast.OpenedPrice * tempLast.TotalCapital;
+                    weightResult.TotalPreClosePrice = weightResult.TotalPreClosePrice + data.PreClosePrice * data.TotalCapital - tempLast.PreClosePrice * tempLast.TotalCapital;
+                    weightResult.TotalTradeAmount = weightResult.TotalTradeAmount + data.TradeAmount - tempLast.TradeAmount;
+                    weightResult.TotalTradeStock = weightResult.TotalTradeStock + data.TradeStock - tempLast.TradeStock;
+                    weightResult.Tradable = weightResult.Tradable + data.Tradable - tempLast.Tradable;
+                    weightResult.TotalCapital = weightResult.TotalCapital + data.TotalCapital - tempLast.TotalCapital;
+                    weightResult.IsUpdate = true;
+
+                    weightResult.LastTempData[key] = new SharesKlineData
+                    {
+                        LastTradeStock = data.LastTradeStock,
+                        LastTradeAmount = data.LastTradeAmount,
+                        TradeStock = data.TradeStock,
+                        TradeAmount = data.TradeAmount,
+                        ClosedPrice = data.ClosedPrice,
+                        MaxPrice = data.MaxPrice,
+                        MinPrice = data.MinPrice,
+                        OpenedPrice = data.OpenedPrice,
+                        PreClosePrice = data.PreClosePrice,
+                        YestodayClosedPrice = data.YestodayClosedPrice,
+                        Tradable = data.Tradable,
+                        TotalCapital = data.TotalCapital,
+                        GroupTimeKey = data.GroupTimeKey,
+                        Time = data.Time,
+                        WeightType = data.WeightType,
+                        PlateId = data.PlateId,
+                        Market = data.Market,
+                        SharesCode = data.SharesCode
+                    };
                 }
             }
             #endregion
@@ -1591,7 +1748,7 @@ inner join
                                 importData.Add(tempValue[i]);
                                 if (i % 5000 == 0 || i == tempValue.Count() - 1)
                                 {
-                                    _bulkData(item.Key, tempValue, db);
+                                    _bulkData(item.Key, importData, db);
                                     importData = new List<PlateImportData>();
                                 }
                             }
@@ -1803,6 +1960,14 @@ inner join
         public void ToPushData(SharesKlineDataContain data)
         {
             SharesKlineQueue.AddMessage(data);
+        }
+
+        /// <summary>
+        /// 执行重置操作
+        /// </summary>
+        public void ToExecuteRetry(int dataType) 
+        { 
+
         }
 
         /// <summary>

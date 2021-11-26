@@ -189,5 +189,7 @@ namespace MealTicket_Web_Handler.Model
         public long TradeAmount { get; set; }
 
         public long Tradable { get; set; }
+
+        public bool IsVaild { get; set; }
     }
 }

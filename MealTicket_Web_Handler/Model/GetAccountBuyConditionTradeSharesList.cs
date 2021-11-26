@@ -199,5 +199,10 @@ namespace MealTicket_Web_Handler.Model
         /// 成交量
         /// </summary>
         public long TodayDealCount { get; set; }
+
+        /// <summary>
+        /// 自选股分组数量
+        /// </summary>
+        public List<long> MySharesGroupList { get; set; }
     }
 }

@@ -28,6 +28,11 @@ namespace MealTicket_Admin_Handler.Model
         public int DataType { get; set; }
 
         /// <summary>
+        /// 日期类型1今日 0其他日期
+        /// </summary>
+        public int DateType { get; set; }
+
+        /// <summary>
         /// 起始时间
         /// </summary>
         public long StartGroupTimeKey { get; set; }

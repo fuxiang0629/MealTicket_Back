@@ -46,14 +46,17 @@ namespace Test
             });
             b.Add(new B
             {
-                Market = 0,
+                Market = 2,
                 SharesCode = "000001"
             });
             b.Add(new B
             {
-                Market = 0,
+                Market = 3,
                 SharesCode = "000003"
             });
+            Dictionary<int, B> dic = new Dictionary<int, B>();
+            dic = b.ToDictionary(k=>k.Market,v=>v);
+            b = new List<B>();
 
             var a = b.OrderBy(e=>e.Market).FirstOrDefault();
             var c = b.Where(e=>e.SharesCode != a.SharesCode).ToList();

@@ -115,6 +115,11 @@ namespace SecurityBarsDataUpdate
         /// 加权类型1不加权 2总股本加权
         /// </summary>
         public int WeightType { get; set; }
+
+        /// <summary>
+        /// 是否有效数据（排除停牌和未上市）
+        /// </summary>
+        public bool IsVaild { get; set; }
     }
 
     public class SecurityBarsDataTaskInfo
@@ -128,6 +133,16 @@ namespace SecurityBarsDataUpdate
         /// 处理类型1当天实时数据 2历史补充数据 3指数当天实时数据 4指数历史补充数据
         /// </summary>
         public int HandlerType { get; set; }
+
+        /// <summary>
+        /// 以重试次数
+        /// </summary>
+        public int RetryCount { get; set; }
+
+        /// <summary>
+        /// 总共可重试次数
+        /// </summary>
+        public int TotalRetryCount { get; set; }
 
         /// <summary>
         /// 数据包列表

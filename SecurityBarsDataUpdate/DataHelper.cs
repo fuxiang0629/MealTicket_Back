@@ -1,5 +1,6 @@
 ﻿using FXCommon.Common;
 using FXCommon.Database;
+using MealTicket_DBCommon;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -17,65 +18,47 @@ namespace SecurityBarsDataUpdate
 {
     public class DataHelper
     {
-        public class TRANSACTION_DATA_STRING
-        {
-            public StringBuilder sErrInfo { get; set; }
-            public StringBuilder sResult { get; set; }
-        }
-
-        static TRANSACTION_DATA_STRING[] sm_td_string = new TRANSACTION_DATA_STRING[Singleton.Instance.hqClientCount];
-
-        static DataHelper()
-        {
-            for (int idx = 0; idx < Singleton.Instance.hqClientCount; idx++)
-            {
-                sm_td_string[idx] = new TRANSACTION_DATA_STRING();
-                sm_td_string[idx].sErrInfo = new StringBuilder(256);
-                sm_td_string[idx].sResult = new StringBuilder(512 * 800);
-            }
-        }
-
         /// <summary>
         /// 获取K线数据
         /// </summary>
         /// <returns></returns>
-        public static Dictionary<int,SecurityBarsDataRes> TdxHq_GetSecurityBarsData(List<SecurityBarsDataParList> sharesList,int handlerType)
+        public static Dictionary<int,SecurityBarsDataRes> TdxHq_GetSecurityBarsData(int handlerType,ref List<SecurityBarsDataParList> sharesList, ref List<SecurityBarsDataParList> successPackage)
         {
+            //生成请求数据队列
             ThreadMsgTemplate<SecurityBarsDataPar> data = new ThreadMsgTemplate<SecurityBarsDataPar>();
             data.Init();
-            foreach (var item in sharesList)
+            if (!_buildRequestDataQueue(sharesList,ref data))
             {
-                foreach (var item2 in item.DataList)
-                {
-                    data.AddMessage(new SecurityBarsDataPar
-                    {
-                        SecurityBarsGetCount= item.SecurityBarsGetCount,
-                        DataType = item.DataType,
-                        PlateId=item2.PlateId,
-                        WeightType=item2.WeightType,
-                        SharesCode =item2.SharesCode,
-                        StartTimeKey=item2.StartTimeKey,
-                        EndTimeKey=item2.EndTimeKey,
-                        Market=item2.Market,
-                        PreClosePrice=item2.PreClosePrice,
-                        YestodayClosedPrice=item2.YestodayClosedPrice,
-                        LastTradeStock=item2.LastTradeStock,
-                        LastTradeAmount=item2.LastTradeAmount
-                    });
-                }
+                return new Dictionary<int, SecurityBarsDataRes>();
             }
+            Dictionary<int, SecurityBarsDataParList> sharesListDic = new Dictionary<int, SecurityBarsDataParList>();
+            sharesListDic = sharesList.ToDictionary(k => k.DataType, v => new SecurityBarsDataParList 
+            {
+                DataType=v.DataType,
+                SecurityBarsGetCount=v.SecurityBarsGetCount,
+                DataList=new List<SecurityBarsDataPar>()
+            });
+            Dictionary<int, SecurityBarsDataParList> successPackageDic = new Dictionary<int, SecurityBarsDataParList>(sharesListDic);
 
+            //结果数据字典
             Dictionary<int, SecurityBarsDataRes> resultList = new Dictionary<int, SecurityBarsDataRes>();
             object resultLock = new object();
 
-            Task[] tArr = new Task[Singleton.Instance.hqClientCount];
-            for (int i = 0; i < Singleton.Instance.hqClientCount; i++)
+            int taskCount = Singleton.Instance.hqClientCount;//同时任务数量
+            if (taskCount <= 0)
             {
-                tArr[i] = Task.Factory.StartNew((ref_string) =>
+                return new Dictionary<int, SecurityBarsDataRes>();
+            }
+
+            //启动线程获取数据
+            Task[] tArr = new Task[taskCount];
+            for (int i = 0; i < taskCount; i++)
+            {
+                tArr[i] = Task.Factory.StartNew(() =>
                 {
                     int hqClient = Singleton.Instance.GetHqClient(); 
-                    StringBuilder sErrInfo = new StringBuilder(256);
-                    StringBuilder sResult = new StringBuilder(512 * 800);
+                    StringBuilder sErrInfo = new StringBuilder(512);
+                    StringBuilder sResult = new StringBuilder(1024 * 800);
                     try
                     {
                         do
@@ -87,28 +70,34 @@ namespace SecurityBarsDataUpdate
                             }
 
                             bool isReconnectClient = false;
-                            var tempList = TdxHq_GetSecurityBarsData_byShares(hqClient, handlerType, tempData,(TRANSACTION_DATA_STRING)ref_string, ref isReconnectClient, ref sResult, ref sErrInfo);
+                            sResult.Clear();
+                            sErrInfo.Clear();
+                            var tempList = TdxHq_GetSecurityBarsData_byShares(hqClient, handlerType, tempData, ref isReconnectClient, ref sResult, ref sErrInfo);
 
                             if (isReconnectClient)
                             {
                                 Singleton.Instance.AddRetryClient(hqClient);
                                 hqClient = Singleton.Instance.GetHqClient();
+                                sharesListDic[tempData.DataType].DataList.Add(tempData);//加入失败列表
                             }
-
-                            lock (resultLock)
+                            else
                             {
-                                if (resultList.ContainsKey(tempData.DataType)) 
+                                lock (resultLock)
                                 {
-                                    resultList[tempData.DataType].DataList.AddRange(tempList);
-                                }
-                                else 
-                                {
-                                    resultList.Add(tempData.DataType, new SecurityBarsDataRes 
+                                    if (resultList.ContainsKey(tempData.DataType))
                                     {
-                                        DataType= tempData.DataType,
-                                        DataList= tempList
-                                    });
+                                        resultList[tempData.DataType].DataList.AddRange(tempList);
+                                    }
+                                    else
+                                    {
+                                        resultList.Add(tempData.DataType, new SecurityBarsDataRes
+                                        {
+                                            DataType = tempData.DataType,
+                                            DataList = tempList
+                                        });
+                                    }
                                 }
+                                successPackageDic[tempData.DataType].DataList.Add(tempData);//加入成功列表
                             }
                         } while (true);
                     }
@@ -120,24 +109,122 @@ namespace SecurityBarsDataUpdate
                     {
                         Singleton.Instance.AddHqClient(hqClient);
                     }
-                }, sm_td_string[i]);
+                });
             }
             Task.WaitAll(tArr);
             data.Release();
 
+            sharesList = new List<SecurityBarsDataParList>();//重置参数
+            successPackage = new List<SecurityBarsDataParList>();
+            foreach (var item in sharesListDic)
+            {
+                if (item.Value.DataList.Count() <= 0)
+                {
+                    continue;
+                }
+                sharesList.Add(item.Value);
+            }
+            foreach (var item in successPackageDic)
+            {
+                if (item.Value.DataList.Count() <= 0)
+                {
+                    continue;
+                }
+                successPackage.Add(item.Value);
+            }
             return resultList;
+        }
+
+        private static bool _buildRequestDataQueue(List<SecurityBarsDataParList> sharesList, ref ThreadMsgTemplate<SecurityBarsDataPar> dataQueue)
+        {
+            try
+            {
+                foreach (var item in sharesList)
+                {
+                    foreach (var item2 in item.DataList)
+                    {
+                        dataQueue.AddMessage(new SecurityBarsDataPar
+                        {
+                            SecurityBarsGetCount = item.SecurityBarsGetCount,
+                            DataType = item.DataType,
+                            PlateId = item2.PlateId,
+                            WeightType = item2.WeightType,
+                            SharesCode = item2.SharesCode,
+                            StartTimeKey = item2.StartTimeKey,
+                            EndTimeKey = item2.EndTimeKey,
+                            Market = item2.Market,
+                            PreClosePrice = item2.PreClosePrice,
+                            YestodayClosedPrice = item2.YestodayClosedPrice,
+                            LastTradeStock = item2.LastTradeStock,
+                            LastTradeAmount = item2.LastTradeAmount
+                        });
+                    }
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("生成数据队列失败",ex);
+                return false;
+            }
         }
 
         /// <summary>
         /// 获取某只股票K线数据
         /// </summary>
         /// <returns></returns>
-        private static List<SecurityBarsDataInfo> TdxHq_GetSecurityBarsData_byShares(int hqClient,int handlerType, SecurityBarsDataPar sharesData, TRANSACTION_DATA_STRING result_info, ref bool isReconnectClient, ref StringBuilder sResult,ref StringBuilder sErrInfo)
+        private static List<SecurityBarsDataInfo> TdxHq_GetSecurityBarsData_byShares(int hqClient,int handlerType, SecurityBarsDataPar sharesData, ref bool isReconnectClient, ref StringBuilder sResult,ref StringBuilder sErrInfo)
         {
             int datatype = sharesData.DataType;
             if (!CheckDataType(datatype))
             {
                 return new List<SecurityBarsDataInfo>();
+            }
+            if (handlerType == 1 && (datatype==2 || datatype==7))
+            {
+                DateTime timeNow = DateTime.Now;
+                TimeSpan spanNow = TimeSpan.Parse(timeNow.ToString("HH:mm:ss"));
+                if (spanNow > TimeSpan.Parse("09:25:00") && spanNow < TimeSpan.Parse("09:30:00"))
+                {
+                    var quotes = GetSharesQuotes(sharesData.Market, sharesData.SharesCode, timeNow.Date);
+                    if (quotes == null)
+                    {
+                        return new List<SecurityBarsDataInfo>();
+                    }
+                    long groupTimeKey = 0;
+                    if (datatype == 2)
+                    {
+                        groupTimeKey = long.Parse(timeNow.ToString("yyyyMMdd0930"));
+                    }
+                    else if (datatype == 7)
+                    {
+                        groupTimeKey = long.Parse(timeNow.ToString("yyyyMMdd"));
+                    }
+                    return new List<SecurityBarsDataInfo>
+                    {
+                        new SecurityBarsDataInfo
+                        {
+                            SharesCode=sharesData.SharesCode,
+                            Market=sharesData.Market,
+                            LastTradeStock=0,
+                            TimeStr=timeNow.ToString("yyyy-MM-dd 09:30:00"),
+                            TradeStock=quotes.TotalCount*100,
+                            ClosedPrice=quotes.PresentPrice,
+                            DataType=datatype,
+                            GroupTimeKey=groupTimeKey,
+                            IsLast=true,
+                            IsVaild=true,
+                            LastTradeAmount=0,
+                            MaxPrice=quotes.MaxPrice,
+                            MinPrice=quotes.MinPrice,
+                            OpenedPrice=quotes.OpenedPrice,
+                            PreClosePrice=sharesData.YestodayClosedPrice,
+                            Time=DateTime.Parse(timeNow.ToString("yyyy-MM-dd 09:30:00")),
+                            TradeAmount=quotes.TotalAmount,
+                            YestodayClosedPrice=sharesData.YestodayClosedPrice
+                        }
+                    };
+                }
             }
 
             int defaultGetCount = sharesData.SecurityBarsGetCount;
@@ -160,11 +247,9 @@ namespace SecurityBarsDataUpdate
             do
             {
                 nCount = (short)defaultGetCount;
-                sResult.Clear();
-                sErrInfo.Clear();
 
                 bool bRet = false;
-                if (handlerType == 1 || handlerType == 2)
+                if (handlerType == 1 || handlerType == 2 || handlerType==21)
                 {
                     bRet = TradeX_M.TdxHq_GetSecurityBars(hqClient, category, (byte)sharesData.Market, sharesData.SharesCode, nStart, ref nCount, sResult, sErrInfo);
                 }
@@ -265,12 +350,54 @@ namespace SecurityBarsDataUpdate
             int j = 0;
             long lastTradeStock = sharesData.LastTradeStock;
             long lastTradeAmount = sharesData.LastTradeAmount;
+            long yestodayClosedPrice= sharesData.YestodayClosedPrice;
             DateTime? lastDate = null;
+            bool isVaild = true;
             foreach (var item in resultlist)
             {
-                j++;
+                //去除涨跌幅不正常的
+                if (((item.ClosedPrice - preClosePrice) * 1.0 / preClosePrice) >= 0.1 && preClosePrice > 0)
+                {
+                    item.OpenedPrice = preClosePrice;
+                    item.ClosedPrice = preClosePrice;
+                    item.MaxPrice = preClosePrice;
+                    item.MinPrice = preClosePrice;
+                    item.TradeStock = 0;
+                    item.TradeAmount = 0;
+                }
+                if (handlerType == 1 || handlerType == 2 || handlerType==21)
+                {
+                    if (lastDate == null || lastDate.Value != item.Time.Value.Date)
+                    {
+                        if (CheckQuotes(item.Market, item.SharesCode, item.Time.Value.Date))
+                        {
+                            isVaild = true;
+                        }
+                        else
+                        {
+                            isVaild = false;
+                        }
+                    }
+                    item.IsVaild = isVaild;
+                    if (!isVaild)
+                    {
+                        item.OpenedPrice = preClosePrice;
+                        item.ClosedPrice = preClosePrice;
+                        item.MaxPrice = preClosePrice;
+                        item.MinPrice = preClosePrice;
+                        item.TradeStock = 0;
+                        item.TradeAmount = 0;
+                    }
+                }
+                if (lastDate != null && lastDate.Value != item.Time.Value.Date)
+                {
+                    yestodayClosedPrice = preClosePrice;
+                }
+                item.YestodayClosedPrice = yestodayClosedPrice;
+
                 item.PreClosePrice = preClosePrice;
                 preClosePrice = item.ClosedPrice;
+                j++;
                 if (j == totalCount)
                 {
                     item.IsLast = true;
@@ -279,7 +406,6 @@ namespace SecurityBarsDataUpdate
                 {
                     item.IsLast = false;
                 }
-                item.YestodayClosedPrice = sharesData.YestodayClosedPrice;
                 if (datatype == 2)
                 {
                     if (lastDate != null && lastDate.Value != item.Time.Value.Date)
@@ -287,12 +413,17 @@ namespace SecurityBarsDataUpdate
                         lastTradeStock = 0;
                         lastTradeAmount = 0;
                     }
-                    item.LastTradeStock = lastTradeStock;
                     item.LastTradeAmount = lastTradeAmount;
+                    item.LastTradeStock = lastTradeStock;
                     lastTradeStock = lastTradeStock + item.TradeStock;
                     lastTradeAmount = lastTradeAmount + item.TradeAmount;
-                    lastDate = item.Time.Value.Date;
                 }
+                else
+                {
+                    item.LastTradeAmount = 0;
+                    item.LastTradeStock = 0;
+                }
+                lastDate = item.Time.Value.Date;
             }
             return resultlist;
         }
@@ -473,6 +604,46 @@ namespace SecurityBarsDataUpdate
                     return false;
             }
             return true;
+        }
+
+        private static t_shares_quotes_date GetSharesQuotes(int market, string sharesCode, DateTime date) 
+        {
+            int dateInt = int.Parse(date.ToString("yyyyMMdd"));
+            string dateStr = date.ToString("yyyy-MM-dd");
+            var quotesSession = Singleton.Instance._SharesQuotesSession.GetSessionData();
+            if (dateInt == quotesSession.Date)
+            {
+                int key = int.Parse(sharesCode) * 10 + market;
+                if (!quotesSession.QuotesDic.ContainsKey(key))
+                {
+                    return null;
+                }
+                return quotesSession.QuotesDic[key];
+            }
+            else
+            {
+                using (var db = new meal_ticketEntities())
+                {
+                    var quotes = (from item in db.t_shares_quotes_date
+                                  where item.Date == dateStr && item.Market == market && item.SharesCode == sharesCode
+                                  select item).FirstOrDefault();
+                    return quotes;
+                }
+            }
+        }
+
+        private static bool CheckQuotes(int market,string sharesCode,DateTime date) 
+        {
+            var result=GetSharesQuotes(market, sharesCode, date);
+            if (result == null)
+            {
+                return false;
+            }
+            if (result.PresentPrice > 0)
+            {
+                return true;
+            }
+            return false;
         }
     }
 }

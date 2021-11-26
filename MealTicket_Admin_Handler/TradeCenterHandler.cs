@@ -561,7 +561,7 @@ namespace MealTicket_Admin_Handler
                                   }
                                   if (!string.IsNullOrEmpty(item.Business))
                                   {
-                                      sqlApp += string.Format("Business='{0}'", item.Business);
+                                      sqlApp += string.Format("Business='{0}'", item.Business.Trim());
                                       sqlApp += ",";
                                   }
                                   if (item.TotalCapital > 0)
@@ -592,13 +592,31 @@ namespace MealTicket_Admin_Handler
 
 
                                   //解析行业
-                                  string[] IndustryArr = item.Industry.Replace(" ", "").Split('/');
+                                  string[] IndustryArr = item.Industry.Split('/');
+                                  List<string> IndustryList = new List<string>();
+                                  for (int idx = 0; idx < IndustryArr.Length; idx++)
+                                  {
+                                      IndustryList.Add(IndustryArr[idx].Trim());
+                                  }
                                   //解析地区
-                                  string[] AresArr = item.Area.Replace(" ", "").Split('/');
+                                  string[] AresArr = item.Area.Split('/');
+                                  List<string> AresList = new List<string>();
+                                  for (int idx = 0; idx < AresArr.Length; idx++)
+                                  {
+                                      AresList.Add(AresArr[idx].Trim());
+                                  }
                                   //解析概念
-                                  string[] IdeaArr = item.Idea.Replace(" ", "").Split('/');
+                                  string[] IdeaArr = item.Idea.Split('/');
+                                  List<string> IdeaList = new List<string>();
+                                  for (int idx = 0; idx < IdeaArr.Length; idx++)
+                                  {
+                                      IdeaList.Add(IdeaArr[idx].Trim());
+                                  }
+
+
+
                                   var plateListTemp = (from x in plateList
-                                                       where ((x.Type == 1 && IndustryArr.Contains(x.Name.Trim())) || (x.Type == 2 && AresArr.Contains(x.Name.Trim())) || (x.Type == 3 && IdeaArr.Contains(x.Name))) && !string.IsNullOrEmpty(x.Name.Trim())
+                                                       where ((x.Type == 1 && IndustryList.Contains(x.Name.Trim())) || (x.Type == 2 && AresList.Contains(x.Name.Trim())) || (x.Type == 3 && IdeaList.Contains(x.Name.Trim()))) && !string.IsNullOrEmpty(x.Name.Trim())
                                                        select x).ToList();
                                   sql = "";
                                   foreach (var x in plateListTemp)
@@ -10101,73 +10119,100 @@ namespace MealTicket_Admin_Handler
         /// <param name="request"></param>
         public void ResetSharesKLine(ResetSharesKLineRequest request)
         {
-            DateTime tempDate = DateTime.Parse("1991-01-01 00:00:00");
-            switch (request.DataType)
+            DateTime timeNow = DateTime.Now;
+            //判断是否交易时间
+            if (Helper.CheckTradeTime(timeNow) || Helper.CheckTradeTime(timeNow.AddMinutes(15)))
             {
-                case 2:
-                    tempDate= DateTime.ParseExact((request.StartGroupTimeKey/10000).ToString(),"yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-                    break;
-                case 3:
-                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-                    break;
-                case 4:
-                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-                    break;
-                case 5:
-                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-                    break;
-                case 6:
-                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-                    break;
-                case 7:
-                    tempDate = DateTime.ParseExact(request.StartGroupTimeKey.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-                    break;
-                case 8:
-                    var temp1 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
-                                where item.the_week == request.StartGroupTimeKey
-                                orderby item.the_date
-                                select item).FirstOrDefault();
-                    if (temp1 == null)
-                    {
-                        throw new WebApiException(400,"时间超出界限");
-                    }
-                    tempDate = DateTime.ParseExact(temp1.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-                    break;
-                case 9:
-                    var temp2 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
-                                where item.the_month == request.StartGroupTimeKey
-                                orderby item.the_date
-                                select item).FirstOrDefault();
-                    if (temp2 == null)
-                    {
-                        throw new WebApiException(400, "时间超出界限");
-                    }
-                    tempDate = DateTime.ParseExact(temp2.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-                    break;
-                case 10:
-                    var temp3 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
-                                 where item.the_quarter == request.StartGroupTimeKey
-                                 orderby item.the_date
-                                 select item).FirstOrDefault();
-                    if (temp3 == null)
-                    {
-                        throw new WebApiException(400, "时间超出界限");
-                    }
-                    tempDate = DateTime.ParseExact(temp3.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-                    break;
-                case 11:
-                    var temp4 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
-                                 where item.the_year == request.StartGroupTimeKey
-                                 orderby item.the_date
-                                 select item).FirstOrDefault();
-                    if (temp4 == null)
-                    {
-                        throw new WebApiException(400, "时间超出界限");
-                    }
-                    tempDate = DateTime.ParseExact(temp4.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-                    break;
-                default:
-                    throw new WebApiException(400, "参数错误");
+                throw new WebApiException(400,"交易时间范围内无法重置");
+            }
+            DateTime tempDate = DateTime.Parse("1991-01-01 00:00:00");
+            if (request.DateType == 1)
+            {
+                tempDate = timeNow.Date;
+
+                long StartGroupTimeKey = -1;
+                if (!ParseTimeGroupKey(DateTime.Parse(timeNow.ToString("yyyy-MM-dd 09:30:00")), request.DataType, ref StartGroupTimeKey))
+                {
+                    throw new WebApiException(400,"时间值错误");
+                }
+                request.StartGroupTimeKey = StartGroupTimeKey;
+
+                long EndGroupTimeKey = -1;
+                if (!ParseTimeGroupKey(DateTime.Parse(timeNow.ToString("yyyy-MM-dd 15:00:00")), request.DataType, ref EndGroupTimeKey))
+                {
+                    throw new WebApiException(400, "时间值错误");
+                }
+                request.EndGroupTimeKey = EndGroupTimeKey;
+            }
+            else
+            {
+                switch (request.DataType)
+                {
+                    case 2:
+                        tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                        break;
+                    case 3:
+                        tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                        break;
+                    case 4:
+                        tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                        break;
+                    case 5:
+                        tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                        break;
+                    case 6:
+                        tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                        break;
+                    case 7:
+                        tempDate = DateTime.ParseExact(request.StartGroupTimeKey.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                        break;
+                    case 8:
+                        var temp1 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                     where item.the_week == request.StartGroupTimeKey
+                                     orderby item.the_date
+                                     select item).FirstOrDefault();
+                        if (temp1 == null)
+                        {
+                            throw new WebApiException(400, "时间超出界限");
+                        }
+                        tempDate = DateTime.ParseExact(temp1.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                        break;
+                    case 9:
+                        var temp2 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                     where item.the_month == request.StartGroupTimeKey
+                                     orderby item.the_date
+                                     select item).FirstOrDefault();
+                        if (temp2 == null)
+                        {
+                            throw new WebApiException(400, "时间超出界限");
+                        }
+                        tempDate = DateTime.ParseExact(temp2.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                        break;
+                    case 10:
+                        var temp3 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                     where item.the_quarter == request.StartGroupTimeKey
+                                     orderby item.the_date
+                                     select item).FirstOrDefault();
+                        if (temp3 == null)
+                        {
+                            throw new WebApiException(400, "时间超出界限");
+                        }
+                        tempDate = DateTime.ParseExact(temp3.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                        break;
+                    case 11:
+                        var temp4 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                     where item.the_year == request.StartGroupTimeKey
+                                     orderby item.the_date
+                                     select item).FirstOrDefault();
+                        if (temp4 == null)
+                        {
+                            throw new WebApiException(400, "时间超出界限");
+                        }
+                        tempDate = DateTime.ParseExact(temp4.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                        break;
+                    default:
+                        throw new WebApiException(400, "参数错误");
+                }
             }
 
             long PreClosePrice = 0;
@@ -10203,14 +10248,64 @@ namespace MealTicket_Admin_Handler
             {
                 DataList = list,
                 DataType = request.DataType,
+                RetryCount = 1,
+                TotalRetryCount = Singleton.Instance.TotalRetryCount,
                 SecurityBarsGetCount = SecurityBarsGetCount
             });
             var sendData = new
             {
-                HandlerType = 2,
-                PackageList = packageList
+                HandlerType = request.DateType == 1 ? 21 : 2,
+                PackageList = packageList,
             };
             Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SecurityBars", "1min");
+        }
+
+        /// <summary>
+        /// 解析时间值
+        /// </summary>
+        /// <returns></returns>
+        private bool ParseTimeGroupKey(DateTime date, int type, ref long groupTimeKey)
+        {
+            switch (type)
+            {
+                case 2:
+                    groupTimeKey = long.Parse(date.ToString("yyyyMMddHHmm"));
+                    break;
+                case 3:
+                    groupTimeKey = long.Parse(date.ToString("yyyyMMddHHmm"));
+                    break;
+                case 4:
+                    groupTimeKey = long.Parse(date.ToString("yyyyMMddHHmm"));
+                    break;
+                case 5:
+                    groupTimeKey = long.Parse(date.ToString("yyyyMMddHHmm"));
+                    break;
+                case 6:
+                    groupTimeKey = long.Parse(date.ToString("yyyyMMddHHmm"));
+                    break;
+                case 7:
+                    groupTimeKey = long.Parse(date.ToString("yyyyMMdd"));
+                    break;
+                case 8:
+                    groupTimeKey = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                    where item.the_date == int.Parse(date.ToString("yyyyMMdd"))
+                                    select item.the_week).FirstOrDefault() ?? 0;
+                    break;
+                case 9:
+                    groupTimeKey = long.Parse(date.ToString("yyyyMM"));
+                    break;
+                case 10:
+                    groupTimeKey = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                    where item.the_date == int.Parse(date.ToString("yyyyMMdd"))
+                                    select item.the_quarter).FirstOrDefault() ?? 0;
+                    break;
+                case 11:
+                    groupTimeKey = long.Parse(date.ToString("yyyy"));
+                    break;
+                default:
+                    return false;
+            }
+            return true;
         }
 
         /// <summary>
@@ -10219,73 +10314,101 @@ namespace MealTicket_Admin_Handler
         /// <param name="request"></param>
         public void BatchResetSharesKLine(BatchResetSharesKLineRequest request)
         {
-            DateTime tempDate = DateTime.Parse("1991-01-01 00:00:00");
-            switch (request.DataType)
+            DateTime timeNow = DateTime.Now;
+            //判断是否交易时间
+            if (Helper.CheckTradeTime(timeNow) || Helper.CheckTradeTime(timeNow.AddMinutes(15)))
             {
-                case 2:
-                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-                    break;
-                case 3:
-                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-                    break;
-                case 4:
-                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-                    break;
-                case 5:
-                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-                    break;
-                case 6:
-                    tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-                    break;
-                case 7:
-                    tempDate = DateTime.ParseExact(request.StartGroupTimeKey.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-                    break;
-                case 8:
-                    var temp1 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
-                                 where item.the_week == request.StartGroupTimeKey
-                                 orderby item.the_date
-                                 select item).FirstOrDefault();
-                    if (temp1 == null)
-                    {
-                        throw new WebApiException(400, "时间超出界限");
-                    }
-                    tempDate = DateTime.ParseExact(temp1.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-                    break;
-                case 9:
-                    var temp2 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
-                                 where item.the_month == request.StartGroupTimeKey
-                                 orderby item.the_date
-                                 select item).FirstOrDefault();
-                    if (temp2 == null)
-                    {
-                        throw new WebApiException(400, "时间超出界限");
-                    }
-                    tempDate = DateTime.ParseExact(temp2.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-                    break;
-                case 10:
-                    var temp3 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
-                                 where item.the_quarter == request.StartGroupTimeKey
-                                 orderby item.the_date
-                                 select item).FirstOrDefault();
-                    if (temp3 == null)
-                    {
-                        throw new WebApiException(400, "时间超出界限");
-                    }
-                    tempDate = DateTime.ParseExact(temp3.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-                    break;
-                case 11:
-                    var temp4 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
-                                 where item.the_year == request.StartGroupTimeKey
-                                 orderby item.the_date
-                                 select item).FirstOrDefault();
-                    if (temp4 == null)
-                    {
-                        throw new WebApiException(400, "时间超出界限");
-                    }
-                    tempDate = DateTime.ParseExact(temp4.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
-                    break;
-                default:
-                    throw new WebApiException(400, "参数错误");
+                throw new WebApiException(400, "交易时间范围内无法重置");
+            }
+
+            DateTime tempDate = DateTime.Parse("1991-01-01 00:00:00");
+            if (request.DateType == 1)
+            {
+                tempDate = timeNow.Date;
+
+                long StartGroupTimeKey = -1;
+                if (!ParseTimeGroupKey(DateTime.Parse(timeNow.ToString("yyyy-MM-dd 09:30:00")), request.DataType, ref StartGroupTimeKey))
+                {
+                    throw new WebApiException(400, "时间值错误");
+                }
+                request.StartGroupTimeKey = StartGroupTimeKey;
+
+                long EndGroupTimeKey = -1;
+                if (!ParseTimeGroupKey(DateTime.Parse(timeNow.ToString("yyyy-MM-dd 15:00:00")), request.DataType, ref EndGroupTimeKey))
+                {
+                    throw new WebApiException(400, "时间值错误");
+                }
+                request.EndGroupTimeKey = EndGroupTimeKey;
+            }
+            else
+            {
+                switch (request.DataType)
+                {
+                    case 2:
+                        tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                        break;
+                    case 3:
+                        tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                        break;
+                    case 4:
+                        tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                        break;
+                    case 5:
+                        tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                        break;
+                    case 6:
+                        tempDate = DateTime.ParseExact((request.StartGroupTimeKey / 10000).ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                        break;
+                    case 7:
+                        tempDate = DateTime.ParseExact(request.StartGroupTimeKey.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                        break;
+                    case 8:
+                        var temp1 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                     where item.the_week == request.StartGroupTimeKey
+                                     orderby item.the_date
+                                     select item).FirstOrDefault();
+                        if (temp1 == null)
+                        {
+                            throw new WebApiException(400, "时间超出界限");
+                        }
+                        tempDate = DateTime.ParseExact(temp1.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                        break;
+                    case 9:
+                        var temp2 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                     where item.the_month == request.StartGroupTimeKey
+                                     orderby item.the_date
+                                     select item).FirstOrDefault();
+                        if (temp2 == null)
+                        {
+                            throw new WebApiException(400, "时间超出界限");
+                        }
+                        tempDate = DateTime.ParseExact(temp2.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                        break;
+                    case 10:
+                        var temp3 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                     where item.the_quarter == request.StartGroupTimeKey
+                                     orderby item.the_date
+                                     select item).FirstOrDefault();
+                        if (temp3 == null)
+                        {
+                            throw new WebApiException(400, "时间超出界限");
+                        }
+                        tempDate = DateTime.ParseExact(temp3.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                        break;
+                    case 11:
+                        var temp4 = (from item in Singleton.Instance._DimTimeSession.GetSessionData()
+                                     where item.the_year == request.StartGroupTimeKey
+                                     orderby item.the_date
+                                     select item).FirstOrDefault();
+                        if (temp4 == null)
+                        {
+                            throw new WebApiException(400, "时间超出界限");
+                        }
+                        tempDate = DateTime.ParseExact(temp4.the_date.ToString(), "yyyyMMdd", System.Globalization.CultureInfo.InvariantCulture);
+                        break;
+                    default:
+                        throw new WebApiException(400, "参数错误");
+                }
             }
 
             using (var db = new meal_ticketEntities())
@@ -10335,11 +10458,13 @@ namespace MealTicket_Admin_Handler
                     {
                         DataList = list,
                         DataType = request.DataType,
+                        RetryCount = 1,
+                        TotalRetryCount = Singleton.Instance.TotalRetryCount,
                         SecurityBarsGetCount = SecurityBarsGetCount
                     });
                     var sendData = new
                     {
-                        HandlerType = 2,
+                        HandlerType = request.DateType == 1 ? 21 : 2,
                         PackageList = packageList
                     };
                     Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SecurityBars", "1min");

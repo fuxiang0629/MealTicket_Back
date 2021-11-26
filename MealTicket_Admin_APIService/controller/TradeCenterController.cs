@@ -434,8 +434,8 @@ namespace MealTicket_Admin_APIService.controller
                                     Area = datas[4],
                                     Idea = datas[5],
                                     Business = datas[6],
-                                    TotalCapital = long.Parse(datas[7]),
-                                    CirculatingCapital = long.Parse(datas[8]),
+                                    TotalCapital = TotalCapital,
+                                    CirculatingCapital = CirculatingCapital,
                                 });
                             }
                             catch (Exception ex)

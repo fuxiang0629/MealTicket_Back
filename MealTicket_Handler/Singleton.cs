@@ -117,6 +117,11 @@ namespace MealTicket_Handler
         /// </summary>
         public long PriceFormat = 10000;
 
+        /// <summary>
+        /// K线重置失败次数
+        /// </summary>
+        public int TotalRetryCount = 3;
+
         #region====K线数据参数====
         public int SecurityBarsIsOpen = 1;
         public int SecurityBarsIntervalTime = 3000;//间隔时间(毫秒)
@@ -432,6 +437,11 @@ namespace MealTicket_Handler
                         if (!TimeSpan.TryParse(tempSecurityBarsDataUpdateEndTime, out SecurityBarsDataUpdateEndTime))
                         {
                             SecurityBarsDataUpdateEndTime = TimeSpan.Parse("23:00:00");
+                        }
+                        int tempTotalRetryCount = sysValue.TotalRetryCount;
+                        if (tempTotalRetryCount > 0)
+                        {
+                            TotalRetryCount = tempTotalRetryCount;
                         }
                     }
                 }

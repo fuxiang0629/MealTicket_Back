@@ -739,6 +739,8 @@ inner join
                 {
                     TaskGuid = "",
                     HandlerType = 3,
+                    RetryCount = 1,
+                    TotalRetryCount = 1,
                     PackageList = sendList
                 })), "SecurityBars", "1min");
             }

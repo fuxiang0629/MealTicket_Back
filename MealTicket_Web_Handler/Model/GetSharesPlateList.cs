@@ -23,6 +23,8 @@ namespace MealTicket_Web_Handler
         /// </summary>
         public int Type { get; set; }
 
+        public int CalType { get; set; }
+
         /// <summary>
         /// 市场
         /// </summary>

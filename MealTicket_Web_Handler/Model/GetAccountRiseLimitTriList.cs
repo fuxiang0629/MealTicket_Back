@@ -368,5 +368,10 @@ namespace MealTicket_Web_Handler.Model
         public int LimitUpDays { get; set; }
 
         public string TriDesc { get; set; }
+
+        /// <summary>
+        /// 自选股分组列表
+        /// </summary>
+        public List<long> MySharesGroupList { get; set; }
     }
 }

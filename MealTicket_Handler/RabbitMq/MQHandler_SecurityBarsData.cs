@@ -22,7 +22,7 @@ namespace MealTicket_Handler
             try
             {
                 var resultData = JsonConvert.DeserializeObject<SecurityBarsDataTaskQueueInfo>(data);
-                if (resultData.HandlerType == 1 || resultData.HandlerType == 2)
+                if (resultData.HandlerType == 1 || resultData.HandlerType == 2 || resultData.HandlerType == 21)
                 {
                     Singleton.Instance._securityBarsDataTask.SecurityBarsDataQueue.AddMessage(new QueueMsgObj
                     {
@@ -35,12 +35,10 @@ namespace MealTicket_Handler
                     foreach (var package in resultData.PackageList)
                     {
                         var sessionDataList = (from item in package.Value.DataList
-                                               join item2 in Singleton.Instance._sharesBaseSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
-                                               from ai in a.DefaultIfEmpty()
                                                select new SharesKlineData
                                                {
-                                                   PlateId=item.PlateId,
-                                                   WeightType=item.WeightType,
+                                                   PlateId = item.PlateId,
+                                                   WeightType = item.WeightType,
                                                    SharesCode = item.SharesCode,
                                                    LastTradeStock = item.LastTradeStock,
                                                    ClosedPrice = item.ClosedPrice,
@@ -53,17 +51,27 @@ namespace MealTicket_Handler
                                                    OpenedPrice = item.OpenedPrice,
                                                    PreClosePrice = item.PreClosePrice,
                                                    Time = item.Time,
-                                                   TotalCapital = ai == null ? 0 : ai.TotalCapital,
-                                                   Tradable = ai == null ? 0 : ai.CirculatingCapital,
                                                    TradeAmount = item.TradeAmount,
                                                    YestodayClosedPrice = item.YestodayClosedPrice
                                                }).ToList();
                         Singleton.Instance._newIindexSecurityBarsDataTask.ToPushData(new SharesKlineDataContain
                         {
                             DataType = package.Value.DataType,
-                            CalType=1,
+                            CalType = 1,
                             SharesKlineData = sessionDataList
                         });
+                    }
+
+                    if (resultData.HandlerType == 4 && resultData.FailPackageList.Count() > 0 && resultData.RetryCount < resultData.TotalRetryCount)
+                    {
+                        SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new
+                        {
+                            TaskGuid = resultData.TaskGuid,
+                            HandlerType = resultData.HandlerType,
+                            RetryCount = resultData.RetryCount + 1,
+                            TotalRetryCount = resultData.TotalRetryCount,
+                            PackageList = resultData.FailPackageList
+                        })), "SecurityBars", "1min");
                     }
                 }
             }

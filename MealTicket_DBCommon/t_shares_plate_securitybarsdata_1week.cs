@@ -35,5 +35,6 @@ namespace MealTicket_DBCommon
         public bool IsLast { get; set; }
         public System.DateTime LastModified { get; set; }
         public long YestodayClosedPrice { get; set; }
+        public string Date { get; set; }
     }
 }

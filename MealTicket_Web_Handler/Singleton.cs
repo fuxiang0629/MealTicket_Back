@@ -112,6 +112,8 @@ namespace MealTicket_Web_Handler
         /// </summary>
         public Dictionary<int, int> PlateIndexTypeDic = new Dictionary<int, int>();
 
+        public double PlateIndexRatio = 4;
+
         /// <summary>
         /// 自动买入最大任务数量
         /// </summary>
@@ -187,7 +189,7 @@ namespace MealTicket_Web_Handler
             PlateIndexTypeDic.Add(0, 2);//其他 1加权 2不加权
             PlateIndexTypeDic.Add(1, 2);//板块指数
             PlateIndexTypeDic.Add(2, 1);//市场指数
-            PlateIndexTypeDic.Add(3, 2);//成分指数
+            PlateIndexTypeDic.Add(3, 1);//成分指数
 
             handlerThreadCount = 10;
             connString_meal_ticket = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
@@ -524,6 +526,7 @@ namespace MealTicket_Web_Handler
                         int PlateIndex_KLineType = sysValue.PlateIndex_KLineType;
                         int MarketIndex_KLineType = sysValue.MarketIndex_KLineType;
                         int UnitIndex_KLineType = sysValue.UnitIndex_KLineType;
+                        PlateIndexRatio = sysValue.PlateIndexRatio;
 
                         PlateIndexTypeDic[0] = OtherIndex_KLineType;
                         PlateIndexTypeDic[1] = PlateIndex_KLineType;

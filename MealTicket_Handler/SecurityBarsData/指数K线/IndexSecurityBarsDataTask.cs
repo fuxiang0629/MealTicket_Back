@@ -1676,13 +1676,14 @@ inner join
         /// <summary>
         /// 发送指令获取券商板块K线数据
         /// </summary>
-        /// <param name="list"></param>
         private void SendToGetPlateKLine(List<dynamic> sendList,int handlerType,string taskGuid)
         {
             Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new
             {
                 TaskGuid = taskGuid,
                 HandlerType = handlerType,
+                RetryCount = 1,
+                TotalRetryCount = handlerType == 4 ? Singleton.Instance.TotalRetryCount : 1,
                 PackageList = sendList
             })), "SecurityBars", "1min");
         }

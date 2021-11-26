@@ -68,16 +68,16 @@ namespace MealTicket_Web_Handler.Model
         /// <summary>
         /// 涨幅
         /// </summary>
-        public int RiseRate 
+        public int RiseRate
         {
-            get 
+            get
             {
-                if (ClosedPrice <= 0) 
+                if (ClosedPrice <= 0)
                 {
                     return 0;
                 }
                 return (int)Math.Round(((PresentPrice - ClosedPrice) * 1.0 / ClosedPrice) * 10000, 0);
-            } 
+            }
         }
 
         /// <summary>
@@ -123,7 +123,7 @@ namespace MealTicket_Web_Handler.Model
         /// <summary>
         /// 文字颜色
         /// </summary>
-        public string TextColor 
+        public string TextColor
         {
             get
             {
@@ -367,5 +367,10 @@ namespace MealTicket_Web_Handler.Model
                 return (int)(DaysNowAvgDealCount * 1.0 / CirculatingCapital * 10000);
             }
         }
+
+        /// <summary>
+        /// 自选股分组列表
+        /// </summary>
+        public List<long> MySharesGroupList { get; set; }
     }
 }

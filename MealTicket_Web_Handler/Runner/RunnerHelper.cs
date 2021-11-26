@@ -1510,7 +1510,7 @@ where t.Market={0} and t.SharesCode='{1}' and AccountId={2} and t2.[Status]=1 an
                                     //查询跟投分组信息
                                     sql = string.Format(@"select Id
   from t_account_follow_group with(nolock)
-  where AccountId = {0} and[Status] = 1
+  where AccountId = {0} and [Status] = 1
   order by OrderIndex", item.AccountId);
                                     var groupList = db.Database.SqlQuery<long>(sql).ToList();
                                     int groupCount = groupList.Count();
@@ -1530,7 +1530,7 @@ where t.Market={0} and t.SharesCode='{1}' and AccountId={2} and t2.[Status]=1 an
 
 inner
   join t_account_follow_rel t2 with(nolock) on t1.RelId = t2.Id
-  where t.Id = {0} and t.AccountId = {1} and t.[Status]= 1 and t2.AccountId = {1}", thisId, item.AccountId);
+  where t.Id = {0} and t.AccountId = {1} and t.[Status]= 1 and t2.AccountId = {1} and t1.[Status]=1", thisId, item.AccountId);
                                         FollowList = db.Database.SqlQuery<FollowAccountInfo>(sql).ToList();
                                     }
 

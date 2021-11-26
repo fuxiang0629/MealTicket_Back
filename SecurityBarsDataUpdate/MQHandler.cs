@@ -24,21 +24,28 @@ namespace SecurityBarsDataUpdate
             try
             {
                 var resultData = JsonConvert.DeserializeObject<SecurityBarsDataTaskInfo>(data);
-                if (resultData.PackageList.Count() <= 0)
+                var dataPackage = resultData.PackageList;
+                int handlerType = resultData.HandlerType;
+                string taskGuid = resultData.TaskGuid;
+                int retryCount = resultData.RetryCount;
+                int totalRetryCount = resultData.TotalRetryCount;
+
+                if (dataPackage.Count() <= 0)
                 {
                     throw new Exception("更新至少需要一只股票数据");
                 }
-                if (resultData.HandlerType != 1 && resultData.HandlerType != 2 && resultData.HandlerType != 3 && resultData.HandlerType != 4)
+                if (handlerType != 1 && handlerType != 2 && handlerType!=21 && handlerType != 3 && handlerType != 4)
                 {
                     throw new Exception("处理类型参数错误");
                 }
 
-                Dictionary<int, SecurityBarsDataRes> list = new Dictionary<int, SecurityBarsDataRes>();
                 Stopwatch stopwatch = new Stopwatch();
                 stopwatch.Start();
 
-                Console.WriteLine("==========开始获取K线数据======" + resultData.TaskGuid + "===");
-                list = DataHelper.TdxHq_GetSecurityBarsData(resultData.PackageList, resultData.HandlerType);
+                Console.WriteLine("==========开始获取K线数据======" + taskGuid + "===");
+                Dictionary<int, SecurityBarsDataRes> resultList = new Dictionary<int, SecurityBarsDataRes>();
+                var successPackage = new List<SecurityBarsDataParList>();
+                resultList = DataHelper.TdxHq_GetSecurityBarsData(handlerType,ref dataPackage,ref successPackage);
                 stopwatch.Stop();
                 Console.WriteLine("=====获取K线数据结束:" + stopwatch.ElapsedMilliseconds + "============");
 
@@ -47,9 +54,13 @@ namespace SecurityBarsDataUpdate
 
                 SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new
                 {
-                    PackageList = list,
-                    TaskGuid = resultData.TaskGuid,
-                    HandlerType = resultData.HandlerType,
+                    PackageList = resultList,
+                    TaskGuid = taskGuid,
+                    HandlerType = handlerType,
+                    RetryCount= retryCount,
+                    TotalRetryCount= totalRetryCount,
+                    FailPackageList= dataPackage,
+                    SuccessPackageList= successPackage
                 })), "SecurityBars", "update_1min");
             }
             catch (Exception ex)

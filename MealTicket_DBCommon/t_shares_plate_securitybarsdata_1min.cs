@@ -35,5 +35,6 @@ namespace MealTicket_DBCommon
         public long TotalCapital { get; set; }
         public bool IsLast { get; set; }
         public System.DateTime LastModified { get; set; }
+        public string Date { get; set; }
     }
 }

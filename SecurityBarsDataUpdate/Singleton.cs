@@ -113,6 +113,7 @@ namespace SecurityBarsDataUpdate
             StartHeartbeatThread();
 
             _DimTimeSession.StartUpdate(3600000);
+            _SharesQuotesSession.StartUpdate(60000);
         }
 
         /// <summary>
@@ -386,5 +387,6 @@ namespace SecurityBarsDataUpdate
 
 
         public DimTimeSession _DimTimeSession = new DimTimeSession();
+        public SharesQuotesSession _SharesQuotesSession = new SharesQuotesSession();
     }
 }

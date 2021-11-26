@@ -100,6 +100,11 @@ namespace MealTicket_Handler.SecurityBarsData
         /// 是否更新变动
         /// </summary>
         public bool IsUpdate { get; set; }
+
+        /// <summary>
+        /// 记录上一次统计进入板块的股票数据
+        /// </summary>
+        public Dictionary<int, SharesKlineData> LastTempData { get; set; }
     }
 
     /// <summary>
@@ -144,11 +149,11 @@ namespace MealTicket_Handler.SecurityBarsData
         {
             get
             {
-                if (PreClosePrice == 0)
+                if (YestodayClosedPrice == 0)
                 {
                     return 0;
                 }
-                return (long)Math.Round((OpenedPrice - PreClosePrice) * 1.0 / PreClosePrice * 10000);
+                return (long)Math.Round((OpenedPrice - YestodayClosedPrice) * 1.0 / YestodayClosedPrice * 10000);
             }
         }
 
@@ -161,11 +166,11 @@ namespace MealTicket_Handler.SecurityBarsData
         {
             get
             {
-                if (PreClosePrice == 0)
+                if (YestodayClosedPrice == 0)
                 {
                     return 0;
                 }
-                return (long)Math.Round((ClosedPrice - PreClosePrice) * 1.0 / PreClosePrice * 10000);
+                return (long)Math.Round((ClosedPrice - YestodayClosedPrice) * 1.0 / YestodayClosedPrice * 10000);
             }
         }
 
@@ -178,11 +183,11 @@ namespace MealTicket_Handler.SecurityBarsData
         {
             get
             {
-                if (PreClosePrice == 0)
+                if (YestodayClosedPrice == 0)
                 {
                     return 0;
                 }
-                return (long)Math.Round((MinPrice - PreClosePrice) * 1.0 / PreClosePrice * 10000);
+                return (long)Math.Round((MinPrice - YestodayClosedPrice) * 1.0 / YestodayClosedPrice * 10000);
             }
         }
 
@@ -195,11 +200,11 @@ namespace MealTicket_Handler.SecurityBarsData
         {
             get 
             {
-                if (PreClosePrice == 0)
+                if (YestodayClosedPrice == 0)
                 {
                     return 0;
                 }
-                return (long)Math.Round((MaxPrice - PreClosePrice) * 1.0 / PreClosePrice * 10000);
+                return (long)Math.Round((MaxPrice - YestodayClosedPrice) * 1.0 / YestodayClosedPrice * 10000);
             }
         }
 
@@ -432,5 +437,7 @@ namespace MealTicket_Handler.SecurityBarsData
         /// 总股本
         /// </summary>
         public long TotalCapital { get; set; }
+
+        public int DataType { get; set; }
     }
 }

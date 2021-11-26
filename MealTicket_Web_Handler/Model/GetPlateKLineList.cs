@@ -23,6 +23,11 @@ namespace MealTicket_Web_Handler.Model
         public int WeightType { get; set; }
 
         /// <summary>
+        /// 最高/最低是否需要除以系数
+        /// </summary>
+        public bool XSJQ { get; set; }
+
+        /// <summary>
         /// 类型1.1分钟线 2.5分钟线 3.15分钟线 4.30分钟线 5.60分钟线 6.日线 7.周线 8.月线 9.季度线 10.年线
         /// </summary>
         public int Type { get; set; }
@@ -162,6 +167,8 @@ namespace MealTicket_Web_Handler.Model
     public class DB_PlateKLineInfo
     {
         public long PlateId { get; set; }
+
+        public int WeightType { get; set; }
 
         public long GroupTimeKey { get; set; }
 

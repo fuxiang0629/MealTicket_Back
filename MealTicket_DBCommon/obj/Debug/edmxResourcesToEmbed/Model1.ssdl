@@ -2930,6 +2930,7 @@
     <Property Name="IsLast" Type="bit" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="YestodayClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="Date" Type="varchar" MaxLength="10" StoreGeneratedPattern="Computed" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_1day">
     <Key>
@@ -2956,6 +2957,7 @@
     <Property Name="IsLast" Type="bit" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="YestodayClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="Date" Type="varchar" MaxLength="10" StoreGeneratedPattern="Computed" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_1min">
     <Key>
@@ -2982,6 +2984,7 @@
     <Property Name="TotalCapital" Type="bigint" Nullable="false" />
     <Property Name="IsLast" Type="bit" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="Date" Type="varchar" MaxLength="10" StoreGeneratedPattern="Computed" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_1month">
     <Key>
@@ -3008,6 +3011,7 @@
     <Property Name="IsLast" Type="bit" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="YestodayClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="Date" Type="varchar" MaxLength="10" StoreGeneratedPattern="Computed" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_1quarter">
     <Key>
@@ -3034,6 +3038,7 @@
     <Property Name="IsLast" Type="bit" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="YestodayClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="Date" Type="varchar" MaxLength="10" StoreGeneratedPattern="Computed" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_1week">
     <Key>
@@ -3060,6 +3065,7 @@
     <Property Name="IsLast" Type="bit" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="YestodayClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="Date" Type="varchar" MaxLength="10" StoreGeneratedPattern="Computed" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_1year">
     <Key>
@@ -3086,6 +3092,7 @@
     <Property Name="IsLast" Type="bit" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="YestodayClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="Date" Type="varchar" MaxLength="10" StoreGeneratedPattern="Computed" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_30min">
     <Key>
@@ -3112,6 +3119,7 @@
     <Property Name="IsLast" Type="bit" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="YestodayClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="Date" Type="varchar" MaxLength="10" StoreGeneratedPattern="Computed" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_5min">
     <Key>
@@ -3138,6 +3146,7 @@
     <Property Name="IsLast" Type="bit" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="YestodayClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="Date" Type="varchar" MaxLength="10" StoreGeneratedPattern="Computed" />
   </EntityType>
   <EntityType Name="t_shares_plate_securitybarsdata_60min">
     <Key>
@@ -3164,6 +3173,7 @@
     <Property Name="IsLast" Type="bit" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="YestodayClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="Date" Type="varchar" MaxLength="10" StoreGeneratedPattern="Computed" />
   </EntityType>
   <EntityType Name="t_shares_plate_shares_limit">
     <Key>
@@ -3530,6 +3540,7 @@
     <Property Name="HandCount" Type="int" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="IsLast" Type="bit" Nullable="false" />
+    <Property Name="IsVaild" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_securitybarsdata_1day">
     <Key>
@@ -3555,6 +3566,7 @@
     <Property Name="HandCount" Type="int" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="IsLast" Type="bit" Nullable="false" />
+    <Property Name="IsVaild" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_securitybarsdata_1min">
     <Key>
@@ -3581,6 +3593,8 @@
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="IsLast" Type="bit" Nullable="false" />
     <Property Name="YestodayClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="SharesNumber" Type="int" StoreGeneratedPattern="Computed" />
+    <Property Name="IsVaild" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_securitybarsdata_1month">
     <Key>
@@ -3606,6 +3620,7 @@
     <Property Name="HandCount" Type="int" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="IsLast" Type="bit" Nullable="false" />
+    <Property Name="IsVaild" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_securitybarsdata_1quarter">
     <Key>
@@ -3631,6 +3646,7 @@
     <Property Name="HandCount" Type="int" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="IsLast" Type="bit" Nullable="false" />
+    <Property Name="IsVaild" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_securitybarsdata_1week">
     <Key>
@@ -3656,6 +3672,7 @@
     <Property Name="HandCount" Type="int" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="IsLast" Type="bit" Nullable="false" />
+    <Property Name="IsVaild" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_securitybarsdata_1year">
     <Key>
@@ -3681,6 +3698,7 @@
     <Property Name="HandCount" Type="int" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="IsLast" Type="bit" Nullable="false" />
+    <Property Name="IsVaild" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_securitybarsdata_30min">
     <Key>
@@ -3706,6 +3724,7 @@
     <Property Name="HandCount" Type="int" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="IsLast" Type="bit" Nullable="false" />
+    <Property Name="IsVaild" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_securitybarsdata_5min">
     <Key>
@@ -3731,6 +3750,7 @@
     <Property Name="HandCount" Type="int" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="IsLast" Type="bit" Nullable="false" />
+    <Property Name="IsVaild" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_securitybarsdata_60min">
     <Key>
@@ -3756,6 +3776,7 @@
     <Property Name="HandCount" Type="int" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="IsLast" Type="bit" Nullable="false" />
+    <Property Name="IsVaild" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_suspension">
     <Key>

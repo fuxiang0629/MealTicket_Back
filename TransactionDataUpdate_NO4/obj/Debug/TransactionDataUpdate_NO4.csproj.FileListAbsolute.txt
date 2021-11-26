@@ -80,4 +80,3 @@ D:\项目\饭票\后端\TransactionDataUpdate_NO4\obj\Debug\TransactionDataUpdat
 F:\项目\饭票后端\TransactionDataUpdate_NO4\bin\Debug\MealTicket_DBCommon.dll
 F:\项目\饭票后端\TransactionDataUpdate_NO4\bin\Debug\MealTicket_DBCommon.pdb
 F:\项目\饭票后端\TransactionDataUpdate_NO4\bin\Debug\MealTicket_DBCommon.dll.config
-F:\项目\饭票后端\TransactionDataUpdate_NO4\obj\Debug\TransactionDataUpdate_NO4.csprojAssemblyReference.cache
