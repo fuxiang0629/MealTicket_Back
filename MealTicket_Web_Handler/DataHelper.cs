@@ -4299,10 +4299,6 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
             dataTable.Columns.Add("PushDesc", typeof(string));
             dataTable.Columns.Add("TrendId", typeof(long));
 
-            trendResult = (from item in trendResult
-                           group item by new { item.Market, item.SharesCode,item.TrendId } into g
-                           select g.FirstOrDefault()).ToList();
-
             foreach (var item in trendResult)
             {
                 DataRow row = dataTable.NewRow();
