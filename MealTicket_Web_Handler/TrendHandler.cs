@@ -23504,7 +23504,7 @@ select @buyId;";
         /// <param name="request"></param>
         /// <param name="basedata"></param>
         /// <returns></returns>
-        public PageRes<AccountShareGroupRelInfo> GetAccountShareGroupRelList(GetAccountShareGroupRelListPageRequest request, HeadBase basedata)
+        public GetAccountShareGroupRelListRes GetAccountShareGroupRelList(GetAccountShareGroupRelListPageRequest request, HeadBase basedata)
         {
             using (var db = new meal_ticketEntities())
             {
@@ -23586,7 +23586,7 @@ select @buyId;";
                                     join x2 in db.t_account_shares_conditiontrade_buy_group on x.GroupId equals x2.Id
                                     where x2.AccountId == basedata.AccountId
                                     select x).ToList();
-                List<AccountShareGroupRelInfo> finallyResult = new List<AccountShareGroupRelInfo>();
+                List < AccountShareGroupRelInfo > finallyResult = new List<AccountShareGroupRelInfo>();
                 foreach (var item in _resultList)
                 {
                     if (item.ConditionStatus == 0)
@@ -23612,13 +23612,23 @@ select @buyId;";
                                       where x.Market == item.Market && x.SharesCode == item.SharesCode
                                       orderby x.RiseRate descending
                                       select x).ToList();
+
                     finallyResult.Add(item);
                 }
-                return new PageRes<AccountShareGroupRelInfo>
+
+                var groupSharesCount = (from item in db.t_account_shares_group_rel
+                                        where item.AccountId == basedata.AccountId
+                                        group item by item.GroupId into g
+                                        select new AccountShareGroupCountInfo
+                                        {
+                                            GroupId = g.Key,
+                                            SharesCount = g.Count()
+                                        }).ToList();
+                return new GetAccountShareGroupRelListRes
                 {
                     List= finallyResult,
                     TotalCount=totalCount,
-                    MaxId=0
+                    GroupSharesCountList= groupSharesCount
                 };
             }
         }
@@ -23708,6 +23718,27 @@ select @buyId;";
                 }
                 db.t_account_shares_group_rel.Remove(groupRel);
                 db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 批量删除自选股分组内股票
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public void BatchDeleteAccountShareGroupRel(BatchDeleteAccountShareGroupRelRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var groupRel = (from item in db.t_account_shares_group_rel
+                                where request.RelIdList.Contains(item.Id) && item.AccountId == basedata.AccountId
+                                select item).ToList();
+                if (groupRel.Count()>0)
+                {
+                    db.t_account_shares_group_rel.RemoveRange(groupRel);
+                    db.SaveChanges();
+                }
             }
         }
 

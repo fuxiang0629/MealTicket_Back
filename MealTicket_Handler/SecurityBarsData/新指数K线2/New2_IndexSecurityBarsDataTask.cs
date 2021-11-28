@@ -18,6 +18,8 @@ namespace MealTicket_Handler.SecurityBarsData
     /// </summary>
     public class New2_IndexSecurityBarsDataTask
     {
+        DateTime MINTIME = DateTime.Parse("1990-01-01 00:00:00");
+
         #region===所有板块字典缓存===
         /// <summary>
         /// 板块字典缓存
@@ -680,8 +682,8 @@ inner join
                             {
                                 var context = JsonConvert.DeserializeObject<dynamic>(item.Context);
                                 DateTime baseDate = Convert.ToDateTime(context.Date);
-                                baseDate=DbHelper.GetLastTradeDate2(0, 0, 0, 1, baseDate);
-                                var plate=GetPlateSessionValue(item.PlateId);
+                                baseDate = DbHelper.GetLastTradeDate2(0, 0, 0, 1, baseDate);
+                                var plate = GetPlateSessionValue(item.PlateId);
                                 if (plate == null)
                                 {
                                     tran.Commit();
@@ -691,140 +693,62 @@ inner join
 
                                 #region===删除所有K线数据===
                                 //1.1分钟K线
-                                string sql = string.Format(@"delete t_shares_plate_securitybarsdata_1min where PlateId={0};",item.PlateId);
-                                db.Database.ExecuteSqlCommand(sql);
-                                sql = string.Format(@"insert into t_shares_plate_securitybarsdata_1min
-  (WeightType, PlateId, Market, SharesCode, GroupTimeKey,[Time], OpenedPrice, ClosedPrice, PreClosePrice, YestodayClosedPrice, MinPrice, MaxPrice, TradeStock, TradeAmount,
-  LastTradeStock, LastTradeAmount, Tradable, TotalCapital, IsLast, LastModified)
-  values(1,{0},0,'',{1},'{2}',{3},{3},{3},{3},{3},{3},0,0,0,0,0,0,0,'{4}');", item.PlateId, long.Parse(baseDate.ToString("yyyyMMdd0931")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                db.Database.ExecuteSqlCommand(sql);
-                                sql = string.Format(@"insert into t_shares_plate_securitybarsdata_1min
-  (WeightType, PlateId, Market, SharesCode, GroupTimeKey,[Time], OpenedPrice, ClosedPrice, PreClosePrice, YestodayClosedPrice, MinPrice, MaxPrice, TradeStock, TradeAmount,
-  LastTradeStock, LastTradeAmount, Tradable, TotalCapital, IsLast, LastModified)
-  values(2,{0},0,'',{1},'{2}',{3},{3},{3},{3},{3},{3},0,0,0,0,0,0,0,'{4}');", item.PlateId, long.Parse(baseDate.ToString("yyyyMMdd0931")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                db.Database.ExecuteSqlCommand(sql);
+                                ToDeleteResult(item.PlateId, 2, MINTIME, db);
+                                ToInsertBaseData(item.PlateId, 2, long.Parse(baseDate.ToString("yyyyMMdd0931")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, db);
                                 //2.5分钟K线
-                                sql = string.Format(@"delete t_shares_plate_securitybarsdata_5min where PlateId={0};", item.PlateId);
-                                db.Database.ExecuteSqlCommand(sql);
-                                sql = string.Format(@"insert into t_shares_plate_securitybarsdata_5min
-  (WeightType, PlateId, Market, SharesCode, GroupTimeKey,[Time], OpenedPrice, ClosedPrice, PreClosePrice, YestodayClosedPrice, MinPrice, MaxPrice, TradeStock, TradeAmount,
-  LastTradeStock, LastTradeAmount, Tradable, TotalCapital, IsLast, LastModified)
-  values(1,{0},0,'',{1},'{2}',{3},{3},{3},{3},{3},{3},0,0,0,0,0,0,0,'{4}');", item.PlateId, long.Parse(baseDate.ToString("yyyyMMdd0935")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                db.Database.ExecuteSqlCommand(sql);
-                                sql = string.Format(@"insert into t_shares_plate_securitybarsdata_5min
-  (WeightType, PlateId, Market, SharesCode, GroupTimeKey,[Time], OpenedPrice, ClosedPrice, PreClosePrice, YestodayClosedPrice, MinPrice, MaxPrice, TradeStock, TradeAmount,
-  LastTradeStock, LastTradeAmount, Tradable, TotalCapital, IsLast, LastModified)
-  values(2,{0},0,'',{1},'{2}',{3},{3},{3},{3},{3},{3},0,0,0,0,0,0,0,'{4}');", item.PlateId, long.Parse(baseDate.ToString("yyyyMMdd0935")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                db.Database.ExecuteSqlCommand(sql);
+                                ToDeleteResult(item.PlateId, 3, MINTIME, db);
+                                ToInsertBaseData(item.PlateId, 3, long.Parse(baseDate.ToString("yyyyMMdd0935")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, db);
                                 //3.15分钟K线
-                                sql = string.Format(@"delete t_shares_plate_securitybarsdata_15min where PlateId={0};", item.PlateId);
-                                db.Database.ExecuteSqlCommand(sql);
-                                sql = string.Format(@"insert into t_shares_plate_securitybarsdata_15min
-  (WeightType, PlateId, Market, SharesCode, GroupTimeKey,[Time], OpenedPrice, ClosedPrice, PreClosePrice, YestodayClosedPrice, MinPrice, MaxPrice, TradeStock, TradeAmount,
-  LastTradeStock, LastTradeAmount, Tradable, TotalCapital, IsLast, LastModified)
-  values(1,{0},0,'',{1},'{2}',{3},{3},{3},{3},{3},{3},0,0,0,0,0,0,0,'{4}');", item.PlateId, long.Parse(baseDate.ToString("yyyyMMdd0945")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                db.Database.ExecuteSqlCommand(sql);
-                                sql = string.Format(@"insert into t_shares_plate_securitybarsdata_15min
-  (WeightType, PlateId, Market, SharesCode, GroupTimeKey,[Time], OpenedPrice, ClosedPrice, PreClosePrice, YestodayClosedPrice, MinPrice, MaxPrice, TradeStock, TradeAmount,
-  LastTradeStock, LastTradeAmount, Tradable, TotalCapital, IsLast, LastModified)
-  values(2,{0},0,'',{1},'{2}',{3},{3},{3},{3},{3},{3},0,0,0,0,0,0,0,'{4}');", item.PlateId, long.Parse(baseDate.ToString("yyyyMMdd0945")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                db.Database.ExecuteSqlCommand(sql);
+                                ToDeleteResult(item.PlateId, 4, MINTIME, db);
+                                ToInsertBaseData(item.PlateId, 4, long.Parse(baseDate.ToString("yyyyMMdd0945")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, db);
                                 //4.30分钟K线
-                                sql = string.Format(@"delete t_shares_plate_securitybarsdata_30min where PlateId={0};", item.PlateId);
-                                db.Database.ExecuteSqlCommand(sql);
-                                sql = string.Format(@"insert into t_shares_plate_securitybarsdata_30min
-  (WeightType, PlateId, Market, SharesCode, GroupTimeKey,[Time], OpenedPrice, ClosedPrice, PreClosePrice, YestodayClosedPrice, MinPrice, MaxPrice, TradeStock, TradeAmount,
-  LastTradeStock, LastTradeAmount, Tradable, TotalCapital, IsLast, LastModified)
-  values(1,{0},0,'',{1},'{2}',{3},{3},{3},{3},{3},{3},0,0,0,0,0,0,0,'{4}');", item.PlateId, long.Parse(baseDate.ToString("yyyyMMdd1000")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                db.Database.ExecuteSqlCommand(sql);
-                                sql = string.Format(@"insert into t_shares_plate_securitybarsdata_30min
-  (WeightType, PlateId, Market, SharesCode, GroupTimeKey,[Time], OpenedPrice, ClosedPrice, PreClosePrice, YestodayClosedPrice, MinPrice, MaxPrice, TradeStock, TradeAmount,
-  LastTradeStock, LastTradeAmount, Tradable, TotalCapital, IsLast, LastModified)
-  values(2,{0},0,'',{1},'{2}',{3},{3},{3},{3},{3},{3},0,0,0,0,0,0,0,'{4}');", item.PlateId, long.Parse(baseDate.ToString("yyyyMMdd1000")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                db.Database.ExecuteSqlCommand(sql);
+                                ToDeleteResult(item.PlateId, 5, MINTIME, db);
+                                ToInsertBaseData(item.PlateId, 5, long.Parse(baseDate.ToString("yyyyMMdd1000")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, db);
                                 //5.60分钟K线
-                                sql = string.Format(@"delete t_shares_plate_securitybarsdata_60min where PlateId={0};", item.PlateId);
-                                db.Database.ExecuteSqlCommand(sql);
-                                sql = string.Format(@"insert into t_shares_plate_securitybarsdata_60min
-  (WeightType, PlateId, Market, SharesCode, GroupTimeKey,[Time], OpenedPrice, ClosedPrice, PreClosePrice, YestodayClosedPrice, MinPrice, MaxPrice, TradeStock, TradeAmount,
-  LastTradeStock, LastTradeAmount, Tradable, TotalCapital, IsLast, LastModified)
-  values(1,{0},0,'',{1},'{2}',{3},{3},{3},{3},{3},{3},0,0,0,0,0,0,0,'{4}');", item.PlateId, long.Parse(baseDate.ToString("yyyyMMdd1030")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                db.Database.ExecuteSqlCommand(sql);
-                                sql = string.Format(@"insert into t_shares_plate_securitybarsdata_60min
-  (WeightType, PlateId, Market, SharesCode, GroupTimeKey,[Time], OpenedPrice, ClosedPrice, PreClosePrice, YestodayClosedPrice, MinPrice, MaxPrice, TradeStock, TradeAmount,
-  LastTradeStock, LastTradeAmount, Tradable, TotalCapital, IsLast, LastModified)
-  values(2,{0},0,'',{1},'{2}',{3},{3},{3},{3},{3},{3},0,0,0,0,0,0,0,'{4}');", item.PlateId, long.Parse(baseDate.ToString("yyyyMMdd1030")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                db.Database.ExecuteSqlCommand(sql);
+                                ToDeleteResult(item.PlateId, 6, MINTIME, db);
+                                ToInsertBaseData(item.PlateId, 6, long.Parse(baseDate.ToString("yyyyMMdd1030")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, db);
                                 //6.日K线
-                                sql = string.Format(@"delete t_shares_plate_securitybarsdata_1day where PlateId={0};", item.PlateId);
-                                db.Database.ExecuteSqlCommand(sql);
-                                sql = string.Format(@"insert into t_shares_plate_securitybarsdata_1day
-  (WeightType, PlateId, Market, SharesCode, GroupTimeKey,[Time], OpenedPrice, ClosedPrice, PreClosePrice, YestodayClosedPrice, MinPrice, MaxPrice, TradeStock, TradeAmount,
-  LastTradeStock, LastTradeAmount, Tradable, TotalCapital, IsLast, LastModified)
-  values(1,{0},0,'',{1},'{2}',{3},{3},{3},{3},{3},{3},0,0,0,0,0,0,0,'{4}');", item.PlateId, long.Parse(baseDate.ToString("yyyyMMdd")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                db.Database.ExecuteSqlCommand(sql);
-                                sql = string.Format(@"insert into t_shares_plate_securitybarsdata_1day
-  (WeightType, PlateId, Market, SharesCode, GroupTimeKey,[Time], OpenedPrice, ClosedPrice, PreClosePrice, YestodayClosedPrice, MinPrice, MaxPrice, TradeStock, TradeAmount,
-  LastTradeStock, LastTradeAmount, Tradable, TotalCapital, IsLast, LastModified)
-  values(2,{0},0,'',{1},'{2}',{3},{3},{3},{3},{3},{3},0,0,0,0,0,0,0,'{4}');", item.PlateId, long.Parse(baseDate.ToString("yyyyMMdd")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                db.Database.ExecuteSqlCommand(sql);
+                                ToDeleteResult(item.PlateId, 7, MINTIME, db);
+                                ToInsertBaseData(item.PlateId, 7, long.Parse(baseDate.ToString("yyyyMMdd")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, db);
                                 //7.周K线
-                                sql = string.Format(@"delete t_shares_plate_securitybarsdata_1week where PlateId={0};", item.PlateId);
-                                db.Database.ExecuteSqlCommand(sql);
+                                ToDeleteResult(item.PlateId, 8, MINTIME, db);
                                 long groupTimeKey = 0;
                                 ParseTimeGroupKey(baseDate, 8, ref groupTimeKey);
-                                sql = string.Format(@"insert into t_shares_plate_securitybarsdata_1week
-  (WeightType, PlateId, Market, SharesCode, GroupTimeKey,[Time], OpenedPrice, ClosedPrice, PreClosePrice, YestodayClosedPrice, MinPrice, MaxPrice, TradeStock, TradeAmount,
-  LastTradeStock, LastTradeAmount, Tradable, TotalCapital, IsLast, LastModified)
-  values(1,{0},0,'',{1},'{2}',{3},{3},{3},{3},{3},{3},0,0,0,0,0,0,0,'{4}');", item.PlateId, groupTimeKey, baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                db.Database.ExecuteSqlCommand(sql);
-                                sql = string.Format(@"insert into t_shares_plate_securitybarsdata_1week
-  (WeightType, PlateId, Market, SharesCode, GroupTimeKey,[Time], OpenedPrice, ClosedPrice, PreClosePrice, YestodayClosedPrice, MinPrice, MaxPrice, TradeStock, TradeAmount,
-  LastTradeStock, LastTradeAmount, Tradable, TotalCapital, IsLast, LastModified)
-  values(2,{0},0,'',{1},'{2}',{3},{3},{3},{3},{3},{3},0,0,0,0,0,0,0,'{4}');", item.PlateId, groupTimeKey, baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                db.Database.ExecuteSqlCommand(sql);
+                                ToInsertBaseData(item.PlateId, 8, groupTimeKey, baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, db);
                                 //8.月K线
-                                sql = string.Format(@"delete t_shares_plate_securitybarsdata_1month where PlateId={0};", item.PlateId);
-                                db.Database.ExecuteSqlCommand(sql);
-                                sql = string.Format(@"insert into t_shares_plate_securitybarsdata_1month
-  (WeightType, PlateId, Market, SharesCode, GroupTimeKey,[Time], OpenedPrice, ClosedPrice, PreClosePrice, YestodayClosedPrice, MinPrice, MaxPrice, TradeStock, TradeAmount,
-  LastTradeStock, LastTradeAmount, Tradable, TotalCapital, IsLast, LastModified)
-  values(1,{0},0,'',{1},'{2}',{3},{3},{3},{3},{3},{3},0,0,0,0,0,0,0,'{4}');", item.PlateId, long.Parse(baseDate.ToString("yyyyMM")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                db.Database.ExecuteSqlCommand(sql);
-                                sql = string.Format(@"insert into t_shares_plate_securitybarsdata_1month
-  (WeightType, PlateId, Market, SharesCode, GroupTimeKey,[Time], OpenedPrice, ClosedPrice, PreClosePrice, YestodayClosedPrice, MinPrice, MaxPrice, TradeStock, TradeAmount,
-  LastTradeStock, LastTradeAmount, Tradable, TotalCapital, IsLast, LastModified)
-  values(2,{0},0,'',{1},'{2}',{3},{3},{3},{3},{3},{3},0,0,0,0,0,0,0,'{4}');", item.PlateId, long.Parse(baseDate.ToString("yyyyMM")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                db.Database.ExecuteSqlCommand(sql);
+                                ToDeleteResult(item.PlateId, 9, MINTIME, db);
+                                ToInsertBaseData(item.PlateId, 9, long.Parse(baseDate.ToString("yyyyMM")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, db);
                                 //9.季度K线
-                                sql = string.Format(@"delete t_shares_plate_securitybarsdata_1quarter where PlateId={0};", item.PlateId);
-                                db.Database.ExecuteSqlCommand(sql);
+                                ToDeleteResult(item.PlateId, 10, MINTIME, db);
                                 groupTimeKey = 0;
                                 ParseTimeGroupKey(baseDate, 10, ref groupTimeKey);
-                                sql = string.Format(@"insert into t_shares_plate_securitybarsdata_1quarter
-  (WeightType, PlateId, Market, SharesCode, GroupTimeKey,[Time], OpenedPrice, ClosedPrice, PreClosePrice, YestodayClosedPrice, MinPrice, MaxPrice, TradeStock, TradeAmount,
-  LastTradeStock, LastTradeAmount, Tradable, TotalCapital, IsLast, LastModified)
-  values(1,{0},0,'',{1},'{2}',{3},{3},{3},{3},{3},{3},0,0,0,0,0,0,0,'{4}');", item.PlateId, groupTimeKey, baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                db.Database.ExecuteSqlCommand(sql);
-                                sql = string.Format(@"insert into t_shares_plate_securitybarsdata_1quarter
-  (WeightType, PlateId, Market, SharesCode, GroupTimeKey,[Time], OpenedPrice, ClosedPrice, PreClosePrice, YestodayClosedPrice, MinPrice, MaxPrice, TradeStock, TradeAmount,
-  LastTradeStock, LastTradeAmount, Tradable, TotalCapital, IsLast, LastModified)
-  values(2,{0},0,'',{1},'{2}',{3},{3},{3},{3},{3},{3},0,0,0,0,0,0,0,'{4}');", item.PlateId, groupTimeKey, baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                db.Database.ExecuteSqlCommand(sql);
+                                ToInsertBaseData(item.PlateId, 10, groupTimeKey, baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, db);
                                 //10.年K线
-                                sql = string.Format(@"delete t_shares_plate_securitybarsdata_1year where PlateId={0};", item.PlateId);
-                                db.Database.ExecuteSqlCommand(sql);
-                                sql = string.Format(@"insert into t_shares_plate_securitybarsdata_1year
-  (WeightType, PlateId, Market, SharesCode, GroupTimeKey,[Time], OpenedPrice, ClosedPrice, PreClosePrice, YestodayClosedPrice, MinPrice, MaxPrice, TradeStock, TradeAmount,
-  LastTradeStock, LastTradeAmount, Tradable, TotalCapital, IsLast, LastModified)
-  values(1,{0},0,'',{1},'{2}',{3},{3},{3},{3},{3},{3},0,0,0,0,0,0,0,'{4}');", item.PlateId, long.Parse(baseDate.ToString("yyyy")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                db.Database.ExecuteSqlCommand(sql);
-                                sql = string.Format(@"insert into t_shares_plate_securitybarsdata_1year
-  (WeightType, PlateId, Market, SharesCode, GroupTimeKey,[Time], OpenedPrice, ClosedPrice, PreClosePrice, YestodayClosedPrice, MinPrice, MaxPrice, TradeStock, TradeAmount,
-  LastTradeStock, LastTradeAmount, Tradable, TotalCapital, IsLast, LastModified)
-  values(2,{0},0,'',{1},'{2}',{3},{3},{3},{3},{3},{3},0,0,0,0,0,0,0,'{4}');", item.PlateId, long.Parse(baseDate.ToString("yyyy")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                                db.Database.ExecuteSqlCommand(sql);
+                                ToDeleteResult(item.PlateId, 11, MINTIME, db);
+                                ToInsertBaseData(item.PlateId, 11, long.Parse(baseDate.ToString("yyyy")), baseDate.ToString("yyyy-MM-dd 09:31:00"), initIndex, db);
                                 #endregion
+                            }
+                            //重置K线
+                            else if (item.Type == 2)
+                            {
+                                var context = JsonConvert.DeserializeObject<dynamic>(item.Context);
+                                DateTime baseDate = Convert.ToDateTime(context.Date);
+                                baseDate = DbHelper.GetLastTradeDate2(0, 0, 0, 1, baseDate);
+                                ToDeleteResult(item.PlateId, item.DataType, baseDate, db);
+                            }
+                            //批量重置K线
+                            else if (item.Type == 3)
+                            {
+                                var context = JsonConvert.DeserializeObject<dynamic>(item.Context);
+                                DateTime baseDate = Convert.ToDateTime(context.Date);
+                                baseDate = DbHelper.GetLastTradeDate2(0, 0, 0, 1, baseDate);
+                                ToDeleteResult(0, item.DataType, baseDate, db);
+                            }
+                            else if (item.Type == 4)
+                            {
+                                var context = JsonConvert.DeserializeObject<dynamic>(item.Context);
+                                long groupTimeKey = Convert.ToDateTime(context.GroupTimeKey);
+                                ToDeleteResult(0, item.DataType, groupTimeKey, db);
                             }
 
                             tran.Commit();
@@ -837,6 +761,69 @@ inner join
                     }
                 }
             }
+        }
+
+        //删除某个板块K线数据
+        private bool ToDeleteResult(long plateId, int dataType, DateTime startTime, meal_ticketEntities db)
+        {
+            string tableName = "";
+            if (!ParsePlateTableName(dataType, ref tableName))
+            {
+                return false;
+            }
+            string sql = "";
+            if (plateId == 0)
+            { 
+                sql = string.Format("delete {0} where [Time]>='{1}'", tableName, startTime.ToString("yyyy-MM-dd HH:mm:ss")); 
+            }
+            else
+            {
+                sql = string.Format("delete {0} where PlateId={1} and [Time]>='{2}'", tableName, plateId, startTime.ToString("yyyy-MM-dd HH:mm:ss"));
+            }
+            db.Database.ExecuteSqlCommand(sql);
+            return true;
+        }
+
+        //删除某个板块K线数据
+        private bool ToDeleteResult(long plateId, int dataType, long groupTimeKey, meal_ticketEntities db)
+        {
+            string tableName = "";
+            if (!ParsePlateTableName(dataType, ref tableName))
+            {
+                return false;
+            }
+            string sql = "";
+            if (plateId == 0)
+            {
+                sql = string.Format("delete {0} where GroupTimeKey>={1}", tableName, groupTimeKey);
+            }
+            else
+            {
+                sql = string.Format("delete {0} where PlateId={1} and GroupTimeKey>={2}", tableName, plateId, groupTimeKey);
+            }
+            db.Database.ExecuteSqlCommand(sql);
+            return true;
+        }
+
+        //添加基准日基准数据
+        private bool ToInsertBaseData(long plateId, int dataType, long groupTimeKey, string time, long initIndex, meal_ticketEntities db)
+        {
+            string tableName = "";
+            if (!ParsePlateTableName(dataType, ref tableName))
+            {
+                return false;
+            }
+            string sql = string.Format(@"insert into {0}
+  (WeightType, PlateId, Market, SharesCode, GroupTimeKey,[Time], OpenedPrice, ClosedPrice, PreClosePrice, YestodayClosedPrice, MinPrice, MaxPrice, TradeStock, TradeAmount,
+  LastTradeStock, LastTradeAmount, Tradable, TotalCapital, IsLast, LastModified)
+  values(1,{1},0,'',{2},'{3}',{4},{4},{4},{4},{4},{4},0,0,0,0,0,0,0,'{5}');", tableName, plateId, groupTimeKey, time, initIndex, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")); ;
+            db.Database.ExecuteSqlCommand(sql);
+            sql = string.Format(@"insert into {0}
+  (WeightType, PlateId, Market, SharesCode, GroupTimeKey,[Time], OpenedPrice, ClosedPrice, PreClosePrice, YestodayClosedPrice, MinPrice, MaxPrice, TradeStock, TradeAmount,
+  LastTradeStock, LastTradeAmount, Tradable, TotalCapital, IsLast, LastModified)
+  values(2,{1},0,'',{2},'{3}',{4},{4},{4},{4},{4},{4},0,0,0,0,0,0,0,'{5}');", tableName, plateId, groupTimeKey, time, initIndex, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")); ;
+            db.Database.ExecuteSqlCommand(sql);
+            return true;
         }
 
         /// <summary>
@@ -1003,7 +990,7 @@ inner join
                             {
                                 while (true)
                                 {
-                                    if (lastTime > lastDate.Date)
+                                    if (lastTime > lastDate.Date.AddDays(1))
                                     {
                                         break;
                                     }
@@ -1965,9 +1952,97 @@ inner join
         /// <summary>
         /// 执行重置操作
         /// </summary>
-        public void ToExecuteRetry(int dataType) 
-        { 
+        public void ToExecuteRetry(int dateType,List<SecurityBarsDataParList> packageList) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                foreach (var package in packageList)
+                {
+                    if (package.DataList.Count() <= 0)
+                    {
+                        continue;
+                    }
+                    long minGroupTimeKey = long.MaxValue;
+                    List<long> plateIdList = new List<long>();
+                    foreach (var shares in package.DataList)
+                    {
+                        if (minGroupTimeKey > shares.StartTimeKey)
+                        {
+                            minGroupTimeKey = shares.StartTimeKey;
+                        }
+                        long key = long.Parse(shares.SharesCode) * 10 + shares.Market;
+                        plateIdList = GetSharesPlateSession(key);
 
+                    }
+                    if (dateType == 2)//添加指令
+                    {
+                        //判断指令是否存在
+                        var instructions = (from item in db.t_shares_plate_rel_snapshot_instructions
+                                            where item.IsExcute == false && item.PlateId == 0 && item.DataType == package.DataType && item.Type == 4
+                                            select item).FirstOrDefault();
+                        if (instructions == null)
+                        {
+                            db.t_shares_plate_rel_snapshot_instructions.Add(new t_shares_plate_rel_snapshot_instructions
+                            {
+                                SharesCode = "",
+                                Context = JsonConvert.SerializeObject(new
+                                {
+                                    GroupTimeKey = minGroupTimeKey
+                                }),
+                                CreateTime = DateTime.Now,
+                                DataType = package.DataType,
+                                Date = DateTime.Now.Date,
+                                ExcuteTime = null,
+                                IsExcute = false,
+                                LastModified = DateTime.Now,
+                                Market = 0,
+                                PlateId = 0,
+                                PlateType = 0,
+                                Type = 4
+                            });
+                            db.SaveChanges();
+                        }
+                        else
+                        {
+                            var context = JsonConvert.DeserializeObject<dynamic>(instructions.Context);
+                            long groupTimeKey = Convert.ToDateTime(context.GroupTimeKey);
+                            if (groupTimeKey > minGroupTimeKey)
+                            {
+                                instructions.Context = JsonConvert.SerializeObject(new
+                                {
+                                    GroupTimeKey = minGroupTimeKey
+                                });
+                                db.SaveChanges();
+                            }
+                        }
+                    }
+                    if (dateType == 21)
+                    {
+                        foreach (long plateId in plateIdList)
+                        {
+                            ToDeleteResult(plateId, package.DataType, DateTime.Now.Date, db);
+                        }
+                    }
+                }
+            }
+            //重新加载缓存
+            if (dateType == 21)
+            {
+                //加载板块最后一条K线数据
+                LoadPlateKlineLastSession();
+                UpdateTodayPlateRelSnapshot();
+                //加载其他缓存
+                LoadSecurityBarsLastData();
+                //补全数据
+                DoRealTimeTask_Cal_His();
+
+                //加载板块最后一条K线数据
+                LoadPlateKlineLastSession();
+                UpdateTodayPlateRelSnapshot();
+                //加载其他缓存
+                LoadSecurityBarsLastData();
+                LoadPlateKlineSession();
+            }
         }
 
         /// <summary>

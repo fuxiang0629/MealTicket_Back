@@ -23,6 +23,23 @@ namespace MealTicket_Web_Handler.Model
         public int OrderType { get; set; }
     }
 
+    public class GetAccountShareGroupRelListRes
+    {
+        /// <summary>
+        /// 总数量
+        /// </summary>
+        public int TotalCount { get; set; }
+
+        /// <summary>
+        /// 股票列表
+        /// </summary>
+        public List<AccountShareGroupRelInfo> List { get; set; }
+
+        /// <summary>
+        /// 分组内股票数量列表
+        /// </summary>
+        public List<AccountShareGroupCountInfo> GroupSharesCountList { get; set; }
+    }
     public class AccountShareGroupRelInfo
     {
         /// <summary>
@@ -109,5 +126,18 @@ namespace MealTicket_Web_Handler.Model
         /// 板块列表
         /// </summary>
         public List<SharesPlateInfo> PlateList { get; set; }
+    }
+
+    public class AccountShareGroupCountInfo
+    {
+        /// <summary>
+        /// 分组Id
+        /// </summary>
+        public long GroupId { get; set; }
+
+        /// <summary>
+        /// 股票数量
+        /// </summary>
+        public int SharesCount { get; set; }
     }
 }

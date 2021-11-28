@@ -4133,7 +4133,7 @@
             股票k线数据传送
             </summary>
         </member>
-        <member name="M:MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.ToExecuteRetry(System.Int32)">
+        <member name="M:MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.ToExecuteRetry(System.Int32,System.Collections.Generic.List{MealTicket_Handler.SecurityBarsData.SecurityBarsDataParList})">
             <summary>
             执行重置操作
             </summary>

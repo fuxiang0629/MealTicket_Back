@@ -3255,7 +3255,6 @@
             <summary>
             发送指令获取券商板块K线数据
             </summary>
-            <param name="list"></param>
         </member>
         <member name="M:MealTicket_Handler.SecurityBarsData.IndexSecurityBarsDataTask.ParseTimeGroupKey(System.DateTime,System.Int32,System.Int64@)">
             <summary>
@@ -4134,6 +4133,11 @@
             股票k线数据传送
             </summary>
         </member>
+        <member name="M:MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.ToExecuteRetry(System.Int32,System.Collections.Generic.List{MealTicket_Handler.SecurityBarsData.SecurityBarsDataParList})">
+            <summary>
+            执行重置操作
+            </summary>
+        </member>
         <member name="M:MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.ParseTableName(System.Int32,System.String@)">
             <summary>
             获取股票K线数据表名称
@@ -4253,6 +4257,101 @@
         <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo.PackageList">
             <summary>
             数据包列表
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo.RetryCount">
+            <summary>
+            已重试次数
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo.TotalRetryCount">
+            <summary>
+            可重试次数
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo.FailPackageList">
+            <summary>
+            重试股票数据列表
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTaskQueueInfo.SuccessPackageList">
+            <summary>
+            成功股票数据列表
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataParList.SecurityBarsGetCount">
+            <summary>
+            每次获取数量（最大800）
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataParList.DataType">
+            <summary>
+            数据类型 2.1分钟K线 3.5分钟K线 4.15分钟K线 5.30分钟K线 6.60分钟K线 7.日K 8.周K 9.月K 10.季度K 11.年K
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataParList.DataList">
+            <summary>
+            股票数据列表
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataPar.Market">
+            <summary>
+            市场代码
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataPar.SharesCode">
+            <summary>
+            股票代码
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataPar.DataType">
+            <summary>
+            数据类型 2.1分钟K线 3.5分钟K线 4.15分钟K线 5.30分钟K线 6.60分钟K线 7.日K 8.周K 9.月K 10.季度K 11.年K
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataPar.SecurityBarsGetCount">
+            <summary>
+            每次获取数量（最大800）
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataPar.StartTimeKey">
+            <summary>
+            获取数据起始时间（-1表示无开始时间）
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataPar.EndTimeKey">
+            <summary>
+            获取数据截止时间（-1表示无截止时间）
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataPar.PreClosePrice">
+            <summary>
+            上一时段收盘价
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataPar.YestodayClosedPrice">
+            <summary>
+            昨日收盘价
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataPar.LastTradeStock">
+            <summary>
+            前一分钟成交量之和
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataPar.LastTradeAmount">
+            <summary>
+            前一分钟成交额之和
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataPar.PlateId">
+            <summary>
+            板块Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataPar.WeightType">
+            <summary>
+            加权类型1不加权 2总股本加权
             </summary>
         </member>
         <member name="P:MealTicket_Handler.SecurityBarsData.SecurityBarsDataType.DataType">
@@ -4453,6 +4552,11 @@
         <member name="F:MealTicket_Handler.Singleton.PriceFormat">
             <summary>
             金额保存小数位数
+            </summary>
+        </member>
+        <member name="F:MealTicket_Handler.Singleton.TotalRetryCount">
+            <summary>
+            K线重置失败次数
             </summary>
         </member>
         <member name="M:MealTicket_Handler.Singleton.Dispose">

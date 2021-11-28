@@ -10128,17 +10128,17 @@ namespace MealTicket_Admin_Handler
             DateTime tempDate = DateTime.Parse("1991-01-01 00:00:00");
             if (request.DateType == 1)
             {
-                tempDate = timeNow.Date;
+                tempDate = DbHelper.GetLastTradeDate2(0,0,0,0, timeNow.Date);
 
                 long StartGroupTimeKey = -1;
-                if (!ParseTimeGroupKey(DateTime.Parse(timeNow.ToString("yyyy-MM-dd 09:30:00")), request.DataType, ref StartGroupTimeKey))
+                if (!ParseTimeGroupKey(DateTime.Parse(tempDate.ToString("yyyy-MM-dd 09:30:00")), request.DataType, ref StartGroupTimeKey))
                 {
                     throw new WebApiException(400,"时间值错误");
                 }
                 request.StartGroupTimeKey = StartGroupTimeKey;
 
                 long EndGroupTimeKey = -1;
-                if (!ParseTimeGroupKey(DateTime.Parse(timeNow.ToString("yyyy-MM-dd 15:00:00")), request.DataType, ref EndGroupTimeKey))
+                if (!ParseTimeGroupKey(DateTime.Parse(tempDate.ToString("yyyy-MM-dd 15:00:00")), request.DataType, ref EndGroupTimeKey))
                 {
                     throw new WebApiException(400, "时间值错误");
                 }
@@ -10324,17 +10324,17 @@ namespace MealTicket_Admin_Handler
             DateTime tempDate = DateTime.Parse("1991-01-01 00:00:00");
             if (request.DateType == 1)
             {
-                tempDate = timeNow.Date;
+                tempDate = DbHelper.GetLastTradeDate2(0, 0, 0, 0, timeNow.Date);
 
                 long StartGroupTimeKey = -1;
-                if (!ParseTimeGroupKey(DateTime.Parse(timeNow.ToString("yyyy-MM-dd 09:30:00")), request.DataType, ref StartGroupTimeKey))
+                if (!ParseTimeGroupKey(DateTime.Parse(tempDate.ToString("yyyy-MM-dd 09:30:00")), request.DataType, ref StartGroupTimeKey))
                 {
                     throw new WebApiException(400, "时间值错误");
                 }
                 request.StartGroupTimeKey = StartGroupTimeKey;
 
                 long EndGroupTimeKey = -1;
-                if (!ParseTimeGroupKey(DateTime.Parse(timeNow.ToString("yyyy-MM-dd 15:00:00")), request.DataType, ref EndGroupTimeKey))
+                if (!ParseTimeGroupKey(DateTime.Parse(tempDate.ToString("yyyy-MM-dd 15:00:00")), request.DataType, ref EndGroupTimeKey))
                 {
                     throw new WebApiException(400, "时间值错误");
                 }

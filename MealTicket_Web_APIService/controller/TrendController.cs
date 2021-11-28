@@ -8590,7 +8590,7 @@ namespace MealTicket_Web_APIService.controller
         [Description("获取自选股分组内股票列表")]
         [Route("account/shares/group/rel/list"), HttpPost]
         [CheckUserLoginFilter]
-        public PageRes<AccountShareGroupRelInfo> GetAccountShareGroupRelList(GetAccountShareGroupRelListPageRequest request)
+        public GetAccountShareGroupRelListRes GetAccountShareGroupRelList(GetAccountShareGroupRelListPageRequest request)
         {
             if (request == null)
             {
@@ -8633,6 +8633,24 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             trendHandler.DeleteAccountShareGroupRel(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量删除自选股分组内股票
+        /// </summary>
+        /// <returns></returns>
+        [Description("批量删除自选股分组内股票")]
+        [Route("account/shares/group/rel/delete/batch"), HttpPost]
+        [CheckUserLoginFilter]
+        public object BatchDeleteAccountShareGroupRel(BatchDeleteAccountShareGroupRelRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BatchDeleteAccountShareGroupRel(request, basedata);
             return null;
         }
 

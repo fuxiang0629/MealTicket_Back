@@ -433,13 +433,9 @@ namespace MealTicket_Handler.SecurityBarsData
             if (isFinish)
             {
                 //通知板块
-                if (dataObj.HandlerType == 21)//当天更新，立即通知板块
+                if (dataObj.HandlerType == 2 || dataObj.HandlerType == 21)
                 {
-
-                }
-                else if (dataObj.HandlerType == 2)//形成通知板块指令
-                {
-
+                    Singleton.Instance._newIindexSecurityBarsDataTask.ToExecuteRetry(dataObj.HandlerType, dataObj.SuccessPackageList);
                 }
                 ClearTaskInfo(dataObj);//超时则清空任务
                 dataObj.TaskTimeOut = Singleton.Instance.SecurityBarsTaskTimeout;
