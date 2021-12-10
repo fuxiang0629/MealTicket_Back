@@ -11,6 +11,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using TradeAPI;
+using static SharesHqService.SessionHandler;
 
 namespace SharesHqService
 {
@@ -20,16 +21,6 @@ namespace SharesHqService
         /// 单例对象
         /// </summary>
         private static readonly Singleton instance = new Singleton();
-
-        /// <summary>
-        /// 系统参数更新线程
-        /// </summary>
-        Thread SysparUpdateThread;
-
-        /// <summary>
-        /// 系统参数更新线程等待队列
-        /// </summary>
-        private ThreadMsgTemplate<int> UpdateWait = new ThreadMsgTemplate<int>();
 
         public static Singleton Instance
         {
@@ -46,9 +37,13 @@ namespace SharesHqService
 
         }
 
+        public SessionHandler session = null;
+
         private Singleton()
         {
-            Init();
+            session = new SessionHandler();
+            session.UpdateSessionManual();
+            ClientInit();
         }
 
         /// <summary>
@@ -57,107 +52,14 @@ namespace SharesHqService
         public readonly long PriceFormat = 10000;
 
         /// <summary>
-        /// 股票基本信息列表
-        /// </summary>
-        private List<SharesBaseInfo> SharesBaseInfoList=new List<SharesBaseInfo>();
-        private ReaderWriterLock _readWriteLock_SharesBaseInfoList = new ReaderWriterLock();
-        public List<SharesBaseInfo> _getSharesBaseInfoList() 
-        {
-            List<SharesBaseInfo> _sharesBaseInfoList = new List<SharesBaseInfo>();
-            _readWriteLock_SharesBaseInfoList.AcquireReaderLock(-1);
-            _sharesBaseInfoList = SharesBaseInfoList;
-            _readWriteLock_SharesBaseInfoList.ReleaseReaderLock();
-            return _sharesBaseInfoList;
-        }
-        public void _setSharesBaseInfoList(List<SharesBaseInfo> list)
-        {
-            _readWriteLock_SharesBaseInfoList.AcquireWriterLock(-1);
-            SharesBaseInfoList = list;
-            _readWriteLock_SharesBaseInfoList.ReleaseWriterLock();
-        }
-
-        /// <summary>
-        /// 上一次五档行情数据
-        /// </summary>
-        public Dictionary<string, SharesQuotesInfo> LastSharesQuotesList = new Dictionary<string, SharesQuotesInfo>();
-
-        /// <summary>
-        /// 深圳股票匹配
-        /// </summary>
-        public string SharesCodeMatch0 = "(^00.*)|(^30.*)";
-
-        /// <summary>
-        /// 上海股票匹配
-        /// </summary>
-        public string SharesCodeMatch1 = "(^6.*)";
-
-        /// <summary>
-        /// 重连线程
-        /// </summary>
-        Thread HqClientRetryThread;
-
-        /// <summary>
-        /// 行情服务器
-        /// </summary>
-        private List<HostInfo> HostList;
-
-        /// <summary>
         /// 行情连接数量
         /// </summary>
         public readonly int hqClientCount = 32;
 
         /// <summary>
-        /// 心跳线程
+        /// 行情内存空间
         /// </summary>
-        Thread HeartbeatThread;
-
-        /// <summary>
-        /// 股票k线资源锁
-        /// </summary>
-        public object SecurityBarsLocked = new object();
-
-        /// <summary>
-        /// 指数k线资源锁
-        /// </summary>
-        public object SecurityIndexBarsLocked = new object();
-
-        /// <summary>
-        /// 分时行情数据资源锁
-        /// </summary>
-        public object MinuteTimeDataLocked = new object();
-
-        /// <summary>
-        /// 分笔成交数据资源锁
-        /// </summary>
-        public object TransactionDataLocked = new object();
-
-        /// <summary>
-        /// 实时行情更新频率（毫秒）
-        /// </summary>
-        public int SshqUpdateRate = 3000;
-
-        /// <summary>
-        /// 获取实时行情每批次数量（最大80）
-        /// </summary>
-        public int QuotesCount = 75;
-
-        /// <summary>
-        /// 股票基础数据起始时间
-        /// </summary>
-        public TimeSpan AllSharesStartHour = TimeSpan.Parse("01:00:00");
-
-        /// <summary>
-        /// 股票基础数据截止时间
-        /// </summary>
-        public TimeSpan AllSharesEndHour = TimeSpan.Parse("04:00:00");
-
-        /// <summary>
-        /// 股票涨幅列表
-        /// </summary>
-        public List<t_shares_limit_fundmultiple> RangeList = new List<t_shares_limit_fundmultiple>();
-
-        //股票昨日收盘价缓存
-        public List<SharesBaseInfo> SharesList = new List<SharesBaseInfo>();
+        public TdxHq_Result[] tdxHq_Result;
 
         //行情是否在运行
         object isRunLock = new object();
@@ -184,88 +86,12 @@ namespace SharesHqService
             }
         }
 
-        //是否可以进入行情业务更新
-        object quotesBusinessLock = new object();
-        public bool QuotesBusinessCanEnter = true;
-
-        public bool TryQuotesBusinessCanEnter()
-        {
-            lock (quotesBusinessLock)
-            {
-                if (!QuotesBusinessCanEnter) { return false; }
-
-                QuotesBusinessCanEnter = false;
-            }
-
-            return true;
-        }
-
-        public bool TryQuotesBusinessCanLeave()
-        {
-            lock (quotesBusinessLock)
-            {
-                if (QuotesBusinessCanEnter) { return false; }
-
-                QuotesBusinessCanEnter = true;
-            }
-
-            return true;
-        }
-
-
-        #region====暂未使用====
-        /// <summary>
-        /// 获取证券k线数据每批次数量
-        /// </summary>
-        public readonly int BarsCount = 50;
-
-        /// <summary>
-        /// 获取指数k线数据每批次数量
-        /// </summary>
-        public readonly int IndexBarsCount = 50;
-
-        /// <summary>
-        /// 获取分时行情数据每批次数量
-        /// </summary>
-        public readonly int MinuteTimeDataCount = 50;
-
-        /// <summary>
-        /// 获取分笔成交数据每批次数量
-        /// </summary>
-        public readonly int TransactionDataCount = 1;
-        #endregion
-
-        #region===获取K线参数====
-        public int SecurityIndexBarsGetCount = 5;//每次获取k线数据数量
-        #endregion
-
-        /// <summary>
-        /// 运行时间比交易时间提前秒数
-        /// </summary>
-        public int RunStartTime = -180;
-
-        /// <summary>
-        /// 运行时间比交易时间滞后秒数
-        /// </summary>
-        public int RunEndTime = 180;
-
-        /// <summary>
-        /// 行情业务定时器（毫秒）
-        /// </summary>
-        public int BusinessRunTime = 3000;
-
-        public ThreadMsgTemplate<int> cltData = new ThreadMsgTemplate<int>();
-        public ThreadMsgTemplate<int> retryData = new ThreadMsgTemplate<int>();
-        private ThreadMsgTemplate<int> retryWait = new ThreadMsgTemplate<int>();
-        private ThreadMsgTemplate<int> heartbeatWait = new ThreadMsgTemplate<int>();
-
         /// <summary>
         /// 获取行情链接
         /// </summary>
         /// <returns></returns>
         public int GetHqClient()
         {
-
             int clientId = -1;
             cltData.WaitMessage(ref clientId);
             return clientId;
@@ -290,11 +116,24 @@ namespace SharesHqService
         }
 
         /// <summary>
-        /// 初始化
+        /// 链接初始化
         /// </summary>
-        private void Init()
+        private void ClientInit()
         {
-            Dispose();
+            QueueInit();//初始化各个队列
+            ApplyTdxMemory();
+            for (int i = 0; i < hqClientCount; i++)
+            {
+                StartHqClient(-1);
+            }
+        }
+
+        /// <summary>
+        /// 申请行情获取内存空间
+        /// </summary>
+        private void ApplyTdxMemory()
+        {
+            int QuotesCount = session.GetQuotesCount();
             //申请行情内存空间数组
             tdxHq_Result = new TdxHq_Result[hqClientCount];
             for (int i = 0; i < hqClientCount; i++)
@@ -305,29 +144,6 @@ namespace SharesHqService
                     sResult = new StringBuilder(2048 * QuotesCount)
                 };
             }
-
-            retryWait.Init();
-            retryData.Init();
-            cltData.Init();
-            heartbeatWait.Init();
-            StartHqClientRetryThread();
-            StartHeartbeatThread();
-            GetSysSettingInfo();
-
-            GetSharesHqHost();
-            GetSharesBaseInfoList();
-            for (int i = 0; i < hqClientCount; i++)
-            {
-                StartHqClient(-1);
-            }
-
-            UpdateWait.Init();
-        }
-
-        public void StartSysPar()
-        {
-            SysparUpdate();
-            StartSysparUpdateThread();
         }
 
         /// <summary>
@@ -345,6 +161,7 @@ namespace SharesHqService
             StringBuilder sResult = new StringBuilder(1024);
             StringBuilder sErrInfo = new StringBuilder(256);
 
+            var HostList = session.GetHostList();
             Random rd = new Random();
             int index = rd.Next(HostList.Count);
             var hqHost = HostList[index];
@@ -370,177 +187,56 @@ namespace SharesHqService
         }
 
         /// <summary>
-        /// 获取股票列表
+        /// 初始化
         /// </summary>
-        private void GetSharesBaseInfoList()
+        public void Init()
         {
-            using (var db = new meal_ticketEntities())
-            {
-                var result = (from x in db.t_shares_all
-                              select new SharesBaseInfo
-                              {
-                                  ShareCode = x.SharesCode,
-                                  ShareHandCount = x.SharesHandCount,
-                                  ShareName = x.SharesName,
-                                  Pyjc=x.SharesPyjc,
-                                  ShareClosedPrice = x.ShareClosedPrice,
-                                  Market = x.Market
-                              }).ToList();
-                _setSharesBaseInfoList(result);
-            }
+            session.SetTimerStatus("", 0);
+            session.UpdateSessionManual();
+            session.StartUpdate();
+            StartHqClientRetryThread();
+
+            StartHeartbeatThread();
         }
 
         /// <summary>
-        /// 获取股票五档数据列表
+        /// 队列初始化
         /// </summary>
-        public void GetLastSharesQuotesList()
+        public ThreadMsgTemplate<int> cltData = new ThreadMsgTemplate<int>();
+        public ThreadMsgTemplate<int> retryData = new ThreadMsgTemplate<int>();
+        private ThreadMsgTemplate<int> retryWait = new ThreadMsgTemplate<int>();
+        private ThreadMsgTemplate<int> heartbeatWait = new ThreadMsgTemplate<int>();
+        private ThreadMsgTemplate<int> UpdateWait = new ThreadMsgTemplate<int>();
+
+        private void QueueInit()
         {
-            DateTime dateNow = DateTime.Now.Date;
-            using (var db = new meal_ticketEntities())
-            {
-                var result = (from item in db.v_shares_quotes_last
-                              where item.LastModified > dateNow
-                              select new SharesQuotesInfo
-                              {
-                                  SellCount1=item.SellCount1,
-                                  SellCount2=item.SellCount2,
-                                  SellCount3=item.SellCount3,
-                                  SellCount4=item.SellCount4,
-                                  SellCount5=item.SellCount5,
-                                  SellPrice1=item.SellPrice1,
-                                  SellPrice2=item.SellPrice2,
-                                  SellPrice3=item.SellPrice3,
-                                  SellPrice4=item.SellPrice4,
-                                  SellPrice5=item.SellPrice5,
-                                  SharesCode=item.SharesCode,
-                                  SpeedUp=item.SpeedUp,
-                                  Activity=item.Activity,
-                                  BuyCount1=item.BuyCount1,
-                                  BuyCount2=item.BuyCount2,
-                                  BuyCount3=item.BuyCount3,
-                                  BuyCount4=item.BuyCount4,
-                                  BuyCount5=item.BuyCount5,
-                                  BuyPrice1=item.BuyPrice1,
-                                  BuyPrice2=item.BuyPrice2,
-                                  BuyPrice3=item.BuyPrice3,
-                                  BuyPrice4=item.BuyPrice4,
-                                  BuyPrice5=item.BuyPrice5,
-                                  ClosedPrice=item.ClosedPrice,
-                                  InvolCount=item.InvolCount,
-                                  LimitDownPrice=item.LimitDownPrice,
-                                  LimitUpPrice=item.LimitUpPrice,
-                                  Market=item.Market,
-                                  MaxPrice=item.MaxPrice,
-                                  MinPrice=item.MinPrice,
-                                  OuterCount=item.OuterCount,
-                                  OpenedPrice=item.OpenedPrice,
-                                  PresentCount=item.PresentCount,
-                                  PriceType=item.PriceType,
-                                  PresentPrice=item.PresentPrice,
-                                  TotalAmount=item.TotalAmount,
-                                  TotalCount=item.TotalCount,
-                                  TriNearLimitType=item.TriNearLimitType,
-                                  TriPriceType=item.TriPriceType,
-                                  LastModified=item.LastModified,
-                                  BackSharesCode=item.SharesCode
-                              }).ToDictionary(e => e.Market+""+e.SharesCode, e => e);
-                LastSharesQuotesList = result;
-            }
+            retryWait.Init();
+            retryData.Init();
+            cltData.Init();
+            heartbeatWait.Init();
+            UpdateWait.Init();
         }
 
+        public MQHandler mqHandler;
         /// <summary>
-        /// 获取配资信息
+        /// 启动Mq队列
         /// </summary>
-        private void GetSysSettingInfo() 
+        public MQHandler StartMqHandler()
         {
-            using (var db = new meal_ticketEntities())
-            {
-                var sys = (from item in db.t_system_param
-                           select item).ToList();
-                var tempSharesCodeMatch0=sys.Where(e => e.ParamName == "SharesCodeMatch0").Select(e=>e.ParamValue).FirstOrDefault();
-                var tempSharesCodeMatch1 = sys.Where(e => e.ParamName == "SharesCodeMatch1").Select(e => e.ParamValue).FirstOrDefault();
-                if (!string.IsNullOrEmpty(tempSharesCodeMatch0))
-                {
-                    SharesCodeMatch0 = tempSharesCodeMatch0;
-                }
-                if (!string.IsNullOrEmpty(tempSharesCodeMatch1))
-                {
-                    SharesCodeMatch1 = tempSharesCodeMatch1;
-                }
-            }
-        }
-
-        /// <summary>
-        /// 获取行情链接地址
-        /// </summary>
-        private void GetSharesHqHost()
-        {
-            using (var db = new meal_ticketEntities())
-            {
-                var host = (from item in db.t_shares_hq_host
-                            where item.Status == 1
-                            select new HostInfo
-                            {
-                                Ip = item.IpAddress,
-                                Port = item.Port
-                            }).ToList();
-                HostList = host;
-            }
-        }
-
-        /// <summary>
-        /// 释放资源。
-        /// </summary>
-        public void Dispose()
-        {
-            if (HqClientRetryThread != null)
-            {
-                retryWait.AddMessage(0);
-                HqClientRetryThread.Join();
-                retryWait.Release();
-
-                do
-                {
-                    int clientId = -1;
-                    if (!cltData.GetMessage(ref clientId, true))
-                    { break; }
-
-                    TradeX_M.TdxHq_Disconnect(clientId);
-                } while (true);
-                cltData.Release();
-
-                do
-                {
-                    int clientId = -1;
-                    if (!retryData.GetMessage(ref clientId, true))
-                    { break; }
-
-                    if (clientId >= 0)
-                    {
-                        TradeX_M.TdxHq_Disconnect(clientId);
-                    }
-                } while (true);
-                retryData.Release();
-            }
-            if (HeartbeatThread != null)
-            {
-                heartbeatWait.AddMessage(0);
-                HeartbeatThread.Join();
-                heartbeatWait.Release();
-            }
-
-
-            if (SysparUpdateThread != null)
-            {
-                UpdateWait.AddMessage(0);
-                SysparUpdateThread.Join();
-                UpdateWait.Release();
-            }
+            string hostName = ConfigurationManager.AppSettings["MQ_HostName"];
+            int port = int.Parse(ConfigurationManager.AppSettings["MQ_Port"]);
+            string userName = ConfigurationManager.AppSettings["MQ_UserName"];
+            string password = ConfigurationManager.AppSettings["MQ_Password"];
+            string virtualHost = ConfigurationManager.AppSettings["MQ_VirtualHost"];
+            mqHandler = new MQHandler(hostName, port, userName, password, virtualHost);
+            return mqHandler;
         }
 
         /// <summary>
         /// 重连线程
         /// </summary>
+        Thread HqClientRetryThread;
+
         private void StartHqClientRetryThread()
         {
             HqClientRetryThread = new Thread(() =>
@@ -573,9 +269,12 @@ namespace SharesHqService
             } while (true);
         }
 
+
         /// <summary>
         /// 心跳线程
         /// </summary>
+        Thread HeartbeatThread;
+
         private void StartHeartbeatThread()
         {
             HeartbeatThread = new Thread(() =>
@@ -619,7 +318,7 @@ namespace SharesHqService
             } while (true);
 
             string successStr = "";
-            for (int idx = 0; idx < clientSuccess.Count(); idx++) 
+            for (int idx = 0; idx < clientSuccess.Count(); idx++)
             {
                 AddHqClient(clientSuccess[idx]);
                 successStr = successStr + "," + clientSuccess[idx];
@@ -633,130 +332,53 @@ namespace SharesHqService
             }
         }
 
+
         /// <summary>
-        /// 启动系统参数更新线程
+        /// 释放资源。
         /// </summary>
-        private void StartSysparUpdateThread()
+        public void Dispose()
         {
-            SysparUpdateThread = new Thread(() =>
+            if (HqClientRetryThread != null)
             {
+                retryWait.AddMessage(0);
+                HqClientRetryThread.Join();
+                retryWait.Release();
+
                 do
                 {
-                    int msgId = 0;
-                    if (UpdateWait.WaitMessage(ref msgId, 60000))
-                    {
-                        break;
-                    }
-                    SysparUpdate();
+                    int clientId = -1;
+                    if (!cltData.GetMessage(ref clientId, true))
+                    { break; }
+
+                    TradeX_M.TdxHq_Disconnect(clientId);
                 } while (true);
-            });
-            SysparUpdateThread.Start();
-        }
+                cltData.Release();
 
-        private void SysparUpdate()
-        {
-            try
-            {
-                using (var db = new meal_ticketEntities())
+                do
                 {
-                    try
+                    int clientId = -1;
+                    if (!retryData.GetMessage(ref clientId, true))
+                    { break; }
+
+                    if (clientId >= 0)
                     {
-                        var sysPar1 = (from item in db.t_system_param
-                                       where item.ParamName == "HqServerPar"
-                                       select item).FirstOrDefault();
-                        if (sysPar1 != null)
-                        {
-                            var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar1.ParamValue);
-                            int tempRunStartTime= sysValue.RunStartTime;
-                            if (tempRunStartTime < 1800)
-                            {
-                                RunStartTime = tempRunStartTime;
-                            }
-                            int tempRunEndTime = sysValue.RunEndTime;
-                            if (tempRunEndTime < 1800)
-                            {
-                                RunEndTime = tempRunEndTime;
-                            }
-                            int tempSshqUpdateRate = sysValue.SshqUpdateRate; 
-                            if (tempSshqUpdateRate >0 && tempSshqUpdateRate<60000)
-                            {
-                                SshqUpdateRate = tempSshqUpdateRate;
-                            }
-                            int tempQuotesCount = sysValue.QuotesCount;
-                            if (tempQuotesCount > 0 && tempQuotesCount <= 80)
-                            {
-                                QuotesCount = tempQuotesCount;
-                            }
-                            string tempAllSharesStartHour = sysValue.AllSharesStartHour;
-                            if (!TimeSpan.TryParse(tempAllSharesStartHour, out AllSharesStartHour))
-                            {
-                                AllSharesStartHour = TimeSpan.Parse("01:00:00");
-                            }
-                            string tempAllSharesEndHour = sysValue.AllSharesEndHour;
-                            if (!TimeSpan.TryParse(tempAllSharesEndHour, out AllSharesEndHour))
-                            {
-                                AllSharesEndHour = TimeSpan.Parse("04:00:00");
-                            }
-                            int tempBusinessRunTime = sysValue.BusinessRunTime;
-                            if (tempBusinessRunTime > 0 && tempBusinessRunTime <1800000)
-                            {
-                                BusinessRunTime = tempBusinessRunTime;
-                            }
-                        }
+                        TradeX_M.TdxHq_Disconnect(clientId);
                     }
-                    catch { }
-                    try
-                    {
-                        var sysPar2 = (from item in db.t_system_param
-                                       where item.ParamName == "SharesCodeMatch0"
-                                       select item).FirstOrDefault();
-                        if (sysPar2 != null)
-                        {
-                            SharesCodeMatch0 = sysPar2.ParamValue;
-                        }
-                    }
-                    catch { }
-                    try
-                    {
-                        var sysPar3 = (from item in db.t_system_param
-                                       where item.ParamName == "SharesCodeMatch1"
-                                       select item).FirstOrDefault();
-                        if (sysPar3 != null)
-                        {
-                            SharesCodeMatch1 = sysPar3.ParamValue;
-                        }
-                    }
-                    catch { }
-                    try
-                    {
-                        RangeList = (from item in db.t_shares_limit_fundmultiple
-                                       select item).ToList();
-                    }
-                    catch { }
-                }
+                } while (true);
+                retryData.Release();
             }
-            catch (Exception ex)
-            { }
+            if (HeartbeatThread != null)
+            {
+                heartbeatWait.AddMessage(0);
+                HeartbeatThread.Join();
+                heartbeatWait.Release();
+            }
 
-        }
 
-        #region====五档行情数据结构====
-        public TdxHq_Result[] tdxHq_Result;//行情内存空间
-        #endregion
-
-        public MQHandler mqHandler;
-        /// <summary>
-        /// 启动Mq队列
-        /// </summary>
-        public MQHandler StartMqHandler()
-        {
-            string hostName = ConfigurationManager.AppSettings["MQ_HostName"];
-            int port = int.Parse(ConfigurationManager.AppSettings["MQ_Port"]);
-            string userName = ConfigurationManager.AppSettings["MQ_UserName"];
-            string password = ConfigurationManager.AppSettings["MQ_Password"];
-            string virtualHost = ConfigurationManager.AppSettings["MQ_VirtualHost"];
-            mqHandler = new MQHandler(hostName, port, userName, password, virtualHost);
-            return mqHandler;
+            if (session != null)
+            {
+                session.Dispose();
+            }
         }
     }
 }

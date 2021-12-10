@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SecurityBarsDataUpdate
@@ -74,7 +75,7 @@ namespace SecurityBarsDataUpdate
         /// <summary>
         /// 成交量(笔)
         /// </summary>
-        public int TradeStock { get; set; }
+        public long TradeStock { get; set; }
 
         /// <summary>
         /// 成交额(元*10000)
@@ -120,6 +121,11 @@ namespace SecurityBarsDataUpdate
         /// 是否有效数据（排除停牌和未上市）
         /// </summary>
         public bool IsVaild { get; set; }
+
+        /// <summary>
+        /// 是否错误数据
+        /// </summary>
+        public bool IsError { get; set; }
     }
 
     public class SecurityBarsDataTaskInfo
@@ -277,5 +283,54 @@ namespace SecurityBarsDataUpdate
         /// 成交额
         /// </summary>
         public long TradeAmount { get; set; }
+    }
+
+
+    public class TaskDataInfo 
+    {
+        public SecurityBarsDataPar Data { get; set; }
+
+        /// <summary>
+        /// 数据包类型
+        /// </summary>
+        public int HandlerType { get; set; }
+
+        /// <summary>
+        /// 信号量
+        /// </summary>
+        public Semaphore semap { get; set; }
+
+        /// <summary>
+        /// 等待句柄
+        /// </summary>
+        public ManualResetEvent WatiHandle { get; set; }
+
+        /// <summary>
+        /// 总数量
+        /// </summary>
+        public int TotalCount { get; set; }
+
+        /// <summary>
+        /// 失败数据包
+        /// </summary>
+        public Dictionary<int, SecurityBarsDataParList> FailPackage { get; set; }
+
+        public object FailLock { get; set; }
+
+        /// <summary>
+        /// 成功数据包
+        /// </summary>
+        public Dictionary<int, SecurityBarsDataParList> SuccessPackage { get; set; }
+
+        public object SuccessLock { get; set; }
+
+        /// <summary>
+        /// 结果集
+        /// </summary>
+        public Dictionary<int, SecurityBarsDataRes> ResultList { get; set; }
+
+        public Dictionary<int,int> downCounter { get; set; }
+
+        public object DownLoadLock { get; set; }
     }
 }

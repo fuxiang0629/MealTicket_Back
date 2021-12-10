@@ -1,6 +1,13 @@
+删除表t_shares_plate_rel_tag
+t_shares_plate_rel_tag_force
+t_shares_plate_rel_tag_trendlike
+t_shares_plate_rel_tag_focuson
+P_GetPlate_Quotes_Date_Session
+P_GetPlate_Quotes_Today_Session
+P_GetShares_Quotes_Date_Session
+P_GetShares_Quotes_Today_Session
 
-  alter table t_shares_limit_time add Time7 nvarchar(max);
-f_getSecuritybarsdata_groupTime
 
-
-t_shares_minutetimedata
+  insert into t_system_param
+  (ParamName,[Description],ParamValue,IsJson,CreateTime,LastModified)
+  values('PlateTagCalPar','板块标签计算参数','{TrendLikeDays":5}',1,getdate(),getdate())

@@ -4361,71 +4361,39 @@ t.SharesInfo in {1}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"), sharesQuery.ToStr
 
                 string sql = @"select Market,SharesCode,ClosedPrice,PresentPrice,LimitUpPrice,LimitDownPrice
 from v_shares_quotes_last with(nolock)";
-                List<QuotesDateInfo> quotes_list = new List<QuotesDateInfo>();
+                Dictionary<int, QuotesDateInfo> quotesDic = new Dictionary<int, QuotesDateInfo>();
                 using (var db = new meal_ticketEntities())
                 {
-                    quotes_list = db.Database.SqlQuery<QuotesDateInfo>(sql).ToList();
-                }
-
-                ThreadMsgTemplate<SharesBase_Session> data = new ThreadMsgTemplate<SharesBase_Session>();
-                data.Init();
-                foreach (var item in sharesList)
-                {
-                    data.AddMessage(item);
+                    quotesDic = db.Database.SqlQuery<QuotesDateInfo>(sql).ToList().ToDictionary(k => int.Parse(k.SharesCode) * 10 + k.Market, v => v);
                 }
 
                 List<SharesBase_Session> result = new List<SharesBase_Session>();
-                object dataLock = new object();
 
-                int defaultCount = Singleton.Instance.MaxTrendCheckTaskCount;
-                int taskCount = data.GetCount();
-                if (taskCount > defaultCount)
+                foreach (var tempData in sharesList)
                 {
-                    taskCount = defaultCount;
-                }
-
-                Task[] taskArr = new Task[taskCount];
-                for (int index = 0; index < taskCount; index++)
-                {
-                    taskArr[index] = new Task(() =>
+                    int key = int.Parse(tempData.SharesCode) * 10 + tempData.Market;
+                    if (!quotesDic.ContainsKey(key))
                     {
-                        do
+                        continue;
+                    }
+                    var quotes = quotesDic[key];
+                    long disPrice = priceType == 1 ? (quotes.LimitUpPrice + priceError)
+                        : priceType == 2 ? (quotes.LimitDownPrice + priceError)
+                        : priceType == 3 ? (long)(quotes.ClosedPrice * 1.0 / 100 * priceError / 10000 + quotes.ClosedPrice)
+                        : 0;
+                    if (disPrice <= 0 || quotes.PresentPrice <= 0)
+                    {
+                        continue;
+                    }
+                    if ((compare == 1 && quotes.PresentPrice >= disPrice) || (compare == 2 && quotes.PresentPrice <= disPrice))
+                    {
+                        result.Add(new SharesBase_Session
                         {
-                            SharesBase_Session tempData = new SharesBase_Session();
-                            if (!data.GetMessage(ref tempData, true))
-                            {
-                                break;
-                            }
-                            var quotes = quotes_list.Where(e => e.Market == tempData.Market && e.SharesCode == tempData.SharesCode).FirstOrDefault();
-                            if (quotes == null)
-                            {
-                                continue;
-                            }
-                            long disPrice = priceType == 1 ? (quotes.LimitUpPrice + priceError)
-                                : priceType == 2 ? (quotes.LimitDownPrice + priceError)
-                                : priceType == 3 ? (long)(quotes.ClosedPrice * 1.0 / 100 * priceError/10000 + quotes.ClosedPrice)
-                                : 0;
-                            if (disPrice <= 0 || quotes.PresentPrice <= 0)
-                            {
-                                continue;
-                            }
-                            if ((compare == 1 && quotes.PresentPrice >= disPrice) || (compare == 2 && quotes.PresentPrice <= disPrice))
-                            {
-                                lock (dataLock)
-                                {
-                                    result.Add(new SharesBase_Session
-                                    {
-                                        Market = tempData.Market,
-                                        SharesCode = tempData.SharesCode
-                                    });
-                                }
-                            }
-                        } while (true);
-                    }, TaskCreationOptions.LongRunning);
-                    taskArr[index].Start();
+                            Market = tempData.Market,
+                            SharesCode = tempData.SharesCode
+                        });
+                    }
                 }
-                Task.WaitAll(taskArr);
-                data.Release();
                 return result;
             }
             catch (Exception ex)
@@ -4579,416 +4547,350 @@ from v_shares_quotes_last with(nolock)";
                 {
                     quotes_date_list = db.Database.SqlQuery<QuotesDateInfo>(sql).ToList();
                 }
-
-                ThreadMsgTemplate<SharesBase_Session> data = new ThreadMsgTemplate<SharesBase_Session>();
-                data.Init();
-                foreach (var item in sharesList)
-                {
-                    data.AddMessage(item);
-                }
-
-                List<SharesBase_Session> result = new List<SharesBase_Session>();
-                object dataLock = new object();
-
-
-                int defaultCount = Singleton.Instance.MaxTrendCheckTaskCount;
-                int taskCount = data.GetCount();
-                if (taskCount > defaultCount)
-                {
-                    taskCount = defaultCount;
-                }
-
                 var quotes_date_list_dic = quotes_date_list.GroupBy(e => new { e.Market, e.SharesCode }).ToDictionary(k => int.Parse(k.Key.SharesCode) * 10 + k.Key.Market, v => v.ToList());
 
-                Task[] taskArr = new Task[taskCount];
-                for (int index = 0; index < taskCount; index++)
+                List<SharesBase_Session> result = new List<SharesBase_Session>();
+                foreach (var tempData in sharesList)
                 {
-                    taskArr[index] = new Task(() =>
+                    List<QuotesDateInfo> quotes_date = new List<QuotesDateInfo>();
+                    List<QuotesDateInfo> temp_quotes_date = new List<QuotesDateInfo>();
+                    int key = int.Parse(tempData.SharesCode) * 10 + tempData.Market;
+                    if (quotes_date_list_dic.ContainsKey(key))
                     {
-                        do
+                        temp_quotes_date = quotes_date_list_dic[key];
+                    }
+                    if (priceCompare > 0 && priceType > 0)
+                    {
+                        if (direct == 2)
                         {
-                            SharesBase_Session tempData = new SharesBase_Session();
-                            if (!data.GetMessage(ref tempData, true))
+                            var direct_quotes_date = temp_quotes_date.OrderByDescending(e => e.Date).ToList();
+                            foreach (var item in direct_quotes_date)
                             {
-                                break;
+                                if ((priceType == 1 && priceCompare == 1 && item.PresentPrice >= item.LimitUpPrice + priceError) || (priceType == 1 && priceCompare == 2 && item.PresentPrice <= item.LimitUpPrice + priceError))
+                                {
+                                    quotes_date.Add(item);
+                                    break;
+                                }
+                                else if ((priceType == 2 && priceCompare == 1 && item.PresentPrice >= item.LimitDownPrice + priceError) || (priceType == 2 && priceCompare == 2 && item.PresentPrice <= item.LimitDownPrice + priceError))
+                                {
+                                    quotes_date.Add(item);
+                                    break;
+                                }
+                                else if ((priceType == 3 && priceCompare == 1 && item.RiseRate >= priceError) || (priceType == 3 && priceCompare == 2 && item.RiseRate <= priceError))
+                                {
+                                    quotes_date.Add(item);
+                                    break;
+                                }
+                                quotes_date.Add(item);
                             }
+                        }
+                        else
+                        {
+                            var direct_quotes_date = temp_quotes_date.OrderBy(e => e.Date).ToList();
+                            bool isAdd = false;
+                            foreach (var item in direct_quotes_date)
+                            {
+                                if (!isAdd)
+                                {
+                                    if ((priceType == 1 && priceCompare == 1 && item.PresentPrice >= item.LimitUpPrice + priceError) || (priceType == 1 && priceCompare == 2 && item.PresentPrice <= item.LimitUpPrice + priceError))
+                                    {
+                                        isAdd = true;
+                                    }
+                                    else if ((priceType == 2 && priceCompare == 1 && item.PresentPrice >= item.LimitDownPrice + priceError) || (priceType == 2 && priceCompare == 2 && item.PresentPrice <= item.LimitDownPrice + priceError))
+                                    {
+                                        isAdd = true;
+                                    }
+                                    else if ((priceType == 3 && priceCompare == 1 && item.RiseRate >= priceError) || (priceType == 3 && priceCompare == 2 && item.RiseRate <= priceError))
+                                    {
+                                        isAdd = true;
+                                    }
+                                }
+                                if (isAdd)
+                                {
+                                    quotes_date.Add(item);
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        quotes_date = temp_quotes_date.OrderBy(e => e.Date).ToList();
+                    }
+                    //没涨停次数
+                    if (type == 1)
+                    {
+                        int tempCount = quotes_date.Where(e => e.PriceType != 1).Count();
+                        if ((compare == 1 && tempCount >= count) || (compare == 2 && tempCount <= count))
+                        {
+                            result.Add(new SharesBase_Session
+                            {
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                    }
+                    //涨停次数
+                    else if (type == 2)
+                    {
+                        int tempCount = 0;
+                        if (triPrice)
+                        {
+                            tempCount = quotes_date.Where(e => e.TriPriceType == 1).Count();
+                        }
+                        else
+                        {
+                            tempCount = quotes_date.Where(e => e.PriceType == 1).Count();
+                        }
 
-                            List<QuotesDateInfo> quotes_date = new List<QuotesDateInfo>();
-                            List<QuotesDateInfo> temp_quotes_date = new List<QuotesDateInfo>();
-                            int key = int.Parse(tempData.SharesCode) * 10 + tempData.Market;
-                            if (quotes_date_list_dic.ContainsKey(key))
+                        if ((compare == 1 && tempCount >= count) || (compare == 2 && tempCount <= count))
+                        {
+                            result.Add(new SharesBase_Session
                             {
-                                temp_quotes_date = quotes_date_list_dic[key];
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                    }
+                    //跌停次数
+                    else if (type == 3)
+                    {
+                        int tempCount = 0;
+                        if (triPrice)
+                        {
+                            tempCount = quotes_date.Where(e => e.TriPriceType == 2).Count();
+                        }
+                        else
+                        {
+                            tempCount = quotes_date.Where(e => e.PriceType == 2).Count();
+                        }
+                        if ((compare == 1 && tempCount >= count) || (compare == 2 && tempCount <= count))
+                        {
+                            result.Add(new SharesBase_Session
+                            {
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                    }
+                    //炸板次数
+                    else if (type == 4)
+                    {
+                        int tempCount = quotes_date.Where(e => e.PriceType != 1 && e.LimitUpCount > 0).Count();
+                        if ((compare == 1 && tempCount >= count) || (compare == 2 && tempCount <= count))
+                        {
+                            result.Add(new SharesBase_Session
+                            {
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                    }
+                    //每日涨跌幅
+                    else if (type == 13)
+                    {
+                        int i = 0;
+                        foreach (var quote in quotes_date)
+                        {
+                            if (quote.PresentPrice <= 0 || quote.ClosedPrice <= 0)
+                            {
+                                continue;
                             }
-                            if (priceCompare > 0 && priceType > 0)
+                            int rate = (int)((quote.PresentPrice - quote.ClosedPrice) * 1.0 / quote.ClosedPrice * 10000);
+                            if (!flatRise && rate == 0)
                             {
-                                if (direct == 2)
-                                {
-                                    var direct_quotes_date = temp_quotes_date.OrderByDescending(e => e.Date).ToList();
-                                    foreach (var item in direct_quotes_date)
-                                    {
-                                        if ((priceType == 1 && priceCompare == 1 && item.PresentPrice>=item.LimitUpPrice+priceError) || (priceType == 1 && priceCompare == 2 && item.PresentPrice <= item.LimitUpPrice + priceError))
-                                        {
-                                            quotes_date.Add(item);
-                                            break;
-                                        }
-                                        else if ((priceType == 2 && priceCompare == 1 && item.PresentPrice >= item.LimitDownPrice + priceError) || (priceType == 2 && priceCompare == 2 && item.PresentPrice <= item.LimitDownPrice + priceError))
-                                        {
-                                            quotes_date.Add(item);
-                                            break;
-                                        }
-                                        else if ((priceType == 3 && priceCompare == 1 && item.RiseRate >= priceError) || (priceType == 3 && priceCompare == 2 && item.RiseRate <= priceError))
-                                        {
-                                            quotes_date.Add(item);
-                                            break;
-                                        }
-                                        quotes_date.Add(item);
-                                    }
-                                }
-                                else
-                                {
-                                    var direct_quotes_date = temp_quotes_date.OrderBy(e => e.Date).ToList();
-                                    bool isAdd = false;
-                                    foreach (var item in direct_quotes_date)
-                                    {
-                                        if (!isAdd)
-                                        {
-                                            if ((priceType == 1 && priceCompare == 1 && item.PresentPrice >= item.LimitUpPrice + priceError) || (priceType == 1 && priceCompare == 2 && item.PresentPrice <= item.LimitUpPrice + priceError))
-                                            {
-                                                isAdd = true;
-                                            }
-                                            else if ((priceType == 2 && priceCompare == 1 && item.PresentPrice >= item.LimitDownPrice + priceError) || (priceType == 2 && priceCompare == 2 && item.PresentPrice <= item.LimitDownPrice + priceError))
-                                            {
-                                                isAdd = true;
-                                            }
-                                            else if ((priceType == 3 && priceCompare == 1 && item.RiseRate >= priceError) || (priceType == 3 && priceCompare == 2 && item.RiseRate <= priceError))
-                                            {
-                                                isAdd = true;
-                                            }
-                                        }
-                                        if (isAdd)
-                                        {
-                                            quotes_date.Add(item);
-                                        }
-                                    }
-                                }
+                                continue;
+                            }
+                            if (rateCompare == 1 && rate >= rateCount)
+                            {
+                                i++;
+                                continue;
+                            }
+                            if (rateCompare == 2 && rate <= rateCount)
+                            {
+                                i++;
+                                continue;
+                            }
+                        }
+                        if ((compare == 1 && i >= count) || (compare == 2 && i <= count))
+                        {
+                            result.Add(new SharesBase_Session
+                            {
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                    }
+                    //包含连续涨停
+                    else if (type == 7)
+                    {
+                        int tempi = 0;//连续涨停天数
+                        foreach (var quote in quotes_date)
+                        {
+                            if (quote.PriceType == 1)
+                            {
+                                tempi++;
                             }
                             else
                             {
-                                quotes_date= temp_quotes_date.OrderBy(e => e.Date).ToList();
+                                tempi = 0;
                             }
-                            //没涨停次数
-                            if (type == 1)
+                            if (tempi >= limitDay)
                             {
-                                int tempCount = quotes_date.Where(e => e.PriceType != 1).Count();
-                                if ((compare == 1 && tempCount >= count) || (compare == 2 && tempCount <= count))
+                                result.Add(new SharesBase_Session
                                 {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
+                                    Market = tempData.Market,
+                                    SharesCode = tempData.SharesCode
+                                });
+                                break;
                             }
-                            //涨停次数
-                            else if (type == 2)
+                        }
+                    }
+                    //排除连续涨停
+                    else if (type == 8)
+                    {
+                        int tempi = 0;//连续涨停天数
+                        foreach (var quote in quotes_date)
+                        {
+                            if (quote.PriceType == 1)
                             {
-                                int tempCount = 0;
-                                if (triPrice)
+                                tempi++;
+                            }
+                            else
+                            {
+                                tempi = 0;
+                            }
+                            if (tempi >= limitDay)
+                            {
+                                break;
+                            }
+                        }
+                        result.Add(new SharesBase_Session
+                        {
+                            Market = tempData.Market,
+                            SharesCode = tempData.SharesCode
+                        });
+                    }
+                    //包含连续跌停
+                    else if (type == 9)
+                    {
+                        int tempi = 0;//连续跌停天数
+                        foreach (var quote in quotes_date)
+                        {
+                            if (quote.PriceType == 2)
+                            {
+                                tempi++;
+                            }
+                            else
+                            {
+                                tempi = 0;
+                            }
+                            if (tempi >= limitDay)
+                            {
+                                result.Add(new SharesBase_Session
                                 {
-                                    tempCount = quotes_date.Where(e => e.TriPriceType == 1).Count();
-                                }
-                                else
-                                {
-                                    tempCount = quotes_date.Where(e => e.PriceType == 1).Count();
-                                }
+                                    Market = tempData.Market,
+                                    SharesCode = tempData.SharesCode
+                                });
+                                break;
+                            }
+                        }
+                    }
+                    //排除连续跌停
+                    else if (type == 10)
+                    {
+                        int tempi = 0;//连续跌停天数
+                        foreach (var quote in quotes_date)
+                        {
+                            if (quote.PriceType == 2)
+                            {
+                                tempi++;
+                            }
+                            else
+                            {
+                                tempi = 0;
+                            }
+                            if (tempi >= limitDay)
+                            {
+                                break;
+                            }
+                        }
+                        result.Add(new SharesBase_Session
+                        {
+                            Market = tempData.Market,
+                            SharesCode = tempData.SharesCode
+                        });
+                    }
+                    //总涨跌幅
+                    else if (type == 14)
+                    {
+                        long closePrice = quotes_date.OrderBy(e => e.Date).Select(e => e.ClosedPrice).FirstOrDefault();
+                        long presentPrice = quotes_date.OrderByDescending(e => e.Date).Select(e => e.PresentPrice).FirstOrDefault();
+                        if (closePrice <= 0 || presentPrice <= 0)
+                        {
+                            continue;
+                        }
+                        int rate = (int)((presentPrice - closePrice) * 1.0 / closePrice * 10000);
+                        if (!flatRise && rate == 0)
+                        {
+                            continue;
+                        }
+                        if ((compare == 1 && rate >= count) || (compare == 2 && rate <= count))
+                        {
+                            result.Add(new SharesBase_Session
+                            {
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                    }
+                    //新高
+                    else if (type == 15 || type == 16)
+                    {
+                        var currInfo = quotes_date.OrderByDescending(e => e.Date).FirstOrDefault();
+                        if (currInfo == null)
+                        {
+                            continue;
+                        }
+                        var quotes_date_his = quotes_date.Where(e => e.Date != currInfo.Date).ToList();
+                        if (quotes_date_his.Count() <= 0)
+                        {
+                            continue;
+                        }
+                        long sourcePrice = currInfo.PresentPrice;
+                        long disMaxPrice = 0;
+                        long disMinPrice = 0;
+                        if (baseType == 1)
+                        {
+                            disMaxPrice = quotes_date_his.Max(e => e.OpenedPrice);
+                            disMinPrice = quotes_date_his.Min(e => e.OpenedPrice);
+                        }
+                        else if (baseType == 3)
+                        {
+                            disMaxPrice = quotes_date_his.Max(e => e.MaxPrice);
+                            disMinPrice = quotes_date_his.Min(e => e.MaxPrice);
+                        }
+                        else if (baseType == 4)
+                        {
+                            disMaxPrice = quotes_date_his.Max(e => e.MinPrice);
+                            disMinPrice = quotes_date_his.Min(e => e.MinPrice);
+                        }
+                        else
+                        {
+                            disMaxPrice = quotes_date_his.Max(e => e.PresentPrice);
+                            disMinPrice = quotes_date_his.Min(e => e.PresentPrice);
+                        }
 
-                                if ((compare == 1 && tempCount >= count) || (compare == 2 && tempCount <= count))
-                                {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
-                            }
-                            //跌停次数
-                            else if (type == 3)
+                        if ((type == 15 && sourcePrice >= disMaxPrice) || (type == 16 && sourcePrice <= disMinPrice))
+                        {
+                            result.Add(new SharesBase_Session
                             {
-                                int tempCount = 0;
-                                if (triPrice)
-                                {
-                                    tempCount = quotes_date.Where(e => e.TriPriceType == 2).Count();
-                                }
-                                else
-                                {
-                                    tempCount = quotes_date.Where(e => e.PriceType == 2).Count();
-                                }
-                                if ((compare == 1 && tempCount >= count) || (compare == 2 && tempCount <= count))
-                                {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
-                            }
-                            //炸板次数
-                            else if (type == 4)
-                            {
-                                int tempCount = quotes_date.Where(e => e.PriceType != 1 && e.LimitUpCount > 0).Count();
-                                if ((compare == 1 && tempCount >= count) || (compare == 2 && tempCount <= count))
-                                {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
-                            }
-                            //每日涨跌幅
-                            else if (type == 13)
-                            {
-                                int i = 0;
-                                foreach (var quote in quotes_date)
-                                {
-                                    if (quote.PresentPrice <= 0 || quote.ClosedPrice <= 0)
-                                    {
-                                        continue;
-                                    }
-                                    int rate = (int)((quote.PresentPrice - quote.ClosedPrice) * 1.0 / quote.ClosedPrice * 10000);
-                                    if (!flatRise && rate == 0)
-                                    {
-                                        continue;
-                                    }
-                                    if (rateCompare == 1 && rate >= rateCount)
-                                    {
-                                        i++;
-                                        continue;
-                                    }
-                                    if (rateCompare == 2 && rate <= rateCount)
-                                    {
-                                        i++;
-                                        continue;
-                                    }
-                                }
-                                if ((compare == 1 && i >= count) || (compare == 2 && i <= count))
-                                {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
-                            }
-                            //包含连续涨停
-                            else if (type == 7)
-                            {
-                                int tempi = 0;//连续涨停天数
-                                foreach (var quote in quotes_date)
-                                {
-                                    if (quote.PriceType == 1)
-                                    {
-                                        tempi++;
-                                    }
-                                    else
-                                    {
-                                        tempi = 0;
-                                    }
-                                    if (tempi >= limitDay)
-                                    {
-                                        lock (dataLock)
-                                        {
-                                            result.Add(new SharesBase_Session
-                                            {
-                                                Market = tempData.Market,
-                                                SharesCode = tempData.SharesCode
-                                            });
-                                        }
-                                        break;
-                                    }
-                                }
-                            }
-                            //排除连续涨停
-                            else if (type == 8)
-                            {
-                                int tempi = 0;//连续涨停天数
-                                foreach (var quote in quotes_date)
-                                {
-                                    if (quote.PriceType == 1)
-                                    {
-                                        tempi++;
-                                    }
-                                    else
-                                    {
-                                        tempi = 0;
-                                    }
-                                    if (tempi >= limitDay)
-                                    {
-                                        break;
-                                    }
-                                }
-                                lock (dataLock)
-                                {
-                                    result.Add(new SharesBase_Session
-                                    {
-                                        Market = tempData.Market,
-                                        SharesCode = tempData.SharesCode
-                                    });
-                                }
-                            }
-                            //包含连续跌停
-                            else if (type == 9)
-                            {
-                                int tempi = 0;//连续跌停天数
-                                foreach (var quote in quotes_date)
-                                {
-                                    if (quote.PriceType == 2)
-                                    {
-                                        tempi++;
-                                    }
-                                    else
-                                    {
-                                        tempi = 0;
-                                    }
-                                    if (tempi >= limitDay)
-                                    {
-                                        lock (dataLock)
-                                        {
-                                            result.Add(new SharesBase_Session
-                                            {
-                                                Market = tempData.Market,
-                                                SharesCode = tempData.SharesCode
-                                            });
-                                        }
-                                        break;
-                                    }
-                                }
-                            }
-                            //排除连续跌停
-                            else if (type == 10)
-                            {
-                                int tempi = 0;//连续跌停天数
-                                foreach (var quote in quotes_date)
-                                {
-                                    if (quote.PriceType == 2)
-                                    {
-                                        tempi++;
-                                    }
-                                    else
-                                    {
-                                        tempi = 0;
-                                    }
-                                    if (tempi >= limitDay)
-                                    {
-                                        break;
-                                    }
-                                }
-                                lock (dataLock)
-                                {
-                                    result.Add(new SharesBase_Session
-                                    {
-                                        Market = tempData.Market,
-                                        SharesCode = tempData.SharesCode
-                                    });
-                                }
-                            }
-                            //总涨跌幅
-                            else if (type == 14)
-                            {
-                                long closePrice = quotes_date.OrderBy(e => e.Date).Select(e => e.ClosedPrice).FirstOrDefault();
-                                long presentPrice = quotes_date.OrderByDescending(e => e.Date).Select(e => e.PresentPrice).FirstOrDefault();
-                                if (closePrice <= 0 || presentPrice <= 0)
-                                {
-                                    continue;
-                                }
-                                int rate = (int)((presentPrice - closePrice) * 1.0 / closePrice * 10000);
-                                if (!flatRise && rate == 0)
-                                {
-                                    continue;
-                                }
-                                if ((compare == 1 && rate >= count) || (compare == 2 && rate <= count))
-                                {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
-                            }
-                            //新高
-                            else if (type == 15 || type==16)
-                            {
-                                var currInfo = quotes_date.OrderByDescending(e => e.Date).FirstOrDefault();
-                                if (currInfo == null)
-                                {
-                                    continue;
-                                }
-                                var quotes_date_his = quotes_date.Where(e => e.Date != currInfo.Date).ToList();
-                                if (quotes_date_his.Count() <= 0)
-                                {
-                                    continue;
-                                }
-                                long sourcePrice = currInfo.PresentPrice;
-                                long disMaxPrice = 0;
-                                long disMinPrice = 0;
-                                if (baseType == 1) 
-                                {
-                                    disMaxPrice = quotes_date_his.Max(e=>e.OpenedPrice);
-                                    disMinPrice = quotes_date_his.Min(e => e.OpenedPrice);
-                                }
-                                else if (baseType == 3)
-                                {
-                                    disMaxPrice = quotes_date_his.Max(e => e.MaxPrice);
-                                    disMinPrice = quotes_date_his.Min(e => e.MaxPrice);
-                                }
-                                else if (baseType == 4)
-                                {
-                                    disMaxPrice = quotes_date_his.Max(e => e.MinPrice);
-                                    disMinPrice = quotes_date_his.Min(e => e.MinPrice);
-                                }
-                                else
-                                {
-                                    disMaxPrice = quotes_date_his.Max(e => e.PresentPrice);
-                                    disMinPrice = quotes_date_his.Min(e => e.PresentPrice);
-                                }
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                    }
 
-                                if ((type==15 && sourcePrice>= disMaxPrice) || (type == 16 && sourcePrice <= disMinPrice))
-                                {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
-                            }
-                        } while (true);
-                    },TaskCreationOptions.LongRunning);
-                    taskArr[index].Start();
                 }
-                Task.WaitAll(taskArr);
-                data.Release();
                 return result;
             }
             catch (Exception ex)
@@ -5029,7 +4931,7 @@ from v_shares_quotes_last with(nolock)";
                 catch (Exception ex) { }
                 try
                 {
-                    count = (type == 5 || type == 6 || type==10) ? (int)(Convert.ToDouble(temp.Count) * 100) : Convert.ToInt64(temp.Count);
+                    count = (type == 5 || type == 6 || type == 10) ? (int)(Convert.ToDouble(temp.Count) * 100) : Convert.ToInt64(temp.Count);
                 }
                 catch (Exception ex) { }
                 try
@@ -5094,7 +4996,7 @@ set @secondDayTime=dbo.f_getTradeDate(@currDate,-{1});
 select Market,SharesCode,convert(bigint,avg(TotalAmount)) AvgTotalAmount,count(*) DateCount
 from t_shares_quotes_date with(nolock)
 where LastModified>@secondDayTime and LastModified<@firstDayTime
-group by Market,SharesCode",firstDay<=0?0: firstDay-1, secondDay);
+group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
                         dealList = db.Database.SqlQuery<dynamic>(sql).ToList();
                     }
                     else if (type == 8)
@@ -5114,298 +5016,232 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
                         dealList = db.Database.SqlQuery<dynamic>(sql).ToList();
                     }
                 }
-
-                ThreadMsgTemplate<SharesBase_Session> data = new ThreadMsgTemplate<SharesBase_Session>();
-                data.Init();
-                foreach (var item in sharesList)
-                {
-                    data.AddMessage(item);
-                }
-
-                List<SharesBase_Session> result = new List<SharesBase_Session>();
-                object dataLock = new object();
-
-                int defaultCount = Singleton.Instance.MaxTrendCheckTaskCount;
-                int taskCount = data.GetCount();
-                if (taskCount > defaultCount)
-                {
-                    taskCount = defaultCount;
-                }
-
                 var quotes_date_list_dic = quotes_date_list.ToDictionary(k => int.Parse(k.SharesCode) * 10 + k.Market, v => v);
 
-                Task[] taskArr = new Task[taskCount];
-                for (int index = 0; index < taskCount; index++)
+
+                List<SharesBase_Session> result = new List<SharesBase_Session>();
+                foreach (var tempData in sharesList)
                 {
-                    taskArr[index] = new Task(() =>
+                    int key = int.Parse(tempData.SharesCode) * 10 + tempData.Market;
+                    if (!quotes_date_list_dic.ContainsKey(key))
                     {
-                        do
+                        continue;
+                    }
+                    var quotes_date = quotes_date_list_dic[key];
+                    //涨停次数
+                    if (type == 1)
+                    {
+                        int currCount = triPrice ? quotes_date.TriLimitUpCount : quotes_date.LimitUpCount;
+                        if ((compare == 1 && currCount >= count) || (compare == 2 && currCount <= count))
                         {
-                            SharesBase_Session tempData = new SharesBase_Session();
-                            if (!data.GetMessage(ref tempData, true))
+                            result.Add(new SharesBase_Session
                             {
-                                break;
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                    }
+                    //跌停次数
+                    else if (type == 2)
+                    {
+                        int currCount = triPrice ? quotes_date.TriLimitDownCount : quotes_date.LimitDownCount;
+                        if ((compare == 1 && currCount >= count) || (compare == 2 && currCount <= count))
+                        {
+                            result.Add(new SharesBase_Session
+                            {
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                    }
+                    //炸板次数
+                    else if (type == 3)
+                    {
+                        if ((compare == 1 && quotes_date.LimitUpBombCount >= count) || (compare == 2 && quotes_date.LimitUpBombCount <= count))
+                        {
+                            result.Add(new SharesBase_Session
+                            {
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                    }
+                    //盘中涨跌幅
+                    else if (type == 4)
+                    {
+                        int i = -1;
+                        foreach (var item in temp.riseRateList)
+                        {
+                            UP_OR_DOWN_INFO upOrDownInfo = new UP_OR_DOWN_INFO();
+                            DB_TRADE_PRICE_INFO DB_TRADE_PRICE_INFO = new DB_TRADE_PRICE_INFO();
+                            int Minute = item.Minute;
+                            int Compare = item.Compare;
+                            double Rate = item.Rate;
+                            int iErrorCode = Singleton.Instance.m_stockMonitor.GetUpOrDownInfoInTime(tempData.SharesCode + "," + tempData.Market, Minute, ref DB_TRADE_PRICE_INFO, ref upOrDownInfo);
+                            if (iErrorCode != 0)
+                            {
+                                Logger.WriteFileLog(iErrorCode + "" + JsonConvert.SerializeObject(upOrDownInfo), null);
+                                continue;
                             }
-                            int key = int.Parse(tempData.SharesCode) * 10 + tempData.Market;
-                            if (!quotes_date_list_dic.ContainsKey(key))
+                            if (upOrDownInfo.iLastestPercent == -0x0FFFFFFF)
                             {
                                 continue;
                             }
-                            var quotes_date = quotes_date_list_dic[key];
-                            //涨停次数
-                            if (type == 1)
+                            if (Compare == 1 && upOrDownInfo.iLastestPercent >= Rate * 100)
                             {
-                                int currCount = triPrice ? quotes_date.TriLimitUpCount : quotes_date.LimitUpCount;
-                                if ((compare == 1 && currCount >= count) || (compare == 2 && currCount <= count))
-                                {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
+                                i++;
+                                break;
                             }
-                            //跌停次数
-                            else if (type == 2)
+                            if (Compare == 2 && upOrDownInfo.iLastestPercent <= Rate * 100)
                             {
-                                int currCount = triPrice ? quotes_date.TriLimitDownCount : quotes_date.LimitDownCount;
-                                if ((compare == 1 && currCount >= count) || (compare == 2 && currCount <= count))
-                                {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
+                                i++;
+                                break;
                             }
-                            //炸板次数
-                            else if (type == 3)
+                        }
+                        if (i == 0)
+                        {
+                            result.Add(new SharesBase_Session
                             {
-                                if ((compare == 1 && quotes_date.LimitUpBombCount >= count) || (compare == 2 && quotes_date.LimitUpBombCount <= count))
-                                {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
-                            }
-                            //盘中涨跌幅
-                            else if (type == 4)
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                    }
+                    //开盘涨跌幅
+                    else if (type == 5)
+                    {
+                        long openPrice = quotes_date.OpenedPrice;
+                        long closePrice = quotes_date.ClosedPrice;
+                        if (closePrice <= 0 || openPrice <= 0)
+                        {
+                            continue;
+                        }
+                        int rate = (int)((openPrice - closePrice) * 1.0 / closePrice * 10000);
+                        if ((compare == 1 && rate >= count) || (compare == 2 && rate <= count))
+                        {
+                            result.Add(new SharesBase_Session
                             {
-                                int i = -1;
-                                foreach (var item in temp.riseRateList)
-                                {
-                                    UP_OR_DOWN_INFO upOrDownInfo = new UP_OR_DOWN_INFO();
-                                    DB_TRADE_PRICE_INFO DB_TRADE_PRICE_INFO = new DB_TRADE_PRICE_INFO();
-                                    int Minute = item.Minute;
-                                    int Compare = item.Compare;
-                                    double Rate = item.Rate;
-                                    int iErrorCode = Singleton.Instance.m_stockMonitor.GetUpOrDownInfoInTime(tempData.SharesCode + "," + tempData.Market, Minute, ref DB_TRADE_PRICE_INFO, ref upOrDownInfo);
-                                    if (iErrorCode != 0)
-                                    {
-                                        Logger.WriteFileLog(iErrorCode + "" + JsonConvert.SerializeObject(upOrDownInfo), null);
-                                        continue;
-                                    }
-                                    if (upOrDownInfo.iLastestPercent == -0x0FFFFFFF)
-                                    {
-                                        continue;
-                                    }
-                                    if (Compare == 1 && upOrDownInfo.iLastestPercent >= Rate * 100)
-                                    {
-                                        i++;
-                                        break;
-                                    }
-                                    if (Compare == 2 && upOrDownInfo.iLastestPercent <= Rate * 100)
-                                    {
-                                        i++;
-                                        break;
-                                    }
-                                }
-                                if (i == 0)
-                                {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
-                            }
-                            //开盘涨跌幅
-                            else if (type == 5)
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                    }
+                    //振幅
+                    else if (type == 6)
+                    {
+                        long maxPrice = quotes_date.MaxPrice;
+                        long minPrice = quotes_date.MinPrice;
+                        long closePrice = quotes_date.ClosedPrice;
+                        if (closePrice <= 0 || maxPrice <= 0 || minPrice <= 0)
+                        {
+                            continue;
+                        }
+                        int rate = (int)((maxPrice - minPrice) * 1.0 / closePrice * 10000);
+                        if ((compare == 1 && rate >= count) || (compare == 2 && rate <= count))
+                        {
+                            result.Add(new SharesBase_Session
                             {
-                                long openPrice = quotes_date.OpenedPrice;
-                                long closePrice = quotes_date.ClosedPrice;
-                                if (closePrice <= 0 || openPrice <= 0)
-                                {
-                                    continue;
-                                }
-                                int rate = (int)((openPrice - closePrice) * 1.0 / closePrice * 10000);
-                                if ((compare == 1 && rate >= count) || (compare == 2 && rate <= count))
-                                {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
-                            }
-                            //振幅
-                            else if (type == 6)
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                    }
+                    //成交额
+                    else if (type == 7)
+                    {
+                        var deal = dealList.Where(e => e.Market == quotes_date.Market && e.SharesCode == quotes_date.SharesCode).FirstOrDefault();
+                        if (deal == null)
+                        {
+                            continue;
+                        }
+                        int quotesCount = deal.DateCount;
+                        if (dayShortageType == 2 && quotesCount < firstDay)
+                        {
+                            result.Add(new SharesBase_Session
                             {
-                                long maxPrice = quotes_date.MaxPrice;
-                                long minPrice = quotes_date.MinPrice;
-                                long closePrice = quotes_date.ClosedPrice;
-                                if (closePrice <= 0 || maxPrice <= 0 || minPrice <= 0)
-                                {
-                                    continue;
-                                }
-                                int rate = (int)((maxPrice - minPrice) * 1.0 / closePrice * 10000);
-                                if ((compare == 1 && rate >= count) || (compare == 2 && rate <= count))
-                                {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
-                            }
-                            //成交额
-                            else if (type == 7)
-                            {
-                                var deal = dealList.Where(e => e.Market == quotes_date.Market && e.SharesCode == quotes_date.SharesCode).FirstOrDefault();
-                                if (deal == null)
-                                {
-                                    continue;
-                                }
-                                int quotesCount = deal.DateCount;
-                                if (dayShortageType == 2 && quotesCount < firstDay)
-                                {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
-                                if (dayShortageType == 3 && quotesCount < firstDay)
-                                {
-                                    continue;
-                                }
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                        if (dayShortageType == 3 && quotesCount < firstDay)
+                        {
+                            continue;
+                        }
 
-                                long avgResult = deal.AvgTotalAmount;
-                                if ((compare == 1 && quotes_date.TotalAmount >= avgResult * multiple) || (compare == 2 && quotes_date.TotalAmount <= avgResult * multiple))
-                                {
-                                    if ((compare2 == 1 && avgResult >= count * 10000) || (compare2 == 2 && avgResult <= count * 10000))
-                                    {
-                                        lock (dataLock)
-                                        {
-                                            result.Add(new SharesBase_Session
-                                            {
-                                                Market = tempData.Market,
-                                                SharesCode = tempData.SharesCode
-                                            });
-                                        }
-                                    }
-                                }
-                            }
-                            //成交量
-                            else if (type == 8)
+                        long avgResult = deal.AvgTotalAmount;
+                        if ((compare == 1 && quotes_date.TotalAmount >= avgResult * multiple) || (compare == 2 && quotes_date.TotalAmount <= avgResult * multiple))
+                        {
+                            if ((compare2 == 1 && avgResult >= count * 10000) || (compare2 == 2 && avgResult <= count * 10000))
                             {
-                                var deal = dealList.Where(e => e.Market == quotes_date.Market && e.SharesCode == quotes_date.SharesCode).FirstOrDefault();
-                                if (deal == null)
+                                result.Add(new SharesBase_Session
                                 {
-                                    continue;
-                                }
-                                int quotesCount = deal.DateCount;
-                                if (dayShortageType == 2 && quotesCount < firstDay)
-                                {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
-                                if (dayShortageType == 3 && quotesCount < firstDay)
-                                {
-                                    continue;
-                                }
-
-                                long avgResult = deal.AvgTotalCount;
-                                if ((compare == 1 && quotes_date.TotalCount >= avgResult * multiple) || (compare == 2 && quotes_date.TotalCount <= avgResult * multiple))
-                                {
-                                    if ((compare2 == 1 && avgResult * 100 >= count) || (compare2 == 2 && avgResult * 100 <= count))
-                                    {
-                                        lock (dataLock)
-                                        {
-                                            result.Add(new SharesBase_Session
-                                            {
-                                                Market = tempData.Market,
-                                                SharesCode = tempData.SharesCode
-                                            });
-                                        }
-                                    }
-                                }
+                                    Market = tempData.Market,
+                                    SharesCode = tempData.SharesCode
+                                });
                             }
-                            //K线形态
-                            else if (type == 10)
+                        }
+                    }
+                    //成交量
+                    else if (type == 8)
+                    {
+                        var deal = dealList.Where(e => e.Market == quotes_date.Market && e.SharesCode == quotes_date.SharesCode).FirstOrDefault();
+                        if (deal == null)
+                        {
+                            continue;
+                        }
+                        int quotesCount = deal.DateCount;
+                        if (dayShortageType == 2 && quotesCount < firstDay)
+                        {
+                            result.Add(new SharesBase_Session
                             {
-                                long openPrice = quotes_date.OpenedPrice;
-                                long currPrice = quotes_date.PresentPrice;
-                                int rate = (int)((currPrice - openPrice) * 10000.0 / openPrice);
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                        if (dayShortageType == 3 && quotesCount < firstDay)
+                        {
+                            continue;
+                        }
 
-                                if (dealLineType == 1 && ((isCross && rate == 0) || rate > 0) && ((compare==1 && rate>= count) || (compare == 2 && rate <= count)))
+                        long avgResult = deal.AvgTotalCount;
+                        if ((compare == 1 && quotes_date.TotalCount >= avgResult * multiple) || (compare == 2 && quotes_date.TotalCount <= avgResult * multiple))
+                        {
+                            if ((compare2 == 1 && avgResult * 100 >= count) || (compare2 == 2 && avgResult * 100 <= count))
+                            {
+                                result.Add(new SharesBase_Session
                                 {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
-                                else if (dealLineType == 2 && ((isCross && rate == 0) || rate < 0) && ((compare == 1 && (-rate) >= count) || (compare == 2 && (-rate) <= count)))
-                                {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
+                                    Market = tempData.Market,
+                                    SharesCode = tempData.SharesCode
+                                });
                             }
-                        } while (true);
-                    }, TaskCreationOptions.LongRunning);
-                    taskArr[index].Start();
+                        }
+                    }
+                    //K线形态
+                    else if (type == 10)
+                    {
+                        long openPrice = quotes_date.OpenedPrice;
+                        long currPrice = quotes_date.PresentPrice;
+                        int rate = (int)((currPrice - openPrice) * 10000.0 / openPrice);
+
+                        if (dealLineType == 1 && ((isCross && rate == 0) || rate > 0) && ((compare == 1 && rate >= count) || (compare == 2 && rate <= count)))
+                        {
+                            result.Add(new SharesBase_Session
+                            {
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                        else if (dealLineType == 2 && ((isCross && rate == 0) || rate < 0) && ((compare == 1 && (-rate) >= count) || (compare == 2 && (-rate) <= count)))
+                        {
+                            result.Add(new SharesBase_Session
+                            {
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                    }
+
                 }
-                Task.WaitAll(taskArr);
-                data.Release();
                 return result;
             }
             catch (Exception ex)
@@ -5527,138 +5363,103 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
                                                         SellCount4 = item.SellCount4,
                                                         SellCount5 = item.SellCount5,
                                                     }).ToList();
-                ThreadMsgTemplate<SharesBase_Session> data = new ThreadMsgTemplate<SharesBase_Session>();
-                data.Init();
-                foreach (var item in sharesList)
-                {
-                    data.AddMessage(item);
-                }
 
                 List<SharesBase_Session> result = new List<SharesBase_Session>();
-                object dataLock = new object();
-
-                int defaultCount = Singleton.Instance.MaxTrendCheckTaskCount;
-                int taskCount = data.GetCount();
-                if (taskCount > defaultCount)
+                foreach (var tempData in sharesList)
                 {
-                    taskCount = defaultCount;
-                }
-
-                Task[] taskArr = new Task[taskCount];
-                for (int index = 0; index < taskCount; index++)
-                {
-                    taskArr[index] = new Task(() =>
+                    var quotes = quotes_list.Where(e => e.Market == tempData.Market && e.SharesCode == tempData.SharesCode).FirstOrDefault();
+                    if (quotes == null)
                     {
-                        do
+                        continue;
+                    }
+                    int realCount;
+                    string realCountDes;
+                    switch (type)
+                    {
+                        case 1:
+                            realCount = quotes.BuyCount1;
+                            realCountDes = "买一挂单";
+                            break;
+                        case 2:
+                            realCount = quotes.BuyCount2;
+                            realCountDes = "买二挂单";
+                            break;
+                        case 3:
+                            realCount = quotes.BuyCount3;
+                            realCountDes = "买三挂单";
+                            break;
+                        case 4:
+                            realCount = quotes.BuyCount4;
+                            realCountDes = "买四挂单";
+                            break;
+                        case 5:
+                            realCount = quotes.BuyCount5;
+                            realCountDes = "买五挂单";
+                            break;
+                        case 6:
+                            realCount = quotes.SellCount1;
+                            realCountDes = "卖一挂单";
+                            break;
+                        case 7:
+                            realCount = quotes.SellCount2;
+                            realCountDes = "卖二挂单";
+                            break;
+                        case 8:
+                            realCount = quotes.SellCount3;
+                            realCountDes = "卖三挂单";
+                            break;
+                        case 9:
+                            realCount = quotes.SellCount4;
+                            realCountDes = "卖四挂单";
+                            break;
+                        case 10:
+                            realCount = quotes.SellCount5;
+                            realCountDes = "卖五挂单";
+                            break;
+                        default:
+                            continue;
+                    }
+                    realCount = realCount * 100;
+
+                    if (countType == 1)//流通股百分比
+                    {
+                        //查询流通股
+                        var sharesInfo = (from item in Singleton.Instance._SharesBaseSession.GetSessionData()
+                                          where item.Market == tempData.Market && item.SharesCode == tempData.SharesCode
+                                          select item).FirstOrDefault();
+                        if (sharesInfo == null)
                         {
-                            SharesBase_Session tempData = new SharesBase_Session();
-                            if (!data.GetMessage(ref tempData, true))
-                            {
-                                break;
-                            }
-                            var quotes = quotes_list.Where(e => e.Market == tempData.Market && e.SharesCode == tempData.SharesCode).FirstOrDefault();
-                            if (quotes == null)
-                            {
-                                continue;
-                            }
-                            int realCount;
-                            string realCountDes;
-                            switch (type)
-                            {
-                                case 1:
-                                    realCount = quotes.BuyCount1;
-                                    realCountDes = "买一挂单";
-                                    break;
-                                case 2:
-                                    realCount = quotes.BuyCount2;
-                                    realCountDes = "买二挂单";
-                                    break;
-                                case 3:
-                                    realCount = quotes.BuyCount3;
-                                    realCountDes = "买三挂单";
-                                    break;
-                                case 4:
-                                    realCount = quotes.BuyCount4;
-                                    realCountDes = "买四挂单";
-                                    break;
-                                case 5:
-                                    realCount = quotes.BuyCount5;
-                                    realCountDes = "买五挂单";
-                                    break;
-                                case 6:
-                                    realCount = quotes.SellCount1;
-                                    realCountDes = "卖一挂单";
-                                    break;
-                                case 7:
-                                    realCount = quotes.SellCount2;
-                                    realCountDes = "卖二挂单";
-                                    break;
-                                case 8:
-                                    realCount = quotes.SellCount3;
-                                    realCountDes = "卖三挂单";
-                                    break;
-                                case 9:
-                                    realCount = quotes.SellCount4;
-                                    realCountDes = "卖四挂单";
-                                    break;
-                                case 10:
-                                    realCount = quotes.SellCount5;
-                                    realCountDes = "卖五挂单";
-                                    break;
-                                default:
-                                    continue;
-                            }
-                            realCount = realCount * 100;
+                            continue;
+                        }
+                        long circulatingCapital = sharesInfo.CirculatingCapital;
+                        long setCount = (long)(circulatingCapital * (count / 100));
 
-                            if (countType == 1)//流通股百分比
+                        if ((compare == 1 && realCount >= setCount) || (compare == 2 && realCount <= setCount))
+                        {
+                            result.Add(new SharesBase_Session
                             {
-                                //查询流通股
-                                var sharesInfo = (from item in Singleton.Instance._SharesBaseSession.GetSessionData()
-                                                  where item.Market == tempData.Market && item.SharesCode == tempData.SharesCode
-                                                  select item).FirstOrDefault();
-                                if (sharesInfo == null)
-                                {
-                                    continue;
-                                }
-                                long circulatingCapital = sharesInfo.CirculatingCapital;
-                                long setCount = (long)(circulatingCapital * (count / 100));
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                    }
+                    else if (countType == 2)//股数
+                    {
+                        if ((compare == 1 && realCount >= count) || (compare == 2 && realCount <= count))
+                        {
+                            result.Add(new SharesBase_Session
+                            {
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                    }
+                    else if (countType == 3)//流通市值百分比
+                    {
 
-                                if ((compare == 1 && realCount >= setCount) || (compare == 2 && realCount <= setCount))
-                                {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
-                            }
-                            else if (countType == 2)//股数
-                            {
-                                if ((compare == 1 && realCount >= count) || (compare == 2 && realCount <= count))
-                                {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
-                            }
-                            else if (countType == 3)//流通市值百分比
-                            {
+                    }
 
-                            }
-                        } while (true);
-                    }, TaskCreationOptions.LongRunning);
-                    taskArr[index].Start();
                 }
-                Task.WaitAll(taskArr);
-                data.Release();
                 return result;
             }
             catch (Exception ex)
@@ -5706,89 +5507,56 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
                     quotes_date_list = db.Database.SqlQuery<QuotesDateInfo>(sql).ToList();
                 }
 
-                ThreadMsgTemplate<SharesBase_Session> data = new ThreadMsgTemplate<SharesBase_Session>();
-                data.Init();
-                foreach (var item in sharesList)
-                {
-                    data.AddMessage(item);
-                }
-
                 List<SharesBase_Session> result = new List<SharesBase_Session>();
-                object dataLock = new object();
-
-                int defaultCount = Singleton.Instance.MaxTrendCheckTaskCount;
-                int taskCount = data.GetCount();
-                if (taskCount > defaultCount)
+                foreach (var tempData in sharesList)
                 {
-                    taskCount = defaultCount;
-                }
-
-                Task[] taskArr = new Task[taskCount];
-                for (int index = 0; index < taskCount; index++)
-                {
-                    taskArr[index] = new Task(() =>
+                    var quotes = quotes_date_list.Where(e => e.Market == tempData.Market && e.SharesCode == tempData.SharesCode).ToList();
+                    if (quotes.Count() <= 0)
                     {
-                        do
+                        continue;
+                    }
+                    var presentInfo = quotes.OrderByDescending(e => e.Date).FirstOrDefault();
+                    long presentPrice = presentInfo.PresentPrice;
+                    if (presentPrice <= 0)
+                    {
+                        continue;
+                    }
+
+                    var lastInfo = quotes.Where(e => e.LastModified < presentInfo.LastModified).ToList();
+                    long realPrice;
+                    switch (priceType)
+                    {
+                        case 1:
+                            realPrice = compare == 1 ? lastInfo.Max(e => e.OpenedPrice) : lastInfo.Min(e => e.OpenedPrice);
+                            break;
+                        case 2:
+                            realPrice = compare == 1 ? lastInfo.Max(e => e.PresentPrice) : lastInfo.Min(e => e.PresentPrice);
+                            break;
+                        case 3:
+                            realPrice = compare == 1 ? lastInfo.Max(e => e.MaxPrice) : lastInfo.Min(e => e.MaxPrice);
+                            break;
+                        case 4:
+                            realPrice = compare == 1 ? lastInfo.Max(e => e.MinPrice) : lastInfo.Min(e => e.MinPrice);
+                            break;
+                        default:
+                            continue;
+                    }
+
+                    if (count != 0)//计算偏差
+                    {
+                        realPrice = (long)(realPrice * (count / 100) + realPrice);
+                    }
+
+                    if ((compare == 1 && presentPrice >= realPrice) || (compare == 2 && presentPrice <= realPrice))
+                    {
+                        result.Add(new SharesBase_Session
                         {
-                            SharesBase_Session tempData = new SharesBase_Session();
-                            if (!data.GetMessage(ref tempData, true))
-                            {
-                                break;
-                            }
-                            var quotes = quotes_date_list.Where(e=>e.Market== tempData.Market && e.SharesCode== tempData.SharesCode).ToList();
-                            if (quotes.Count() <= 0)
-                            {
-                                continue;
-                            }
-                            var presentInfo = quotes.OrderByDescending(e=>e.Date).FirstOrDefault();
-                            long presentPrice = presentInfo.PresentPrice;
-                            if (presentPrice <= 0)
-                            {
-                                continue;
-                            }
+                            Market = tempData.Market,
+                            SharesCode = tempData.SharesCode
+                        });
+                    }
 
-                            var lastInfo = quotes.Where(e => e.LastModified < presentInfo.LastModified).ToList();
-                            long realPrice;
-                            switch (priceType)
-                            {
-                                case 1:
-                                    realPrice = compare == 1 ? lastInfo.Max(e => e.OpenedPrice) : lastInfo.Min(e => e.OpenedPrice);
-                                    break;
-                                case 2:
-                                    realPrice = compare == 1 ? lastInfo.Max(e => e.PresentPrice) : lastInfo.Min(e => e.PresentPrice);
-                                    break;
-                                case 3:
-                                    realPrice = compare == 1 ? lastInfo.Max(e => e.MaxPrice) : lastInfo.Min(e => e.MaxPrice);
-                                    break;
-                                case 4:
-                                    realPrice = compare == 1 ? lastInfo.Max(e => e.MinPrice) : lastInfo.Min(e => e.MinPrice);
-                                    break;
-                                default:
-                                    continue;
-                            }
-
-                            if (count != 0)//计算偏差
-                            {
-                                realPrice = (long)(realPrice * (count / 100) + realPrice);
-                            }
-
-                            if ((compare == 1 && presentPrice >= realPrice) || (compare == 2 && presentPrice <= realPrice))
-                            {
-                                lock (dataLock)
-                                {
-                                    result.Add(new SharesBase_Session
-                                    {
-                                        Market = tempData.Market,
-                                        SharesCode = tempData.SharesCode
-                                    });
-                                }
-                            }
-                        } while (true);
-                    }, TaskCreationOptions.LongRunning);
-                    taskArr[index].Start();
                 }
-                Task.WaitAll(taskArr);
-                data.Release();
                 return result;
             }
             catch (Exception ex)
@@ -5813,7 +5581,7 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
 
                 compare = Convert.ToInt32(temp.Compare);
                 day1 = Convert.ToInt32(temp.Day1);
-              
+
                 try
                 {
                     day2 = Convert.ToInt32(temp.Day2);
@@ -5855,148 +5623,112 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
                     quotes_date_list = db.Database.SqlQuery<QuotesDateInfo>(sql).ToList();
                 }
 
-                ThreadMsgTemplate<SharesBase_Session> data = new ThreadMsgTemplate<SharesBase_Session>();
-                data.Init();
-                foreach (var item in sharesList)
-                {
-                    data.AddMessage(item);
-                }
-
-                List<SharesBase_Session> result = new List<SharesBase_Session>();
-                object dataLock = new object();
-
-                int defaultCount = Singleton.Instance.MaxTrendCheckTaskCount;
-                int taskCount = data.GetCount();
-                if (taskCount > defaultCount)
-                {
-                    taskCount = defaultCount;
-                }
-
                 var quotes_date_list_dic = quotes_date_list.GroupBy(e => new { e.Market, e.SharesCode }).ToDictionary(k => int.Parse(k.Key.SharesCode) * 10 + k.Key.Market, v => v.ToList());
 
-                Task[] taskArr = new Task[taskCount];
-                for (int index = 0; index < taskCount; index++)
+                List<SharesBase_Session> result = new List<SharesBase_Session>();
+                foreach (var tempData in sharesList)
                 {
-                    taskArr[index] = new Task(() =>
+                    int key = int.Parse(tempData.SharesCode) * 10 + tempData.Market;
+                    if (!quotes_date_list_dic.ContainsKey(key))
                     {
-                        do
+                        continue;
+                    }
+                    var quotes = quotes_date_list_dic[key].OrderByDescending(e => e.Date).ToList();
+                    if (quotes.Count() <= 0)
+                    {
+                        continue;
+                    }
+                    var presentInfo = quotes.FirstOrDefault();
+                    long presentPrice = presentInfo.PresentPrice;
+                    if (presentPrice <= 0)
+                    {
+                        continue;
+                    }
+                    //计算均线价格
+                    var list1 = quotes.Take(day1).ToList();
+                    if (list1.Count() <= 0)
+                    {
+                        continue;
+                    }
+                    if (list1.Count() < day1)
+                    {
+                        if (dayShortageType == 2)
                         {
-                            SharesBase_Session tempData = new SharesBase_Session();
-                            if (!data.GetMessage(ref tempData, true))
+                            result.Add(new SharesBase_Session
                             {
-                                break;
-                            }
-                            int key = int.Parse(tempData.SharesCode) * 10 + tempData.Market;
-                            if (!quotes_date_list_dic.ContainsKey(key))
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                        if (dayShortageType == 3)
+                        {
+                            continue;
+                        }
+                    }
+                    long averagePrice = (long)list1.Average(e => e.PresentPrice);
+                    if (count != 0)//计算偏差
+                    {
+                        averagePrice = (long)(averagePrice * (count / 100) + averagePrice);
+                    }
+
+                    if ((compare == 1 && presentPrice >= averagePrice) || (compare == 2 && presentPrice <= averagePrice))
+                    {
+                        bool IsSuccess = true;
+                        if (day2 >= 2)//计算每日均线
+                        {
+                            long lastAveragePrice = 0;
+                            for (int i = 0; i < day2; i++)
                             {
-                                continue;
-                            }
-                            var quotes = quotes_date_list_dic[key].OrderByDescending(e=>e.Date).ToList();
-                            if (quotes.Count() <= 0)
-                            {
-                                continue;
-                            }
-                            var presentInfo = quotes.FirstOrDefault();
-                            long presentPrice = presentInfo.PresentPrice;
-                            if (presentPrice <= 0)
-                            {
-                                continue;
-                            }
-                            //计算均线价格
-                            var list1 = quotes.Take(day1).ToList();
-                            if (list1.Count() <= 0)
-                            {
-                                continue;
-                            }
-                            if (list1.Count() < day1)
-                            {
-                                if (dayShortageType == 2)
+                                long tempAveragePrice;
+                                var list2 = quotes.Skip(i).Take(day1).ToList();
+                                if (list2.Count() <= 0)
                                 {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
+                                    tempAveragePrice = 0;
                                 }
-                                if (dayShortageType == 3)
+                                else
                                 {
+                                    tempAveragePrice = (long)list2.Average(e => e.PresentPrice);
+                                }
+                                if (upOrDown == 1)
+                                {
+                                    //向上，则当前必须<=前一个数据
+                                    if (tempAveragePrice > lastAveragePrice && lastAveragePrice != 0)
+                                    {
+                                        IsSuccess = false;
+                                        break;
+                                    }
+                                    lastAveragePrice = tempAveragePrice;
                                     continue;
                                 }
+                                else if (upOrDown == 2)
+                                {
+                                    //向下，则当前必须>=前一个数据
+                                    if (tempAveragePrice < lastAveragePrice && lastAveragePrice != 0)
+                                    {
+                                        IsSuccess = false;
+                                        break;
+                                    }
+                                    lastAveragePrice = tempAveragePrice;
+                                    continue;
+                                }
+                                else
+                                {
+                                    IsSuccess = false;
+                                    break;
+                                }
                             }
-                            long averagePrice = (long)list1.Average(e => e.PresentPrice);
-                            if (count != 0)//计算偏差
+                        }
+                        if (IsSuccess)
+                        {
+                            result.Add(new SharesBase_Session
                             {
-                                averagePrice = (long)(averagePrice * (count / 100) + averagePrice);
-                            }
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                    }
 
-                            if ((compare == 1 && presentPrice >= averagePrice) || (compare == 2 && presentPrice <= averagePrice))
-                            {
-                                bool IsSuccess = true;
-                                if (day2 >= 2)//计算每日均线
-                                {
-                                    long lastAveragePrice = 0;
-                                    for (int i = 0; i < day2; i++)
-                                    {
-                                        long tempAveragePrice;
-                                        var list2 = quotes.Skip(i).Take(day1).ToList();
-                                        if (list2.Count() <= 0)
-                                        {
-                                            tempAveragePrice = 0;
-                                        }
-                                        else
-                                        {
-                                            tempAveragePrice = (long)list2.Average(e => e.PresentPrice);
-                                        }
-                                        if (upOrDown == 1)
-                                        {
-                                            //向上，则当前必须<=前一个数据
-                                            if (tempAveragePrice > lastAveragePrice && lastAveragePrice != 0)
-                                            {
-                                                IsSuccess = false;
-                                                break;
-                                            }
-                                            lastAveragePrice = tempAveragePrice;
-                                            continue;
-                                        }
-                                        else if (upOrDown == 2)
-                                        {
-                                            //向下，则当前必须>=前一个数据
-                                            if (tempAveragePrice < lastAveragePrice && lastAveragePrice != 0)
-                                            {
-                                                IsSuccess = false;
-                                                break;
-                                            }
-                                            lastAveragePrice = tempAveragePrice;
-                                            continue;
-                                        }
-                                        else
-                                        {
-                                            IsSuccess = false;
-                                            break;
-                                        }
-                                    }
-                                }
-                                if (IsSuccess)
-                                {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
-                            }
-                        } while (true);
-                    }, TaskCreationOptions.LongRunning);
-                    taskArr[index].Start();
                 }
-                Task.WaitAll(taskArr);
-                data.Release();
                 return result;
             }
             catch (Exception ex)
@@ -6036,188 +5768,155 @@ from t_shares_quotes with(nolock)";
                     quotes_list = db.Database.SqlQuery<QuotesDateInfo>(sql).ToList();
                 }
 
-                ThreadMsgTemplate<SharesBase_Session> data = new ThreadMsgTemplate<SharesBase_Session>();
-                data.Init();
-                foreach (var item in sharesList)
-                {
-                    data.AddMessage(item);
-                }
-
                 List<SharesBase_Session> result = new List<SharesBase_Session>();
-                object dataLock = new object();
-
-                int defaultCount = Singleton.Instance.MaxTrendCheckTaskCount;
-                int taskCount = data.GetCount();
-                if (taskCount > defaultCount)
+                foreach (var tempData in sharesList)
                 {
-                    taskCount = defaultCount;
-                }
-
-                Task[] taskArr = new Task[taskCount];
-                for (int index = 0; index < taskCount; index++)
-                {
-                    taskArr[index] = new Task(() =>
+                    var quotes = quotes_list.Where(e => e.Market == tempData.Market && e.SharesCode == tempData.SharesCode).ToList();
+                    var quotesLast = quotes.Where(e => e.DataType == 0).FirstOrDefault();
+                    var quotesPre = quotes.Where(e => e.DataType == 1).FirstOrDefault();
+                    if (quotesLast == null || quotesPre == null)
                     {
-                        do
+                        continue;
+                    }
+
+                    int disCount = 0;
+                    long disPrice = 0;
+                    int lastCount = 0;
+                    long lastPrice = 0;
+                    int tradetype = 0;
+
+                    switch (type)
+                    {
+                        case 1:
+                            disCount = quotesLast.BuyCount1;
+                            disPrice = quotesLast.BuyPrice1;
+                            lastCount = quotesPre.BuyCount1;
+                            lastPrice = quotesPre.BuyPrice1;
+                            tradetype = 1;
+                            break;
+                        case 2:
+                            disCount = quotesLast.BuyCount2;
+                            disPrice = quotesLast.BuyPrice2;
+                            lastCount = quotesPre.BuyCount2;
+                            lastPrice = quotesPre.BuyPrice2;
+                            tradetype = 1;
+                            break;
+                        case 3:
+                            disCount = quotesLast.BuyCount3;
+                            disPrice = quotesLast.BuyPrice3;
+                            lastCount = quotesPre.BuyCount3;
+                            lastPrice = quotesPre.BuyPrice3;
+                            tradetype = 1;
+                            break;
+                        case 4:
+                            disCount = quotesLast.BuyCount4;
+                            disPrice = quotesLast.BuyPrice4;
+                            lastCount = quotesPre.BuyCount4;
+                            lastPrice = quotesPre.BuyPrice4;
+                            tradetype = 1;
+                            break;
+                        case 5:
+                            disCount = quotesLast.BuyCount5;
+                            disPrice = quotesLast.BuyPrice5;
+                            lastCount = quotesPre.BuyCount5;
+                            lastPrice = quotesPre.BuyPrice5;
+                            tradetype = 1;
+                            break;
+                        case 6:
+                            disCount = quotesLast.SellCount1;
+                            disPrice = quotesLast.SellPrice1;
+                            lastCount = quotesPre.SellCount1;
+                            lastPrice = quotesPre.SellPrice1;
+                            tradetype = 2;
+                            break;
+                        case 7:
+                            disCount = quotesLast.SellCount2;
+                            disPrice = quotesLast.SellPrice2;
+                            lastCount = quotesPre.SellCount2;
+                            lastPrice = quotesPre.SellPrice2;
+                            tradetype = 2;
+                            break;
+                        case 8:
+                            disCount = quotesLast.SellCount3;
+                            disPrice = quotesLast.SellPrice3;
+                            lastCount = quotesPre.SellCount3;
+                            lastPrice = quotesPre.SellPrice3;
+                            tradetype = 2;
+                            break;
+                        case 9:
+                            disCount = quotesLast.SellCount4;
+                            disPrice = quotesLast.SellPrice4;
+                            lastCount = quotesPre.SellCount4;
+                            lastPrice = quotesPre.SellPrice4;
+                            tradetype = 2;
+                            break;
+                        case 10:
+                            disCount = quotesLast.SellCount5;
+                            disPrice = quotesLast.SellPrice5;
+                            lastCount = quotesPre.SellCount5;
+                            lastPrice = quotesPre.SellPrice5;
+                            tradetype = 2;
+                            break;
+                        default:
+                            continue;
+                    }
+
+                    long currPrice = quotesLast.PresentPrice;
+                    if ((othercompare == 1 && disPrice < currPrice) || (othercompare == 2 && disPrice > currPrice))
+                    {
+                        continue;
+                    }
+                    if (lastCount <= 0 || lastPrice <= 0)
+                    {
+                        continue;
+                    }
+
+                    double rate = 0;
+                    //当前价格等于0，速率为-100%
+                    if (disPrice <= 0)
+                    {
+                        rate = -100;
+                    }
+                    //价格相等，计算速率
+                    else if (lastPrice == disPrice)
+                    {
+                        rate = (disCount - lastCount) * 1.0 / lastCount * 100;
+                    }
+                    else if (lastPrice > disPrice)
+                    {
+                        //卖单则为无限大（999999999）
+                        if (tradetype == 2)
                         {
-                            SharesBase_Session tempData = new SharesBase_Session();
-                            if (!data.GetMessage(ref tempData, true))
-                            {
-                                break;
-                            }
-                            var quotes = quotes_list.Where(e => e.Market == tempData.Market && e.SharesCode == tempData.SharesCode).ToList();
-                            var quotesLast = quotes.Where(e => e.DataType == 0).FirstOrDefault();
-                            var quotesPre = quotes.Where(e => e.DataType == 1).FirstOrDefault();
-                            if (quotesLast == null || quotesPre == null)
-                            {
-                                continue;
-                            }
+                            rate = 999999999;
+                        }
+                        else
+                        {
+                            rate = -100;
+                        }
+                    }
+                    else
+                    {
+                        //买单则为无限大（999999999）
+                        if (tradetype == 1)
+                        {
+                            rate = 999999999;
+                        }
+                        else
+                        {
+                            rate = -100;
+                        }
+                    }
 
-                            int disCount = 0;
-                            long disPrice = 0;
-                            int lastCount = 0;
-                            long lastPrice = 0;
-                            int tradetype = 0;
+                    if ((compare == 1 && rate >= count) || (compare == 2 && rate <= count))
+                    {
+                        result.Add(new SharesBase_Session
+                        {
+                            Market = tempData.Market,
+                            SharesCode = tempData.SharesCode
+                        });
+                    }
 
-                            switch (type)
-                            {
-                                case 1:
-                                    disCount = quotesLast.BuyCount1;
-                                    disPrice = quotesLast.BuyPrice1;
-                                    lastCount = quotesPre.BuyCount1;
-                                    lastPrice = quotesPre.BuyPrice1;
-                                    tradetype = 1;
-                                    break;
-                                case 2:
-                                    disCount = quotesLast.BuyCount2;
-                                    disPrice = quotesLast.BuyPrice2;
-                                    lastCount = quotesPre.BuyCount2;
-                                    lastPrice = quotesPre.BuyPrice2;
-                                    tradetype = 1;
-                                    break;
-                                case 3:
-                                    disCount = quotesLast.BuyCount3;
-                                    disPrice = quotesLast.BuyPrice3;
-                                    lastCount = quotesPre.BuyCount3;
-                                    lastPrice = quotesPre.BuyPrice3;
-                                    tradetype = 1;
-                                    break;
-                                case 4:
-                                    disCount = quotesLast.BuyCount4;
-                                    disPrice = quotesLast.BuyPrice4;
-                                    lastCount = quotesPre.BuyCount4;
-                                    lastPrice = quotesPre.BuyPrice4;
-                                    tradetype = 1;
-                                    break;
-                                case 5:
-                                    disCount = quotesLast.BuyCount5;
-                                    disPrice = quotesLast.BuyPrice5;
-                                    lastCount = quotesPre.BuyCount5;
-                                    lastPrice = quotesPre.BuyPrice5;
-                                    tradetype = 1;
-                                    break;
-                                case 6:
-                                    disCount = quotesLast.SellCount1;
-                                    disPrice = quotesLast.SellPrice1;
-                                    lastCount = quotesPre.SellCount1;
-                                    lastPrice = quotesPre.SellPrice1;
-                                    tradetype = 2;
-                                    break;
-                                case 7:
-                                    disCount = quotesLast.SellCount2;
-                                    disPrice = quotesLast.SellPrice2;
-                                    lastCount = quotesPre.SellCount2;
-                                    lastPrice = quotesPre.SellPrice2;
-                                    tradetype = 2;
-                                    break;
-                                case 8:
-                                    disCount = quotesLast.SellCount3;
-                                    disPrice = quotesLast.SellPrice3;
-                                    lastCount = quotesPre.SellCount3;
-                                    lastPrice = quotesPre.SellPrice3;
-                                    tradetype = 2;
-                                    break;
-                                case 9:
-                                    disCount = quotesLast.SellCount4;
-                                    disPrice = quotesLast.SellPrice4;
-                                    lastCount = quotesPre.SellCount4;
-                                    lastPrice = quotesPre.SellPrice4;
-                                    tradetype = 2;
-                                    break;
-                                case 10:
-                                    disCount = quotesLast.SellCount5;
-                                    disPrice = quotesLast.SellPrice5;
-                                    lastCount = quotesPre.SellCount5;
-                                    lastPrice = quotesPre.SellPrice5;
-                                    tradetype = 2;
-                                    break;
-                                default:
-                                    continue;
-                            }
-
-                            long currPrice = quotesLast.PresentPrice;
-                            if ((othercompare == 1 && disPrice < currPrice) || (othercompare == 2 && disPrice > currPrice))
-                            {
-                                continue;
-                            }
-                            if (lastCount <= 0 || lastPrice <= 0)
-                            {
-                                continue;
-                            }
-
-                            double rate = 0;
-                            //当前价格等于0，速率为-100%
-                            if (disPrice <= 0)
-                            {
-                                rate = -100;
-                            }
-                            //价格相等，计算速率
-                            else if (lastPrice == disPrice)
-                            {
-                                rate = (disCount - lastCount) * 1.0 / lastCount * 100;
-                            }
-                            else if (lastPrice > disPrice)
-                            {
-                                //卖单则为无限大（999999999）
-                                if (tradetype == 2)
-                                {
-                                    rate = 999999999;
-                                }
-                                else
-                                {
-                                    rate = -100;
-                                }
-                            }
-                            else
-                            {
-                                //买单则为无限大（999999999）
-                                if (tradetype == 1)
-                                {
-                                    rate = 999999999;
-                                }
-                                else
-                                {
-                                    rate = -100;
-                                }
-                            }
-
-                            if ((compare == 1 && rate >= count) || (compare == 2 && rate <= count))
-                            {
-                                lock (dataLock)
-                                {
-                                    result.Add(new SharesBase_Session
-                                    {
-                                        Market = tempData.Market,
-                                        SharesCode = tempData.SharesCode
-                                    });
-                                }
-                            }
-                        } while (true);
-                    }, TaskCreationOptions.LongRunning);
-                    taskArr[index].Start();
                 }
-                Task.WaitAll(taskArr);
-                data.Release();
                 return result;
             }
             catch (Exception ex)
@@ -6259,203 +5958,170 @@ from t_shares_quotes with(nolock)";
                     quotes_list = db.Database.SqlQuery<QuotesDateInfo>(sql).ToList();
                 }
 
-                ThreadMsgTemplate<SharesBase_Session> data = new ThreadMsgTemplate<SharesBase_Session>();
-                data.Init();
-                foreach (var item in sharesList)
-                {
-                    data.AddMessage(item);
-                }
-
                 List<SharesBase_Session> result = new List<SharesBase_Session>();
-                object dataLock = new object();
-
-                int defaultCount = Singleton.Instance.MaxTrendCheckTaskCount;
-                int taskCount = data.GetCount();
-                if (taskCount > defaultCount)
+                foreach (var tempData in sharesList)
                 {
-                    taskCount = defaultCount;
-                }
-
-                Task[] taskArr = new Task[taskCount];
-                for (int index = 0; index < taskCount; index++)
-                {
-                    taskArr[index] = new Task(() =>
+                    var quotes = quotes_list.Where(e => e.Market == tempData.Market && e.SharesCode == tempData.SharesCode).ToList();
+                    var quotesLast = quotes.Where(e => e.DataType == 0).FirstOrDefault();
+                    var quotesPre = quotes.Where(e => e.DataType == 1).FirstOrDefault();
+                    if (quotesLast == null || quotesPre == null)
                     {
-                        do
-                        {
-                            SharesBase_Session tempData = new SharesBase_Session();
-                            if (!data.GetMessage(ref tempData, true))
+                        continue;
+                    }
+                    long currPrice = quotesLast.PresentPrice;
+                    if (priceType == 2)
+                    {
+                        currPrice = quotesLast.LimitUpPrice;
+                    }
+                    else if (priceType == 3)
+                    {
+                        currPrice = quotesLast.LimitDownPrice;
+                    }
+
+                    int disCount = 0;
+                    int lastCount = 0;
+
+                    double rate = 0;
+                    switch (type)
+                    {
+                        case 1:
+                            if (quotesPre.BuyPrice1 == currPrice)
                             {
-                                break;
+                                lastCount = quotesPre.BuyCount1;
                             }
-                            var quotes = quotes_list.Where(e => e.Market == tempData.Market && e.SharesCode == tempData.SharesCode).ToList();
-                            var quotesLast = quotes.Where(e => e.DataType == 0).FirstOrDefault();
-                            var quotesPre = quotes.Where(e => e.DataType == 1).FirstOrDefault();
-                            if (quotesLast == null || quotesPre == null)
+                            else if (quotesPre.BuyPrice2 == currPrice)
+                            {
+                                lastCount = quotesPre.BuyCount2;
+                            }
+                            else if (quotesPre.BuyPrice3 == currPrice)
+                            {
+                                lastCount = quotesPre.BuyCount3;
+                            }
+                            else if (quotesPre.BuyPrice4 == currPrice)
+                            {
+                                lastCount = quotesPre.BuyCount4;
+                            }
+                            else if (quotesPre.BuyPrice5 == currPrice)
+                            {
+                                lastCount = quotesPre.BuyCount5;
+                            }
+                            else
                             {
                                 continue;
                             }
-                            long currPrice = quotesLast.PresentPrice;
-                            if (priceType == 2)
+                            if (quotesLast.BuyPrice1 == currPrice)
                             {
-                                currPrice = quotesLast.LimitUpPrice;
+                                disCount = quotesLast.BuyCount1;
                             }
-                            else if (priceType == 3)
+                            else if (quotesLast.BuyPrice2 == currPrice)
                             {
-                                currPrice = quotesLast.LimitDownPrice;
+                                disCount = quotesLast.BuyCount2;
                             }
-
-                            int disCount = 0;
-                            int lastCount = 0;
-
-                            double rate = 0;
-                            switch (type)
+                            else if (quotesLast.BuyPrice3 == currPrice)
                             {
-                                case 1:
-                                    if (quotesPre.BuyPrice1 == currPrice)
-                                    {
-                                        lastCount = quotesPre.BuyCount1;
-                                    }
-                                    else if (quotesPre.BuyPrice2 == currPrice)
-                                    {
-                                        lastCount = quotesPre.BuyCount2;
-                                    }
-                                    else if (quotesPre.BuyPrice3 == currPrice)
-                                    {
-                                        lastCount = quotesPre.BuyCount3;
-                                    }
-                                    else if (quotesPre.BuyPrice4 == currPrice)
-                                    {
-                                        lastCount = quotesPre.BuyCount4;
-                                    }
-                                    else if (quotesPre.BuyPrice5 == currPrice)
-                                    {
-                                        lastCount = quotesPre.BuyCount5;
-                                    }
-                                    else
-                                    {
-                                        continue;
-                                    }
-                                    if (quotesLast.BuyPrice1 == currPrice)
-                                    {
-                                        disCount = quotesLast.BuyCount1;
-                                    }
-                                    else if (quotesLast.BuyPrice2 == currPrice)
-                                    {
-                                        disCount = quotesLast.BuyCount2;
-                                    }
-                                    else if (quotesLast.BuyPrice3 == currPrice)
-                                    {
-                                        disCount = quotesLast.BuyCount3;
-                                    }
-                                    else if (quotesLast.BuyPrice4 == currPrice)
-                                    {
-                                        disCount = quotesLast.BuyCount4;
-                                    }
-                                    else if (quotesLast.BuyPrice5 == currPrice)
-                                    {
-                                        disCount = quotesLast.BuyCount5;
-                                    }
-                                    else
-                                    {
-                                        if (quotesLast.BuyPrice1 > currPrice)
-                                        {
-                                            rate = 0x0FFFFFFF;
-                                        }
-                                        else
-                                        {
-                                            rate = -100;
-                                        }
-                                    }
-                                    break;
-                                case 2:
-                                    if (quotesPre.SellPrice1 == currPrice)
-                                    {
-                                        lastCount = quotesPre.SellCount1;
-                                    }
-                                    else if (quotesPre.SellPrice2 == currPrice)
-                                    {
-                                        lastCount = quotesPre.SellCount2;
-                                    }
-                                    else if (quotesPre.SellPrice3 == currPrice)
-                                    {
-                                        lastCount = quotesPre.SellCount3;
-                                    }
-                                    else if (quotesPre.SellPrice4 == currPrice)
-                                    {
-                                        lastCount = quotesPre.SellCount4;
-                                    }
-                                    else if (quotesPre.SellPrice5 == currPrice)
-                                    {
-                                        lastCount = quotesPre.SellCount5;
-                                    }
-                                    else
-                                    {
-                                        continue;
-                                    }
-                                    if (quotesLast.SellPrice1 == currPrice)
-                                    {
-                                        disCount = quotesLast.SellCount1;
-                                    }
-                                    else if (quotesLast.SellPrice2 == currPrice)
-                                    {
-                                        disCount = quotesLast.SellCount2;
-                                    }
-                                    else if (quotesLast.SellPrice3 == currPrice)
-                                    {
-                                        disCount = quotesLast.SellCount3;
-                                    }
-                                    else if (quotesLast.SellPrice4 == currPrice)
-                                    {
-                                        disCount = quotesLast.SellCount4;
-                                    }
-                                    else if (quotesLast.SellPrice5 == currPrice)
-                                    {
-                                        disCount = quotesLast.SellCount5;
-                                    }
-                                    else
-                                    {
-                                        if (quotesLast.SellPrice1 > currPrice)
-                                        {
-                                            rate = -100;
-                                        }
-                                        else
-                                        {
-                                            rate = 0x0FFFFFFF;
-                                        }
-                                    }
-                                    break;
-                                default:
-                                    continue;
+                                disCount = quotesLast.BuyCount3;
                             }
-
-                            if (rate == 0)
+                            else if (quotesLast.BuyPrice4 == currPrice)
                             {
-                                if (lastCount == 0)
+                                disCount = quotesLast.BuyCount4;
+                            }
+                            else if (quotesLast.BuyPrice5 == currPrice)
+                            {
+                                disCount = quotesLast.BuyCount5;
+                            }
+                            else
+                            {
+                                if (quotesLast.BuyPrice1 > currPrice)
                                 {
-                                    continue;
+                                    rate = 0x0FFFFFFF;
                                 }
-                                rate = (disCount - lastCount) * 1.0 / lastCount * 100;
-                            }
-
-
-                            if ((compare == 1 && rate >= count) || (compare == 2 && rate <= count))
-                            {
-                                lock (dataLock)
+                                else
                                 {
-                                    result.Add(new SharesBase_Session
-                                    {
-                                        Market = tempData.Market,
-                                        SharesCode = tempData.SharesCode
-                                    });
+                                    rate = -100;
                                 }
                             }
-                        } while (true);
-                    }, TaskCreationOptions.LongRunning);
-                    taskArr[index].Start();
+                            break;
+                        case 2:
+                            if (quotesPre.SellPrice1 == currPrice)
+                            {
+                                lastCount = quotesPre.SellCount1;
+                            }
+                            else if (quotesPre.SellPrice2 == currPrice)
+                            {
+                                lastCount = quotesPre.SellCount2;
+                            }
+                            else if (quotesPre.SellPrice3 == currPrice)
+                            {
+                                lastCount = quotesPre.SellCount3;
+                            }
+                            else if (quotesPre.SellPrice4 == currPrice)
+                            {
+                                lastCount = quotesPre.SellCount4;
+                            }
+                            else if (quotesPre.SellPrice5 == currPrice)
+                            {
+                                lastCount = quotesPre.SellCount5;
+                            }
+                            else
+                            {
+                                continue;
+                            }
+                            if (quotesLast.SellPrice1 == currPrice)
+                            {
+                                disCount = quotesLast.SellCount1;
+                            }
+                            else if (quotesLast.SellPrice2 == currPrice)
+                            {
+                                disCount = quotesLast.SellCount2;
+                            }
+                            else if (quotesLast.SellPrice3 == currPrice)
+                            {
+                                disCount = quotesLast.SellCount3;
+                            }
+                            else if (quotesLast.SellPrice4 == currPrice)
+                            {
+                                disCount = quotesLast.SellCount4;
+                            }
+                            else if (quotesLast.SellPrice5 == currPrice)
+                            {
+                                disCount = quotesLast.SellCount5;
+                            }
+                            else
+                            {
+                                if (quotesLast.SellPrice1 > currPrice)
+                                {
+                                    rate = -100;
+                                }
+                                else
+                                {
+                                    rate = 0x0FFFFFFF;
+                                }
+                            }
+                            break;
+                        default:
+                            continue;
+                    }
+
+                    if (rate == 0)
+                    {
+                        if (lastCount == 0)
+                        {
+                            continue;
+                        }
+                        rate = (disCount - lastCount) * 1.0 / lastCount * 100;
+                    }
+
+
+                    if ((compare == 1 && rate >= count) || (compare == 2 && rate <= count))
+                    {
+                        result.Add(new SharesBase_Session
+                        {
+                            Market = tempData.Market,
+                            SharesCode = tempData.SharesCode
+                        });
+                    }
+
                 }
-                Task.WaitAll(taskArr);
-                data.Release();
                 return result;
             }
             catch (Exception ex)
@@ -6476,7 +6142,7 @@ from t_shares_quotes with(nolock)";
                 long count = 0;
 
                 riseType = Convert.ToInt32(temp.RiseType);
-              
+
                 try
                 {
                     compare = Convert.ToInt32(temp.Compare);
@@ -6503,163 +6169,111 @@ from t_shares_quotes with(nolock)";
                                                         PriceType = item.PriceType
                                                     }).ToList();
 
-                ThreadMsgTemplate<SharesBase_Session> data = new ThreadMsgTemplate<SharesBase_Session>();
-                data.Init();
-                foreach (var item in sharesList)
-                {
-                    data.AddMessage(item);
-                }
-
-                List<SharesBase_Session> result = new List<SharesBase_Session>();
-                object dataLock = new object();
-
-                int defaultCount = Singleton.Instance.MaxTrendCheckTaskCount;
-                int taskCount = data.GetCount();
-                if (taskCount > defaultCount)
-                {
-                    taskCount = defaultCount;
-                }
-
                 var quotes_list_dic = quotes_list.ToDictionary(k => int.Parse(k.SharesCode) * 10 + k.Market, v => v);
                 var _SharesBaseSession_dic = Singleton.Instance._SharesBaseSession.GetSessionData().ToDictionary(k => int.Parse(k.SharesCode) * 10 + k.Market, v => v);
 
-                Task[] taskArr = new Task[taskCount];
-                for (int index = 0; index < taskCount; index++)
+                List<SharesBase_Session> result = new List<SharesBase_Session>();
+                foreach (var tempData in sharesList)
                 {
-                    taskArr[index] = new Task(() =>
+                    //当前价格
+                    int key = int.Parse(tempData.SharesCode) * 10 + tempData.Market;
+                    if (!quotes_list_dic.ContainsKey(key))
                     {
-                        do
+                        continue;
+                    }
+                    var quotes = quotes_list_dic[key];
+
+                    if (riseType == 1 && quotes.TriPriceType == 1)
+                    {
+                        result.Add(new SharesBase_Session
                         {
-                            SharesBase_Session tempData = new SharesBase_Session();
-                            if (!data.GetMessage(ref tempData, true))
-                            {
-                                break;
-                            }
-                            //当前价格
-                            int key = int.Parse(tempData.SharesCode) * 10 + tempData.Market;
-                            if (!quotes_list_dic.ContainsKey(key))
-                            {
-                                continue;
-                            }
-                            var quotes = quotes_list_dic[key];
+                            Market = tempData.Market,
+                            SharesCode = tempData.SharesCode
+                        });
+                    }
 
-                            if (riseType == 1 && quotes.TriPriceType == 1)
-                            {
-                                lock (dataLock)
-                                {
-                                    result.Add(new SharesBase_Session
-                                    {
-                                        Market = tempData.Market,
-                                        SharesCode = tempData.SharesCode
-                                    });
-                                }
-                            }
+                    else if (riseType == 2 && quotes.TriPriceType == 2)
+                    {
+                        result.Add(new SharesBase_Session
+                        {
+                            Market = tempData.Market,
+                            SharesCode = tempData.SharesCode
+                        });
+                    }
 
-                            else if (riseType == 2 && quotes.TriPriceType == 2)
-                            {
-                                lock (dataLock)
-                                {
-                                    result.Add(new SharesBase_Session
-                                    {
-                                        Market = tempData.Market,
-                                        SharesCode = tempData.SharesCode
-                                    });
-                                }
-                            }
+                    else if (riseType == 3 && quotes.PriceType == 1)
+                    {
+                        result.Add(new SharesBase_Session
+                        {
+                            Market = tempData.Market,
+                            SharesCode = tempData.SharesCode
+                        });
+                        continue;
+                    }
 
-                            else if (riseType == 3 && quotes.PriceType == 1)
-                            {
-                                lock (dataLock)
-                                {
-                                    result.Add(new SharesBase_Session
-                                    {
-                                        Market = tempData.Market,
-                                        SharesCode = tempData.SharesCode
-                                    });
-                                }
-                                continue;
-                            }
+                    else if (riseType == 4 && quotes.PriceType == 2)
+                    {
+                        result.Add(new SharesBase_Session
+                        {
+                            Market = tempData.Market,
+                            SharesCode = tempData.SharesCode
+                        });
+                        continue;
+                    }
 
-                            else if (riseType == 4 && quotes.PriceType == 2)
+                    else if (riseType == 5)
+                    {
+                        if ((compare == 1 && quotes.PresentPrice >= count) || (compare == 2 && quotes.PresentPrice <= count))
+                        {
+                            result.Add(new SharesBase_Session
                             {
-                                lock (dataLock)
-                                {
-                                    result.Add(new SharesBase_Session
-                                    {
-                                        Market = tempData.Market,
-                                        SharesCode = tempData.SharesCode
-                                    });
-                                }
-                                continue;
-                            }
-                            
-                            else if (riseType == 5)
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+
+                    }
+
+                    else if (riseType == 6)
+                    {
+                        //查询流通股
+                        if (!_SharesBaseSession_dic.ContainsKey(key))
+                        {
+                            continue;
+                        }
+                        var sharesInfo = _SharesBaseSession_dic[key];
+
+                        long circulatingCapital = sharesInfo.CirculatingCapital;
+                        if ((compare == 1 && quotes.PresentPrice * circulatingCapital >= count) || (compare == 2 && quotes.PresentPrice * circulatingCapital <= count))
+                        {
+                            result.Add(new SharesBase_Session
                             {
-                                if ((compare == 1 && quotes.PresentPrice >= count) || (compare == 2 && quotes.PresentPrice <= count))
-                                {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                    }
+                    else if (riseType == 7)
+                    {
+                        //查询总股本
 
-                            }
-                            
-                            else if (riseType == 6)
+                        if (!_SharesBaseSession_dic.ContainsKey(key))
+                        {
+                            continue;
+                        }
+                        var sharesInfo = _SharesBaseSession_dic[key];
+
+                        long totalCapital = sharesInfo.TotalCapital;
+                        if ((compare == 1 && quotes.PresentPrice * totalCapital >= count) || (compare == 2 && quotes.PresentPrice * totalCapital <= count))
+                        {
+                            result.Add(new SharesBase_Session
                             {
-                                //查询流通股
-                                if (!_SharesBaseSession_dic.ContainsKey(key))
-                                {
-                                    continue;
-                                }
-                                var sharesInfo = _SharesBaseSession_dic[key];
-
-                                long circulatingCapital = sharesInfo.CirculatingCapital;
-                                if ((compare == 1 && quotes.PresentPrice * circulatingCapital >= count) || (compare == 2 && quotes.PresentPrice * circulatingCapital <= count))
-                                {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
-                            }
-                            else if (riseType == 7)
-                            {
-                                //查询总股本
-
-                                if (!_SharesBaseSession_dic.ContainsKey(key))
-                                {
-                                    continue;
-                                }
-                                var sharesInfo = _SharesBaseSession_dic[key];
-
-                                long totalCapital = sharesInfo.TotalCapital;
-                                if ((compare == 1 && quotes.PresentPrice * totalCapital >= count) || (compare == 2 && quotes.PresentPrice * totalCapital <= count))
-                                {
-                                    lock (dataLock)
-                                    {
-                                        result.Add(new SharesBase_Session
-                                        {
-                                            Market = tempData.Market,
-                                            SharesCode = tempData.SharesCode
-                                        });
-                                    }
-                                }
-                            }
-                        } while (true);
-                    }, TaskCreationOptions.LongRunning);
-                    taskArr[index].Start();
+                                Market = tempData.Market,
+                                SharesCode = tempData.SharesCode
+                            });
+                        }
+                    }
                 }
-                Task.WaitAll(taskArr);
-                data.Release();
                 return result;
             }
             catch (Exception ex)

@@ -13,6 +13,11 @@ namespace MealTicket_Web_Handler.Model
     public class GetAccountShareGroupRelListPageRequest:DetailsPageRequest
     {
         /// <summary>
+        /// 账户Id
+        /// </summary>
+        public long AccountId { get; set; }
+
+        /// <summary>
         /// 排序方式
         /// </summary>
         public string OrderMethod { get; set; }
@@ -126,10 +131,20 @@ namespace MealTicket_Web_Handler.Model
         /// 板块列表
         /// </summary>
         public List<SharesPlateInfo> PlateList { get; set; }
+
+        /// <summary>
+        /// 所属自选股分组列表
+        /// </summary>
+        public List<long> MySharesGroupList { get; set; }
     }
 
     public class AccountShareGroupCountInfo
     {
+        /// <summary>
+        /// 账户Id
+        /// </summary>
+        public long AccountId { get; set; }
+
         /// <summary>
         /// 分组Id
         /// </summary>

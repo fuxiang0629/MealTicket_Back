@@ -4142,6 +4142,13 @@
     <EntitySet Name="t_shares_plate_rel_snapshot_instructions" EntityType="meal_ticketModel.t_shares_plate_rel_snapshot_instructions" />
     <EntitySet Name="t_account_shares_group" EntityType="meal_ticketModel.t_account_shares_group" />
     <EntitySet Name="t_account_shares_group_rel" EntityType="meal_ticketModel.t_account_shares_group_rel" />
+    <EntitySet Name="t_account_shares_group_share" EntityType="meal_ticketModel.t_account_shares_group_share" />
+    <EntitySet Name="t_account_shares_group_share_rel" EntityType="meal_ticketModel.t_account_shares_group_share_rel" />
+    <EntitySet Name="t_shares_plate_rel_tag_setting" EntityType="meal_ticketModel.t_shares_plate_rel_tag_setting" />
+    <EntitySet Name="t_shares_plate_rel_tag_account" EntityType="meal_ticketModel.t_shares_plate_rel_tag_account" />
+    <EntitySet Name="t_shares_plate_rel_tag_focuson" EntityType="meal_ticketModel.t_shares_plate_rel_tag_focuson" />
+    <EntitySet Name="t_shares_plate_rel_tag_force" EntityType="meal_ticketModel.t_shares_plate_rel_tag_force" />
+    <EntitySet Name="t_shares_plate_rel_tag_trendlike" EntityType="meal_ticketModel.t_shares_plate_rel_tag_trendlike" />
   </EntityContainer>
   <EntityType Name="t_account_baseinfo">
     <Key>
@@ -5314,5 +5321,78 @@
     <Property Name="Market" Type="Int32" Nullable="false" />
     <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_group_share">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="ShareAccountId" Type="Int64" Nullable="false" />
+    <Property Name="OrderIndex" Type="Int32" Nullable="false" />
+    <Property Name="ShareTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_account_shares_group_share_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="ShareId" Type="Int64" Nullable="false" />
+    <Property Name="GroupId" Type="Int64" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="OrderIndex" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_rel_tag_setting">
+    <Key>
+      <PropertyRef Name="Market" />
+      <PropertyRef Name="SharesCode" />
+    </Key>
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="IsAuto" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_rel_tag_account">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="IsFocusOn" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_rel_tag_focuson">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="IsFocusOn" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_rel_tag_force">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="IsForce1" Type="Boolean" Nullable="false" />
+    <Property Name="IsForce2" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_rel_tag_trendlike">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="IsTrendLike" Type="Boolean" Nullable="false" />
   </EntityType>
 </Schema>

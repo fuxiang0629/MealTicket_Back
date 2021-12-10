@@ -66,9 +66,14 @@ namespace MealTicket_Web_Handler.Model
     public class AccountBuyConditionTradeSharesInfo
     {
         /// <summary>
-        /// Id
+        /// 条件买入Id
         /// </summary>
         public long Id { get; set; }
+
+        /// <summary>
+        /// 条件买入状态
+        /// </summary>
+        public int ConditionStatus { get; set; }
 
         /// <summary>
         /// 关系Id

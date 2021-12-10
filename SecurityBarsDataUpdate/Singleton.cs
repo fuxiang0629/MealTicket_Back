@@ -39,7 +39,16 @@ namespace SecurityBarsDataUpdate
 
         private Singleton()
         {
-            Init();
+            retryWait.Init();
+            retryData.Init();
+            cltData.Init();
+            heartbeatWait.Init();
+            UpdateWait.Init();
+            GetSharesHqHost();
+            for (int i = 0; i < hqClientCount; i++)
+            {
+                StartHqClient(-1);
+            }
         }
 
         private List<HostInfo> HostList;// 行情服务器
@@ -58,6 +67,18 @@ namespace SecurityBarsDataUpdate
 
         public ThreadMsgTemplate<int> cltData = new ThreadMsgTemplate<int>();//行情链接队列
         public ThreadMsgTemplate<int> retryData = new ThreadMsgTemplate<int>();//行情重连队列
+
+        /// <summary>
+        /// 线程任务对象
+        /// </summary>
+        public ThreadTask threadTask;
+
+        public string New_N = "N";
+        public string New_C = "C";
+
+        public string TradeTime1 = "09:00:00";
+        public string TradeTime2 = "09:25:00";
+        public string TradeTime3 = "09:30:00";
 
         /// <summary>
         /// 获取行情链接
@@ -92,28 +113,22 @@ namespace SecurityBarsDataUpdate
         /// <summary>
         /// 初始化
         /// </summary>
-        private void Init()
+        public void Init()
         {
             SysparUpdate();
-            GetSharesHqHost();
 
-            retryWait.Init();
-            retryData.Init();
-            cltData.Init();
-            heartbeatWait.Init();
-            UpdateWait.Init();
-
-
-            for (int i = 0; i < hqClientCount; i++)
-            {
-                StartHqClient(-1);
-            }
             StartSysparUpdateThread();
             StartHqClientRetryThread();
             StartHeartbeatThread();
 
             _DimTimeSession.StartUpdate(3600000);
-            _SharesQuotesSession.StartUpdate(60000);
+            _SharesQuotesSession.StartUpdate(3000); 
+            _FundmultipleSession.StartUpdate(3600000);
+            _SharesBaseSession.StartUpdate(600000);
+
+
+
+            threadTask = new ThreadTask(hqClientCount);
         }
 
         /// <summary>
@@ -223,6 +238,11 @@ namespace SecurityBarsDataUpdate
             if (mqHandler != null)
             {
                 mqHandler.Dispose();
+            }
+
+            if (threadTask != null)
+            {
+                threadTask.Dispose();
             }
         }
 
@@ -388,5 +408,7 @@ namespace SecurityBarsDataUpdate
 
         public DimTimeSession _DimTimeSession = new DimTimeSession();
         public SharesQuotesSession _SharesQuotesSession = new SharesQuotesSession();
+        public FundmultipleSession _FundmultipleSession = new FundmultipleSession();
+        public SharesBaseSession _SharesBaseSession = new SharesBaseSession();
     }
 }

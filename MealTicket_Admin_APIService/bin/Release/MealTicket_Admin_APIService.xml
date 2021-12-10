@@ -3728,6 +3728,20 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetSharesBasePlateList(MealTicket_Admin_Handler.Model.GetSharesBasePlateListRequest)">
+            <summary>
+            获取股票所属基础板块
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifySharesBasePlateTag(MealTicket_Admin_Handler.Model.ModifySharesBasePlateTagRequest)">
+            <summary>
+            设置股票所属基础板块标记
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.ExtensionHelper.GetAllWebApi(System.Web.Http.HttpConfiguration)">
             <summary>
             获取当前配置内的所有web api

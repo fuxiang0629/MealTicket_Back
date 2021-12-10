@@ -4790,5 +4790,84 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_group_share">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_group_share">
+        <MappingFragment StoreEntitySet="t_account_shares_group_share">
+          <ScalarProperty Name="ShareTime" ColumnName="ShareTime" />
+          <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
+          <ScalarProperty Name="ShareAccountId" ColumnName="ShareAccountId" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_account_shares_group_share_rel">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_account_shares_group_share_rel">
+        <MappingFragment StoreEntitySet="t_account_shares_group_share_rel">
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="GroupId" ColumnName="GroupId" />
+          <ScalarProperty Name="ShareId" ColumnName="ShareId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_shares_plate_rel_tag_setting">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_shares_plate_rel_tag_setting">
+        <MappingFragment StoreEntitySet="t_shares_plate_rel_tag_setting">
+          <ScalarProperty Name="IsAuto" ColumnName="IsAuto" />
+          <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+          <ScalarProperty Name="Market" ColumnName="Market" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_shares_plate_rel_tag_account">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_shares_plate_rel_tag_account">
+        <MappingFragment StoreEntitySet="t_shares_plate_rel_tag_account">
+          <ScalarProperty Name="IsFocusOn" ColumnName="IsFocusOn" />
+          <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+          <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+          <ScalarProperty Name="Market" ColumnName="Market" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_shares_plate_rel_tag_focuson">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_shares_plate_rel_tag_focuson">
+        <MappingFragment StoreEntitySet="t_shares_plate_rel_tag_focuson">
+          <ScalarProperty Name="IsFocusOn" ColumnName="IsFocusOn" />
+          <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+          <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+          <ScalarProperty Name="Market" ColumnName="Market" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_shares_plate_rel_tag_force">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_shares_plate_rel_tag_force">
+        <MappingFragment StoreEntitySet="t_shares_plate_rel_tag_force">
+          <ScalarProperty Name="IsForce2" ColumnName="IsForce2" />
+          <ScalarProperty Name="IsForce1" ColumnName="IsForce1" />
+          <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+          <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+          <ScalarProperty Name="Market" ColumnName="Market" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_shares_plate_rel_tag_trendlike">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_shares_plate_rel_tag_trendlike">
+        <MappingFragment StoreEntitySet="t_shares_plate_rel_tag_trendlike">
+          <ScalarProperty Name="IsTrendLike" ColumnName="IsTrendLike" />
+          <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+          <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+          <ScalarProperty Name="Market" ColumnName="Market" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

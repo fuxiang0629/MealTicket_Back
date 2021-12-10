@@ -295,6 +295,13 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel_snapshot_instructions" Width="1.5" PointX="52.375" PointY="0.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_group" Width="1.5" PointX="51.375" PointY="33.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_group_rel" Width="1.5" PointX="52.375" PointY="5.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_group_share" Width="1.5" PointX="52.375" PointY="8.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_account_shares_group_share_rel" Width="1.5" PointX="52.375" PointY="11.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel_tag_setting" Width="1.5" PointX="52.375" PointY="18.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel_tag_account" Width="1.5" PointX="52.375" PointY="21.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel_tag_focuson" Width="1.5" PointX="52.375" PointY="14.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel_tag_force" Width="1.5" PointX="52.375" PointY="24.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel_tag_trendlike" Width="1.5" PointX="52.375" PointY="36.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

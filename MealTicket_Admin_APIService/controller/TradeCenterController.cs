@@ -5823,5 +5823,42 @@ namespace MealTicket_Admin_APIService.controller
             tradeCenterHandler.BatchResetSharesPlateKLine(request);
             return null;
         }
+
+        /// <summary>
+        /// 获取股票所属基础板块
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/base/plate/list"), HttpPost]
+        [Description("获取股票所属基础板块")]
+        public GetSharesBasePlateListRes GetSharesBasePlateList(GetSharesBasePlateListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return tradeCenterHandler.GetSharesBasePlateList(request, basedata);
+        }
+
+        /// <summary>
+        /// 设置股票所属基础板块标记
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/base/plate/tag/modify"), HttpPost]
+        [Description("设置股票所属基础板块标记")]
+        public object ModifySharesBasePlateTag(ModifySharesBasePlateTagRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.ModifySharesBasePlateTag(request, basedata);
+            return null;
+        }
     }
 }

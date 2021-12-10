@@ -80,7 +80,37 @@ namespace FXCommon.Common
             });
             UpdateThread.Start();
         }
-        
+
+        /// <summary>
+        /// 局部设置缓存
+        /// </summary>
+        public bool SetSessionWithLock(T newData)
+        {
+            _readWriteLock.AcquireWriterLock(-1);
+            bool isSuccess = _SetSession(newData);
+            _readWriteLock.ReleaseWriterLock();
+            return isSuccess;
+        }
+
+        private bool _SetSession(T newData) 
+        {
+            try
+            {
+                SessionData = SetSession(newData);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog(Name + "缓存设置失败", ex);
+                return false;
+            }
+        }
+
+        public virtual T SetSession(T newData)
+        {
+            return default(T);
+        }
+
         private bool UpdateSessionWithLock()
         {
             _readWriteLock.AcquireWriterLock(-1);
