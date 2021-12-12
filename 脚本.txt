@@ -7,7 +7,10 @@ P_GetPlate_Quotes_Today_Session
 P_GetShares_Quotes_Date_Session
 P_GetShares_Quotes_Today_Session
 
+PlateTagForceSessionInfo  P_Plate_Tag_Force_Session_Update
+PlateTagTrendLikeSessionInfo P_Plate_Tag_TrendLike_Session_Update
+
 
   insert into t_system_param
   (ParamName,[Description],ParamValue,IsJson,CreateTime,LastModified)
-  values('PlateTagCalPar','板块标签计算参数','{TrendLikeDays":5}',1,getdate(),getdate())
+  values('PlateTagCalPar','板块标签计算参数','{"TrendLikeDays":5,"PlateTagCalIntervalTime":3000}',1,getdate(),getdate())

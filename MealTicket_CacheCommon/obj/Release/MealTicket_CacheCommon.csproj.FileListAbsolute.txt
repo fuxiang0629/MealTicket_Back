@@ -116,7 +116,6 @@ D:\项目\饭票\后端\MealTicket_CacheCommon\bin\Release\System.Numerics.Vecto
 D:\项目\饭票\后端\MealTicket_CacheCommon\bin\Release\zh-Hans\EntityFramework.resources.dll
 D:\项目\饭票\后端\MealTicket_CacheCommon\bin\Release\zh-Hans\EntityFramework.SqlServer.resources.dll
 D:\项目\饭票\后端\MealTicket_CacheCommon\obj\Release\MealTicket_CacheCommon.csprojAssemblyReference.cache
-D:\项目\饭票\后端\MealTicket_CacheCommon\obj\Release\MealTicket_CacheCommon.exe.config
 D:\项目\饭票\后端\MealTicket_CacheCommon\obj\Release\MealTicket_CacheCommon.csproj.CoreCompileInputs.cache
 D:\项目\饭票\后端\MealTicket_CacheCommon\obj\Release\MealTicket_CacheCommon.csproj.CopyComplete
 D:\项目\饭票\后端\MealTicket_CacheCommon\obj\Release\MealTicket_CacheCommon.exe

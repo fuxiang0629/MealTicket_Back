@@ -186,5 +186,45 @@ namespace MealTicket_Web_Handler
             }
             return session as Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>>;
         }
+
+        public Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> GetPlate_Quotes_Date_Session()
+        {
+            var session = GetSession(Enum_Excute_DataKey.Plate_Quotes_Date_Session.ToString());
+            if (session == null)
+            {
+                return new Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>>();
+            }
+            return session as Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>>;
+        }
+
+        public Dictionary<long, Plate_Quotes_Session_Info> GetPlate_Quotes_Today_Session()
+        {
+            var session = GetSession(Enum_Excute_DataKey.Plate_Quotes_Today_Session.ToString());
+            if (session == null)
+            {
+                return new Dictionary<long, Plate_Quotes_Session_Info>();
+            }
+            return session as Dictionary<long, Plate_Quotes_Session_Info>;
+        }
+
+        public Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> GetShares_Quotes_Date_Session()
+        {
+            var session = GetSession(Enum_Excute_DataKey.Shares_Quotes_Date_Session.ToString());
+            if (session == null)
+            {
+                return new Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>>();
+            }
+            return session as Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>>;
+        }
+
+        public Dictionary<long, Shares_Quotes_Session_Info> GetShares_Quotes_Today_Session()
+        {
+            var session = GetSession(Enum_Excute_DataKey.Shares_Quotes_Today_Session.ToString());
+            if (session == null)
+            {
+                return new Dictionary<long, Shares_Quotes_Session_Info>();
+            }
+            return session as Dictionary<long, Shares_Quotes_Session_Info>;
+        }
     }
 }

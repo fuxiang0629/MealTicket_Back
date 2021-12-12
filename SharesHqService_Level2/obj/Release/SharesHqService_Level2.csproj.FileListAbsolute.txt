@@ -61,5 +61,4 @@ D:\项目\饭票\后端\SharesHqService_Level2\bin\Release\System.Runtime.Compil
 D:\项目\饭票\后端\SharesHqService_Level2\bin\Release\System.Buffers.xml
 D:\项目\饭票\后端\SharesHqService_Level2\bin\Release\System.Numerics.Vectors.xml
 D:\项目\饭票\后端\SharesHqService_Level2\obj\Release\SharesHqService_Level2.csprojAssemblyReference.cache
-D:\项目\饭票\后端\SharesHqService_Level2\obj\Release\SharesHqService_Level2.exe.config
 D:\项目\饭票\后端\SharesHqService_Level2\obj\Release\SharesHqService_Level2.csproj.CopyComplete

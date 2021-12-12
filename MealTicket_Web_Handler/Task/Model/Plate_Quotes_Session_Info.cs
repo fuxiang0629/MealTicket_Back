@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace MealTicket_Web_Handler
 {
+    [Serializable]
     public class Plate_Quotes_Session_Info
     {
         /// <summary>

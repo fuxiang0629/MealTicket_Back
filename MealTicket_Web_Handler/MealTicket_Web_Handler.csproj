@@ -295,6 +295,7 @@
     <Compile Include="PageRequest.cs" />
     <Compile Include="PageRes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Runner\PlateTagCalHelper.cs" />
     <Compile Include="Runner\RunnerHelper.cs" />
     <Compile Include="Session\AccountRiseLimitTriSession.cs" />
     <Compile Include="Session\AccountSearchTriSession.cs" />

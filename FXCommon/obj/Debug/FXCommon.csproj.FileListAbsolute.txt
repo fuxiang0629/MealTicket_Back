@@ -53,3 +53,6 @@ F:\项目\饭票后端\FXCommon\obj\Debug\FXCommon.pdb
 F:\项目\饭票后端\FXCommon\bin\Debug\PInvoke.Windows.Core.dll
 F:\项目\饭票后端\FXCommon\bin\Debug\PInvoke.Windows.Core.xml
 F:\项目\饭票后端\FXCommon\obj\Debug\FXCommon.csprojAssemblyReference.cache
+D:\项目\饭票\后端\FXCommon\bin\Debug\PInvoke.Windows.Core.dll
+D:\项目\饭票\后端\FXCommon\bin\Debug\PInvoke.Windows.Core.xml
+D:\项目\饭票\后端\FXCommon\obj\Debug\FXCommon.csprojAssemblyReference.cache

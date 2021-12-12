@@ -120,6 +120,11 @@ namespace MealTicket_Web_Handler
         public int AutoBuyTaskMaxCount = 50;
 
         /// <summary>
+        /// 板块标记计算间隔时间（毫秒）
+        /// </summary>
+        public int PlateTagCalIntervalTime = 3000;
+
+        /// <summary>
         /// adb.net操作对象
         /// </summary>
         public SqlHelper sqlHelper;
@@ -553,6 +558,22 @@ namespace MealTicket_Web_Handler
                         PlateIndexTypeDic[1] = PlateIndex_KLineType;
                         PlateIndexTypeDic[2] = MarketIndex_KLineType;
                         PlateIndexTypeDic[3] = UnitIndex_KLineType;
+                    }
+                }
+                catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "PlateTagCalPar"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                        int tempPlateTagCalIntervalTime = sysValue.PlateTagCalIntervalTime;
+                        if (tempPlateTagCalIntervalTime > 0)
+                        {
+                            PlateTagCalIntervalTime = tempPlateTagCalIntervalTime;
+                        }
                     }
                 }
                 catch { }

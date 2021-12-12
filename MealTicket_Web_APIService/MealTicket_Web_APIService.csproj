@@ -108,6 +108,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="runner\ClearTransactiondataRunner.cs" />
+    <Compile Include="runner\PlateTagCalRunner.cs" />
     <Compile Include="runner\SearchMonitorRunner.cs" />
   </ItemGroup>
   <ItemGroup>

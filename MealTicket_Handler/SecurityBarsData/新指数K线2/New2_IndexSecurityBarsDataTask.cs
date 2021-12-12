@@ -403,21 +403,22 @@ inner join
         /// </summary>
         Dictionary<long, SharesKlineData> SharesKlineLastSession = new Dictionary<long, SharesKlineData>();
 
+        object SetSharesKlineLastSessionLock = new object();
         /// <summary>
         /// 获取股票最后一条数据缓存
         /// </summary>
         /// <returns></returns>
         public SharesKlineData GetSharesKlineLastSession(long key)
         {
-            SharesKlineData temp = null;
-            if (SharesKlineLastSession.ContainsKey(key))
+            lock (SetSharesKlineLastSessionLock)
             {
-                temp = SharesKlineLastSession[key];
+                if (!SharesKlineLastSession.ContainsKey(key))
+                {
+                    SharesKlineLastSession.Add(key, new SharesKlineData());
+                }
             }
-            return temp;
+            return SharesKlineLastSession[key];
         }
-
-        object SetSharesKlineLastSessionLock = new object();
 
         /// <summary>
         /// 设置股票最后一条数据缓存

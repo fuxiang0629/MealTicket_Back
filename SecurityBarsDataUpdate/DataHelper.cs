@@ -163,7 +163,7 @@ namespace SecurityBarsDataUpdate
                 {
                     return new List<SecurityBarsDataInfo>();
                 }
-                if (spanNow > TimeSpan.Parse(Singleton.Instance.TradeTime1) && spanNow < TimeSpan.Parse(Singleton.Instance.TradeTime2))
+                if (spanNow > TimeSpan.Parse(Singleton.Instance.TradeTime1) && spanNow < TimeSpan.Parse(Singleton.Instance.TradeTime2) && sharesData.YestodayClosedPrice>0)
                 {
                     return new List<SecurityBarsDataInfo>
                     {
@@ -194,6 +194,10 @@ namespace SecurityBarsDataUpdate
                 {
                     var quotes = GetSharesQuotes(sharesData.Market, sharesData.SharesCode, timeNow.Date);
                     if (quotes == null)
+                    {
+                        return new List<SecurityBarsDataInfo>();
+                    }
+                    if (quotes.ClosedPrice == 0)
                     {
                         return new List<SecurityBarsDataInfo>();
                     }
