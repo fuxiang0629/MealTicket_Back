@@ -30,10 +30,11 @@ namespace SecurityBarsDataUpdate
                 var result = (from item in db.t_shares_quotes_date
                               where item.Date == tradeDateStr
                               select item).ToList().ToDictionary(k => int.Parse(k.SharesCode) * 10 + k.Market, v => v);
-            
+                int date = int.Parse(tradeDate.ToString("yyyyMMdd"));
+
                 return new SharesQuotesSessionData
                 {
-                    Date = int.Parse(tradeDate.ToString("yyyyMMdd")),
+                    Date = date,
                     QuotesDic= result
                 };
             }

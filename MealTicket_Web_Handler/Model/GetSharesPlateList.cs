@@ -104,6 +104,14 @@ namespace MealTicket_Web_Handler
         /// 涨跌幅排名
         /// </summary>
         public int Rank { get; set; }
+
+        public bool IsFocusOn { get; set; }
+
+        public bool IsForce1 { get; set; }
+
+        public bool IsForce2 { get; set; }
+
+        public bool IsTrendLike { get; set; }
     }
 
     public class GetSharesPlateListRequest:DetailsPageRequest 

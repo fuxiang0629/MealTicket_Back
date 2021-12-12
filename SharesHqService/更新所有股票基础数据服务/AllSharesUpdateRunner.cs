@@ -30,7 +30,7 @@ namespace SharesHqService
                     }
                     //每天凌晨1-4点执行
                     TimeSpan tpNow = TimeSpan.Parse(DateTime.Now.ToString("HH:mm:ss"));
-                    if (tpNow < Singleton.Instance.AllSharesStartHour || tpNow > Singleton.Instance.AllSharesEndHour)
+                    if (tpNow < Singleton.Instance.session.GetAllSharesStartHour() || tpNow > Singleton.Instance.session.GetAllSharesEndHour())
                     {
                         return false;
                     }

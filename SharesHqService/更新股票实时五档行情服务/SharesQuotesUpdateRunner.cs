@@ -1,4 +1,5 @@
 ﻿using FXCommon.Common;
+using MealTicket_DBCommon;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -12,9 +13,9 @@ namespace SharesHqService
     {
         //是否可以进入行情更新
         object quotesLock = new object();
-        public bool QuotesCanEnter = true;
+        private bool QuotesCanEnter = true;
 
-        public bool TryQuotesCanEnter()
+        private bool TryQuotesCanEnter()
         {
             lock (quotesLock)
             {
@@ -27,7 +28,7 @@ namespace SharesHqService
         }
 
 
-        public bool TryQuotesCanLeave()
+        private bool TryQuotesCanLeave()
         {
             lock (quotesLock)
             {
@@ -41,7 +42,7 @@ namespace SharesHqService
 
         public SharesQuotesUpdateRunner()
         {
-            SleepTime = Singleton.Instance.SshqUpdateRate;
+            SleepTime = Singleton.Instance.session.GetSshqUpdateRate();
             Name = "SharesQuotesUpdateRunner";
         }
 
@@ -49,10 +50,11 @@ namespace SharesHqService
         {
             get
             {
+                SleepTime = Singleton.Instance.session.GetSshqUpdateRate();
                 DateTime timeNow = DateTime.Now;
                 try
                 {
-                    if (!Helper.CheckTradeTime(timeNow.AddSeconds(-Singleton.Instance.RunStartTime)) && !Helper.CheckTradeTime(timeNow.AddSeconds(-Singleton.Instance.RunEndTime)))
+                    if (!DbHelper.CheckTradeTime7(timeNow, Singleton.Instance.session.GetLimitTimeList()))
                     {
                         Singleton.Instance.TryToSetIsRun(false);
                         return false;

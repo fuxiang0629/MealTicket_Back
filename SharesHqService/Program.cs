@@ -40,14 +40,14 @@ namespace SharesHqService
                 var serviceRun=Console.ReadLine();
                 if (serviceRun.ToUpper() == "Y" || serviceRun.ToUpper() == "YES")
                 {
-                    Instance.GetLastSharesQuotesList();
-                    Instance.StartSysPar();
-                    var mqHandler=Instance.StartMqHandler();
-                    var runners = _kernel.GetAll<Runner>().ToList();
-                    runners.ForEach((e) => e.Run());
                     break;
                 }
             }
+            Instance.Init();
+            var mqHandler = Instance.StartMqHandler();
+            var runners = _kernel.GetAll<Runner>().ToList();
+            runners.ForEach((e) => e.Run());
+
             Console.WriteLine("程序已启动");
 
             while (true)

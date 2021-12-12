@@ -150,5 +150,5 @@ D:\项目\饭票\后端\SharesHqService\bin\Release\System.Threading.Tasks.Exten
 D:\项目\饭票\后端\SharesHqService\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
 D:\项目\饭票\后端\SharesHqService\bin\Release\System.Buffers.xml
 D:\项目\饭票\后端\SharesHqService\bin\Release\System.Numerics.Vectors.xml
-F:\项目\饭票后端\SharesHqService\obj\Release\SharesHqService.csprojAssemblyReference.cache
 D:\项目\饭票\后端\SharesHqService\obj\Release\SharesHqService.csprojAssemblyReference.cache
+F:\项目\饭票后端\SharesHqService\obj\Release\SharesHqService.csprojAssemblyReference.cache

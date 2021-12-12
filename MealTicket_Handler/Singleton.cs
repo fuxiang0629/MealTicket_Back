@@ -559,12 +559,6 @@ namespace MealTicket_Handler
             var securityBarsDataTask = StartSecurityBarsDataTask();
             var newIndexSecurityBarsDataTask = StartNewIndexSecurityBarsDataTask();
 
-            newIndexSecurityBarsDataTask.LoadPlateSession();
-            newIndexSecurityBarsDataTask.LoadSecurityBarsLastData();
-            newIndexSecurityBarsDataTask.LoadPlateKlineLastSession();
-            newIndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot();
-            newIndexSecurityBarsDataTask.LoadPlateKlineSession();
-
             securityBarsDataTask.Init();
             newIndexSecurityBarsDataTask.Init();
 

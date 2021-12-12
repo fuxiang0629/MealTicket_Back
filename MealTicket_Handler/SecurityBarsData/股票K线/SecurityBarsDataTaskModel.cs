@@ -514,4 +514,47 @@ namespace MealTicket_Handler.SecurityBarsData
 
         public long ClosePrice { get; set; }
     }
+
+    public class SecurityBarsImportData 
+    {
+        public int Market { get; set; }
+
+        public string SharesCode { get; set; }
+
+        public long GroupTimeKey { get; set; }
+
+        public DateTime Time { get; set; }
+
+        public string TimeStr { get; set; }
+
+        public long OpenedPrice { get; set; }
+
+        public long ClosedPrice { get; set; }
+
+        public long PreClosePrice { get; set; }
+
+        public long MinPrice { get; set; }
+
+        public long MaxPrice { get; set; }
+
+        public long TradeStock { get; set; }
+
+        public long TradeAmount { get; set; }
+
+        public long LastTradeStock { get; set; }
+
+        public long LastTradeAmount { get; set; }
+
+        public long Tradable { get; set; }
+
+        public long TotalCapital { get; set; }
+
+        public int HandCount { get; set; }
+
+        public bool IsLast { get; set; }
+
+        public long YestodayClosedPrice { get; set; }
+
+        public bool IsVaild { get; set; }
+    }
 }

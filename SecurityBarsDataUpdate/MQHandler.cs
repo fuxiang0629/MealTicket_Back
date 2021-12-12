@@ -45,9 +45,11 @@ namespace SecurityBarsDataUpdate
                 Console.WriteLine("==========开始获取K线数据======" + taskGuid + "===");
                 Dictionary<int, SecurityBarsDataRes> resultList = new Dictionary<int, SecurityBarsDataRes>();
                 var successPackage = new List<SecurityBarsDataParList>();
-                resultList = DataHelper.TdxHq_GetSecurityBarsData(handlerType,ref dataPackage,ref successPackage);
+                var failPackage = new List<SecurityBarsDataParList>();
+                int download_Second = 0;
+                resultList = DataHelper.TdxHq_GetSecurityBarsData(handlerType,dataPackage,ref failPackage,ref successPackage,ref download_Second);
                 stopwatch.Stop();
-                Console.WriteLine("=====获取K线数据结束:" + stopwatch.ElapsedMilliseconds + "============");
+                Console.WriteLine("=====获取K线数据结束,时间："+ download_Second + "/"+ stopwatch.ElapsedMilliseconds + "============");
 
                 Console.WriteLine("");
                 Console.WriteLine("");
@@ -59,7 +61,7 @@ namespace SecurityBarsDataUpdate
                     HandlerType = handlerType,
                     RetryCount= retryCount,
                     TotalRetryCount= totalRetryCount,
-                    FailPackageList= dataPackage,
+                    FailPackageList= failPackage,
                     SuccessPackageList= successPackage
                 })), "SecurityBars", "update_1min");
             }

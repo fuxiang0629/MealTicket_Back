@@ -9559,6 +9559,71 @@
             1指定时间 2止盈 3止损
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetSharesBasePlateListRequest.Market">
+            <summary>
+            市场代码
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetSharesBasePlateListRequest.SharesCode">
+            <summary>
+            股票代码
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetSharesBasePlateListRes.IsAuto">
+            <summary>
+            是否允许自动修改
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetSharesBasePlateListRes.List">
+            <summary>
+            数据列表
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesBasePlateInfo.PlateId">
+            <summary>
+            板块Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesBasePlateInfo.PlateName">
+            <summary>
+            板块名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesBasePlateInfo.IsFocusOn">
+            <summary>
+            是否重点关注
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesBasePlateInfo.IsTrendLike">
+            <summary>
+            是否走势最像
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesBasePlateInfo.ForceList">
+            <summary>
+            强势上涨列表
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ForceInfo.PlateId">
+            <summary>
+            板块Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ForceInfo.ForceType">
+            <summary>
+            强势类型1.3天 2.5天 3.10天 4.15天
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ForceInfo.IsForce1">
+            <summary>
+            是否强力1
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ForceInfo.IsForce2">
+            <summary>
+            是否强力2
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.GetSharesConditionTrendParPlatePageRequest.GroupType">
             <summary>
             总分组类型（1行业 2地区 3概念）
@@ -10392,6 +10457,46 @@
         <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateSellDetailsRequest.OtherConditionRelative">
             <summary>
             额外卖出条件0无 1封涨停板 2封跌停板
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesBasePlateTagRequest.Market">
+            <summary>
+            市场代码
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesBasePlateTagRequest.SharesCode">
+            <summary>
+            股票代码
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesBasePlateTagRequest.ParList">
+            <summary>
+            参数列表
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesBasePlateTagRequest.IsAuto">
+            <summary>
+            是否允许自动修改
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesBasePlateTagSetPar.PlateId">
+            <summary>
+            板块Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesBasePlateTagSetPar.IsFocusOn">
+            <summary>
+            是否重点关注
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesBasePlateTagSetPar.IsTrendLike">
+            <summary>
+            是否走势最像
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesBasePlateTagSetPar.ForceList">
+            <summary>
+            强势上涨列表
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.ModifySharesCorrigendumRequest.Id">
@@ -14217,6 +14322,20 @@
             批量重置板块K线数据
             </summary>
             <param name="request"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetSharesBasePlateList(MealTicket_Admin_Handler.Model.GetSharesBasePlateListRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            获取股票所属基础板块
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesBasePlateTag(MealTicket_Admin_Handler.Model.ModifySharesBasePlateTagRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            设置股票所属基础板块标记
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
         </member>
     </members>
 </doc>

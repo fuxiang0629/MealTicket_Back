@@ -365,6 +365,7 @@
     <Compile Include="Model\TradeCenter\GetConditiontradeTemplateJoinDetailsList.cs" />
     <Compile Include="Model\TradeCenter\GetConditiontradeTemplateList.cs" />
     <Compile Include="Model\TradeCenter\GetConditiontradeTemplateSellDetailsList.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesBasePlateList.cs" />
     <Compile Include="Model\TradeCenter\GetSharesConditionTrendParPlate.cs" />
     <Compile Include="Model\TradeCenter\GetSharesCorrigendumList.cs" />
     <Compile Include="Model\TradeCenter\GetSharesKlineList.cs" />
@@ -390,6 +391,7 @@
     <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateJoinDetails.cs" />
     <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateSearchDetails.cs" />
     <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateSellDetails.cs" />
+    <Compile Include="Model\TradeCenter\ModifySharesBasePlateTag.cs" />
     <Compile Include="Model\TradeCenter\ModifySharesCorrigendum.cs" />
     <Compile Include="Model\TradeCenter\ModifySharesLimitAutoBuy.cs" />
     <Compile Include="Model\TradeCenter\ModifySharesMonitorTrend.cs" />

@@ -7,14 +7,19 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.Serialization;
+using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace Test
 {
-    class A
+    [Serializable]
+    public class A
     {
         public int Id { get; set; }
         public int Id2 { get; set; }
@@ -37,37 +42,116 @@ namespace Test
 
     class Program
     {
+        public static T DeepCopyByReflect<T>(T obj)
+        {
+            //如果是字符串或值类型则直接返回
+            if (obj is string || obj.GetType().IsValueType) return obj;
+
+            object retval = Activator.CreateInstance(obj.GetType());
+            FieldInfo[] fields = obj.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+            foreach (FieldInfo field in fields)
+            {
+                try { field.SetValue(retval, DeepCopyByReflect(field.GetValue(obj))); }
+                catch { }
+            }
+            return (T)retval;
+        }
+
+        // 利用二进制序列化和反序列实现
+        public static T DeepCopyWithBinarySerialize<T>(T obj)
+        {
+            object retval;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                BinaryFormatter bf = new BinaryFormatter();
+                // 序列化成流
+                bf.Serialize(ms, obj);
+                ms.Seek(0, SeekOrigin.Begin);
+                // 反序列化成对象
+                retval = bf.Deserialize(ms);
+                ms.Close();
+            }
+
+            return (T)retval;
+        }
+        public static T DeepCopyWithXmlSerializer<T>(T obj)
+        {
+            object retval;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                XmlSerializer xml = new XmlSerializer(typeof(T));
+                xml.Serialize(ms, obj);
+                ms.Seek(0, SeekOrigin.Begin);
+                retval = xml.Deserialize(ms);
+                ms.Close();
+            }
+
+            return (T)retval;
+        }
+
+
+        static Dictionary<long, Dictionary<long, A>> dic = new Dictionary<long, Dictionary<long, A>>();
+
+        static void SetPlateKlineSession(long keyMain, Dictionary<long, A> dicValue)
+        {
+            if (!dic.ContainsKey(keyMain))
+            {
+                dic[keyMain] = new Dictionary<long, A>();
+            }
+
+            dic[keyMain] = dicValue;
+
+        }
         static void Main(string[] args)
         {
-            List<B> b = new List<B>();
-            b.Add(new B 
+            Dictionary<int,Dictionary<int,A>> aDic = new Dictionary<int, Dictionary<int, A>>();
+            Dictionary<int, A> bDic = new Dictionary<int, A>();
+            bDic.Add(1, new A
             {
-                Market=0,
-                SharesCode="000001",
-                TrendId=1,
-                Time="13123213",
-                Des="123123"
+                Id = 1,
+                Name = "1"
             });
-            b.Add(new B
+            aDic.Add(1, bDic);
+
+            Dictionary<int, Dictionary<int, A>> aDic2 = DeepCopyWithBinarySerialize<Dictionary<int, Dictionary<int, A>>>(aDic);
+
+
+            var t= aDic2[1];
+            t.Add(3, new A
             {
-                Market = 1,
-                SharesCode = "000002",
-                TrendId = 2,
-                Time = "13123213",
-                Des = "123123"
+                Id = 3,
+                Name = "3"
             });
-            b.Add(new B
-            {
-                Market = 2,
-                SharesCode = "000003",
-                TrendId = 3,
-                Time = "13123213",
-                Des = "123123"
-            });
-            b = (from item in b
-                 group item by new { item.Market, item.SharesCode, item.TrendId } into g
-                 select g.FirstOrDefault()).ToList();
-            var d = b;
+            var ddd = t;
+            //List<B> b = new List<B>();
+            //b.Add(new B 
+            //{
+            //    Market=0,
+            //    SharesCode="000001",
+            //    TrendId=1,
+            //    Time="13123213",
+            //    Des="123123"
+            //});
+            //b.Add(new B
+            //{
+            //    Market = 1,
+            //    SharesCode = "000002",
+            //    TrendId = 2,
+            //    Time = "13123213",
+            //    Des = "123123"
+            //});
+            //b.Add(new B
+            //{
+            //    Market = 2,
+            //    SharesCode = "000003",
+            //    TrendId = 3,
+            //    Time = "13123213",
+            //    Des = "123123"
+            //});
+            //b = (from item in b
+            //     group item by new { item.Market, item.SharesCode, item.TrendId } into g
+            //     select g.FirstOrDefault()).ToList();
+            //var d = b;
 
             //Dictionary<int, A> dic1 = new Dictionary<int, A>();
             //dic1.Add(1,new A 

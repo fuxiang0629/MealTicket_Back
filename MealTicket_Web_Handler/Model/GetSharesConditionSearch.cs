@@ -147,6 +147,8 @@ namespace MealTicket_Web_Handler.Model
         /// </summary>
         public List<SharesPlateInfo> PlateList { get; set; }
 
+        public List<long> MySharesGroupList { get; set; }
+
         /// <summary>
         /// 总股本
         /// </summary>

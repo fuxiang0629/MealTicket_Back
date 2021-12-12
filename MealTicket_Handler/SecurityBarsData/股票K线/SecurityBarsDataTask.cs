@@ -51,7 +51,9 @@ namespace MealTicket_Handler.SecurityBarsData
                 TaskGuid = null,
                 TaskTimeOut = Singleton.Instance.SecurityBarsTaskTimeout,
                 HandlerType = 1,
-                PackageList = new Dictionary<int, SecurityBarsDataType>()
+                PackageList = new Dictionary<int, SecurityBarsDataType>(),
+                SuccessPackageList = new List<SecurityBarsDataParList>(),
+                FailPackageList = new List<SecurityBarsDataParList>()
             };
         }
 
@@ -135,12 +137,23 @@ namespace MealTicket_Handler.SecurityBarsData
         /// <param name="dataObj"></param>
         private void ClearTaskInfo(SecurityBarsDataTaskQueueInfo dataObj)
         {
+            if (dataObj.PackageList != null)
+            {
+                dataObj.PackageList.Clear();
+            }
+            if (dataObj.SuccessPackageList != null)
+            {
+                dataObj.SuccessPackageList.Clear();
+            }
+            if (dataObj.FailPackageList != null)
+            {
+                dataObj.FailPackageList.Clear();
+            }
             dataObj.TaskGuid = null;
             dataObj.StartTime = null;
             dataObj.TotalPacketCount = 0;
             dataObj.CallBackPacketCount = 0;
             dataObj.HandlerType = 1;
-            dataObj.PackageList = new Dictionary<int, SecurityBarsDataType>();
         }
 
         /// <summary>
@@ -151,12 +164,12 @@ namespace MealTicket_Handler.SecurityBarsData
             try
             {
                 DateTime timeNow = DateTime.Now;
-                if (!RunnerHelper.CheckTradeDate(timeNow))
+                if (!DbHelper.CheckTradeDate(timeNow))
                 {
                     dataObj.TaskTimeOut = Singleton.Instance.SecurityBarsTaskTimeout;
                     return false;
                 }
-                if (!RunnerHelper.CheckTradeTime2(timeNow.AddSeconds(-180)) && !RunnerHelper.CheckTradeTime2(timeNow.AddSeconds(180)))
+                if (!DbHelper.CheckTradeTime7(timeNow))
                 {
                     dataObj.TaskTimeOut = Singleton.Instance.SecurityBarsTaskTimeout;
                     //每天21-23点执行
@@ -392,13 +405,16 @@ namespace MealTicket_Handler.SecurityBarsData
                 }
             }
 
-            else if (receivedObj.HandlerType == 2 || receivedObj.HandlerType==21)
+            else if (receivedObj.HandlerType == 2 || receivedObj.HandlerType == 21)
             {
                 dataObj.TaskGuid = receivedObj.TaskGuid;
                 dataObj.TaskTimeOut = -1;
                 dataObj.HandlerType = receivedObj.HandlerType;
                 dataObj.PackageList = receivedObj.PackageList;
                 dataObj.SuccessPackageList = receivedObj.SuccessPackageList;
+                dataObj.FailPackageList = receivedObj.FailPackageList;
+                dataObj.RetryCount = receivedObj.RetryCount;
+                dataObj.TotalRetryCount = receivedObj.TotalRetryCount;
                 //需要重新获取的重新获取
                 if (receivedObj.FailPackageList.Count() > 0 && receivedObj.RetryCount <= receivedObj.TotalRetryCount)
                 {
@@ -406,219 +422,235 @@ namespace MealTicket_Handler.SecurityBarsData
                     {
                         TaskGuid = receivedObj.TaskGuid,
                         HandlerType = receivedObj.HandlerType,
-                        RetryCount = receivedObj.RetryCount+1,
+                        RetryCount = receivedObj.RetryCount + 1,
                         TotalRetryCount = receivedObj.TotalRetryCount,
                         PackageList = receivedObj.FailPackageList
                     })), "SecurityBars", "1min");
                 }
             }
 
-            bool isFinish = false;
+            UpdateToDataBase();
 
-            if (UpdateToDataBase(ref isFinish))
+            //通知板块
+            if (dataObj.HandlerType == 2 || dataObj.HandlerType == 21)
             {
-                dataObj.TaskTimeOut = -1;
-
-                if (!isFinish)
-                {
-                    dataObj.HandlerType = receivedObj.HandlerType;
-                    SecurityBarsDataQueue.AddMessage(new QueueMsgObj
-                    {
-                        MsgId = 2,
-                        MsgObj = dataObj
-                    });
-                }
-            }
-
-            if (isFinish)
-            {
-                //通知板块
-                if (dataObj.HandlerType == 2 || dataObj.HandlerType == 21)
+                try
                 {
                     Singleton.Instance._newIindexSecurityBarsDataTask.ToExecuteRetry(dataObj.HandlerType, dataObj.SuccessPackageList);
                 }
-                ClearTaskInfo(dataObj);//超时则清空任务
-                dataObj.TaskTimeOut = Singleton.Instance.SecurityBarsTaskTimeout;
+                catch (Exception ex)
+                {
+                    Logger.WriteFileLog("通知板块出错",ex);
+                }
             }
+            ClearTaskInfo(dataObj);//超时则清空任务
+            dataObj.TaskTimeOut = Singleton.Instance.SecurityBarsTaskTimeout;
         }
 
         /// <summary>
         /// 数据更新到数据库
         /// </summary>
         /// <returns></returns>
-        private bool UpdateToDataBase(ref bool isFinish)
+        private void UpdateToDataBase()
         {
-            isFinish = false;
-
-            int finishCount = 0;
             int taskCount = dataObj.PackageList.Count();
             Task[] taskArr = new Task[taskCount];
             int i = 0;
             foreach (var dataDic in dataObj.PackageList)
             {
                 int dataType = dataDic.Key;
-                int dataIndex = dataDic.Value.DataIndex;
                 var dataList = dataDic.Value.DataList;
+                int haldlerType = dataObj.HandlerType;
                 taskArr[i] = Task.Factory.StartNew(() =>
                 {
-                    string tableName = "";
-                    long groupTimeKey = 0;
-                    if (!CheckDataType(dataType, ref tableName, ref groupTimeKey))
-                    {
-                        finishCount++;
-                        return;
-                    }
-                    var disList = dataList.Skip(dataIndex).Take(Singleton.Instance.SecurityBarsUpdateCountOnce).ToList();
-                    int disCount = disList.Count();
-                    int totalCount = dataList.Count();
-                    if (disCount <= 0)
-                    {
-                        finishCount++;
-                        return;
-                    }
-
-                    bool isSuccess = false;
-                    var disResultList = (from item in disList
-                                         join item2 in Singleton.Instance._sharesBaseSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
-                                         from ai in a.DefaultIfEmpty()
-                                         select new { item, ai }).ToList();
-                    disResultList = (from item in disResultList
-                                     group item by new { item.item.Market, item.item.SharesCode, item.item.GroupTimeKey } into g
-                                     select g.FirstOrDefault()).ToList();
                     try
                     {
-                        DataTable table = new DataTable();
-                        table.Columns.Add("Market", typeof(int));
-                        table.Columns.Add("SharesCode", typeof(string));
-                        table.Columns.Add("GroupTimeKey", typeof(long));
-                        table.Columns.Add("Time", typeof(DateTime));
-                        table.Columns.Add("TimeStr", typeof(string));
-                        table.Columns.Add("OpenedPrice", typeof(long));
-                        table.Columns.Add("ClosedPrice", typeof(long));
-                        table.Columns.Add("PreClosePrice", typeof(long));
-                        table.Columns.Add("MinPrice", typeof(long));
-                        table.Columns.Add("MaxPrice", typeof(long));
-                        table.Columns.Add("TradeStock", typeof(long));
-                        table.Columns.Add("TradeAmount", typeof(long));
-                        table.Columns.Add("LastTradeStock", typeof(long));
-                        table.Columns.Add("LastTradeAmount", typeof(long));
-                        table.Columns.Add("Tradable", typeof(long));
-                        table.Columns.Add("TotalCapital", typeof(long));
-                        table.Columns.Add("HandCount", typeof(int));
-                        table.Columns.Add("LastModified", typeof(DateTime));
-                        table.Columns.Add("IsLast", typeof(bool));
-                        table.Columns.Add("YestodayClosedPrice", typeof(long));
-                        table.Columns.Add("IsVaild", typeof(bool));
-                        foreach (var item in disResultList)
+                        Dictionary<long, SecurityBarsImportData> successData = _updateToDataBase(dataList, dataType);
+                        if (successData.Count()==0)
                         {
-                            DataRow row = table.NewRow();
-                            row["Market"] = item.item.Market;
-                            row["SharesCode"] = item.item.SharesCode;
-                            row["GroupTimeKey"] = item.item.GroupTimeKey;
-                            row["Time"] = item.item.Time;
-                            row["TimeStr"] = item.item.TimeStr;
-                            row["OpenedPrice"] = item.item.OpenedPrice;
-                            row["ClosedPrice"] = item.item.ClosedPrice;
-                            row["PreClosePrice"] = item.item.PreClosePrice;
-                            row["MinPrice"] = item.item.MinPrice;
-                            row["MaxPrice"] = item.item.MaxPrice;
-                            row["TradeStock"] = item.item.TradeStock;
-                            row["TradeAmount"] = item.item.TradeAmount;
-                            row["LastTradeStock"] = item.item.LastTradeStock;
-                            row["LastTradeAmount"] = item.item.LastTradeAmount;
-                            row["Tradable"] = item.ai == null ? 0 : item.ai.CirculatingCapital;
-                            row["TotalCapital"] = item.ai == null ? 0 : item.ai.TotalCapital;
-                            row["HandCount"] = item.ai == null ? 0 : item.ai.SharesHandCount;
-                            row["LastModified"] = DateTime.Now;
-                            row["IsLast"] = item.item.IsLast;
-                            row["YestodayClosedPrice"] = item.item.YestodayClosedPrice;
-                            row["IsVaild"] = item.item.IsVaild;
-                            table.Rows.Add(row);
+                            return;
                         }
-
-                        using (var db = new meal_ticketEntities())
-                        using (var tran = db.Database.BeginTransaction())
+                        if (haldlerType == 1)
                         {
-                            try
+                            List<SharesKlineData> sessionDataList = new List<SharesKlineData>();
+                            foreach (var item in successData)
                             {
-                                //关键是类型
-                                SqlParameter parameter = new SqlParameter("@sharesSecurityBarsData", SqlDbType.Structured);
-                                //必须指定表类型名
-                                parameter.TypeName = "dbo.SharesSecurityBarsData";
-                                //赋值
-                                parameter.Value = table;
-
-                                SqlParameter dataType_parameter = new SqlParameter("@dataType", SqlDbType.Int);
-                                dataType_parameter.Value = dataType;
-                                db.Database.ExecuteSqlCommand("exec P_Shares_SecurityBarsData_Update @sharesSecurityBarsData,@dataType", parameter, dataType_parameter);
-                                tran.Commit();
-                                isSuccess = true;
+                                sessionDataList.Add(new SharesKlineData {
+                                    SharesCode = item.Value.SharesCode,
+                                    LastTradeStock = item.Value.LastTradeStock,
+                                    ClosedPrice = item.Value.ClosedPrice,
+                                    GroupTimeKey = item.Value.GroupTimeKey,
+                                    TradeStock = item.Value.TradeStock,
+                                    LastTradeAmount = item.Value.LastTradeAmount,
+                                    Market = item.Value.Market,
+                                    MaxPrice = item.Value.MaxPrice,
+                                    MinPrice = item.Value.MinPrice,
+                                    OpenedPrice = item.Value.OpenedPrice,
+                                    PreClosePrice = item.Value.PreClosePrice,
+                                    Time = item.Value.Time,
+                                    TotalCapital = item.Value.TotalCapital,
+                                    Tradable = item.Value.Tradable,
+                                    TradeAmount = item.Value.TradeAmount,
+                                    YestodayClosedPrice = item.Value.YestodayClosedPrice
+                                });
                             }
-                            catch (Exception ex)
-                            {
-                                Logger.WriteFileLog("更新K线数据出错", ex);
-                                tran.Rollback();
-                            }
-                        }
-
-                    }
-                    catch (Exception ex)
-                    {
-                        Logger.WriteFileLog("更新K线数据失败", ex);
-                    }
-
-                    bool finish = false;
-                    if (isSuccess)
-                    {
-                        dataObj.PackageList[dataType].DataIndex = dataIndex + disCount;
-                        if (totalCount <= dataIndex + disCount)
-                        {
-                            finishCount++;
-                            finish = true;
-                        }
-                        if (dataObj.HandlerType == 1)
-                        {
-                            var sessionDataList = (from item in disResultList
-                                                   select new SharesKlineData
-                                                   {
-                                                       SharesCode = item.item.SharesCode,
-                                                       LastTradeStock = item.item.LastTradeStock,
-                                                       ClosedPrice = item.item.ClosedPrice,
-                                                       GroupTimeKey = item.item.GroupTimeKey,
-                                                       TradeStock = item.item.TradeStock,
-                                                       LastTradeAmount = item.item.LastTradeAmount,
-                                                       Market = item.item.Market,
-                                                       MaxPrice = item.item.MaxPrice,
-                                                       MinPrice = item.item.MinPrice,
-                                                       OpenedPrice = item.item.OpenedPrice,
-                                                       PreClosePrice = item.item.PreClosePrice,
-                                                       Time = item.item.Time,
-                                                       TotalCapital = item.ai == null ? 0 : item.ai.TotalCapital,
-                                                       Tradable = item.ai == null ? 0 : item.ai.CirculatingCapital,
-                                                       TradeAmount = item.item.TradeAmount,
-                                                       YestodayClosedPrice = item.item.YestodayClosedPrice
-                                                   }).ToList();
                             Singleton.Instance._newIindexSecurityBarsDataTask.ToPushData(new SharesKlineDataContain
                             {
-                                IsFinish = finish,
                                 DataType = dataType,
+                                IsFinish=true,
                                 SharesKlineData = sessionDataList
                             });
                         }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        finishCount++;
+                        Logger.WriteFileLog("导入K线数据出错",ex);
                     }
                 });
                 i++;
             }
             Task.WaitAll(taskArr);
-            if (finishCount >= taskCount)
+        }
+
+        private Dictionary<long, SecurityBarsImportData> _updateToDataBase(List<SecurityBarsDataInfo> datalist, int dataType)
+        {
+            int totalCount = datalist.Count;
+            if (totalCount <= 0)
             {
-                isFinish = true;
+                return new Dictionary<long, SecurityBarsImportData>();
             }
-            return true;
+
+            int dataIndex = 0;
+            var sharesBaseDic = Singleton.Instance._sharesBaseSession.GetSessionData().ToDictionary(k => int.Parse(k.SharesCode) * 10 + k.Market, v => v);
+            Dictionary<long, SecurityBarsImportData> totalImportDic = new Dictionary<long, SecurityBarsImportData>();
+            List<SecurityBarsDataInfo> tempImportList = new List<SecurityBarsDataInfo>();
+            foreach (var data in datalist)
+            {
+                tempImportList.Add(data);
+                dataIndex++;
+                if (tempImportList.Count() < Singleton.Instance.SecurityBarsUpdateCountOnce && dataIndex < totalCount)
+                {
+                    continue;
+                }
+
+                Dictionary<long, SecurityBarsImportData> importDic = new Dictionary<long, SecurityBarsImportData>();
+                foreach (var item in tempImportList)
+                {
+                    int sharesKey = int.Parse(item.SharesCode) * 10 + item.Market;
+                    if (!sharesBaseDic.ContainsKey(sharesKey))
+                    {
+                        continue;
+                    }
+                    var sharesInfo = sharesBaseDic[sharesKey];
+                    long disKey = item.GroupTimeKey * 10000000 + long.Parse(item.SharesCode) * 10 + item.Market;
+                    importDic[disKey] = new SecurityBarsImportData
+                    {
+                        SharesCode = item.SharesCode,
+                        LastTradeStock = item.LastTradeStock,
+                        TimeStr = item.TimeStr,
+                        TradeStock = item.TradeStock,
+                        ClosedPrice = item.ClosedPrice,
+                        GroupTimeKey = item.GroupTimeKey,
+                        HandCount = sharesInfo.SharesHandCount,
+                        IsLast = item.IsLast,
+                        IsVaild = item.IsVaild,
+                        LastTradeAmount = item.LastTradeAmount,
+                        Market = item.Market,
+                        MaxPrice = item.MaxPrice,
+                        MinPrice = item.MinPrice,
+                        OpenedPrice = item.OpenedPrice,
+                        PreClosePrice = item.PreClosePrice,
+                        Time = item.Time.Value,
+                        TotalCapital = sharesInfo.TotalCapital,
+                        Tradable = sharesInfo.CirculatingCapital,
+                        TradeAmount = item.TradeAmount,
+                        YestodayClosedPrice = item.YestodayClosedPrice
+                    };
+                }
+
+                DataTable table = new DataTable();
+                table.Columns.Add("Market", typeof(int));
+                table.Columns.Add("SharesCode", typeof(string));
+                table.Columns.Add("GroupTimeKey", typeof(long));
+                table.Columns.Add("Time", typeof(DateTime));
+                table.Columns.Add("TimeStr", typeof(string));
+                table.Columns.Add("OpenedPrice", typeof(long));
+                table.Columns.Add("ClosedPrice", typeof(long));
+                table.Columns.Add("PreClosePrice", typeof(long));
+                table.Columns.Add("MinPrice", typeof(long));
+                table.Columns.Add("MaxPrice", typeof(long));
+                table.Columns.Add("TradeStock", typeof(long));
+                table.Columns.Add("TradeAmount", typeof(long));
+                table.Columns.Add("LastTradeStock", typeof(long));
+                table.Columns.Add("LastTradeAmount", typeof(long));
+                table.Columns.Add("Tradable", typeof(long));
+                table.Columns.Add("TotalCapital", typeof(long));
+                table.Columns.Add("HandCount", typeof(int));
+                table.Columns.Add("LastModified", typeof(DateTime));
+                table.Columns.Add("IsLast", typeof(bool));
+                table.Columns.Add("YestodayClosedPrice", typeof(long));
+                table.Columns.Add("IsVaild", typeof(bool));
+                foreach (var item in importDic)
+                {
+                    DataRow row = table.NewRow();
+                    row["Market"] = item.Value.Market;
+                    row["SharesCode"] = item.Value.SharesCode;
+                    row["GroupTimeKey"] = item.Value.GroupTimeKey;
+                    row["Time"] = item.Value.Time;
+                    row["TimeStr"] = item.Value.TimeStr;
+                    row["OpenedPrice"] = item.Value.OpenedPrice;
+                    row["ClosedPrice"] = item.Value.ClosedPrice;
+                    row["PreClosePrice"] = item.Value.PreClosePrice;
+                    row["MinPrice"] = item.Value.MinPrice;
+                    row["MaxPrice"] = item.Value.MaxPrice;
+                    row["TradeStock"] = item.Value.TradeStock;
+                    row["TradeAmount"] = item.Value.TradeAmount;
+                    row["LastTradeStock"] = item.Value.LastTradeStock;
+                    row["LastTradeAmount"] = item.Value.LastTradeAmount;
+                    row["Tradable"] = item.Value.Tradable;
+                    row["TotalCapital"] = item.Value.TotalCapital;
+                    row["HandCount"] = item.Value.HandCount;
+                    row["LastModified"] = DateTime.Now;
+                    row["IsLast"] = item.Value.IsLast;
+                    row["YestodayClosedPrice"] = item.Value.YestodayClosedPrice;
+                    row["IsVaild"] = item.Value.IsVaild;
+                    table.Rows.Add(row);
+                }
+
+                using (var db = new meal_ticketEntities())
+                using (var tran = db.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        //关键是类型
+                        SqlParameter parameter = new SqlParameter("@sharesSecurityBarsData", SqlDbType.Structured);
+                        //必须指定表类型名
+                        parameter.TypeName = "dbo.SharesSecurityBarsData";
+                        //赋值
+                        parameter.Value = table;
+
+                        SqlParameter dataType_parameter = new SqlParameter("@dataType", SqlDbType.Int);
+                        dataType_parameter.Value = dataType;
+                        db.Database.ExecuteSqlCommand("exec P_Shares_SecurityBarsData_Update @sharesSecurityBarsData,@dataType", parameter, dataType_parameter);
+                        tran.Commit();
+
+                        foreach (var item in importDic)
+                        {
+                            totalImportDic[item.Key] = item.Value;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteFileLog("更新K线数据出错", ex);
+                        tran.Rollback();
+                        break;
+                    }
+                }
+
+                tempImportList.Clear();
+            }
+
+            return totalImportDic;
         }
 
         /// <summary>
@@ -644,29 +676,16 @@ namespace MealTicket_Handler.SecurityBarsData
                     GroupTimeKey= groupTimeKey
                 });
             }
+
+            DateTime dateNow = DateTime.Now.Date;
             List<string> sharesList = new List<string>();
-            //sharesList.Add("002707");
-            //sharesList.Add("000796");
-            //sharesList.Add("000978");
-            //sharesList.Add("600640");
-            //sharesList.Add("300005");
-            //sharesList.Add("000917");
-            //sharesList.Add("000524");
-            //sharesList.Add("600138");
-            //sharesList.Add("300178");
-            //sharesList.Add("002489");
-            //sharesList.Add("600258");
-            //sharesList.Add("002558");
-            //sharesList.Add("603199");
-            //sharesList.Add("300133");
-            var allSharesList = (from item in Singleton.Instance._sharesBaseSession.GetSessionData()
-                                 where item.PresentPrice>0 //&& sharesList.Contains(item.SharesCode)
+            var allSharesList = (from item in Singleton.Instance._SharesQuotesSession.GetSessionData()
                                  select new
                                  {
                                      Market = item.Market,
                                      SharesCode = item.SharesCode,
                                      SharesCodeNum=long.Parse(item.SharesCode),
-                                     PreClosePrice = item.ClosedPrice
+                                     PreClosePrice = item.LastModified> dateNow?item.ClosedPrice:item.PresentPrice
                                  }).ToList();
             int totalCount = allSharesList.Count();
             //批次数

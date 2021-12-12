@@ -89,4 +89,40 @@ namespace MealTicket_Web_Handler.Model
             }
         }
     }
+
+    public class ShareStatisticInfo
+    {
+        /// <summary>
+        /// 市场
+        /// </summary>
+        public int Market { get; set; }
+
+        /// <summary>
+        /// 股票代码
+        /// </summary>
+        public string SharesCode { get; set; }
+
+        /// <summary>
+        /// 条件买入状态1不存在 2未开启 3已开启
+        /// </summary>
+        public int? ConditionStatus { get; set; }
+
+        public long? ConditionId { get; set; }
+
+        /// <summary>
+        /// 所属自定义分组
+        /// </summary>
+        public List<long> GroupList { get; set; }
+
+        /// <summary>
+        /// 板块列表
+        /// </summary>
+        public List<SharesPlateInfo> PlateList { get; set; }
+
+        /// <summary>
+        /// 自选股分组列表
+        /// </summary>
+        public List<long> MySharesGroupList { get; set; }
+
+    }
 }

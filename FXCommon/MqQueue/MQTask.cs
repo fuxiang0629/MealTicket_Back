@@ -33,7 +33,7 @@ namespace FXCommon.MqQueue
         /// </summary>
         IModel _listenModel;
 
-        bool isConnect = true;
+        bool isReconnection = true;
 
         /// <summary>
         /// 发送通道是否有效
@@ -95,16 +95,16 @@ namespace FXCommon.MqQueue
         /// <returns></returns>
         public bool SendMessage(byte[] originalData, string exchange, string routekey)
         {
-            bool sendSuccess = false;
             bool isCompressed = (originalData.Length > CompressedSize);
             byte[] newData = (isCompressed ? Utils.Compress(originalData) : originalData);
             byte[] sendData = Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new { isCompressed = isCompressed, data = newData }));
 
+            bool sendSuccess = false;
             lock (sendModelLock)
             {
                 try
                 {
-                    if (isSendModelValid)
+                    if (_sendModel != null)
                     {
                         _sendModel.BasicPublish(exchange, routekey, null, sendData);
                         sendSuccess = true;
@@ -114,14 +114,24 @@ namespace FXCommon.MqQueue
                 {
                     Logger.WriteFileLog("队列消息发送失败", ex);
                 }
-                if (!sendSuccess)
+
+                if (!sendSuccess && isReconnection)
                 {
-                    isSendModelValid = false;
-                    SendModelConnect();
+                    _SendModelConnect();
                 }
-                Logger.WriteFileLog("数据加入队列" + (sendSuccess ? "成功" : "失败") + ",时间" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), "RabbitMq/production/" + exchange + "/" + routekey, null);
                 return sendSuccess;
             }
+        }
+
+        private void _SendModelConnect()
+        {
+            if (_sendModel != null)
+            {
+                _sendModel.Dispose();
+                _sendModel = null;
+            }
+
+            _sendModel = _connection.CreateModel();
         }
 
         /// <summary>
@@ -133,12 +143,7 @@ namespace FXCommon.MqQueue
             {
                 lock (sendModelLock)
                 {
-                    if (isSendModelValid)
-                    {
-                        return;
-                    }
-                    _sendModel = _connection.CreateModel();
-                    isSendModelValid = true;
+                    _SendModelConnect();
                 }
             }
             catch (Exception ex)
@@ -153,27 +158,35 @@ namespace FXCommon.MqQueue
         /// <returns></returns>
         public bool StartListen() 
         {
-            return ListenModelConnect(false);
+            return ListenModelConnect();
         }
 
         /// <summary>
         /// 监听数据通道连接
         /// </summary>
-        private bool ListenModelConnect(bool isRetry) 
+        private bool ListenModelConnect()
         {
             lock (listenModellLock)
             {
-                if (!isConnect)
+                if (!isReconnection)
                 {
                     return false;
                 }
+
                 if (string.IsNullOrEmpty(ListenQueueName))
                 {
                     Logger.WriteFileLog("启动队列监听出错，监听队列名称为空", null);
                     return false;
                 }
+
                 try
                 {
+                    if (_listenModel != null)
+                    {
+                        _listenModel.Dispose();
+                        _listenModel = null;
+                    }
+
                     _listenModel = _connection.CreateModel();
                     var consumerUpdate = new EventingBasicConsumer(_listenModel);
                     consumerUpdate.Received += Consumer_Received;
@@ -186,15 +199,12 @@ namespace FXCommon.MqQueue
                 catch (Exception ex)
                 {
                     Logger.WriteFileLog("启动队列监听出错", ex);
-                    if (isRetry)
-                    {
-                        Thread.Sleep(3000);
-                        ListenModelConnect(true);
-                    }
                 }
-                return true;
+                return false;
             }
         }
+
+        Timer timer = null;
 
         /// <summary>
         /// 连接断开事件
@@ -204,7 +214,38 @@ namespace FXCommon.MqQueue
         private void Consumer_Shutdown(object sender, ShutdownEventArgs e)
         {
             Logger.WriteFileLog("监听队列链接断开", null);
-            ListenModelConnect(true);
+            if (!ListenModelConnect())
+            {
+                ResetTimer();
+            }
+        }
+
+        private void ResetTimer()
+        {
+            CloseTimer();
+
+            timer = new Timer(TimerCallBack, null,3000,Timeout.Infinite);
+        }
+
+        private void CloseTimer()
+        {
+            if (timer != null)
+            {
+                timer.Dispose();
+                timer = null;
+            }
+        }
+
+        private void TimerCallBack(object state) 
+        {
+            if (ListenModelConnect())
+            {
+                CloseTimer();
+            }
+            else
+            {
+                ResetTimer();
+            }
         }
 
         /// <summary>
@@ -294,34 +335,31 @@ namespace FXCommon.MqQueue
 
         public virtual void Dispose()
         {
-            isConnect = false;
-            try
+            isReconnection = false;
+
+            CloseTimer();
+            lock (sendModelLock)
             {
-                lock (sendModelLock)
+                if (_sendModel != null)
                 {
-                    if (_sendModel != null)
-                    {
-                        _sendModel.Dispose();
-                        _sendModel = null;
-                    }
-                }
-                lock (listenModellLock)
-                {
-                    if (_listenModel != null)
-                    {
-                        _listenModel.Dispose();
-                        _listenModel = null;
-                    }
-                }
-                if (_connection != null)
-                {
-                    _connection.Dispose();
-                    _connection = null;
+                    _sendModel.Dispose();
+                    _sendModel = null;
                 }
             }
-            catch (Exception ex)
+
+            lock (listenModellLock)
             {
-                Logger.WriteFileLog("这里出错来了", ex);
+                if (_listenModel != null)
+                {
+                    _listenModel.Dispose();
+                    _listenModel = null;
+                }
+            }
+
+            if (_connection != null)
+            {
+                _connection.Dispose();
+                _connection = null;
             }
         }
     }

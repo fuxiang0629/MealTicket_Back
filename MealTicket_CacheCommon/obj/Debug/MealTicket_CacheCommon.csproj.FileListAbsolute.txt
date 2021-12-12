@@ -19,7 +19,6 @@ F:\项目\饭票后端\MealTicket_CacheCommon\bin\Debug\System.Net.Http.Formatti
 F:\项目\饭票后端\MealTicket_CacheCommon\bin\Debug\System.Web.Http.xml
 F:\项目\饭票后端\MealTicket_CacheCommon\bin\Debug\System.Web.Http.Cors.xml
 F:\项目\饭票后端\MealTicket_CacheCommon\bin\Debug\System.Web.Http.Owin.xml
-F:\项目\饭票后端\MealTicket_CacheCommon\obj\Debug\MealTicket_CacheCommon.exe.config
 F:\项目\饭票后端\MealTicket_CacheCommon\obj\Debug\MealTicket_CacheCommon.csproj.CoreCompileInputs.cache
 F:\项目\饭票后端\MealTicket_CacheCommon\obj\Debug\MealTicket_CacheCommon.csproj.CopyComplete
 F:\项目\饭票后端\MealTicket_CacheCommon\obj\Debug\MealTicket_CacheCommon.exe

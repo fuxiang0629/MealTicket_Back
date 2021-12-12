@@ -10123,7 +10123,7 @@ namespace MealTicket_Admin_Handler
             //判断是否交易时间
             if (Helper.CheckTradeTime(timeNow) || Helper.CheckTradeTime(timeNow.AddMinutes(15)))
             {
-                throw new WebApiException(400,"交易时间范围内无法重置");
+                throw new WebApiException(400, "交易时间范围内无法重置");
             }
             DateTime tempDate = DateTime.Parse("1991-01-01 00:00:00");
             if (request.DateType == 1)
@@ -10939,8 +10939,7 @@ namespace MealTicket_Admin_Handler
             {
                 var context = new
                 {
-                    StartDate = request.StartGroupTimeKey,
-                    EndDate = request.EndGroupTimeKey
+                    GroupTimeKey = request.StartGroupTimeKey
                 };
                 BuildInstructions(DateTime.Now.Date.AddDays(1), 3, request.PlateId, 0, "", request.DataType, JsonConvert.SerializeObject(context),0, db);
             }
@@ -10956,8 +10955,7 @@ namespace MealTicket_Admin_Handler
             {
                 var context = new
                 {
-                    StartDate = request.StartGroupTimeKey,
-                    EndDate = request.EndGroupTimeKey
+                    GroupTimeKey = request.StartGroupTimeKey
                 };
                 BuildInstructions(DateTime.Now.Date.AddDays(1), 2, 0, 0, "", request.DataType, JsonConvert.SerializeObject(context), request.PlateType, db);
             }
@@ -10983,6 +10981,210 @@ namespace MealTicket_Admin_Handler
                 throw new WebApiException(400, "参数不正确");
             }
             db.Database.ExecuteSqlCommand(sql);
+        }
+
+        /// <summary>
+        /// 获取股票所属基础板块
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        public GetSharesBasePlateListRes GetSharesBasePlateList(GetSharesBasePlateListRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var force = (from item in db.t_shares_plate_rel_tag_force
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select new ForceInfo
+                             {
+                                 PlateId=item.PlateId,
+                                 ForceType =item.Type,
+                                 IsForce1=item.IsForce1,
+                                 IsForce2=item.IsForce2
+                             }).ToList().GroupBy(e=>e.PlateId).ToDictionary(k=>k.Key,v=>v.ToList());
+                var plateList = (from item in db.t_shares_plate_rel
+                                 join item2 in db.t_shares_plate on item.PlateId equals item2.Id
+                                 join item3 in db.t_shares_plate_rel_tag_focuson on new { item.PlateId, item.Market, item.SharesCode } equals new { item3.PlateId, item3.Market, item3.SharesCode } into a
+                                 from ai in a.DefaultIfEmpty()
+                                 join item4 in db.t_shares_plate_rel_tag_trendlike on new { item.PlateId, item.Market, item.SharesCode } equals new { item4.PlateId, item4.Market, item4.SharesCode } into b
+                                 from bi in b.DefaultIfEmpty()
+                                 where item.Market == request.Market && item.SharesCode == request.SharesCode && item2.BaseStatus == 1 && item2.Status == 1 && item2.Type == 3
+                                 select new SharesBasePlateInfo
+                                 {
+                                     IsFocusOn = ai == null ? false : ai.IsFocusOn,
+                                     IsTrendLike = bi == null ? false : bi.IsTrendLike,
+                                     PlateId = item.PlateId,
+                                     PlateName = item2.Name
+                                 }).ToList();
+                foreach (var item in plateList)
+                {
+                    if (force.ContainsKey(item.PlateId))
+                    {
+                        item.ForceList = force[item.PlateId];
+                    }
+                    else
+                    {
+                        item.ForceList = new List<ForceInfo>();
+                        item.ForceList.Add(new ForceInfo
+                        {
+                            PlateId = item.PlateId,
+                            ForceType = 1,
+                            IsForce1 = false,
+                            IsForce2 = false,
+                        });
+                        item.ForceList.Add(new ForceInfo
+                        {
+                            PlateId = item.PlateId,
+                            ForceType = 2,
+                            IsForce1 = false,
+                            IsForce2 = false,
+                        });
+                        item.ForceList.Add(new ForceInfo
+                        {
+                            PlateId = item.PlateId,
+                            ForceType = 3,
+                            IsForce1 = false,
+                            IsForce2 = false,
+                        });
+                        item.ForceList.Add(new ForceInfo
+                        {
+                            PlateId = item.PlateId,
+                            ForceType = 4,
+                            IsForce1 = false,
+                            IsForce2 = false,
+                        });
+                    }
+                }
+                bool isAuto = true;
+                var setting = (from item in db.t_shares_plate_rel_tag_setting
+                               where item.Market == request.Market && item.SharesCode == request.SharesCode
+                               select item).FirstOrDefault();
+                if (setting != null)
+                {
+                    isAuto = setting.IsAuto;
+                }
+                return new GetSharesBasePlateListRes 
+                {
+                    List= plateList,
+                    IsAuto=isAuto
+                };
+            }
+        }
+
+        /// <summary>
+        /// 设置股票所属基础板块标记
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifySharesBasePlateTag(ModifySharesBasePlateTagRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran=db.Database.BeginTransaction())
+            {
+                try
+                {
+                    _modifySharesBasePlateTag(request,db);
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+
+            _sendPushNotice(request);
+        }
+        private void _modifySharesBasePlateTag(ModifySharesBasePlateTagRequest request, meal_ticketEntities db)
+        {
+            var setting = (from item in db.t_shares_plate_rel_tag_setting
+                           where item.Market == request.Market && item.SharesCode == request.SharesCode
+                           select item).FirstOrDefault();
+            if (setting == null)
+            {
+                db.t_shares_plate_rel_tag_setting.Add(new t_shares_plate_rel_tag_setting
+                {
+                    SharesCode = request.SharesCode,
+                    Market = request.Market,
+                    IsAuto = request.IsAuto
+                });
+            }
+            else
+            {
+                setting.IsAuto = request.IsAuto;
+            }
+            db.SaveChanges();
+
+            var tag_focuson = (from item in db.t_shares_plate_rel_tag_focuson
+                               where item.Market == request.Market && item.SharesCode == request.SharesCode
+                               select item).ToList();
+            //删除原先设置
+            if (tag_focuson.Count() > 0)
+            {
+                db.t_shares_plate_rel_tag_focuson.RemoveRange(tag_focuson);
+                db.SaveChanges();
+            }
+
+            var tag_trendlike = (from item in db.t_shares_plate_rel_tag_trendlike
+                                 where item.Market == request.Market && item.SharesCode == request.SharesCode
+                                 select item).ToList();
+            //删除原先设置
+            if (tag_trendlike.Count() > 0)
+            {
+                db.t_shares_plate_rel_tag_trendlike.RemoveRange(tag_trendlike);
+                db.SaveChanges();
+            }
+
+            var tag_force = (from item in db.t_shares_plate_rel_tag_force
+                             where item.Market == request.Market && item.SharesCode == request.SharesCode
+                             select item).ToList();
+            //删除原先设置
+            if (tag_force.Count() > 0)
+            {
+                db.t_shares_plate_rel_tag_force.RemoveRange(tag_force);
+                db.SaveChanges();
+            }
+
+            foreach (var item in request.ParList)
+            {
+                db.t_shares_plate_rel_tag_focuson.Add(new t_shares_plate_rel_tag_focuson
+                {
+                    SharesCode=request.SharesCode,
+                    Market=request.Market,
+                    PlateId=item.PlateId,
+                    IsFocusOn=item.IsFocusOn
+                });
+                db.t_shares_plate_rel_tag_trendlike.Add(new t_shares_plate_rel_tag_trendlike
+                {
+                    SharesCode = request.SharesCode,
+                    Market = request.Market,
+                    PlateId = item.PlateId,
+                    IsTrendLike = item.IsTrendLike
+                });
+                foreach (var force in item.ForceList)
+                {
+                    db.t_shares_plate_rel_tag_force.Add(new t_shares_plate_rel_tag_force
+                    {
+                        SharesCode = request.SharesCode,
+                        Market = request.Market,
+                        PlateId = item.PlateId,
+                        IsForce1= force.IsForce1,
+                        IsForce2= force.IsForce2,
+                        Type= force.ForceType
+                    });
+                }
+            }
+            db.SaveChanges();
+        }
+        private void _sendPushNotice(ModifySharesBasePlateTagRequest sendData) 
+        {
+            try
+            {
+                Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesPlateTag", "notice");
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("修改板块标记发送通知出错",ex);
+            }
         }
     }
 }

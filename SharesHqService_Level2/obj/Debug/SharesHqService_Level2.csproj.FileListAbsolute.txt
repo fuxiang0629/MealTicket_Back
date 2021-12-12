@@ -33,7 +33,6 @@ F:\项目\饭票后端\SharesHqService_Level2\bin\Debug\System.Threading.Tasks.E
 F:\项目\饭票后端\SharesHqService_Level2\bin\Debug\System.Runtime.CompilerServices.Unsafe.xml
 F:\项目\饭票后端\SharesHqService_Level2\bin\Debug\System.Buffers.xml
 F:\项目\饭票后端\SharesHqService_Level2\bin\Debug\System.Numerics.Vectors.xml
-F:\项目\饭票后端\SharesHqService_Level2\obj\Debug\SharesHqService_Level2.exe.config
 F:\项目\饭票后端\SharesHqService_Level2\obj\Debug\SharesHqService_Level2.csproj.CopyComplete
 F:\项目\饭票后端\SharesHqService_Level2\bin\Debug\StockMarket.dll
 F:\项目\饭票后端\SharesHqService_Level2\bin\Debug\StockMarket.pdb

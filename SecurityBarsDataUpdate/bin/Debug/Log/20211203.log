@@ -1,0 +1,92 @@
+2021/12/3 20:34:10
+行情缓存更新成功,日期:20211203,条数:4782
+
+
+2021/12/3 20:34:18
+监听队列已链接
+
+
+2021/12/3 20:35:24
+行情缓存更新成功,日期:20211203,条数:4782
+
+
+2021/12/3 20:35:26
+获取K线数据出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 SecurityBarsDataUpdate.ThreadTask._doTask(Int32 hqClient, StringBuilder sResult, StringBuilder sErrInfo, TaskDataInfo tempData) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\线程池\ThreadTask.cs:行号 129
+
+2021/12/3 20:35:58
+获取K线数据出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 SecurityBarsDataUpdate.ThreadTask._doTask(Int32 hqClient, StringBuilder sResult, StringBuilder sErrInfo, TaskDataInfo tempData) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\线程池\ThreadTask.cs:行号 129
+
+2021/12/3 20:35:25
+获取K线数据出错
+System.ArgumentOutOfRangeException: 索引超出范围。必须为非负值并小于集合大小。
+参数名: index
+   在 System.ThrowHelper.ThrowArgumentOutOfRangeException(ExceptionArgument argument, ExceptionResource resource)
+   在 System.Collections.Generic.List`1.get_Item(Int32 index)
+   在 SecurityBarsDataUpdate.ThreadTask._doTask(Int32 hqClient, StringBuilder sResult, StringBuilder sErrInfo, TaskDataInfo tempData) 位置 F:\项目\饭票后端\SecurityBarsDataUpdate\线程池\ThreadTask.cs:行号 129
+
+2021/12/3 20:37:06
+行情缓存更新成功,日期:20211203,条数:4782
+
+
+2021/12/3 20:41:40
+行情缓存更新成功,日期:20211203,条数:4782
+
+
+2021/12/3 20:41:47
+监听队列已链接
+
+
+2021/12/3 20:41:56
+行情缓存更新成功,日期:20211203,条数:4782
+
+
+2021/12/3 20:42:04
+行情缓存更新成功,日期:20211203,条数:4782
+
+
+2021/12/3 20:42:12
+行情缓存更新成功,日期:20211203,条数:4782
+
+
+2021/12/3 20:42:20
+行情缓存更新成功,日期:20211203,条数:4782
+
+
+2021/12/3 20:42:29
+行情缓存更新成功,日期:20211203,条数:4782
+
+
+2021/12/3 20:42:37
+行情缓存更新成功,日期:20211203,条数:4782
+
+
+2021/12/3 20:42:45
+行情缓存更新成功,日期:20211203,条数:4782
+
+
+2021/12/3 20:48:59
+监听队列已链接
+
+
+2021/12/3 20:58:04
+监听队列已链接
+
+
+2021/12/3 21:02:39
+监听队列已链接
+
+
+2021/12/3 21:08:51
+监听队列已链接
+
+

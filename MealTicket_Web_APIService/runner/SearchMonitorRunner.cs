@@ -22,8 +22,9 @@ namespace MealTicket_Web_APIService.runner
 
         public override bool Check 
         {
-            get 
+            get
             {
+                SleepTime = Singleton.Instance.SearchInterval;
                 return true;
             }
         }

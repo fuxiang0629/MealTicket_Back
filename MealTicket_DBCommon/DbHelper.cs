@@ -130,6 +130,63 @@ namespace MealTicket_DBCommon
         }
 
         /// <summary>
+        /// 检查当前是否Level1数据时间
+        /// </summary>
+        /// <returns></returns>
+        public static bool CheckTradeTime7(DateTime? time = null,List<t_shares_limit_time> timeSession=null)
+        {
+            DateTime timeDis = DateTime.Now;
+            if (time != null)
+            {
+                timeDis = time.Value;
+            }
+            if (!CheckTradeDate(timeDis))
+            {
+                return false;
+            }
+
+            List<t_shares_limit_time> timeLimit = null;
+            if (timeSession != null)
+            {
+                timeLimit = timeSession;
+            }
+            else
+            {
+                using (var db = new meal_ticketEntities())
+                {
+                    var tradeTime = (from item in db.t_shares_limit_time
+                                     select item).ToList();
+                    timeLimit = tradeTime;
+                }
+            }
+
+            TimeSpan timeSpanNow = TimeSpan.Parse(timeDis.ToString("HH:mm:ss"));
+            foreach (var item in timeLimit)
+            {
+                //解析time7
+                if (item.Time7 != null)
+                {
+                    string[] timeArr = item.Time7.Split(',');
+                    foreach (var times in timeArr)
+                    {
+                        var timeSpanArr = times.Split('-');
+                        if (timeSpanArr.Length != 2)
+                        {
+                            continue;
+                        }
+                        TimeSpan timeStart = TimeSpan.Parse(timeSpanArr[0]);
+                        TimeSpan timeEnd = TimeSpan.Parse(timeSpanArr[1]);
+                        if (timeSpanNow >= timeStart && timeSpanNow < timeEnd)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// 获取最近交易日日期
         /// </summary>
         /// <returns></returns>

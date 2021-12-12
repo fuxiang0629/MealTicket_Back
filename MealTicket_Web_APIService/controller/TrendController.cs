@@ -93,6 +93,23 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 获取单只股票基础信息
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取单只股票基础信息")]
+        [Route("shares/base/info"), HttpPost]
+        [CheckUserLoginFilter]
+        public ShareStatisticInfo GetShareStatisticInfo(GetShareQuotesInfoRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetShareStatisticInfo(request, basedata);
+        }
+
+        /// <summary>
         /// 获取单个板块行情数据
         /// </summary>
         /// <returns></returns>
@@ -8506,10 +8523,10 @@ namespace MealTicket_Web_APIService.controller
         [Description("获取自选股分组列表")]
         [Route("account/shares/group/list"), HttpPost]
         [CheckUserLoginFilter]
-        public List<AccountShareGroupInfo> GetAccountShareGroupList()
+        public List<AccountShareGroupInfo> GetAccountShareGroupList(GetAccountShareGroupListRequest request)
         {
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
-            return trendHandler.GetAccountShareGroupList(basedata);
+            return trendHandler.GetAccountShareGroupList(request,basedata);
         }
 
         /// <summary>
@@ -8669,6 +8686,185 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.GetAccountShareInGroupList(request, basedata);
+        }
+
+        /// <summary>
+        /// 获取自选股主动共享分组列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取自选股主动共享分组列表")]
+        [Route("account/shares/group/share/active/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public PageRes<AccountSharesGroupShareActive> GetAccountSharesGroupShareActiveList(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountSharesGroupShareActiveList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加自选股主动共享分组
+        /// </summary>
+        /// <returns></returns>
+        [Description("添加自选股主动共享分组")]
+        [Route("account/shares/group/share/active/add"), HttpPost]
+        [CheckUserLoginFilter]
+        public object AddAccountSharesGroupShareActive(AddAccountSharesGroupShareActiveRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddAccountSharesGroupShareActive(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑自选股主动共享分组
+        /// </summary>
+        /// <returns></returns>
+        [Description("编辑自选股主动共享分组")]
+        [Route("account/shares/group/share/active/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifyAccountSharesGroupShareActive(ModifyAccountSharesGroupShareActiveRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountSharesGroupShareActive(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除自选股主动共享分组
+        /// </summary>
+        /// <returns></returns>
+        [Description("删除自选股主动共享分组")]
+        [Route("account/shares/group/share/active/delete"), HttpPost]
+        [CheckUserLoginFilter]
+        public object DeleteAccountSharesGroupShareActive(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteAccountSharesGroupShareActive(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取自选股被共享分组列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取自选股被共享分组列表")]
+        [Route("account/shares/group/share/passive/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public PageRes<AccountSharesGroupSharePassive> GetAccountSharesGroupSharePassiveList(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountSharesGroupSharePassiveList(request, basedata);
+        }
+
+        /// <summary>
+        /// 修改自选股被共享分组账户排序值
+        /// </summary>
+        /// <returns></returns>
+        [Description("修改自选股被共享分组账户排序值")]
+        [Route("account/shares/group/share/passive/orderindex/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifyAccountSharesGroupSharePassiveOrderIndex(ModifyOrderIndexRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountSharesGroupSharePassiveOrderIndex(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改自选股被共享分组分组排序值
+        /// </summary>
+        /// <returns></returns>
+        [Description("修改自选股被共享分组分组排序值")]
+        [Route("account/shares/group/share/passive/orderindex/group/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifyAccountSharesGroupSharePassiveGroupOrderIndex(ModifyOrderIndexRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountSharesGroupSharePassiveGroupOrderIndex(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改自选股被共享分组是否可见
+        /// </summary>
+        /// <returns></returns>
+        [Description("修改自选股被共享分组是否可见")]
+        [Route("account/shares/group/share/passive/status/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifyAccountSharesGroupSharePassiveStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyAccountSharesGroupSharePassiveStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取股票所属基础板块
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Description("获取股票所属基础板块")]
+        [Route("account/shares/base/plate/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<SharesBasePlateInfo> GetSharesBasePlateList(GetSharesBasePlateListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesBasePlateList(request, basedata);
+        }
+
+        /// <summary>
+        /// 设置股票所属基础板块标记
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Description("设置股票所属基础板块标记")]
+        [Route("account/shares/base/plate/tag/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifySharesBasePlateTag(ModifySharesBasePlateTagRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifySharesBasePlateTag(request, basedata);
+            return null;
         }
         #endregion
     }

@@ -21,6 +21,70 @@ namespace MealTicket_Web_Handler
 {
     public class TrendHandler
     {
+
+        private List<SharesPlateInfo> _getSharesPlateRelList(List<SharesBaseInfo> SharesList,long accountId,meal_ticketEntities db, int forceType=0) 
+        {
+            if (forceType == 0)
+            {
+                forceType = 3;
+            }
+            var accountTag = (from item in db.t_shares_plate_rel_tag_account
+                              where item.AccountId == accountId
+                              select item).ToList();
+            var plateList = (from x in Singleton.Instance._SharesPlateSession.GetSessionData()
+                             join x2 in Singleton.Instance._SharesPlateRelSession.GetSessionData() on x.PlateId equals x2.PlateId
+                             join x3 in Singleton.Instance._SharesPlateQuotesSession.GetSessionData() on x.PlateId equals x3.PlateId
+                             join x4 in SharesList on new { x2.Market, x2.SharesCode } equals new { x4.Market, x4.SharesCode }
+                             join x5 in accountTag on new { x2.PlateId, x2.Market, x2.SharesCode } equals new { x5.PlateId, x5.Market, x5.SharesCode } into a
+                             from ai in a.DefaultIfEmpty()
+                             where x.ChooseStatus == 1 || (x.IsBasePlate == 1 && x.BaseStatus == 1)
+                             select new SharesPlateInfo
+                             {
+                                 Id = x.PlateId,
+                                 Name = x.PlateName,
+                                 SharesCode = x2.SharesCode,
+                                 SharesCount = x3.SharesCount,
+                                 Market = x2.Market,
+                                 DownLimitCount = x3.DownLimitCount,
+                                 RiseLimitCount = x3.RiseLimitCount,
+                                 Type = x.PlateType,
+                                 Rank = x3.Rank,
+                                 RiseRate = x3.RiseRate,
+                                 IsFocusOn = ai == null ? false : ai.IsFocusOn
+                             }).ToList();
+            var FocusOn_Session=Singleton.Instance.sessionHandler.GetPlate_Tag_FocusOn_Session();
+            var Force_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_Force_Session();
+            var TrendLike_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_TrendLike_Session();
+            foreach (var item in plateList)
+            {
+                long key1 = long.Parse(item.SharesCode) * 10 + item.Market;
+                if (!item.IsFocusOn && FocusOn_Session.ContainsKey(key1))
+                {
+                    if (FocusOn_Session[key1].ContainsKey(item.Id))
+                    {
+                        item.IsFocusOn = FocusOn_Session[key1][item.Id].IsFocusOn;
+                    }
+                }
+                if (TrendLike_Session.ContainsKey(key1))
+                {
+                    if (TrendLike_Session[key1].ContainsKey(item.Id))
+                    {
+                        item.IsTrendLike = TrendLike_Session[key1][item.Id].IsTrendLike;
+                    }
+                }
+                long key2 = long.Parse(item.SharesCode) * 1000 + item.Market * 100 + forceType;
+                if (Force_Session.ContainsKey(key2))
+                {
+                    if (Force_Session[key2].ContainsKey(item.Id))
+                    {
+                        item.IsForce1 = Force_Session[key2][item.Id].IsForce1;
+                        item.IsForce2 = Force_Session[key2][item.Id].IsForce2;
+                    }
+                }
+            }
+            return plateList;
+        }
+
         /// <summary>
         /// 获取用户保证金余额
         /// </summary>
@@ -194,24 +258,15 @@ namespace MealTicket_Web_Handler
                                   TodayDealCount = item.TotalCount * 100,
                                   TodayDealAmount = item.TotalAmount
                               }).ToList();
-                var plateList = (from x in Singleton.Instance._SharesPlateSession.GetSessionData()
-                                 join x2 in Singleton.Instance._SharesPlateRelSession.GetSessionData() on x.PlateId equals x2.PlateId
-                                 join x3 in Singleton.Instance._SharesPlateQuotesSession.GetSessionData() on x.PlateId equals x3.PlateId
-                                 join x4 in request on new { x2.Market, x2.SharesCode } equals new { x4.Market, x4.SharesCode }
-                                 where x.ChooseStatus == 1 || (x.IsBasePlate == 1 && x.BaseStatus == 1)
-                                 select new SharesPlateInfo
-                                 {
-                                     Id = x.PlateId,
-                                     Name = x.PlateName,
-                                     SharesCode = x2.SharesCode,
-                                     SharesCount = x3.SharesCount,
-                                     Market = x2.Market,
-                                     DownLimitCount = x3.DownLimitCount,
-                                     RiseLimitCount = x3.RiseLimitCount,
-                                     Type = x.PlateType,
-                                     Rank = x3.Rank,
-                                     RiseRate = x3.RiseRate
-                                 }).ToList();
+
+                var sharesList = (from item in request
+                                  select new SharesBaseInfo
+                                  {
+                                      Market = item.Market,
+                                      SharesCode = item.SharesCode
+                                  }).ToList();
+                var plateList = _getSharesPlateRelList(sharesList, basedata.AccountId, db);
+
                 quotes = (from item in quotes
                           join item2 in Singleton.Instance._SharesHisRiseRateSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
                           join item3 in Singleton.Instance._SharesBaseSession.GetSessionData() on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode }
@@ -236,78 +291,39 @@ namespace MealTicket_Web_Handler
                               PreDayDealCount = item2.PreDayDealCount,
                               TotalCapital = item3.TotalCapital
                           }).ToList();
+                var mySharesGroup = (from item in db.t_account_shares_group_rel
+                                     where item.AccountId == basedata.AccountId
+                                     select item).ToList();
+                var sharesList2 = quotes.Select(e => e.SharesCode + "," + e.Market).ToList();
+                var conditionBuy = (from item in db.t_account_shares_conditiontrade_buy
+                                    where item.AccountId == basedata.AccountId && sharesList2.Contains(item.SharesInfo)
+                                    select item).ToList();
+                var groupRelList = (from x in db.t_account_shares_conditiontrade_buy_group_rel
+                                    join x2 in db.t_account_shares_conditiontrade_buy_group on x.GroupId equals x2.Id
+                                    where x2.AccountId == basedata.AccountId
+                                    select x).ToList();
                 foreach (var item in quotes)
                 {
                     //查询股票属于哪个板块
                     item.PlateList = (from x in plateList
                                       where x.Market == item.Market && x.SharesCode == item.SharesCode
-                                      orderby x.RiseRate descending
+                                      orderby x.Type,x.RiseRate descending
                                       select x).ToList();
+                    item.MySharesGroupList = (from x in mySharesGroup
+                                              where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                              select x.GroupId).ToList();
+                    var tempconditionBuy = (from x in conditionBuy
+                                            where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                            select x).FirstOrDefault();
+                    if (tempconditionBuy != null)
+                    {
+                        item.ConditionId = tempconditionBuy.Id;
+                        item.ConditionStatus = tempconditionBuy.Status == 0 ? 1 : tempconditionBuy.Status == 1 ? 3 : 2;
+                    }
+                    item.GroupList = (from x in groupRelList
+                                      where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                      select x.GroupId).ToList();
                 }
-
-                DateTime timeNow = DateTime.Now;
-                long dateAbs = int.Parse(timeNow.ToString("yyyyMMdd"));
-                long minDateAbs = int.Parse(Helper.GetLastTradeDate(-9, 0, 0, Singleton.Instance.QuotesDaysShow).ToString("yyyyMMdd"));
-                long maxDateAbs = int.Parse(Helper.GetLastTradeDate(-9, 0, 0).ToString("yyyyMMdd"));
-                long timeAbs = 9999;
-                if (dateAbs == maxDateAbs)
-                {
-                    timeAbs = int.Parse(timeNow.ToString("HHmm"));
-                }
-
-                List<string> sharesCodeList = quotes.Select(e => e.SharesCode).ToList();
-
-                var kline1min = (from item in db.t_shares_securitybarsdata_1min
-                                 where sharesCodeList.Contains(item.SharesCode) && item.GroupTimeKey > (minDateAbs * 10000) && item.GroupTimeKey < (maxDateAbs * 10000) && (item.GroupTimeKey % 10000) <= timeAbs
-                                 group item by new { item.Market, item.SharesCode, Date = item.GroupTimeKey / 10000 } into g
-                                 select new
-                                 {
-                                     Market = g.Key.Market,
-                                     SharesCode = g.Key.SharesCode,
-                                     Date = g.Key.Date,
-                                     NowAvgDealCount = g.Count() <= 0 ? 0 : g.Sum(e => e.TradeStock),
-                                     NowAvgDealAmount = g.Count() <= 0 ? 0 : g.Sum(e => e.TradeAmount)
-                                 }).ToList();
-                var prekline1min = (from item in kline1min
-                                    group item by new { item.Market, item.SharesCode } into g
-                                    select new
-                                    {
-                                        Market = g.Key.Market,
-                                        SharesCode = g.Key.SharesCode,
-                                        PreNowAvgDealCount = g.Count() <= 0 ? 0 : g.OrderByDescending(e => e.Date).Select(e => e.NowAvgDealCount).FirstOrDefault(),
-                                        PreNowAvgDealAmount = g.Count() <= 0 ? 0 : g.OrderByDescending(e => e.Date).Select(e => e.NowAvgDealAmount).FirstOrDefault(),
-                                        DaysNowAvgDealCount = g.Count() <= 0 ? 0 : (long)g.Average(e => e.NowAvgDealCount),
-                                        DaysNowAvgDealAmount = g.Count() <= 0 ? 0 : (long)g.Average(e => e.NowAvgDealAmount),
-                                    }).ToList();
-                quotes = (from item in quotes
-                          join item2 in prekline1min on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
-                          from ai in a.DefaultIfEmpty()
-                          select new SharesListQuotesInfo
-                          {
-                              PushTime = item.PushTime,
-                              TriCountToday = item.TriCountToday,
-                              SharesCode = item.SharesCode,
-                              Market = item.Market,
-                              CurrPrice = item.CurrPrice,
-                              RisePrice = item.RisePrice,
-                              RiseRate = item.RiseRate,
-                              TodayDealCount = item.TodayDealCount,
-                              TodayDealAmount = item.TodayDealAmount,
-                              CirculatingCapital = item.CirculatingCapital,
-                              DaysAvgDealAmount = item.DaysAvgDealAmount,
-                              DaysAvgDealCount = item.DaysAvgDealCount,
-                              LimitDownCount = item.LimitDownCount,
-                              LimitUpCount = item.LimitUpCount,
-                              LimitUpDay = item.LimitUpDay,
-                              PreDayDealAmount = item.PreDayDealAmount,
-                              PreDayDealCount = item.PreDayDealCount,
-                              TotalCapital = item.TotalCapital,
-                              PlateList = item.PlateList,
-                              DaysNowAvgDealAmount = ai == null ? 0 : ai.DaysNowAvgDealAmount,
-                              DaysNowAvgDealCount = ai == null ? 0 : ai.DaysNowAvgDealCount,
-                              PreNowAvgDealAmount = ai == null ? 0 : ai.PreNowAvgDealAmount,
-                              PreNowAvgDealCount = ai == null ? 0 : ai.PreNowAvgDealCount,
-                          }).ToList();
                 return quotes;
             }
         }
@@ -335,6 +351,52 @@ namespace MealTicket_Web_Handler
                               TodayDealAmount = item.TotalAmount
                           }).FirstOrDefault();
             return result;
+        }
+
+        /// <summary>
+        /// 获取单只股票基础信息
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public ShareStatisticInfo GetShareStatisticInfo(GetShareQuotesInfoRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var mySharesGroup = (from item in db.t_account_shares_group_rel
+                                     where item.AccountId == basedata.AccountId && item.Market==request.Market && item.SharesCode==request.SharesCode
+                                     select item).ToList();
+                var conditionBuy = (from item in db.t_account_shares_conditiontrade_buy
+                                    where item.AccountId == basedata.AccountId && item.Market == request.Market && item.SharesCode == request.SharesCode
+                                    select item).FirstOrDefault();
+                var groupRelList = (from item in db.t_account_shares_conditiontrade_buy_group_rel
+                                    join item2 in db.t_account_shares_conditiontrade_buy_group on item.GroupId equals item2.Id
+                                    where item2.AccountId == basedata.AccountId && item.Market == request.Market && item.SharesCode == request.SharesCode
+                                    select item).ToList();
+
+
+                
+                var plateList = _getSharesPlateRelList(new List<SharesBaseInfo> 
+                {
+                    new SharesBaseInfo
+                    {
+                        Market=request.Market,
+                        SharesCode=request.SharesCode
+                    }
+                }, basedata.AccountId, db);
+                plateList = plateList.OrderByDescending(e => e.RiseRate).ToList();
+
+                return new ShareStatisticInfo 
+                {
+                    SharesCode=request.SharesCode,
+                    Market=request.Market,
+                    ConditionId= conditionBuy == null ?0: conditionBuy.Id,
+                    ConditionStatus = conditionBuy==null?1: conditionBuy.Status==1?3:2,
+                    MySharesGroupList= mySharesGroup.Select(e=>e.GroupId).ToList(),
+                    GroupList= groupRelList.Select(e=>e.GroupId).ToList(),
+                    PlateList= plateList
+                };
+            }
         }
 
         /// <summary>
@@ -2006,25 +2068,15 @@ namespace MealTicket_Web_Handler
                 var groupList = (from x in db.t_account_shares_optional_group_rel
                                  where x.GroupIsContinue || (x.ValidStartTime <= dateNow && x.ValidEndTime >= dateNow)
                                  select x).ToList();
-                var plateList = (from x in Singleton.Instance._SharesPlateSession.GetSessionData()
-                                 join x2 in Singleton.Instance._SharesPlateRelSession.GetSessionData() on x.PlateId equals x2.PlateId
-                                 join x3 in Singleton.Instance._SharesPlateQuotesSession.GetSessionData() on x.PlateId equals x3.PlateId
-                                 join x4 in result on new { x2.Market, x2.SharesCode } equals new { x4.Market, x4.SharesCode }
-                                 where x.ChooseStatus == 1 || (x.IsBasePlate == 1 && x.BaseStatus == 1)
-                                 select new SharesPlateInfo
-                                 {
-                                     Id = x.PlateId,
-                                     Name = x.PlateName,
-                                     SharesCode = x2.SharesCode,
-                                     SharesCount = x3.SharesCount,
-                                     Market = x2.Market,
-                                     DownLimitCount = x3.DownLimitCount,
-                                     RiseLimitCount = x3.RiseLimitCount,
-                                     Type = x.PlateType,
-                                     Rank=x3.Rank,
-                                     RiseRate = x3.RiseRate
-                                 }).ToList();
 
+
+                var shares_List = (from item in result
+                                  select new SharesBaseInfo
+                                  {
+                                      Market = item.Market,
+                                      SharesCode = item.SharesCode
+                                  }).ToList();
+                var plateList = _getSharesPlateRelList(shares_List, basedata.AccountId, db);
 
                 var sharesList = result.Select(e => e.SharesCode + "," + e.Market).ToList();
                 var conditionBuy = (from item in db.t_account_shares_conditiontrade_buy
@@ -2089,7 +2141,7 @@ namespace MealTicket_Web_Handler
                     }
                     item.PlateList = (from x in plateList
                                       where x.Market == item.Market && x.SharesCode == item.SharesCode
-                                      orderby x.RiseRate descending
+                                      orderby x.Type,x.RiseRate descending
                                       select x).ToList();
                     item.MySharesGroupList = (from x in mySharesGroup
                                               where x.Market == item.Market && x.SharesCode == item.SharesCode
@@ -2270,24 +2322,15 @@ namespace MealTicket_Web_Handler
                                     where x2.AccountId == basedata.AccountId
                                     select x).ToList();
                 var tempList = list.Select(e => new { e.Market, e.SharesCode }).Distinct();
-                var plateList = (from x in Singleton.Instance._SharesPlateSession.GetSessionData()
-                                 join x2 in Singleton.Instance._SharesPlateRelSession.GetSessionData() on x.PlateId equals x2.PlateId
-                                 join x3 in Singleton.Instance._SharesPlateQuotesSession.GetSessionData() on x.PlateId equals x3.PlateId
-                                 join x4 in tempList on new { x2.Market, x2.SharesCode } equals new { x4.Market, x4.SharesCode }
-                                 where x.ChooseStatus == 1 || (x.IsBasePlate == 1 && x.BaseStatus == 1)
-                                 select new SharesPlateInfo
-                                 {
-                                     Id = x.PlateId,
-                                     Name = x.PlateName,
-                                     SharesCode = x2.SharesCode,
-                                     SharesCount = x3.SharesCount,
-                                     Market = x2.Market,
-                                     DownLimitCount = x3.DownLimitCount,
-                                     RiseLimitCount = x3.RiseLimitCount,
-                                     Type = x.PlateType,
-                                     Rank = x3.Rank,
-                                     RiseRate = x3.RiseRate
-                                 }).ToList();
+
+
+                var shares_List = (from item in tempList
+                                   select new SharesBaseInfo
+                                   {
+                                       Market = item.Market,
+                                       SharesCode = item.SharesCode
+                                   }).ToList();
+                var plateList = _getSharesPlateRelList(shares_List, basedata.AccountId, db);
 
                 //计算杠杆倍数
                 var accountRules = (from x in db.t_shares_limit_fundmultiple_account
@@ -2385,7 +2428,7 @@ namespace MealTicket_Web_Handler
                     //查询股票属于哪个板块
                     item.PlateList = (from x in plateList
                                       where x.Market == item.Market && x.SharesCode == item.SharesCode
-                                      orderby x.RiseRate descending
+                                      orderby x.Type, x.RiseRate descending
                                       select x).ToList();
                     item.MySharesGroupList = (from x in mySharesGroup
                                               where x.Market == item.Market && x.SharesCode == item.SharesCode
@@ -2569,24 +2612,15 @@ namespace MealTicket_Web_Handler
                                     where x2.AccountId == basedata.AccountId
                                     select x).ToList();
                 var tempList = list.Select(e => new { e.Market, e.SharesCode }).Distinct();
-                var plateList = (from x in Singleton.Instance._SharesPlateSession.GetSessionData()
-                                 join x2 in Singleton.Instance._SharesPlateRelSession.GetSessionData() on x.PlateId equals x2.PlateId
-                                 join x3 in Singleton.Instance._SharesPlateQuotesSession.GetSessionData() on x.PlateId equals x3.PlateId
-                                 join x4 in tempList on new { x2.Market, x2.SharesCode } equals new { x4.Market, x4.SharesCode }
-                                 where x.ChooseStatus == 1 || (x.IsBasePlate == 1 && x.BaseStatus == 1)
-                                 select new SharesPlateInfo
-                                 {
-                                     Id = x.PlateId,
-                                     Name = x.PlateName,
-                                     SharesCode = x2.SharesCode,
-                                     SharesCount = x3.SharesCount,
-                                     Market = x2.Market,
-                                     DownLimitCount = x3.DownLimitCount,
-                                     RiseLimitCount = x3.RiseLimitCount,
-                                     Type = x.PlateType,
-                                     Rank = x3.Rank,
-                                     RiseRate = x3.RiseRate
-                                 }).ToList();
+
+
+                var shares_List = (from item in tempList
+                                   select new SharesBaseInfo
+                                   {
+                                       Market = item.Market,
+                                       SharesCode = item.SharesCode
+                                   }).ToList();
+                var plateList = _getSharesPlateRelList(shares_List, basedata.AccountId, db);
 
                 //计算杠杆倍数
                 var accountRules = (from x in db.t_shares_limit_fundmultiple_account
@@ -2685,7 +2719,7 @@ namespace MealTicket_Web_Handler
                     //查询股票属于哪个板块
                     item.PlateList = (from x in plateList
                                       where x.Market == item.Market && x.SharesCode == item.SharesCode
-                                      orderby x.RiseRate descending
+                                      orderby x.Type, x.RiseRate descending
                                       select x).ToList();
                     item.MySharesGroupList = (from x in mySharesGroup
                                               where x.Market == item.Market && x.SharesCode == item.SharesCode
@@ -3688,24 +3722,13 @@ namespace MealTicket_Web_Handler
                                           where holdIdList.Contains(x.HoldId)
                                           select x).ToList();
 
-                var plateList = (from x in Singleton.Instance._SharesPlateSession.GetSessionData()
-                                 join x2 in Singleton.Instance._SharesPlateRelSession.GetSessionData() on x.PlateId equals x2.PlateId
-                                 join x3 in Singleton.Instance._SharesPlateQuotesSession.GetSessionData() on x.PlateId equals x3.PlateId
-                                 join x4 in tempList on new { x2.Market, x2.SharesCode } equals new { x4.item.Market, x4.item.SharesCode }
-                                 where x.ChooseStatus == 1 || (x.IsBasePlate == 1 && x.BaseStatus == 1)
-                                 select new SharesPlateInfo
-                                 {
-                                     Id = x.PlateId,
-                                     Name = x.PlateName,
-                                     SharesCode = x2.SharesCode,
-                                     SharesCount = x3.SharesCount,
-                                     Market = x2.Market,
-                                     DownLimitCount = x3.DownLimitCount,
-                                     RiseLimitCount = x3.RiseLimitCount,
-                                     Type = x.PlateType,
-                                     Rank = x3.Rank,
-                                     RiseRate = x3.RiseRate
-                                 }).ToList();
+                var shares_List = (from item in tempList
+                                   select new SharesBaseInfo
+                                   {
+                                       Market = item.item.Market,
+                                       SharesCode = item.item.SharesCode
+                                   }).ToList();
+                var plateList = _getSharesPlateRelList(shares_List, basedata.AccountId, db);
 
                 var traderulesList_account = DbHelper.GetTraderules(request.Id);
                 var otherCostInfo = (from item in tempList
@@ -3804,7 +3827,7 @@ namespace MealTicket_Web_Handler
                         ParValidCount = ParValidCount,
                         PlateList = (from x in plateList
                                      where x.Market == item.item.Market && x.SharesCode == item.item.SharesCode
-                                     orderby x.RiseRate descending
+                                     orderby x.Type, x.RiseRate descending
                                      select x).ToList(),
                         TodayDealAmount = item.item3.TotalAmount,
                         TodayDealCount = item.item3.TotalCount * 100
@@ -5652,24 +5675,14 @@ inner
                 var fundmultiple = (from x in db.t_shares_limit_fundmultiple
                                     select x).ToList();
 
-                var plateList = (from x in Singleton.Instance._SharesPlateSession.GetSessionData()
-                                 join x2 in Singleton.Instance._SharesPlateRelSession.GetSessionData() on x.PlateId equals x2.PlateId
-                                 join x3 in Singleton.Instance._SharesPlateQuotesSession.GetSessionData() on x.PlateId equals x3.PlateId
-                                 join x4 in list on new { x2.Market, x2.SharesCode } equals new { x4.Market, x4.SharesCode }
-                                 where x.ChooseStatus == 1 || (x.IsBasePlate == 1 && x.BaseStatus == 1)
-                                 select new SharesPlateInfo
-                                 {
-                                     Id = x.PlateId,
-                                     Name = x.PlateName,
-                                     SharesCode = x2.SharesCode,
-                                     SharesCount = x3.SharesCount,
-                                     Market = x2.Market,
-                                     DownLimitCount = x3.DownLimitCount,
-                                     RiseLimitCount = x3.RiseLimitCount,
-                                     Type = x.PlateType,
-                                     Rank = x3.Rank,
-                                     RiseRate = x3.RiseRate
-                                 }).ToList();
+                var shares_List = (from item in list
+                                   select new SharesBaseInfo
+                                   {
+                                       Market = item.Market,
+                                       SharesCode = item.SharesCode
+                                   }).ToList();
+                var plateList = _getSharesPlateRelList(shares_List, basedata.AccountId, db);
+
                 var mySharesGroup = (from item in db.t_account_shares_group_rel
                                      where item.AccountId == basedata.AccountId
                                      select item).ToList();
@@ -5712,7 +5725,7 @@ inner
                     //查询股票属于哪个板块
                     item.PlateList = (from x in plateList
                                       where x.Market == item.Market && x.SharesCode == item.SharesCode
-                                      orderby x.RiseRate descending
+                                      orderby x.Type, x.RiseRate descending
                                       select x).ToList();
                     item.MySharesGroupList = (from x in mySharesGroup
                                               where x.Market == item.Market && x.SharesCode == item.SharesCode
@@ -5898,24 +5911,13 @@ inner
                                     select x).ToList();
 
 
-                var plateList = (from x in Singleton.Instance._SharesPlateSession.GetSessionData()
-                                 join x2 in Singleton.Instance._SharesPlateRelSession.GetSessionData() on x.PlateId equals x2.PlateId
-                                 join x3 in Singleton.Instance._SharesPlateQuotesSession.GetSessionData() on x.PlateId equals x3.PlateId
-                                 join x4 in list on new { x2.Market, x2.SharesCode } equals new { x4.Market, x4.SharesCode }
-                                 where x.ChooseStatus == 1 || (x.IsBasePlate == 1 && x.BaseStatus == 1)
-                                 select new SharesPlateInfo
-                                 {
-                                     Id = x.PlateId,
-                                     Name = x.PlateName,
-                                     SharesCode = x2.SharesCode,
-                                     SharesCount = x3.SharesCount,
-                                     Market = x2.Market,
-                                     DownLimitCount = x3.DownLimitCount,
-                                     RiseLimitCount = x3.RiseLimitCount,
-                                     Type = x.PlateType,
-                                     Rank = x3.Rank,
-                                     RiseRate = x3.RiseRate
-                                 }).ToList();
+                var shares_List = (from item in list
+                                   select new SharesBaseInfo
+                                   {
+                                       Market = item.Market,
+                                       SharesCode = item.SharesCode
+                                   }).ToList();
+                var plateList = _getSharesPlateRelList(shares_List, basedata.AccountId, db);
 
                 var mySharesGroup = (from item in db.t_account_shares_group_rel
                                      where item.AccountId == basedata.AccountId
@@ -5949,11 +5951,25 @@ inner
                     {
                         item.IsExists = false;
                         item.Id = 0;
+                        item.ConditionStatus = 1;
                     }
                     else 
                     {
                         item.IsExists = true;
                         item.Id = groupRel.Select(e => e.x.Id).FirstOrDefault();
+                        item.ConditionStatus = groupRel.Select(e => e.x.Status).FirstOrDefault();
+                        if (item.ConditionStatus == 0)
+                        {
+                            item.ConditionStatus = 1;
+                        }
+                        else if (item.ConditionStatus == 1)
+                        {
+                            item.ConditionStatus = 3;
+                        }
+                        else if (item.ConditionStatus == 2)
+                        {
+                            item.ConditionStatus = 2;
+                        }
                     }
 
                     item.GroupList = groupRel.Where(e=>e.ai!=null).Select(e => e.ai.GroupId).Distinct().ToList();
@@ -5961,7 +5977,7 @@ inner
                     //查询股票属于哪个板块
                     item.PlateList = (from x in plateList
                                       where x.Market == item.Market && x.SharesCode == item.SharesCode
-                                      orderby x.RiseRate descending
+                                      orderby x.Type, x.RiseRate descending
                                       select x).ToList();
                     item.MySharesGroupList = (from x in mySharesGroup
                                               where x.Market == item.Market && x.SharesCode == item.SharesCode
@@ -9533,24 +9549,14 @@ inner
                                   TriggerTime=item.TriggerTime
                               }).ToList();
 
-                var plateList = (from x in Singleton.Instance._SharesPlateSession.GetSessionData()
-                                 join x2 in Singleton.Instance._SharesPlateRelSession.GetSessionData() on x.PlateId equals x2.PlateId
-                                 join x3 in Singleton.Instance._SharesPlateQuotesSession.GetSessionData() on x.PlateId equals x3.PlateId
-                                 join x4 in result on new { x2.Market, x2.SharesCode } equals new { x4.Market, x4.SharesCode }
-                                 where x.ChooseStatus == 1 || (x.IsBasePlate == 1 && x.BaseStatus == 1)
-                                 select new SharesPlateInfo
-                                 {
-                                     Id = x.PlateId,
-                                     Name = x.PlateName,
-                                     SharesCode = x2.SharesCode,
-                                     SharesCount = x3.SharesCount,
-                                     Market = x2.Market,
-                                     DownLimitCount = x3.DownLimitCount,
-                                     RiseLimitCount = x3.RiseLimitCount,
-                                     Type = x.PlateType,
-                                     Rank = x3.Rank,
-                                     RiseRate = x3.RiseRate
-                                 }).ToList();
+
+                var shares_List = (from item in result
+                                   select new SharesBaseInfo
+                                   {
+                                       Market = item.Market,
+                                       SharesCode = item.SharesCode
+                                   }).ToList();
+                var plateList = _getSharesPlateRelList(shares_List, basedata.AccountId, db);
 
                 var groupRelList = (from x in db.t_account_shares_conditiontrade_buy_group_rel
                                     join x2 in db.t_account_shares_conditiontrade_buy_group on x.GroupId equals x2.Id
@@ -9566,7 +9572,7 @@ inner
                 {
                     item.PlateList = (from x in plateList
                                       where x.Market==item.Market && x.SharesCode==item.SharesCode
-                                      orderby x.RiseRate descending
+                                      orderby x.Type, x.RiseRate descending
                                       select x).ToList();
 
 
@@ -17165,24 +17171,14 @@ select @buyId;";
                                       IsRead = item.Key.bi == null ? false : true,
                                   }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
 
-                var plateList = (from x in Singleton.Instance._SharesPlateSession.GetSessionData()
-                                 join x2 in Singleton.Instance._SharesPlateRelSession.GetSessionData() on x.PlateId equals x2.PlateId
-                                 join x3 in Singleton.Instance._SharesPlateQuotesSession.GetSessionData() on x.PlateId equals x3.PlateId
-                                 join x4 in resultList on new { x2.Market, x2.SharesCode } equals new { x4.Market, x4.SharesCode }
-                                 where x.ChooseStatus == 1 || (x.IsBasePlate == 1 && x.BaseStatus == 1)
-                                 select new SharesPlateInfo
-                                 {
-                                     Id = x.PlateId,
-                                     Name = x.PlateName,
-                                     SharesCode = x2.SharesCode,
-                                     SharesCount = x3.SharesCount,
-                                     Market = x2.Market,
-                                     DownLimitCount = x3.DownLimitCount,
-                                     RiseLimitCount = x3.RiseLimitCount,
-                                     Type = x.PlateType,
-                                     Rank = x3.Rank,
-                                     RiseRate = x3.RiseRate
-                                 }).ToList();
+
+                var shares_List = (from item in resultList
+                                   select new SharesBaseInfo
+                                   {
+                                       Market = item.Market,
+                                       SharesCode = item.SharesCode
+                                   }).ToList();
+                var plateList = _getSharesPlateRelList(shares_List, basedata.AccountId, db);
 
                 DataTable table = new DataTable();
                 table.Columns.Add("ConditiontradeBuyId", typeof(long));
@@ -17203,7 +17199,7 @@ select @buyId;";
                     }
                     item.PlateList = (from x in plateList
                                       where x.Market == item.Market && x.SharesCode == item.SharesCode
-                                      orderby x.RiseRate descending
+                                      orderby x.Type, x.RiseRate descending
                                       select x).ToList();
                     if (!item.IsRead)
                     {
@@ -20884,24 +20880,13 @@ select @buyId;";
                                     where x2.AccountId == basedata.AccountId
                                     select x).ToList();
 
-                var plateList = (from x in Singleton.Instance._SharesPlateSession.GetSessionData()
-                                 join x2 in Singleton.Instance._SharesPlateRelSession.GetSessionData() on x.PlateId equals x2.PlateId
-                                 join x3 in Singleton.Instance._SharesPlateQuotesSession.GetSessionData() on x.PlateId equals x3.PlateId
-                                 join x4 in resultSharesList on new { x2.Market, x2.SharesCode } equals new { x4.Market, x4.SharesCode }
-                                 where x.ChooseStatus == 1 || (x.IsBasePlate == 1 && x.BaseStatus == 1)
-                                 select new SharesPlateInfo
-                                 {
-                                     Id = x.PlateId,
-                                     Name = x.PlateName,
-                                     SharesCode = x2.SharesCode,
-                                     SharesCount = x3.SharesCount,
-                                     Market = x2.Market,
-                                     DownLimitCount = x3.DownLimitCount,
-                                     RiseLimitCount = x3.RiseLimitCount,
-                                     Type = x.PlateType,
-                                     Rank = x3.Rank,
-                                     RiseRate = x3.RiseRate
-                                 }).ToList();
+                var shares_List = (from item in resultSharesList
+                                   select new SharesBaseInfo
+                                   {
+                                       Market = item.Market,
+                                       SharesCode = item.SharesCode
+                                   }).ToList();
+                var plateList = _getSharesPlateRelList(shares_List, basedata.AccountId, db);
 
                 //计算杠杆倍数
                 var accountRules = (from x in db.t_shares_limit_fundmultiple_account
@@ -20950,7 +20935,9 @@ select @buyId;";
                                     PreDayDealCount = item.item5.PreDayDealCount,
                                     TotalCapital = item.item3.TotalCapital,
                                 }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
-
+                var mySharesGroup = (from item in db.t_account_shares_group_rel
+                                     where item.AccountId == basedata.AccountId
+                                     select item).ToList();
                 List<SharesConditionSearchInfo> resultList = new List<SharesConditionSearchInfo>();
                 foreach (var item in tempList)
                 {
@@ -20996,8 +20983,12 @@ select @buyId;";
                     //查询股票属于哪个板块
                     item.PlateList = (from x in plateList
                                       where x.Market == item.Market && x.SharesCode == item.SharesCode
-                                      orderby x.RiseRate descending
+                                      orderby x.Type, x.RiseRate descending
                                       select x).ToList();
+
+                    item.MySharesGroupList = (from x in mySharesGroup
+                                              where x.Market == item.Market && x.SharesCode == item.SharesCode
+                                              select x.GroupId).ToList();
                     resultList.Add(item);
                 }
                 return new PageRes<SharesConditionSearchInfo>
@@ -23150,7 +23141,7 @@ select @buyId;";
                     long _preClosePrice = item.PreClosePrice;
 
                     long _minPrice = item.MinPrice;
-                    long _maxPrice = item.MinPrice;
+                    long _maxPrice = item.MaxPrice;
                     if ((item.WeightType == 1 && string.IsNullOrEmpty(plateDic[item.PlateId].NoWeightSharesCode)) || (item.WeightType == 2 && string.IsNullOrEmpty(plateDic[item.PlateId].WeightSharesCode))) 
                     {
                         long tempMaxPrice = _openedPrice > _closedPrice ? _openedPrice : _closedPrice;
@@ -23345,7 +23336,7 @@ select @buyId;";
         /// </summary>
         /// <param name="basedata"></param>
         /// <returns></returns>
-        public List<AccountShareGroupInfo> GetAccountShareGroupList(HeadBase basedata)
+        public List<AccountShareGroupInfo> GetAccountShareGroupList(GetAccountShareGroupListRequest request,HeadBase basedata)
         {
             using (var db = new meal_ticketEntities())
             {
@@ -23356,8 +23347,32 @@ select @buyId;";
                                        GroupId = item.Id,
                                        GroupName = item.GroupName,
                                        OrderIndex=item.OrderIndex,
-                                       CreateTime=item.CreateTime
+                                       CreateTime=item.CreateTime,
+                                       AccountId=item.AccountId,
+                                       Type=1
                                    }).ToList();
+                if (request.GetAll)
+                {
+                    var shareGroup = (from item in db.t_account_shares_group_share
+                                      join item2 in db.t_account_shares_group_share_rel on item.Id equals item2.ShareId
+                                      join item3 in db.t_account_shares_group on item2.GroupId equals item3.Id into a
+                                      from ai in a.DefaultIfEmpty()
+                                      join item4 in db.t_account_baseinfo on item.AccountId equals item4.Id
+                                      where item.ShareAccountId == basedata.AccountId && item2.Status == 1 && (item2.GroupId == 0 || ai != null)
+                                      select new AccountShareGroupInfo
+                                      {
+                                          GroupId = item2.GroupId,
+                                          GroupName = item2.GroupId == 0 ? "我的自选" : ai.GroupName,
+                                          OrderIndex = item2.OrderIndex,
+                                          AccountOrderIndex=item.OrderIndex,
+                                          CreateTime = item2.CreateTime,
+                                          AccountMobile = item4.Mobile,
+                                          AccountId = item.AccountId,
+                                          Type = 2
+                                      }).ToList();
+                    sharesGroup.AddRange(shareGroup);
+                }
+
                 return sharesGroup;
             }
         }
@@ -23487,6 +23502,7 @@ select @buyId;";
                                     where item.AccountId == basedata.AccountId && item.GroupId == request.Id
                                     select item).ToList();
                     db.t_account_shares_group_rel.RemoveRange(groupRel);
+                    db.SaveChanges();
 
                     tran.Commit();
                 }
@@ -23508,8 +23524,28 @@ select @buyId;";
         {
             using (var db = new meal_ticketEntities())
             {
-                var groupRel = (from item in db.t_account_shares_group_rel
-                                where item.AccountId == basedata.AccountId && item.GroupId == request.Id
+                var totalGroupRel = from item in db.t_account_shares_group_rel
+                                    where item.AccountId == request.AccountId
+                                    select item;
+                List<t_account_shares_group_rel> myGroupRel = new List<t_account_shares_group_rel>();
+                if (request.AccountId == basedata.AccountId)
+                {
+                    myGroupRel = totalGroupRel.ToList();
+                }
+                else 
+                {
+                    myGroupRel= (from item in db.t_account_shares_group_rel
+                                 where item.AccountId == basedata.AccountId
+                                 select item).ToList();
+                    totalGroupRel = from item in totalGroupRel
+                                    join item2 in db.t_account_shares_group_share_rel on item.GroupId equals item2.GroupId
+                                    join item3 in db.t_account_shares_group_share on item2.ShareId equals item3.Id
+                                    where item2.Status == 1 && item3.ShareAccountId == basedata.AccountId
+                                    select item;
+                }
+
+                var groupRel = (from item in totalGroupRel
+                                where item.GroupId == request.Id
                                 select item).ToList();
                 int totalCount = groupRel.Count();
 
@@ -23564,24 +23600,15 @@ select @buyId;";
                                    ConditionStatus = ai == null ? 0 : ai.Status
                                }).ToList();
 
-                var plateList = (from x in Singleton.Instance._SharesPlateSession.GetSessionData()
-                                 join x2 in Singleton.Instance._SharesPlateRelSession.GetSessionData() on x.PlateId equals x2.PlateId
-                                 join x3 in Singleton.Instance._SharesPlateQuotesSession.GetSessionData() on x.PlateId equals x3.PlateId
-                                 join x4 in _resultList on new { x2.Market, x2.SharesCode } equals new { x4.Market, x4.SharesCode }
-                                 where x.ChooseStatus == 1 || (x.IsBasePlate == 1 && x.BaseStatus == 1)
-                                 select new SharesPlateInfo
-                                 {
-                                     Id = x.PlateId,
-                                     Name = x.PlateName,
-                                     SharesCode = x2.SharesCode,
-                                     SharesCount = x3.SharesCount,
-                                     Market = x2.Market,
-                                     DownLimitCount = x3.DownLimitCount,
-                                     RiseLimitCount = x3.RiseLimitCount,
-                                     Type = x.PlateType,
-                                     Rank = x3.Rank,
-                                     RiseRate = x3.RiseRate
-                                 }).ToList();
+
+                var shares_List = (from item in _resultList
+                                   select new SharesBaseInfo
+                                   {
+                                       Market = item.Market,
+                                       SharesCode = item.SharesCode
+                                   }).ToList();
+                var plateList = _getSharesPlateRelList(shares_List, basedata.AccountId, db);
+
                 var groupRelList = (from x in db.t_account_shares_conditiontrade_buy_group_rel
                                     join x2 in db.t_account_shares_conditiontrade_buy_group on x.GroupId equals x2.Id
                                     where x2.AccountId == basedata.AccountId
@@ -23610,8 +23637,12 @@ select @buyId;";
                     //查询股票属于哪个板块
                     item.PlateList = (from x in plateList
                                       where x.Market == item.Market && x.SharesCode == item.SharesCode
-                                      orderby x.RiseRate descending
+                                      orderby x.Type, x.RiseRate descending
                                       select x).ToList();
+
+                    item.MySharesGroupList = (from x in myGroupRel
+                                              where x.SharesCode == item.SharesCode && x.Market == item.Market
+                                              select x.GroupId).ToList();
 
                     finallyResult.Add(item);
                 }
@@ -23621,9 +23652,22 @@ select @buyId;";
                                         group item by item.GroupId into g
                                         select new AccountShareGroupCountInfo
                                         {
+                                            AccountId=basedata.AccountId,
                                             GroupId = g.Key,
                                             SharesCount = g.Count()
                                         }).ToList();
+                var shareGroup = (from item in db.t_account_shares_group_share
+                                  join item2 in db.t_account_shares_group_share_rel on item.Id equals item2.ShareId
+                                  join item3 in db.t_account_shares_group_rel on new { item2.GroupId, item.AccountId } equals new { item3.GroupId, item3.AccountId }
+                                  where item.ShareAccountId == basedata.AccountId && item2.Status == 1
+                                  group new { item, item2, item3 } by new { item2.GroupId, item.AccountId } into g
+                                  select new AccountShareGroupCountInfo
+                                  {
+                                      AccountId = g.Key.AccountId,
+                                      GroupId = g.Key.GroupId,
+                                      SharesCount = g.Count()
+                                  }).ToList();
+                groupSharesCount.AddRange(shareGroup);
                 return new GetAccountShareGroupRelListRes
                 {
                     List= finallyResult,
@@ -23646,6 +23690,18 @@ select @buyId;";
             {
                 try
                 {
+                    bool ContainsZeor = false;
+                    if (request.GroupIdList.Contains(0))
+                    {
+                        ContainsZeor = true;
+                    }
+                    request.GroupIdList = (from item in db.t_account_shares_group
+                                           where request.GroupIdList.Contains(item.Id)
+                                           select item.Id).ToList();
+                    if (ContainsZeor)
+                    {
+                        request.GroupIdList.Add(0);
+                    }
                     var groupList = (from item in db.t_account_shares_group_rel
                                      where item.Market == request.Market && item.SharesCode == request.SharesCode && item.AccountId == basedata.AccountId
                                      select item).ToList();
@@ -23756,6 +23812,486 @@ select @buyId;";
                                 where item.AccountId == basedata.AccountId && item.Market == request.Market && item.SharesCode == request.SharesCode
                                 select item.GroupId).ToList();
                 return groupRel;
+            }
+        }
+
+        /// <summary>
+        /// 获取自选股主动共享分组列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<AccountSharesGroupShareActive> GetAccountSharesGroupShareActiveList(PageRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var groupInfo = from item in db.t_account_shares_group_share_rel
+                                join item2 in db.t_account_shares_group on item.GroupId equals item2.Id into a
+                                from ai in a.DefaultIfEmpty()
+                                select new { item, ai };
+                var groupShare = (from item in db.t_account_shares_group_share
+                                  join item2 in groupInfo on item.Id equals item2.item.ShareId into a
+                                  from ai in a.DefaultIfEmpty()
+                                  join item4 in db.t_account_baseinfo on item.ShareAccountId equals item4.Id
+                                  where item.AccountId == basedata.AccountId
+                                  group new { item, ai, item4 } by new { item, item4 } into g
+                                  select g).ToList();
+                int totalCount = groupShare.Count();
+
+                var result = (from item in groupShare
+                              orderby item.Key.item.ShareTime descending
+                              select new AccountSharesGroupShareActive
+                              {
+                                  ShareAccountId = item.Key.item.ShareAccountId,
+                                  ShareAccountMobile = item.Key.item4.Mobile,
+                                  ShareTime = item.Key.item.ShareTime,
+                                  Id = item.Key.item.Id,
+                                  ShareGroupList = (from x in item
+                                                    where x.ai != null
+                                                    orderby x.ai.item.CreateTime descending
+                                                    select new AccountSharesGroupInfo
+                                                    {
+                                                        GroupId = x.ai.item.GroupId,
+                                                        GroupName = x.ai.item.GroupId == 0 ? "我的自选" : x.ai.ai == null ? "" : x.ai.ai.GroupName
+                                                    }).ToList()
+                              }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+                return new PageRes<AccountSharesGroupShareActive> 
+                {
+                    List=result,
+                    MaxId=0,
+                    TotalCount=totalCount
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加自选股主动共享分组
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public void AddAccountSharesGroupShareActive(AddAccountSharesGroupShareActiveRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //判断共享账户是否存在
+                    var accountBase = (from item in db.t_account_baseinfo
+                                       where item.Mobile == request.ShareAccountMobile
+                                       select item).FirstOrDefault();
+                    if (accountBase == null)
+                    {
+                        throw new WebApiException(400,"共享账户不存在");
+                    }
+                    long shareAccountId = accountBase.Id;
+                    if (shareAccountId == basedata.AccountId)
+                    {
+                        throw new WebApiException(400, "不能授权自己");
+                    }
+
+                    //判断共享给的账户是否已经存在
+                    var share = (from item in db.t_account_shares_group_share
+                                 where item.AccountId == basedata.AccountId && item.ShareAccountId == shareAccountId
+                                 select item).FirstOrDefault();
+                    if (share != null)
+                    {
+                        throw new WebApiException(400,"共享账户已存在");
+                    }
+                    t_account_shares_group_share shareDB = new t_account_shares_group_share
+                    {
+                        ShareAccountId = shareAccountId,
+                        AccountId = basedata.AccountId,
+                        ShareTime = DateTime.Now,
+                        OrderIndex = -1
+                    };
+                    db.t_account_shares_group_share.Add(shareDB);
+                    db.SaveChanges();
+                    long ShareId = shareDB.Id;
+
+                    foreach (var groupId in request.GroupIdList)
+                    {
+                        db.t_account_shares_group_share_rel.Add(new t_account_shares_group_share_rel
+                        {
+                            ShareId = ShareId,
+                            Status = 2,
+                            CreateTime = DateTime.Now,
+                            GroupId = groupId,
+                            OrderIndex = -1
+                        });
+                    }
+                    db.SaveChanges();
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 编辑自选股主动共享分组
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifyAccountSharesGroupShareActive(ModifyAccountSharesGroupShareActiveRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //判断编辑的数据是否存在
+                    var disData = (from item in db.t_account_shares_group_share
+                                   where item.Id == request.Id && item.AccountId == basedata.AccountId
+                                   select item).FirstOrDefault();
+                    if (disData == null)
+                    {
+                        throw new WebApiException(400,"数据不存在");
+                    }
+                    long ShareId = disData.Id;
+                    //查询原共享分组
+                    var shareGroup = (from item in db.t_account_shares_group_share_rel
+                                      where item.ShareId == ShareId
+                                      select item).ToList();
+                    //删除当前不存在的分组
+                    var shareGroup_Del = (from item in shareGroup
+                                          where !request.GroupIdList.Contains(item.GroupId)
+                                          select item).ToList();
+                    if (shareGroup_Del.Count() > 0)
+                    {
+                        db.t_account_shares_group_share_rel.RemoveRange(shareGroup_Del);
+                        db.SaveChanges();
+                    }
+
+                    Dictionary<long, t_account_shares_group_share_rel> shareGroupDic = shareGroup.ToDictionary(k => k.GroupId, v => v);
+                    foreach (var groupId in request.GroupIdList)
+                    {
+                        if (!shareGroupDic.ContainsKey(groupId))
+                        {
+                            db.t_account_shares_group_share_rel.Add(new t_account_shares_group_share_rel
+                            {
+                                ShareId = ShareId,
+                                Status = 1,
+                                CreateTime = DateTime.Now,
+                                GroupId = groupId,
+                                OrderIndex = -1
+                            });
+                        }
+                    }
+                    db.SaveChanges();
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 删除自选股主动共享分组
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void DeleteAccountSharesGroupShareActive(DeleteRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities()) 
+            using (var tran = db.Database.BeginTransaction()) 
+            {
+                try
+                {
+                    //判断删除的数据是否存在
+                    var disData = (from item in db.t_account_shares_group_share
+                                   where item.Id == request.Id && (item.AccountId == basedata.AccountId || item.ShareAccountId==basedata.AccountId)
+                                   select item).FirstOrDefault();
+                    if (disData == null)
+                    {
+                        throw new WebApiException(400, "数据不存在");
+                    }
+                    long ShareId = disData.Id;
+                    //删除分组
+                    var shareGroup = (from item in db.t_account_shares_group_share_rel
+                                      where item.ShareId == ShareId
+                                      select item).ToList();
+                    if (shareGroup.Count() > 0)
+                    {
+                        db.t_account_shares_group_share_rel.RemoveRange(shareGroup);
+                        db.SaveChanges();
+                    }
+
+                    db.t_account_shares_group_share.Remove(disData);
+                    db.SaveChanges();
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+
+        }
+
+        /// <summary>
+        /// 获取自选股被共享分组列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<AccountSharesGroupSharePassive> GetAccountSharesGroupSharePassiveList(PageRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var group_share = from item in db.t_account_shares_group_share
+                                  join item2 in db.t_account_baseinfo on item.AccountId equals item2.Id
+                                  where item.ShareAccountId == basedata.AccountId
+                                  select new { item, item2 };
+                int totalCount = group_share.Count();
+
+                int maxOrderIndex = int.MaxValue;
+                var result = (from item in group_share
+                              let orderIndex = (item.item.OrderIndex == -1 ? maxOrderIndex : item.item.OrderIndex)
+                              orderby orderIndex, item.item.ShareTime
+                              select item).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                List<long> shareIdList = result.Select(e => e.item.Id).ToList();
+                var group_share_rel = (from item in db.t_account_shares_group_share_rel
+                                       join item2 in db.t_account_shares_group on item.GroupId equals item2.Id into a from ai in a.DefaultIfEmpty()
+                                       where shareIdList.Contains(item.ShareId)
+                                       select new { item, ai }).ToList();
+
+                var disResult = (from item in result
+                                 join item2 in group_share_rel on item.item.Id equals item2.item.ShareId
+                                 let orderIndex = (item.item.OrderIndex == -1 ? maxOrderIndex : item.item.OrderIndex)
+                                 let group_orderIndex = (item2.item.OrderIndex == -1 ? maxOrderIndex : item2.item.OrderIndex)
+                                 where item2.ai!=null || item2.item.GroupId == 0
+                                 orderby orderIndex, item.item.ShareTime, item.item.Id, group_orderIndex, item2.item.CreateTime
+                                 select new AccountSharesGroupSharePassive
+                                 {
+                                     ShareTime = item.item.ShareTime,
+                                     AccountId = item.item.AccountId,
+                                     AccountMobile = item.item2.Mobile,
+                                     Id = item.item.Id,
+                                     OrderIndex = item.item.OrderIndex,
+                                     RelId = item2.item.Id,
+                                     GroupShareTime = item2.item.CreateTime,
+                                     GroupStatus = item2.item.Status,
+                                     GroupId = item2.item.GroupId,
+                                     GroupName = item2.item.GroupId == 0 ? "我的自选" : item2.ai == null ? "" : item2.ai.GroupName,
+                                     GroupOrderIndex = item2.item.OrderIndex,
+                                     MergeCount=0
+                                 }).ToList();
+                long lastId = 0;
+                int mergeCount = 0;
+                AccountSharesGroupSharePassive temp = new AccountSharesGroupSharePassive();
+                for (int i=0;i<disResult.Count();i++)
+                {
+                    if (disResult[i].Id != lastId)
+                    {
+                        temp.MergeCount = mergeCount;
+                        temp = disResult[i];
+                        mergeCount = 0;
+                        lastId = disResult[i].Id;
+                    }
+                    mergeCount++;
+                    if (i == disResult.Count() - 1)
+                    {
+                        temp.MergeCount = mergeCount;
+                    }
+                }
+                return new PageRes<AccountSharesGroupSharePassive> 
+                {
+                    MaxId=0,
+                    TotalCount=totalCount,
+                    List= disResult
+                };
+            }
+        }
+
+        /// <summary>
+        /// 修改自选股被共享分组排序值
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifyAccountSharesGroupSharePassiveOrderIndex(ModifyOrderIndexRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var group_share = (from item in db.t_account_shares_group_share
+                                   where item.Id == request.Id && item.ShareAccountId == basedata.AccountId
+                                   select item).FirstOrDefault();
+                if (group_share == null)
+                {
+                    throw new WebApiException(400,"数据不存在");
+                }
+                group_share.OrderIndex = request.OrderIndex;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改自选股被共享分组分组排序值
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifyAccountSharesGroupSharePassiveGroupOrderIndex(ModifyOrderIndexRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var group_share = (from item in db.t_account_shares_group_share_rel
+                                   where item.Id == request.Id
+                                   select item).FirstOrDefault();
+                if (group_share == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                group_share.OrderIndex = request.OrderIndex;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改自选股被共享分组是否可见
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifyAccountSharesGroupSharePassiveStatus(ModifyStatusRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var group_share = (from item in db.t_account_shares_group_share_rel
+                                   where item.Id == request.Id
+                                   select item).FirstOrDefault();
+                if (group_share == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                group_share.Status = request.Status;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取股票所属基础板块
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public List<SharesBasePlateInfo> GetSharesBasePlateList(GetSharesBasePlateListRequest request, HeadBase basedata)
+        {
+            if (request.ForceType == 0)
+            {
+                request.ForceType = 3;
+            }
+            using (var db = new meal_ticketEntities())
+            {
+                var accountTagDic = (from item in db.t_shares_plate_rel_tag_account
+                                     where item.AccountId == basedata.AccountId && item.SharesCode == request.SharesCode && item.Market == request.Market
+                                     select item).ToList().ToDictionary(k => k.PlateId, v => v);
+                var plateList = (from item in Singleton.Instance._SharesPlateRelSession.GetSessionData()
+                                 join item2 in Singleton.Instance._SharesPlateSession.GetSessionData() on item.PlateId equals item2.PlateId
+                                 where item.Market == request.Market && item.SharesCode == request.SharesCode && item2.BaseStatus == 1 && item2.PlateType == 3
+                                 select new SharesBasePlateInfo
+                                 {
+                                     PlateId = item.PlateId,
+                                     PlateName = item2.PlateName
+                                 }).ToList();
+                var Plate_Tag_Force_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_Force_Session();
+                var Plate_Tag_TrendLike_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_TrendLike_Session();
+
+                long key1 = long.Parse(request.SharesCode) * 10 + request.Market;
+                Dictionary<long,Plate_Tag_TrendLike_Session_Info> Plate_Tag_TrendLike_SessionDic = null;
+                if (Plate_Tag_TrendLike_Session.ContainsKey(key1))
+                {
+                    Plate_Tag_TrendLike_SessionDic = Plate_Tag_TrendLike_Session[key1];
+                }
+                long key2= long.Parse(request.SharesCode) * 1000 + request.Market*100+request.ForceType;
+                Dictionary<long, Plate_Tag_Force_Session_Info> Plate_Tag_Force_SessionDic = null;
+                if (Plate_Tag_Force_Session.ContainsKey(key2))
+                {
+                    Plate_Tag_Force_SessionDic = Plate_Tag_Force_Session[key2];
+                }
+                foreach (var item in plateList)
+                {
+                    if (accountTagDic.ContainsKey(item.PlateId))
+                    {
+                        item.IsFocusOn = accountTagDic[item.PlateId].IsFocusOn;
+                    }
+                    else
+                    {
+                        item.IsFocusOn = false;
+                    }
+                    if (Plate_Tag_TrendLike_SessionDic != null && Plate_Tag_TrendLike_SessionDic.ContainsKey(item.PlateId))
+                    {
+                        item.IsTrendLike = Plate_Tag_TrendLike_SessionDic[item.PlateId].IsTrendLike;
+                    }
+                    else
+                    {
+                        item.IsTrendLike = false;
+                    }
+                    if (Plate_Tag_Force_SessionDic != null && Plate_Tag_Force_SessionDic.ContainsKey(item.PlateId))
+                    {
+                        item.IsForce1 = Plate_Tag_Force_SessionDic[item.PlateId].IsForce1;
+                        item.IsForce2 = Plate_Tag_Force_SessionDic[item.PlateId].IsForce2;
+                    }
+                    else
+                    {
+                        item.IsForce1 = false;
+                        item.IsForce2 = false;
+                    }
+                }
+                return plateList;
+            }
+        }
+
+        /// <summary>
+        /// 设置股票所属基础板块标记
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifySharesBasePlateTag(ModifySharesBasePlateTagRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran=db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var accountTag = (from item in db.t_shares_plate_rel_tag_account
+                                      where item.AccountId == basedata.AccountId && item.Market == request.Market && item.SharesCode == request.SharesCode
+                                      select item).ToList();
+                    if (accountTag.Count() > 0)
+                    {
+                        db.t_shares_plate_rel_tag_account.RemoveRange(accountTag);
+                        db.SaveChanges();
+                    }
+
+                    foreach (var item in request.ParList)
+                    {
+                        db.t_shares_plate_rel_tag_account.Add(new t_shares_plate_rel_tag_account 
+                        {
+                            SharesCode=request.SharesCode,
+                            Market=request.Market,
+                            AccountId=basedata.AccountId,
+                            PlateId=item.PlateId,
+                            IsFocusOn=item.IsFocusOn
+                        });
+                    }
+                    db.SaveChanges();
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
             }
         }
         #endregion

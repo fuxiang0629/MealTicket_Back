@@ -262,5 +262,13 @@ namespace MealTicket_Web_Handler.Model
                 return (int)(DaysNowAvgDealCount * 1.0 / CirculatingCapital * 10000);
             }
         }
+
+        public List<long> MySharesGroupList { get; set; }
+
+        public long ConditionId { get; set; }
+
+        public int ConditionStatus { get; set; }
+
+        public List<long> GroupList { get; set; }
     }
 }

@@ -3972,29 +3972,67 @@ select @buyId;";
                                       join item2 in db.t_sys_conditiontrade_template_search on item.Id equals item2.TemplateId
                                       where item.Status == 1 && item.Type == 5
                                       select item2).ToList();
-                Dictionary<long, List<SharesBase_Session>> totalDic = new Dictionary<long, List<SharesBase_Session>>();
+                int templateCount = searchTemplate.Count();
+                if (templateCount == 0)
+                {
+                    return;
+                }
+
+                ThreadMsgTemplate<t_sys_conditiontrade_template_search> data = new ThreadMsgTemplate<t_sys_conditiontrade_template_search>();
+                data.Init();
                 foreach (var item in searchTemplate)
                 {
-                    List<dynamic> searchList = JsonConvert.DeserializeObject<List<dynamic>>(item.TemplateContent);
-                    List<searchInfo> searchPar = new List<searchInfo>();
-                    foreach (var x in searchList)
-                    {
-                        int connect = x.connect;
-                        int leftbracket = string.IsNullOrEmpty(Convert.ToString(x.leftbracket))?0:Convert.ToInt32(x.leftbracket);
-                        int rightbracket = string.IsNullOrEmpty(Convert.ToString(x.rightbracket)) ? 0 : Convert.ToInt32(x.rightbracket);
-                        int type = x.type;
-                        searchPar.Add(new searchInfo
-                        {
-                            connect = connect,
-                            content = JsonConvert.SerializeObject(x.content),
-                            leftbracket= leftbracket,
-                            rightbracket= rightbracket,
-                            type=type
-                        });
-                    }
-                    var result = handler.GetEligibleSharesBatch(searchPar);
-                    totalDic.Add(item.TemplateId, result.Distinct().ToList());
+                    data.AddMessage(item);
                 }
+
+                int taskCount = Singleton.Instance.MaxTrendCheckTaskCount;
+                if (templateCount < taskCount)
+                {
+                    taskCount = templateCount;
+                }
+
+                Dictionary<long, List<SharesBase_Session>> totalDic = new Dictionary<long, List<SharesBase_Session>>();
+                object totalDicLock=new object();
+                Task[] taskArr = new Task[taskCount];
+                for (int idx = 0; idx < taskCount; idx++)
+                {
+                    taskArr[idx] = Task.Factory.StartNew(()=> 
+                    {
+                        do 
+                        {
+                            t_sys_conditiontrade_template_search tempData = new t_sys_conditiontrade_template_search();
+                            if (!data.GetMessage(ref tempData, true))
+                            {
+                                break;
+                            }
+                            List<dynamic> searchList = JsonConvert.DeserializeObject<List<dynamic>>(tempData.TemplateContent);
+                            List<searchInfo> searchPar = new List<searchInfo>();
+                            foreach (var x in searchList)
+                            {
+                                int connect = x.connect;
+                                int leftbracket = string.IsNullOrEmpty(Convert.ToString(x.leftbracket)) ? 0 : Convert.ToInt32(x.leftbracket);
+                                int rightbracket = string.IsNullOrEmpty(Convert.ToString(x.rightbracket)) ? 0 : Convert.ToInt32(x.rightbracket);
+                                int type = x.type;
+                                searchPar.Add(new searchInfo
+                                {
+                                    connect = connect,
+                                    content = JsonConvert.SerializeObject(x.content),
+                                    leftbracket = leftbracket,
+                                    rightbracket = rightbracket,
+                                    type = type
+                                });
+                            }
+                            var result = handler.GetEligibleSharesBatch(searchPar);
+                            lock (totalDicLock)
+                            {
+                                totalDic.Add(tempData.TemplateId, result.Distinct().ToList());
+                            }
+
+                        } while (true);
+                    });
+                }
+                Task.WaitAll(taskArr);
+                data.Release();
 
                 DateTime dateNow = Helper.GetLastTradeDate(-9, 0, 0);
                 foreach (var dic in totalDic)

@@ -50,4 +50,6 @@ F:\项目\饭票后端\FXCommon\obj\Debug\FXCommon.csproj.CoreCompileInputs.cach
 F:\项目\饭票后端\FXCommon\obj\Debug\FXCommon.csproj.CopyComplete
 F:\项目\饭票后端\FXCommon\obj\Debug\FXCommon.dll
 F:\项目\饭票后端\FXCommon\obj\Debug\FXCommon.pdb
+F:\项目\饭票后端\FXCommon\bin\Debug\PInvoke.Windows.Core.dll
+F:\项目\饭票后端\FXCommon\bin\Debug\PInvoke.Windows.Core.xml
 F:\项目\饭票后端\FXCommon\obj\Debug\FXCommon.csprojAssemblyReference.cache

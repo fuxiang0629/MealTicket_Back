@@ -390,7 +390,6 @@ update t_shares_monitor set DataType=0 where DataType=1 and SharesInfo in ({0});
             Logger.WriteFileLog("开始加载数据====="+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")+"=============",null);
             try
             {
-                Logger.WriteFileLog("加载数据节点1=====" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "=============", null);
                 var sharesList = (from item in list
                                   group item by new { item.Market, item.SharesCode } into g
                                   select new SharesInfo
@@ -398,9 +397,7 @@ update t_shares_monitor set DataType=0 where DataType=1 and SharesInfo in ({0});
                                       Market = g.Key.Market,
                                       SharesCode = g.Key.SharesCode
                                   }).ToList();
-                Logger.WriteFileLog("加载数据节点2=====" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "=============", null);
                 var priceDic = GetStockPriceBatch(sharesList);
-                Logger.WriteFileLog("加载数据节点3=====" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "=============", null);
                 if (priceDic.Count == 0)
                 {
                     return false;
@@ -419,7 +416,6 @@ update t_shares_monitor set DataType=0 where DataType=1 and SharesInfo in ({0});
                                        lTradePrice = t.lTradeAmount,
                                        iBalancePrice = t.iTradeStock == 0 ? 0 : (int)(t.lTradeAmount / t.iTradeStock)
                                    }).ToList());
-                Logger.WriteFileLog("加载数据节点4=====" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "=============", null);
 
                 DateTime lastTime = DateTime.Now;
                 if (lastTime > DateTime.Parse(lastTime.ToString("yyyy-MM-dd 15:00:00")))
@@ -466,7 +462,6 @@ update t_shares_monitor set DataType=0 where DataType=1 and SharesInfo in ({0});
                     }
                 }
 
-                Logger.WriteFileLog("加载数据节点5=====" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "=============", null);
                 foreach (var item in priceDic)
                 {
                     item.Value.openingInfo = parDataList[item.Key].Where(e => e.dtTradeTime == DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd 09:25:00"))).FirstOrDefault();
@@ -476,7 +471,6 @@ update t_shares_monitor set DataType=0 where DataType=1 and SharesInfo in ({0});
                     item.Value.topInfo2 = parDataList[item.Key].OrderByDescending(e => e.iLastestPrice).ThenBy(e => e.dtTradeTime).FirstOrDefault();
                     item.Value.lowestInfo2 = parDataList[item.Key].OrderBy(e => e.iLastestPrice).ThenBy(e => e.dtTradeTime).FirstOrDefault();
                 }
-                Logger.WriteFileLog("加载数据节点6=====" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "=============", null);
                 List<LOAD_TRADE_PRICE_INFO> tempList = new List<LOAD_TRADE_PRICE_INFO>();
                 foreach (var item in sharesList)
                 {
@@ -489,10 +483,8 @@ update t_shares_monitor set DataType=0 where DataType=1 and SharesInfo in ({0});
                     });
                 }
 
-                Logger.WriteFileLog("加载数据节点7=====" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "=============", null);
 
                 var error = Singleton.Instance.m_stockMonitor.LoadTradePriceInfoBat(tempList);
-                Logger.WriteFileLog("完成加载数据=====" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff") + "=============", null);
                 if (error <= 0)
                 {
                     Logger.WriteFileLog("走势分笔数据内存加载报错" + error, null);

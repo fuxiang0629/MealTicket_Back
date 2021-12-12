@@ -10,10 +10,37 @@ namespace SharesHqService
 {
     public class BusinessTableUpdateRunner : Runner
     {
+        //是否可以进入行情业务更新
+        object quotesBusinessLock = new object();
+        private bool QuotesBusinessCanEnter = true;
+
+        private bool TryQuotesBusinessCanEnter()
+        {
+            lock (quotesBusinessLock)
+            {
+                if (!QuotesBusinessCanEnter) { return false; }
+
+                QuotesBusinessCanEnter = false;
+            }
+
+            return true;
+        }
+
+        private bool TryQuotesBusinessCanLeave()
+        {
+            lock (quotesBusinessLock)
+            {
+                if (QuotesBusinessCanEnter) { return false; }
+
+                QuotesBusinessCanEnter = true;
+            }
+
+            return true;
+        }
 
         public BusinessTableUpdateRunner()
         {
-            SleepTime = Singleton.Instance.BusinessRunTime;
+            SleepTime = Singleton.Instance.session.GetBusinessRunTime();
             Name = "BusinessTableUpdateRunner";
         }
 
@@ -21,13 +48,14 @@ namespace SharesHqService
         {
             get
             {
+                SleepTime = Singleton.Instance.session.GetBusinessRunTime();
                 return (Singleton.Instance.GetIsRun() && Helper.CheckTradeTimeForQuotes());
             }
         }
 
         public override void Execute()
         {
-            if (!Singleton.Instance.TryQuotesBusinessCanEnter())
+            if (!TryQuotesBusinessCanEnter())
             {
                 return;
             }
@@ -43,7 +71,7 @@ namespace SharesHqService
                 }
                 finally
                 {
-                    Singleton.Instance.TryQuotesBusinessCanLeave();
+                    TryQuotesBusinessCanLeave();
                 }
             });
             task.Start();

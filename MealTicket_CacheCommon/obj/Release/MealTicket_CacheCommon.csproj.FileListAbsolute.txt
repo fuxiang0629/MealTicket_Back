@@ -59,7 +59,6 @@ F:\项目\饭票后端\MealTicket_CacheCommon\bin\Release\zh-Hans\EntityFramewor
 F:\项目\饭票后端\MealTicket_CacheCommon\bin\Release\MealTicket_CacheCommon_Session.dll
 F:\项目\饭票后端\MealTicket_CacheCommon\bin\Release\MealTicket_CacheCommon_Session.pdb
 F:\项目\饭票后端\MealTicket_CacheCommon\bin\Release\MealTicket_CacheCommon_Session.dll.config
-F:\项目\饭票后端\MealTicket_CacheCommon\obj\Release\MealTicket_CacheCommon.exe.config
 D:\项目\饭票\后端\MealTicket_CacheCommon\bin\Release\MealTicket_CacheCommon.exe.config
 D:\项目\饭票\后端\MealTicket_CacheCommon\bin\Release\MealTicket_CacheCommon.exe
 D:\项目\饭票\后端\MealTicket_CacheCommon\bin\Release\MealTicket_CacheCommon.pdb

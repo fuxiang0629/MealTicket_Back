@@ -23,6 +23,7 @@ namespace SecurityBarsDataUpdate
                 }
             }
 
+            session.Init();
             var mqHandler = session.StartMqHandler("SecurityBars_1min");
             mqHandler.StartListen();
             Console.WriteLine("程序已启动,按任意键退出");

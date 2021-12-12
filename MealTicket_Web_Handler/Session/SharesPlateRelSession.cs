@@ -18,7 +18,7 @@ namespace MealTicket_Web_Handler
         {
             using (var db = new meal_ticketEntities())
             {
-                string sql = "select PlateId,Market,SharesCode from t_shares_plate_rel with(nolock)";
+                string sql = @"select t.PlateId,t.Market,t.SharesCode from t_shares_plate_rel t ";
                 var result = db.Database.SqlQuery<SharesPlateRelInfo_Session>(sql).ToList();
                 return result;
             }

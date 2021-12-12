@@ -35,7 +35,6 @@ F:\项目\饭票后端\SharesHqService_Level2\bin\Release\System.Threading.Tasks
 F:\项目\饭票后端\SharesHqService_Level2\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
 F:\项目\饭票后端\SharesHqService_Level2\bin\Release\System.Buffers.xml
 F:\项目\饭票后端\SharesHqService_Level2\bin\Release\System.Numerics.Vectors.xml
-F:\项目\饭票后端\SharesHqService_Level2\obj\Release\SharesHqService_Level2.exe.config
 F:\项目\饭票后端\SharesHqService_Level2\obj\Release\SharesHqService_Level2.csproj.CopyComplete
 D:\项目\饭票\后端\SharesHqService_Level2\bin\Release\FXCommon.dll
 D:\项目\饭票\后端\SharesHqService_Level2\bin\Release\StockMarket.dll

@@ -79,7 +79,7 @@ namespace MealTicket_Web_Handler
         /// </summary>
         public int QuotesDaysShow = 20;
 
-        public int MaxTrendCheckTaskCount = 32;
+        public int MaxTrendCheckTaskCount = 4;
 
         /// <summary>
         /// 监控搜索间隔
@@ -185,6 +185,10 @@ namespace MealTicket_Web_Handler
 
         private Singleton()
         {
+            sessionHandler = new SessionHandler();
+            sessionHandler.UpdateSessionManual();
+            sessionHandler.StartUpdate();
+
             PlateIndexTypeDic.Clear();
             PlateIndexTypeDic.Add(0, 2);//其他 1加权 2不加权
             PlateIndexTypeDic.Add(1, 2);//板块指数
@@ -292,6 +296,14 @@ namespace MealTicket_Web_Handler
             if (quotesMQHandler != null)
             {
                 quotesMQHandler.Dispose();
+            }
+            if (sharesPlateTagMQHandler != null)
+            {
+                sharesPlateTagMQHandler.Dispose();
+            }
+            if (sessionHandler != null)
+            {
+                sessionHandler.Dispose();
             }
         }
 
@@ -510,7 +522,16 @@ namespace MealTicket_Web_Handler
                     if (sysPar != null)
                     {
                         var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
-                        SearchInterval = sysValue.SearchInterval;
+                        int tempSearchInterval = sysValue.SearchInterval;
+                        if (tempSearchInterval > 0)
+                        {
+                            SearchInterval = tempSearchInterval;
+                        }
+                        int tempMaxTrendCheckTaskCount= sysValue.TempThreadCount;
+                        if (tempMaxTrendCheckTaskCount > 0)
+                        {
+                            MaxTrendCheckTaskCount = tempMaxTrendCheckTaskCount;
+                        }
                     }
                 }
                 catch { }
@@ -688,6 +709,25 @@ namespace MealTicket_Web_Handler
             return quotesMQHandler;
         }
 
+        /// <summary>
+        /// 队列对象
+        /// </summary>
+        public SharesPlateTagMQHandler sharesPlateTagMQHandler;
+        /// <summary>
+        /// 启动Mq队列
+        /// </summary>
+        public SharesPlateTagMQHandler StartSharesPlateTagMQHandler()
+        {
+            string hostName = ConfigurationManager.AppSettings["MQ_HostName"];
+            int port = int.Parse(ConfigurationManager.AppSettings["MQ_Port"]);
+            string userName = ConfigurationManager.AppSettings["MQ_UserName"];
+            string password = ConfigurationManager.AppSettings["MQ_Password"];
+            string virtualHost = ConfigurationManager.AppSettings["MQ_VirtualHost"];
+            sharesPlateTagMQHandler = new SharesPlateTagMQHandler(hostName, port, userName, password, virtualHost);
+            sharesPlateTagMQHandler.ListenQueueName = "SharesPlateTagNotice";//设置监听队列
+            return sharesPlateTagMQHandler;
+        }
+
 
         /// <summary>
         /// 分笔数据处理任务
@@ -711,6 +751,8 @@ namespace MealTicket_Web_Handler
 
             var quotesMQHandler = StartQuotesMQHandler();//生成Mq队列对象
             quotesMQHandler.StartListen();
+            var sharesPlateTagMQHandler = StartSharesPlateTagMQHandler();//生成Mq队列对象
+            sharesPlateTagMQHandler.StartListen();
 
             _SharesQuotesSession.StartUpdate(3000);
             _SharesBaseSession.StartUpdate(600000);
@@ -738,5 +780,7 @@ namespace MealTicket_Web_Handler
         public AccountSearchTriSession _AccountSearchTriSession = new AccountSearchTriSession();
         public SharesHisRiseRateSession _SharesHisRiseRateSession = new SharesHisRiseRateSession();
         # endregion
+
+        public SessionHandler sessionHandler;
     }
 }

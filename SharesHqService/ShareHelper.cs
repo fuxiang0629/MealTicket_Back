@@ -142,9 +142,9 @@ namespace SharesHqService
         {
             List<SharesBaseInfo> list = new List<SharesBaseInfo>();
             //拼接所有股票
-            List<SharesBaseInfo> tempList = Singleton.Instance._getSharesBaseInfoList();
-            Regex regex0 = new Regex(Singleton.Instance.SharesCodeMatch0);
-            Regex regex1 = new Regex(Singleton.Instance.SharesCodeMatch1);
+            List<SharesBaseInfo> tempList = Singleton.Instance.session.GetSharesBaseInfoList();
+            Regex regex0 = new Regex(Singleton.Instance.session.GetSharesCodeMatch0());
+            Regex regex1 = new Regex(Singleton.Instance.session.GetSharesCodeMatch1());
             tempList = (from item in tempList
                         where regex0.IsMatch(item.ShareCode) || regex1.IsMatch(item.ShareCode)
                         select item).ToList();
@@ -154,7 +154,7 @@ namespace SharesHqService
             List<SharesQuotesInfo> resultlist = new List<SharesQuotesInfo>();
           
             //计算分页数量
-            int QuotesCount = Singleton.Instance.QuotesCount;
+            int QuotesCount = Singleton.Instance.session.GetQuotesCount();
             int totalCount = list.Count();
             int pageSize;
             if (totalCount % QuotesCount == 0)
@@ -181,9 +181,9 @@ namespace SharesHqService
                 tArr[i] = new Task((tdx_result) =>
                 {
                     StringBuilder sErrInfo = new StringBuilder(256);
-                    StringBuilder sResult = new StringBuilder(2048*Singleton.Instance.QuotesCount);
-                    byte[] nMarketArr = new byte[Singleton.Instance.QuotesCount];
-                    string[] pszZqdmArr = new string[Singleton.Instance.QuotesCount];
+                    StringBuilder sResult = new StringBuilder(2048* QuotesCount);
+                    byte[] nMarketArr = new byte[QuotesCount];
+                    string[] pszZqdmArr = new string[QuotesCount];
                     int hqClient = Singleton.Instance.GetHqClient();
                     try
                     {

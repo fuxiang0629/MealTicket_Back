@@ -87,6 +87,8 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ServiceModule.cs" />
+    <Compile Include="Session\HqServerParInfo.cs" />
+    <Compile Include="Session\SessionHandler.cs" />
     <Compile Include="ShareData\HostInfo.cs" />
     <Compile Include="ShareData\SharesBarsInfo.cs" />
     <Compile Include="ShareData\SharesBaseInfo.cs" />
