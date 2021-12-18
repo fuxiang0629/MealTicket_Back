@@ -1,16 +1,40 @@
-删除表t_shares_plate_rel_tag
-t_shares_plate_rel_tag_force
-t_shares_plate_rel_tag_trendlike
-t_shares_plate_rel_tag_focuson
-P_GetPlate_Quotes_Date_Session
-P_GetPlate_Quotes_Today_Session
-P_GetShares_Quotes_Date_Session
-P_GetShares_Quotes_Today_Session
+t_plate_shares_rel_tag_setting
+t_plate_shares_rel_tag_setting_details
+t_shares_plate_rel_tag_focuson_date  	tag_focuson_tri
+t_shares_plate_rel_tag_force_date  	tag_force_tri
+t_shares_plate_rel_tag_trendlike_date   	tag_trendlike_tri
+t_plate_shares_rel_tag_leader  		tag_leader_tri
+t_plate_shares_rel_tag_leader_date
+t_plate_shares_rel_tag_dayleader	tag_dayleader_tri
+t_plate_shares_rel_tag_dayleader_date
+t_plate_shares_rel_tag_mainarmy	tag_mainarmy_tri
+t_plate_shares_rel_tag_mainarmy_date
 
-PlateTagForceSessionInfo  P_Plate_Tag_Force_Session_Update
 PlateTagTrendLikeSessionInfo P_Plate_Tag_TrendLike_Session_Update
+SharesTagLeaderSessionInfo  P_Shares_Tag_Leader_Session_Update
+SharesTagDayLeaderSessionInfo  P_Shares_Tag_DayLeader_Session_Update
+SharesTagMainArmySessionInfo  P_Shares_Tag_MainArmy_Session_Update
 
 
+  insert into t_plate_shares_rel_tag_setting
+  (Name,[Description],[Type],[Status],DefaultCount,CreateTime,LastModified)
+  values('日内龙头','日内龙头',1,1,1,getdate(),getdate())
+  insert into t_plate_shares_rel_tag_setting
+  (Name,[Description],[Type],[Status],DefaultCount,CreateTime,LastModified)
+  values('龙头','龙头',2,1,1,getdate(),getdate())
+  insert into t_plate_shares_rel_tag_setting
+  (Name,[Description],[Type],[Status],DefaultCount,CreateTime,LastModified)
+  values('中军','中军',3,1,1,getdate(),getdate())
   insert into t_system_param
   (ParamName,[Description],ParamValue,IsJson,CreateTime,LastModified)
-  values('PlateTagCalPar','板块标签计算参数','{"TrendLikeDays":5,"PlateTagCalIntervalTime":3000}',1,getdate(),getdate())
+  values('MtlineSuperpositionPar','分时叠加参数','{"MaxCheckedCount":5,"MtLineColorList":"#1878dd,#d628d9,#abb511,#d51123,#21b548"}',1,getdate(),getdate())
+  insert into t_system_param
+  (ParamName,[Description],ParamValue,IsJson,CreateTime,LastModified)
+  values('VolumeRatePar','量比计算参数','{"SharesStockCal_MinMinute":5,"SharesStockCal_IntervalMinute":15}',1,getdate(),getdate())
+
+  alter table t_shares_plate_rel_tag_trendlike add Score int not null default -1;
+
+
+
+P_GetShares_Quotes_Date_Session
+P_GetShares_Quotes_Today_Session
