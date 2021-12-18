@@ -4149,6 +4149,17 @@
     <EntitySet Name="t_shares_plate_rel_tag_focuson" EntityType="meal_ticketModel.t_shares_plate_rel_tag_focuson" />
     <EntitySet Name="t_shares_plate_rel_tag_force" EntityType="meal_ticketModel.t_shares_plate_rel_tag_force" />
     <EntitySet Name="t_shares_plate_rel_tag_trendlike" EntityType="meal_ticketModel.t_shares_plate_rel_tag_trendlike" />
+    <EntitySet Name="t_plate_shares_rel_tag_setting" EntityType="meal_ticketModel.t_plate_shares_rel_tag_setting" />
+    <EntitySet Name="t_plate_shares_rel_tag_setting_details" EntityType="meal_ticketModel.t_plate_shares_rel_tag_setting_details" />
+    <EntitySet Name="t_plate_shares_rel_tag_dayleader" EntityType="meal_ticketModel.t_plate_shares_rel_tag_dayleader" />
+    <EntitySet Name="t_plate_shares_rel_tag_dayleader_date" EntityType="meal_ticketModel.t_plate_shares_rel_tag_dayleader_date" />
+    <EntitySet Name="t_plate_shares_rel_tag_leader" EntityType="meal_ticketModel.t_plate_shares_rel_tag_leader" />
+    <EntitySet Name="t_plate_shares_rel_tag_leader_date" EntityType="meal_ticketModel.t_plate_shares_rel_tag_leader_date" />
+    <EntitySet Name="t_plate_shares_rel_tag_mainarmy" EntityType="meal_ticketModel.t_plate_shares_rel_tag_mainarmy" />
+    <EntitySet Name="t_plate_shares_rel_tag_mainarmy_date" EntityType="meal_ticketModel.t_plate_shares_rel_tag_mainarmy_date" />
+    <EntitySet Name="t_shares_plate_rel_tag_focuson_date" EntityType="meal_ticketModel.t_shares_plate_rel_tag_focuson_date" />
+    <EntitySet Name="t_shares_plate_rel_tag_force_date" EntityType="meal_ticketModel.t_shares_plate_rel_tag_force_date" />
+    <EntitySet Name="t_shares_plate_rel_tag_trendlike_date" EntityType="meal_ticketModel.t_shares_plate_rel_tag_trendlike_date" />
   </EntityContainer>
   <EntityType Name="t_account_baseinfo">
     <Key>
@@ -5394,5 +5405,136 @@
     <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="PlateId" Type="Int64" Nullable="false" />
     <Property Name="IsTrendLike" Type="Boolean" Nullable="false" />
+    <Property Name="Score" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_plate_shares_rel_tag_setting">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="DefaultCount" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_plate_shares_rel_tag_setting_details">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SettingType" Type="Int32" Nullable="false" />
+    <Property Name="BaseCount" Type="Int32" Nullable="false" />
+    <Property Name="DisCount" Type="Int32" Nullable="false" />
+    <Property Name="Status" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_plate_shares_rel_tag_dayleader">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="DayLeaderType" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_plate_shares_rel_tag_dayleader_date">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="DayLeaderType" Type="Int32" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_plate_shares_rel_tag_leader">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="LeaderType" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_plate_shares_rel_tag_leader_date">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="LeaderType" Type="Int32" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_plate_shares_rel_tag_mainarmy">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="MainArmyType" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_plate_shares_rel_tag_mainarmy_date">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="MainArmyType" Type="Int32" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_rel_tag_focuson_date">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="IsFocusOn" Type="Boolean" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_rel_tag_force_date">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Type" Type="Int32" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="IsForce1" Type="Boolean" Nullable="false" />
+    <Property Name="IsForce2" Type="Boolean" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_plate_rel_tag_trendlike_date">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="IsTrendLike" Type="Boolean" Nullable="false" />
+    <Property Name="Score" Type="Int32" Nullable="false" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
 </Schema>

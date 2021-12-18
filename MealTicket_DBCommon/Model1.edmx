@@ -2191,6 +2191,100 @@
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="t_plate_shares_rel_tag_dayleader">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="PlateId" Type="bigint" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="DayLeaderType" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_plate_shares_rel_tag_dayleader_date">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="PlateId" Type="bigint" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="DayLeaderType" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_plate_shares_rel_tag_leader">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="PlateId" Type="bigint" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="LeaderType" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_plate_shares_rel_tag_leader_date">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="PlateId" Type="bigint" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="LeaderType" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_plate_shares_rel_tag_mainarmy">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="PlateId" Type="bigint" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="MainArmyType" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_plate_shares_rel_tag_mainarmy_date">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="PlateId" Type="bigint" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="MainArmyType" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_plate_shares_rel_tag_setting">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="500" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="DefaultCount" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_plate_shares_rel_tag_setting_details">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SettingType" Type="int" Nullable="false" />
+          <Property Name="BaseCount" Type="int" Nullable="false" />
+          <Property Name="DisCount" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="t_platform_wallet">
           <Key>
             <PropertyRef Name="Id" />
@@ -2921,6 +3015,17 @@
           <Property Name="PlateId" Type="bigint" Nullable="false" />
           <Property Name="IsFocusOn" Type="bit" Nullable="false" />
         </EntityType>
+        <EntityType Name="t_shares_plate_rel_tag_focuson_date">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="PlateId" Type="bigint" Nullable="false" />
+          <Property Name="IsFocusOn" Type="bit" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="t_shares_plate_rel_tag_force">
           <Key>
             <PropertyRef Name="Id" />
@@ -2932,6 +3037,19 @@
           <Property Name="PlateId" Type="bigint" Nullable="false" />
           <Property Name="IsForce1" Type="bit" Nullable="false" />
           <Property Name="IsForce2" Type="bit" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_plate_rel_tag_force_date">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="PlateId" Type="bigint" Nullable="false" />
+          <Property Name="IsForce1" Type="bit" Nullable="false" />
+          <Property Name="IsForce2" Type="bit" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_plate_rel_tag_setting">
           <Key>
@@ -2951,6 +3069,19 @@
           <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
           <Property Name="PlateId" Type="bigint" Nullable="false" />
           <Property Name="IsTrendLike" Type="bit" Nullable="false" />
+          <Property Name="Score" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_plate_rel_tag_trendlike_date">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="PlateId" Type="bigint" Nullable="false" />
+          <Property Name="IsTrendLike" Type="bit" Nullable="false" />
+          <Property Name="Score" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_plate_riserate">
           <Key>
@@ -5298,6 +5429,14 @@
           <EntitySet Name="t_payment_channel" EntityType="Self.t_payment_channel" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_payment_channel_account_rel" EntityType="Self.t_payment_channel_account_rel" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_payment_channel_group" EntityType="Self.t_payment_channel_group" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_plate_shares_rel_tag_dayleader" EntityType="Self.t_plate_shares_rel_tag_dayleader" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_plate_shares_rel_tag_dayleader_date" EntityType="Self.t_plate_shares_rel_tag_dayleader_date" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_plate_shares_rel_tag_leader" EntityType="Self.t_plate_shares_rel_tag_leader" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_plate_shares_rel_tag_leader_date" EntityType="Self.t_plate_shares_rel_tag_leader_date" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_plate_shares_rel_tag_mainarmy" EntityType="Self.t_plate_shares_rel_tag_mainarmy" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_plate_shares_rel_tag_mainarmy_date" EntityType="Self.t_plate_shares_rel_tag_mainarmy_date" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_plate_shares_rel_tag_setting" EntityType="Self.t_plate_shares_rel_tag_setting" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_plate_shares_rel_tag_setting_details" EntityType="Self.t_plate_shares_rel_tag_setting_details" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_platform_wallet" EntityType="Self.t_platform_wallet" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_platform_wallet_change_record" EntityType="Self.t_platform_wallet_change_record" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_push_channel" EntityType="Self.t_push_channel" Schema="dbo" store:Type="Tables" />
@@ -5352,9 +5491,12 @@
           <EntitySet Name="t_shares_plate_rel_snapshot_instructions" EntityType="Self.t_shares_plate_rel_snapshot_instructions" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_plate_rel_tag_account" EntityType="Self.t_shares_plate_rel_tag_account" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_plate_rel_tag_focuson" EntityType="Self.t_shares_plate_rel_tag_focuson" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_plate_rel_tag_focuson_date" EntityType="Self.t_shares_plate_rel_tag_focuson_date" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_plate_rel_tag_force" EntityType="Self.t_shares_plate_rel_tag_force" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_plate_rel_tag_force_date" EntityType="Self.t_shares_plate_rel_tag_force_date" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_plate_rel_tag_setting" EntityType="Self.t_shares_plate_rel_tag_setting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_plate_rel_tag_trendlike" EntityType="Self.t_shares_plate_rel_tag_trendlike" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_plate_rel_tag_trendlike_date" EntityType="Self.t_shares_plate_rel_tag_trendlike_date" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_plate_riserate" EntityType="Self.t_shares_plate_riserate" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_plate_riserate_last" EntityType="Self.t_shares_plate_riserate_last" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_plate_securitybarsdata_15min" EntityType="Self.t_shares_plate_securitybarsdata_15min" Schema="dbo" store:Type="Tables" />
@@ -9736,6 +9878,17 @@
           <EntitySet Name="t_shares_plate_rel_tag_focuson" EntityType="meal_ticketModel.t_shares_plate_rel_tag_focuson" />
           <EntitySet Name="t_shares_plate_rel_tag_force" EntityType="meal_ticketModel.t_shares_plate_rel_tag_force" />
           <EntitySet Name="t_shares_plate_rel_tag_trendlike" EntityType="meal_ticketModel.t_shares_plate_rel_tag_trendlike" />
+          <EntitySet Name="t_plate_shares_rel_tag_setting" EntityType="meal_ticketModel.t_plate_shares_rel_tag_setting" />
+          <EntitySet Name="t_plate_shares_rel_tag_setting_details" EntityType="meal_ticketModel.t_plate_shares_rel_tag_setting_details" />
+          <EntitySet Name="t_plate_shares_rel_tag_dayleader" EntityType="meal_ticketModel.t_plate_shares_rel_tag_dayleader" />
+          <EntitySet Name="t_plate_shares_rel_tag_dayleader_date" EntityType="meal_ticketModel.t_plate_shares_rel_tag_dayleader_date" />
+          <EntitySet Name="t_plate_shares_rel_tag_leader" EntityType="meal_ticketModel.t_plate_shares_rel_tag_leader" />
+          <EntitySet Name="t_plate_shares_rel_tag_leader_date" EntityType="meal_ticketModel.t_plate_shares_rel_tag_leader_date" />
+          <EntitySet Name="t_plate_shares_rel_tag_mainarmy" EntityType="meal_ticketModel.t_plate_shares_rel_tag_mainarmy" />
+          <EntitySet Name="t_plate_shares_rel_tag_mainarmy_date" EntityType="meal_ticketModel.t_plate_shares_rel_tag_mainarmy_date" />
+          <EntitySet Name="t_shares_plate_rel_tag_focuson_date" EntityType="meal_ticketModel.t_shares_plate_rel_tag_focuson_date" />
+          <EntitySet Name="t_shares_plate_rel_tag_force_date" EntityType="meal_ticketModel.t_shares_plate_rel_tag_force_date" />
+          <EntitySet Name="t_shares_plate_rel_tag_trendlike_date" EntityType="meal_ticketModel.t_shares_plate_rel_tag_trendlike_date" />
         </EntityContainer>
         <EntityType Name="t_account_baseinfo">
           <Key>
@@ -10981,6 +11134,137 @@
           <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
           <Property Name="PlateId" Type="Int64" Nullable="false" />
           <Property Name="IsTrendLike" Type="Boolean" Nullable="false" />
+          <Property Name="Score" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_plate_shares_rel_tag_setting">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="false" Unicode="true" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="DefaultCount" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_plate_shares_rel_tag_setting_details">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SettingType" Type="Int32" Nullable="false" />
+          <Property Name="BaseCount" Type="Int32" Nullable="false" />
+          <Property Name="DisCount" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_plate_shares_rel_tag_dayleader">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="PlateId" Type="Int64" Nullable="false" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DayLeaderType" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_plate_shares_rel_tag_dayleader_date">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="PlateId" Type="Int64" Nullable="false" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="DayLeaderType" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_plate_shares_rel_tag_leader">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="PlateId" Type="Int64" Nullable="false" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LeaderType" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_plate_shares_rel_tag_leader_date">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="PlateId" Type="Int64" Nullable="false" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LeaderType" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_plate_shares_rel_tag_mainarmy">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="PlateId" Type="Int64" Nullable="false" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="MainArmyType" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_plate_shares_rel_tag_mainarmy_date">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="PlateId" Type="Int64" Nullable="false" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="MainArmyType" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_plate_rel_tag_focuson_date">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PlateId" Type="Int64" Nullable="false" />
+          <Property Name="IsFocusOn" Type="Boolean" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_plate_rel_tag_force_date">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PlateId" Type="Int64" Nullable="false" />
+          <Property Name="IsForce1" Type="Boolean" Nullable="false" />
+          <Property Name="IsForce2" Type="Boolean" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_plate_rel_tag_trendlike_date">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="PlateId" Type="Int64" Nullable="false" />
+          <Property Name="IsTrendLike" Type="Boolean" Nullable="false" />
+          <Property Name="Score" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -15848,6 +16132,148 @@
           <EntitySetMapping Name="t_shares_plate_rel_tag_trendlike">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_plate_rel_tag_trendlike">
               <MappingFragment StoreEntitySet="t_shares_plate_rel_tag_trendlike">
+                <ScalarProperty Name="Score" ColumnName="Score" />
+                <ScalarProperty Name="IsTrendLike" ColumnName="IsTrendLike" />
+                <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_plate_shares_rel_tag_setting">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_plate_shares_rel_tag_setting">
+              <MappingFragment StoreEntitySet="t_plate_shares_rel_tag_setting">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="DefaultCount" ColumnName="DefaultCount" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_plate_shares_rel_tag_setting_details">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_plate_shares_rel_tag_setting_details">
+              <MappingFragment StoreEntitySet="t_plate_shares_rel_tag_setting_details">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="DisCount" ColumnName="DisCount" />
+                <ScalarProperty Name="BaseCount" ColumnName="BaseCount" />
+                <ScalarProperty Name="SettingType" ColumnName="SettingType" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_plate_shares_rel_tag_dayleader">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_plate_shares_rel_tag_dayleader">
+              <MappingFragment StoreEntitySet="t_plate_shares_rel_tag_dayleader">
+                <ScalarProperty Name="DayLeaderType" ColumnName="DayLeaderType" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_plate_shares_rel_tag_dayleader_date">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_plate_shares_rel_tag_dayleader_date">
+              <MappingFragment StoreEntitySet="t_plate_shares_rel_tag_dayleader_date">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="DayLeaderType" ColumnName="DayLeaderType" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_plate_shares_rel_tag_leader">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_plate_shares_rel_tag_leader">
+              <MappingFragment StoreEntitySet="t_plate_shares_rel_tag_leader">
+                <ScalarProperty Name="LeaderType" ColumnName="LeaderType" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_plate_shares_rel_tag_leader_date">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_plate_shares_rel_tag_leader_date">
+              <MappingFragment StoreEntitySet="t_plate_shares_rel_tag_leader_date">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="LeaderType" ColumnName="LeaderType" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_plate_shares_rel_tag_mainarmy">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_plate_shares_rel_tag_mainarmy">
+              <MappingFragment StoreEntitySet="t_plate_shares_rel_tag_mainarmy">
+                <ScalarProperty Name="MainArmyType" ColumnName="MainArmyType" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_plate_shares_rel_tag_mainarmy_date">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_plate_shares_rel_tag_mainarmy_date">
+              <MappingFragment StoreEntitySet="t_plate_shares_rel_tag_mainarmy_date">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="MainArmyType" ColumnName="MainArmyType" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_plate_rel_tag_focuson_date">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_plate_rel_tag_focuson_date">
+              <MappingFragment StoreEntitySet="t_shares_plate_rel_tag_focuson_date">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="IsFocusOn" ColumnName="IsFocusOn" />
+                <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_plate_rel_tag_force_date">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_plate_rel_tag_force_date">
+              <MappingFragment StoreEntitySet="t_shares_plate_rel_tag_force_date">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="IsForce2" ColumnName="IsForce2" />
+                <ScalarProperty Name="IsForce1" ColumnName="IsForce1" />
+                <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_plate_rel_tag_trendlike_date">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_plate_rel_tag_trendlike_date">
+              <MappingFragment StoreEntitySet="t_shares_plate_rel_tag_trendlike_date">
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Score" ColumnName="Score" />
                 <ScalarProperty Name="IsTrendLike" ColumnName="IsTrendLike" />
                 <ScalarProperty Name="PlateId" ColumnName="PlateId" />
                 <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />

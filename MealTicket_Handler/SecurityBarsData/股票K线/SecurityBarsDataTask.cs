@@ -684,8 +684,8 @@ namespace MealTicket_Handler.SecurityBarsData
                                  {
                                      Market = item.Market,
                                      SharesCode = item.SharesCode,
-                                     SharesCodeNum=long.Parse(item.SharesCode),
-                                     PreClosePrice = item.LastModified> dateNow?item.ClosedPrice:item.PresentPrice
+                                     SharesCodeNum = long.Parse(item.SharesCode),
+                                     PreClosePrice = item.LastModified > dateNow ? item.ClosedPrice : item.PresentPrice
                                  }).ToList();
             int totalCount = allSharesList.Count();
             //批次数
@@ -712,9 +712,9 @@ namespace MealTicket_Handler.SecurityBarsData
                         {
                             SharesCode = x.SharesCode,
                             Market = x.Market,
-                            StartTimeKey = lastData == null ? item.GroupTimeKey : lastData.GroupTimeKey,
+                            StartTimeKey = (lastData == null || lastData.GroupTimeKey==0)? item.GroupTimeKey : lastData.GroupTimeKey,
                             EndTimeKey = -1,
-                            PreClosePrice = lastData == null ? x.PreClosePrice : lastData.PreClosePrice,
+                            PreClosePrice = (lastData == null || lastData.PreClosePrice==0) ? x.PreClosePrice : lastData.PreClosePrice,
                             YestodayClosedPrice = x.PreClosePrice,
                             LastTradeStock = lastData == null ? 0 : lastData.LastTradeStock,
                             LastTradeAmount = lastData == null ? 0 : lastData.LastTradeAmount

@@ -6134,6 +6134,86 @@
             卖出股票价格（限价卖出有效）
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesTagSettingDetailsRequest.SettingType">
+            <summary>
+            类型
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesTagSettingDetailsRequest.BaseCount">
+            <summary>
+            基础数量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddSharesTagSettingDetailsRequest.DisCount">
+            <summary>
+            目标数量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesTagSettingInfo.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesTagSettingInfo.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesTagSettingInfo.Description">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesTagSettingInfo.Type">
+            <summary>
+            类型1日内龙头 2龙头 3中军
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesTagSettingInfo.Status">
+            <summary>
+            状态
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesTagSettingInfo.DefaultCount">
+            <summary>
+            默认数量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesTagSettingInfo.DetailsCount">
+            <summary>
+            详细数量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesTagSettingInfo.CreateTime">
+            <summary>
+            数据创建时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesTagSettingDetails.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesTagSettingDetails.BaseCount">
+            <summary>
+            基础数量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesTagSettingDetails.DisCount">
+            <summary>
+            目的数量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesTagSettingDetails.Status">
+            <summary>
+            状态
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.SharesTagSettingDetails.CreateTime">
+            <summary>
+            数据创建时间
+            </summary>
+        </member>
         <member name="T:MealTicket_Admin_Handler.Model.HeadBase">
             <summary>
             请求头部基础信息
@@ -11679,6 +11759,36 @@
             是否停牌
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesTagSettingRequest.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesTagSettingRequest.Description">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesTagSettingRequest.DefaultCount">
+            <summary>
+            默认值
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesTagSettingDetailsRequest.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesTagSettingDetailsRequest.BaseCount">
+            <summary>
+            基础数量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifySharesTagSettingDetailsRequest.DisCount">
+            <summary>
+            目标数量
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.ModifySharesTradeLeverRequest.Id">
             <summary>
             Id
@@ -14333,6 +14443,70 @@
         <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesBasePlateTag(MealTicket_Admin_Handler.Model.ModifySharesBasePlateTagRequest,MealTicket_Admin_Handler.Model.HeadBase)">
             <summary>
             设置股票所属基础板块标记
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ResetSharesBasePlateTag(MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            重置板块标记
+            </summary>
+            <param name="basedata"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetSharesTagSettingList(MealTicket_Admin_Handler.Model.PageRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            获取股票标记设置列表
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesTagSetting(MealTicket_Admin_Handler.Model.ModifySharesTagSettingRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            编辑股票标记设置
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesTagSettingStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            修改股票标记设置状态
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetSharesTagSettingDetailsList(MealTicket_Admin_Handler.Model.DetailsPageRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            获取股票标记设置详情列表
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.AddSharesTagSettingDetails(MealTicket_Admin_Handler.Model.AddSharesTagSettingDetailsRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            添加股票标记设置详情
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesTagSettingDetails(MealTicket_Admin_Handler.Model.ModifySharesTagSettingDetailsRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            编辑股票标记设置详情
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifySharesTagSettingDetailsStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            修改股票标记设置详情状态
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeleteSharesTagSettingDetails(MealTicket_Admin_Handler.Model.DeleteRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            删除股票标记设置详情
             </summary>
             <param name="request"></param>
             <param name="basedata"></param>

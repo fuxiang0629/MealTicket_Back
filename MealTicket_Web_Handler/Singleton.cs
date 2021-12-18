@@ -114,6 +114,15 @@ namespace MealTicket_Web_Handler
 
         public double PlateIndexRatio = 4;
 
+        public int SharesStockCal_MinMinute = 5;
+        public int SharesStockCal_IntervalMinute = 15;
+
+        /// <summary>
+        ///分时叠加参数
+        /// </summary>
+        public int MaxCheckedCount = 5;
+        public string MtLineColorList = "#1878dd,#d628d9,#abb511,#d51123,#21b548";
+
         /// <summary>
         /// 自动买入最大任务数量
         /// </summary>
@@ -123,6 +132,11 @@ namespace MealTicket_Web_Handler
         /// 板块标记计算间隔时间（毫秒）
         /// </summary>
         public int PlateTagCalIntervalTime = 3000;
+
+        /// <summary>
+        /// 中军计算市值排名取前x/万
+        /// </summary>
+        public int MainArmyRankRate = 5000;
 
         /// <summary>
         /// adb.net操作对象
@@ -181,6 +195,34 @@ namespace MealTicket_Web_Handler
         public StockMonitorCore m_stockMonitor;
         #endregion
 
+        #region===交易时间值====
+        public TimeSpan Time1Start = TimeSpan.Parse("09:15:00");
+        public int Time1StartInt = 915;
+        public TimeSpan Time1End = TimeSpan.Parse("09:25:00");
+        public int Time1EndInt = 925;
+        public TimeSpan Time2Start = TimeSpan.Parse("09:25:00");
+        public int Time2StartInt = 925;
+        public TimeSpan Time2End = TimeSpan.Parse("09:30:00");
+        public int Time2EndInt = 930;
+        public TimeSpan Time3Start1 = TimeSpan.Parse("09:30:00");
+        public int Time3Start1Int = 930;
+        public TimeSpan Time3End1 = TimeSpan.Parse("11:30:00");
+        public int Time3End1Int = 1130;
+        public TimeSpan Time3Start2 = TimeSpan.Parse("13:00:00");
+        public int Time3Start2Int = 1300;
+        public TimeSpan Time3End2 = TimeSpan.Parse("15:00:00");
+        public int Time3End2Int = 1500;
+        public TimeSpan Time4Start = TimeSpan.Parse("14:57:00");
+        public int Time4StartInt = 1457;
+        public TimeSpan Time4End = TimeSpan.Parse("15:00:00");
+        public int Time4EndInt = 1500;
+        public TimeSpan Time5Start = TimeSpan.Parse("09:00:00");
+        public int Time5StartInt = 900;
+        public TimeSpan Time5End = TimeSpan.Parse("09:15:00");
+        public int Time5EndInt = 915;
+        #endregion
+
+
         // 显式静态构造函数告诉C＃编译器
         // 不要将类型标记为BeforeFieldInit
         static Singleton()
@@ -190,16 +232,6 @@ namespace MealTicket_Web_Handler
 
         private Singleton()
         {
-            sessionHandler = new SessionHandler();
-            sessionHandler.UpdateSessionManual();
-            sessionHandler.StartUpdate();
-
-            PlateIndexTypeDic.Clear();
-            PlateIndexTypeDic.Add(0, 2);//其他 1加权 2不加权
-            PlateIndexTypeDic.Add(1, 2);//板块指数
-            PlateIndexTypeDic.Add(2, 1);//市场指数
-            PlateIndexTypeDic.Add(3, 1);//成分指数
-
             handlerThreadCount = 10;
             connString_meal_ticket = ConfigurationManager.ConnectionStrings["ConnectionString"].ConnectionString;
             connString_transactiondata = ConfigurationManager.ConnectionStrings["ConnectionString_data"].ConnectionString;
@@ -210,17 +242,11 @@ namespace MealTicket_Web_Handler
             sqlHelper = new SqlHelper(ConnectionString_meal_ticket);
             SysparUpdate();
 
-
-
-            m_stockMonitor = new StockMonitorCore();
-            int error=m_stockMonitor.InitCore(ConnectionString_meal_ticket + "|" + ConnectionString_meal_ticket_shares_transactiondata, -1, "");
-            if (error != 0)
-            {
-                Logger.WriteFileLog("链接字符串错误",null);
-            }
-
-            UpdateWait.Init();
-            StartSysparUpdateThread();
+            PlateIndexTypeDic.Clear();
+            PlateIndexTypeDic.Add(0, 2);//其他 1加权 2不加权
+            PlateIndexTypeDic.Add(1, 2);//板块指数
+            PlateIndexTypeDic.Add(2, 1);//市场指数
+            PlateIndexTypeDic.Add(3, 1);//成分指数
         }
 
         public static Singleton Instance
@@ -574,6 +600,56 @@ namespace MealTicket_Web_Handler
                         {
                             PlateTagCalIntervalTime = tempPlateTagCalIntervalTime;
                         }
+                        int tempMainArmyRankRate = sysValue.MainArmyRankRate;
+                        if (tempMainArmyRankRate > 0)
+                        {
+                            MainArmyRankRate = tempMainArmyRankRate;
+                        }
+                        
+                    }
+                }
+                catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "VolumeRatePar"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                        int tempSharesStockCal_MinMinute = sysValue.SharesStockCal_MinMinute;
+                        if (tempSharesStockCal_MinMinute > 0)
+                        {
+                            SharesStockCal_MinMinute = tempSharesStockCal_MinMinute;
+                        }
+                        int tempSharesStockCal_IntervalMinute = sysValue.SharesStockCal_IntervalMinute;
+                        if (tempSharesStockCal_IntervalMinute > 0)
+                        {
+                            SharesStockCal_IntervalMinute = tempSharesStockCal_IntervalMinute;
+                        }
+
+                    }
+                }
+                catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "MtlineSuperpositionPar"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                        int tempMaxCheckedCount = sysValue.MaxCheckedCount;
+                        if (tempMaxCheckedCount >= 0)
+                        {
+                            MaxCheckedCount = tempMaxCheckedCount;
+                        }
+                        string tempMtLineColorList = sysValue.MtLineColorList;
+                        if (!string.IsNullOrEmpty(tempMtLineColorList))
+                        {
+                            MtLineColorList = tempMtLineColorList;
+                        }
+
                     }
                 }
                 catch { }
@@ -764,6 +840,20 @@ namespace MealTicket_Web_Handler
 
         public void Init() 
         {
+            sessionHandler = new SessionHandler();
+            sessionHandler.UpdateSessionManual();
+            sessionHandler.StartUpdate();
+
+            m_stockMonitor = new StockMonitorCore();
+            int error = m_stockMonitor.InitCore(ConnectionString_meal_ticket + "|" + ConnectionString_meal_ticket_shares_transactiondata, -1, "");
+            if (error != 0)
+            {
+                Logger.WriteFileLog("链接字符串错误", null);
+            }
+
+            UpdateWait.Init();
+            StartSysparUpdateThread();
+
             var mqHandler = StartMqHandler();//生成Mq队列对象
             var transactionDataTask = StartTransactionDataTask();
             transactionDataTask.DoTask();

@@ -5860,5 +5860,185 @@ namespace MealTicket_Admin_APIService.controller
             tradeCenterHandler.ModifySharesBasePlateTag(request, basedata);
             return null;
         }
+
+        /// <summary>
+        /// 重置板块标记
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/base/plate/tag/reset"), HttpPost]
+        [Description("设置股票所属基础板块标记")]
+        public object ResetSharesBasePlateTag()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.ResetSharesBasePlateTag(basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取股票标记设置列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/tag/setting/list"), HttpPost]
+        [Description("获取股票标记设置列表")]
+        public PageRes<SharesTagSettingInfo> GetSharesTagSettingList(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return tradeCenterHandler.GetSharesTagSettingList(request, basedata);
+        }
+
+        /// <summary>
+        /// 编辑股票标记设置
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/tag/setting/modify"), HttpPost]
+        [Description("编辑股票标记设置")]
+        public object ModifySharesTagSetting(ModifySharesTagSettingRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.ModifySharesTagSetting(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改股票标记设置状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/tag/setting/status/modify"), HttpPost]
+        [Description("修改股票标记设置状态")]
+        public object ModifySharesTagSettingStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.ModifySharesTagSettingStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取股票标记设置详情列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/tag/setting/details/list"), HttpPost]
+        [Description("获取股票标记设置详情列表")]
+        public PageRes<SharesTagSettingDetails> GetSharesTagSettingDetailsList(DetailsPageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return tradeCenterHandler.GetSharesTagSettingDetailsList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加股票标记设置详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/tag/setting/details/add"), HttpPost]
+        [Description("添加股票标记设置详情")]
+        public object AddSharesTagSettingDetails(AddSharesTagSettingDetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.AddSharesTagSettingDetails(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑股票标记设置详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/tag/setting/details/modify"), HttpPost]
+        [Description("编辑股票标记设置详情")]
+        public object ModifySharesTagSettingDetails(ModifySharesTagSettingDetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.ModifySharesTagSettingDetails(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改股票标记设置详情状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/tag/setting/details/status/modify"), HttpPost]
+        [Description("修改股票标记设置详情状态")]
+        public object ModifySharesTagSettingDetailsStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.ModifySharesTagSettingDetailsStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除股票标记设置详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/tag/setting/details/delete"), HttpPost]
+        [Description("删除股票标记设置详情")]
+        public object DeleteSharesTagSettingDetails(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.DeleteSharesTagSettingDetails(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 重置股票标记
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("shares/tag/reset"), HttpPost]
+        [Description("重置股票标记")]
+        public object ResetSharesTag()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.ResetSharesTag(basedata);
+            return null;
+        }
     }
 }

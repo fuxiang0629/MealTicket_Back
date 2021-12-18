@@ -100,6 +100,7 @@
     <Compile Include="Common\Session_Model\SharesPlateRelInfo_Session.cs" />
     <Compile Include="Common\Session_Model_New\Session_Time_Info.cs" />
     <Compile Include="Common\Session_New.cs" />
+    <Compile Include="Common\TaskThread.cs" />
     <Compile Include="Common\ThreadMsgTemplate.cs" />
     <Compile Include="Common\Utils.cs" />
     <Compile Include="Database\BulkBase.cs" />

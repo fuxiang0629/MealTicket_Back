@@ -28,5 +28,10 @@ namespace MealTicket_Web_Handler
         /// 是否走势最相似
         /// </summary>
         public bool IsTrendLike { get; set; }
+
+        /// <summary>
+        /// 分数
+        /// </summary>
+        public int Score { get; set; }
     }
 }

@@ -302,6 +302,17 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel_tag_focuson" Width="1.5" PointX="52.375" PointY="14.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel_tag_force" Width="1.5" PointX="52.375" PointY="24.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel_tag_trendlike" Width="1.5" PointX="52.375" PointY="36.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_plate_shares_rel_tag_setting" Width="1.5" PointX="52.375" PointY="39.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_plate_shares_rel_tag_setting_details" Width="1.5" PointX="48.375" PointY="52.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_plate_shares_rel_tag_dayleader" Width="1.5" PointX="53.375" PointY="28.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_plate_shares_rel_tag_dayleader_date" Width="1.5" PointX="53.375" PointY="31.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_plate_shares_rel_tag_leader" Width="1.5" PointX="34.375" PointY="53.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_plate_shares_rel_tag_leader_date" Width="1.5" PointX="36.375" PointY="53.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_plate_shares_rel_tag_mainarmy" Width="1.5" PointX="38.375" PointY="53.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_plate_shares_rel_tag_mainarmy_date" Width="1.5" PointX="53.375" PointY="43.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel_tag_focuson_date" Width="1.5" PointX="53.375" PointY="47.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel_tag_force_date" Width="1.5" PointX="53.375" PointY="50.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel_tag_trendlike_date" Width="1.5" PointX="54.375" PointY="0.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

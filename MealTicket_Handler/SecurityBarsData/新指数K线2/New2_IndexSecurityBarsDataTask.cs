@@ -889,6 +889,7 @@ inner join
             {
                 var result = (from item in db.t_shares_plate_rel_snapshot_instructions
                               where item.IsExcute == false
+                              orderby item.Type descending
                               select item).ToList();
                 foreach (var item in result)
                 {

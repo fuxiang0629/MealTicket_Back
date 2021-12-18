@@ -19,5 +19,6 @@ namespace MealTicket_DBCommon
         public string SharesCode { get; set; }
         public long PlateId { get; set; }
         public bool IsTrendLike { get; set; }
+        public int Score { get; set; }
     }
 }

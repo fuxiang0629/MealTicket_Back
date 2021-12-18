@@ -11092,7 +11092,7 @@ namespace MealTicket_Admin_Handler
                 }
             }
 
-            _sendPushNotice(request);
+            _sendPushNotice((int)MsgType.MODIFYPLATETAG, request);
         }
         private void _modifySharesBasePlateTag(ModifySharesBasePlateTagRequest request, meal_ticketEntities db)
         {
@@ -11175,16 +11175,263 @@ namespace MealTicket_Admin_Handler
             }
             db.SaveChanges();
         }
-        private void _sendPushNotice(ModifySharesBasePlateTagRequest sendData) 
+
+        private enum MsgType
+        {
+            MODIFYPLATETAG,
+            RESETPLATETAG,
+            RESESHARESTAG,
+        }
+        private void _sendPushNotice(int msgType,object sendData) 
         {
             try
             {
-                Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(sendData)), "SharesPlateTag", "notice");
+                Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(JsonConvert.SerializeObject(new 
+                {
+                    MsgType= msgType,
+                    SendData= sendData
+                })), "SharesPlateTag", "notice");
             }
             catch (Exception ex)
             {
                 Logger.WriteFileLog("修改板块标记发送通知出错",ex);
             }
+        }
+
+        /// <summary>
+        /// 重置板块标记
+        /// </summary>
+        /// <param name="basedata"></param>
+        public void ResetSharesBasePlateTag(HeadBase basedata)
+        {
+            _sendPushNotice((int)MsgType.RESETPLATETAG, null);
+        }
+
+        /// <summary>
+        /// 获取股票标记设置列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<SharesTagSettingInfo> GetSharesTagSettingList(PageRequest request,HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = from item in db.t_plate_shares_rel_tag_setting
+                             select item;
+                int totalCount = result.Count();
+
+                return new PageRes<SharesTagSettingInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in result
+                            join item2 in db.t_plate_shares_rel_tag_setting_details on item.Type equals item2.SettingType into a
+                            from ai in a.DefaultIfEmpty()
+                            group new { item, ai } by item into g
+                            orderby g.Key.CreateTime descending
+                            select new SharesTagSettingInfo
+                            {
+                                Status = g.Key.Status,
+                                CreateTime = g.Key.CreateTime,
+                                DefaultCount = g.Key.DefaultCount,
+                                Description = g.Key.Description,
+                                Id = g.Key.Id,
+                                Name = g.Key.Name,
+                                Type = g.Key.Type,
+                                DetailsCount = g.Where(e=>e.ai!=null).Count()
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 编辑股票标记设置
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifySharesTagSetting(ModifySharesTagSettingRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = (from item in db.t_plate_shares_rel_tag_setting
+                              where item.Id == request.Id
+                              select item).FirstOrDefault();
+                if (result == null)
+                {
+                    throw new WebApiException(400,"数据不存在");
+                }
+                result.DefaultCount = request.DefaultCount;
+                result.Description = request.Description;
+                result.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改股票标记设置状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifySharesTagSettingStatus(ModifyStatusRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var setting = (from item in db.t_plate_shares_rel_tag_setting
+                               where item.Id == request.Id
+                               select item).FirstOrDefault();
+                if (setting == null)
+                {
+                    throw new WebApiException(400,"数据不存在");
+                }
+                setting.Status = request.Status;
+                setting.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取股票标记设置详情列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<SharesTagSettingDetails> GetSharesTagSettingDetailsList(DetailsPageRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var setting_details = from item in db.t_plate_shares_rel_tag_setting_details
+                                      where item.SettingType == request.Id
+                                      select item;
+                int totalCount = setting_details.Count();
+
+                return new PageRes<SharesTagSettingDetails>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List = (from item in setting_details
+                            orderby item.BaseCount
+                            select new SharesTagSettingDetails
+                            {
+                                BaseCount = item.BaseCount,
+                                CreateTime = item.CreateTime,
+                                DisCount = item.DisCount,
+                                Id = item.Id,
+                                Status = item.Status
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加股票标记设置详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void AddSharesTagSettingDetails(AddSharesTagSettingDetailsRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //判断基础数量是否存在
+                var details = (from item in db.t_plate_shares_rel_tag_setting_details
+                               where item.SettingType == request.SettingType && item.BaseCount == request.BaseCount
+                               select item).FirstOrDefault();
+                if (details != null)
+                {
+                    throw new WebApiException(400,"基础数量已存在");
+                }
+                db.t_plate_shares_rel_tag_setting_details.Add(new t_plate_shares_rel_tag_setting_details 
+                {
+                    SettingType=request.SettingType,
+                    Status=1,
+                    BaseCount=request.BaseCount,
+                    CreateTime=DateTime.Now,
+                    DisCount=request.DisCount,
+                    LastModified=DateTime.Now
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 编辑股票标记设置详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifySharesTagSettingDetails(ModifySharesTagSettingDetailsRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var details = (from item in db.t_plate_shares_rel_tag_setting_details
+                               where item.Id==request.Id
+                               select item).FirstOrDefault();
+                if (details == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                //判断基础数量是否存在
+                var temp = (from item in db.t_plate_shares_rel_tag_setting_details
+                            where item.SettingType == details.SettingType && item.BaseCount == request.BaseCount && item.Id != request.Id
+                            select item).FirstOrDefault();
+                if (temp != null)
+                {
+                    throw new WebApiException(400, "基础数量已存在");
+                }
+                details.BaseCount = request.BaseCount;
+                details.DisCount = request.DisCount;
+                details.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改股票标记设置详情状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifySharesTagSettingDetailsStatus(ModifyStatusRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var details = (from item in db.t_plate_shares_rel_tag_setting_details
+                               where item.Id == request.Id
+                               select item).FirstOrDefault();
+                if (details == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+               
+                details.Status = request.Status;
+                details.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除股票标记设置详情
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void DeleteSharesTagSettingDetails(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var details = (from item in db.t_plate_shares_rel_tag_setting_details
+                               where item.Id == request.Id
+                               select item).FirstOrDefault();
+                if (details == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+
+                db.t_plate_shares_rel_tag_setting_details.Remove(details);
+                db.SaveChanges();
+            }
+        }
+
+        public void ResetSharesTag(HeadBase basedata)
+        {
+            _sendPushNotice((int)MsgType.RESESHARESTAG, null);
         }
     }
 }

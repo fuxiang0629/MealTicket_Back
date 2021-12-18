@@ -1497,6 +1497,23 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 获取板块龙头模式股票列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("plate/leadermodel/shares/list"), HttpPost]
+        [Description("获取板块龙头模式股票列表")]
+        [CheckUserLoginFilter]
+        public List<PlateSharesInfo> GetPlateLeaderModelSharesList(GetPlateLeaderModelSharesListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetPlateLeaderModelSharesList(request, basedata);
+        }
+
+        /// <summary>
         /// 添加买入条件单股票
         /// </summary>
         /// <returns></returns>
@@ -8513,6 +8530,20 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.BatchGetPlateMtLineList(request, basedata);
+        }
+
+        /// <summary>
+        /// 获取分时叠加系统参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("mtline/superposition/sys/par"), HttpPost]
+        [Description("获取分时叠加系统参数")]
+        [CheckUserLoginFilter]
+        public object GetMtLineSuperpositionSysPar()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetMtLineSuperpositionSysPar(basedata);
         }
 
         #region===自选股===

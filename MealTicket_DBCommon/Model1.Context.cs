@@ -324,6 +324,17 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_shares_plate_rel_tag_focuson> t_shares_plate_rel_tag_focuson { get; set; }
         public virtual DbSet<t_shares_plate_rel_tag_force> t_shares_plate_rel_tag_force { get; set; }
         public virtual DbSet<t_shares_plate_rel_tag_trendlike> t_shares_plate_rel_tag_trendlike { get; set; }
+        public virtual DbSet<t_plate_shares_rel_tag_setting> t_plate_shares_rel_tag_setting { get; set; }
+        public virtual DbSet<t_plate_shares_rel_tag_setting_details> t_plate_shares_rel_tag_setting_details { get; set; }
+        public virtual DbSet<t_plate_shares_rel_tag_dayleader> t_plate_shares_rel_tag_dayleader { get; set; }
+        public virtual DbSet<t_plate_shares_rel_tag_dayleader_date> t_plate_shares_rel_tag_dayleader_date { get; set; }
+        public virtual DbSet<t_plate_shares_rel_tag_leader> t_plate_shares_rel_tag_leader { get; set; }
+        public virtual DbSet<t_plate_shares_rel_tag_leader_date> t_plate_shares_rel_tag_leader_date { get; set; }
+        public virtual DbSet<t_plate_shares_rel_tag_mainarmy> t_plate_shares_rel_tag_mainarmy { get; set; }
+        public virtual DbSet<t_plate_shares_rel_tag_mainarmy_date> t_plate_shares_rel_tag_mainarmy_date { get; set; }
+        public virtual DbSet<t_shares_plate_rel_tag_focuson_date> t_shares_plate_rel_tag_focuson_date { get; set; }
+        public virtual DbSet<t_shares_plate_rel_tag_force_date> t_shares_plate_rel_tag_force_date { get; set; }
+        public virtual DbSet<t_shares_plate_rel_tag_trendlike_date> t_shares_plate_rel_tag_trendlike_date { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)

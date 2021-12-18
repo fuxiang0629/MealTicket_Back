@@ -1,6 +1,7 @@
 ﻿using FXCommon.Common;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,6 +22,16 @@ namespace SharesHqService
         {
             get 
             {
+                try
+                {
+                    bool istest = bool.Parse(ConfigurationManager.AppSettings["IsTest"]);
+                    if (istest)
+                    {
+                        return false;
+                    }
+                }
+                catch (Exception ex)
+                { }
                 try
                 {
                     //判断当天是否执行过

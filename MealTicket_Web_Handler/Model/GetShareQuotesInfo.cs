@@ -124,5 +124,15 @@ namespace MealTicket_Web_Handler.Model
         /// </summary>
         public List<long> MySharesGroupList { get; set; }
 
+        /// <summary>
+        /// 此刻量比
+        /// </summary>
+        public long StockRate_Now { get; set; }
+
+        /// <summary>
+        /// 预计量比
+        /// </summary>
+        public long StockRate_All { get; set; }
+
     }
 }

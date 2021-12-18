@@ -3742,6 +3742,76 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ResetSharesBasePlateTag">
+            <summary>
+            重置板块标记
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetSharesTagSettingList(MealTicket_Admin_Handler.Model.PageRequest)">
+            <summary>
+            获取股票标记设置列表
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifySharesTagSetting(MealTicket_Admin_Handler.Model.ModifySharesTagSettingRequest)">
+            <summary>
+            编辑股票标记设置
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifySharesTagSettingStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改股票标记设置状态
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetSharesTagSettingDetailsList(MealTicket_Admin_Handler.Model.DetailsPageRequest)">
+            <summary>
+            获取股票标记设置详情列表
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.AddSharesTagSettingDetails(MealTicket_Admin_Handler.Model.AddSharesTagSettingDetailsRequest)">
+            <summary>
+            添加股票标记设置详情
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifySharesTagSettingDetails(MealTicket_Admin_Handler.Model.ModifySharesTagSettingDetailsRequest)">
+            <summary>
+            编辑股票标记设置详情
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifySharesTagSettingDetailsStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改股票标记设置详情状态
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeleteSharesTagSettingDetails(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除股票标记设置详情
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ResetSharesTag">
+            <summary>
+            重置股票标记
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.ExtensionHelper.GetAllWebApi(System.Web.Http.HttpConfiguration)">
             <summary>
             获取当前配置内的所有web api

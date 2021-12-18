@@ -270,5 +270,15 @@ namespace MealTicket_Web_Handler.Model
         public int ConditionStatus { get; set; }
 
         public List<long> GroupList { get; set; }
+
+        /// <summary>
+        /// 此刻量比
+        /// </summary>
+        public int StockRate_Now { get; set; }
+
+        /// <summary>
+        /// 预计量比
+        /// </summary>
+        public int StockRate_All { get; set; }
     }
 }

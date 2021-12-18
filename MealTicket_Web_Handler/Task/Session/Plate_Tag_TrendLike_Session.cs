@@ -16,13 +16,24 @@ namespace MealTicket_Web_Handler
         {
             using (var db = new meal_ticketEntities())
             {
+                DateTime dateNow = DateTime.Now.Date;
+                string sql = string.Format(@"merge into t_shares_plate_rel_tag_trendlike_date as t
+using (select * from t_shares_plate_rel_tag_trendlike) as t1
+ON t.Market = t1.Market and t.SharesCode = t1.SharesCode and t.PlateId=t1.PlateId and t.[Date]='{0}'
+when matched
+then update set t.IsTrendLike = t1.IsTrendLike,t.Score = t1.Score
+when not matched by target
+then insert(Market,SharesCode,PlateId,IsTrendLike,Score,[Date]) values(t1.Market,t1.SharesCode,t1.PlateId,t1.IsTrendLike,t1.Score,'{0}');", dateNow.ToString("yyyy-MM-dd"));
+                db.Database.ExecuteSqlCommand(sql);
+
                 var tag_trendlike = (from item in db.t_shares_plate_rel_tag_trendlike
                                      select new Plate_Tag_TrendLike_Session_Info
                                      {
                                          SharesCode = item.SharesCode,
                                          Market = item.Market,
                                          PlateId = item.PlateId,
-                                         IsTrendLike = item.IsTrendLike
+                                         IsTrendLike = item.IsTrendLike,
+                                         Score=item.Score
                                      }).ToList();
                 return BuildDic(tag_trendlike);
             }
@@ -47,9 +58,7 @@ namespace MealTicket_Web_Handler
         public static Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>> UpdateSessionPart(object newData)
         {
             var newDataResult = newData as List<Plate_Tag_TrendLike_Session_Info>;
-            var oldDic = Singleton.Instance.sessionHandler.GetPlate_Tag_TrendLike_Session();
-            //深度拷贝
-            var oldData = Utils.DeepCopyWithBinarySerialize<Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>>>(oldDic);
+            var oldData = Singleton.Instance.sessionHandler.GetPlate_Tag_TrendLike_Session();
 
             foreach (var item in newDataResult)
             {

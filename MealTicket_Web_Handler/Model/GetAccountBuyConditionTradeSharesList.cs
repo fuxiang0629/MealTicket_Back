@@ -209,5 +209,15 @@ namespace MealTicket_Web_Handler.Model
         /// 自选股分组数量
         /// </summary>
         public List<long> MySharesGroupList { get; set; }
+
+        /// <summary>
+        /// 此刻量比
+        /// </summary>
+        public int StockRate_Now { get; set; }
+
+        /// <summary>
+        /// 预计量比
+        /// </summary>
+        public int StockRate_All { get; set; }
     }
 }

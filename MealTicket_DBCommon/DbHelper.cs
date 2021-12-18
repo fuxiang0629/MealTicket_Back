@@ -130,6 +130,136 @@ namespace MealTicket_DBCommon
         }
 
         /// <summary>
+        /// 检查当前是否交易时间
+        /// </summary>
+        /// <returns></returns>
+        public static bool CheckTradeTime2(DateTime? time = null)
+        {
+            if (!CheckTradeDate())
+            {
+                return false;
+            }
+            DateTime timeDis = DateTime.Now;
+            if (time != null)
+            {
+                timeDis = time.Value;
+            }
+            TimeSpan timeSpanNow = TimeSpan.Parse(timeDis.ToString("HH:mm:ss"));
+            using (var db = new meal_ticketEntities())
+            {
+                var tradeTime = (from item in db.t_shares_limit_time
+                                 select item).ToList();
+                foreach (var item in tradeTime)
+                {
+                    //解析time2
+                    if (item.Time2 != null)
+                    {
+                        string[] timeArr = item.Time2.Split(',');
+                        foreach (var times in timeArr)
+                        {
+                            var timeSpanArr = times.Split('-');
+                            if (timeSpanArr.Length != 2)
+                            {
+                                continue;
+                            }
+                            TimeSpan timeStart = TimeSpan.Parse(timeSpanArr[0]);
+                            TimeSpan timeEnd = TimeSpan.Parse(timeSpanArr[1]);
+                            if (timeSpanNow >= timeStart && timeSpanNow < timeEnd)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                    //解析time3
+                    if (item.Time3 != null)
+                    {
+                        string[] timeArr = item.Time3.Split(',');
+                        foreach (var times in timeArr)
+                        {
+                            var timeSpanArr = times.Split('-');
+                            if (timeSpanArr.Length != 2)
+                            {
+                                continue;
+                            }
+                            TimeSpan timeStart = TimeSpan.Parse(timeSpanArr[0]);
+                            TimeSpan timeEnd = TimeSpan.Parse(timeSpanArr[1]);
+                            if (timeSpanNow >= timeStart && timeSpanNow < timeEnd)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                    //解析time4
+                    if (item.Time4 != null)
+                    {
+                        string[] timeArr = item.Time4.Split(',');
+                        foreach (var times in timeArr)
+                        {
+                            var timeSpanArr = times.Split('-');
+                            if (timeSpanArr.Length != 2)
+                            {
+                                continue;
+                            }
+                            TimeSpan timeStart = TimeSpan.Parse(timeSpanArr[0]);
+                            TimeSpan timeEnd = TimeSpan.Parse(timeSpanArr[1]);
+                            if (timeSpanNow >= timeStart && timeSpanNow < timeEnd)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 检查当前是否闭市时间
+        /// </summary>
+        /// <returns></returns>
+        public static bool CheckTradeTime3(DateTime? time = null)
+        {
+            if (!CheckTradeDate())
+            {
+                return false;
+            }
+            DateTime timeDis = DateTime.Now;
+            if (time != null)
+            {
+                timeDis = time.Value;
+            }
+            TimeSpan timeSpanNow = TimeSpan.Parse(timeDis.ToString("HH:mm:ss"));
+            using (var db = new meal_ticketEntities())
+            {
+                var tradeTime = (from item in db.t_shares_limit_time
+                                 select item).ToList();
+                foreach (var item in tradeTime)
+                {
+                    //解析time1
+                    if (item.Time1 != null)
+                    {
+                        string[] timeArr = item.Time1.Split(',');
+                        foreach (var times in timeArr)
+                        {
+                            var timeSpanArr = times.Split('-');
+                            if (timeSpanArr.Length != 2)
+                            {
+                                continue;
+                            }
+                            TimeSpan timeStart = TimeSpan.Parse(timeSpanArr[0]);
+                            TimeSpan timeEnd = TimeSpan.Parse(timeSpanArr[1]);
+                            if (timeSpanNow >= timeStart && timeSpanNow < timeEnd)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
         /// 检查当前是否Level1数据时间
         /// </summary>
         /// <returns></returns>

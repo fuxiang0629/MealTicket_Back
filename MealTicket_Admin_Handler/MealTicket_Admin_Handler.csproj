@@ -242,6 +242,8 @@
     <Compile Include="Model\FrontAccount\ModifyFrontAccountTransactionPassword.cs" />
     <Compile Include="Model\FrontAccount\ModifyFrontAccountWallet.cs" />
     <Compile Include="Model\FrontAccount\SellFrontAccountSharesHold.cs" />
+    <Compile Include="Model\TradeCenter\AddSharesTagSettingDetails.cs" />
+    <Compile Include="Model\TradeCenter\GetSharesTagSettingList.cs" />
     <Compile Include="Model\HeadBase.cs" />
     <Compile Include="Model\ImageObj.cs" />
     <Compile Include="Model\ImagePath.cs" />
@@ -430,6 +432,8 @@
     <Compile Include="Model\TradeCenter\ModifySharesPositionRules.cs" />
     <Compile Include="Model\TradeCenter\ModifySharesPositionRulesOther.cs" />
     <Compile Include="Model\TradeCenter\ModifySharesSuspensionStatus.cs" />
+    <Compile Include="Model\TradeCenter\ModifySharesTagSetting.cs" />
+    <Compile Include="Model\TradeCenter\ModifySharesTagSettingDetails.cs" />
     <Compile Include="Model\TradeCenter\ModifySharesTradeLever.cs" />
     <Compile Include="Model\TradeCenter\ModifySharesTradeRules.cs" />
     <Compile Include="Model\TradeCenter\ModifySharesTradeRulesOther.cs" />

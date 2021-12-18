@@ -48,5 +48,86 @@ namespace MealTicket_Web_Handler
                 return (int)((ClosedPrice - YestodayClosedPrice) * 1.0 / YestodayClosedPrice * 10000 + 0.5);
             }
         }
+
+        /// <summary>
+        /// 是否涨停
+        /// </summary>
+        public bool IsLimitUp { get; set; }
+
+        /// <summary>
+        /// 涨停时间
+        /// </summary>
+        public DateTime? LimitUpTime { get; set; }
+
+        /// <summary>
+        /// 开盘价格
+        /// </summary>
+        public long OpenedPrice { get; set; }
+
+        /// <summary>
+        /// 成交金额
+        /// </summary>
+        public long TotalAmount { get; set; }
+
+        /// <summary>
+        /// 成交量
+        /// </summary>
+        public long TotalCount { get; set; }
+    }
+
+    [Serializable]
+    public class Shares_Quotes_Session_Info_Last
+    {
+        public Shares_Quotes_Session_Info shares_quotes_info { get; set; }
+
+        /// <summary>
+        /// 今日此刻成交量
+        /// </summary>
+        public long TotalCount_Today_Now { get; set; }
+
+        /// <summary>
+        /// 昨日此刻成交量
+        /// </summary>
+        public long TotalCount_Yestoday_Now { get; set; }
+
+        /// <summary>
+        /// 此刻量比
+        /// </summary>
+        public int RateNow 
+        {
+            get 
+            {
+                if (TotalCount_Yestoday_Now == 0)
+                {
+                    return 0;
+                }
+                return (int)Math.Round(TotalCount_Today_Now * 1.0 / TotalCount_Yestoday_Now * 100, 0);
+            } 
+        }
+
+        /// <summary>
+        /// 昨日总成交量
+        /// </summary>
+        public long TotalCount_Yestoday_All { get; set; }
+
+        /// <summary>
+        /// 预计今日成交量
+        /// </summary>
+        public long TotalCount_Today_Expect { get; set; }
+
+        /// <summary>
+        /// 预计量比
+        /// </summary>
+        public int RateExpect
+        {
+            get
+            {
+                if (TotalCount_Yestoday_All == 0)
+                {
+                    return 0;
+                }
+                return (int)Math.Round(TotalCount_Today_Expect * 1.0 / TotalCount_Yestoday_All * 100, 0);
+            }
+        }
     }
 }

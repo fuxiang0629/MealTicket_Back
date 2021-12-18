@@ -4977,7 +4977,8 @@ from v_shares_quotes_last with(nolock)";
 
                 string sql = @"select Market,SharesCode,LimitUpCount,TriLimitUpCount,LimitDownCount,TriLimitDownCount,LimitUpBombCount,OpenedPrice,PresentPrice,ClosedPrice,MaxPrice,MinPrice,TotalAmount,TotalCount 
 from t_shares_quotes_date with(nolock)
-where [Date] = convert(varchar(10), getdate(), 120)";
+where [Date] = (select Max(Date)
+from t_shares_quotes_date)";
                 List<QuotesDateInfo> quotes_date_list = new List<QuotesDateInfo>();
                 List<dynamic> dealList = new List<dynamic>();
                 using (var db = new meal_ticketEntities())
@@ -5238,6 +5239,23 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
                                 Market = tempData.Market,
                                 SharesCode = tempData.SharesCode
                             });
+                        }
+                    }
+                    else if (type == 11)
+                    {
+                        long keyItem = long.Parse(tempData.SharesCode) * 10 + tempData.Market;
+                        var shares_quotes_last_session = Singleton.Instance.sessionHandler.GetShares_Quotes_Last_Session();
+                        if (shares_quotes_last_session.ContainsKey(keyItem))
+                        {
+                            int rateNow = shares_quotes_last_session[keyItem].RateNow;
+                            if ((compare == 1 && rateNow >= count * 100) || (compare == 2 && rateNow <= count * 100))
+                            {
+                                result.Add(new SharesBase_Session
+                                {
+                                    Market = tempData.Market,
+                                    SharesCode = tempData.SharesCode
+                                });
+                            }
                         }
                     }
 

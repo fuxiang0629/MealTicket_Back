@@ -25,7 +25,7 @@ namespace MealTicket_Web_APIService.runner
                 SleepTime = Singleton.Instance.PlateTagCalIntervalTime;
                 try
                 {
-                    if (!DbHelper.CheckTradeTime())
+                    if (!DbHelper.CheckTradeTime2())
                     {
                         return false;
                     }
@@ -43,6 +43,7 @@ namespace MealTicket_Web_APIService.runner
             try
             {
                 PlateTagCalHelper.Calculate();
+                SharesTagCalHelper.Calculate();
             }
             catch (Exception ex)
             {

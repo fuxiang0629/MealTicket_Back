@@ -16,6 +16,16 @@ namespace MealTicket_Web_Handler
         {
             using (var db = new meal_ticketEntities())
             {
+                DateTime dateNow = DateTime.Now.Date;
+                string sql = string.Format(@"merge into t_shares_plate_rel_tag_force_date as t
+using (select * from t_shares_plate_rel_tag_force) as t1
+ON t.Market = t1.Market and t.SharesCode = t1.SharesCode and t.PlateId=t1.PlateId and t.[Type]=t1.[Type] and t.[Date]='{0}'
+when matched
+then update set t.IsForce1 = t1.IsForce1,t.IsForce2 = t1.IsForce2
+when not matched by target
+then insert([Type],Market,SharesCode,PlateId,IsForce1,IsForce2,[Date]) values(t1.[Type],t1.Market,t1.SharesCode,t1.PlateId,t1.IsForce1,t1.IsForce2,'{0}');", dateNow.ToString("yyyy-MM-dd"));
+                db.Database.ExecuteSqlCommand(sql);
+
                 var tag_force = (from item in db.t_shares_plate_rel_tag_force
                                  select new Plate_Tag_Force_Session_Info
                                  {
@@ -49,9 +59,7 @@ namespace MealTicket_Web_Handler
         public static Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>> UpdateSessionPart(object newData)
         {
             var newDataResult = newData as List<Plate_Tag_Force_Session_Info>;
-            var oldDic = Singleton.Instance.sessionHandler.GetPlate_Tag_Force_Session();
-            //深度拷贝
-            var oldData = Utils.DeepCopyWithBinarySerialize<Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>>>(oldDic);
+            var oldData = Singleton.Instance.sessionHandler.GetPlate_Tag_Force_Session();
 
             foreach (var item in newDataResult)
             {

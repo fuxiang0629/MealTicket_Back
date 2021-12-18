@@ -63,6 +63,10 @@ namespace FXCommon.Common
         {
             _sessionReadWriteLock.AcquireReaderLock(Timeout.Infinite);
             object value = _getSession(key);
+            if (value != null)
+            {
+                value=CopySessionData(value);
+            }
             _sessionReadWriteLock.ReleaseReaderLock();
             return value;
         }
@@ -81,8 +85,12 @@ namespace FXCommon.Common
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void SetSession(string key, object value)
+        public void SetSession(string key, object value, bool isCopyValue = false)
         {
+            if (value != null && isCopyValue)
+            {
+                value = CopySessionData(value);
+            }
             _sessionReadWriteLock.AcquireWriterLock(Timeout.Infinite);
             _setSession(key, value);
             _sessionReadWriteLock.ReleaseWriterLock();
@@ -91,6 +99,11 @@ namespace FXCommon.Common
         private void _setSession(string key, object value)
         {
             SessionData[key] = value;
+        }
+
+        public virtual object CopySessionData(object objData) 
+        {
+            return DeepCopyWithBinarySerialize(objData);
         }
         #endregion
 
@@ -179,13 +192,18 @@ namespace FXCommon.Common
 
         private void _doTask(Session_Time_Info item)
         {
-            object data = UpdateSession(item.ExcuteType);
-            SetSession(item.DataKey, data);
+            _toUpdateSession(item.DataKey, item.ExcuteType);
             if (item.TimerType == 1)
             {
                 item.NextExcuteTime = DateTime.Now.AddSeconds(item.ExcuteInterval);
                 item.TimerStatus = 0;
             }
+        }
+
+        private void _toUpdateSession(string DataKey,int ExcuteType)
+        {
+            object data = UpdateSession(ExcuteType);
+            SetSession(DataKey, data);
         }
 
         /// <summary>
@@ -196,30 +214,7 @@ namespace FXCommon.Common
         public abstract object UpdateSession(int ExcuteType);
 
         /// <summary>
-        /// 设置局部缓存
-        /// </summary>
-        /// <param name="ExcuteType"></param>
-        /// <param name="newData"></param>
-        public void SetSessionWithLock(string DataKey,int ExcuteType, object newData) 
-        {
-            object data = UpdateSessionPart(ExcuteType,newData);
-            if (data != null)
-            {
-                SetSession(DataKey, data);
-            }
-        }
-
-        /// <summary>
-        /// 设置局部缓存
-        /// </summary>
-        /// <returns></returns>
-        public virtual object UpdateSessionPart(int ExcuteType, object newData) 
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// 手动更新Session
+        /// 手动更新所有Session
         /// </summary>
         /// <returns></returns>
         public void UpdateSessionManual()
@@ -230,14 +225,22 @@ namespace FXCommon.Common
                 {
                     continue;
                 }
-                object data = UpdateSession(item.ExcuteType);
-                SetSession(item.DataKey, data);
+                _toUpdateSession(item.DataKey,item.ExcuteType);
 
                 if (item.NextExcuteTime == null)
                 {
                     item.NextExcuteTime = DateTime.Now;
                 }
             }
+        }
+
+        /// <summary>
+        /// 手动更新某个数据缓存
+        /// </summary>
+        /// <param name="dataKey"></param>
+        public void UpdateSessionManual(string DataKey,int ExcuteType)
+        {
+            _toUpdateSession(DataKey, ExcuteType);
         }
 
         /// <summary>

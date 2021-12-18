@@ -16,6 +16,34 @@ namespace MealTicket_Web_Handler.Model
         /// 板块Id
         /// </summary>
         public long PlateId { get; set; }
+
+        /// <summary>
+        /// 是否需要排名数据
+        /// </summary>
+        public bool IsNeedRank { get; set; }
+    }
+
+    public class PlateRankInfo
+    {
+        public int Day1RiseRate { get; set; }
+
+        public int Day1Rank { get; set; }
+
+        public int Day3RiseRate { get; set; }
+
+        public int Day3Rank { get; set; }
+
+        public int Day5RiseRate { get; set; }
+
+        public int Day5Rank { get; set; }
+
+        public int Day10RiseRate { get; set; }
+
+        public int Day10Rank { get; set; }
+
+        public int Day15RiseRate { get; set; }
+
+        public int Day15Rank { get; set; }
     }
 
     public class PlateQuotesInfo
@@ -29,6 +57,11 @@ namespace MealTicket_Web_Handler.Model
         /// 板块名称
         /// </summary>
         public string PlateName { get; set; }
+
+        /// <summary>
+        /// 板块类型
+        /// </summary>
+        public int PlateType { get; set; }
 
         /// <summary>
         /// 当前价格
@@ -99,5 +132,10 @@ namespace MealTicket_Web_Handler.Model
                 return (int)Math.Round(TodayDealCount * 1.0 / CirculatingCapital * 10000, 0);
             }
         }
+
+        /// <summary>
+        /// 板块排名
+        /// </summary>
+        public PlateRankInfo RankInfo { get; set; }
     }
 }

@@ -35,7 +35,6 @@ namespace MealTicket_Web_Handler
             {
                 try
                 {
-
                     ObjectParameter errorCodeDb = new ObjectParameter("errorCode", 0);
                     ObjectParameter errorMessageDb = new ObjectParameter("errorMessage", "");
                     ObjectParameter accountIdDb = new ObjectParameter("accountId", 0);

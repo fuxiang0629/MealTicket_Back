@@ -7,6 +7,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Runtime.Serialization.Formatters.Binary;
@@ -40,452 +41,60 @@ namespace Test
         public string Des { get; set; }
     }
 
+    public static class TransExpV2<TIn, TOut>
+    {
+
+        private static readonly Func<TIn, TOut> cache = GetFunc();
+        private static Func<TIn, TOut> GetFunc()
+        {
+            ParameterExpression parameterExpression = Expression.Parameter(typeof(TIn), "p");
+            List<MemberBinding> memberBindingList = new List<MemberBinding>();
+
+            foreach (var item in typeof(TOut).GetProperties())
+            {
+                if (!item.CanWrite)
+                    continue;
+
+                MemberExpression property = Expression.Property(parameterExpression, typeof(TIn).GetProperty(item.Name));
+                MemberBinding memberBinding = Expression.Bind(item, property);
+                memberBindingList.Add(memberBinding);
+            }
+
+            MemberInitExpression memberInitExpression = Expression.MemberInit(Expression.New(typeof(TOut)), memberBindingList.ToArray());
+            Expression<Func<TIn, TOut>> lambda = Expression.Lambda<Func<TIn, TOut>>(memberInitExpression, new ParameterExpression[] { parameterExpression });
+
+            return lambda.Compile();
+        }
+
+        public static TOut Trans(TIn tIn)
+        {
+            return cache(tIn);
+        }
+
+    }
+
+
     class Program
     {
-        public static T DeepCopyByReflect<T>(T obj)
-        {
-            //如果是字符串或值类型则直接返回
-            if (obj is string || obj.GetType().IsValueType) return obj;
-
-            object retval = Activator.CreateInstance(obj.GetType());
-            FieldInfo[] fields = obj.GetType().GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
-            foreach (FieldInfo field in fields)
-            {
-                try { field.SetValue(retval, DeepCopyByReflect(field.GetValue(obj))); }
-                catch { }
-            }
-            return (T)retval;
-        }
-
-        // 利用二进制序列化和反序列实现
-        public static T DeepCopyWithBinarySerialize<T>(T obj)
-        {
-            object retval;
-            using (MemoryStream ms = new MemoryStream())
-            {
-                BinaryFormatter bf = new BinaryFormatter();
-                // 序列化成流
-                bf.Serialize(ms, obj);
-                ms.Seek(0, SeekOrigin.Begin);
-                // 反序列化成对象
-                retval = bf.Deserialize(ms);
-                ms.Close();
-            }
-
-            return (T)retval;
-        }
-        public static T DeepCopyWithXmlSerializer<T>(T obj)
-        {
-            object retval;
-            using (MemoryStream ms = new MemoryStream())
-            {
-                XmlSerializer xml = new XmlSerializer(typeof(T));
-                xml.Serialize(ms, obj);
-                ms.Seek(0, SeekOrigin.Begin);
-                retval = xml.Deserialize(ms);
-                ms.Close();
-            }
-
-            return (T)retval;
-        }
-
-
-        static Dictionary<long, Dictionary<long, A>> dic = new Dictionary<long, Dictionary<long, A>>();
-
-        static void SetPlateKlineSession(long keyMain, Dictionary<long, A> dicValue)
-        {
-            if (!dic.ContainsKey(keyMain))
-            {
-                dic[keyMain] = new Dictionary<long, A>();
-            }
-
-            dic[keyMain] = dicValue;
-
-        }
         static void Main(string[] args)
         {
-            Dictionary<int,Dictionary<int,A>> aDic = new Dictionary<int, Dictionary<int, A>>();
-            Dictionary<int, A> bDic = new Dictionary<int, A>();
-            bDic.Add(1, new A
+            A a = new A 
             {
-                Id = 1,
-                Name = "1"
-            });
-            aDic.Add(1, bDic);
-
-            Dictionary<int, Dictionary<int, A>> aDic2 = DeepCopyWithBinarySerialize<Dictionary<int, Dictionary<int, A>>>(aDic);
-
-
-            var t= aDic2[1];
-            t.Add(3, new A
-            {
-                Id = 3,
-                Name = "3"
-            });
-            var ddd = t;
-            //List<B> b = new List<B>();
-            //b.Add(new B 
-            //{
-            //    Market=0,
-            //    SharesCode="000001",
-            //    TrendId=1,
-            //    Time="13123213",
-            //    Des="123123"
-            //});
-            //b.Add(new B
-            //{
-            //    Market = 1,
-            //    SharesCode = "000002",
-            //    TrendId = 2,
-            //    Time = "13123213",
-            //    Des = "123123"
-            //});
-            //b.Add(new B
-            //{
-            //    Market = 2,
-            //    SharesCode = "000003",
-            //    TrendId = 3,
-            //    Time = "13123213",
-            //    Des = "123123"
-            //});
-            //b = (from item in b
-            //     group item by new { item.Market, item.SharesCode, item.TrendId } into g
-            //     select g.FirstOrDefault()).ToList();
-            //var d = b;
-
-            //Dictionary<int, A> dic1 = new Dictionary<int, A>();
-            //dic1.Add(1,new A 
-            //{
-            //    Id=1,
-            //    Name="1"
-            //});
-            //dic1.Add(2, new A
-            //{
-            //    Id = 2,
-            //    Name = "2"
-            //});
-
-            //Dictionary<string, Dictionary<int, A>> dic2 = new Dictionary<string, Dictionary<int, A>>();
-            //Dictionary<int, A> temp = new Dictionary<int, A>();
-            //temp.Add(1, dic1[1]);
-            //dic2.Add("a", temp);
-
-            //dic1[1].Name = "5";
-
-            //Console.Write("url:");
-            //string url = Console.ReadLine();
-            //Console.Write("userTokrn:");
-            //string userToken = Console.ReadLine();
-            //try
-            //{
-            //    url = string.Format("{0}/tradecenter/shares/kline/reset", url);
-            //    using (var db = new meal_ticketEntities())
-            //    {
-            //        var sharesList = (from item in db.v_shares_baseinfo
-            //                          select item).ToList();
-            //        string isContinue = "";
-            //        do
-            //        {
-            //            Console.WriteLine("即将开始导入年K数据，确定输入'Y'，跳过输入'J'");
-            //            isContinue = Console.ReadLine();
-            //            if (isContinue.ToUpper() == "Y")
-            //            {
-            //                Console.WriteLine("年K开始导入");
-            //                foreach (var item in sharesList)
-            //                {
-            //                    var content10 = new
-            //                    {
-            //                        Market = item.Market,
-            //                        SharesCode = item.SharesCode,
-            //                        DataType = 11,
-            //                        StartGroupTimeKey = 2020,
-            //                        EndGroupTimeKey = 2021
-            //                    };
-            //                    string res10 = HtmlSender.Request(JsonConvert.SerializeObject(content10), url, "application/json", Encoding.UTF8, "POST", userToken);
-            //                }
-            //                Console.WriteLine("年K结束导入");
-            //                break;
-            //            }
-            //            else if (isContinue.ToUpper() == "J")
-            //            {
-            //                break;
-            //            }
-
-            //        } while (true);
-
-            //        do
-            //        {
-            //            Console.WriteLine("即将开始导入季K数据，确定输入'Y'，跳过输入'J'");
-            //            isContinue = Console.ReadLine();
-            //            if (isContinue.ToUpper() == "Y")
-            //            {
-            //                Console.WriteLine("季K开始导入");
-            //                foreach (var item in sharesList)
-            //                {
-            //                    var content9 = new
-            //                    {
-            //                        Market = item.Market,
-            //                        SharesCode = item.SharesCode,
-            //                        DataType = 10,
-            //                        StartGroupTimeKey = 202002,
-            //                        EndGroupTimeKey = 202103
-            //                    };
-            //                    string res9 = HtmlSender.Request(JsonConvert.SerializeObject(content9), url, "application/json", Encoding.UTF8, "POST", userToken);
-            //                }
-            //                Console.WriteLine("季K结束导入");
-            //                break;
-            //            }
-            //            else if (isContinue.ToUpper() == "J")
-            //            {
-            //                break;
-            //            }
-            //        } while (true);
-
-            //        do
-            //        {
-            //            Console.WriteLine("即将开始导入月K数据，确定输入'Y'，跳过输入'J'");
-            //            isContinue = Console.ReadLine();
-            //            if (isContinue.ToUpper() == "Y")
-            //            {
-            //                Console.WriteLine("月K开始导入");
-            //                foreach (var item in sharesList)
-            //                {
-            //                    var content8 = new
-            //                    {
-            //                        Market = item.Market,
-            //                        SharesCode = item.SharesCode,
-            //                        DataType = 9,
-            //                        StartGroupTimeKey = 202001,
-            //                        EndGroupTimeKey = 202109
-            //                    };
-            //                    string res8 = HtmlSender.Request(JsonConvert.SerializeObject(content8), url, "application/json", Encoding.UTF8, "POST", userToken);
-            //                }
-            //                Console.WriteLine("月K结束导入");
-            //                break;
-            //            }
-            //            else if (isContinue.ToUpper() == "J")
-            //            {
-            //                break;
-            //            }
-
-            //        } while (true);
-
-            //        do
-            //        {
-            //            Console.WriteLine("即将开始导入周K数据，确定输入'Y'，跳过输入'J'");
-            //            isContinue = Console.ReadLine();
-            //            if (isContinue.ToUpper() == "Y")
-            //            {
-            //                Console.WriteLine("周K开始导入");
-            //                foreach (var item in sharesList)
-            //                {
-            //                    var content7 = new
-            //                    {
-            //                        Market = item.Market,
-            //                        SharesCode = item.SharesCode,
-            //                        DataType = 8,
-            //                        StartGroupTimeKey = 202002,
-            //                        EndGroupTimeKey = 202137
-            //                    };
-            //                    string res7 = HtmlSender.Request(JsonConvert.SerializeObject(content7), url, "application/json", Encoding.UTF8, "POST", userToken);
-            //                }
-            //                Console.WriteLine("周K结束导入");
-            //                break;
-            //            }
-            //            else if (isContinue.ToUpper() == "J")
-            //            {
-            //                break;
-            //            }
-
-            //        } while (true);
-
-            //        do
-            //        {
-            //            Console.WriteLine("即将开始导入日K数据，确定输入'Y'，跳过输入'J'");
-            //            isContinue = Console.ReadLine();
-            //            if (isContinue.ToUpper() == "Y")
-            //            {
-            //                Console.WriteLine("日K开始导入");
-            //                foreach (var item in sharesList)
-            //                {
-            //                    var content6 = new
-            //                    {
-            //                        Market = item.Market,
-            //                        SharesCode = item.SharesCode,
-            //                        DataType = 7,
-            //                        StartGroupTimeKey = 20210101,
-            //                        EndGroupTimeKey = 20210908
-            //                    };
-            //                    string res6 = HtmlSender.Request(JsonConvert.SerializeObject(content6), url, "application/json", Encoding.UTF8, "POST", userToken);
-            //                }
-            //                Console.WriteLine("日K结束导入");
-            //                break;
-            //            }
-            //            else if (isContinue.ToUpper() == "J")
-            //            {
-            //                break;
-            //            }
-
-            //        } while (true);
-
-            //        do
-            //        {
-            //            Console.WriteLine("即将开始导入60分K数据，确定输入'Y'，跳过输入'J'");
-            //            isContinue = Console.ReadLine();
-            //            if (isContinue.ToUpper() == "Y")
-            //            {
-            //                Console.WriteLine("60分K开始导入");
-            //                foreach (var item in sharesList)
-            //                {
-            //                    var content5 = new
-            //                    {
-            //                        Market = item.Market,
-            //                        SharesCode = item.SharesCode,
-            //                        DataType = 6,
-            //                        StartGroupTimeKey = 202108010930,
-            //                        EndGroupTimeKey = 202109081500
-            //                    };
-            //                    string res5 = HtmlSender.Request(JsonConvert.SerializeObject(content5), url, "application/json", Encoding.UTF8, "POST", userToken);
-            //                }
-            //                Console.WriteLine("60分K结束导入");
-            //                break;
-            //            }
-            //            else if (isContinue.ToUpper() == "J")
-            //            {
-            //                break;
-            //            }
-
-            //        } while (true);
-
-            //        do
-            //        {
-            //            Console.WriteLine("即将开始导入30分K数据，确定输入'Y'，跳过输入'J'");
-            //            isContinue = Console.ReadLine();
-            //            if (isContinue.ToUpper() == "Y")
-            //            {
-            //                Console.WriteLine("30分K开始导入");
-            //                foreach (var item in sharesList)
-            //                {
-            //                    var content4 = new
-            //                    {
-            //                        Market = item.Market,
-            //                        SharesCode = item.SharesCode,
-            //                        DataType = 5,
-            //                        StartGroupTimeKey = 202108010930,
-            //                        EndGroupTimeKey = 202109081500
-            //                    };
-            //                    string res4 = HtmlSender.Request(JsonConvert.SerializeObject(content4), url, "application/json", Encoding.UTF8, "POST", userToken);
-            //                }
-            //                Console.WriteLine("30分K结束导入");
-            //                break;
-            //            }
-            //            else if (isContinue.ToUpper() == "J")
-            //            {
-            //                break;
-            //            }
-
-            //        } while (true);
-
-            //        do
-            //        {
-            //            Console.WriteLine("即将开始导入15分K数据，确定输入'Y'，跳过输入'J'");
-            //            isContinue = Console.ReadLine();
-            //            if (isContinue.ToUpper() == "Y")
-            //            {
-            //                Console.WriteLine("开始导入");
-            //                foreach (var item in sharesList)
-            //                {
-            //                    var content3 = new
-            //                    {
-            //                        Market = item.Market,
-            //                        SharesCode = item.SharesCode,
-            //                        DataType = 4,
-            //                        StartGroupTimeKey = 202108010930,
-            //                        EndGroupTimeKey = 202109081500
-            //                    };
-            //                    string res3 = HtmlSender.Request(JsonConvert.SerializeObject(content3), url, "application/json", Encoding.UTF8, "POST", userToken);
-            //                }
-            //                Console.WriteLine("15分K结束导入");
-            //                break;
-            //            }
-            //            else if (isContinue.ToUpper() == "J")
-            //            {
-            //                break;
-            //            }
-
-            //        } while (true);
-
-            //        do
-            //        {
-            //            Console.WriteLine("即将开始导入5分K数据，确定输入'Y'，跳过输入'J'");
-            //            isContinue = Console.ReadLine();
-            //            if (isContinue.ToUpper() == "Y")
-            //            {
-            //                Console.WriteLine("5分K开始导入");
-            //                foreach (var item in sharesList)
-            //                {
-            //                    var content2 = new
-            //                    {
-            //                        Market = item.Market,
-            //                        SharesCode = item.SharesCode,
-            //                        DataType = 3,
-            //                        StartGroupTimeKey = 202108010930,
-            //                        EndGroupTimeKey = 202109081500
-            //                    };
-            //                    string res2 = HtmlSender.Request(JsonConvert.SerializeObject(content2), url, "application/json", Encoding.UTF8, "POST", userToken);
-            //                }
-            //                Console.WriteLine("5分K结束导入");
-            //                break;
-            //            }
-            //            else if (isContinue.ToUpper() == "J")
-            //            {
-            //                break;
-            //            }
-
-            //        } while (true);
-
-            //        do
-            //        {
-            //            Console.WriteLine("即将开始导入1分K数据，确定输入'Y'，跳过输入'J'");
-            //            isContinue = Console.ReadLine();
-            //            if (isContinue.ToUpper() == "Y")
-            //            {
-            //                Console.WriteLine("1分K开始导入");
-            //                foreach (var item in sharesList)
-            //                {
-            //                    var content1 = new
-            //                    {
-            //                        Market = item.Market,
-            //                        SharesCode = item.SharesCode,
-            //                        DataType = 2,
-            //                        StartGroupTimeKey = 202108010930,
-            //                        EndGroupTimeKey = 202109081500
-            //                    };
-            //                    string res1 = HtmlSender.Request(JsonConvert.SerializeObject(content1), url, "application/json", Encoding.UTF8, "POST", userToken);
-            //                }
-            //                Console.WriteLine("1分K结束导入");
-            //                break;
-            //            }
-            //            else if (isContinue.ToUpper() == "J")
-            //            {
-            //                break;
-            //            }
-
-            //        } while (true);
-            //    }
-            //}
-            //catch (Exception ex)
-            //{
-            //    Console.WriteLine(ex.Message);
-            //}
-            //Console.WriteLine("执行完成,按1结束");
-            //Console.ReadLine();
+                Id=1,
+                Name="aaa"
+            };
+            SessionHandler sessionHandler = new SessionHandler();
+            sessionHandler.SetSession("a", a);
+            a.Id = 3;
+            sessionHandler.GetSession("a");
         }
     }
-    public class SharesInfo
-    {
-        public int Market { get; set; }
 
-        public string SharesCode { get; set; }
+    public class SessionHandler : Session_New
+    {
+        public override object UpdateSession(int ExcuteType)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
