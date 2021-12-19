@@ -78,15 +78,16 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            A a = new A 
-            {
-                Id=1,
-                Name="aaa"
-            };
-            SessionHandler sessionHandler = new SessionHandler();
-            sessionHandler.SetSession("a", a);
-            a.Id = 3;
-            sessionHandler.GetSession("a");
+            DateTime time = DateTime.Parse("9999-01-01 00:00:00");
+            //A a = new A 
+            //{
+            //    Id=1,
+            //    Name="aaa"
+            //};
+            //SessionHandler sessionHandler = new SessionHandler();
+            //sessionHandler.SetSession("a", a);
+            //a.Id = 3;
+            //sessionHandler.GetSession("a");
         }
     }
 

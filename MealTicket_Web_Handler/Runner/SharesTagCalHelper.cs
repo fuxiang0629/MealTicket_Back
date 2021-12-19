@@ -358,20 +358,22 @@ namespace MealTicket_Web_Handler.Runner
             foreach (var item in sharesList)
             {
                 long key = long.Parse(item.SharesCode) * 10 + item.Market;
-                Dictionary<DateTime, Shares_Quotes_Session_Info> shares_quotes_date_dic = new Dictionary<DateTime, Shares_Quotes_Session_Info>();
-                if (!_shares_Quotes_Date_Session.TryGetValue(key, out shares_quotes_date_dic))
-                {
-                    continue;
-                }
                 Shares_Quotes_Session_Info today_info = new Shares_Quotes_Session_Info();
                 if (!_shares_Quotes_Today_Session.ContainsKey(key))
                 {
+                    Dictionary<DateTime, Shares_Quotes_Session_Info> shares_quotes_date_dic = new Dictionary<DateTime, Shares_Quotes_Session_Info>();
+                    if (!_shares_Quotes_Date_Session.TryGetValue(key, out shares_quotes_date_dic))
+                    {
+                        continue;
+                    }
                     today_info = shares_quotes_date_dic.OrderByDescending(e => e.Key).FirstOrDefault().Value;
                 }
                 else
                 {
                     today_info = _shares_Quotes_Today_Session[key];
                 }
+                item.RiseRate = today_info.RiseRate;
+                item.LimitUpTime = DateTime.Parse("9999-01-01 00:00:00");
                 if (!today_info.IsLimitUp)
                 {
                     continue;
@@ -384,7 +386,7 @@ namespace MealTicket_Web_Handler.Runner
             }
 
             List<Shares_Tag_DayLeader_Session_Info> new_data = new List<Shares_Tag_DayLeader_Session_Info>();
-            List<SharesPlateRelInfo_Session> tempList = sharesList.OrderBy(e => e.LimitUpTime).ToList();
+            List<SharesPlateRelInfo_Session> tempList = sharesList.OrderBy(e => e.LimitUpTime).ThenByDescending(e=>e.RiseRate).ToList();
             int idx = 1;
             foreach (var item in tempList)
             {
@@ -395,7 +397,8 @@ namespace MealTicket_Web_Handler.Runner
                 }
                 else if (item.LimitUpTime == null)
                 {
-                    DayLeaderType = 0;
+                    DayLeaderType = idx;
+                    idx++;
                 }
                 else
                 {

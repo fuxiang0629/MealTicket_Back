@@ -29,21 +29,31 @@ namespace MealTicket_Web_Handler.Model
 
         public int Day1Rank { get; set; }
 
+        public int Day1RealDays { get; set; }
+
         public int Day3RiseRate { get; set; }
 
         public int Day3Rank { get; set; }
+
+        public int Day3RealDays { get; set; }
 
         public int Day5RiseRate { get; set; }
 
         public int Day5Rank { get; set; }
 
+        public int Day5RealDays { get; set; }
+
         public int Day10RiseRate { get; set; }
 
         public int Day10Rank { get; set; }
 
+        public int Day10RealDays { get; set; }
+
         public int Day15RiseRate { get; set; }
 
         public int Day15Rank { get; set; }
+
+        public int Day15RealDays { get; set; }
     }
 
     public class PlateQuotesInfo

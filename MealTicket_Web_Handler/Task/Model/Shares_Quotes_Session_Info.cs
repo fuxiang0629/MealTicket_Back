@@ -81,12 +81,12 @@ namespace MealTicket_Web_Handler
         public Shares_Quotes_Session_Info shares_quotes_info { get; set; }
 
         /// <summary>
-        /// 今日此刻成交量
+        /// 今日此刻每分钟平均成交量
         /// </summary>
         public long TotalCount_Today_Now { get; set; }
 
         /// <summary>
-        /// 昨日此刻成交量
+        /// 昨日每分钟平均成交量
         /// </summary>
         public long TotalCount_Yestoday_Now { get; set; }
 

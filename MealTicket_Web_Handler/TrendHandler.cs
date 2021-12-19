@@ -425,6 +425,8 @@ namespace MealTicket_Web_Handler
             public long PlateId;
 
             public int RiseRate;
+
+            public int RealDays { get; set; }
         }
 
         /// <summary>
@@ -483,7 +485,7 @@ namespace MealTicket_Web_Handler
                     {
                         dataList.Add(plate_today[request.PlateId]);
                     }
-                    dataList=dataList.OrderByDescending(e => e.Date).ThenBy(e => e.PlateId).ToList();
+                    dataList=dataList.OrderBy(e=>e.PlateId).ThenByDescending(e => e.Date).ToList();
 
                     List<Plate_Quotes_Session_Info> day1List = new List<Plate_Quotes_Session_Info>();
                     List<Plate_Quotes_Session_Info> day3List = new List<Plate_Quotes_Session_Info>();
@@ -492,35 +494,208 @@ namespace MealTicket_Web_Handler
                     List<Plate_Quotes_Session_Info> day15List = new List<Plate_Quotes_Session_Info>();
 
                     int idx = 0;
-                    DateTime? lastDate = null;
+                    long lastPlateId = 0;
+                    long todayClosedPrice = 0;
+                    Plate_Quotes_Session_Info tempInfo = new Plate_Quotes_Session_Info();
+                    bool existsMin = false;
                     foreach (var item in dataList)
                     {
-                        if (lastDate == null || item.Date != lastDate)
+                        if (item.PlateId != lastPlateId)
                         {
-                            idx++;
-                            lastDate = item.Date;
+                            if (idx > 0)
+                            {
+                                if (idx < 3)
+                                {
+                                    day3List.Add(new Plate_Quotes_Session_Info
+                                    {
+                                        ClosedPrice = tempInfo.ClosedPrice,
+                                        Date = tempInfo.Date,
+                                        PlateId = tempInfo.PlateId,
+                                        RealDays = tempInfo.RealDays,
+                                        YestodayClosedPrice = tempInfo.YestodayClosedPrice
+                                    });
+                                }
+                                if (idx < 5)
+                                {
+                                    day5List.Add(new Plate_Quotes_Session_Info
+                                    {
+                                        ClosedPrice = tempInfo.ClosedPrice,
+                                        Date = tempInfo.Date,
+                                        PlateId = tempInfo.PlateId,
+                                        RealDays = tempInfo.RealDays,
+                                        YestodayClosedPrice = tempInfo.YestodayClosedPrice
+                                    });
+                                }
+                                if (idx < 10)
+                                {
+                                    day10List.Add(new Plate_Quotes_Session_Info
+                                    {
+                                        ClosedPrice = tempInfo.ClosedPrice,
+                                        Date = tempInfo.Date,
+                                        PlateId = tempInfo.PlateId,
+                                        RealDays = tempInfo.RealDays,
+                                        YestodayClosedPrice = tempInfo.YestodayClosedPrice
+                                    });
+                                }
+                                if (idx < 15)
+                                {
+                                    day15List.Add(new Plate_Quotes_Session_Info
+                                    {
+                                        ClosedPrice = tempInfo.ClosedPrice,
+                                        Date = tempInfo.Date,
+                                        PlateId = tempInfo.PlateId,
+                                        RealDays = tempInfo.RealDays,
+                                        YestodayClosedPrice = tempInfo.YestodayClosedPrice
+                                    });
+                                }
+                            }
+
+                            idx =0;
+                            lastPlateId = item.PlateId;
+                            existsMin = false;
                         }
+                        idx++;
                         if (idx == 1)
                         {
-                            day1List.Add(item);
+                            todayClosedPrice = item.ClosedPrice;
+                            tempInfo = new Plate_Quotes_Session_Info
+                            {
+                                ClosedPrice = item.ClosedPrice,
+                                Date = item.Date,
+                                PlateId = item.PlateId,
+                                RealDays = item.RealDays,
+                                YestodayClosedPrice = item.YestodayClosedPrice
+                            };
+                            tempInfo.RealDays = idx;
+                            day1List.Add(new Plate_Quotes_Session_Info
+                            {
+                                ClosedPrice = tempInfo.ClosedPrice,
+                                Date = tempInfo.Date,
+                                PlateId = tempInfo.PlateId,
+                                RealDays = tempInfo.RealDays,
+                                YestodayClosedPrice = tempInfo.YestodayClosedPrice
+                            });
+                            continue;
                         }
-                        else if (idx == 3)
+                        if (item.ClosedPrice > todayClosedPrice && item.ClosedPrice> tempInfo.ClosedPrice && !existsMin)
                         {
-                            day3List.Add(item);
+                            tempInfo = new Plate_Quotes_Session_Info
+                            {
+                                ClosedPrice = item.ClosedPrice,
+                                Date = item.Date,
+                                PlateId = item.PlateId,
+                                RealDays = item.RealDays,
+                                YestodayClosedPrice = item.YestodayClosedPrice
+                            };
+                            tempInfo.RealDays = idx;
+                        }
+                        else if(item.ClosedPrice< todayClosedPrice && item.ClosedPrice< tempInfo.ClosedPrice)
+                        {
+                            tempInfo = new Plate_Quotes_Session_Info
+                            {
+                                ClosedPrice = item.ClosedPrice,
+                                Date = item.Date,
+                                PlateId = item.PlateId,
+                                RealDays = item.RealDays,
+                                YestodayClosedPrice = item.YestodayClosedPrice
+                            };
+                            tempInfo.RealDays = idx;
+                            existsMin = true;
+                        }
+
+                        if (idx == 3)
+                        {
+                            day3List.Add(new Plate_Quotes_Session_Info
+                            {
+                                ClosedPrice = tempInfo.ClosedPrice,
+                                Date = tempInfo.Date,
+                                PlateId = tempInfo.PlateId,
+                                RealDays = tempInfo.RealDays,
+                                YestodayClosedPrice = tempInfo.YestodayClosedPrice
+                            });
                         }
                         if (idx == 5)
                         {
-                            day5List.Add(item);
+                            day5List.Add(new Plate_Quotes_Session_Info
+                            {
+                                ClosedPrice = tempInfo.ClosedPrice,
+                                Date = tempInfo.Date,
+                                PlateId = tempInfo.PlateId,
+                                RealDays = tempInfo.RealDays,
+                                YestodayClosedPrice = tempInfo.YestodayClosedPrice
+                            });
                         }
                         if (idx == 10)
                         {
-                            day10List.Add(item);
+                            day10List.Add(new Plate_Quotes_Session_Info
+                            {
+                                ClosedPrice = tempInfo.ClosedPrice,
+                                Date = tempInfo.Date,
+                                PlateId = tempInfo.PlateId,
+                                RealDays = tempInfo.RealDays,
+                                YestodayClosedPrice = tempInfo.YestodayClosedPrice
+                            });
                         }
                         if (idx == 15)
                         {
-                            day15List.Add(item);
+                            day15List.Add(new Plate_Quotes_Session_Info
+                            {
+                                ClosedPrice = tempInfo.ClosedPrice,
+                                Date = tempInfo.Date,
+                                PlateId = tempInfo.PlateId,
+                                RealDays = tempInfo.RealDays,
+                                YestodayClosedPrice = tempInfo.YestodayClosedPrice
+                            });
                         }
                     }
+                    if (idx > 0)
+                    {
+                        if (idx < 3)
+                        {
+                            day3List.Add(new Plate_Quotes_Session_Info
+                            {
+                                ClosedPrice = tempInfo.ClosedPrice,
+                                Date = tempInfo.Date,
+                                PlateId = tempInfo.PlateId,
+                                RealDays = tempInfo.RealDays,
+                                YestodayClosedPrice = tempInfo.YestodayClosedPrice
+                            });
+                        }
+                        if (idx < 5)
+                        {
+                            day5List.Add(new Plate_Quotes_Session_Info
+                            {
+                                ClosedPrice = tempInfo.ClosedPrice,
+                                Date = tempInfo.Date,
+                                PlateId = tempInfo.PlateId,
+                                RealDays = tempInfo.RealDays,
+                                YestodayClosedPrice = tempInfo.YestodayClosedPrice
+                            });
+                        }
+                        if (idx < 10)
+                        {
+                            day10List.Add(new Plate_Quotes_Session_Info
+                            {
+                                ClosedPrice = tempInfo.ClosedPrice,
+                                Date = tempInfo.Date,
+                                PlateId = tempInfo.PlateId,
+                                RealDays = tempInfo.RealDays,
+                                YestodayClosedPrice = tempInfo.YestodayClosedPrice
+                            });
+                        }
+                        if (idx < 15)
+                        {
+                            day15List.Add(new Plate_Quotes_Session_Info
+                            {
+                                ClosedPrice = tempInfo.ClosedPrice,
+                                Date = tempInfo.Date,
+                                PlateId = tempInfo.PlateId,
+                                RealDays = tempInfo.RealDays,
+                                YestodayClosedPrice = tempInfo.YestodayClosedPrice
+                            });
+                        }
+                    }
+
 
 
                     List<PlateRank> rank1List = new List<PlateRank>();
@@ -534,6 +709,7 @@ namespace MealTicket_Web_Handler
                                  select new PlateRank
                                  {
                                      PlateId = item.PlateId,
+                                     RealDays=item.RealDays,
                                      RiseRate = item.YestodayClosedPrice == 0 ? 0 : (int)Math.Round((item.ClosedPrice - item.YestodayClosedPrice) * 1.0 / item.YestodayClosedPrice * 10000,0)
                                  }).ToList();
                     rank1List = rank1List.OrderByDescending(e => e.RiseRate).ToList();
@@ -544,6 +720,7 @@ namespace MealTicket_Web_Handler
                         if (item.PlateId == request.PlateId)
                         {
                             result.RankInfo.Day1Rank = idx;
+                            result.RankInfo.Day1RealDays = item.RealDays;
                             result.RankInfo.Day1RiseRate = item.RiseRate;
                         }
                     }
@@ -552,7 +729,8 @@ namespace MealTicket_Web_Handler
                                  select new PlateRank
                                  {
                                      PlateId = item.PlateId,
-                                     RiseRate = item2.YestodayClosedPrice == 0 ? 0 : (int)Math.Round((item.ClosedPrice - item2.YestodayClosedPrice) * 1.0 / item2.YestodayClosedPrice * 10000,0)
+                                     RealDays = item2.RealDays,
+                                     RiseRate = item2.ClosedPrice == 0 ? 0 : (int)Math.Round((item.ClosedPrice - item2.ClosedPrice) * 1.0 / item2.ClosedPrice * 10000, 0)
                                  }).ToList();
                     rank3List = rank3List.OrderByDescending(e => e.RiseRate).ToList();
                     idx = 0;
@@ -562,6 +740,7 @@ namespace MealTicket_Web_Handler
                         if (item.PlateId == request.PlateId)
                         {
                             result.RankInfo.Day3Rank = idx;
+                            result.RankInfo.Day3RealDays = item.RealDays;
                             result.RankInfo.Day3RiseRate = item.RiseRate;
                         }
                     }
@@ -570,7 +749,8 @@ namespace MealTicket_Web_Handler
                                  select new PlateRank
                                  {
                                      PlateId = item.PlateId,
-                                     RiseRate = item2.YestodayClosedPrice == 0 ? 0 : (int)Math.Round((item.ClosedPrice - item2.YestodayClosedPrice) * 1.0 / item2.YestodayClosedPrice * 10000,0)
+                                     RealDays = item2.RealDays,
+                                     RiseRate = item2.ClosedPrice == 0 ? 0 : (int)Math.Round((item.ClosedPrice - item2.ClosedPrice) * 1.0 / item2.ClosedPrice * 10000,0)
                                  }).ToList();
                     rank5List = rank5List.OrderByDescending(e => e.RiseRate).ToList();
                     idx = 0;
@@ -580,6 +760,7 @@ namespace MealTicket_Web_Handler
                         if (item.PlateId == request.PlateId)
                         {
                             result.RankInfo.Day5Rank = idx;
+                            result.RankInfo.Day5RealDays = item.RealDays;
                             result.RankInfo.Day5RiseRate = item.RiseRate;
                         }
                     }
@@ -588,7 +769,8 @@ namespace MealTicket_Web_Handler
                                  select new PlateRank
                                  {
                                      PlateId = item.PlateId,
-                                     RiseRate = item2.YestodayClosedPrice == 0 ? 0 : (int)Math.Round((item.ClosedPrice - item2.YestodayClosedPrice) * 1.0 / item2.YestodayClosedPrice * 10000,0)
+                                     RealDays = item2.RealDays,
+                                     RiseRate = item2.ClosedPrice == 0 ? 0 : (int)Math.Round((item.ClosedPrice - item2.ClosedPrice) * 1.0 / item2.ClosedPrice * 10000,0)
                                  }).ToList();
                     rank10List = rank10List.OrderByDescending(e => e.RiseRate).ToList();
                     idx = 0;
@@ -598,6 +780,7 @@ namespace MealTicket_Web_Handler
                         if (item.PlateId == request.PlateId)
                         {
                             result.RankInfo.Day10Rank = idx;
+                            result.RankInfo.Day10RealDays = item.RealDays;
                             result.RankInfo.Day10RiseRate = item.RiseRate;
                         }
                     }
@@ -606,7 +789,8 @@ namespace MealTicket_Web_Handler
                                   select new PlateRank
                                   {
                                       PlateId = item.PlateId,
-                                      RiseRate = item2.YestodayClosedPrice == 0 ? 0 : (int)Math.Round((item.ClosedPrice - item2.YestodayClosedPrice) * 1.0 / item2.YestodayClosedPrice * 10000,0)
+                                      RealDays = item2.RealDays,
+                                      RiseRate = item2.ClosedPrice == 0 ? 0 : (int)Math.Round((item.ClosedPrice - item2.ClosedPrice) * 1.0 / item2.ClosedPrice * 10000,0)
                                   }).ToList();
                     rank15List = rank15List.OrderByDescending(e => e.RiseRate).ToList();
                     idx = 0;
@@ -616,6 +800,7 @@ namespace MealTicket_Web_Handler
                         if (item.PlateId == request.PlateId)
                         {
                             result.RankInfo.Day15Rank = idx;
+                            result.RankInfo.Day15RealDays = item.RealDays;
                             result.RankInfo.Day15RiseRate = item.RiseRate;
                         }
                     }

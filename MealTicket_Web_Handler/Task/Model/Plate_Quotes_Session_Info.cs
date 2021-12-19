@@ -43,5 +43,10 @@ namespace MealTicket_Web_Handler
                 return (int)((ClosedPrice - YestodayClosedPrice) * 1.0 / YestodayClosedPrice * 10000 + 0.5);
             }
         }
+
+        /// <summary>
+        /// 真实天数（计算板块排名用）
+        /// </summary>
+        public int RealDays { get; set; }
     }
 }

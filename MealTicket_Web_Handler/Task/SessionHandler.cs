@@ -311,11 +311,13 @@ namespace MealTicket_Web_Handler
                     long remainMinute = Shares_TradeStock_Session.GetRemainMinute(stockDic[item.Key].GroupTimeKey);
                     if (240 - remainMinute > Singleton.Instance.SharesStockCal_MinMinute && TradeStock_Interval_Count>0)
                     {
-                        temp.TotalCount_Today_Now = stockDic[item.Key].TradeStock;
-                        temp.TotalCount_Yestoday_Now = stockDic[item.Key].TradeStock_Now;
+                        temp.TotalCount_Today_Now = stockDic[item.Key].TradeStock/(240 - remainMinute);
+                        temp.TotalCount_Yestoday_Now = stockDic[item.Key].TradeStock_Yestoday / 240;
 
                         temp.TotalCount_Yestoday_All = stockDic[item.Key].TradeStock_Yestoday;
                         temp.TotalCount_Today_Expect = (TradeStock_Interval / TradeStock_Interval_Count) * remainMinute + temp.TotalCount_Today_Now;
+
+
                     }
                 }
                 result.Add(item.Key, temp);
