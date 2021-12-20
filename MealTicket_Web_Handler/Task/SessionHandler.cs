@@ -29,7 +29,8 @@ namespace MealTicket_Web_Handler
             Shares_Tag_MainArmy_Session,
             Plate_Shares_Rel_Tag_Setting_Session,
             Shares_Base_Session,
-            Shares_TradeStock_Session
+            Shares_TradeStock_Session,
+            Plate_Shares_Rel_Session
         }
 
         public enum Enum_Excute_DataKey
@@ -47,7 +48,8 @@ namespace MealTicket_Web_Handler
             Shares_Tag_MainArmy_Session,
             Plate_Shares_Rel_Tag_Setting_Session,
             Shares_Base_Session,
-            Shares_TradeStock_Session
+            Shares_TradeStock_Session,
+            Plate_Shares_Rel_Session
         }
 
         public SessionHandler() 
@@ -87,6 +89,8 @@ namespace MealTicket_Web_Handler
             result.Add(_toBuildTimeInfo(Enum_Excute_DataKey.Shares_Base_Session.ToString(), 60 * 60 * 24, (int)Enum_Excute_Type.Shares_Base_Session, DateTime.Now.Date.AddHours(9).AddMinutes(15), 0, 0));
             //股票昨日成交量缓存
             result.Add(_toBuildTimeInfo(Enum_Excute_DataKey.Shares_TradeStock_Session.ToString(), 3, (int)Enum_Excute_Type.Shares_TradeStock_Session, null, 0, 0));
+            //板块内股票缓存
+            result.Add(_toBuildTimeInfo(Enum_Excute_DataKey.Plate_Shares_Rel_Session.ToString(), 60*10, (int)Enum_Excute_Type.Plate_Shares_Rel_Session, null, 0, 0));
             return result;
         }
 
@@ -135,6 +139,8 @@ namespace MealTicket_Web_Handler
                     return Shares_Base_Session.UpdateSession();
                 case (int)Enum_Excute_Type.Shares_TradeStock_Session:
                     return Shares_TradeStock_Session.UpdateSession();
+                case (int)Enum_Excute_Type.Plate_Shares_Rel_Session:
+                    return Plate_Shares_Rel_Session.UpdateSession();
                 default:
                     return null;
             }
@@ -214,6 +220,33 @@ namespace MealTicket_Web_Handler
             return session as Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>>;
         }
 
+        public Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>> GetPlate_Tag_FocusOn_Session_ByPlate()
+        {
+            var session = GetSession(Enum_Excute_DataKey.Plate_Tag_FocusOn_Session.ToString());
+            if (session == null)
+            {
+                return new Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>>();
+            }
+            var shares_tag=session as Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>>;
+            Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>> result = new Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>>();
+            foreach (var item in shares_tag)
+            {
+                foreach (var x in item.Value)
+                {
+                    if (!result.ContainsKey(x.Key))
+                    {
+                        result.Add(x.Key, new Dictionary<long, Plate_Tag_FocusOn_Session_Info>());
+                    }
+                    if (!result[x.Key].ContainsKey(item.Key))
+                    {
+                        result[x.Key].Add(item.Key, new Plate_Tag_FocusOn_Session_Info());
+                    }
+                    result[x.Key][item.Key] = x.Value;
+                }
+            }
+            return result;
+        }
+
         public Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>> GetPlate_Tag_Force_Session()
         {
             var session = GetSession(Enum_Excute_DataKey.Plate_Tag_Force_Session.ToString());
@@ -224,6 +257,33 @@ namespace MealTicket_Web_Handler
             return session as Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>>;
         }
 
+        public Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>> GetPlate_Tag_Force_Session_ByPlate()
+        {
+            var session = GetSession(Enum_Excute_DataKey.Plate_Tag_Force_Session.ToString());
+            if (session == null)
+            {
+                return new Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>>();
+            }
+            var shares_tag = session as Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>>;
+            Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>> result = new Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>>();
+            foreach (var item in shares_tag)
+            {
+                foreach (var x in item.Value)
+                {
+                    if (!result.ContainsKey(x.Key))
+                    {
+                        result.Add(x.Key, new Dictionary<long, Plate_Tag_Force_Session_Info>());
+                    }
+                    if (!result[x.Key].ContainsKey(item.Key))
+                    {
+                        result[x.Key].Add(item.Key, new Plate_Tag_Force_Session_Info());
+                    }
+                    result[x.Key][item.Key] = x.Value;
+                }
+            }
+            return result;
+        }
+
         public Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>> GetPlate_Tag_TrendLike_Session()
         {
             var session = GetSession(Enum_Excute_DataKey.Plate_Tag_TrendLike_Session.ToString());
@@ -232,6 +292,33 @@ namespace MealTicket_Web_Handler
                 return new Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>>();
             }
             return session as Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>>;
+        }
+
+        public Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>> GetPlate_Tag_TrendLike_Session_ByPlate()
+        {
+            var session = GetSession(Enum_Excute_DataKey.Plate_Tag_TrendLike_Session.ToString());
+            if (session == null)
+            {
+                return new Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>>();
+            }
+            var shares_tag = session as Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>>;
+            Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>> result = new Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>>();
+            foreach (var item in shares_tag)
+            {
+                foreach (var x in item.Value)
+                {
+                    if (!result.ContainsKey(x.Key))
+                    {
+                        result.Add(x.Key, new Dictionary<long, Plate_Tag_TrendLike_Session_Info>());
+                    }
+                    if (!result[x.Key].ContainsKey(item.Key))
+                    {
+                        result[x.Key].Add(item.Key, new Plate_Tag_TrendLike_Session_Info());
+                    }
+                    result[x.Key][item.Key] = x.Value;
+                }
+            }
+            return result;
         }
 
         public Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> GetPlate_Quotes_Date_Session()
@@ -315,7 +402,7 @@ namespace MealTicket_Web_Handler
                         temp.TotalCount_Yestoday_Now = stockDic[item.Key].TradeStock_Yestoday / 240;
 
                         temp.TotalCount_Yestoday_All = stockDic[item.Key].TradeStock_Yestoday;
-                        temp.TotalCount_Today_Expect = (TradeStock_Interval / TradeStock_Interval_Count) * remainMinute + temp.TotalCount_Today_Now;
+                        temp.TotalCount_Today_Expect = (TradeStock_Interval / TradeStock_Interval_Count) * remainMinute + stockDic[item.Key].TradeStock;
 
 
                     }
@@ -383,6 +470,16 @@ namespace MealTicket_Web_Handler
                 return new Dictionary<long, Shares_Base_Session_Info>();
             }
             return session as Dictionary<long, Shares_Base_Session_Info>;
+        }
+
+        public Dictionary<long, List<Plate_Shares_Rel_Session_Info>> GetPlate_Shares_Rel_Session()
+        {
+            var session = GetSession(Enum_Excute_DataKey.Plate_Shares_Rel_Session.ToString());
+            if (session == null)
+            {
+                return new Dictionary<long, List<Plate_Shares_Rel_Session_Info>>();
+            }
+            return session as Dictionary<long, List<Plate_Shares_Rel_Session_Info>>;
         }
     }
 }

@@ -1503,7 +1503,7 @@ namespace MealTicket_Web_APIService.controller
         [Route("plate/leadermodel/shares/list"), HttpPost]
         [Description("获取板块龙头模式股票列表")]
         [CheckUserLoginFilter]
-        public List<PlateSharesInfo> GetPlateLeaderModelSharesList(GetPlateLeaderModelSharesListRequest request)
+        public object GetPlateLeaderModelSharesList(GetPlateLeaderModelSharesListRequest request)
         {
             if (request == null)
             {

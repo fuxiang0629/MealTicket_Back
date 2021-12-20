@@ -31,19 +31,18 @@ namespace MealTicket_Web_Handler.Runner
 
             var calTypeArr = System.Enum.GetValues(typeof(Enum_SharesTag_CalType));
             int taskCount = calTypeArr.Length;
-            TaskThread[] taskArr = new TaskThread[taskCount];
+            Task[] taskArr = new Task[taskCount];
             int idx = 0;
             foreach (Enum_SharesTag_CalType calType in calTypeArr)
             {
                 Enum_SharesTag_CalType _calType = calType;
-                taskArr[idx] = new TaskThread();
-                taskArr[idx].CreateTask(e =>
+                taskArr[idx]=Task.Factory.StartNew(() =>
                 {
                     _calculate(_calType, PlateRel, Plate_Quotes_Date_Session, Plate_Quotes_Today_Session, Shares_Quotes_Date_Session, Shares_Quotes_Today_Session, Plate_Tag_FocusOn_Session, Plate_Tag_Force_Session, Plate_Tag_TrendLike_Session, Plate_Shares_Rel_Tag_Setting_Session, Shares_Base_Session);
                 });
                 idx++;
             }
-            TaskThread.WaitAll(ref taskArr);
+            Task.WaitAll(taskArr);
 
         }
 

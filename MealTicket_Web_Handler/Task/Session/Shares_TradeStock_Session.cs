@@ -13,6 +13,7 @@ namespace MealTicket_Web_Handler
         {
             using (var db = new meal_ticketEntities())
             {
+                db.Database.CommandTimeout = 600;
                 string sql = string.Format(@"declare @diffDays int;
   declare @dateNow datetime=convert(varchar(10),dateadd(MINUTE,-{1},dateadd(HOUR,-{0},getdate())),120); 
   declare @errorCode int;
@@ -27,7 +28,7 @@ namespace MealTicket_Web_Handler
   end
   declare @disDate datetime;
   set @disDate=dbo.f_getTradeDate(@dateNow,@diffDays);
-  declare @maxDate datetime=dateadd(DAY,1,@disDate)
+  declare @maxDate datetime=dbo.f_getTradeDate(@disDate,1)
 
   declare @dateInt bigint=convert(varchar(10),@disDate,112);
   declare @hour int=datepart(HOUR,getdate());
@@ -41,19 +42,34 @@ namespace MealTicket_Web_Handler
   begin
 	set @timeSpan={4};
   end
+  else if(@timeSpan>{5} and @timeSpan<{6})
+  begin
+	set @timeSpan={5};
+  end
 
   declare @GroupTimeKeyNow bigint=@dateInt*10000+@timeSpan;
 
   
   declare @dateMaxInt bigint=convert(varchar(10),@maxDate,112);
   declare @endGroupTimeKeyNow bigint=@dateMaxInt*10000+@timeSpan;
-  declare @startGroupTimeKeyNow bigint=@endGroupTimeKeyNow-{5};
+  declare @startGroupTimeKeyNow bigint=@endGroupTimeKeyNow-{7};
+
+  declare @endTimeSpan bigint=@startGroupTimeKeyNow%10000;
+  if(@endTimeSpan<{4})
+  begin
+	set @startGroupTimeKeyNow=(@startGroupTimeKeyNow/10000*10000)+{4};
+  end
+  else if(@endTimeSpan>{5} and @endTimeSpan<{6})
+  begin
+	set @startGroupTimeKeyNow=(@startGroupTimeKeyNow/10000*10000)+{5};
+  end
+
   if(@startGroupTimeKeyNow%100>=60)
   begin
 	set @startGroupTimeKeyNow=@startGroupTimeKeyNow-40;
   end
 
-  select t.Market,t.SharesCode,t.TradeStock_Yestoday,t.TradeStock_Now,t.GroupTimeKey,t1.TradeStock,t1.TradeStock_Interval,t1.TradeStock_Interval_Count
+  select t.Market,t.SharesCode,t.TradeStock_Yestoday,t.TradeStock_Now,t.GroupTimeKey,isnull(t1.TradeStock,0)TradeStock,isnull(t1.TradeStock_Interval,0)TradeStock_Interval,isnull(t1.TradeStock_Interval_Count,0)TradeStock_Interval_Count
   from
   (
 	  select Market,SharesCode,sum(TradeStock)TradeStock_Yestoday,sum(case when GroupTimeKey<=@GroupTimeKeyNow then TradeStock else 0 end)TradeStock_Now,@timeSpan GroupTimeKey
@@ -69,7 +85,7 @@ namespace MealTicket_Web_Handler
 	  from t_shares_securitybarsdata_1min
 	  where [Time]>@maxDate
 	  group by Market,SharesCode
-  )t1 on t.SharesCode=t1.SharesCode and t.Market=t1.Market", Singleton.Instance.Time1EndInt/100, Singleton.Instance.Time1EndInt%100, Singleton.Instance.Time1EndInt, Singleton.Instance.Time4EndInt,Singleton.Instance.Time3Start1Int,Singleton.Instance.SharesStockCal_IntervalMinute);
+  )t1 on t.SharesCode=t1.SharesCode and t.Market=t1.Market", Singleton.Instance.Time1EndInt/100, Singleton.Instance.Time1EndInt%100, Singleton.Instance.Time1EndInt, Singleton.Instance.Time4EndInt,Singleton.Instance.Time3Start1Int,Singleton.Instance.Time3End1Int,Singleton.Instance.Time3Start2Int, Singleton.Instance.SharesStockCal_IntervalMinute);
                 var result = db.Database.SqlQuery<Shares_TradeStock_Session_Info>(sql).ToList();
                 return result.ToDictionary(k => long.Parse(k.SharesCode) * 10 + k.Market, v => v);
             }

@@ -78,3 +78,9 @@ D:\项目\饭票\后端\Test\bin\Debug\System.Numerics.Vectors.xml
 D:\项目\饭票\后端\Test\bin\Debug\zh-Hans\EntityFramework.resources.dll
 D:\项目\饭票\后端\Test\bin\Debug\zh-Hans\EntityFramework.SqlServer.resources.dll
 D:\项目\饭票\后端\Test\obj\Debug\Test.csproj.CopyComplete
+F:\项目\饭票后端\Test\bin\Debug\MealTicket_Web_Handler.dll
+F:\项目\饭票后端\Test\bin\Debug\StockTrendMonitor.dll
+F:\项目\饭票后端\Test\bin\Debug\stock_db_core.dll
+F:\项目\饭票后端\Test\bin\Debug\MealTicket_Web_Handler.pdb
+F:\项目\饭票后端\Test\bin\Debug\MealTicket_Web_Handler.dll.config
+F:\项目\饭票后端\Test\bin\Debug\stock_db_core.pdb

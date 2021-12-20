@@ -1,5 +1,6 @@
 ﻿using FXCommon.Common;
 using MealTicket_DBCommon;
+using MealTicket_Web_Handler;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -78,24 +79,15 @@ namespace Test
     {
         static void Main(string[] args)
         {
-            DateTime time = DateTime.Parse("9999-01-01 00:00:00");
-            //A a = new A 
-            //{
-            //    Id=1,
-            //    Name="aaa"
-            //};
-            //SessionHandler sessionHandler = new SessionHandler();
-            //sessionHandler.SetSession("a", a);
-            //a.Id = 3;
-            //sessionHandler.GetSession("a");
-        }
-    }
-
-    public class SessionHandler : Session_New
-    {
-        public override object UpdateSession(int ExcuteType)
-        {
-            throw new NotImplementedException();
+            A a = new A
+            {
+                Id = 1,
+                Name = "aaa"
+            };
+            var session=Singleton.Instance;
+            session.Init();
+            session.sessionHandler.GetShares_Quotes_Last_Session();
+         
         }
     }
 }

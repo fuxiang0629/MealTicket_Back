@@ -13,7 +13,7 @@ namespace MealTicket_Web_Handler
         {
             using (var db = new meal_ticketEntities())
             {
-                string sql = @"select Market,SharesCode,SharesName,TotalCapital,CirculatingCapital,MarketStatus from v_shares_baseinfo";
+                string sql = @"select Market,SharesCode,SharesName,SharesPyjc,TotalCapital,CirculatingCapital,MarketStatus from v_shares_baseinfo";
                 var result = db.Database.SqlQuery<Shares_Base_Session_Info>(sql).ToList();
                 return result.ToDictionary(k => long.Parse(k.SharesCode)*10+k.Market, v => v) ;
             }

@@ -313,6 +313,7 @@
     <Compile Include="Singleton.cs" />
     <Compile Include="Task\Model\EnumModel.cs" />
     <Compile Include="Task\Model\Plate_Quotes_Session_Info.cs" />
+    <Compile Include="Task\Model\Plate_Shares_Rel_Session_Info.cs" />
     <Compile Include="Task\Model\Plate_Shares_Rel_Tag_Setting_Session_Info.cs" />
     <Compile Include="Task\Model\Plate_Tag_FocusOn_Session_Info.cs" />
     <Compile Include="Task\Model\Plate_Tag_Force_Session_Info.cs" />
@@ -327,6 +328,7 @@
     <Compile Include="Task\Session\Plate_Quotes_Today_Session.cs" />
     <Compile Include="Task\SessionHandler.cs" />
     <Compile Include="Task\SessionSetting.cs" />
+    <Compile Include="Task\Session\Plate_Shares_Rel_Session.cs" />
     <Compile Include="Task\Session\Plate_Shares_Rel_Tag_Setting_Session.cs" />
     <Compile Include="Task\Session\Plate_Tag_FocusOn_Session.cs" />
     <Compile Include="Task\Session\Plate_Tag_Force_Session.cs" />

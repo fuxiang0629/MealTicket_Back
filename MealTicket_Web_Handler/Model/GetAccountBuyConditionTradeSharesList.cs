@@ -61,6 +61,31 @@ namespace MealTicket_Web_Handler.Model
         /// 获取等级
         /// </summary>
         public int Level { get; set; }
+
+        /// <summary>
+        /// 自带股票市场
+        /// </summary>
+        public int Market { get; set; }
+
+        /// <summary>
+        /// 自带股票code
+        /// </summary>
+        public string SharesCode { get; set; }
+
+        /// <summary>
+        /// 是否值查询带标签的板块的股票
+        /// </summary>
+        public bool IsRealPlate { get; set; }
+
+        /// <summary>
+        /// 市场（深市/上市/创业板）
+        /// </summary>
+        public List<string> MarketValue { get; set; }
+
+        /// <summary>
+        /// 时间类型
+        /// </summary>
+        public int BaseDayType { get; set; }
     }
 
     public class AccountBuyConditionTradeSharesInfo
@@ -219,5 +244,10 @@ namespace MealTicket_Web_Handler.Model
         /// 预计量比
         /// </summary>
         public int StockRate_All { get; set; }
+
+        /// <summary>
+        /// 是否外面传入的股票
+        /// </summary>
+        public bool IsMain { get; set; }
     }
 }

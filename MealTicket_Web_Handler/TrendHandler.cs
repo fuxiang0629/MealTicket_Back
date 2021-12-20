@@ -6160,147 +6160,180 @@ inner
             {
                 request.Id = basedata.AccountId;
             }
+            if (request.BaseDayType == 0)
+            {
+                request.BaseDayType = 3;
+            }
             List<AccountBuyConditionTradeSharesInfo> list = new List<AccountBuyConditionTradeSharesInfo>();
             using (var db = new meal_ticketEntities())
             {
-                var tempResult = from item in db.t_shares_plate
-                                 join item2 in db.t_shares_plate_rel on item.Id equals item2.PlateId
-                                 where item.Status == 1
-                                 select item2;
+                var plateSharesRel = Singleton.Instance.sessionHandler.GetPlate_Shares_Rel_Session();
 
+                List<Plate_Shares_Rel_Session_Info> tempResult_temp = new List<Plate_Shares_Rel_Session_Info>();
                 if (request.GroupId1 > 0)
                 {
-                    tempResult = from item in tempResult
-                                 where item.PlateId == request.GroupId1
-                                 select item;
+                    if (plateSharesRel.ContainsKey(request.GroupId1))
+                    {
+                        tempResult_temp.AddRange(plateSharesRel[request.GroupId1]);
+                    }
 
                 }
                 if (request.GroupId2 > 0)
                 {
-                    tempResult = from item in tempResult
-                                 where item.PlateId == request.GroupId2
-                                 select item;
+                    if (plateSharesRel.ContainsKey(request.GroupId2))
+                    {
+                        tempResult_temp.AddRange(plateSharesRel[request.GroupId2]);
+                    }
                 }
                 if (request.GroupId3 > 0)
                 {
-                    tempResult = from item in tempResult
-                                 where item.PlateId == request.GroupId3
-                                 select item;
+                    if (plateSharesRel.ContainsKey(request.GroupId3))
+                    {
+                        tempResult_temp.AddRange(plateSharesRel[request.GroupId3]);
+                    }
                 }
 
-                var result = from item in tempResult
-                             join item2 in db.v_shares_baseinfo on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode } into a
-                             from ai in a.DefaultIfEmpty()
-                             join item3 in db.v_shares_quotes_last on new { item.Market, item.SharesCode } equals new { item3.Market, item3.SharesCode } into b
-                             from bi in b.DefaultIfEmpty()
-                             select new { item, ai, bi };
+                List<Plate_Shares_Rel_Session_Info> tempResult = new List<Plate_Shares_Rel_Session_Info>();
+                var Tag_FocusOn = Singleton.Instance.sessionHandler.GetPlate_Tag_FocusOn_Session_ByPlate();
+                var Tag_Force = Singleton.Instance.sessionHandler.GetPlate_Tag_Force_Session_ByPlate();
+                var Tag_TrendLike = Singleton.Instance.sessionHandler.GetPlate_Tag_TrendLike_Session_ByPlate();
+                foreach (var item in tempResult_temp)
+                {
+                    if (request.IsRealPlate)
+                    {
+                        long key1 = long.Parse(item.SharesCode) * 10 + item.Market;
+                        long key2 = long.Parse(item.SharesCode) * 1000 + item.Market * 100 + request.BaseDayType;
+                        if (Tag_FocusOn.ContainsKey(item.PlateId))
+                        {
+                            if (Tag_FocusOn[item.PlateId].ContainsKey(key1))
+                            {
+                                if (Tag_FocusOn[item.PlateId][key1].IsFocusOn)
+                                {
+                                    tempResult.Add(item);
+                                    continue;
+                                }
+                            }
+                        }
+                        if (Tag_TrendLike.ContainsKey(item.PlateId))
+                        {
+                            if (Tag_TrendLike[item.PlateId].ContainsKey(key1))
+                            {
+                                if (Tag_TrendLike[item.PlateId][key1].IsTrendLike)
+                                {
+                                    tempResult.Add(item);
+                                    continue;
+                                }
+                            }
+                        }
+                        if (Tag_Force.ContainsKey(item.PlateId))
+                        {
+                            if (Tag_Force[item.PlateId].ContainsKey(key2))
+                            {
+                                if (Tag_Force[item.PlateId][key2].IsForce1 || Tag_Force[item.PlateId][key2].IsForce2)
+                                {
+                                    tempResult.Add(item);
+                                    continue;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        tempResult.Add(item);
+                    }
+                }
+
+                List<Plate_Shares_Rel_Session_Info> tempResult2 = new List<Plate_Shares_Rel_Session_Info>();
+                if (request.MarketValue.Count() <= 0)
+                {
+                    tempResult2 = tempResult;
+                }
+                else
+                {
+                    foreach (string keyStr in request.MarketValue)
+                    {
+                        string[] tempValue = keyStr.Split(',');
+                        if (tempValue.Length != 2)
+                        {
+                            continue;
+                        }
+                        int limitMarket = int.Parse(tempValue[0]);
+                        string limitSharesCode = tempValue[1];
+                        var temp = (from x in tempResult
+                                    where (limitMarket == -1 || limitMarket == x.Market) && x.SharesCode.StartsWith(limitSharesCode)
+                                    select x).ToList();
+                        tempResult2.AddRange(temp);
+                    }
+                }
+
+                tempResult = (from item in tempResult2
+                              group item by new { item.Market, item.SharesCode } into g
+                              select new Plate_Shares_Rel_Session_Info
+                              {
+                                  SharesCode = g.Key.SharesCode,
+                                  Market = g.Key.Market
+                              }).ToList();
+                var shares_base_session = Singleton.Instance.sessionHandler.GetShares_Base_Session().Values.ToList();
+                var shares_quotes_last_session = Singleton.Instance.sessionHandler.GetShares_Quotes_Last_Session().Values.ToList();
+                var result = (from item in tempResult
+                              join item2 in shares_base_session on new { item.Market, item.SharesCode } equals new { item2.Market, item2.SharesCode }
+                              join item3 in shares_quotes_last_session on new { item.Market, item.SharesCode } equals new { item3.shares_quotes_info.Market, item3.shares_quotes_info.SharesCode } into b
+                              from bi in b.DefaultIfEmpty()
+                              select new { item, item2, bi }).ToList();
                 if (!string.IsNullOrEmpty(request.SharesInfo))
                 {
-                    result = from item in result
-                             where item.ai != null && (item.ai.SharesCode.Contains(request.SharesInfo) || item.ai.SharesName.Contains(request.SharesInfo) || item.ai.SharesPyjc.StartsWith(request.SharesInfo))
-                             select item;
+                    result = (from item in result
+                              where item.item2.SharesCode.Contains(request.SharesInfo) || item.item2.SharesName.Contains(request.SharesInfo) || item.item2.SharesPyjc.StartsWith(request.SharesInfo)
+                              select item).ToList();
                 }
 
                 int totalCount = result.Count();
 
-                if (request.OrderType == 2)
+                if (request.OrderMethod == "descending")
                 {
-                    if (request.OrderMethod == "descending")
-                    {
-                        list = (from item in result
-                                let currPrice = item.bi == null ? 0 : item.bi.PresentPrice
-                                let riseRate = (item.bi == null || item.bi.ClosedPrice <= 0) ? 0 : (int)((currPrice - item.bi.ClosedPrice) * 1.0 / item.bi.ClosedPrice * 10000)
-                                orderby riseRate descending
-                                select new AccountBuyConditionTradeSharesInfo
-                                {
-                                    SharesCode = item.item.SharesCode,
-                                    TodayDealCount=item.bi==null?0:item.bi.TotalCount,
-                                    TodayDealAmount= item.bi == null ? 0 : item.bi.TotalAmount,
-                                    OpenedPrice=item.bi==null?0:item.bi.OpenedPrice,
-                                    CirculatingCapital=(item.ai==null || item.ai.CirculatingCapital==null)? 0:item.ai.CirculatingCapital.Value,
-                                    SharesName = item.ai == null ? "" : item.ai.SharesName,
-                                    CreateTime = item.item.CreateTime,
-                                    CurrPrice = currPrice,
-                                    ClosedPrice = item.bi == null ? 0 : item.bi.ClosedPrice,
-                                    MarketStatus = item.ai == null ? 0 : item.ai.MarketStatus,
-                                    Market = item.item.Market,
-                                    RisePrice = item.bi == null ? 0 : (currPrice - item.bi.ClosedPrice),
-                                    RiseRate = riseRate,
-                                }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
-                    }
-                    else
-                    {
-                        list = (from item in result
-                                let currPrice = item.bi == null ? 0 : item.bi.PresentPrice
-                                let riseRate = (item.bi == null || item.bi.ClosedPrice <= 0) ? 0 : (int)((currPrice - item.bi.ClosedPrice) * 1.0 / item.bi.ClosedPrice * 10000)
-                                orderby riseRate
-                                select new AccountBuyConditionTradeSharesInfo
-                                {
-                                    SharesCode = item.item.SharesCode,
-                                    TodayDealCount = item.bi == null ? 0 : item.bi.TotalCount,
-                                    TodayDealAmount = item.bi == null ? 0 : item.bi.TotalAmount,
-                                    OpenedPrice = item.bi == null ? 0 : item.bi.OpenedPrice,
-                                    CirculatingCapital = (item.ai == null || item.ai.CirculatingCapital == null) ? 0 : item.ai.CirculatingCapital.Value,
-                                    SharesName = item.ai == null ? "" : item.ai.SharesName,
-                                    CreateTime = item.item.CreateTime,
-                                    CurrPrice = currPrice,
-                                    ClosedPrice = item.bi == null ? 0 : item.bi.ClosedPrice,
-                                    MarketStatus = item.ai == null ? 0 : item.ai.MarketStatus,
-                                    Market = item.item.Market,
-                                    RisePrice = item.bi == null ? 0 : (currPrice - item.bi.ClosedPrice),
-                                    RiseRate = riseRate,
-                                }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
-                    }
+                    list = (from item in result
+                            let currPrice = item.bi == null ? 0 : item.bi.shares_quotes_info.ClosedPrice
+                            let riseRate = (item.bi == null || item.bi.shares_quotes_info.YestodayClosedPrice == 0) ? 0 : (int)((currPrice - item.bi.shares_quotes_info.YestodayClosedPrice) * 1.0 / item.bi.shares_quotes_info.YestodayClosedPrice * 10000)
+                            orderby riseRate descending
+                            select new AccountBuyConditionTradeSharesInfo
+                            {
+                                SharesCode = item.item.SharesCode,
+                                TodayDealCount = item.bi == null ? 0 : item.bi.shares_quotes_info.TotalCount,
+                                TodayDealAmount = item.bi == null ? 0 : item.bi.shares_quotes_info.TotalAmount,
+                                OpenedPrice = item.bi == null ? 0 : item.bi.shares_quotes_info.OpenedPrice,
+                                CirculatingCapital = item.item2.CirculatingCapital,
+                                SharesName = item.item2.SharesName,
+                                CurrPrice = currPrice,
+                                ClosedPrice = item.bi == null ? 0 : item.bi.shares_quotes_info.YestodayClosedPrice,
+                                MarketStatus = item.item2.MarketStatus,
+                                Market = item.item.Market,
+                                RisePrice = item.bi == null ? 0 : (currPrice - item.bi.shares_quotes_info.YestodayClosedPrice),
+                                RiseRate = riseRate,
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                 }
                 else
                 {
-                    if (request.OrderMethod == "descending")
-                    {
-                        list = (from item in result
-                                let currPrice = item.bi == null ? 0 : item.bi.PresentPrice
-                                let riseRate = (item.bi == null || item.bi.ClosedPrice <= 0) ? 0 : (int)((currPrice - item.bi.ClosedPrice) * 1.0 / item.bi.ClosedPrice * 10000)
-                                orderby item.item.CreateTime descending
-                                select new AccountBuyConditionTradeSharesInfo
-                                {
-                                    SharesCode = item.item.SharesCode,
-                                    TodayDealCount = item.bi == null ? 0 : item.bi.TotalCount,
-                                    TodayDealAmount = item.bi == null ? 0 : item.bi.TotalAmount,
-                                    OpenedPrice = item.bi == null ? 0 : item.bi.OpenedPrice,
-                                    CirculatingCapital = (item.ai == null || item.ai.CirculatingCapital == null) ? 0 : item.ai.CirculatingCapital.Value,
-                                    SharesName = item.ai == null ? "" : item.ai.SharesName,
-                                    CreateTime = item.item.CreateTime,
-                                    CurrPrice = currPrice,
-                                    ClosedPrice = item.bi == null ? 0 : item.bi.ClosedPrice,
-                                    MarketStatus = item.ai == null ? 0 : item.ai.MarketStatus,
-                                    Market = item.item.Market,
-                                    RisePrice = item.bi == null ? 0 : (currPrice - item.bi.ClosedPrice),
-                                    RiseRate = riseRate,
-                                }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
-                    }
-                    else
-                    {
-                        list = (from item in result
-                                let currPrice = item.bi == null ? 0 : item.bi.PresentPrice
-                                let riseRate = (item.bi == null || item.bi.ClosedPrice <= 0) ? 0 : (int)((currPrice - item.bi.ClosedPrice) * 1.0 / item.bi.ClosedPrice * 10000)
-                                orderby item.item.CreateTime
-                                select new AccountBuyConditionTradeSharesInfo
-                                {
-                                    SharesCode = item.item.SharesCode,
-                                    TodayDealCount = item.bi == null ? 0 : item.bi.TotalCount,
-                                    TodayDealAmount = item.bi == null ? 0 : item.bi.TotalAmount,
-                                    OpenedPrice = item.bi == null ? 0 : item.bi.OpenedPrice,
-                                    CirculatingCapital = (item.ai == null || item.ai.CirculatingCapital == null) ? 0 : item.ai.CirculatingCapital.Value,
-                                    SharesName = item.ai == null ? "" : item.ai.SharesName,
-                                    CreateTime = item.item.CreateTime,
-                                    CurrPrice = currPrice,
-                                    ClosedPrice = item.bi == null ? 0 : item.bi.ClosedPrice,
-                                    MarketStatus = item.ai == null ? 0 : item.ai.MarketStatus,
-                                    Market = item.item.Market,
-                                    RisePrice = item.bi == null ? 0 : (currPrice - item.bi.ClosedPrice),
-                                    RiseRate = riseRate,
-                                }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
-                    }
+                    list = (from item in result
+                            let currPrice = item.bi == null ? 0 : item.bi.shares_quotes_info.ClosedPrice
+                            let riseRate = (item.bi == null || item.bi.shares_quotes_info.YestodayClosedPrice == 0) ? 0 : (int)((currPrice - item.bi.shares_quotes_info.YestodayClosedPrice) * 1.0 / item.bi.shares_quotes_info.YestodayClosedPrice * 10000)
+                            orderby riseRate
+                            select new AccountBuyConditionTradeSharesInfo
+                            {
+                                SharesCode = item.item.SharesCode,
+                                TodayDealCount = item.bi == null ? 0 : item.bi.shares_quotes_info.TotalCount,
+                                TodayDealAmount = item.bi == null ? 0 : item.bi.shares_quotes_info.TotalAmount,
+                                OpenedPrice = item.bi == null ? 0 : item.bi.shares_quotes_info.OpenedPrice,
+                                CirculatingCapital = item.item2.CirculatingCapital,
+                                SharesName = item.item2.SharesName,
+                                CurrPrice = currPrice,
+                                ClosedPrice = item.bi == null ? 0 : item.bi.shares_quotes_info.YestodayClosedPrice,
+                                MarketStatus = item.item2.MarketStatus,
+                                Market = item.item.Market,
+                                RisePrice = item.bi == null ? 0 : (currPrice - item.bi.shares_quotes_info.YestodayClosedPrice),
+                                RiseRate = riseRate,
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                 }
+              
                 List<long> detailsIdList = list.Select(e => e.Id).ToList();
                 var groupRelList = from x in db.t_account_shares_conditiontrade_buy_group_rel
                                    join x2 in db.t_account_shares_conditiontrade_buy_group on x.GroupId equals x2.Id
@@ -6399,6 +6432,10 @@ inner
                         item.StockRate_All = shares_last_quotes_session[key].RateExpect;
                         item.StockRate_Now = shares_last_quotes_session[key].RateNow;
                     }
+                    if (item.Market == request.Market && item.SharesCode == request.SharesCode)
+                    {
+                        item.IsMain = true;
+                    }
                 }
                 return new PageRes<AccountBuyConditionTradeSharesInfo>
                 {
@@ -6426,37 +6463,29 @@ inner
         /// <param name="request"></param>
         /// <param name="basedata"></param>
         /// <returns></returns>
-        public List<PlateSharesInfo> GetPlateLeaderModelSharesList(GetPlateLeaderModelSharesListRequest request, HeadBase basedata)
+        public object GetPlateLeaderModelSharesList(GetPlateLeaderModelSharesListRequest request, HeadBase basedata)
         {
             using (var db = new meal_ticketEntities())
             {
-                var LeaderDic = Singleton.Instance.sessionHandler.GetShares_Tag_Leader_Session();
-                var DayLeaderDic = Singleton.Instance.sessionHandler.GetShares_Tag_DayLeader_Session();
-                var MainArmyDic = Singleton.Instance.sessionHandler.GetShares_Tag_MainArmy_Session();
-                long key = request.PlateId * 100 + request.BaseDayType;
-
-                List<long> SharesKeyList = new List<long>();
-                if (LeaderDic.ContainsKey(key))
-                {
-                    var newDic=LeaderDic[key].Where(e => e.Value.LeaderType > 0).ToDictionary(k => k.Key,v=>v.Value);
-                    SharesKeyList.AddRange(newDic.Keys.ToList());
-                }
-                if (DayLeaderDic.ContainsKey(key))
-                {
-                    var newDic = DayLeaderDic[key].Where(e => e.Value.DayLeaderType > 0).ToDictionary(k => k.Key, v => v.Value);
-                    SharesKeyList.AddRange(newDic.Keys.ToList());
-                }
-                if (MainArmyDic.ContainsKey(key))
-                {
-                    var newDic = MainArmyDic[key].Where(e => e.Value.MainArmyType > 0).ToDictionary(k => k.Key, v => v.Value);
-                    SharesKeyList.AddRange(newDic.Keys.ToList());
-                }
+                //系统内所有股票
+                var sysTotalSharesKeyList = Singleton.Instance.sessionHandler.GetShares_Base_Session().Keys;
+                //板块内所有带标签的股票
+                var totalSharesKeyList=_getTotalCalShares(request.PlateId,request.BaseDayType);
+                //板块内所有龙头股票
+                Dictionary<long, Shares_Tag_Leader_Session_Info> LeaderDic = new Dictionary<long, Shares_Tag_Leader_Session_Info>();
+                Dictionary<long, Shares_Tag_DayLeader_Session_Info> DayLeaderDic = new Dictionary<long, Shares_Tag_DayLeader_Session_Info>();
+                Dictionary<long, Shares_Tag_MainArmy_Session_Info> MainArmyDic = new Dictionary<long, Shares_Tag_MainArmy_Session_Info>();
+                var leaderSharesKeyList = _getLeaderCalShares(request.PlateId, request.BaseDayType,ref LeaderDic,ref DayLeaderDic, ref MainArmyDic);
+                //所有需要展示的股票
+                var sharesKeyList = leaderSharesKeyList;
                 if (!string.IsNullOrEmpty(request.SharesCode))
                 {
-                    SharesKeyList.Add(long.Parse(request.SharesCode) * 10 + request.Market);
+                    long parKey = long.Parse(request.SharesCode) * 10 + request.Market;
+                    if (totalSharesKeyList.Contains(parKey) && !sharesKeyList.Contains(parKey))
+                    {
+                        sharesKeyList.Add(parKey);
+                    }
                 }
-
-                SharesKeyList = SharesKeyList.Distinct().ToList();
 
                 var sharesBaseDic = Singleton.Instance.sessionHandler.GetShares_Base_Session();
 
@@ -6481,7 +6510,7 @@ inner
                 var mySharesGroup = (from item in db.t_account_shares_group_rel
                                      where item.AccountId == basedata.AccountId
                                      select item).ToList();
-                var shares_List = (from item in SharesKeyList
+                var shares_List = (from item in sharesKeyList
                                    select new SharesBaseInfo
                                    {
                                        Market = (int)(item % 10),
@@ -6492,7 +6521,8 @@ inner
                 int CalDays = request.BaseDayType == 1 ? 3 : request.BaseDayType == 2 ? 5 : request.BaseDayType == 3 ? 10 : 15;
                 var shares_quotes_date=Singleton.Instance.sessionHandler.GetShares_Quotes_Date_Session();
                 var shares_quotes_today = Singleton.Instance.sessionHandler.GetShares_Quotes_Today_Session();
-                foreach (long itemkey in SharesKeyList) 
+                Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> shares_quotes_date_new = new Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>>();
+                foreach (long itemkey in sysTotalSharesKeyList) 
                 {
                     if (!shares_quotes_today.ContainsKey(itemkey))
                     {
@@ -6506,13 +6536,9 @@ inner
                     {
                         shares_quotes_date[itemkey].Add(DateTime.Now.Date, shares_quotes_today[itemkey]);
                     }
-                }
 
-                Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> shares_quotes_date_new = new Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>>();
-                foreach (var item in shares_quotes_date)
-                {
-                    var newDate=item.Value.OrderByDescending(e => e.Key).Take(CalDays).ToDictionary(k => k.Key, v => v.Value);
-                    shares_quotes_date_new.Add(item.Key, newDate);
+                    var newDate = shares_quotes_date[itemkey].OrderByDescending(e => e.Key).Take(CalDays).ToDictionary(k => k.Key, v => v.Value);
+                    shares_quotes_date_new.Add(itemkey, newDate);
                 }
 
                 List<SharesRank> rank = new List<SharesRank>();
@@ -6521,8 +6547,12 @@ inner
                     SharesRank tempRank = new SharesRank();
                     tempRank.SharesKey = item.Key;
                     var lastQuote = item.Value.OrderByDescending(e => e.Key).FirstOrDefault().Value;
-                    var firsrQuote = item.Value.OrderBy(e => e.Key).FirstOrDefault().Value;
-                    tempRank.RiseRate = (int)Math.Round((lastQuote.ClosedPrice - firsrQuote.YestodayClosedPrice) * 1.0 / firsrQuote.YestodayClosedPrice * 10000, 0);
+                    var tempQuote = item.Value.OrderBy(e => e.Value.ClosedPrice).FirstOrDefault().Value;
+                    if (tempQuote.ClosedPrice >= lastQuote.ClosedPrice)
+                    {
+                        tempQuote= item.Value.OrderByDescending(e => e.Value.ClosedPrice).FirstOrDefault().Value;
+                    }
+                    tempRank.RiseRate = tempQuote.ClosedPrice == 0 ? 0 : (int)Math.Round((lastQuote.ClosedPrice - tempQuote.ClosedPrice) * 1.0 / tempQuote.ClosedPrice * 10000, 0);
                     rank.Add(tempRank);
                 }
                 rank = rank.OrderByDescending(e => e.RiseRate).ToList();
@@ -6536,7 +6566,7 @@ inner
                     idx++;
                     t.TotalRank = idx;
 
-                    if (SharesKeyList.Contains(t.SharesKey))
+                    if (totalSharesKeyList.Contains(t.SharesKey))
                     {
                         plateIdx++;
                         t.PlateRank = plateIdx;
@@ -6548,32 +6578,23 @@ inner
                 List<PlateSharesInfo> result = new List<PlateSharesInfo>();
 
                 var shares_last_quotes_session = Singleton.Instance.sessionHandler.GetShares_Quotes_Last_Session();
-                foreach (long itemkey in SharesKeyList)
+                foreach (long itemkey in sharesKeyList)
                 {
                     PlateSharesInfo tempInfo = new PlateSharesInfo();
 
                     int market = (int)(itemkey % 10);
                     string sharesCode = (itemkey / 10).ToString();
-                    if (LeaderDic.ContainsKey(key))
+                    if (LeaderDic.ContainsKey(itemkey))
                     {
-                        if (LeaderDic[key].ContainsKey(itemkey))
-                        {
-                            tempInfo.LeaderType = LeaderDic[key][itemkey].LeaderType;
-                        }
+                        tempInfo.LeaderType = LeaderDic[itemkey].LeaderType;
                     }
-                    if (DayLeaderDic.ContainsKey(key))
+                    if (DayLeaderDic.ContainsKey(itemkey))
                     {
-                        if (DayLeaderDic[key].ContainsKey(itemkey))
-                        {
-                            tempInfo.DayLeaderType = DayLeaderDic[key][itemkey].DayLeaderType;
-                        }
+                        tempInfo.DayLeaderType = DayLeaderDic[itemkey].DayLeaderType;
                     }
-                    if (MainArmyDic.ContainsKey(key))
+                    if (MainArmyDic.ContainsKey(itemkey))
                     {
-                        if (MainArmyDic[key].ContainsKey(itemkey))
-                        {
-                            tempInfo.MainArmyType = MainArmyDic[key][itemkey].MainArmyType;
-                        }
+                        tempInfo.MainArmyType = MainArmyDic[itemkey].MainArmyType;
                     }
 
                     long circulatingCapital = 0;
@@ -6688,6 +6709,10 @@ inner
                         tempInfo.StockRate_All = shares_last_quotes_session[itemkey].RateExpect;
                         tempInfo.StockRate_Now = shares_last_quotes_session[itemkey].RateNow;
                     }
+                    if (request.Market == tempInfo.Market && request.SharesCode == tempInfo.SharesCode)
+                    {
+                        tempInfo.IsMain = true;
+                    }
                     result.Add(tempInfo);
                 }
                 if (request.OrderMethod == "descending")
@@ -6698,9 +6723,75 @@ inner
                 {
                     result = result.OrderBy(e => e.RiseRate).ToList();
                 }
-                return result;
+                return new 
+                {
+                    TableList= result,
+                    TotalCount =totalSharesKeyList.Count()
+                };
             }
         }
+
+        private List<long> _getTotalCalShares(long plateId,int dayType)
+        {
+            List<long> result = new List<long>();
+            var FocusOnDic = Singleton.Instance.sessionHandler.GetPlate_Tag_FocusOn_Session_ByPlate();
+            var ForceDic = Singleton.Instance.sessionHandler.GetPlate_Tag_Force_Session_ByPlate();
+            var TrendLikeDic = Singleton.Instance.sessionHandler.GetPlate_Tag_TrendLike_Session_ByPlate();
+            if (FocusOnDic.ContainsKey(plateId))
+            {
+                var newDic = FocusOnDic[plateId].Where(e => e.Value.IsFocusOn==true).ToDictionary(k => k.Key, v => v.Value);
+                result.AddRange(newDic.Keys.ToList());
+            }
+            if (ForceDic.ContainsKey(plateId))
+            {
+                var newDic = ForceDic[plateId].Where(e => e.Value.IsForce1 == true || e.Value.IsForce2 == true).ToDictionary(k => k.Key, v => v.Value);
+                foreach (var item in newDic)
+                {
+                    if ((item.Key % 100) == dayType)
+                    {
+                        long newKey = item.Key / 100;
+                        result.Add(newKey);
+                    }
+                }
+            }
+            if (TrendLikeDic.ContainsKey(plateId))
+            {
+                var newDic = TrendLikeDic[plateId].Where(e => e.Value.IsTrendLike == true).ToDictionary(k => k.Key, v => v.Value);
+                result.AddRange(newDic.Keys.ToList());
+            }
+            result = result.Distinct().ToList();
+            return result;
+        }
+        private List<long> _getLeaderCalShares(long plateId, int dayType,ref Dictionary<long, Shares_Tag_Leader_Session_Info> refLeaderDic,ref Dictionary<long, Shares_Tag_DayLeader_Session_Info>  refDayLeaderDic,ref Dictionary<long, Shares_Tag_MainArmy_Session_Info>  refMainArmyDic)
+        {
+            var LeaderDic = Singleton.Instance.sessionHandler.GetShares_Tag_Leader_Session();
+            var DayLeaderDic = Singleton.Instance.sessionHandler.GetShares_Tag_DayLeader_Session();
+            var MainArmyDic = Singleton.Instance.sessionHandler.GetShares_Tag_MainArmy_Session();
+            long key = plateId * 100 + dayType;
+
+            List<long> SharesKeyList = new List<long>();
+            if (LeaderDic.ContainsKey(key))
+            {
+                var newDic = LeaderDic[key].Where(e => e.Value.LeaderType > 0).ToDictionary(k => k.Key, v => v.Value);
+                SharesKeyList.AddRange(newDic.Keys.ToList());
+                refLeaderDic = newDic;
+            }
+            if (DayLeaderDic.ContainsKey(key))
+            {
+                var newDic = DayLeaderDic[key].Where(e => e.Value.DayLeaderType > 0).ToDictionary(k => k.Key, v => v.Value);
+                SharesKeyList.AddRange(newDic.Keys.ToList());
+                refDayLeaderDic = newDic;
+            }
+            if (MainArmyDic.ContainsKey(key))
+            {
+                var newDic = MainArmyDic[key].Where(e => e.Value.MainArmyType > 0).ToDictionary(k => k.Key, v => v.Value);
+                SharesKeyList.AddRange(newDic.Keys.ToList());
+                refMainArmyDic = newDic;
+            }
+            SharesKeyList = SharesKeyList.Distinct().ToList();
+            return SharesKeyList;
+        }
+
 
         /// <summary>
         /// 添加买入条件单股票
@@ -15952,6 +16043,7 @@ select @buyId;";
                             select new TradeTimeMarketInfo
                             {
                                 Key = item.LimitKey,
+                                Market=item.LimitMarket,
                                 Name = item.MarketName
                             }).ToList();
                 return list;

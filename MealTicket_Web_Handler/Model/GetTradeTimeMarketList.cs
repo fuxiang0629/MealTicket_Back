@@ -18,6 +18,11 @@ namespace MealTicket_Web_Handler.Model
         public string Key { get; set; }
 
         /// <summary>
+        /// 市场
+        /// </summary>
+        public int Market { get; set; }
+
+        /// <summary>
         /// 名称
         /// </summary>
         public string Name { get; set; }

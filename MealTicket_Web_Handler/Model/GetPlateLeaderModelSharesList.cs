@@ -205,6 +205,11 @@ namespace MealTicket_Web_Handler.Model
         /// 预计量比
         /// </summary>
         public int StockRate_All { get; set; }
+
+        /// <summary>
+        /// 是否外面传入的股票
+        /// </summary>
+        public bool IsMain { get; set; }
     }
 
     public class SharesRankInfo

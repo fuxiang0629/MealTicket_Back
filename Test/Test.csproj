@@ -71,6 +71,10 @@
       <Project>{100aabcb-bbbc-46dd-b494-57d56083590a}</Project>
       <Name>MealTicket_DBCommon</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MealTicket_Web_Handler\MealTicket_Web_Handler.csproj">
+      <Project>{209718FF-927C-4DDA-B3DC-24B49FE643AE}</Project>
+      <Name>MealTicket_Web_Handler</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

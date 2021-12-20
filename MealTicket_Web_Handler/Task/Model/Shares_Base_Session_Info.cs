@@ -25,6 +25,11 @@ namespace MealTicket_Web_Handler
         public string SharesName { get; set; }
 
         /// <summary>
+        /// 拼音简称
+        /// </summary>
+        public string SharesPyjc { get; set; }
+
+        /// <summary>
         /// 流通股本
         /// </summary>
         public long CirculatingCapital { get; set; }
