@@ -22,5 +22,28 @@ namespace MealTicket_Web_Handler
         {
             throw new NotSupportedException();
         }
+
+        public static Dictionary<long, List<Plate_Shares_Rel_Session_Info>> CopySessionData(object objData)
+        {
+            var data = objData as Dictionary<long, List<Plate_Shares_Rel_Session_Info>>;
+            var resultData = new Dictionary<long, List<Plate_Shares_Rel_Session_Info>>();
+            foreach (var item in data)
+            {
+                if (!resultData.ContainsKey(item.Key))
+                {
+                    resultData.Add(item.Key, new List<Plate_Shares_Rel_Session_Info>());
+                }
+                foreach (var item2 in item.Value)
+                {
+                    resultData[item.Key].Add(new Plate_Shares_Rel_Session_Info 
+                    {
+                        SharesCode=item2.SharesCode,
+                        Market=item2.Market,
+                        PlateId=item2.PlateId
+                    });
+                }
+            }
+            return resultData;
+        }
     }
 }

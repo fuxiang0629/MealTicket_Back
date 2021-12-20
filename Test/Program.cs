@@ -79,6 +79,9 @@ namespace Test
     {
         static void Main(string[] args)
         {
+            string sharesCode = "602433";
+            var ttt = sharesCode.PadLeft(6, '0');
+
             A a = new A
             {
                 Id = 1,

@@ -130,5 +130,27 @@ namespace MealTicket_Web_Handler
                 return 0;
             }
         }
+
+        public static Dictionary<long, Shares_TradeStock_Session_Info> CopySessionData(object objData)
+        {
+            var data = objData as Dictionary<long, Shares_TradeStock_Session_Info>;
+            var resultData = new Dictionary<long, Shares_TradeStock_Session_Info>();
+            foreach (var item in data)
+            {
+                if (!resultData.ContainsKey(item.Key))
+                {
+                    resultData.Add(item.Key, new Shares_TradeStock_Session_Info());
+                }
+                resultData[item.Key].GroupTimeKey = item.Value.GroupTimeKey;
+                resultData[item.Key].Market = item.Value.Market;
+                resultData[item.Key].SharesCode = item.Value.SharesCode;
+                resultData[item.Key].TradeStock = item.Value.TradeStock;
+                resultData[item.Key].TradeStock_Interval = item.Value.TradeStock_Interval;
+                resultData[item.Key].TradeStock_Interval_Count = item.Value.TradeStock_Interval_Count;
+                resultData[item.Key].TradeStock_Now = item.Value.TradeStock_Now;
+                resultData[item.Key].TradeStock_Yestoday = item.Value.TradeStock_Yestoday;
+            }
+            return resultData;
+        }
     }
 }

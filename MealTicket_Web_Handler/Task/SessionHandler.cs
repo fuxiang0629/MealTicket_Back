@@ -210,6 +210,45 @@ namespace MealTicket_Web_Handler
             SetSession(dataKey, newSession);
         }
 
+        public override object CopySessionData(object objData,string dataKey)
+        {
+            switch ((Enum_Excute_DataKey)System.Enum.Parse(typeof(Enum_Excute_DataKey), dataKey))
+            {
+                case Enum_Excute_DataKey.Plate_Tag_FocusOn_Session:
+                    return Plate_Tag_FocusOn_Session.CopySessionData(objData);
+                case Enum_Excute_DataKey.Plate_Tag_Force_Session:
+                    return Plate_Tag_Force_Session.CopySessionData(objData);
+                case Enum_Excute_DataKey.Plate_Tag_TrendLike_Session:
+                    return Plate_Tag_TrendLike_Session.CopySessionData(objData);
+                case Enum_Excute_DataKey.Plate_Quotes_Date_Session:
+                    return Plate_Quotes_Date_Session.CopySessionData(objData);
+                case Enum_Excute_DataKey.Plate_Quotes_Today_Session:
+                    return Plate_Quotes_Today_Session.CopySessionData(objData);
+                case Enum_Excute_DataKey.Shares_Quotes_Date_Session:
+                    return Shares_Quotes_Date_Session.CopySessionData(objData);
+                case Enum_Excute_DataKey.Shares_Quotes_Today_Session:
+                    return Shares_Quotes_Today_Session.CopySessionData(objData);
+                case Enum_Excute_DataKey.Shares_TradeStock_Session:
+                    return Shares_TradeStock_Session.CopySessionData(objData);
+                case Enum_Excute_DataKey.Plate_Tag_Setting_Session:
+                    return Plate_Tag_Setting_Session.CopySessionData(objData);
+                case Enum_Excute_DataKey.Shares_Tag_Leader_Session:
+                    return Shares_Tag_Leader_Session.CopySessionData(objData);
+                case Enum_Excute_DataKey.Shares_Tag_DayLeader_Session:
+                    return Shares_Tag_DayLeader_Session.CopySessionData(objData);
+                case Enum_Excute_DataKey.Shares_Tag_MainArmy_Session:
+                    return Shares_Tag_MainArmy_Session.CopySessionData(objData);
+                case Enum_Excute_DataKey.Plate_Shares_Rel_Tag_Setting_Session:
+                    return Plate_Shares_Rel_Tag_Setting_Session.CopySessionData(objData);
+                case Enum_Excute_DataKey.Shares_Base_Session:
+                    return Shares_Base_Session.CopySessionData(objData);
+                case Enum_Excute_DataKey.Plate_Shares_Rel_Session:
+                    return Plate_Shares_Rel_Session.CopySessionData(objData);
+                default:
+                    return base.CopySessionData(objData, dataKey);
+            }
+        }
+
         public Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>> GetPlate_Tag_FocusOn_Session()
         {
             var session = GetSession(Enum_Excute_DataKey.Plate_Tag_FocusOn_Session.ToString());
