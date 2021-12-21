@@ -65,7 +65,11 @@ namespace FXCommon.Common
             object value = _getSession(key);
             if (value != null)
             {
+<<<<<<< HEAD
                 value = CopySessionData(value);
+=======
+                value=CopySessionData(value, key);
+>>>>>>> 8534aa7090507427d17587007d57aa6506af1c7a
             }
             _sessionReadWriteLock.ReleaseReaderLock();
             return value;
@@ -89,7 +93,7 @@ namespace FXCommon.Common
         {
             if (value != null && isCopyValue)
             {
-                value = CopySessionData(value);
+                value = CopySessionData(value, key);
             }
             _sessionReadWriteLock.AcquireWriterLock(Timeout.Infinite);
             _setSession(key, value);
@@ -101,7 +105,7 @@ namespace FXCommon.Common
             SessionData[key] = value;
         }
 
-        public virtual object CopySessionData(object objData) 
+        public virtual object CopySessionData(object objData,string dataKey) 
         {
             return DeepCopyWithBinarySerialize(objData);
         }

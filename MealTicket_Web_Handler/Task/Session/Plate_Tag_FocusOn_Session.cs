@@ -78,5 +78,30 @@ namespace MealTicket_Web_Handler
             }
             return oldData;
         }
+
+        public static Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>> CopySessionData(object objData)
+        {
+            var data = objData as Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>>;
+            var resultData = new Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>>();
+            foreach (var item in data)
+            {
+                if (!resultData.ContainsKey(item.Key))
+                {
+                    resultData.Add(item.Key, new Dictionary<long, Plate_Tag_FocusOn_Session_Info>());
+                }
+                foreach (var item2 in item.Value)
+                {
+                    if (!resultData[item.Key].ContainsKey(item2.Key))
+                    {
+                        resultData[item.Key].Add(item2.Key, new Plate_Tag_FocusOn_Session_Info());
+                    }
+                    resultData[item.Key][item2.Key].IsFocusOn = item2.Value.IsFocusOn;
+                    resultData[item.Key][item2.Key].Market = item2.Value.Market;
+                    resultData[item.Key][item2.Key].PlateId = item2.Value.PlateId;
+                    resultData[item.Key][item2.Key].SharesCode = item2.Value.SharesCode;
+                }
+            }
+            return resultData;
+        }
     }
 }

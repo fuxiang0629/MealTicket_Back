@@ -52,7 +52,7 @@ namespace MealTicket_Web_Handler
                                  RiseRate = x3.RiseRate,
                                  IsFocusOn = ai == null ? false : ai.IsFocusOn
                              }).ToList();
-            var FocusOn_Session=Singleton.Instance.sessionHandler.GetPlate_Tag_FocusOn_Session();
+            var FocusOn_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_FocusOn_Session();
             var Force_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_Force_Session();
             var TrendLike_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_TrendLike_Session();
             foreach (var item in plateList)
@@ -476,16 +476,35 @@ namespace MealTicket_Web_Handler
                 {
                     var plate_quotes = Singleton.Instance.sessionHandler.GetPlate_Quotes_Date_Session();
                     var plate_today = Singleton.Instance.sessionHandler.GetPlate_Quotes_Today_Session();
+                    var plate_base_session = Singleton.Instance._SharesPlateSession.GetSessionData().ToDictionary(k => k.PlateId, v => v);
                     List<Plate_Quotes_Session_Info> dataList = new List<Plate_Quotes_Session_Info>();
                     foreach (var item in plate_quotes)
                     {
+                        if (!plate_base_session.ContainsKey(item.Key))
+                        {
+                            continue;
+                        }
+                        if (plate_base_session[item.Key].BaseStatus != 1)
+                        {
+                            continue;
+                        }
                         dataList.AddRange(item.Value.Values.ToList());
                     }
-                    if (plate_today.ContainsKey(request.PlateId))
+                    foreach (var item in plate_today)
                     {
-                        dataList.Add(plate_today[request.PlateId]);
+                        if (!plate_base_session.ContainsKey(item.Key))
+                        {
+                            continue;
+                        }
+                        if (plate_base_session[item.Key].BaseStatus != 1)
+                        {
+                            continue;
+                        }
+                        dataList.Add(item.Value);
                     }
-                    dataList=dataList.OrderBy(e=>e.PlateId).ThenByDescending(e => e.Date).ToList();
+
+
+                    dataList =dataList.OrderBy(e=>e.PlateId).ThenByDescending(e => e.Date).ToList();
 
                     List<Plate_Quotes_Session_Info> day1List = new List<Plate_Quotes_Session_Info>();
                     List<Plate_Quotes_Session_Info> day3List = new List<Plate_Quotes_Session_Info>();
@@ -498,6 +517,7 @@ namespace MealTicket_Web_Handler
                     long todayClosedPrice = 0;
                     Plate_Quotes_Session_Info tempInfo = new Plate_Quotes_Session_Info();
                     bool existsMin = false;
+
                     foreach (var item in dataList)
                     {
                         if (item.PlateId != lastPlateId)
@@ -2714,6 +2734,7 @@ namespace MealTicket_Web_Handler
                                        Market = item.Market,
                                        SharesCode = item.SharesCode
                                    }).ToList();
+
                 var plateList = _getSharesPlateRelList(shares_List, basedata.AccountId, db);
 
                 //计算杠杆倍数
@@ -2763,6 +2784,7 @@ namespace MealTicket_Web_Handler
                                      select item).ToList();
                 var shares_last_quotes_session = Singleton.Instance.sessionHandler.GetShares_Quotes_Last_Session();
                 List<AccountRiseLimitTriInfo> resultList = new List<AccountRiseLimitTriInfo>();
+
                 foreach (var item in result_list)
                 {
                     var temp = limit.Where(e => (item.Market == e.LimitMarket || e.LimitMarket == -1) && ((e.LimitType == 1 && item.SharesCode.StartsWith(e.LimitKey)) || (e.LimitType == 2 && item.SharesName.StartsWith(e.LimitKey)))).FirstOrDefault();
@@ -6583,7 +6605,7 @@ inner
                     PlateSharesInfo tempInfo = new PlateSharesInfo();
 
                     int market = (int)(itemkey % 10);
-                    string sharesCode = (itemkey / 10).ToString();
+                    string sharesCode = (itemkey / 10).ToString().PadLeft(6, '0');
                     if (LeaderDic.ContainsKey(itemkey))
                     {
                         tempInfo.LeaderType = LeaderDic[itemkey].LeaderType;
