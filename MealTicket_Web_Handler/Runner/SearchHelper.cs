@@ -1622,7 +1622,7 @@ namespace MealTicket_Web_Handler.Runner
             catch (Exception) { }
             try
             {
-                count = (type == 5 || type == 6 || type == 10) ? (int)(Convert.ToDouble(temp.Count) * 100) : Convert.ToInt64(temp.Count);
+                count = (type == 5 || type == 6 || type == 10 || type==11) ? (int)(Convert.ToDouble(temp.Count) * 100) : Convert.ToInt64(temp.Count);
             }
             catch (Exception) { }
             try
@@ -1923,7 +1923,7 @@ group by Market,SharesCode", firstDay <= 0 ? 0 : firstDay - 1, secondDay);
             foreach (var item in quotes_date)
             {
                 int rateNow = item.Value.RateNow;
-                if ((compare == 1 && rateNow >= count * 100) || (compare == 2 && rateNow <= count * 100))
+                if ((compare == 1 && rateNow >= count) || (compare == 2 && rateNow <= count))
                 {
                     result.Add(new SharesBase
                     {

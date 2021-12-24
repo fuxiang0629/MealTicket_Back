@@ -576,7 +576,7 @@ namespace MealTicket_Web_Handler.Runner
             }
 
             int mainArmyRankRate = Singleton.Instance.MainArmyRankRate;
-            int takeCount = (int)(sharesList.Count() * (mainArmyRankRate * 1.0 / 10000));
+            int takeCount = (int)Math.Round(sharesList.Count() * (mainArmyRankRate * 1.0 / 10000),0);
             var rankList = sharesList.OrderByDescending(e => e.MarketValue).Take(takeCount).ToList();
             rankList=rankList.Where(e => e.Score >= 0).OrderBy(e => e.Score).ToList();
 
