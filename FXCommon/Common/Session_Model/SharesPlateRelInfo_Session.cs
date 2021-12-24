@@ -15,6 +15,11 @@ namespace FXCommon.Common
         public long PlateId { get; set; }
 
         /// <summary>
+        /// 板块类型
+        /// </summary>
+        public int PlateType { get; set; }
+
+        /// <summary>
         /// 市场代码
         /// </summary>
         public int Market { get; set; }

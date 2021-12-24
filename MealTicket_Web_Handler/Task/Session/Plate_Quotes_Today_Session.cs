@@ -27,19 +27,7 @@ namespace MealTicket_Web_Handler
         public static Dictionary<long, Plate_Quotes_Session_Info> CopySessionData(object objData)
         {
             var data = objData as Dictionary<long, Plate_Quotes_Session_Info>;
-            var resultData = new Dictionary<long, Plate_Quotes_Session_Info>();
-            foreach (var item in data)
-            {
-                if (!resultData.ContainsKey(item.Key))
-                {
-                    resultData.Add(item.Key, new Plate_Quotes_Session_Info());
-                }
-                resultData[item.Key].ClosedPrice = item.Value.ClosedPrice;
-                resultData[item.Key].Date = item.Value.Date;
-                resultData[item.Key].PlateId = item.Value.PlateId;
-                resultData[item.Key].RealDays = item.Value.RealDays;
-                resultData[item.Key].YestodayClosedPrice = item.Value.YestodayClosedPrice;
-            }
+            var resultData = new Dictionary<long, Plate_Quotes_Session_Info>(data);
             return resultData;
         }
     }

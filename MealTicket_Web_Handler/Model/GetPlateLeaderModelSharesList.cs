@@ -23,6 +23,11 @@ namespace MealTicket_Web_Handler.Model
         public int BaseDayType { get; set; }
 
         /// <summary>
+        /// 排序方式1.根据排名排序 2.根据涨跌幅排序
+        /// </summary>
+        public int OrderType { get; set; }
+
+        /// <summary>
         /// 排序方式
         /// </summary>
         public string OrderMethod { get; set; }

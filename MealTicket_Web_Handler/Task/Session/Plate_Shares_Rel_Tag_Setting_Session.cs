@@ -56,19 +56,7 @@ namespace MealTicket_Web_Handler
             var resultData = new Dictionary<int, List<Plate_Shares_Rel_Tag_Setting_Session_Info>>();
             foreach (var item in data)
             {
-                if (!resultData.ContainsKey(item.Key))
-                {
-                    resultData.Add(item.Key, new List<Plate_Shares_Rel_Tag_Setting_Session_Info>());
-                }
-                foreach (var item2 in item.Value)
-                {
-                    resultData[item.Key].Add(new Plate_Shares_Rel_Tag_Setting_Session_Info 
-                    {
-                        SettingType=item2.SettingType,
-                        BaseCount=item2.BaseCount,
-                        DisCount=item2.DisCount
-                    });
-                }
+                resultData[item.Key] = new List<Plate_Shares_Rel_Tag_Setting_Session_Info>(item.Value);
             }
             return resultData;
         }

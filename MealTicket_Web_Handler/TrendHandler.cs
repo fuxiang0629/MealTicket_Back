@@ -2,6 +2,7 @@
 using MealTicket_DBCommon;
 using MealTicket_Web_Handler.Enum;
 using MealTicket_Web_Handler.Model;
+using MealTicket_Web_Handler.Runner;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -16,6 +17,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Transactions;
+using FollowAccountInfo = MealTicket_Web_Handler.Model.FollowAccountInfo;
 
 namespace MealTicket_Web_Handler
 {
@@ -31,6 +33,58 @@ namespace MealTicket_Web_Handler
             var accountTag = (from item in db.t_shares_plate_rel_tag_account
                               where item.AccountId == accountId
                               select item).ToList();
+            //var shares_plate_rel_session = Singleton.Instance.sessionHandler.GetShares_Plate_Rel_Session();
+            //var plate_base_session = Singleton.Instance.sessionHandler.GetPlate_Base_Session();
+            //var plate_quotes_session = Singleton.Instance.sessionHandler.GetPlate_Quotes_Last_Session();
+            //var FocusOn_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_FocusOn_Session();
+            //var Force_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_Force_Session();
+            //var TrendLike_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_TrendLike_Session();
+            //var plate_shares_rel_session = Singleton.Instance.sessionHandler.GetPlate_Shares_Rel_Session();
+
+            //List<SharesPlateInfo> result = new List<SharesPlateInfo>();
+            //foreach (var item in SharesList)
+            //{
+            //    long key = long.Parse(item.SharesCode) * 10 + item.Market;
+            //    if (!shares_plate_rel_session.ContainsKey(key))
+            //    {
+            //        continue;
+            //    }
+
+            //    foreach (var plate in shares_plate_rel_session[key])
+            //    {
+            //        if (!plate_base_session.ContainsKey(plate.PlateId))
+            //        {
+            //            continue;
+            //        }
+            //        if (plate_base_session[plate.PlateId].BaseStatus != 1)
+            //        {
+            //            continue;
+            //        }
+            //        if (!plate_shares_rel_session.ContainsKey(plate.PlateId))
+            //        {
+            //            continue;
+            //        }
+            //        result.Add(new SharesPlateInfo 
+            //        {
+            //            Id = plate.PlateId,
+            //            Name = plate_base_session[plate.PlateId].PlateName,
+            //            SharesCode = item.SharesCode,
+            //            SharesCount = plate_shares_rel_session[plate.PlateId].Count(),
+            //            Market = item.Market,
+            //            DownLimitCount = x3.DownLimitCount,
+            //            RiseLimitCount = x3.RiseLimitCount,
+            //            Type = x.PlateType,
+            //            Rank = x3.Rank,
+            //            RiseRate = x3.RiseRate,
+            //            IsFocusOn = ai == null ? false : ai.IsFocusOn
+            //        });
+            //    }
+            //}
+
+
+
+
+
             var plateList = (from x in Singleton.Instance._SharesPlateSession.GetSessionData()
                              join x2 in Singleton.Instance._SharesPlateRelSession.GetSessionData() on x.PlateId equals x2.PlateId
                              join x3 in Singleton.Instance._SharesPlateQuotesSession.GetSessionData() on x.PlateId equals x3.PlateId
@@ -6477,6 +6531,8 @@ inner
             public int PlateRank;
 
             public int TotalRank;
+
+            public int RealDays { get; set; }
         }
 
         /// <summary>
@@ -6489,8 +6545,6 @@ inner
         {
             using (var db = new meal_ticketEntities())
             {
-                //系统内所有股票
-                var sysTotalSharesKeyList = Singleton.Instance.sessionHandler.GetShares_Base_Session().Keys;
                 //板块内所有带标签的股票
                 var totalSharesKeyList=_getTotalCalShares(request.PlateId,request.BaseDayType);
                 //板块内所有龙头股票
@@ -6510,6 +6564,8 @@ inner
                 }
 
                 var sharesBaseDic = Singleton.Instance.sessionHandler.GetShares_Base_Session();
+                //系统内所有股票
+                var sysTotalSharesKeyList = sharesBaseDic.Keys;
 
                 var groupRelList = from x in db.t_account_shares_conditiontrade_buy_group_rel
                                    join x2 in db.t_account_shares_conditiontrade_buy_group on x.GroupId equals x2.Id
@@ -6536,7 +6592,7 @@ inner
                                    select new SharesBaseInfo
                                    {
                                        Market = (int)(item % 10),
-                                       SharesCode = (item / 10).ToString()
+                                       SharesCode = (item / 10).ToString().PadLeft(6,'0')
                                    }).ToList();
                 var plateList = _getSharesPlateRelList(shares_List, basedata.AccountId, db, request.BaseDayType);
 
@@ -6544,7 +6600,7 @@ inner
                 var shares_quotes_date=Singleton.Instance.sessionHandler.GetShares_Quotes_Date_Session();
                 var shares_quotes_today = Singleton.Instance.sessionHandler.GetShares_Quotes_Today_Session();
                 Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> shares_quotes_date_new = new Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>>();
-                foreach (long itemkey in sysTotalSharesKeyList) 
+                foreach (long itemkey in sysTotalSharesKeyList)
                 {
                     if (!shares_quotes_today.ContainsKey(itemkey))
                     {
@@ -6558,11 +6614,14 @@ inner
                     {
                         shares_quotes_date[itemkey].Add(DateTime.Now.Date, shares_quotes_today[itemkey]);
                     }
+                    else
+                    {
+                        shares_quotes_date.Add(itemkey, new Dictionary<DateTime, Shares_Quotes_Session_Info>());
+                    }
 
                     var newDate = shares_quotes_date[itemkey].OrderByDescending(e => e.Key).Take(CalDays).ToDictionary(k => k.Key, v => v.Value);
                     shares_quotes_date_new.Add(itemkey, newDate);
                 }
-
                 List<SharesRank> rank = new List<SharesRank>();
                 foreach (var item in shares_quotes_date_new)
                 {
@@ -6570,11 +6629,18 @@ inner
                     tempRank.SharesKey = item.Key;
                     var lastQuote = item.Value.OrderByDescending(e => e.Key).FirstOrDefault().Value;
                     var tempQuote = item.Value.OrderBy(e => e.Value.ClosedPrice).FirstOrDefault().Value;
+                    if (lastQuote == null || tempQuote == null)
+                    {
+                        rank.Add(tempRank);
+                        continue;
+                    }
                     if (tempQuote.ClosedPrice >= lastQuote.ClosedPrice)
                     {
                         tempQuote= item.Value.OrderByDescending(e => e.Value.ClosedPrice).FirstOrDefault().Value;
                     }
+                    tempRank.RealDays = item.Value.Where(e => e.Key >= tempQuote.Date && e.Key <= lastQuote.Date).Count();
                     tempRank.RiseRate = tempQuote.ClosedPrice == 0 ? 0 : (int)Math.Round((lastQuote.ClosedPrice - tempQuote.ClosedPrice) * 1.0 / tempQuote.ClosedPrice * 10000, 0);
+
                     rank.Add(tempRank);
                 }
                 rank = rank.OrderByDescending(e => e.RiseRate).ToList();
@@ -6593,6 +6659,7 @@ inner
                         plateIdx++;
                         t.PlateRank = plateIdx;
                     }
+
                     rankDic.Add(item.SharesKey,t);
                 }
 
@@ -6603,6 +6670,9 @@ inner
                 foreach (long itemkey in sharesKeyList)
                 {
                     PlateSharesInfo tempInfo = new PlateSharesInfo();
+                    tempInfo.LeaderType = int.MaxValue;
+                    tempInfo.DayLeaderType = int.MaxValue;
+                    tempInfo.MainArmyType = int.MaxValue;
 
                     int market = (int)(itemkey % 10);
                     string sharesCode = (itemkey / 10).ToString().PadLeft(6, '0');
@@ -6717,11 +6787,11 @@ inner
                                           orderby x.Type, x.RiseRate descending
                                           select x).ToList();
 
+                    tempInfo.Rank = new SharesRankInfo();
                     if (rankDic.ContainsKey(itemkey))
                     {
                         var temp = rankDic[itemkey];
-                        tempInfo.Rank = new SharesRankInfo();
-                        tempInfo.Rank.RealDays = shares_quotes_date_new[itemkey].Count();
+                        tempInfo.Rank.RealDays = temp.RealDays;
                         tempInfo.Rank.RiseRate = temp.RiseRate;
                         tempInfo.Rank.PlateRank = temp.PlateRank;
                         tempInfo.Rank.TotalRank = temp.TotalRank;
@@ -6737,13 +6807,33 @@ inner
                     }
                     result.Add(tempInfo);
                 }
-                if (request.OrderMethod == "descending")
+                if (request.OrderMethod == "descending" && request.OrderType == 2)
                 {
                     result = result.OrderByDescending(e => e.RiseRate).ToList();
                 }
-                else
+                else if (request.OrderType == 2)
                 {
                     result = result.OrderBy(e => e.RiseRate).ToList();
+                }
+                else 
+                {
+                    result = result.OrderByDescending(e=>e.IsMain).ThenBy(e => e.LeaderType).ThenBy(e=>e.DayLeaderType).ThenBy(e => e.MainArmyType).ToList();
+                }
+
+                foreach (var item in result)
+                {
+                    if (item.LeaderType == int.MaxValue)
+                    {
+                        item.LeaderType = 0;
+                    }
+                    if (item.DayLeaderType == int.MaxValue)
+                    {
+                        item.DayLeaderType = 0;
+                    }
+                    if (item.MainArmyType == int.MaxValue)
+                    {
+                        item.MainArmyType = 0;
+                    }
                 }
                 return new 
                 {
@@ -6755,33 +6845,55 @@ inner
 
         private List<long> _getTotalCalShares(long plateId,int dayType)
         {
-            List<long> result = new List<long>();
-            var FocusOnDic = Singleton.Instance.sessionHandler.GetPlate_Tag_FocusOn_Session_ByPlate();
-            var ForceDic = Singleton.Instance.sessionHandler.GetPlate_Tag_Force_Session_ByPlate();
-            var TrendLikeDic = Singleton.Instance.sessionHandler.GetPlate_Tag_TrendLike_Session_ByPlate();
-            if (FocusOnDic.ContainsKey(plateId))
+            var plate_base = Singleton.Instance.sessionHandler.GetPlate_Base_Session();
+            if (!plate_base.ContainsKey(plateId))
             {
-                var newDic = FocusOnDic[plateId].Where(e => e.Value.IsFocusOn==true).ToDictionary(k => k.Key, v => v.Value);
-                result.AddRange(newDic.Keys.ToList());
+                return new List<long>();
             }
-            if (ForceDic.ContainsKey(plateId))
+            List<long> result = new List<long>();
+
+            if (plate_base[plateId].PlateType == 1)
             {
-                var newDic = ForceDic[plateId].Where(e => e.Value.IsForce1 == true || e.Value.IsForce2 == true).ToDictionary(k => k.Key, v => v.Value);
-                foreach (var item in newDic)
+                var plate_rel_session=Singleton.Instance.sessionHandler.GetPlate_Shares_Rel_Session();
+                if (!plate_rel_session.ContainsKey(plateId))
                 {
-                    if ((item.Key % 100) == dayType)
+                    return new List<long>();
+                }
+                result = plate_rel_session[plateId].Select(e => long.Parse(e.SharesCode) * 10 + e.Market).ToList();
+            }
+            else if (plate_base[plateId].PlateType == 3)
+            {
+                var FocusOnDic = Singleton.Instance.sessionHandler.GetPlate_Tag_FocusOn_Session_ByPlate();
+                var ForceDic = Singleton.Instance.sessionHandler.GetPlate_Tag_Force_Session_ByPlate();
+                var TrendLikeDic = Singleton.Instance.sessionHandler.GetPlate_Tag_TrendLike_Session_ByPlate();
+                if (FocusOnDic.ContainsKey(plateId))
+                {
+                    var newDic = FocusOnDic[plateId].Where(e => e.Value.IsFocusOn == true).ToDictionary(k => k.Key, v => v.Value);
+                    result.AddRange(newDic.Keys.ToList());
+                }
+                if (ForceDic.ContainsKey(plateId))
+                {
+                    var newDic = ForceDic[plateId].Where(e => e.Value.IsForce1 == true || e.Value.IsForce2 == true).ToDictionary(k => k.Key, v => v.Value);
+                    foreach (var item in newDic)
                     {
-                        long newKey = item.Key / 100;
-                        result.Add(newKey);
+                        if ((item.Key % 100) == dayType)
+                        {
+                            long newKey = item.Key / 100;
+                            result.Add(newKey);
+                        }
                     }
                 }
+                if (TrendLikeDic.ContainsKey(plateId))
+                {
+                    var newDic = TrendLikeDic[plateId].Where(e => e.Value.IsTrendLike == true).ToDictionary(k => k.Key, v => v.Value);
+                    result.AddRange(newDic.Keys.ToList());
+                }
+                result = result.Distinct().ToList();
             }
-            if (TrendLikeDic.ContainsKey(plateId))
+            else
             {
-                var newDic = TrendLikeDic[plateId].Where(e => e.Value.IsTrendLike == true).ToDictionary(k => k.Key, v => v.Value);
-                result.AddRange(newDic.Keys.ToList());
+                return new List<long>();
             }
-            result = result.Distinct().ToList();
             return result;
         }
         private List<long> _getLeaderCalShares(long plateId, int dayType,ref Dictionary<long, Shares_Tag_Leader_Session_Info> refLeaderDic,ref Dictionary<long, Shares_Tag_DayLeader_Session_Info>  refDayLeaderDic,ref Dictionary<long, Shares_Tag_MainArmy_Session_Info>  refMainArmyDic)
@@ -21676,11 +21788,12 @@ select @buyId;";
         /// <returns></returns>
         public PageRes<SharesConditionSearchInfo> GetSharesConditionSearch(GetSharesConditionSearchRequest request, HeadBase basedata)
         {
-            var tempSharesList = GetEligibleSharesBatch(request.SearchInfo);
+            SearchHelper searchHelper = new SearchHelper();
+            var tempSharesList=searchHelper.DoSearchTemplate(request.SearchInfo);
 
             using (var db = new meal_ticketEntities())
             {
-                List<SharesBase_Session> resultSharesList = new List<SharesBase_Session>();
+                List<SharesBase> resultSharesList = new List<SharesBase>();
                 var limit = (from item in db.t_shares_limit
                              select item).ToList();
                 foreach (var item in tempSharesList)

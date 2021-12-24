@@ -65,6 +65,16 @@ namespace MealTicket_Web_Handler
         public long OpenedPrice { get; set; }
 
         /// <summary>
+        /// 涨停价格
+        /// </summary>
+        public long LimitUpPrice { get; set; }
+
+        /// <summary>
+        /// 跌停价格
+        /// </summary>
+        public long LimitDownPrice { get; set; }
+
+        /// <summary>
         /// 成交金额
         /// </summary>
         public long TotalAmount { get; set; }
@@ -73,6 +83,51 @@ namespace MealTicket_Web_Handler
         /// 成交量
         /// </summary>
         public long TotalCount { get; set; }
+
+        /// <summary>
+        /// 涨停次数
+        /// </summary>
+        public int LimitUpCount { get; set; }
+
+        /// <summary>
+        /// 触发涨停次数
+        /// </summary>
+        public int TriLimitUpCount { get; set; }
+
+        /// <summary>
+        /// 跌停次数
+        /// </summary>
+        public int LimitDownCount { get; set; }
+
+        /// <summary>
+        /// 触发跌停次数
+        /// </summary>
+        public int TriLimitDownCount { get; set; }
+
+        /// <summary>
+        /// 炸板次数
+        /// </summary>
+        public int LimitUpBombCount { get; set; }
+
+        /// <summary>
+        /// 最高价
+        /// </summary>
+        public long MaxPrice { get; set; }
+
+        /// <summary>
+        /// 最低价
+        /// </summary>
+        public long MinPrice { get; set; }
+
+        /// <summary>
+        /// 触发涨停
+        /// </summary>
+        public int TriPriceType { get; set; }
+
+        /// <summary>
+        /// 涨停
+        /// </summary>
+        public int PriceType { get; set; }
     }
 
     [Serializable]

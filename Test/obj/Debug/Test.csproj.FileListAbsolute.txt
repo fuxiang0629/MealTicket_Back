@@ -90,3 +90,4 @@ D:\项目\饭票\后端\Test\bin\Debug\stock_db_core.dll
 D:\项目\饭票\后端\Test\bin\Debug\MealTicket_Web_Handler.pdb
 D:\项目\饭票\后端\Test\bin\Debug\MealTicket_Web_Handler.dll.config
 D:\项目\饭票\后端\Test\bin\Debug\stock_db_core.pdb
+F:\项目\饭票后端\Test\bin\Debug\NCalc.dll

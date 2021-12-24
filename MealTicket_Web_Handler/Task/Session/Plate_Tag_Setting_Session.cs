@@ -27,11 +27,7 @@ namespace MealTicket_Web_Handler
         public static Dictionary<long, bool> CopySessionData(object objData)
         {
             var data = objData as Dictionary<long, bool>;
-            var resultData = new Dictionary<long, bool>();
-            foreach (var item in data)
-            {
-                resultData.Add(item.Key, item.Value);
-            }
+            var resultData = new Dictionary<long, bool>(data);
             return resultData;
         }
     }

@@ -3919,7 +3919,6 @@
         <member name="F:MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.PlateKlineSessionDic">
             <summary>
             板块Id*100+K线类型=>计算结果
-            GroupTimeKey*10+WeightType
             </summary>
         </member>
         <member name="M:MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.GetPlateKlineSessionAllKey">

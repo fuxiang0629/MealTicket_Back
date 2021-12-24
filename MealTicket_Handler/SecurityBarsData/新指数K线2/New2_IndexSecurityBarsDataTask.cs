@@ -136,7 +136,6 @@ inner join
         object SetPlateKlineSessionLock = new object();
         /// <summary>
         /// 板块Id*100+K线类型=>计算结果
-        /// GroupTimeKey*10+WeightType
         /// </summary>
         private Dictionary<long, Dictionary<long, PlateKlineSession>> PlateKlineSessionDic = new Dictionary<long, Dictionary<long, PlateKlineSession>>();
 

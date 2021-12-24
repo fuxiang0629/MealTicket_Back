@@ -58,26 +58,26 @@ then insert([Type],Market,SharesCode,PlateId,DayLeaderType,[Date]) values(t1.[Ty
         public static Dictionary<long, Dictionary<long, Shares_Tag_DayLeader_Session_Info>> UpdateSessionPart(object newData)
         {
             var newDataResult = newData as List<Shares_Tag_DayLeader_Session_Info>;
-            var oldData = Singleton.Instance.sessionHandler.GetShares_Tag_DayLeader_Session();
+            var disData = new Dictionary<long, Dictionary<long, Shares_Tag_DayLeader_Session_Info>>();
 
             foreach (var item in newDataResult)
             {
                 long key1 = item.PlateId * 100 + item.Type;
-                if (!oldData.ContainsKey(key1))
+                if (!disData.ContainsKey(key1))
                 {
-                    oldData.Add(key1, new Dictionary<long, Shares_Tag_DayLeader_Session_Info>());
+                    disData.Add(key1, new Dictionary<long, Shares_Tag_DayLeader_Session_Info>());
                 }
                 long key2 = long.Parse(item.SharesCode) * 10 + item.Market;
-                if (!oldData[key1].ContainsKey(key2))
+                if (!disData[key1].ContainsKey(key2))
                 {
-                    oldData[key1].Add(key2, item);
+                    disData[key1].Add(key2, item);
                 }
                 else
                 {
-                    oldData[key1][key2] = item;
+                    disData[key1][key2] = item;
                 }
             }
-            return oldData;
+            return disData;
         }
 
         public static Dictionary<long, Dictionary<long, Shares_Tag_DayLeader_Session_Info>> CopySessionData(object objData)
@@ -86,22 +86,7 @@ then insert([Type],Market,SharesCode,PlateId,DayLeaderType,[Date]) values(t1.[Ty
             var resultData = new Dictionary<long, Dictionary<long, Shares_Tag_DayLeader_Session_Info>>();
             foreach (var item in data)
             {
-                if (!resultData.ContainsKey(item.Key))
-                {
-                    resultData.Add(item.Key, new Dictionary<long, Shares_Tag_DayLeader_Session_Info>());
-                }
-                foreach (var item2 in item.Value)
-                {
-                    if (!resultData[item.Key].ContainsKey(item2.Key))
-                    {
-                        resultData[item.Key].Add(item2.Key, new Shares_Tag_DayLeader_Session_Info());
-                    }
-                    resultData[item.Key][item2.Key].DayLeaderType = item2.Value.DayLeaderType;
-                    resultData[item.Key][item2.Key].Type = item2.Value.Type;
-                    resultData[item.Key][item2.Key].Market = item2.Value.Market;
-                    resultData[item.Key][item2.Key].PlateId = item2.Value.PlateId;
-                    resultData[item.Key][item2.Key].SharesCode = item2.Value.SharesCode;
-                }
+                resultData[item.Key] = new Dictionary<long, Shares_Tag_DayLeader_Session_Info>(item.Value);
             }
             return resultData;
         }

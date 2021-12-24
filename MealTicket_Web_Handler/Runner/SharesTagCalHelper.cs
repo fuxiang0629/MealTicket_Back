@@ -27,7 +27,7 @@ namespace MealTicket_Web_Handler.Runner
             Dictionary<int, List<Plate_Shares_Rel_Tag_Setting_Session_Info>> Plate_Shares_Rel_Tag_Setting_Session = Singleton.Instance.sessionHandler.GetPlate_Shares_Rel_Tag_Setting_Session();
             Dictionary<long, Shares_Base_Session_Info> Shares_Base_Session= Singleton.Instance.sessionHandler.GetShares_Base_Session();
             List<SharesPlateRelInfo_Session> PlateRel = new List<SharesPlateRelInfo_Session>();
-            ToGetPlateRelSession(ref PlateRel);
+            ToGetPlateRelSession(Shares_Base_Session,ref PlateRel);
 
             var calTypeArr = System.Enum.GetValues(typeof(Enum_SharesTag_CalType));
             int taskCount = calTypeArr.Length;
@@ -46,12 +46,31 @@ namespace MealTicket_Web_Handler.Runner
 
         }
 
-        private static void ToGetPlateRelSession(ref List<SharesPlateRelInfo_Session> PlateRel)
+        private static void ToGetPlateRelSession(Dictionary<long, Shares_Base_Session_Info> Shares_Base_Session,ref List<SharesPlateRelInfo_Session> PlateRel)
         {
-            PlateRel = (from item in Singleton.Instance._SharesPlateSession.GetSessionData()
-                        join item2 in Singleton.Instance._SharesPlateRelSession.GetSessionData() on item.PlateId equals item2.PlateId
-                        where item.BaseStatus == 1 && item.PlateType == 3
-                        select item2).ToList();
+            var tempPlateRel = (from item in Singleton.Instance._SharesPlateSession.GetSessionData()
+                                join item2 in Singleton.Instance._SharesPlateRelSession.GetSessionData() on item.PlateId equals item2.PlateId
+                                where item.BaseStatus == 1 && (item.PlateType == 3 || item.PlateType == 1)
+                                select new SharesPlateRelInfo_Session
+                                {
+                                    PlateId = item.PlateId,
+                                    PlateType = item.PlateType,
+                                    Market = item2.Market,
+                                    SharesCode = item2.SharesCode
+                                }).ToList();
+            var limit_session=Singleton.Instance.sessionHandler.GetShares_Limit_Session();
+            foreach (var item in tempPlateRel)
+            {
+                long key = long.Parse(item.SharesCode) * 10 + item.Market;
+                if (!Shares_Base_Session.ContainsKey(key))
+                {
+                    continue;
+                }
+                if (!limit_session.ContainsKey(key))
+                {
+                    PlateRel.Add(item);
+                }
+            }
         }
 
         private static void _calculate(Enum_SharesTag_CalType calType, List<SharesPlateRelInfo_Session> plateRel, Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> _plate_Quotes_Date_Session, Dictionary<long, Plate_Quotes_Session_Info> _plate_Quotes_Today_Session, Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> _shares_Quotes_Date_Session, Dictionary<long, Shares_Quotes_Session_Info> _shares_Quotes_Today_Session, Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>> _plate_Tag_FocusOn_Session, Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>> _plate_Tag_Force_Session, Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>> _plate_Tag_TrendLike_Session,Dictionary<int, List<Plate_Shares_Rel_Tag_Setting_Session_Info>> _plate_Shares_Rel_Tag_Setting_Session, Dictionary<long, Shares_Base_Session_Info> _shares_Base_Session)
@@ -90,7 +109,7 @@ namespace MealTicket_Web_Handler.Runner
                     var plate_Quotes_Date_Session = new Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>>();
                     var shares_Quotes_Date_Session = new Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>>();
                     int diffDay = _shares_Quotes_Today_Session.Count() == 0 ? 0 : 1;
-                    BuidForcePar(diffDay,dayType, _plate_Quotes_Date_Session, _shares_Quotes_Date_Session, ref plate_Quotes_Date_Session, ref shares_Quotes_Date_Session);
+                    BuidPlateForcePar(diffDay,dayType, _plate_Quotes_Date_Session, _shares_Quotes_Date_Session, ref plate_Quotes_Date_Session, ref shares_Quotes_Date_Session);
 
                     Dictionary<long, List<SharesPlateRelInfo_Session>> plateRelDic = _plateRel.GroupBy(e => e.PlateId).ToDictionary(k => k.Key, v => v.ToList());
 
@@ -121,22 +140,22 @@ namespace MealTicket_Web_Handler.Runner
             List<Shares_Tag_Leader_Session_Info> new_data = new List<Shares_Tag_Leader_Session_Info>();
             foreach (var item in plateRelDic)
             {
-                long plateId = item.Key;
-                //1.查询板块最低点日期
-                DateTime lowestDate = DateTime.Now.Date;
-                DateTime lastDate = DateTime.Now.Date;
-                bool isVaild = QueryPlateLowestDate(plateId, _plate_Quotes_Date_Session, _plate_Quotes_Today_Session, ref lowestDate, ref lastDate);
-                if (!isVaild)
-                {
-                    continue;
-                }
+                //long plateId = item.Key;
+                ////1.查询板块最低点日期
+                //DateTime lowestDate = DateTime.Now.Date;
+                //DateTime lastDate = DateTime.Now.Date;
+                //bool isVaild = QueryPlateLowestDate(plateId, _plate_Quotes_Date_Session, _plate_Quotes_Today_Session, ref lowestDate, ref lastDate);
+                //if (!isVaild)
+                //{
+                //    continue;
+                //}
                 //2.查询板块涨幅最高排名
                 int disCount=GetDisCount((int)Enum_SharesTag_CalType.LEADER, item.Value.Count(), _plate_Shares_Rel_Tag_Setting_Session);
                 if (disCount <= 0)
                 {
                     continue;
                 }
-                var new_data_temp = _toCalLeader(disCount,dayType, item.Value, lowestDate, lastDate, _shares_Quotes_Date_Session, _shares_Quotes_Today_Session);
+                var new_data_temp = _toCalLeader(disCount,dayType, item.Value, _shares_Quotes_Date_Session, _shares_Quotes_Today_Session);
                 new_data.AddRange(new_data_temp);
             }
             return new_data;
@@ -179,7 +198,7 @@ namespace MealTicket_Web_Handler.Runner
             return true;
         }
 
-        private static List<Shares_Tag_Leader_Session_Info> _toCalLeader(int disCount, int dayType, List<SharesPlateRelInfo_Session> sharesList, DateTime lowestDate, DateTime lastDate, Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> _shares_Quotes_Date_Session, Dictionary<long, Shares_Quotes_Session_Info> _shares_Quotes_Today_Session)
+        private static List<Shares_Tag_Leader_Session_Info> _toCalLeader(int disCount, int dayType, List<SharesPlateRelInfo_Session> sharesList,Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> _shares_Quotes_Date_Session, Dictionary<long, Shares_Quotes_Session_Info> _shares_Quotes_Today_Session)
         {
             foreach (var item in sharesList)
             {
@@ -190,26 +209,26 @@ namespace MealTicket_Web_Handler.Runner
                     continue;
                 }
                 Shares_Quotes_Session_Info shares_quotes_date = new Shares_Quotes_Session_Info();
-                if (!shares_quotes_date_dic.TryGetValue(lowestDate, out shares_quotes_date))
+                if (shares_quotes_date_dic.Count() == 0)
+                {
+                    continue;
+                }
+                shares_quotes_date = shares_quotes_date_dic.OrderBy(e => e.Value.ClosedPrice).FirstOrDefault().Value;
+                if (shares_quotes_date==null)
                 {
                     continue;
                 }
 
                 Shares_Quotes_Session_Info shares_quotes_today = new Shares_Quotes_Session_Info();
-                if (lastDate == DateTime.Now.Date)
+                if (!_shares_Quotes_Today_Session.ContainsKey(key))
                 {
-                    if (!_shares_Quotes_Today_Session.TryGetValue(key, out shares_quotes_today))
-                    {
-                        continue;
-                    }
+                    shares_quotes_today = shares_quotes_date_dic.OrderByDescending(e => e.Key).FirstOrDefault().Value;
                 }
                 else
                 {
-                    if (!shares_quotes_date_dic.TryGetValue(lastDate, out shares_quotes_today))
-                    {
-                        continue;
-                    }
+                    shares_quotes_today = _shares_Quotes_Today_Session[key];
                 }
+
                 if (shares_quotes_date.ClosedPrice >= shares_quotes_today.ClosedPrice)
                 {
                     continue;
@@ -310,7 +329,7 @@ namespace MealTicket_Web_Handler.Runner
                     var plate_Quotes_Date_Session = new Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>>();
                     var shares_Quotes_Date_Session = new Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>>();
                     int diffDay = _shares_Quotes_Today_Session.Count() == 0 ? 0 : 1;
-                    BuidForcePar(diffDay, dayType, _plate_Quotes_Date_Session, _shares_Quotes_Date_Session, ref plate_Quotes_Date_Session, ref shares_Quotes_Date_Session);
+                    BuidPlateForcePar(diffDay, dayType, _plate_Quotes_Date_Session, _shares_Quotes_Date_Session, ref plate_Quotes_Date_Session, ref shares_Quotes_Date_Session);
 
                     Dictionary<long, List<SharesPlateRelInfo_Session>> plateRelDic = _plateRel.GroupBy(e => e.PlateId).ToDictionary(k => k.Key, v => v.ToList());
 
@@ -478,7 +497,7 @@ namespace MealTicket_Web_Handler.Runner
                     var plate_Quotes_Date_Session = new Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>>();
                     var shares_Quotes_Date_Session = new Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>>();
                     int diffDay = _shares_Quotes_Today_Session.Count() == 0 ? 0 : 1;
-                    BuidForcePar(diffDay, dayType, _plate_Quotes_Date_Session, _shares_Quotes_Date_Session, ref plate_Quotes_Date_Session, ref shares_Quotes_Date_Session);
+                    BuidPlateForcePar(diffDay, dayType, _plate_Quotes_Date_Session, _shares_Quotes_Date_Session, ref plate_Quotes_Date_Session, ref shares_Quotes_Date_Session);
 
                     Dictionary<long, List<SharesPlateRelInfo_Session>> plateRelDic = _plateRel.GroupBy(e => e.PlateId).ToDictionary(k => k.Key, v => v.ToList());
 
@@ -644,38 +663,45 @@ namespace MealTicket_Web_Handler.Runner
             foreach (var item in PlateRel)
             {
                 bool isVaild = false;
-                long key1 = long.Parse(item.SharesCode) * 10 + item.Market;
-                long key2 = item.PlateId;
-                if (Plate_Tag_FocusOn_Session.ContainsKey(key1))
+                if (item.PlateType == 3)
                 {
-                    if (Plate_Tag_FocusOn_Session[key1].ContainsKey(key2))
+                    long key1 = long.Parse(item.SharesCode) * 10 + item.Market;
+                    long key2 = item.PlateId;
+                    if (Plate_Tag_FocusOn_Session.ContainsKey(key1))
                     {
-                        if (Plate_Tag_FocusOn_Session[key1][key2].IsFocusOn)
+                        if (Plate_Tag_FocusOn_Session[key1].ContainsKey(key2))
                         {
-                            isVaild = true;
+                            if (Plate_Tag_FocusOn_Session[key1][key2].IsFocusOn)
+                            {
+                                isVaild = true;
+                            }
+                        }
+                    }
+                    if (Plate_Tag_TrendLike_Session.ContainsKey(key1))
+                    {
+                        if (Plate_Tag_TrendLike_Session[key1].ContainsKey(key2))
+                        {
+                            if (Plate_Tag_TrendLike_Session[key1][key2].IsTrendLike)
+                            {
+                                isVaild = true;
+                            }
+                        }
+                    }
+                    key1 = long.Parse(item.SharesCode) * 1000 + item.Market * 100 + dayType;
+                    if (Plate_Tag_Force_Session.ContainsKey(key1))
+                    {
+                        if (Plate_Tag_Force_Session[key1].ContainsKey(key2))
+                        {
+                            if (Plate_Tag_Force_Session[key1][key2].IsForce1 || Plate_Tag_Force_Session[key1][key2].IsForce2)
+                            {
+                                isVaild = true;
+                            }
                         }
                     }
                 }
-                if (Plate_Tag_TrendLike_Session.ContainsKey(key1))
+                else 
                 {
-                    if (Plate_Tag_TrendLike_Session[key1].ContainsKey(key2))
-                    {
-                        if (Plate_Tag_TrendLike_Session[key1][key2].IsTrendLike)
-                        {
-                            isVaild = true;
-                        }
-                    }
-                }
-                key1 = long.Parse(item.SharesCode) * 1000 + item.Market * 100 + dayType;
-                if (Plate_Tag_Force_Session.ContainsKey(key1))
-                {
-                    if (Plate_Tag_Force_Session[key1].ContainsKey(key2))
-                    {
-                        if (Plate_Tag_Force_Session[key1][key2].IsForce1 || Plate_Tag_Force_Session[key1][key2].IsForce2)
-                        {
-                            isVaild = true;
-                        }
-                    }
+                    isVaild = true;
                 }
 
                 if (isVaild)
@@ -685,7 +711,7 @@ namespace MealTicket_Web_Handler.Runner
             }
         }
 
-        private static void BuidForcePar(int diffDay,int dayType, Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> Plate_Quotes_Date_Session, Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> Shares_Quotes_Date_Session, ref Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> _plate_Quotes_Date_Session, ref Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> _shares_Quotes_Date_Session)
+        private static void BuidPlateForcePar(int diffDay,int dayType, Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> Plate_Quotes_Date_Session, Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> Shares_Quotes_Date_Session, ref Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> _plate_Quotes_Date_Session, ref Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> _shares_Quotes_Date_Session)
         {
             int takeCount = 0;
             switch (dayType)
