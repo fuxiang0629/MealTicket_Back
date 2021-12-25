@@ -65,7 +65,7 @@ namespace FXCommon.Common
             object value = _getSession(key);
             if (value != null)
             {
-                value=CopySessionData(value, key);
+                value = CopySessionData(value, key);
             }
             _sessionReadWriteLock.ReleaseReaderLock();
             return value;

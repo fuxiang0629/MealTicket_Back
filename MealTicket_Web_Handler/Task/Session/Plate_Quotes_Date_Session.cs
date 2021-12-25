@@ -44,22 +44,7 @@ namespace MealTicket_Web_Handler
             var resultData = new Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>>();
             foreach (var item in data)
             {
-                if (!resultData.ContainsKey(item.Key))
-                {
-                    resultData.Add(item.Key, new Dictionary<DateTime, Plate_Quotes_Session_Info>());
-                }
-                foreach (var item2 in item.Value)
-                {
-                    if (!resultData[item.Key].ContainsKey(item2.Key))
-                    {
-                        resultData[item.Key].Add(item2.Key, new Plate_Quotes_Session_Info());
-                    }
-                    resultData[item.Key][item2.Key].ClosedPrice = item2.Value.ClosedPrice;
-                    resultData[item.Key][item2.Key].Date = item2.Value.Date;
-                    resultData[item.Key][item2.Key].PlateId = item2.Value.PlateId;
-                    resultData[item.Key][item2.Key].RealDays = item2.Value.RealDays;
-                    resultData[item.Key][item2.Key].YestodayClosedPrice = item2.Value.YestodayClosedPrice;
-                }
+                resultData[item.Key] = new Dictionary<DateTime, Plate_Quotes_Session_Info>(item.Value);
             }
             return resultData;
         }

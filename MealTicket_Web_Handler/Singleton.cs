@@ -79,7 +79,10 @@ namespace MealTicket_Web_Handler
         /// </summary>
         public int QuotesDaysShow = 20;
 
-        public int MaxTrendCheckTaskCount = 4;
+
+        //搜索线程数
+        public int TempThreadCount = 4;
+        public int ConditionThreadCount = 16;
 
         /// <summary>
         /// 监控搜索间隔
@@ -116,6 +119,7 @@ namespace MealTicket_Web_Handler
 
         public int SharesStockCal_MinMinute = 5;
         public int SharesStockCal_IntervalMinute = 15;
+        public int SharesStockCal_Type = 1;
 
         /// <summary>
         ///分时叠加参数
@@ -561,7 +565,12 @@ namespace MealTicket_Web_Handler
                         int tempMaxTrendCheckTaskCount= sysValue.TempThreadCount;
                         if (tempMaxTrendCheckTaskCount > 0)
                         {
-                            MaxTrendCheckTaskCount = tempMaxTrendCheckTaskCount;
+                            TempThreadCount = tempMaxTrendCheckTaskCount;
+                        }
+                        int tempConditionThreadCount = sysValue.ConditionThreadCount;
+                        if (tempConditionThreadCount > 0)
+                        {
+                            ConditionThreadCount = tempConditionThreadCount;
                         }
                     }
                 }
@@ -627,7 +636,11 @@ namespace MealTicket_Web_Handler
                         {
                             SharesStockCal_IntervalMinute = tempSharesStockCal_IntervalMinute;
                         }
-
+                        int tempSharesStockCal_Type = sysValue.SharesStockCal_Type;
+                        if (tempSharesStockCal_Type > 0)
+                        {
+                            SharesStockCal_Type = tempSharesStockCal_Type;
+                        }
                     }
                 }
                 catch { }

@@ -48,5 +48,10 @@ namespace MealTicket_Web_Handler
         /// 真实天数（计算板块排名用）
         /// </summary>
         public int RealDays { get; set; }
+
+        /// <summary>
+        /// 板块排名
+        /// </summary>
+        public int Rank { get; set; }
     }
 }

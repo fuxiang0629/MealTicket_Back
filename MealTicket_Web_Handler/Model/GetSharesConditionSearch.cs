@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MealTicket_Web_Handler.Runner;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -44,6 +45,16 @@ namespace MealTicket_Web_Handler.Model
         /// 查询参数
         /// </summary>
         public string content { get; set; }
+
+        /// <summary>
+        /// 条件排序值
+        /// </summary>
+        public int orderIndex { get; set; }
+
+        /// <summary>
+        /// 符合的股票列表
+        /// </summary>
+        public Dictionary<long,SharesBase> SharesDic { get; set; }
     }
 
     public class SharesConditionSearchInfo

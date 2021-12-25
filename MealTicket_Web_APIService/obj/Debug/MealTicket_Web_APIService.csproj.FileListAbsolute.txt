@@ -163,3 +163,4 @@ F:\项目\饭票后端\MealTicket_Web_APIService\bin\Debug\MealTicket_DBCommon.d
 D:\项目\饭票\后端\MealTicket_Web_APIService\bin\Debug\MealTicket_DBCommon.dll
 D:\项目\饭票\后端\MealTicket_Web_APIService\bin\Debug\MealTicket_DBCommon.pdb
 D:\项目\饭票\后端\MealTicket_Web_APIService\bin\Debug\MealTicket_DBCommon.dll.config
+F:\项目\饭票后端\MealTicket_Web_APIService\bin\Debug\NCalc.dll

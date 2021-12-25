@@ -67,6 +67,8 @@ namespace MealTicket_APIService
         /// <param name="urls">其他扩展地址</param>
         public void Start<TStartup>(string url, params string[] urls)
         {
+            TaskThread.SetTaskThreads();
+
             //框架内部缓存信息
             session = Singleton.Instance;
             session.Init();

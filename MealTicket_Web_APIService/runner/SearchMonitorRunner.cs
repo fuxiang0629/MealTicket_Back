@@ -33,7 +33,8 @@ namespace MealTicket_Web_APIService.runner
         {
             try
             {
-                RunnerHelper.SearchMonitor();
+                SearchHelper searchHelper = new SearchHelper();
+                searchHelper.SearchMonitor();
             }
             catch (Exception ex)
             {
