@@ -313,6 +313,10 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel_tag_focuson_date" Width="1.5" PointX="53.375" PointY="47.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel_tag_force_date" Width="1.5" PointX="53.375" PointY="50.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_plate_rel_tag_trendlike_date" Width="1.5" PointX="54.375" PointY="0.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.securitybarsdata_1min_test" Width="1.5" PointX="54.375" PointY="4.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_setting_plate_index" Width="1.5" PointX="54.375" PointY="10.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_setting_plate_linkage" Width="1.5" PointX="54.375" PointY="14.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_setting_plate_shares_linkage" Width="1.5" PointX="54.375" PointY="17.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

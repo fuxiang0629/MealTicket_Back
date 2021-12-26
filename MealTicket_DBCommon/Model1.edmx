@@ -5,6 +5,33 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="meal_ticketModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="securitybarsdata_1min_test">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="GroupTimeKey" Type="bigint" Nullable="false" />
+          <Property Name="Time" Type="datetime" Nullable="false" />
+          <Property Name="TimeStr" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
+          <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
+          <Property Name="PreClosePrice" Type="bigint" Nullable="false" />
+          <Property Name="MinPrice" Type="bigint" Nullable="false" />
+          <Property Name="MaxPrice" Type="bigint" Nullable="false" />
+          <Property Name="TradeStock" Type="bigint" Nullable="false" />
+          <Property Name="TradeAmount" Type="bigint" Nullable="false" />
+          <Property Name="LastTradeStock" Type="bigint" Nullable="false" />
+          <Property Name="LastTradeAmount" Type="bigint" Nullable="false" />
+          <Property Name="Tradable" Type="bigint" Nullable="false" />
+          <Property Name="TotalCapital" Type="bigint" Nullable="false" />
+          <Property Name="HandCount" Type="int" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+          <Property Name="IsLast" Type="bit" Nullable="false" />
+          <Property Name="YestodayClosedPrice" Type="bigint" Nullable="false" />
+          <Property Name="IsVaild" Type="bit" Nullable="false" />
+        </EntityType>
         <EntityType Name="t_account_api">
           <Key>
             <PropertyRef Name="Id" />
@@ -2459,6 +2486,36 @@
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="ServerId" Type="varchar" MaxLength="50" Nullable="false" />
           <Property Name="BrokerAccountId" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_setting_plate_index">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="200" />
+          <Property Name="ValueJson" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_setting_plate_linkage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MainPlateId" Type="bigint" Nullable="false" />
+          <Property Name="LinkagePlateId" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_setting_plate_shares_linkage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="MainPlateId" Type="bigint" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_all">
           <Key>
@@ -5264,6 +5321,7 @@
           </ReturnType>
         </Function>
         <EntityContainer Name="meal_ticketModelStoreContainer">
+          <EntitySet Name="securitybarsdata_1min_test" EntityType="Self.securitybarsdata_1min_test" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_api" EntityType="Self.t_account_api" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_bank_card" EntityType="Self.t_account_bank_card" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_account_baseinfo" EntityType="Self.t_account_baseinfo" Schema="dbo" store:Type="Tables" />
@@ -5450,6 +5508,9 @@
           <EntitySet Name="t_search_tri_setting" EntityType="Self.t_search_tri_setting" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_server" EntityType="Self.t_server" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_server_broker_account_rel" EntityType="Self.t_server_broker_account_rel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_setting_plate_index" EntityType="Self.t_setting_plate_index" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_setting_plate_linkage" EntityType="Self.t_setting_plate_linkage" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_setting_plate_shares_linkage" EntityType="Self.t_setting_plate_shares_linkage" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_all" EntityType="Self.t_shares_all" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_all_corrigendum" EntityType="Self.t_shares_all_corrigendum" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_all_temp" EntityType="Self.t_shares_all_temp" Schema="dbo" store:Type="Tables" />
@@ -9889,6 +9950,10 @@
           <EntitySet Name="t_shares_plate_rel_tag_focuson_date" EntityType="meal_ticketModel.t_shares_plate_rel_tag_focuson_date" />
           <EntitySet Name="t_shares_plate_rel_tag_force_date" EntityType="meal_ticketModel.t_shares_plate_rel_tag_force_date" />
           <EntitySet Name="t_shares_plate_rel_tag_trendlike_date" EntityType="meal_ticketModel.t_shares_plate_rel_tag_trendlike_date" />
+          <EntitySet Name="securitybarsdata_1min_test" EntityType="meal_ticketModel.securitybarsdata_1min_test" />
+          <EntitySet Name="t_setting_plate_index" EntityType="meal_ticketModel.t_setting_plate_index" />
+          <EntitySet Name="t_setting_plate_linkage" EntityType="meal_ticketModel.t_setting_plate_linkage" />
+          <EntitySet Name="t_setting_plate_shares_linkage" EntityType="meal_ticketModel.t_setting_plate_shares_linkage" />
         </EntityContainer>
         <EntityType Name="t_account_baseinfo">
           <Key>
@@ -11265,6 +11330,63 @@
           <Property Name="IsTrendLike" Type="Boolean" Nullable="false" />
           <Property Name="Score" Type="Int32" Nullable="false" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="securitybarsdata_1min_test">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
+          <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TimeStr" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="OpenedPrice" Type="Int64" Nullable="false" />
+          <Property Name="ClosedPrice" Type="Int64" Nullable="false" />
+          <Property Name="PreClosePrice" Type="Int64" Nullable="false" />
+          <Property Name="MinPrice" Type="Int64" Nullable="false" />
+          <Property Name="MaxPrice" Type="Int64" Nullable="false" />
+          <Property Name="TradeStock" Type="Int64" Nullable="false" />
+          <Property Name="TradeAmount" Type="Int64" Nullable="false" />
+          <Property Name="LastTradeStock" Type="Int64" Nullable="false" />
+          <Property Name="LastTradeAmount" Type="Int64" Nullable="false" />
+          <Property Name="Tradable" Type="Int64" Nullable="false" />
+          <Property Name="TotalCapital" Type="Int64" Nullable="false" />
+          <Property Name="HandCount" Type="Int32" Nullable="false" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="IsLast" Type="Boolean" Nullable="false" />
+          <Property Name="YestodayClosedPrice" Type="Int64" Nullable="false" />
+          <Property Name="IsVaild" Type="Boolean" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_setting_plate_index">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="ValueJson" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_setting_plate_linkage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MainPlateId" Type="Int64" Nullable="false" />
+          <Property Name="LinkagePlateId" Type="Int64" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_setting_plate_shares_linkage">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="MainPlateId" Type="Int64" Nullable="false" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -16278,6 +16400,67 @@
                 <ScalarProperty Name="PlateId" ColumnName="PlateId" />
                 <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
                 <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="securitybarsdata_1min_test">
+            <EntityTypeMapping TypeName="meal_ticketModel.securitybarsdata_1min_test">
+              <MappingFragment StoreEntitySet="securitybarsdata_1min_test">
+                <ScalarProperty Name="IsVaild" ColumnName="IsVaild" />
+                <ScalarProperty Name="YestodayClosedPrice" ColumnName="YestodayClosedPrice" />
+                <ScalarProperty Name="IsLast" ColumnName="IsLast" />
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="HandCount" ColumnName="HandCount" />
+                <ScalarProperty Name="TotalCapital" ColumnName="TotalCapital" />
+                <ScalarProperty Name="Tradable" ColumnName="Tradable" />
+                <ScalarProperty Name="LastTradeAmount" ColumnName="LastTradeAmount" />
+                <ScalarProperty Name="LastTradeStock" ColumnName="LastTradeStock" />
+                <ScalarProperty Name="TradeAmount" ColumnName="TradeAmount" />
+                <ScalarProperty Name="TradeStock" ColumnName="TradeStock" />
+                <ScalarProperty Name="MaxPrice" ColumnName="MaxPrice" />
+                <ScalarProperty Name="MinPrice" ColumnName="MinPrice" />
+                <ScalarProperty Name="PreClosePrice" ColumnName="PreClosePrice" />
+                <ScalarProperty Name="ClosedPrice" ColumnName="ClosedPrice" />
+                <ScalarProperty Name="OpenedPrice" ColumnName="OpenedPrice" />
+                <ScalarProperty Name="TimeStr" ColumnName="TimeStr" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="GroupTimeKey" ColumnName="GroupTimeKey" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_setting_plate_index">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_setting_plate_index">
+              <MappingFragment StoreEntitySet="t_setting_plate_index">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="ValueJson" ColumnName="ValueJson" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_setting_plate_linkage">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_setting_plate_linkage">
+              <MappingFragment StoreEntitySet="t_setting_plate_linkage">
+                <ScalarProperty Name="LinkagePlateId" ColumnName="LinkagePlateId" />
+                <ScalarProperty Name="MainPlateId" ColumnName="MainPlateId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_setting_plate_shares_linkage">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_setting_plate_shares_linkage">
+              <MappingFragment StoreEntitySet="t_setting_plate_shares_linkage">
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="MainPlateId" ColumnName="MainPlateId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

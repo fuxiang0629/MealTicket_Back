@@ -6040,5 +6040,150 @@ namespace MealTicket_Admin_APIService.controller
             tradeCenterHandler.ResetSharesTag(basedata);
             return null;
         }
+
+        /// <summary>
+        /// 获取板块指数配置信息
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("plate/index/setting/list"), HttpPost]
+        [Description("获取板块指数配置信息")]
+        public PageRes<PlateIndexSettingInfo> GetPlateIndexSettingList(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return tradeCenterHandler.GetPlateIndexSettingList(request, basedata);
+        }
+
+        /// <summary>
+        /// 编辑板块指数配置信息
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("plate/index/setting/modify"), HttpPost]
+        [Description("编辑板块指数配置信息")]
+        public object ModifyPlateIndexSetting(ModifyPlateIndexSettingRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.ModifyPlateIndexSetting(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改板块指数配置信息状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("plate/index/setting/status/modify"), HttpPost]
+        [Description("修改板块指数配置信息状态")]
+        public object ModifyPlateIndexSettingStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.ModifyPlateIndexSettingStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取板块联动列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("plate/linkage/setting/list"), HttpPost]
+        [Description("获取板块联动列表")]
+        public PageRes<PlateLinkageSettingInfo> GetPlateLinkageSettingList(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return tradeCenterHandler.GetPlateLinkageSettingList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加板块联动
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("plate/linkage/setting/add"), HttpPost]
+        [Description("添加板块联动")]
+        public object AddPlateLinkageSetting(AddPlateLinkageSettingRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.AddPlateLinkageSetting(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除板块联动
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("plate/linkage/setting/delete"), HttpPost]
+        [Description("删除板块联动")]
+        public object DeletePlateLinkageSetting(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.DeletePlateLinkageSetting(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 设置联动板块
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("plate/linkage/setting/modify"), HttpPost]
+        [Description("设置联动板块")]
+        public object ModifyPlateLinkageSetting(ModifyPlateLinkageSettingRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.ModifyPlateLinkageSetting(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取可设置联动板块列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("plate/linkage/all/list"), HttpPost]
+        [Description("获取可设置联动板块列表")]
+        public List<PlateLinkageAllInfo> GetPlateLinkageAllList()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return tradeCenterHandler.GetPlateLinkageAllList(basedata);
+        }
     }
 }

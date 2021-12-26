@@ -1,40 +1,17 @@
-t_plate_shares_rel_tag_setting
-t_plate_shares_rel_tag_setting_details
-t_shares_plate_rel_tag_focuson_date  	tag_focuson_tri
-t_shares_plate_rel_tag_force_date  	tag_force_tri
-t_shares_plate_rel_tag_trendlike_date   	tag_trendlike_tri
-t_plate_shares_rel_tag_leader  		tag_leader_tri
-t_plate_shares_rel_tag_leader_date
-t_plate_shares_rel_tag_dayleader	tag_dayleader_tri
-t_plate_shares_rel_tag_dayleader_date
-t_plate_shares_rel_tag_mainarmy	tag_mainarmy_tri
-t_plate_shares_rel_tag_mainarmy_date
-
-PlateTagTrendLikeSessionInfo P_Plate_Tag_TrendLike_Session_Update
-SharesTagLeaderSessionInfo  P_Shares_Tag_Leader_Session_Update
-SharesTagDayLeaderSessionInfo  P_Shares_Tag_DayLeader_Session_Update
-SharesTagMainArmySessionInfo  P_Shares_Tag_MainArmy_Session_Update
+t_setting_plate_index
+t_setting_plate_linkage
+t_setting_plate_shares_linkage
 
 
-  insert into t_plate_shares_rel_tag_setting
-  (Name,[Description],[Type],[Status],DefaultCount,CreateTime,LastModified)
-  values('日内龙头','日内龙头',1,1,1,getdate(),getdate())
-  insert into t_plate_shares_rel_tag_setting
-  (Name,[Description],[Type],[Status],DefaultCount,CreateTime,LastModified)
-  values('龙头','龙头',2,1,1,getdate(),getdate())
-  insert into t_plate_shares_rel_tag_setting
-  (Name,[Description],[Type],[Status],DefaultCount,CreateTime,LastModified)
-  values('中军','中军',3,1,1,getdate(),getdate())
-  insert into t_system_param
-  (ParamName,[Description],ParamValue,IsJson,CreateTime,LastModified)
-  values('MtlineSuperpositionPar','分时叠加参数','{"MaxCheckedCount":5,"MtLineColorList":"#1878dd,#d628d9,#abb511,#d51123,#21b548"}',1,getdate(),getdate())
-  insert into t_system_param
-  (ParamName,[Description],ParamValue,IsJson,CreateTime,LastModified)
-  values('VolumeRatePar','量比计算参数','{"SharesStockCal_MinMinute":5,"SharesStockCal_IntervalMinute":15}',1,getdate(),getdate())
-
-  alter table t_shares_plate_rel_tag_trendlike add Score int not null default -1;
-
-
-
-P_GetShares_Quotes_Date_Session
-P_GetShares_Quotes_Today_Session
+  insert into t_setting_plate_index
+  ([Type],Name,[Description],ValueJson,CreateTime,LastModified)
+  values(1,'龙头指数','龙头指数','{"coefficient":1000}',getdate(),getdate())
+  insert into t_setting_plate_index
+  ([Type],Name,[Description],ValueJson,CreateTime,LastModified)
+  values(2,'板块联动','板块联动','{"coefficient":1000}',getdate(),getdate())
+  insert into t_setting_plate_index
+  ([Type],Name,[Description],ValueJson,CreateTime,LastModified)
+  values(3,'股票联动','股票联动','{"coefficient":1000}',getdate(),getdate())
+  insert into t_setting_plate_index
+  ([Type],Name,[Description],ValueJson,CreateTime,LastModified)
+  values(4,'新高指数','新高指数','{"coefficient":1000,"calDays":20}',getdate(),getdate())

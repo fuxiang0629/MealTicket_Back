@@ -6134,6 +6134,11 @@
             卖出股票价格（限价卖出有效）
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddPlateLinkageSettingRequest.MainPlateId">
+            <summary>
+            主板块Id
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.AddSharesTagSettingDetailsRequest.SettingType">
             <summary>
             类型
@@ -6147,6 +6152,86 @@
         <member name="P:MealTicket_Admin_Handler.Model.AddSharesTagSettingDetailsRequest.DisCount">
             <summary>
             目标数量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.PlateIndexSettingInfo.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.PlateIndexSettingInfo.Type">
+            <summary>
+            类型1龙头指数 2板块联动 3股票联动 4新高指数
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.PlateIndexSettingInfo.Name">
+            <summary>
+            名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.PlateIndexSettingInfo.Description">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.PlateIndexSettingInfo.Coefficient">
+            <summary>
+            系数
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.PlateIndexSettingInfo.CalDays">
+            <summary>
+            新高计算天数
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.PlateIndexSettingInfo.Status">
+            <summary>
+            状态1有效 2无效
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.PlateIndexSettingInfo.LastModified">
+            <summary>
+            数据最后修改时间
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.PlateLinkageSettingInfo.MainPlateId">
+            <summary>
+            主板块Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.PlateLinkageSettingInfo.MainPlateName">
+            <summary>
+            主板块名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.PlateLinkageSettingInfo.LinkagePlateList">
+            <summary>
+            联动板块列表
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.PlateLinkageAllInfo.PlateType">
+            <summary>
+            板块类型
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.PlateLinkageAllInfo.PlateTypeName">
+            <summary>
+            板块类型名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.PlateLinkageAllInfo.PlateList">
+            <summary>
+            板块列表
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.PlateNameInfo.PlateId">
+            <summary>
+            板块Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.PlateNameInfo.PlateName">
+            <summary>
+            板块名称
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.SharesTagSettingInfo.Id">
@@ -10539,6 +10624,31 @@
             额外卖出条件0无 1封涨停板 2封跌停板
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyPlateIndexSettingRequest.Id">
+            <summary>
+            Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyPlateIndexSettingRequest.Description">
+            <summary>
+            描述
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyPlateIndexSettingRequest.ValueJson">
+            <summary>
+            JSON值
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyPlateLinkageSettingRequest.MainPlateId">
+            <summary>
+            主板块Id
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyPlateLinkageSettingRequest.LinkagePlateList">
+            <summary>
+            联动板块列表
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.ModifySharesBasePlateTagRequest.Market">
             <summary>
             市场代码
@@ -14510,6 +14620,65 @@
             </summary>
             <param name="request"></param>
             <param name="basedata"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetPlateIndexSettingList(MealTicket_Admin_Handler.Model.PageRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            获取板块指数配置信息
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifyPlateIndexSetting(MealTicket_Admin_Handler.Model.ModifyPlateIndexSettingRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            编辑板块指数配置信息
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifyPlateIndexSettingStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            修改板块指数配置信息状态
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetPlateLinkageSettingList(MealTicket_Admin_Handler.Model.PageRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            获取板块联动列表
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.AddPlateLinkageSetting(MealTicket_Admin_Handler.Model.AddPlateLinkageSettingRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            添加板块联动
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.DeletePlateLinkageSetting(MealTicket_Admin_Handler.Model.DeleteRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            删除板块联动
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.ModifyPlateLinkageSetting(MealTicket_Admin_Handler.Model.ModifyPlateLinkageSettingRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            设置板块联动列表
+            </summary>
+            <param name="request"></param>
+            <param name="basedata"></param>
+        </member>
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetPlateLinkageAllList(MealTicket_Admin_Handler.Model.HeadBase)">
+            <summary>
+            获取可设置联动板块列表
+            </summary>
+            <param name="basedata"></param>
+            <returns></returns>
         </member>
     </members>
 </doc>

@@ -11433,5 +11433,263 @@ namespace MealTicket_Admin_Handler
         {
             _sendPushNotice((int)MsgType.RESESHARESTAG, null);
         }
+
+        /// <summary>
+        /// 获取板块指数配置信息
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<PlateIndexSettingInfo> GetPlateIndexSettingList(PageRequest request,HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var resultList = (from item in db.t_setting_plate_index
+                                  select item).ToList();
+                int totalCount = resultList.Count();
+                resultList = (from item in resultList
+                              orderby item.CreateTime descending
+                              select item).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+
+                List<PlateIndexSettingInfo> list = new List<PlateIndexSettingInfo>();
+                foreach (var item in resultList)
+                {
+                    var temp = JsonConvert.DeserializeObject<dynamic>(item.ValueJson);
+                    int Coefficient = temp.coefficient;
+                    int CalDays = 0;
+                    if (item.Type == 4)
+                    {
+                        CalDays = temp.calDays;
+                    }
+
+                    list.Add(new PlateIndexSettingInfo
+                    {
+                        Description = item.Description,
+                        Id = item.Id,
+                        LastModified = item.LastModified,
+                        Status=item.Status,
+                        Name = item.Name,
+                        Type = item.Type,
+                        Coefficient = Coefficient,
+                        CalDays = CalDays
+                    });
+                }
+
+                return new PageRes<PlateIndexSettingInfo> 
+                {
+                    TotalCount=0,
+                    List= list
+                };
+            }
+        }
+
+        /// <summary>
+        /// 编辑板块指数配置信息
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifyPlateIndexSetting(ModifyPlateIndexSettingRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var temp = (from item in db.t_setting_plate_index
+                            where item.Id == request.Id
+                            select item).FirstOrDefault();
+                if (temp == null)
+                {
+                    throw new WebApiException(400,"数据不存在");
+                }
+                temp.Description = request.Description;
+                temp.ValueJson = request.ValueJson;
+                temp.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 修改板块指数配置信息状态
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifyPlateIndexSettingStatus(ModifyStatusRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var temp = (from item in db.t_setting_plate_index
+                            where item.Id == request.Id
+                            select item).FirstOrDefault();
+                if (temp == null)
+                {
+                    throw new WebApiException(400, "数据不存在");
+                }
+                temp.Status = request.Status;
+                temp.LastModified = DateTime.Now;
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 获取板块联动列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<PlateLinkageSettingInfo> GetPlateLinkageSettingList(PageRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var plate_linkage = from item in db.t_setting_plate_linkage
+                                    join item2 in db.t_shares_plate on item.MainPlateId equals item2.Id
+                                    where item2.Status == 1 && item2.BaseStatus == 1
+                                    group item by new { item2.Id, item2.Name } into g
+                                    select g;
+                int totalCount = plate_linkage.Count();
+                var list = (from item in plate_linkage
+                            orderby item.Key.Name
+                            select new PlateLinkageSettingInfo
+                            {
+                                MainPlateId = item.Key.Id,
+                                MainPlateName = item.Key.Name,
+                                LinkagePlateList = item.Select(e => e.LinkagePlateId).ToList()
+                            }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+                var basePlateIdList = (from item in db.t_shares_plate
+                                       where item.Status == 1 && item.BaseStatus == 1
+                                       select item.Id).ToList();
+                foreach (var item in list)
+                {
+                    item.LinkagePlateList = item.LinkagePlateList.Intersect(basePlateIdList).ToList();
+                }
+                return new PageRes<PlateLinkageSettingInfo>
+                {
+                    TotalCount = totalCount,
+                    List = list
+                };
+            }
+        }
+
+        /// <summary>
+        /// 添加板块联动
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void AddPlateLinkageSetting(AddPlateLinkageSettingRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //判断板块是否已经添加
+                var plate_linkage = (from item in db.t_setting_plate_linkage
+                                     where item.MainPlateId == request.MainPlateId
+                                     select item).FirstOrDefault();
+                if (plate_linkage != null)
+                {
+                    throw new WebApiException(400,"板块已存在");
+                }
+                db.t_setting_plate_linkage.Add(new t_setting_plate_linkage 
+                {
+                    LinkagePlateId=0,
+                    MainPlateId= request.MainPlateId
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除板块联动
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public void DeletePlateLinkageSetting(DeleteRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var plate_linkage = (from item in db.t_setting_plate_linkage
+                                     where item.MainPlateId == request.Id
+                                     select item).ToList();
+                if (plate_linkage.Count() > 0)
+                {
+                    db.t_setting_plate_linkage.RemoveRange(plate_linkage);
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 设置板块联动列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifyPlateLinkageSetting(ModifyPlateLinkageSettingRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran=db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var plate_linkage = (from item in db.t_setting_plate_linkage
+                                         where item.MainPlateId == request.MainPlateId
+                                         select item).ToList();
+                    if (plate_linkage.Count() > 0)
+                    {
+                        db.t_setting_plate_linkage.RemoveRange(plate_linkage);
+                        db.SaveChanges();
+                    }
+                    foreach (var item in request.LinkagePlateList)
+                    {
+                        db.t_setting_plate_linkage.Add(new t_setting_plate_linkage 
+                        {
+                            MainPlateId=request.MainPlateId,
+                            LinkagePlateId=item
+                        });
+                    }
+                    if (request.LinkagePlateList.Count()== 0)
+                    {
+                        db.t_setting_plate_linkage.Add(new t_setting_plate_linkage
+                        {
+                            MainPlateId = request.MainPlateId,
+                            LinkagePlateId = 0
+                        });
+                    }
+                    db.SaveChanges();
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 获取可设置联动板块列表
+        /// </summary>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public List<PlateLinkageAllInfo> GetPlateLinkageAllList(HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = (from item in db.t_shares_plate
+                              where item.Status == 1 && item.BaseStatus == 1
+                              group item by item.Type into g
+                              orderby g.Key
+                              select new PlateLinkageAllInfo
+                              {
+                                  PlateType = g.Key,
+                                  PlateTypeName = g.Key == 1 ? "行业" : g.Key == 2 ? "地区" : "概念",
+                                  PlateList = (from x in g
+                                               orderby x.Name
+                                               select new PlateNameInfo
+                                               {
+                                                   PlateId = x.Id,
+                                                   PlateName = x.Name
+                                               }).ToList()
+
+                              }).ToList();
+                return result;
+            }
+        }
     }
 }

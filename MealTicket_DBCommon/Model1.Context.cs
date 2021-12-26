@@ -335,6 +335,10 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_shares_plate_rel_tag_focuson_date> t_shares_plate_rel_tag_focuson_date { get; set; }
         public virtual DbSet<t_shares_plate_rel_tag_force_date> t_shares_plate_rel_tag_force_date { get; set; }
         public virtual DbSet<t_shares_plate_rel_tag_trendlike_date> t_shares_plate_rel_tag_trendlike_date { get; set; }
+        public virtual DbSet<securitybarsdata_1min_test> securitybarsdata_1min_test { get; set; }
+        public virtual DbSet<t_setting_plate_index> t_setting_plate_index { get; set; }
+        public virtual DbSet<t_setting_plate_linkage> t_setting_plate_linkage { get; set; }
+        public virtual DbSet<t_setting_plate_shares_linkage> t_setting_plate_shares_linkage { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)

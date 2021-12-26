@@ -3812,6 +3812,62 @@
             <param name="request"></param>
             <returns></returns>
         </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetPlateIndexSettingList(MealTicket_Admin_Handler.Model.PageRequest)">
+            <summary>
+            获取板块指数配置信息
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyPlateIndexSetting(MealTicket_Admin_Handler.Model.ModifyPlateIndexSettingRequest)">
+            <summary>
+            编辑板块指数配置信息
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyPlateIndexSettingStatus(MealTicket_Admin_Handler.Model.ModifyStatusRequest)">
+            <summary>
+            修改板块指数配置信息状态
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetPlateLinkageSettingList(MealTicket_Admin_Handler.Model.PageRequest)">
+            <summary>
+            获取板块联动列表
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.AddPlateLinkageSetting(MealTicket_Admin_Handler.Model.AddPlateLinkageSettingRequest)">
+            <summary>
+            添加板块联动
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.DeletePlateLinkageSetting(MealTicket_Admin_Handler.Model.DeleteRequest)">
+            <summary>
+            删除板块联动
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.ModifyPlateLinkageSetting(MealTicket_Admin_Handler.Model.ModifyPlateLinkageSettingRequest)">
+            <summary>
+            设置联动板块
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetPlateLinkageAllList">
+            <summary>
+            获取可设置联动板块列表
+            </summary>
+            <param name="request"></param>
+            <returns></returns>
+        </member>
         <member name="M:MealTicket_Admin_APIService.ExtensionHelper.GetAllWebApi(System.Web.Http.HttpConfiguration)">
             <summary>
             获取当前配置内的所有web api
