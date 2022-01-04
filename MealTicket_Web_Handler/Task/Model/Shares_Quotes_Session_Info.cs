@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace MealTicket_Web_Handler
 {
-    [Serializable]
     public class Shares_Quotes_Session_Info
     {
         /// <summary>
@@ -130,7 +129,6 @@ namespace MealTicket_Web_Handler
         public int PriceType { get; set; }
     }
 
-    [Serializable]
     public class Shares_Quotes_Session_Info_Last
     {
         public Shares_Quotes_Session_Info shares_quotes_info { get; set; }
@@ -184,5 +182,18 @@ namespace MealTicket_Web_Handler
                 return (int)Math.Round(TotalCount_Today_Expect * 1.0 / TotalCount_Yestoday_All * 100, 0);
             }
         }
+    }
+
+    public class Shares_Quotes_Session_Info_Obj 
+    {
+        /// <summary>
+        /// 缓存天数
+        /// </summary>
+        public int Days { get; set; }
+
+        /// <summary>
+        /// 缓存
+        /// </summary>
+        public Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> SessionDic { get; set; }
     }
 }

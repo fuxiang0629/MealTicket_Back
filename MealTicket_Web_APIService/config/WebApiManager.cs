@@ -84,6 +84,10 @@ namespace MealTicket_Web_APIService
             //框架内部缓存信息
             session = Singleton.Instance;
             session.Init();
+
+            session.plateMonitorHelper = new MealTicket_Web_Handler.Runner.PlateMonitorHelper();
+            session.plateMonitorHelper.DoCalTask();
+
             //加载依赖注入
             Kernel = LoadKernel();   
             //加载循环任务

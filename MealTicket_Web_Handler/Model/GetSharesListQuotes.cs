@@ -280,5 +280,10 @@ namespace MealTicket_Web_Handler.Model
         /// 预计量比
         /// </summary>
         public int StockRate_All { get; set; }
+
+        /// <summary>
+        /// 龙头类型1是龙头 0不是龙头
+        /// </summary>
+        public int LeaderType { get; set; }
     }
 }

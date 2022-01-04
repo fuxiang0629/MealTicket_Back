@@ -21,7 +21,7 @@ namespace MealTicket_Handler.SecurityBarsData
         /// <summary>
         /// 任务线程
         /// </summary>
-        Thread TaskThread;
+        Thread TaskHandle;
 
         /// <summary>
         /// K线数据回调队列
@@ -62,7 +62,7 @@ namespace MealTicket_Handler.SecurityBarsData
         /// </summary>
         public void DoTask()
         {
-            TaskThread = new Thread(() =>
+            TaskHandle = new Thread(() =>
             {
                 int waitTimeout = CalcIntervalTime(null, 0);
                 do
@@ -94,7 +94,7 @@ namespace MealTicket_Handler.SecurityBarsData
                     waitTimeout = CalcIntervalTime(waitTime, waitTimeout);
                 } while (true);
             });
-            TaskThread.Start();
+            TaskHandle.Start();
         }
 
         /// <summary>
@@ -434,17 +434,19 @@ namespace MealTicket_Handler.SecurityBarsData
             //通知板块
             if (dataObj.HandlerType == 2 || dataObj.HandlerType == 21)
             {
-                try
-                {
-                    Singleton.Instance._newIindexSecurityBarsDataTask.ToExecuteRetry(dataObj.HandlerType, dataObj.SuccessPackageList);
-                }
-                catch (Exception ex)
-                {
-                    Logger.WriteFileLog("通知板块出错",ex);
-                }
+                pushNoticeToPlate(dataObj.HandlerType, dataObj.SuccessPackageList);
             }
             ClearTaskInfo(dataObj);//超时则清空任务
             dataObj.TaskTimeOut = Singleton.Instance.SecurityBarsTaskTimeout;
+        }
+
+        /// <summary>
+        /// 通知板块
+        /// </summary>
+        private void pushNoticeToPlate(int HandlerType,List<SecurityBarsDataParList> SuccessPackageList) 
+        {
+            List<SecurityBarsDataParList> list = new List<SecurityBarsDataParList>(SuccessPackageList); 
+            Singleton.Instance._newIindexSecurityBarsDataTask.ToReceiveSharesRetry(HandlerType, list);
         }
 
         /// <summary>
@@ -799,14 +801,14 @@ namespace MealTicket_Handler.SecurityBarsData
         /// </summary>
         public void Dispose()
         {
-            if (TaskThread != null)
+            if (TaskHandle != null)
             {
                 SecurityBarsDataQueue.AddMessage(new QueueMsgObj
                 {
                     MsgId = -1,
                     MsgObj = null
                 }, true, 0);
-                TaskThread.Join();
+                TaskHandle.Join();
             }
             if (SecurityBarsDataQueue != null)
             {

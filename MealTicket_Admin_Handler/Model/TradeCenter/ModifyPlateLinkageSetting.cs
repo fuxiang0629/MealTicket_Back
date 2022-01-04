@@ -18,6 +18,11 @@ namespace MealTicket_Admin_Handler.Model
         public long MainPlateId { get; set; }
 
         /// <summary>
+        /// 是否真实在走这个板块
+        /// </summary>
+        public bool IsReal { get; set; }
+
+        /// <summary>
         /// 联动板块列表
         /// </summary>
         public List<long> LinkagePlateList { get; set; }

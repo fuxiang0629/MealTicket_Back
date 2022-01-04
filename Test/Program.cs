@@ -21,7 +21,6 @@ using System.Xml.Serialization;
 
 namespace Test
 {
-    [Serializable]
     public class A
     {
         public int Id { get; set; }
@@ -82,33 +81,47 @@ namespace Test
         static List<A> aList = new List<A>();
         static void Main(string[] args)
         {
-            TaskThread.SetTaskThreads();
-            int i = 0;
-            int idx = 0;
-            while (true)
-            {
-                i++;
-                if (i % 2 == 0)
-                {
-                    RunOneThread(idx);
-                    idx += 400000;
-                    RunOneThreadOne(idx);
-                    idx += 100000;
-                    RunMoreThread(idx);
-                    idx += 400000;
-                }
-                else
-                {
-                    RunMoreThread(idx);
-                    idx += 400000;
-                    RunOneThreadOne(idx);
-                    idx += 100000;
-                    RunOneThread(idx);
-                    idx += 400000;
-                }
-                Console.WriteLine("=============================================");
-                Thread.Sleep(5000);
-            }
+            int i=typeof(A).GetFields().Length;
+            int t = i;
+            //List<A> alist = new List<A>
+            //{
+            //    new A
+            //    {
+            //        Id=1,
+            //        Name="1"
+            //    }
+            //};
+            //List<A> blist = new List<A>(alist);
+            //alist.Clear();
+            //var c = blist;
+
+            //TaskThread.SetTaskThreads();
+            //int i = 0;
+            //int idx = 0;
+            //while (true)
+            //{
+            //    i++;
+            //    if (i % 2 == 0)
+            //    {
+            //        RunOneThread(idx);
+            //        idx += 400000;
+            //        RunOneThreadOne(idx);
+            //        idx += 100000;
+            //        RunMoreThread(idx);
+            //        idx += 400000;
+            //    }
+            //    else
+            //    {
+            //        RunMoreThread(idx);
+            //        idx += 400000;
+            //        RunOneThreadOne(idx);
+            //        idx += 100000;
+            //        RunOneThread(idx);
+            //        idx += 400000;
+            //    }
+            //    Console.WriteLine("=============================================");
+            //    Thread.Sleep(5000);
+            //}
         }
 
         static void RunOneThread(int idx)

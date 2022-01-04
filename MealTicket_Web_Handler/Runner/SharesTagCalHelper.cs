@@ -200,8 +200,14 @@ namespace MealTicket_Web_Handler.Runner
 
         private static List<Shares_Tag_Leader_Session_Info> _toCalLeader(int disCount, int dayType, List<SharesPlateRelInfo_Session> sharesList,Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> _shares_Quotes_Date_Session, Dictionary<long, Shares_Quotes_Session_Info> _shares_Quotes_Today_Session)
         {
+            List<SharesPlateRelInfo_Session> tempSharesList = new List<SharesPlateRelInfo_Session>();
             foreach (var item in sharesList)
             {
+                SharesPlateRelInfo_Session temp = new SharesPlateRelInfo_Session();
+                temp.SharesCode = item.SharesCode;
+                temp.Market = item.Market;
+                temp.PlateId = item.PlateId;
+                tempSharesList.Add(temp);
                 long key = long.Parse(item.SharesCode) * 10 + item.Market;
                 Dictionary<DateTime, Shares_Quotes_Session_Info> shares_quotes_date_dic = new Dictionary<DateTime, Shares_Quotes_Session_Info>();
                 if (!_shares_Quotes_Date_Session.TryGetValue(key, out shares_quotes_date_dic))
@@ -214,7 +220,7 @@ namespace MealTicket_Web_Handler.Runner
                     continue;
                 }
                 shares_quotes_date = shares_quotes_date_dic.OrderBy(e => e.Value.ClosedPrice).FirstOrDefault().Value;
-                if (shares_quotes_date==null)
+                if (shares_quotes_date == null)
                 {
                     continue;
                 }
@@ -233,11 +239,11 @@ namespace MealTicket_Web_Handler.Runner
                 {
                     continue;
                 }
-                item.RiseRate = (int)((shares_quotes_today.ClosedPrice - shares_quotes_date.ClosedPrice) * 1.0 / shares_quotes_date.ClosedPrice * 10000 + 0.5);
+                temp.RiseRate = (int)((shares_quotes_today.ClosedPrice - shares_quotes_date.ClosedPrice) * 1.0 / shares_quotes_date.ClosedPrice * 10000 + 0.5);
             }
 
             List<Shares_Tag_Leader_Session_Info> new_data = new List<Shares_Tag_Leader_Session_Info>();
-            List<SharesPlateRelInfo_Session> tempList = sharesList.OrderByDescending(e => e.RiseRate).ToList();
+            List<SharesPlateRelInfo_Session> tempList = tempSharesList.OrderByDescending(e => e.RiseRate).ToList();
             int idx = 1;
             foreach (var item in tempList)
             {
@@ -371,10 +377,17 @@ namespace MealTicket_Web_Handler.Runner
             return new_data;
         }
 
-        private static List<Shares_Tag_DayLeader_Session_Info> _toCalDayLeader(int disCount,int dayType,List<SharesPlateRelInfo_Session> sharesList, Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> _shares_Quotes_Date_Session, Dictionary<long, Shares_Quotes_Session_Info> _shares_Quotes_Today_Session) 
+        private static List<Shares_Tag_DayLeader_Session_Info> _toCalDayLeader(int disCount,int dayType,List<SharesPlateRelInfo_Session> sharesList, Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> _shares_Quotes_Date_Session, Dictionary<long, Shares_Quotes_Session_Info> _shares_Quotes_Today_Session)
         {
+            List<SharesPlateRelInfo_Session> tempSharesList = new List<SharesPlateRelInfo_Session>();
             foreach (var item in sharesList)
             {
+                SharesPlateRelInfo_Session temp = new SharesPlateRelInfo_Session();
+                temp.SharesCode = item.SharesCode;
+                temp.Market = item.Market;
+                temp.PlateId = item.PlateId;
+                tempSharesList.Add(temp);
+
                 long key = long.Parse(item.SharesCode) * 10 + item.Market;
                 Shares_Quotes_Session_Info today_info = new Shares_Quotes_Session_Info();
                 if (!_shares_Quotes_Today_Session.ContainsKey(key))
@@ -390,8 +403,8 @@ namespace MealTicket_Web_Handler.Runner
                 {
                     today_info = _shares_Quotes_Today_Session[key];
                 }
-                item.RiseRate = today_info.RiseRate;
-                item.LimitUpTime = DateTime.Parse("9999-01-01 00:00:00");
+                temp.RiseRate = today_info.RiseRate;
+                temp.LimitUpTime = DateTime.Parse("9999-01-01 00:00:00");
                 if (!today_info.IsLimitUp)
                 {
                     continue;
@@ -400,11 +413,11 @@ namespace MealTicket_Web_Handler.Runner
                 {
                     continue;
                 }
-                item.LimitUpTime = today_info.LimitUpTime.Value;
+                temp.LimitUpTime = today_info.LimitUpTime.Value;
             }
 
             List<Shares_Tag_DayLeader_Session_Info> new_data = new List<Shares_Tag_DayLeader_Session_Info>();
-            List<SharesPlateRelInfo_Session> tempList = sharesList.OrderBy(e => e.LimitUpTime).ThenByDescending(e=>e.RiseRate).ToList();
+            List<SharesPlateRelInfo_Session> tempList = tempSharesList.OrderBy(e => e.LimitUpTime).ThenByDescending(e=>e.RiseRate).ToList();
             int idx = 1;
             foreach (var item in tempList)
             {
@@ -541,8 +554,14 @@ namespace MealTicket_Web_Handler.Runner
 
         private static List<Shares_Tag_MainArmy_Session_Info> _toCalMainArmy(int disCount, int dayType, List<SharesPlateRelInfo_Session> sharesList, Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> _shares_Quotes_Date_Session, Dictionary<long, Shares_Quotes_Session_Info> _shares_Quotes_Today_Session, Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>> _plate_Tag_TrendLike_Session, Dictionary<long, Shares_Base_Session_Info> _shares_Base_Session)
         {
+            List<SharesPlateRelInfo_Session> tempSharesList = new List<SharesPlateRelInfo_Session>();
             foreach (var item in sharesList)
             {
+                SharesPlateRelInfo_Session temp = new SharesPlateRelInfo_Session();
+                temp.SharesCode = item.SharesCode;
+                temp.Market = item.Market;
+                temp.PlateId = item.PlateId;
+                tempSharesList.Add(temp);
                 long key = long.Parse(item.SharesCode) * 10 + item.Market;
                 Dictionary<DateTime, Shares_Quotes_Session_Info> shares_quotes_date_dic = new Dictionary<DateTime, Shares_Quotes_Session_Info>();
                 if (!_shares_Quotes_Date_Session.TryGetValue(key, out shares_quotes_date_dic))
@@ -571,13 +590,13 @@ namespace MealTicket_Web_Handler.Runner
                 {
                     continue;
                 }
-                item.Score = _plate_Tag_TrendLike_Session[key][item.PlateId].Score;
-                item.MarketValue = today_info.ClosedPrice * _shares_Base_Session[key].TotalCapital;
+                temp.Score = _plate_Tag_TrendLike_Session[key][item.PlateId].Score;
+                temp.MarketValue = today_info.ClosedPrice * _shares_Base_Session[key].TotalCapital;
             }
 
             int mainArmyRankRate = Singleton.Instance.MainArmyRankRate;
-            int takeCount = (int)Math.Round(sharesList.Count() * (mainArmyRankRate * 1.0 / 10000),0);
-            var rankList = sharesList.OrderByDescending(e => e.MarketValue).Take(takeCount).ToList();
+            int takeCount = (int)Math.Round(tempSharesList.Count() * (mainArmyRankRate * 1.0 / 10000),0);
+            var rankList = tempSharesList.OrderByDescending(e => e.MarketValue).Take(takeCount).ToList();
             rankList=rankList.Where(e => e.Score >= 0).OrderBy(e => e.Score).ToList();
 
             Dictionary<long, int> sharesDic = new Dictionary<long, int>();
@@ -594,7 +613,7 @@ namespace MealTicket_Web_Handler.Runner
             }
 
             List<Shares_Tag_MainArmy_Session_Info> new_data = new List<Shares_Tag_MainArmy_Session_Info>();
-            foreach (var item in sharesList)
+            foreach (var item in tempSharesList)
             {
                 int MainArmyType = 0;
                 long key = long.Parse(item.SharesCode) * 10 + item.Market;

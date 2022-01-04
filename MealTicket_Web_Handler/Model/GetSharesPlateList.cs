@@ -107,9 +107,9 @@ namespace MealTicket_Web_Handler
 
         public bool IsFocusOn { get; set; }
 
-        public bool IsForce1 { get; set; }
+        public List<int> IsForce1 { get; set; }
 
-        public bool IsForce2 { get; set; }
+        public List<int> IsForce2 { get; set; }
 
         public bool IsTrendLike { get; set; }
     }

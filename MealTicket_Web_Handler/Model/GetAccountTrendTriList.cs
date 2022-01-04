@@ -382,5 +382,7 @@ namespace MealTicket_Web_Handler.Model
         /// 当前预计与昨日全量比
         /// </summary>
         public int StockRate_All { get; set; }
+
+        public int LeaderType { get; set; }
     }
 }

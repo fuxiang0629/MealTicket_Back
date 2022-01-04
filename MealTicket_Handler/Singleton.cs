@@ -152,6 +152,11 @@ namespace MealTicket_Handler
             IndexInitValueDic.Add(3, 10000000);//成分指数
             UpdateSysPar();
             UpdateWait.Init();
+
+            sessionHandler = new SessionHandler();
+            sessionHandler.UpdateSessionManual();
+            sessionHandler.StartUpdate();
+
             StartSysparUpdateThread();
         }
 
@@ -216,6 +221,12 @@ namespace MealTicket_Handler
                 _newIindexSecurityBarsDataTask.Dispose();
             }
             #endregion
+
+
+            if (sessionHandler != null)
+            {
+                sessionHandler.Dispose();
+            }
         }
 
         /// <summary>
@@ -576,5 +587,7 @@ namespace MealTicket_Handler
         public SharesPlateSession _SharesPlateSession = new SharesPlateSession();
         public SharesQuotesSession _SharesQuotesSession = new SharesQuotesSession();
         #endregion
+
+        public SessionHandler sessionHandler;
     }
 }

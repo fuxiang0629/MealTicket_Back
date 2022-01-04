@@ -10,39 +10,28 @@ namespace MealTicket_Web_Handler.Model
     {
     }
 
-    public class GetPlateLeaderModelSharesListRequest
+    public struct SharesRank
     {
-        /// <summary>
-        /// 板块Id
-        /// </summary>
-        public long PlateId { get; set; }
+        public int DayType { get; set; }
 
-        /// <summary>
-        /// 1.3天 2.5天 3.10天 4.15天
-        /// </summary>
-        public int BaseDayType { get; set; }
+        public long SharesKey { get; set; }
 
-        /// <summary>
-        /// 排序方式1.根据排名排序 2.根据涨跌幅排序
-        /// </summary>
-        public int OrderType { get; set; }
+        public int RiseRate { get; set; }
 
-        /// <summary>
-        /// 排序方式
-        /// </summary>
-        public string OrderMethod { get; set; }
+        public int PlateRank { get; set; }
 
-        /// <summary>
-        /// 自带股票市场
-        /// </summary>
-        public int Market { get; set; }
+        public int TotalRank { get; set; }
 
-        /// <summary>
-        /// 自带股票code
-        /// </summary>
-        public string SharesCode { get; set; }
+        public int RealSharesCount { get; set; }
+
+        public int RealDays { get; set; }
+
+        public int LeaderType { get; set; }
+
+        public int DayLeaderType { get; set; }
+
+        public int MainArmyType { get; set; }
     }
-
     public class PlateSharesInfo
     {
         /// <summary>
@@ -79,17 +68,6 @@ namespace MealTicket_Web_Handler.Model
         /// 股票名称
         /// </summary>
         public string SharesName { get; set; }
-
-        public int LeaderType { get; set; }
-
-        public int DayLeaderType { get; set; }
-
-        public int MainArmyType { get; set; }
-
-        /// <summary>
-        /// 股票排名信息
-        /// </summary>
-        public SharesRankInfo Rank { get; set; }
 
         /// <summary>
         /// 涨跌幅(1/万)
@@ -215,6 +193,27 @@ namespace MealTicket_Web_Handler.Model
         /// 是否外面传入的股票
         /// </summary>
         public bool IsMain { get; set; }
+
+        /// <summary>
+        /// 股票排名信息
+        /// </summary>
+        public List<SharesRank> Rank { get; set; }
+
+        /// <summary>
+        /// 综合排名
+        /// </summary>
+        public int OverallRank { get; set; }
+
+        /// <summary>
+        /// 综合涨跌幅
+        /// </summary>
+        public int OverallRiseRate
+        {
+            get 
+            {
+                return (int)Rank.Average(e => e.RiseRate);
+            }
+        }
     }
 
     public class SharesRankInfo
@@ -238,5 +237,33 @@ namespace MealTicket_Web_Handler.Model
         /// 总排名
         /// </summary>
         public int TotalRank { get; set; }
+    }
+
+    public class GetPlateLeaderModelSharesListRequest:PageRequest
+    {
+        /// <summary>
+        /// 板块Id
+        /// </summary>
+        public long PlateId { get; set; }
+
+        /// <summary>
+        /// 排序方式1.根据排名排序 2.根据涨跌幅排序
+        /// </summary>
+        public int OrderType { get; set; }
+
+        /// <summary>
+        /// 排序方式
+        /// </summary>
+        public string OrderMethod { get; set; }
+
+        /// <summary>
+        /// 自带股票市场
+        /// </summary>
+        public int Market { get; set; }
+
+        /// <summary>
+        /// 自带股票code
+        /// </summary>
+        public string SharesCode { get; set; }
     }
 }

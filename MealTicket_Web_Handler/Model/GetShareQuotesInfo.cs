@@ -17,6 +17,14 @@ namespace MealTicket_Web_Handler.Model
         public string SharesCode { get; set; }
     }
 
+    public class BatchGetShareQuotesInfoRequest
+    {
+        /// <summary>
+        /// 股票Key
+        /// </summary>
+        public List<long> SharesKey { get; set; }
+    }
+
     public class ShareQuotesInfo
     {
         /// <summary>
@@ -28,6 +36,11 @@ namespace MealTicket_Web_Handler.Model
         /// 股票代码
         /// </summary>
         public string SharesCode { get; set; }
+
+        /// <summary>
+        /// 股票名称
+        /// </summary>
+        public string SharesName { get; set; }
 
         /// <summary>
         /// 当前价格

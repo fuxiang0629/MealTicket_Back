@@ -59,7 +59,7 @@ namespace FXCommon.Common
         /// 获取缓存
         /// </summary>
         /// <returns></returns>
-        public object GetSession(string key)
+        public object GetSession(string key, object oct = null)
         {
             _sessionReadWriteLock.AcquireReaderLock(Timeout.Infinite);
             object value = _getSession(key);
@@ -91,6 +91,7 @@ namespace FXCommon.Common
             {
                 value = CopySessionData(value, key);
             }
+
             _sessionReadWriteLock.AcquireWriterLock(Timeout.Infinite);
             _setSession(key, value);
             _sessionReadWriteLock.ReleaseWriterLock();
@@ -103,7 +104,7 @@ namespace FXCommon.Common
 
         public virtual object CopySessionData(object objData,string dataKey) 
         {
-            return DeepCopyWithBinarySerialize(objData);
+            return objData;
         }
         #endregion
 
@@ -200,9 +201,9 @@ namespace FXCommon.Common
             }
         }
 
-        private void _toUpdateSession(string DataKey,int ExcuteType)
+        private void _toUpdateSession(string DataKey,int ExcuteType, object oct = null)
         {
-            object data = UpdateSession(ExcuteType);
+            object data = UpdateSession(ExcuteType, oct);
             SetSession(DataKey, data);
         }
 
@@ -211,7 +212,7 @@ namespace FXCommon.Common
         /// </summary>
         /// <param name="ExcuteType"></param>
         /// <returns></returns>
-        public abstract object UpdateSession(int ExcuteType);
+        public abstract object UpdateSession(int ExcuteType, object oct = null);
 
         /// <summary>
         /// 手动更新所有Session
@@ -238,9 +239,9 @@ namespace FXCommon.Common
         /// 手动更新某个数据缓存
         /// </summary>
         /// <param name="dataKey"></param>
-        public void UpdateSessionManual(string DataKey,int ExcuteType)
+        public void UpdateSessionManual(string DataKey,int ExcuteType,object oct=null)
         {
-            _toUpdateSession(DataKey, ExcuteType);
+            _toUpdateSession(DataKey, ExcuteType, oct);
         }
 
         /// <summary>

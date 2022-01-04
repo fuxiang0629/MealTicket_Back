@@ -243,9 +243,12 @@
     <Compile Include="Model\FrontAccount\ModifyFrontAccountWallet.cs" />
     <Compile Include="Model\FrontAccount\SellFrontAccountSharesHold.cs" />
     <Compile Include="Model\TradeCenter\AddPlateLinkageSetting.cs" />
+    <Compile Include="Model\TradeCenter\AddPlateSharesLinkageSetting.cs" />
     <Compile Include="Model\TradeCenter\AddSharesTagSettingDetails.cs" />
     <Compile Include="Model\TradeCenter\GetPlateIndexSettingList.cs" />
     <Compile Include="Model\TradeCenter\GetPlateLinkageSettingList.cs" />
+    <Compile Include="Model\TradeCenter\GetPlateSharesLinkageAllList.cs" />
+    <Compile Include="Model\TradeCenter\GetPlateSharesLinkageSettingList.cs" />
     <Compile Include="Model\TradeCenter\GetSharesTagSettingList.cs" />
     <Compile Include="Model\HeadBase.cs" />
     <Compile Include="Model\ImageObj.cs" />
@@ -398,6 +401,8 @@
     <Compile Include="Model\TradeCenter\ModifyConditiontradeTemplateSellDetails.cs" />
     <Compile Include="Model\TradeCenter\ModifyPlateIndexSetting.cs" />
     <Compile Include="Model\TradeCenter\ModifyPlateLinkageSetting.cs" />
+    <Compile Include="Model\TradeCenter\ModifyPlateSharesLinkageSetting.cs" />
+    <Compile Include="Model\TradeCenter\ModifyPlateSharesLinkageSettingDefault.cs" />
     <Compile Include="Model\TradeCenter\ModifySharesBasePlateTag.cs" />
     <Compile Include="Model\TradeCenter\ModifySharesCorrigendum.cs" />
     <Compile Include="Model\TradeCenter\ModifySharesLimitAutoBuy.cs" />

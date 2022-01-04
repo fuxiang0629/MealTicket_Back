@@ -2490,6 +2490,7 @@
     <Property Name="Type" Type="int" Nullable="false" />
     <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
     <Property Name="Description" Type="nvarchar" MaxLength="200" />
+    <Property Name="Coefficient" Type="int" Nullable="false" />
     <Property Name="ValueJson" Type="nvarchar(max)" Nullable="false" />
     <Property Name="Status" Type="int" Nullable="false" />
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
@@ -2502,6 +2503,7 @@
     <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="MainPlateId" Type="bigint" Nullable="false" />
     <Property Name="LinkagePlateId" Type="bigint" Nullable="false" />
+    <Property Name="IsReal" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="t_setting_plate_shares_linkage">
     <Key>
@@ -2511,6 +2513,8 @@
     <Property Name="MainPlateId" Type="bigint" Nullable="false" />
     <Property Name="Market" Type="int" Nullable="false" />
     <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="IsReal" Type="bit" Nullable="false" />
+    <Property Name="IsDefault" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_all">
     <Key>

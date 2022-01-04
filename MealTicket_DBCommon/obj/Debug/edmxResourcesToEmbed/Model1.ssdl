@@ -1,5 +1,32 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Schema Namespace="meal_ticketModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="securitybarsdata_1min_test">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="GroupTimeKey" Type="bigint" Nullable="false" />
+    <Property Name="Time" Type="datetime" Nullable="false" />
+    <Property Name="TimeStr" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="OpenedPrice" Type="bigint" Nullable="false" />
+    <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="PreClosePrice" Type="bigint" Nullable="false" />
+    <Property Name="MinPrice" Type="bigint" Nullable="false" />
+    <Property Name="MaxPrice" Type="bigint" Nullable="false" />
+    <Property Name="TradeStock" Type="bigint" Nullable="false" />
+    <Property Name="TradeAmount" Type="bigint" Nullable="false" />
+    <Property Name="LastTradeStock" Type="bigint" Nullable="false" />
+    <Property Name="LastTradeAmount" Type="bigint" Nullable="false" />
+    <Property Name="Tradable" Type="bigint" Nullable="false" />
+    <Property Name="TotalCapital" Type="bigint" Nullable="false" />
+    <Property Name="HandCount" Type="int" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+    <Property Name="IsLast" Type="bit" Nullable="false" />
+    <Property Name="YestodayClosedPrice" Type="bigint" Nullable="false" />
+    <Property Name="IsVaild" Type="bit" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_account_api">
     <Key>
       <PropertyRef Name="Id" />
@@ -2454,6 +2481,40 @@
     <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="ServerId" Type="varchar" MaxLength="50" Nullable="false" />
     <Property Name="BrokerAccountId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_setting_plate_index">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="200" />
+    <Property Name="Coefficient" Type="int" Nullable="false" />
+    <Property Name="ValueJson" Type="nvarchar(max)" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_setting_plate_linkage">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MainPlateId" Type="bigint" Nullable="false" />
+    <Property Name="LinkagePlateId" Type="bigint" Nullable="false" />
+    <Property Name="IsReal" Type="bit" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_setting_plate_shares_linkage">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="MainPlateId" Type="bigint" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="IsReal" Type="bit" Nullable="false" />
+    <Property Name="IsDefault" Type="bit" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_all">
     <Key>
@@ -5259,6 +5320,7 @@
     </ReturnType>
   </Function>
   <EntityContainer Name="meal_ticketModelStoreContainer">
+    <EntitySet Name="securitybarsdata_1min_test" EntityType="Self.securitybarsdata_1min_test" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_api" EntityType="Self.t_account_api" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_bank_card" EntityType="Self.t_account_bank_card" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_account_baseinfo" EntityType="Self.t_account_baseinfo" Schema="dbo" store:Type="Tables" />
@@ -5445,6 +5507,9 @@
     <EntitySet Name="t_search_tri_setting" EntityType="Self.t_search_tri_setting" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_server" EntityType="Self.t_server" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_server_broker_account_rel" EntityType="Self.t_server_broker_account_rel" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_setting_plate_index" EntityType="Self.t_setting_plate_index" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_setting_plate_linkage" EntityType="Self.t_setting_plate_linkage" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_setting_plate_shares_linkage" EntityType="Self.t_setting_plate_shares_linkage" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_all" EntityType="Self.t_shares_all" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_all_corrigendum" EntityType="Self.t_shares_all_corrigendum" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_all_temp" EntityType="Self.t_shares_all_temp" Schema="dbo" store:Type="Tables" />

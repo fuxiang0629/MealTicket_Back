@@ -5042,6 +5042,7 @@
     <EntitySetMapping Name="t_setting_plate_index">
       <EntityTypeMapping TypeName="meal_ticketModel.t_setting_plate_index">
         <MappingFragment StoreEntitySet="t_setting_plate_index">
+          <ScalarProperty Name="Coefficient" ColumnName="Coefficient" />
           <ScalarProperty Name="LastModified" ColumnName="LastModified" />
           <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
           <ScalarProperty Name="Status" ColumnName="Status" />
@@ -5056,6 +5057,7 @@
     <EntitySetMapping Name="t_setting_plate_linkage">
       <EntityTypeMapping TypeName="meal_ticketModel.t_setting_plate_linkage">
         <MappingFragment StoreEntitySet="t_setting_plate_linkage">
+          <ScalarProperty Name="IsReal" ColumnName="IsReal" />
           <ScalarProperty Name="LinkagePlateId" ColumnName="LinkagePlateId" />
           <ScalarProperty Name="MainPlateId" ColumnName="MainPlateId" />
           <ScalarProperty Name="Id" ColumnName="Id" />
@@ -5065,6 +5067,8 @@
     <EntitySetMapping Name="t_setting_plate_shares_linkage">
       <EntityTypeMapping TypeName="meal_ticketModel.t_setting_plate_shares_linkage">
         <MappingFragment StoreEntitySet="t_setting_plate_shares_linkage">
+          <ScalarProperty Name="IsDefault" ColumnName="IsDefault" />
+          <ScalarProperty Name="IsReal" ColumnName="IsReal" />
           <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
           <ScalarProperty Name="Market" ColumnName="Market" />
           <ScalarProperty Name="MainPlateId" ColumnName="MainPlateId" />

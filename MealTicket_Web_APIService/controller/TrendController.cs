@@ -93,6 +93,23 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 批量获取股票行情数据
+        /// </summary>
+        /// <returns></returns>
+        [Description("批量获取股票行情数据")]
+        [Route("shares/quotes/info/batch"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<ShareQuotesInfo> BatchGetShareQuotesInfo(BatchGetShareQuotesInfoRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.BatchGetShareQuotesInfo(request, basedata);
+        }
+
+        /// <summary>
         /// 获取单只股票基础信息
         /// </summary>
         /// <returns></returns>
@@ -124,6 +141,23 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.GetPlateQuotesInfo(request, basedata);
+        }
+
+        /// <summary>
+        /// 批量获取板块行情数据
+        /// </summary>
+        /// <returns></returns>
+        [Description("批量获取板块行情数据")]
+        [Route("plate/quotes/info/batch"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<PlateQuotesInfo> BatchGetPlateQuotesInfo(BatchGetPlateQuotesInfoRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.BatchGetPlateQuotesInfo(request, basedata);
         }
 
         /// <summary>
@@ -1501,7 +1535,7 @@ namespace MealTicket_Web_APIService.controller
         /// </summary>
         /// <returns></returns>
         [Route("plate/leadermodel/shares/list"), HttpPost]
-        [Description("获取板块龙头模式股票列表")]
+        [Description("获取板块龙头模式股票列表(新)")]
         [CheckUserLoginFilter]
         public object GetPlateLeaderModelSharesList(GetPlateLeaderModelSharesListRequest request)
         {
@@ -8531,7 +8565,6 @@ namespace MealTicket_Web_APIService.controller
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.BatchGetPlateMtLineList(request, basedata);
         }
-
         /// <summary>
         /// 获取分时叠加系统参数
         /// </summary>
@@ -8544,6 +8577,20 @@ namespace MealTicket_Web_APIService.controller
         {
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.GetMtLineSuperpositionSysPar(basedata);
+        }
+
+        /// <summary>
+        /// 获取板块监控系统参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("plate/monitor/sys/par"), HttpPost]
+        [Description("获取板块监控系统参数")]
+        [CheckUserLoginFilter]
+        public object GetPlateMonitorSysPar()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetPlateMonitorSysPar(basedata);
         }
 
         #region===自选股===
@@ -8898,5 +8945,37 @@ namespace MealTicket_Web_APIService.controller
             return null;
         }
         #endregion
+
+        /// <summary>
+        /// 获取板块动能指数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("plate/energy/index/list"), HttpPost]
+        [Description("获取板块动能指数")]
+        [CheckUserLoginFilter]
+        public List<PlateEnergyIndexInfo> GetPlateEnergyIndexList(GetPlateEnergyIndexListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400,"参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetPlateEnergyIndexList(request,basedata);
+        }
+
+        /// <summary>
+        /// 获取板块涨速列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("plate/rise/speed/list"), HttpPost]
+        [Description("获取板块涨速列表")]
+        [CheckUserLoginFilter]
+        public List<PlateRiseSpeedInfo> GetPlateRiseSpeedList()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetPlateRiseSpeedList(basedata);
+        }
     }
 }

@@ -4603,6 +4603,7 @@ namespace MealTicket_Admin_Handler
                 }
 
                 template.Name = request.Name;
+                template.Type = request.Type;
                 template.LastModified = DateTime.Now;
                 db.SaveChanges();
             }
@@ -11457,9 +11458,11 @@ namespace MealTicket_Admin_Handler
                     var temp = JsonConvert.DeserializeObject<dynamic>(item.ValueJson);
                     int Coefficient = temp.coefficient;
                     int CalDays = 0;
+                    int CalPriceType = 0;
                     if (item.Type == 4)
                     {
                         CalDays = temp.calDays;
+                        CalPriceType = temp.calPriceType;
                     }
 
                     list.Add(new PlateIndexSettingInfo
@@ -11471,7 +11474,8 @@ namespace MealTicket_Admin_Handler
                         Name = item.Name,
                         Type = item.Type,
                         Coefficient = Coefficient,
-                        CalDays = CalDays
+                        CalDays = CalDays,
+                        CalPriceType= CalPriceType
                     });
                 }
 
@@ -11541,7 +11545,7 @@ namespace MealTicket_Admin_Handler
                 var plate_linkage = from item in db.t_setting_plate_linkage
                                     join item2 in db.t_shares_plate on item.MainPlateId equals item2.Id
                                     where item2.Status == 1 && item2.BaseStatus == 1
-                                    group item by new { item2.Id, item2.Name } into g
+                                    group item by new { item2.Id, item2.Name,item.IsReal } into g
                                     select g;
                 int totalCount = plate_linkage.Count();
                 var list = (from item in plate_linkage
@@ -11550,6 +11554,7 @@ namespace MealTicket_Admin_Handler
                             {
                                 MainPlateId = item.Key.Id,
                                 MainPlateName = item.Key.Name,
+                                IsReal=item.Key.IsReal,
                                 LinkagePlateList = item.Select(e => e.LinkagePlateId).ToList()
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
                 var basePlateIdList = (from item in db.t_shares_plate
@@ -11564,6 +11569,160 @@ namespace MealTicket_Admin_Handler
                     TotalCount = totalCount,
                     List = list
                 };
+            }
+        }
+
+        /// <summary>
+        /// 同步板块联动
+        /// </summary>
+        /// <param name="basedata"></param>
+        public void SynchroPlateLinkageSetting(HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran=db.Database.BeginTransaction())
+            {
+                try
+
+                {
+                    //查询基础版块
+                    var plate_base = (from item in db.t_shares_plate
+                                      where item.Status == 1 && item.BaseStatus == 1
+                                      select item).ToList();
+                    //查询已存在板块联动
+                    var plate_linkage = (from item in db.t_setting_plate_linkage
+                                         group item by item.MainPlateId into g
+                                         select g.Key).ToList();
+                    //需要删除的板块
+                    List<long> plate_remove = (from item in plate_linkage
+                                               join item2 in plate_base on item equals item2.Id into a
+                                               from ai in a.DefaultIfEmpty()
+                                               where ai == null
+                                               select item).ToList();
+                    if (plate_remove.Count() > 0)
+                    {
+                        var remove_item = (from item in db.t_setting_plate_linkage
+                                           where plate_remove.Contains(item.MainPlateId)
+                                           select item).ToList();
+                        db.t_setting_plate_linkage.RemoveRange(remove_item);
+                        db.SaveChanges();
+                    }
+
+                    foreach (var item in plate_base)
+                    {
+                        if (!plate_linkage.Contains(item.Id))
+                        {
+                            db.t_setting_plate_linkage.Add(new t_setting_plate_linkage
+                            {
+                                IsReal = false,
+                                MainPlateId = item.Id,
+                                LinkagePlateId = 0
+                            });
+                        }
+                    }
+                    db.SaveChanges();
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 批量导入板块联动数据
+        /// </summary>
+        /// <param name="dataDic"></param>
+        public void ExportPlateLinkageSetting(Dictionary<string, List<string>> dataDic) 
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran=db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var plate_base = (from item in db.t_shares_plate
+                                      where item.Status == 1 && item.BaseStatus == 1
+                                      select item).ToList().ToDictionary(k => k.Name, v => v);
+                    Dictionary<long, List<long>> dataPar = new Dictionary<long, List<long>>();
+                    foreach (var item in dataDic)
+                    {
+                        if (!plate_base.ContainsKey(item.Key))
+                        {
+                            continue;
+                        }
+                        var mainPlate = plate_base[item.Key].Id;
+                        foreach (var linkage in item.Value)
+                        {
+                            if (!plate_base.ContainsKey(linkage))
+                            {
+                                continue;
+                            }
+                            var linkagePlate = plate_base[linkage].Id;
+                            if (!dataPar.ContainsKey(mainPlate))
+                            {
+                                dataPar.Add(mainPlate, new List<long>());
+                            }
+                            dataPar[mainPlate].Add(linkagePlate);
+                        }
+                    }
+
+
+                    //查询已有板块
+                    var plate_linkage = (from item in db.t_setting_plate_linkage
+                                         group item by new { item.MainPlateId, item.IsReal } into g
+                                         select g.Key).ToList();
+                    List<long> remove_plate = new List<long>();
+                    List<t_setting_plate_linkage> add_plate = new List<t_setting_plate_linkage>();
+                    foreach (var item in plate_linkage)
+                    {
+                        if (!dataPar.ContainsKey(item.MainPlateId))
+                        {
+                            continue;
+                        }
+                        remove_plate.Add(item.MainPlateId);
+                        var tempAdd = dataPar[item.MainPlateId].Distinct().ToList();
+                        if (tempAdd.Count() == 0)
+                        {
+                            add_plate.Add(new t_setting_plate_linkage
+                            {
+                                IsReal = item.IsReal,
+                                MainPlateId = item.MainPlateId,
+                                LinkagePlateId = 0
+                            });
+                        }
+                        foreach (long plateId in tempAdd)
+                        {
+                            add_plate.Add(new t_setting_plate_linkage
+                            {
+                                IsReal = item.IsReal,
+                                MainPlateId = item.MainPlateId,
+                                LinkagePlateId = plateId
+                            });
+                        }
+                    }
+
+                    if (remove_plate.Count() > 0)
+                    {
+                        var remove_item = (from item in db.t_setting_plate_linkage
+                                           where remove_plate.Contains(item.MainPlateId)
+                                           select item).ToList();
+                        db.t_setting_plate_linkage.RemoveRange(remove_item);
+                        db.SaveChanges();
+                    }
+                    if (add_plate.Count() > 0)
+                    {
+                        db.t_setting_plate_linkage.AddRange(add_plate);
+                        db.SaveChanges();
+                    }
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
             }
         }
 
@@ -11587,7 +11746,8 @@ namespace MealTicket_Admin_Handler
                 db.t_setting_plate_linkage.Add(new t_setting_plate_linkage 
                 {
                     LinkagePlateId=0,
-                    MainPlateId= request.MainPlateId
+                    MainPlateId= request.MainPlateId,
+                    IsReal=false
                 });
                 db.SaveChanges();
             }
@@ -11634,20 +11794,28 @@ namespace MealTicket_Admin_Handler
                         db.t_setting_plate_linkage.RemoveRange(plate_linkage);
                         db.SaveChanges();
                     }
+                    int addCount = 0;
                     foreach (var item in request.LinkagePlateList)
                     {
+                        if (request.MainPlateId == item)
+                        {
+                            continue;
+                        }
                         db.t_setting_plate_linkage.Add(new t_setting_plate_linkage 
                         {
                             MainPlateId=request.MainPlateId,
-                            LinkagePlateId=item
+                            LinkagePlateId=item,
+                            IsReal = request.IsReal
                         });
+                        addCount++;
                     }
-                    if (request.LinkagePlateList.Count()== 0)
+                    if (addCount == 0)
                     {
                         db.t_setting_plate_linkage.Add(new t_setting_plate_linkage
                         {
                             MainPlateId = request.MainPlateId,
-                            LinkagePlateId = 0
+                            LinkagePlateId = 0,
+                            IsReal = request.IsReal
                         });
                     }
                     db.SaveChanges();
@@ -11685,6 +11853,271 @@ namespace MealTicket_Admin_Handler
                                                {
                                                    PlateId = x.Id,
                                                    PlateName = x.Name
+                                               }).ToList()
+
+                              }).ToList();
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// 获取板块股票联动列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<PlateSharesLinkageSettingInfo> GetPlateSharesLinkageSettingList(PageRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var shares_linkage = from item in db.t_setting_plate_shares_linkage
+                                    join item2 in db.t_shares_plate on item.MainPlateId equals item2.Id
+                                    where item2.Status == 1 && item2.BaseStatus == 1
+                                    group item by new { item2.Id, item2.Name,item.IsReal,item.IsDefault} into g
+                                    select g;
+                int totalCount = shares_linkage.Count();
+                var list = (from item in shares_linkage
+                            orderby item.Key.Name
+                            select item).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList();
+                List<PlateSharesLinkageSettingInfo> result = new List<PlateSharesLinkageSettingInfo>();
+                foreach (var item in list)
+                {
+                    var LinkageSharesList = item.Where(e=>!string.IsNullOrEmpty(e.SharesCode)).Select(e => long.Parse(e.SharesCode) * 10 + e.Market).ToList();
+                    result.Add(new PlateSharesLinkageSettingInfo 
+                    {
+                        MainPlateId=item.Key.Id,
+                        MainPlateName=item.Key.Name,
+                        IsReal= item.Key.IsReal,
+                        IsDefault=item.Key.IsDefault,
+                        LinkageSharesList = LinkageSharesList
+                    });
+                }
+                return new PageRes<PlateSharesLinkageSettingInfo>
+                {
+                    TotalCount = totalCount,
+                    List = result
+                };
+            }
+        }
+
+        /// <summary>
+        /// 同步板块股票联动
+        /// </summary>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public void SynchroPlateSharesLinkageSetting(HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //查询基础版块
+                    var plate_base = (from item in db.t_shares_plate
+                                      where item.Status == 1 && item.BaseStatus == 1
+                                      select item).ToList();
+                    //查询已存在板块股票联动
+                    var plate_shares_linkage = (from item in db.t_setting_plate_shares_linkage
+                                                group item by new { item.MainPlateId, item.IsDefault } into g
+                                                select g.Key).ToList().ToDictionary(k => k.MainPlateId, v => v);
+                    //需要删除的板块
+                    List<long> plate_shares_remove = (from item in plate_shares_linkage
+                                                      join item2 in plate_base on new { MainPlateId = item.Key } equals new { MainPlateId = item2.Id } into a
+                                                      from ai in a.DefaultIfEmpty()
+                                                      where ai == null
+                                                      select item.Key).ToList();
+                    if (plate_shares_remove.Count() > 0)
+                    {
+                        var remove_item = (from item in db.t_setting_plate_shares_linkage
+                                           where plate_shares_remove.Contains(item.MainPlateId)
+                                           select item).ToList();
+                        db.t_setting_plate_shares_linkage.RemoveRange(remove_item);
+                        db.SaveChanges();
+                    }
+
+                    foreach (var item in plate_base)
+                    {
+                        if (!plate_shares_linkage.ContainsKey(item.Id))
+                        {
+                            db.t_setting_plate_shares_linkage.Add(new t_setting_plate_shares_linkage
+                            {
+                                IsReal = false,
+                                MainPlateId = item.Id,
+                                SharesCode = "",
+                                Market = 0,
+                                IsDefault= plate_shares_linkage[item.Id].IsDefault
+                            });
+                        }
+                    }
+                    db.SaveChanges();
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 添加板块股票联动
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public void AddPlateSharesLinkageSetting(AddPlateSharesLinkageSettingRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                //判断板块是否已经添加
+                var shares_linkage = (from item in db.t_setting_plate_shares_linkage
+                                      where item.MainPlateId == request.MainPlateId
+                                     select item).FirstOrDefault();
+                if (shares_linkage != null)
+                {
+                    throw new WebApiException(400, "板块已存在");
+                }
+                db.t_setting_plate_shares_linkage.Add(new t_setting_plate_shares_linkage
+                {
+                    Market = 0,
+                    SharesCode="",
+                    MainPlateId = request.MainPlateId,
+                    IsReal=false,
+                    IsDefault=false,
+                });
+                db.SaveChanges();
+            }
+        }
+
+        /// <summary>
+        /// 删除板块股票联动
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public void DeletePlateSharesLinkageSetting(DeleteRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var shares_linkage = (from item in db.t_setting_plate_shares_linkage
+                                      where item.MainPlateId == request.Id
+                                     select item).ToList();
+                if (shares_linkage.Count() > 0)
+                {
+                    db.t_setting_plate_shares_linkage.RemoveRange(shares_linkage);
+                    db.SaveChanges();
+                }
+            }
+        }
+
+        /// <summary>
+        /// 设置联动板块股票
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public void ModifyPlateSharesLinkageSetting(ModifyPlateSharesLinkageSettingRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    bool IsDefault = false;
+                    var shares_linkage = (from item in db.t_setting_plate_shares_linkage
+                                         where item.MainPlateId == request.MainPlateId
+                                         select item).ToList();
+                    if (shares_linkage.Count() > 0)
+                    {
+                        IsDefault = shares_linkage[0].IsDefault;
+                        db.t_setting_plate_shares_linkage.RemoveRange(shares_linkage);
+                        db.SaveChanges();
+                    }
+                    request.LinkageSharesList = request.LinkageSharesList.Distinct().ToList();
+                    foreach (var item in request.LinkageSharesList)
+                    {
+                        int market = (int)(item % 10);
+                        string sharesCode = (item / 10).ToString().PadLeft(6, '0');
+                        db.t_setting_plate_shares_linkage.Add(new t_setting_plate_shares_linkage
+                        {
+                            MainPlateId = request.MainPlateId,
+                            SharesCode = sharesCode,
+                            Market= market,
+                            IsReal=request.IsReal,
+                            IsDefault= IsDefault
+                        });
+                    }
+                    if (request.LinkageSharesList.Count() == 0)
+                    {
+                        db.t_setting_plate_shares_linkage.Add(new t_setting_plate_shares_linkage
+                        {
+                            MainPlateId = request.MainPlateId,
+                            SharesCode = "",
+                            Market = 0,
+                            IsReal= request.IsReal,
+                            IsDefault = IsDefault
+                        });
+                    }
+                    db.SaveChanges();
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 设置联动板块股票是否默认
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void ModifyPlateSharesLinkageSettingDefault(ModifyPlateSharesLinkageSettingDefaultRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var shares_linkage = (from item in db.t_setting_plate_shares_linkage
+                                      where item.MainPlateId == request.MainPlateId
+                                      select item).ToList();
+                foreach (var item in shares_linkage)
+                {
+                    item.IsDefault = request.IsDefault;
+                }
+                db.SaveChanges();
+
+            }
+        }
+
+        /// <summary>
+        /// 获取可设置联动股票列表
+        /// </summary>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public List<PlateSharesLinkageAllInfo> GetPlateSharesLinkageAllList(HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var result = (from item in db.t_shares_plate
+                              join item2 in db.t_shares_plate_rel on item.Id equals item2.PlateId
+                              join item3 in db.t_shares_all on new { item2.Market,item2.SharesCode} equals new { item3.Market,item3.SharesCode}
+                              where item.Status == 1 && item.BaseStatus == 1
+                              group item3 by item into g
+                              orderby g.Key.Id
+                              select new PlateSharesLinkageAllInfo
+                              {
+                                  PlateId = g.Key.Id,
+                                  PlateName = g.Key.Name+"(" + (g.Key.Type == 1 ? "行业" : g.Key.Type == 2 ? "地区" : "概念") + ")",
+                                  SharesList = (from x in g
+                                               orderby x.SharesCode
+                                               select new SharesNameInfo
+                                               {
+                                                   SharesCode = x.SharesCode,
+                                                   SharesName = x.SharesName,
+                                                   Market=x.Market
                                                }).ToList()
 
                               }).ToList();

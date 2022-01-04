@@ -23,6 +23,14 @@ namespace MealTicket_Web_Handler.Model
         public bool IsNeedRank { get; set; }
     }
 
+    public class BatchGetPlateQuotesInfoRequest
+    {
+        /// <summary>
+        /// 板块Key
+        /// </summary>
+        public List<long> PlateKey { get; set; }
+    }
+
     public class PlateRankInfo
     {
         public int Day1RiseRate { get; set; }

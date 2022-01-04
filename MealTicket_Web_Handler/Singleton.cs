@@ -125,7 +125,13 @@ namespace MealTicket_Web_Handler
         ///分时叠加参数
         /// </summary>
         public int MaxCheckedCount = 5;
-        public string MtLineColorList = "#1878dd,#d628d9,#abb511,#d51123,#21b548";
+        public string[] MtLineColorList = new[] { "#1878dd", "#d628d9", "#abb511", "#d51123", "#21b548" };
+
+        //板块监控涨跌幅排行颜色列表
+        public string[] RiseRankBgColorList = new[] { "#ff0019", "#c3535e", "#d7a1a6" };
+        public string[] DownRankBgColorList = new[] { "#52f900", "#5f8f48", "#accf9b" };
+        public bool PlateRiseRateIsReal = false;
+        public int[] EnergyIndexTypeList = new[] { 1, 2, 3, 4 };
 
         /// <summary>
         /// 自动买入最大任务数量
@@ -143,9 +149,23 @@ namespace MealTicket_Web_Handler
         public int MainArmyRankRate = 5000;
 
         /// <summary>
+        /// 走势最像天数
+        /// </summary>
+        public int TrendLikeDays = 20;
+
+        public int[] SharesLeaderType = new[] { 1, 2, 3 };
+        public int[] SharesLeaderShowType = new[] { 1, 2, 3 };
+        public int[] SharesLeaderDaysType = new [] { 1, 2, 3, 4 };
+
+        /// <summary>
         /// adb.net操作对象
         /// </summary>
         public SqlHelper sqlHelper;
+
+        /// <summary>
+        /// 板块监控计算对象
+        /// </summary>
+        public PlateMonitorHelper plateMonitorHelper = null;
 
         /// <summary>
         /// 系统参数更新线程
@@ -339,6 +359,12 @@ namespace MealTicket_Web_Handler
             if (sessionHandler != null)
             {
                 sessionHandler.Dispose();
+            }
+
+
+            if (plateMonitorHelper != null)
+            {
+                plateMonitorHelper.Dispose();
             }
         }
 
@@ -609,12 +635,16 @@ namespace MealTicket_Web_Handler
                         {
                             PlateTagCalIntervalTime = tempPlateTagCalIntervalTime;
                         }
+                        int tempTrendLikeDays = sysValue.TrendLikeDays;
+                        if (tempTrendLikeDays > 0)
+                        {
+                            TrendLikeDays = tempTrendLikeDays;
+                        }
                         int tempMainArmyRankRate = sysValue.MainArmyRankRate;
                         if (tempMainArmyRankRate > 0)
                         {
                             MainArmyRankRate = tempMainArmyRankRate;
                         }
-                        
                     }
                 }
                 catch { }
@@ -657,12 +687,105 @@ namespace MealTicket_Web_Handler
                         {
                             MaxCheckedCount = tempMaxCheckedCount;
                         }
-                        string tempMtLineColorList = sysValue.MtLineColorList;
-                        if (!string.IsNullOrEmpty(tempMtLineColorList))
+                        string mtLineColorListStr = sysValue.MtLineColorList;
+                        mtLineColorListStr.Split()
+                        List<string> tempMtLineColorList = new List<string>();
+                        if (sysValue.MtLineColorList != null)
                         {
-                            MtLineColorList = tempMtLineColorList;
+                            foreach (string tem in sysValue.MtLineColorList)
+                            {
+                                tempMtLineColorList.Add(tem);
+                            }
+                        }
+                        if (tempMtLineColorList.Count>0)
+                        {
+                            MtLineColorList = tempMtLineColorList.ToArray();
                         }
 
+                    }
+                }
+                catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "PlateMonitorPar"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+
+                        List<string> tempRiseRankBgColorList = new List<string>();
+                        if (sysValue.RiseRankBgColorList != null)
+                        {
+                            foreach (string tem in sysValue.RiseRankBgColorList)
+                            {
+                                tempRiseRankBgColorList.Add(tem);
+                            }
+                        }
+                        RiseRankBgColorList = tempRiseRankBgColorList.ToArray();
+
+                        List<string> tempDownRankBgColorList = new List<string>();
+                        if (sysValue.DownRankBgColorList != null)
+                        {
+                            foreach (string tem in sysValue.DownRankBgColorList)
+                            {
+                                tempDownRankBgColorList.Add(tem);
+                            }
+                        }
+                        DownRankBgColorList = tempDownRankBgColorList.ToArray();
+
+                        List<int> tempEnergyIndexTypeList = new List<int>();
+                        if (sysValue.EnergyIndexTypeList != null)
+                        {
+                            foreach (int tem in sysValue.EnergyIndexTypeList)
+                            {
+                                tempEnergyIndexTypeList.Add(tem);
+                            }
+                        }
+                        EnergyIndexTypeList = tempEnergyIndexTypeList.ToArray();
+
+                        PlateRiseRateIsReal = sysValue.IsReal;
+                    }
+                }
+                catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "SharesLeaderPar"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+
+                        List<int> tempSharesLeaderType = new List<int>();
+                        if (sysValue.TypeList != null)
+                        {
+                            foreach (int tem in sysValue.TypeList)
+                            {
+                                tempSharesLeaderType.Add(tem);
+                            }
+                        }
+                        SharesLeaderType = tempSharesLeaderType.ToArray();
+
+                        List<int> tempSharesLeaderShowType = new List<int>();
+                        if (sysValue.ShowTypeList != null)
+                        {
+                            foreach (int tem in sysValue.ShowTypeList)
+                            {
+                                tempSharesLeaderShowType.Add(tem);
+                            }
+                        }
+                        SharesLeaderShowType = tempSharesLeaderShowType.ToArray();
+                        
+                        List<int> tempSharesLeaderDaysType = new List<int>();
+                        if (sysValue.DaysTypeList != null)
+                        {
+                            foreach (int tem in sysValue.DaysTypeList)
+                            {
+                                tempSharesLeaderDaysType.Add(tem);
+                            }
+                        }
+                        SharesLeaderDaysType = tempSharesLeaderDaysType.ToArray();
                     }
                 }
                 catch { }

@@ -6116,6 +6116,90 @@ namespace MealTicket_Admin_APIService.controller
         }
 
         /// <summary>
+        /// 同步板块联动
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("plate/linkage/setting/synchro"), HttpPost]
+        [Description("同步板块联动")]
+        public object SynchroPlateLinkageSetting()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.SynchroPlateLinkageSetting(basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量导入板块联动数据
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserLoginFilter]
+        [Route("plate/linkage/setting/export"), HttpPost]
+        [Description("批量导入板块联动数据")]
+        public async Task<object> ExportPlateLinkageSetting()
+        {
+            string path = string.Empty;
+            // 检查是否是 multipart/form-data 
+            if (Request.Content.IsMimeMultipartContent("form-data"))
+            {
+                if (Request.Content.Headers.ContentLength > 0)
+                {
+                    // 设置上传目录 
+                    string root = System.AppDomain.CurrentDomain.BaseDirectory;
+                    var provider = new MultipartFormDataStreamProvider(root);
+                    await Request.Content.ReadAsMultipartAsync(provider);
+
+                    if (provider.FileData.Count() > 0)
+                    {
+                        var file = provider.FileData[0];
+                        var fileInfo = new FileInfo(file.LocalFileName);
+                        var fileStream = fileInfo.OpenRead();
+                        int fsLen = (int)fileStream.Length;
+                        byte[] heByte = new byte[fsLen];
+                        int r = fileStream.Read(heByte, 0, heByte.Length);
+                        string myStr = System.Text.Encoding.GetEncoding("utf-8").GetString(heByte);
+                        string[] temp = myStr.Split(new string[] { "\r\n" }, StringSplitOptions.None);
+
+                        Dictionary<string, List<string>> parDic = new Dictionary<string, List<string>>();
+                        for (int i = 0; i < temp.Length; i++)
+                        {
+                            if (i == 0)
+                            {
+                                continue;
+                            }
+                            string[] datas = temp[i].Split(',');
+                            if (datas.Length < 2 )
+                            {
+                                continue;
+                            }
+                            string mainPlate = datas[0].Trim();
+                            List<string> linkagePlate = datas[1].Split('_').ToList();
+                            if (!parDic.ContainsKey(mainPlate))
+                            {
+                                parDic.Add(mainPlate, new List<string>());
+                            }
+                            parDic[mainPlate] = linkagePlate;
+                        }
+                        tradeCenterHandler.ExportPlateLinkageSetting(parDic);
+                        return null;
+                    }
+                    else
+                    {
+                        throw new WebApiException(400, "上传文件内容不能为空");
+                    }
+                }
+                else
+                {
+                    throw new WebApiException(400, "上传数据不能为空");
+                }
+            }
+            else
+            {
+                throw new WebApiException(400, "请求媒体参数不正确，请确保使用的是multipart/form-data方式");
+            }
+        }
+
+        /// <summary>
         /// 添加板块联动
         /// </summary>
         /// <param name="request"></param>
@@ -6184,6 +6268,128 @@ namespace MealTicket_Admin_APIService.controller
         {
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return tradeCenterHandler.GetPlateLinkageAllList(basedata);
+        }
+
+        /// <summary>
+        /// 获取板块股票联动列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("plate/shares/linkage/setting/list"), HttpPost]
+        [Description("获取板块股票联动列表")]
+        public PageRes<PlateSharesLinkageSettingInfo> GetPlateSharesLinkageSettingList(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return tradeCenterHandler.GetPlateSharesLinkageSettingList(request, basedata);
+        }
+
+        /// <summary>
+        /// 同步板块股票联动
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("plate/shares/linkage/setting/synchro"), HttpPost]
+        [Description("同步板块股票联动")]
+        public object SynchroPlateSharesLinkageSetting()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.SynchroPlateSharesLinkageSetting(basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 添加板块股票联动
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("plate/shares/linkage/setting/add"), HttpPost]
+        [Description("添加板块股票联动")]
+        public object AddPlateSharesLinkageSetting(AddPlateSharesLinkageSettingRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.AddPlateSharesLinkageSetting(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除板块股票联动
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("plate/shares/linkage/setting/delete"), HttpPost]
+        [Description("删除板块股票联动")]
+        public object DeletePlateSharesLinkageSetting(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.DeletePlateSharesLinkageSetting(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 设置联动板块股票
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("plate/shares/linkage/setting/modify"), HttpPost]
+        [Description("设置联动板块股票")]
+        public object ModifyPlateSharesLinkageSetting(ModifyPlateSharesLinkageSettingRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.ModifyPlateSharesLinkageSetting(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 设置联动板块股票是否默认
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("plate/shares/linkage/setting/default/modify"), HttpPost]
+        [Description("设置联动板块股票是否默认")]
+        public object ModifyPlateSharesLinkageSettingDefault(ModifyPlateSharesLinkageSettingDefaultRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            tradeCenterHandler.ModifyPlateSharesLinkageSettingDefault(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取可设置联动股票列表
+        /// </summary>
+        /// <returns></returns>
+        [CheckUserPowerFilter]
+        [Route("plate/shares/linkage/all/list"), HttpPost]
+        [Description("获取可设置联动股票列表")]
+        public List<PlateSharesLinkageAllInfo> GetPlateSharesLinkageAllList()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return tradeCenterHandler.GetPlateSharesLinkageAllList(basedata);
         }
     }
 }

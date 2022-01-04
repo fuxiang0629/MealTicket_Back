@@ -125,7 +125,7 @@ namespace SharesHqService
             Init(MIN_TIMER_INTERVAL, Session_Time_Info_List);
         }
 
-        public override object UpdateSession(int ExcuteType)
+        public override object UpdateSession(int ExcuteType, object oct = null)
         {
             using (var db = new meal_ticketEntities())
             {

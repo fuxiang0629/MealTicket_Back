@@ -18,6 +18,11 @@ namespace MealTicket_Admin_Handler.Model
         public long Id { get; set; }
 
         /// <summary>
+        /// 4搜索 5强势股搜索
+        /// </summary>
+        public int Type { get; set; }
+
+        /// <summary>
         /// 模板名称
         /// </summary>
         public string Name { get; set; }

@@ -17,5 +17,6 @@ namespace MealTicket_DBCommon
         public long Id { get; set; }
         public long MainPlateId { get; set; }
         public long LinkagePlateId { get; set; }
+        public bool IsReal { get; set; }
     }
 }

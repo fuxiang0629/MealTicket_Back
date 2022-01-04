@@ -43,6 +43,11 @@ namespace MealTicket_Admin_Handler.Model
         public int CalDays { get; set; }
 
         /// <summary>
+        /// 新高计算价格类型
+        /// </summary>
+        public int CalPriceType { get; set; }
+
+        /// <summary>
         /// 状态1有效 2无效
         /// </summary>
         public int Status { get; set; }

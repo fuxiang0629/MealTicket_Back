@@ -5580,6 +5580,7 @@
     <Property Name="Status" Type="Int32" Nullable="false" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Coefficient" Type="Int32" Nullable="false" />
   </EntityType>
   <EntityType Name="t_setting_plate_linkage">
     <Key>
@@ -5588,6 +5589,7 @@
     <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
     <Property Name="MainPlateId" Type="Int64" Nullable="false" />
     <Property Name="LinkagePlateId" Type="Int64" Nullable="false" />
+    <Property Name="IsReal" Type="Boolean" Nullable="false" />
   </EntityType>
   <EntityType Name="t_setting_plate_shares_linkage">
     <Key>
@@ -5597,5 +5599,7 @@
     <Property Name="MainPlateId" Type="Int64" Nullable="false" />
     <Property Name="Market" Type="Int32" Nullable="false" />
     <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="IsReal" Type="Boolean" Nullable="false" />
+    <Property Name="IsDefault" Type="Boolean" Nullable="false" />
   </EntityType>
 </Schema>

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace MealTicket_Web_Handler
 {
-    [Serializable]
     public class Plate_Quotes_Session_Info
     {
         /// <summary>
@@ -53,5 +52,68 @@ namespace MealTicket_Web_Handler
         /// 板块排名
         /// </summary>
         public int Rank { get; set; }
+
+        /// <summary>
+        /// 今日此刻每分钟平均成交量
+        /// </summary>
+        public long TotalCount_Today_Now { get; set; }
+
+        /// <summary>
+        /// 昨日每分钟平均成交量
+        /// </summary>
+        public long TotalCount_Yestoday_Now { get; set; }
+
+        /// <summary>
+        /// 此刻量比
+        /// </summary>
+        public int RateNow
+        {
+            get
+            {
+                if (TotalCount_Yestoday_Now == 0)
+                {
+                    return 0;
+                }
+                return (int)Math.Round(TotalCount_Today_Now * 1.0 / TotalCount_Yestoday_Now * 100, 0);
+            }
+        }
+
+        /// <summary>
+        /// 昨日总成交量
+        /// </summary>
+        public long TotalCount_Yestoday_All { get; set; }
+
+        /// <summary>
+        /// 预计今日成交量
+        /// </summary>
+        public long TotalCount_Today_Expect { get; set; }
+
+        /// <summary>
+        /// 预计量比
+        /// </summary>
+        public int RateExpect
+        {
+            get
+            {
+                if (TotalCount_Yestoday_All == 0)
+                {
+                    return 0;
+                }
+                return (int)Math.Round(TotalCount_Today_Expect * 1.0 / TotalCount_Yestoday_All * 100, 0);
+            }
+        }
+    }
+
+    public class Plate_Quotes_Session_Info_Obj
+    {
+        /// <summary>
+        /// 缓存天数
+        /// </summary>
+        public int Days { get; set; }
+
+        /// <summary>
+        /// 缓存
+        /// </summary>
+        public Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> SessionDic { get; set; }
     }
 }

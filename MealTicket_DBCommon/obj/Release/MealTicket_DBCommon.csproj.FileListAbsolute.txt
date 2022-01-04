@@ -28,4 +28,3 @@ F:\项目\饭票后端\MealTicket_DBCommon\obj\Release\MealTicket_DBCommon.cspro
 F:\项目\饭票后端\MealTicket_DBCommon\obj\Release\MealTicket_DBCommon.csproj.CopyComplete
 F:\项目\饭票后端\MealTicket_DBCommon\obj\Release\MealTicket_DBCommon.dll
 F:\项目\饭票后端\MealTicket_DBCommon\obj\Release\MealTicket_DBCommon.pdb
-F:\项目\饭票后端\MealTicket_DBCommon\obj\Release\MealTicket_DBCommon.csprojAssemblyReference.cache

@@ -191,6 +191,11 @@
     <Compile Include="Session\SharesQuotesSession.cs" />
     <Compile Include="Singleton.cs" />
     <Compile Include="DBUtils.cs" />
+    <Compile Include="Task\Model\Plate_Base_Session_Info.cs" />
+    <Compile Include="Task\Model\Plate_Shares_Rel_Session_Info.cs" />
+    <Compile Include="Task\SessionHandler.cs" />
+    <Compile Include="Task\Session\Plate_Base_Session.cs" />
+    <Compile Include="Task\Session\Plate_Shares_Rel_Session.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.Config" />

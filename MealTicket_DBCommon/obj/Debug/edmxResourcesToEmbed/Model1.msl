@@ -5011,5 +5011,70 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="securitybarsdata_1min_test">
+      <EntityTypeMapping TypeName="meal_ticketModel.securitybarsdata_1min_test">
+        <MappingFragment StoreEntitySet="securitybarsdata_1min_test">
+          <ScalarProperty Name="IsVaild" ColumnName="IsVaild" />
+          <ScalarProperty Name="YestodayClosedPrice" ColumnName="YestodayClosedPrice" />
+          <ScalarProperty Name="IsLast" ColumnName="IsLast" />
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="HandCount" ColumnName="HandCount" />
+          <ScalarProperty Name="TotalCapital" ColumnName="TotalCapital" />
+          <ScalarProperty Name="Tradable" ColumnName="Tradable" />
+          <ScalarProperty Name="LastTradeAmount" ColumnName="LastTradeAmount" />
+          <ScalarProperty Name="LastTradeStock" ColumnName="LastTradeStock" />
+          <ScalarProperty Name="TradeAmount" ColumnName="TradeAmount" />
+          <ScalarProperty Name="TradeStock" ColumnName="TradeStock" />
+          <ScalarProperty Name="MaxPrice" ColumnName="MaxPrice" />
+          <ScalarProperty Name="MinPrice" ColumnName="MinPrice" />
+          <ScalarProperty Name="PreClosePrice" ColumnName="PreClosePrice" />
+          <ScalarProperty Name="ClosedPrice" ColumnName="ClosedPrice" />
+          <ScalarProperty Name="OpenedPrice" ColumnName="OpenedPrice" />
+          <ScalarProperty Name="TimeStr" ColumnName="TimeStr" />
+          <ScalarProperty Name="Time" ColumnName="Time" />
+          <ScalarProperty Name="GroupTimeKey" ColumnName="GroupTimeKey" />
+          <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+          <ScalarProperty Name="Market" ColumnName="Market" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_setting_plate_index">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_setting_plate_index">
+        <MappingFragment StoreEntitySet="t_setting_plate_index">
+          <ScalarProperty Name="Coefficient" ColumnName="Coefficient" />
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="ValueJson" ColumnName="ValueJson" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_setting_plate_linkage">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_setting_plate_linkage">
+        <MappingFragment StoreEntitySet="t_setting_plate_linkage">
+          <ScalarProperty Name="IsReal" ColumnName="IsReal" />
+          <ScalarProperty Name="LinkagePlateId" ColumnName="LinkagePlateId" />
+          <ScalarProperty Name="MainPlateId" ColumnName="MainPlateId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_setting_plate_shares_linkage">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_setting_plate_shares_linkage">
+        <MappingFragment StoreEntitySet="t_setting_plate_shares_linkage">
+          <ScalarProperty Name="IsDefault" ColumnName="IsDefault" />
+          <ScalarProperty Name="IsReal" ColumnName="IsReal" />
+          <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+          <ScalarProperty Name="Market" ColumnName="Market" />
+          <ScalarProperty Name="MainPlateId" ColumnName="MainPlateId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

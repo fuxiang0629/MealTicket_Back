@@ -18,5 +18,7 @@ namespace MealTicket_DBCommon
         public long MainPlateId { get; set; }
         public int Market { get; set; }
         public string SharesCode { get; set; }
+        public bool IsReal { get; set; }
+        public bool IsDefault { get; set; }
     }
 }

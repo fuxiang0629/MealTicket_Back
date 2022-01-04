@@ -17,9 +17,9 @@ namespace MealTicket_Web_Handler.Runner
         /// </summary>
         public static void Calculate() 
         {
-            Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> Plate_Quotes_Date_Session = Singleton.Instance.sessionHandler.GetPlate_Quotes_Date_Session();
+            Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> Plate_Quotes_Date_Session = Singleton.Instance.sessionHandler.GetPlate_Quotes_Date_Session(Singleton.Instance.TrendLikeDays);
             Dictionary<long, Plate_Quotes_Session_Info> Plate_Quotes_Today_Session = Singleton.Instance.sessionHandler.GetPlate_Quotes_Today_Session();
-            Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> Shares_Quotes_Date_Session = Singleton.Instance.sessionHandler.GetShares_Quotes_Date_Session();
+            Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> Shares_Quotes_Date_Session = Singleton.Instance.sessionHandler.GetShares_Quotes_Date_Session(Singleton.Instance.TrendLikeDays);
             Dictionary<long, Shares_Quotes_Session_Info> Shares_Quotes_Today_Session = Singleton.Instance.sessionHandler.GetShares_Quotes_Today_Session();
 
             List<SharesPlateRelInfo_Session> PlateRel = new List<SharesPlateRelInfo_Session>();
@@ -330,7 +330,11 @@ namespace MealTicket_Web_Handler.Runner
         private static void DoTrendLikeHandler(List<SharesPlateRelInfo_Session> plateRel, Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> Plate_Quotes_Date_Session, Dictionary<long, Plate_Quotes_Session_Info> Plate_Quotes_Today_Session, Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> Shares_Quotes_Date_Session, Dictionary<long, Shares_Quotes_Session_Info> Shares_Quotes_Today_Session)
         {
             var plateRelDic = plateRel.GroupBy(e => new { e.Market, e.SharesCode }).ToDictionary(k => long.Parse(k.Key.SharesCode) * 10 + k.Key.Market, v => v.ToList());
-            List<Plate_Tag_TrendLike_Session_Info> new_trendlike_data = _doTrendLikeHandler(plateRelDic, Plate_Quotes_Date_Session, Plate_Quotes_Today_Session, Shares_Quotes_Date_Session, Shares_Quotes_Today_Session);
+            Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> _plate_Quotes_Date_Session = new Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>>();
+            Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> _shares_Quotes_Date_Session = new Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>>();
+            int diffDay = Shares_Quotes_Today_Session.Count() == 0 ? 0 : 1;
+            _buidTrendLikePar(diffDay, Plate_Quotes_Date_Session, Shares_Quotes_Date_Session, ref _plate_Quotes_Date_Session, ref _shares_Quotes_Date_Session);
+            List<Plate_Tag_TrendLike_Session_Info> new_trendlike_data = _doTrendLikeHandler(plateRelDic, _plate_Quotes_Date_Session, Plate_Quotes_Today_Session, _shares_Quotes_Date_Session, Shares_Quotes_Today_Session);
             //设置缓存
             Singleton.Instance.sessionHandler.UpdateSessionPart((int)SessionHandler.Enum_Excute_Type.Plate_Tag_TrendLike_Session, new_trendlike_data);
             //入库
@@ -341,6 +345,21 @@ namespace MealTicket_Web_Handler.Runner
             catch (Exception ex)
             {
                 Logger.WriteFileLog("走势最像板块计算入库失败", ex);
+            }
+        }
+
+        private static void _buidTrendLikePar(int diffDay, Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> Plate_Quotes_Date_Session, Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> Shares_Quotes_Date_Session, ref Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> _plate_Quotes_Date_Session, ref Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> _shares_Quotes_Date_Session)
+        {
+            int takeCount = Singleton.Instance.TrendLikeDays - diffDay;
+            foreach (var item in Plate_Quotes_Date_Session)
+            {
+                var temp = item.Value.OrderByDescending(e => e.Key).Take(takeCount).ToDictionary(k => k.Key, v => v.Value);
+                _plate_Quotes_Date_Session.Add(item.Key, temp);
+            }
+            foreach (var item in Shares_Quotes_Date_Session)
+            {
+                var temp = item.Value.OrderByDescending(e => e.Key).Take(takeCount).ToDictionary(k => k.Key, v => v.Value);
+                _shares_Quotes_Date_Session.Add(item.Key, temp);
             }
         }
 
