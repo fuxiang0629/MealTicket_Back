@@ -75,12 +75,12 @@ namespace MealTicket_Web_Handler
             foreach (var item in newDataResult)
             {
                 long key1 = long.Parse(item.SharesCode) * 10 + item.Market;
+                long key2 = item.PlateId;
                 if (!resultData.Shares_Plate_FocusOn_Session.ContainsKey(key1))
                 {
                     resultData.Shares_Plate_FocusOn_Session.Add(key1, new Dictionary<long, Plate_Tag_FocusOn_Session_Info>());
                 }
 
-                long key2 = item.PlateId;
                 if (!resultData.Shares_Plate_FocusOn_Session[key1].ContainsKey(key2))
                 {
                     resultData.Shares_Plate_FocusOn_Session[key1].Add(key2, item);

@@ -75,12 +75,12 @@ then insert(Market,SharesCode,PlateId,IsTrendLike,Score,[Date]) values(t1.Market
             foreach (var item in newDataResult)
             {
                 long key1 = long.Parse(item.SharesCode) * 10 + item.Market;
+                long key2 = item.PlateId;
                 if (!resultData.Shares_Plate_TrendLike_Session.ContainsKey(key1))
                 {
                     resultData.Shares_Plate_TrendLike_Session.Add(key1, new Dictionary<long, Plate_Tag_TrendLike_Session_Info>());
                 }
 
-                long key2 = item.PlateId;
                 if (!resultData.Shares_Plate_TrendLike_Session[key1].ContainsKey(key2))
                 {
                     resultData.Shares_Plate_TrendLike_Session[key1].Add(key2, item);

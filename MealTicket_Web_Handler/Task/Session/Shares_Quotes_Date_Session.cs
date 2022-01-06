@@ -79,7 +79,7 @@ namespace MealTicket_Web_Handler
             resultData.MinSessionDic = new Dictionary<long, SortedSet<Shares_Quotes_Session_Info>>();
             foreach (var item in data.SessionDic)
             {
-                resultData.SessionDic[item.Key] = item.Value;
+                resultData.SessionDic[item.Key] = new Dictionary<DateTime, Shares_Quotes_Session_Info>(item.Value);
             }
             foreach (var item in data.OpenSessionDic)
             {

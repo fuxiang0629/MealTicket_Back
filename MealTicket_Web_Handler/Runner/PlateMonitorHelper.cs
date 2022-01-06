@@ -689,7 +689,7 @@ namespace MealTicket_Web_Handler.Runner
                 IndexRate = 0,
                 IndexScore = 0,
                 Coefficient = Coefficient,
-                KeyList = new List<long>()
+                KeyList = new List<long> { plateId }
             };
             //1.查询联动板块
             if (!sessionContainer.SettingPlateLinkageSession.ContainsKey(plateId))
@@ -753,6 +753,7 @@ namespace MealTicket_Web_Handler.Runner
                 calCount++;
                 PlateLinkageIndex.KeyList.Add(item.LinkagePlateId);
             }
+            PlateLinkageIndex.KeyList = PlateLinkageIndex.KeyList.Distinct().ToList();
             if (limitUpRate == 0 || calCount == 0)
             {
                 return;
