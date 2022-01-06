@@ -11945,7 +11945,7 @@ namespace MealTicket_Admin_Handler
                                 MainPlateId = item.Id,
                                 SharesCode = "",
                                 Market = 0,
-                                IsDefault= plate_shares_linkage[item.Id].IsDefault
+                                IsDefault=false
                             });
                         }
                     }

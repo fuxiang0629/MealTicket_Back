@@ -80,6 +80,19 @@ namespace FXCommon.Common
             return SessionData[key];
         }
 
+        public object GetData(string DataKey)
+        {
+            _sessionReadWriteLock.AcquireReaderLock(Timeout.Infinite);
+            object _ret = OnGetData(DataKey);
+            _sessionReadWriteLock.ReleaseReaderLock();
+            return _ret;
+        }
+
+        protected virtual object OnGetData(string DataKey)
+        {
+            return null;
+        }
+
         /// <summary>
         /// 设置缓存
         /// </summary>

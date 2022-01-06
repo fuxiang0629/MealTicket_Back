@@ -358,6 +358,7 @@
     <Compile Include="Task\Session\Setting_Plate_Shares_Linkage_Session.cs" />
     <Compile Include="Task\Session\Shares_Base_Session.cs" />
     <Compile Include="Task\Session\Shares_Limit_Session.cs" />
+    <Compile Include="Task\Session\Shares_Limit_Time_Session.cs" />
     <Compile Include="Task\Session\Shares_Quotes_Date_Session.cs" />
     <Compile Include="Task\Session\Shares_Minute_KLine_Session.cs" />
     <Compile Include="Task\Session\Shares_Quotes_Today_Session.cs" />

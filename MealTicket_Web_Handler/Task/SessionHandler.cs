@@ -1,8 +1,10 @@
 ﻿using FXCommon.Common;
+using MealTicket_DBCommon;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace MealTicket_Web_Handler
@@ -38,7 +40,8 @@ namespace MealTicket_Web_Handler
             Setting_Plate_Shares_Linkage_Session,
             Plate_TradeStock_Session,
             Plate_Minute_KLine_Session,
-            Shares_Minute_KLine_Session
+            Shares_Minute_KLine_Session,
+            Shares_Limit_Time_Session
         }
 
         public enum Enum_Excute_DataKey
@@ -65,7 +68,8 @@ namespace MealTicket_Web_Handler
             Setting_Plate_Shares_Linkage_Session,
             Plate_TradeStock_Session,
             Plate_Minute_KLine_Session,
-            Shares_Minute_KLine_Session
+            Shares_Minute_KLine_Session,
+            Shares_Limit_Time_Session
         }
 
         public SessionHandler() 
@@ -122,7 +126,9 @@ namespace MealTicket_Web_Handler
             //板块分钟K线缓存缓存
             result.Add(_toBuildTimeInfo(Enum_Excute_DataKey.Plate_Minute_KLine_Session.ToString(), 15, (int)Enum_Excute_Type.Plate_Minute_KLine_Session, null, 0, 0));
             //股票分钟K线缓存缓存
-            result.Add(_toBuildTimeInfo(Enum_Excute_DataKey.Shares_Minute_KLine_Session.ToString(), 15, (int)Enum_Excute_Type.Shares_Minute_KLine_Session, null, 0, 0));
+            //result.Add(_toBuildTimeInfo(Enum_Excute_DataKey.Shares_Minute_KLine_Session.ToString(), 15, (int)Enum_Excute_Type.Shares_Minute_KLine_Session, null, 0, 0));
+            //股票交易时间缓存
+            result.Add(_toBuildTimeInfo(Enum_Excute_DataKey.Shares_Limit_Time_Session.ToString(), 60 * 10, (int)Enum_Excute_Type.Shares_Limit_Time_Session, null, 0, 0));
             return result;
         }
 
@@ -189,6 +195,8 @@ namespace MealTicket_Web_Handler
                     return Plate_Minute_KLine_Session.UpdateSession();
                 case (int)Enum_Excute_Type.Shares_Minute_KLine_Session:
                     return Shares_Minute_KLine_Session.UpdateSession();
+                case (int)Enum_Excute_Type.Shares_Limit_Time_Session:
+                    return Shares_Limit_Time_Session.UpdateSession();
                 default:
                     return null;
             }
@@ -300,6 +308,8 @@ namespace MealTicket_Web_Handler
                     return Plate_Minute_KLine_Session.CopySessionData(objData);
                 case Enum_Excute_DataKey.Shares_Minute_KLine_Session:
                     return Shares_Minute_KLine_Session.CopySessionData(objData);
+                case Enum_Excute_DataKey.Shares_Limit_Time_Session:
+                    return Shares_Limit_Time_Session.CopySessionData(objData);
                 default:
                     return base.CopySessionData(objData, dataKey);
             }
@@ -313,7 +323,7 @@ namespace MealTicket_Web_Handler
             {
                 return new Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>>();
             }
-            return session as Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>>;
+            return (session as Plate_Tag_FocusOn_Session_Obj).Shares_Plate_FocusOn_Session;
         }
         //关注缓存（根据板块获取）
         public Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>> GetPlate_Tag_FocusOn_Session_ByPlate()
@@ -323,24 +333,7 @@ namespace MealTicket_Web_Handler
             {
                 return new Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>>();
             }
-            var shares_tag=session as Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>>;
-            Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>> result = new Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>>();
-            foreach (var item in shares_tag)
-            {
-                foreach (var x in item.Value)
-                {
-                    if (!result.ContainsKey(x.Key))
-                    {
-                        result.Add(x.Key, new Dictionary<long, Plate_Tag_FocusOn_Session_Info>());
-                    }
-                    if (!result[x.Key].ContainsKey(item.Key))
-                    {
-                        result[x.Key].Add(item.Key, new Plate_Tag_FocusOn_Session_Info());
-                    }
-                    result[x.Key][item.Key] = x.Value;
-                }
-            }
-            return result;
+            return (session as Plate_Tag_FocusOn_Session_Obj).Plate_Shares_FocusOn_Session;
         }
         //涨缓存（根据股票获取）
         public Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>> GetPlate_Tag_Force_Session()
@@ -350,7 +343,7 @@ namespace MealTicket_Web_Handler
             {
                 return new Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>>();
             }
-            return session as Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>>;
+            return (session as Plate_Tag_Force_Session_Obj).Shares_Plate_Force_Session;
         }
         //涨缓存（根据板块获取）
         public Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>> GetPlate_Tag_Force_Session_ByPlate()
@@ -360,24 +353,7 @@ namespace MealTicket_Web_Handler
             {
                 return new Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>>();
             }
-            var shares_tag = session as Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>>;
-            Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>> result = new Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>>();
-            foreach (var item in shares_tag)
-            {
-                foreach (var x in item.Value)
-                {
-                    if (!result.ContainsKey(x.Key))
-                    {
-                        result.Add(x.Key, new Dictionary<long, Plate_Tag_Force_Session_Info>());
-                    }
-                    if (!result[x.Key].ContainsKey(item.Key))
-                    {
-                        result[x.Key].Add(item.Key, new Plate_Tag_Force_Session_Info());
-                    }
-                    result[x.Key][item.Key] = x.Value;
-                }
-            }
-            return result;
+            return (session as Plate_Tag_Force_Session_Obj).Plate_Shares_Force_Session;
         }
         //走势缓存（根据股票获取）
         public Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>> GetPlate_Tag_TrendLike_Session()
@@ -387,7 +363,7 @@ namespace MealTicket_Web_Handler
             {
                 return new Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>>();
             }
-            return session as Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>>;
+            return (session as Plate_Tag_TrendLike_Session_Obj).Shares_Plate_TrendLike_Session;
         }
         //走势缓存（根据股票获取）
         public Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>> GetPlate_Tag_TrendLike_Session_ByPlate()
@@ -397,24 +373,7 @@ namespace MealTicket_Web_Handler
             {
                 return new Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>>();
             }
-            var shares_tag = session as Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>>;
-            Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>> result = new Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>>();
-            foreach (var item in shares_tag)
-            {
-                foreach (var x in item.Value)
-                {
-                    if (!result.ContainsKey(x.Key))
-                    {
-                        result.Add(x.Key, new Dictionary<long, Plate_Tag_TrendLike_Session_Info>());
-                    }
-                    if (!result[x.Key].ContainsKey(item.Key))
-                    {
-                        result[x.Key].Add(item.Key, new Plate_Tag_TrendLike_Session_Info());
-                    }
-                    result[x.Key][item.Key] = x.Value;
-                }
-            }
-            return result;
+            return (session as Plate_Tag_TrendLike_Session_Obj).Plate_Shares_TrendLike_Session;
         }
         //板块历史行情缓存
         object GetPlate_Quotes_Date_Session_Lock = new object();
@@ -467,7 +426,7 @@ namespace MealTicket_Web_Handler
             {
                 if (!today_session.ContainsKey(item.Key))
                 {
-                    var last = item.Value.OrderByDescending(e => e.Key).FirstOrDefault().Value;
+                    var last = item.Value.FirstOrDefault().Value;
                     today_session.Add(item.Key, last);
                 }
             }
@@ -484,10 +443,6 @@ namespace MealTicket_Web_Handler
                     continue;
                 }
                 idx++;
-                //if (idx > Singleton.Instance.PlateRankShow)
-                //{
-                //    break;
-                //}
                 item.Value.Rank = idx;
             }
 
@@ -567,6 +522,21 @@ namespace MealTicket_Web_Handler
                 return temp.SessionDic;
             }
         }
+        public Shares_Quotes_Session_Info_Obj GetShares_Quotes_Date_Sort_Session(int days = 0)
+        {
+            lock (GetShares_Quotes_Date_Session_Lock)
+            {
+                var temp = _getShares_Quotes_Date_Session();
+                if (temp.Days < days)
+                {
+
+                    UpdateSessionManual(Enum_Excute_DataKey.Shares_Quotes_Date_Session.ToString(), (int)Enum_Excute_Type.Shares_Quotes_Date_Session, days);
+                    return _getShares_Quotes_Date_Session();
+                }
+                return temp;
+            }
+        }
+
         private Shares_Quotes_Session_Info_Obj _getShares_Quotes_Date_Session()
         {
             var session = GetSession(Enum_Excute_DataKey.Shares_Quotes_Date_Session.ToString());
@@ -575,7 +545,11 @@ namespace MealTicket_Web_Handler
                 return new Shares_Quotes_Session_Info_Obj
                 {
                     Days = 0,
-                    SessionDic = new Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>>()
+                    SessionDic = new Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>>(),
+                    MinSessionDic = new Dictionary<long, SortedSet<Shares_Quotes_Session_Info>>(),
+                    MaxSessionDic = new Dictionary<long, SortedSet<Shares_Quotes_Session_Info>>(),
+                    OpenSessionDic = new Dictionary<long, SortedSet<Shares_Quotes_Session_Info>>(),
+                    CloseSessionDic = new Dictionary<long, SortedSet<Shares_Quotes_Session_Info>>()
                 };
             }
             return session as Shares_Quotes_Session_Info_Obj;
@@ -611,17 +585,19 @@ namespace MealTicket_Web_Handler
             }
             return session as Dictionary<long, Plate_TradeStock_Session_Info>;
         }
+
         //股票最后行情缓存
         public Dictionary<long, Shares_Quotes_Session_Info_Last> GetShares_Quotes_Last_Session(bool isGetVolumeRate=true)
         {
             Dictionary<long, Shares_Quotes_Session_Info_Last> result = new Dictionary<long, Shares_Quotes_Session_Info_Last>();
             var date_session = GetShares_Quotes_Date_Session();
             var today_session = GetShares_Quotes_Today_Session();
+
             foreach (var item in date_session)
             {
                 if (!today_session.ContainsKey(item.Key))
                 {
-                    var last = item.Value.OrderByDescending(e => e.Key).FirstOrDefault().Value;
+                    var last = item.Value.FirstOrDefault().Value;
                     today_session.Add(item.Key, last);
                 }
             }
@@ -645,30 +621,32 @@ namespace MealTicket_Web_Handler
                 temp.shares_quotes_info = item.Value;
                 if (stockDic.ContainsKey(item.Key))
                 {
-                    int TradeStock_Interval_Count = stockDic[item.Key].TradeStock_Interval_Count;
-                    long TradeStock_Interval = stockDic[item.Key].TradeStock_Interval;
+                    Shares_TradeStock_Session_Info _tradeStock = stockDic[item.Key];
+                    int TradeStock_Interval_Count = _tradeStock.TradeStock_Interval_Count;
+                    long TradeStock_Interval = _tradeStock.TradeStock_Interval;
                     //获取剩余分钟数
-                    long remainMinute = Shares_TradeStock_Session.GetRemainMinute(stockDic[item.Key].GroupTimeKey);
+                    long remainMinute = Shares_TradeStock_Session.GetRemainMinute(_tradeStock.GroupTimeKey);
                     if (240 - remainMinute >= Singleton.Instance.SharesStockCal_MinMinute && TradeStock_Interval_Count>0)
                     {
                         if (tempSharesStockCal_Type == 2)
                         {
-                            temp.TotalCount_Today_Now = stockDic[item.Key].TradeStock;
-                            temp.TotalCount_Yestoday_Now = stockDic[item.Key].TradeStock_Now;
+                            temp.TotalCount_Today_Now = _tradeStock.TradeStock;
+                            temp.TotalCount_Yestoday_Now = _tradeStock.TradeStock_Now;
 
-                            temp.TotalCount_Yestoday_All = stockDic[item.Key].TradeStock_Yestoday;
-                            temp.TotalCount_Today_Expect = (TradeStock_Interval / TradeStock_Interval_Count) * remainMinute + stockDic[item.Key].TradeStock;
+                            temp.TotalCount_Yestoday_All = _tradeStock.TradeStock_Yestoday;
+                            temp.TotalCount_Today_Expect = (TradeStock_Interval / TradeStock_Interval_Count) * remainMinute + _tradeStock.TradeStock;
                         }
                         else
                         {
-                            temp.TotalCount_Today_Now = stockDic[item.Key].TradeStock / (240 - remainMinute);
-                            temp.TotalCount_Yestoday_Now = stockDic[item.Key].TradeStock_Yestoday / 240;
+                            temp.TotalCount_Today_Now = _tradeStock.TradeStock / (240 - remainMinute);
+                            temp.TotalCount_Yestoday_Now = _tradeStock.TradeStock_Yestoday / 240;
 
-                            temp.TotalCount_Yestoday_All = stockDic[item.Key].TradeStock_Yestoday;
-                            temp.TotalCount_Today_Expect = (TradeStock_Interval / TradeStock_Interval_Count) * remainMinute + stockDic[item.Key].TradeStock;
+                            temp.TotalCount_Yestoday_All = _tradeStock.TradeStock_Yestoday;
+                            temp.TotalCount_Today_Expect = (TradeStock_Interval / TradeStock_Interval_Count) * remainMinute + _tradeStock.TradeStock;
                         }
                     }
                 }
+
                 result.Add(item.Key, temp);
             }
             return result;
@@ -758,28 +736,28 @@ namespace MealTicket_Web_Handler
             return session as Dictionary<long, Dictionary<long, Shares_Tag_MainArmy_Session_Info>>;
         }
         //中军缓存(股票出发)
-        public Dictionary<long, bool> GetShares_Tag_MainArmy_Session_ByShares()
-        {
-            Dictionary<long, bool> result = new Dictionary<long, bool>();
-            var plate_leader = GetShares_Tag_MainArmy_Session();
-            foreach (var item in plate_leader)
-            {
-                foreach (var item2 in item.Value)
-                {
-                    item2.Value.MainArmyType==0
-                    if (!result.ContainsKey(item2.Key))
-                    {
-                        result.Add(item2.Key, new Dictionary<long, Shares_Tag_MainArmy_Session_Info>());
-                    }
-                    if (!result[item2.Key].ContainsKey(item.Key))
-                    {
-                        result[item2.Key].Add(item.Key, new Shares_Tag_MainArmy_Session_Info());
-                    }
-                    result[item2.Key][item.Key] = item2.Value;
-                }
-            }
-            return result;
-        }
+        //public Dictionary<long, bool> GetShares_Tag_MainArmy_Session_ByShares()
+        //{
+        //    Dictionary<long, bool> result = new Dictionary<long, bool>();
+        //    var plate_leader = GetShares_Tag_MainArmy_Session();
+        //    foreach (var item in plate_leader)
+        //    {
+        //        foreach (var item2 in item.Value)
+        //        {
+        //            item2.Value.MainArmyType==0
+        //            if (!result.ContainsKey(item2.Key))
+        //            {
+        //                result.Add(item2.Key, new Dictionary<long, Shares_Tag_MainArmy_Session_Info>());
+        //            }
+        //            if (!result[item2.Key].ContainsKey(item.Key))
+        //            {
+        //                result[item2.Key].Add(item.Key, new Shares_Tag_MainArmy_Session_Info());
+        //            }
+        //            result[item2.Key][item.Key] = item2.Value;
+        //        }
+        //    }
+        //    return result;
+        //}
         //股票标签类型缓存
         public Dictionary<int, List<Plate_Shares_Rel_Tag_Setting_Session_Info>> GetPlate_Shares_Rel_Tag_Setting_Session()
         {
@@ -1030,25 +1008,17 @@ namespace MealTicket_Web_Handler
                 }
                 if (plate_base[item.Key].PlateType == 3)
                 {
-                    foreach (var share in item.Value)
+                    if (FocusOn_Session.ContainsKey(item.Key))
                     {
-                        long key = long.Parse(share.SharesCode) * 10 + share.Market;
-                        if (FocusOn_Session.ContainsKey(item.Key) && FocusOn_Session[item.Key].ContainsKey(key) && FocusOn_Session[item.Key][key].IsFocusOn)
-                        {
-                            result[item.Key].Add(key);
-                            continue;
-                        }
-                        if (TrendLike_Session.ContainsKey(item.Key) && TrendLike_Session[item.Key].ContainsKey(key) && TrendLike_Session[item.Key][key].IsTrendLike)
-                        {
-                            result[item.Key].Add(key);
-                            continue;
-                        }
-                        long forceKey = key * 100 + dayType;
-                        if (Force_Session.ContainsKey(item.Key) && Force_Session[item.Key].ContainsKey(forceKey) && (Force_Session[item.Key][forceKey].IsForce1 || Force_Session[item.Key][forceKey].IsForce2))
-                        {
-                            result[item.Key].Add(key);
-                            continue;
-                        }
+                        result[item.Key].AddRange(FocusOn_Session[item.Key].Keys);
+                    }
+                    if (Force_Session.ContainsKey(item.Key))
+                    {
+                        result[item.Key].AddRange(Force_Session[item.Key].Keys.Select(e=>e/100).ToList());
+                    }
+                    if (TrendLike_Session.ContainsKey(item.Key))
+                    {
+                        result[item.Key].AddRange(TrendLike_Session[item.Key].Keys);
                     }
                 }
             }
@@ -1104,6 +1074,16 @@ namespace MealTicket_Web_Handler
                 return new Dictionary<long, List<Shares_Minute_KLine_Session_Info>>();
             }
             return sessionData as Dictionary<long, List<Shares_Minute_KLine_Session_Info>>;
+        }
+        //股票交易时间缓存
+        public List<t_shares_limit_time> GetShares_Limit_Time_Session()
+        {
+            var sessionData = GetSession(Enum_Excute_DataKey.Shares_Limit_Time_Session.ToString());
+            if (sessionData == null)
+            {
+                return new List<t_shares_limit_time>();
+            }
+            return sessionData as List<t_shares_limit_time>;
         }
     }
 }

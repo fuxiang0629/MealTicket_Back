@@ -12,7 +12,7 @@ namespace MealTicket_Web_Handler
     {
         //SharesCode*1000+Market*100+ForceType
         //PlateId
-        public static Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>> UpdateSession()
+        public static Plate_Tag_Force_Session_Obj UpdateSession()
         {
             using (var db = new meal_ticketEntities())
             {
@@ -40,54 +40,115 @@ then insert([Type],Market,SharesCode,PlateId,IsForce1,IsForce2,[Date]) values(t1
             }
         }
 
-        private static Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>> BuildDic(List<Plate_Tag_Force_Session_Info> dataList)
+        private static Plate_Tag_Force_Session_Obj BuildDic(List<Plate_Tag_Force_Session_Info> dataList)
         {
-            Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>> session_Dic = new Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>>();
+            Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>> session_Dic1 = new Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>>();
+            Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>> session_Dic2 = new Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>>();
             foreach (var item in dataList)
             {
                 long key1 = long.Parse(item.SharesCode) * 1000 + item.Market * 100 + item.Type;
-                if (!session_Dic.ContainsKey(key1))
-                {
-                    session_Dic.Add(key1, new Dictionary<long, Plate_Tag_Force_Session_Info>());
-                }
                 long key2 = item.PlateId;
-                session_Dic[key1][key2] = item;
+                if (!session_Dic1.ContainsKey(key1))
+                {
+                    session_Dic1.Add(key1, new Dictionary<long, Plate_Tag_Force_Session_Info>());
+                }
+                session_Dic1[key1][key2] = item;
+
+                if (!session_Dic2.ContainsKey(key2))
+                {
+                    session_Dic2.Add(key2, new Dictionary<long, Plate_Tag_Force_Session_Info>());
+                }
+                session_Dic2[key2][key1] = item;
             }
-            return session_Dic;
+            return new Plate_Tag_Force_Session_Obj 
+            {
+                Plate_Shares_Force_Session= session_Dic2,
+                Shares_Plate_Force_Session= session_Dic1
+            };
         }
 
-        public static Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>> UpdateSessionPart(object newData)
+        public static Plate_Tag_Force_Session_Obj UpdateSessionPart(object newData)
         {
             var newDataResult = newData as List<Plate_Tag_Force_Session_Info>;
-            var oldData = Singleton.Instance.sessionHandler.GetPlate_Tag_Force_Session();
+            var resultData = new Plate_Tag_Force_Session_Obj();
+            resultData.Shares_Plate_Force_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_Force_Session();
+            resultData.Plate_Shares_Force_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_Force_Session_ByPlate();
 
             foreach (var item in newDataResult)
             {
                 long key1 = long.Parse(item.SharesCode) * 1000 + item.Market*100+item.Type;
-                if (!oldData.ContainsKey(key1))
+                if (!resultData.Shares_Plate_Force_Session.ContainsKey(key1))
                 {
-                    oldData.Add(key1, new Dictionary<long, Plate_Tag_Force_Session_Info>());
+                    resultData.Shares_Plate_Force_Session.Add(key1, new Dictionary<long, Plate_Tag_Force_Session_Info>());
                 }
+
                 long key2 = item.PlateId;
-                if (!oldData[key1].ContainsKey(key2))
+                if (!resultData.Shares_Plate_Force_Session[key1].ContainsKey(key2))
                 {
-                    oldData[key1].Add(key2, item);
+                    resultData.Shares_Plate_Force_Session[key1].Add(key2, item);
                 }
                 else
                 {
-                    oldData[key1][key2] = item;
+                    resultData.Shares_Plate_Force_Session[key1][key2] = item;
+                }
+
+                if (!resultData.Plate_Shares_Force_Session.ContainsKey(key2))
+                {
+                    resultData.Plate_Shares_Force_Session.Add(key2, new Dictionary<long, Plate_Tag_Force_Session_Info>());
+                }
+
+                if (!resultData.Plate_Shares_Force_Session[key2].ContainsKey(key1))
+                {
+                    resultData.Plate_Shares_Force_Session[key2].Add(key1, item);
+                }
+                else
+                {
+                    resultData.Plate_Shares_Force_Session[key2][key1] = item;
                 }
             }
-            return oldData;
+            return resultData;
         }
 
-        public static Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>> CopySessionData(object objData)
+        public static Plate_Tag_Force_Session_Obj CopySessionData(object objData)
         {
-            var data = objData as Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>>;
-            var resultData = new Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>>();
-            foreach (var item in data)
+            var data = objData as Plate_Tag_Force_Session_Obj;
+            var resultData = new Plate_Tag_Force_Session_Obj();
+            resultData.Shares_Plate_Force_Session = new Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>>();
+            resultData.Plate_Shares_Force_Session = new Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>>();
+            foreach (var item in data.Shares_Plate_Force_Session)
             {
-                resultData[item.Key] = new Dictionary<long, Plate_Tag_Force_Session_Info>(item.Value);
+                if (!resultData.Shares_Plate_Force_Session.ContainsKey(item.Key))
+                {
+                    resultData.Shares_Plate_Force_Session.Add(item.Key, new Dictionary<long, Plate_Tag_Force_Session_Info>());
+                }
+
+                foreach (var item2 in item.Value)
+                {
+                    if (!item2.Value.IsForce1 && !item2.Value.IsForce2)
+                    {
+                        continue;
+                    }
+                
+                    resultData.Shares_Plate_Force_Session[item.Key].Add(item2.Key,item2.Value);
+                }
+            }
+
+            foreach (var item in data.Plate_Shares_Force_Session)
+            {
+                if (!resultData.Plate_Shares_Force_Session.ContainsKey(item.Key))
+                {
+                    resultData.Plate_Shares_Force_Session.Add(item.Key, new Dictionary<long, Plate_Tag_Force_Session_Info>());
+                }
+
+                foreach (var item2 in item.Value)
+                {
+                    if (!item2.Value.IsForce1 && !item2.Value.IsForce2)
+                    {
+                        continue;
+                    }
+
+                    resultData.Plate_Shares_Force_Session[item.Key].Add(item2.Key, item2.Value);
+                }
             }
             return resultData;
         }

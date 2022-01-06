@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace MealTicket_Web_Handler
 {
-    [Serializable]
     public class Plate_Tag_TrendLike_Session_Info
     {
         /// <summary>
@@ -33,5 +32,12 @@ namespace MealTicket_Web_Handler
         /// 分数
         /// </summary>
         public int Score { get; set; }
+    }
+
+    public class Plate_Tag_TrendLike_Session_Obj
+    {
+        public Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>> Plate_Shares_TrendLike_Session { get; set; }
+
+        public Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>> Shares_Plate_TrendLike_Session { get; set; }
     }
 }

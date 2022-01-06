@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace MealTicket_Web_Handler
 {
-    [Serializable]
     public class Plate_Tag_Force_Session_Info
     {
         /// <summary>
@@ -38,5 +37,12 @@ namespace MealTicket_Web_Handler
         /// 是否上涨2
         /// </summary>
         public bool IsForce2 { get; set; }
+    }
+
+    public class Plate_Tag_Force_Session_Obj
+    {
+        public Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>> Plate_Shares_Force_Session { get; set; }
+
+        public Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>> Shares_Plate_Force_Session { get; set; }
     }
 }

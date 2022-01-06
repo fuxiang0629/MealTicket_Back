@@ -21,12 +21,17 @@ using System.Xml.Serialization;
 
 namespace Test
 {
-    public class A
+    public class A : IComparable<A>
     {
         public int Id { get; set; }
         public int Id2 { get; set; }
 
         public string Name { get; set; }
+
+        public int CompareTo(A other)
+        {
+            return (other.Id.CompareTo(this.Id) > 0 ? 1 : -1);
+        }
     }
 
     class B 
@@ -78,11 +83,15 @@ namespace Test
     class Program
     {
         static Dictionary<int,Dictionary<int,A>> aDic = new Dictionary<int, Dictionary<int, A>>();
+
+
         static List<A> aList = new List<A>();
         static void Main(string[] args)
         {
-            int i=typeof(A).GetFields().Length;
-            int t = i;
+            aDic.Add(1, new Dictionary<int, A>());
+            var t=aDic[1].FirstOrDefault();
+            
+            var v = t.Value;
             //List<A> alist = new List<A>
             //{
             //    new A

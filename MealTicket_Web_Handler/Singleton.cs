@@ -688,20 +688,7 @@ namespace MealTicket_Web_Handler
                             MaxCheckedCount = tempMaxCheckedCount;
                         }
                         string mtLineColorListStr = sysValue.MtLineColorList;
-                        mtLineColorListStr.Split()
-                        List<string> tempMtLineColorList = new List<string>();
-                        if (sysValue.MtLineColorList != null)
-                        {
-                            foreach (string tem in sysValue.MtLineColorList)
-                            {
-                                tempMtLineColorList.Add(tem);
-                            }
-                        }
-                        if (tempMtLineColorList.Count>0)
-                        {
-                            MtLineColorList = tempMtLineColorList.ToArray();
-                        }
-
+                        MtLineColorList = mtLineColorListStr.Split(';');
                     }
                 }
                 catch { }
@@ -714,25 +701,11 @@ namespace MealTicket_Web_Handler
                     {
                         var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
 
-                        List<string> tempRiseRankBgColorList = new List<string>();
-                        if (sysValue.RiseRankBgColorList != null)
-                        {
-                            foreach (string tem in sysValue.RiseRankBgColorList)
-                            {
-                                tempRiseRankBgColorList.Add(tem);
-                            }
-                        }
-                        RiseRankBgColorList = tempRiseRankBgColorList.ToArray();
+                        string riseRankBgColorListStr = sysValue.RiseRankBgColorList;
+                        RiseRankBgColorList = riseRankBgColorListStr.Split(';');
 
-                        List<string> tempDownRankBgColorList = new List<string>();
-                        if (sysValue.DownRankBgColorList != null)
-                        {
-                            foreach (string tem in sysValue.DownRankBgColorList)
-                            {
-                                tempDownRankBgColorList.Add(tem);
-                            }
-                        }
-                        DownRankBgColorList = tempDownRankBgColorList.ToArray();
+                        string downRankBgColorListStr = sysValue.DownRankBgColorList;
+                        DownRankBgColorList = downRankBgColorListStr.Split(';');
 
                         List<int> tempEnergyIndexTypeList = new List<int>();
                         if (sysValue.EnergyIndexTypeList != null)

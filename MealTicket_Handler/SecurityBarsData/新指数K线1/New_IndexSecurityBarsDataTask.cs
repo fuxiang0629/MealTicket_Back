@@ -1146,10 +1146,6 @@ inner join
         /// </summary>
         private void _bulkData(int dataType, List<PlateKlineSession> list, meal_ticketEntities db,int type=0)
         {
-            list = (from item in list
-                    group item by new { item.PlateId, item.WeightType, item.GroupTimeKey } into g
-                    select g.FirstOrDefault()).ToList();
-
             DataTable table = new DataTable();
             table.Columns.Add("WeightType", typeof(int));
             table.Columns.Add("PlateId", typeof(long));
@@ -1193,6 +1189,10 @@ inner join
             DateTime BaseDate = DateTime.Now.Date;
             foreach (var item in list)
             {
+                if (item.PlateId == 0)
+                {
+                    continue;
+                }
                 if (!_SharesPlateSessionDic.ContainsKey(item.PlateId))
                 {
                     continue;

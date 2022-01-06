@@ -71,6 +71,32 @@ namespace MealTicket_Web_Handler.Model
             }
         }
 
+        public int EnergyIndexRate
+        {
+            get
+            {
+                int Coefficient = 0;
+                var EnergyIndexTypeList = Singleton.Instance.EnergyIndexTypeList;
+                if (EnergyIndexTypeList.Contains(1))
+                {
+                    Coefficient += LeaderIndex.Coefficient;
+                }
+                if (EnergyIndexTypeList.Contains(2))
+                {
+                    Coefficient += PlateLinkageIndex.Coefficient;
+                }
+                if (EnergyIndexTypeList.Contains(3))
+                {
+                    Coefficient += SharesLinkageIndex.Coefficient;
+                }
+                if (EnergyIndexTypeList.Contains(4))
+                {
+                    Coefficient += NewHighIndex.Coefficient;
+                }
+                return Coefficient == 0 ? 0 : (int)Math.Round(EnergyIndex * 1.0 / Coefficient * 10000, 0);
+            }
+        }
+
         /// <summary>
         /// 龙头指数
         /// </summary>

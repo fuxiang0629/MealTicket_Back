@@ -24,6 +24,11 @@ namespace MealTicket_Web_Handler.Runner
         public int IndexScore { get; set; }
 
         /// <summary>
+        /// 总分系数
+        /// </summary>
+        public int Coefficient { get; set; }
+
+        /// <summary>
         /// 股票列表
         /// </summary>
         public List<long> KeyList { get; set; }
@@ -75,6 +80,32 @@ namespace MealTicket_Web_Handler.Runner
                     tempEnergyIndex += NewHighIndex.IndexScore;
                 }
                 return tempEnergyIndex;
+            }
+        }
+
+        public int EnergyIndexRate
+        {
+            get 
+            {
+                int Coefficient = 0;
+                var EnergyIndexTypeList = Singleton.Instance.EnergyIndexTypeList;
+                if (EnergyIndexTypeList.Contains(1))
+                {
+                    Coefficient += LeaderIndex.Coefficient;
+                }
+                if (EnergyIndexTypeList.Contains(2))
+                {
+                    Coefficient += PlateLinkageIndex.Coefficient;
+                }
+                if (EnergyIndexTypeList.Contains(3))
+                {
+                    Coefficient += SharesLinkageIndex.Coefficient;
+                }
+                if (EnergyIndexTypeList.Contains(4))
+                {
+                    Coefficient += NewHighIndex.Coefficient;
+                }
+                return Coefficient == 0 ? 0 : (int)Math.Round(EnergyIndex * 1.0 / Coefficient * 10000, 0);
             }
         }
 
@@ -152,6 +183,11 @@ namespace MealTicket_Web_Handler.Runner
         /// 板块内股票缓存
         /// </summary>
         public Dictionary<long, List<Plate_Shares_Rel_Session_Info>> Plate_Shares_Rel_Session { get; set; }
+
+        /// <summary>
+        /// 板块基础数据
+        /// </summary>
+        public Dictionary<long, Plate_Base_Session_Info> PlateBasePlate { get; set; }
     }
 
     public struct Plate_CalDays_Info
@@ -246,22 +282,26 @@ namespace MealTicket_Web_Handler.Runner
                             SharesLinkageIndex =new PlateIndexInfo 
                             {
                                 IndexRate=0,
-                                IndexScore=0
+                                IndexScore=0,
+                                Coefficient=0
                             },
                             LeaderIndex = new PlateIndexInfo
                             {
                                 IndexRate = 0,
-                                IndexScore = 0
+                                IndexScore = 0,
+                                Coefficient = 0
                             },
                             NewHighIndex = new PlateIndexInfo
                             {
                                 IndexRate = 0,
-                                IndexScore = 0
+                                IndexScore = 0,
+                                Coefficient = 0
                             },
                             PlateLinkageIndex = new PlateIndexInfo
                             {
                                 IndexRate = 0,
-                                IndexScore = 0
+                                IndexScore = 0,
+                                Coefficient = 0
                             },
                             PlateVolume = new PlateVolumeInfo
                             {
@@ -275,18 +315,22 @@ namespace MealTicket_Web_Handler.Runner
                     var tempLeaderIndex = temp.LeaderIndex;
                     tempLeaderIndex.IndexRate = tempLeaderIndex.IndexRate + plate.Value.LeaderIndex.IndexRate;
                     tempLeaderIndex.IndexScore = tempLeaderIndex.IndexScore + plate.Value.LeaderIndex.IndexScore;
+                    tempLeaderIndex.Coefficient = tempLeaderIndex.Coefficient + plate.Value.LeaderIndex.Coefficient;
                     temp.LeaderIndex = tempLeaderIndex;
                     var tempNewHighIndex = temp.NewHighIndex;
                     tempNewHighIndex.IndexRate = tempNewHighIndex.IndexRate + plate.Value.NewHighIndex.IndexRate;
                     tempNewHighIndex.IndexScore = tempNewHighIndex.IndexScore + plate.Value.NewHighIndex.IndexScore;
+                    tempNewHighIndex.Coefficient = tempNewHighIndex.Coefficient + plate.Value.NewHighIndex.Coefficient;
                     temp.NewHighIndex = tempNewHighIndex;
                     var tempPlateLinkageIndex = temp.PlateLinkageIndex;
                     tempPlateLinkageIndex.IndexRate = tempPlateLinkageIndex.IndexRate + plate.Value.PlateLinkageIndex.IndexRate;
                     tempPlateLinkageIndex.IndexScore = tempPlateLinkageIndex.IndexScore + plate.Value.PlateLinkageIndex.IndexScore;
+                    tempPlateLinkageIndex.Coefficient = tempPlateLinkageIndex.Coefficient + plate.Value.PlateLinkageIndex.Coefficient;
                     temp.PlateLinkageIndex = tempPlateLinkageIndex;
                     var tempSharesLinkageIndex = temp.SharesLinkageIndex;
                     tempSharesLinkageIndex.IndexRate = tempSharesLinkageIndex.IndexRate + plate.Value.SharesLinkageIndex.IndexRate;
                     tempSharesLinkageIndex.IndexScore = tempSharesLinkageIndex.IndexScore + plate.Value.SharesLinkageIndex.IndexScore;
+                    tempSharesLinkageIndex.Coefficient = tempSharesLinkageIndex.Coefficient + plate.Value.SharesLinkageIndex.Coefficient;
                     temp.SharesLinkageIndex = tempSharesLinkageIndex;
                     temp.CalCount = temp.CalCount + 1;
                     plateListDic[plate.Key] = temp;
@@ -304,21 +348,25 @@ namespace MealTicket_Web_Handler.Runner
                         {
                             IndexRate = plateListDic[item.Key].LeaderIndex.IndexRate / calCount,
                             IndexScore = plateListDic[item.Key].LeaderIndex.IndexScore / calCount,
+                            Coefficient= plateListDic[item.Key].LeaderIndex.Coefficient / calCount,
                         },
                         SharesLinkageIndex = new PlateIndexInfo
                         {
                             IndexRate = plateListDic[item.Key].SharesLinkageIndex.IndexRate / calCount,
                             IndexScore = plateListDic[item.Key].SharesLinkageIndex.IndexScore / calCount,
+                            Coefficient = plateListDic[item.Key].SharesLinkageIndex.Coefficient / calCount,
                         },
                         PlateLinkageIndex = new PlateIndexInfo
                         {
                             IndexRate = plateListDic[item.Key].PlateLinkageIndex.IndexRate / calCount,
                             IndexScore = plateListDic[item.Key].PlateLinkageIndex.IndexScore / calCount,
+                            Coefficient = plateListDic[item.Key].PlateLinkageIndex.Coefficient / calCount,
                         },
                         NewHighIndex = new PlateIndexInfo
                         {
                             IndexRate = plateListDic[item.Key].NewHighIndex.IndexRate / calCount,
                             IndexScore = plateListDic[item.Key].NewHighIndex.IndexScore / calCount,
+                            Coefficient = plateListDic[item.Key].NewHighIndex.Coefficient / calCount,
                         },
                     };
                     var temp = item.Value;
@@ -372,50 +420,88 @@ namespace MealTicket_Web_Handler.Runner
 
         private void UpdateSessionContainer()
         {
+            Logger.WriteFileLog("11:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            var DayLeaderSession = Singleton.Instance.sessionHandler.GetShares_Tag_DayLeader_Session();
+            Logger.WriteFileLog("12:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            var LeaderSession = Singleton.Instance.sessionHandler.GetShares_Tag_Leader_Session();
+            Logger.WriteFileLog("13:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            var MainArmySession = Singleton.Instance.sessionHandler.GetShares_Tag_MainArmy_Session();
+            Logger.WriteFileLog("14:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            var SettingPlateIndexSession = Singleton.Instance.sessionHandler.GetSetting_Plate_Index_Session();
+            Logger.WriteFileLog("15:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            var SettingPlateLinkageSession = Singleton.Instance.sessionHandler.GetSetting_Plate_Linkage_Session();
+            Logger.WriteFileLog("16:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            var SharesQuotesLastSession = Singleton.Instance.sessionHandler.GetShares_Quotes_Last_Session();
+            Logger.WriteFileLog("17:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            var PlateQuotesLastSession = Singleton.Instance.sessionHandler.GetPlate_Quotes_Last_Session();
+            Logger.WriteFileLog("18:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            var Plate_Shares_Rel_Session = Singleton.Instance.sessionHandler.GetPlate_Shares_Rel_Session();
+            Logger.WriteFileLog("19:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            var SettingPlateSharesLinkageSession = Singleton.Instance.sessionHandler.GetSetting_Plate_Shares_Linkage_Session();
+            Logger.WriteFileLog("110:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            var PlateBasePlate = Singleton.Instance.sessionHandler.GetPlate_Base_Session();
             sessionContainer = new SessionContainer
             {
-                DayLeaderSession = Singleton.Instance.sessionHandler.GetShares_Tag_DayLeader_Session(),
-                LeaderSession = Singleton.Instance.sessionHandler.GetShares_Tag_Leader_Session(),
-                MainArmySession = Singleton.Instance.sessionHandler.GetShares_Tag_MainArmy_Session(),
-                SettingPlateIndexSession = Singleton.Instance.sessionHandler.GetSetting_Plate_Index_Session(),
-                SettingPlateLinkageSession = Singleton.Instance.sessionHandler.GetSetting_Plate_Linkage_Session(),
-                SharesQuotesLastSession = Singleton.Instance.sessionHandler.GetShares_Quotes_Last_Session(false),
-                PlateQuotesLastSession = Singleton.Instance.sessionHandler.GetPlate_Quotes_Last_Session(),
-                Plate_Shares_Rel_Session=Singleton.Instance.sessionHandler.GetPlate_Shares_Rel_Session(),
-                SettingPlateSharesLinkageSession=Singleton.Instance.sessionHandler.GetSetting_Plate_Shares_Linkage_Session()
+                DayLeaderSession = DayLeaderSession,
+                LeaderSession = LeaderSession,
+                MainArmySession = MainArmySession,
+                SettingPlateIndexSession = SettingPlateIndexSession,
+                SettingPlateLinkageSession = SettingPlateLinkageSession,
+                SharesQuotesLastSession = SharesQuotesLastSession,
+                PlateQuotesLastSession = PlateQuotesLastSession,
+                Plate_Shares_Rel_Session= Plate_Shares_Rel_Session,
+                SettingPlateSharesLinkageSession= SettingPlateSharesLinkageSession,
+                PlateBasePlate= PlateBasePlate
             };
         }
 
         public void _doCalTask(object obj) 
         {
-            if (!DbHelper.CheckTradeTime7() && !IsFirst)
+            Logger.WriteFileLog("1:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            var time_limit = Singleton.Instance.sessionHandler.GetShares_Limit_Time_Session();
+            if (!DbHelper.CheckTradeTime7(null, time_limit) && !IsFirst)
             {
                 ChangeTimer();
                 return;
             }
+
             IsFirst = false;
             UpdateSessionContainer();//获取公用缓存
+
+            Logger.WriteFileLog("2:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
 
             int coefficient = 0;
             var newHighResult = CheckNewHeightIndex(ref coefficient);
 
+            Logger.WriteFileLog("3:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             WaitHandle[] taskArr = new WaitHandle[DaysType.Count()];
             for (int idx = 0; idx < DaysType.Count(); idx++)
             {
                 int dayType = DaysType[idx];
-                taskArr[idx] = TaskThread.CreateTask((e)=> 
+                taskArr[idx] = TaskThread.CreateTask((e) =>
                 {
                     List<PlateMonitor> plateMonitors = new List<PlateMonitor>();
-                    var plateDic = Singleton.Instance.sessionHandler.GetPlate_Real_Session(dayType);
-                    var Plate_Real_Shares_Session = Singleton.Instance.sessionHandler.GetPlate_Real_Shares_Session(dayType);
-                    foreach (var item in plateDic)
+                    if (dayType == 4)
                     {
+                        Logger.WriteFileLog("31:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                    }
+                    var plate_real_shares = Singleton.Instance.sessionHandler.GetPlate_Real_Shares_Session(dayType);
+                    if (dayType == 4)
+                    {
+                        Logger.WriteFileLog("33:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                    }
+                    foreach (var item in sessionContainer.PlateBasePlate)
+                    {
+                        if (!plate_real_shares.ContainsKey(item.Key))
+                        {
+                            continue;
+                        }
                         PlateIndexInfo LeaderIndex = new PlateIndexInfo();
-                        CalLeaderIndex(dayType, item.Key,ref LeaderIndex);
+                        CalLeaderIndex(dayType, item.Key, ref LeaderIndex);
                         PlateIndexInfo PlateLinkageIndex = new PlateIndexInfo();
-                        CalPlateLinkageIndex(item.Key, dayType,ref PlateLinkageIndex);
+                        CalPlateLinkageIndex(item.Key, dayType, ref PlateLinkageIndex, plate_real_shares);
                         PlateIndexInfo SharesLinkageIndex = new PlateIndexInfo();
-                        CalSharesLinkageIndex(item.Key, Plate_Real_Shares_Session, ref SharesLinkageIndex);
+                        CalSharesLinkageIndex(item.Key, plate_real_shares, ref SharesLinkageIndex);
                         PlateIndexInfo NewHighIndex = new PlateIndexInfo();
                         CalNewHeightIndex(dayType, item.Key, coefficient, newHighResult, ref NewHighIndex);
                         PlateVolumeInfo PlateVolume = new PlateVolumeInfo();
@@ -424,19 +510,33 @@ namespace MealTicket_Web_Handler.Runner
                         {
                             PlateId = item.Key,
                             LeaderIndex = LeaderIndex,
-                            PlateLinkageIndex= PlateLinkageIndex,
+                            PlateLinkageIndex = PlateLinkageIndex,
                             SharesLinkageIndex = SharesLinkageIndex,
                             NewHighIndex = NewHighIndex,
                             PlateVolume = PlateVolume
                         });
                     }
+                    if (dayType == 4)
+                    {
+                        Logger.WriteFileLog("34:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                    }
                     SetSession(dayType, plateMonitors);
+                    if (dayType == 4)
+                    {
+                        Logger.WriteFileLog("35:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                    }
                     InsertIntoDataBase(dayType, plateMonitors);
+                    if (dayType == 4)
+                    {
+                        Logger.WriteFileLog("36:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                    }
                 }, null);
             }
             TaskThread.WaitAll(taskArr,Timeout.Infinite);
             TaskThread.CloseAllTasks(taskArr);
+            Logger.WriteFileLog("4:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             SetMinSession();
+            Logger.WriteFileLog("5:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             ChangeTimer();
         }
 
@@ -517,12 +617,18 @@ namespace MealTicket_Web_Handler.Runner
         /// <summary>
         /// 计算龙头指数
         /// </summary>
-        private void CalLeaderIndex(int dayType,long plateId,ref PlateIndexInfo LeaderIndex) 
+        private void CalLeaderIndex(int dayType, long plateId, ref PlateIndexInfo LeaderIndex)
         {
+            int Coefficient = 0;
+            if (sessionContainer.SettingPlateIndexSession.ContainsKey(1))
+            {
+                Coefficient = sessionContainer.SettingPlateIndexSession[1].Coefficient;
+            }
             LeaderIndex = new PlateIndexInfo
             {
                 IndexRate = 0,
                 IndexScore = 0,
+                Coefficient = Coefficient,
                 KeyList = new List<long>()
             };
             long key = plateId * 100 + dayType;
@@ -550,8 +656,8 @@ namespace MealTicket_Web_Handler.Runner
                 {
                     continue;
                 }
-                var temp=sessionContainer.SharesQuotesLastSession[sharesKey];
-                if (temp.shares_quotes_info.LimitUpPrice == 0 || temp.shares_quotes_info.YestodayClosedPrice==0)
+                var temp = sessionContainer.SharesQuotesLastSession[sharesKey];
+                if (temp.shares_quotes_info.LimitUpPrice == 0 || temp.shares_quotes_info.YestodayClosedPrice == 0)
                 {
                     continue;
                 }
@@ -560,30 +666,29 @@ namespace MealTicket_Web_Handler.Runner
                 limitUpRate = limitUpRate + (int)Math.Round((temp.shares_quotes_info.LimitUpPrice - temp.shares_quotes_info.YestodayClosedPrice) * 1.0 / temp.shares_quotes_info.YestodayClosedPrice * 10000, 0);
                 LeaderIndex.KeyList.Add(sharesKey);
             }
-            if (limitUpRate == 0 || calCount==0)
+            if (limitUpRate == 0 || calCount == 0)
             {
                 return;
             }
             LeaderIndex.IndexRate = (int)Math.Round(rate * 1.0 / calCount, 0);
-            if (!sessionContainer.SettingPlateIndexSession.ContainsKey(1))
-            {
-                LeaderIndex.IndexScore = 0;
-            }
-            else
-            {
-                LeaderIndex.IndexScore = (int)Math.Round(rate * 1.0 / limitUpRate * sessionContainer.SettingPlateIndexSession[1].Coefficient, 0);
-            }
+            LeaderIndex.IndexScore = Coefficient == 0 ? 0 : (int)Math.Round(rate * 1.0 / limitUpRate * Coefficient, 0);
         }
 
         /// <summary>
         /// 计算板块联动指数
         /// </summary>
-        private void CalPlateLinkageIndex(long plateId,int dayType, ref PlateIndexInfo PlateLinkageIndex)
+        private void CalPlateLinkageIndex(long plateId, int dayType, ref PlateIndexInfo PlateLinkageIndex, Dictionary<long, List<long>> plate_real_shares)
         {
+            int Coefficient = 0;
+            if (sessionContainer.SettingPlateIndexSession.ContainsKey(2))
+            {
+                Coefficient = sessionContainer.SettingPlateIndexSession[2].Coefficient;
+            }
             PlateLinkageIndex = new PlateIndexInfo
             {
                 IndexRate = 0,
                 IndexScore = 0,
+                Coefficient = Coefficient,
                 KeyList = new List<long>()
             };
             //1.查询联动板块
@@ -592,7 +697,6 @@ namespace MealTicket_Web_Handler.Runner
                 return;
             }
             var PlateLinkage = sessionContainer.SettingPlateLinkageSession[plateId];
-            var plate_real_shares = Singleton.Instance.sessionHandler.GetPlate_Real_Shares_Session(dayType);
             int rate = 0;
             int limitUpRate = 0;
             int calCount = 0;
@@ -649,19 +753,12 @@ namespace MealTicket_Web_Handler.Runner
                 calCount++;
                 PlateLinkageIndex.KeyList.Add(item.LinkagePlateId);
             }
-            if (limitUpRate == 0 || calCount==0)
+            if (limitUpRate == 0 || calCount == 0)
             {
                 return;
             }
             PlateLinkageIndex.IndexRate = (int)Math.Round(rate * 1.0 / calCount, 0);
-            if (!sessionContainer.SettingPlateIndexSession.ContainsKey(2))
-            {
-                PlateLinkageIndex.IndexScore = 0;
-            }
-            else
-            {
-                PlateLinkageIndex.IndexScore = (int)Math.Round(rate * 1.0 / limitUpRate * sessionContainer.SettingPlateIndexSession[2].Coefficient, 0);
-            }
+            PlateLinkageIndex.IndexScore = Coefficient == 0 ? 0 : (int)Math.Round(rate * 1.0 / limitUpRate * Coefficient, 0);
         }
 
         /// <summary>
@@ -669,10 +766,16 @@ namespace MealTicket_Web_Handler.Runner
         /// </summary>
         private void CalSharesLinkageIndex(long plateId, Dictionary<long, List<long>> Plate_Real_Shares_Session, ref PlateIndexInfo SharesLinkageIndex)
         {
+            int Coefficient = 0;
+            if (sessionContainer.SettingPlateIndexSession.ContainsKey(3))
+            {
+                Coefficient = sessionContainer.SettingPlateIndexSession[3].Coefficient;
+            }
             SharesLinkageIndex = new PlateIndexInfo
             {
                 IndexRate = 0,
                 IndexScore = 0,
+                Coefficient = Coefficient,
                 KeyList = new List<long>()
             };
             //1.查询联动股票
@@ -681,7 +784,7 @@ namespace MealTicket_Web_Handler.Runner
                 return;
             }
             var SharesLinkageSession = sessionContainer.SettingPlateSharesLinkageSession[plateId];
-            List<Setting_Plate_Shares_Linkage_Session_Info> sharesList =new List<Setting_Plate_Shares_Linkage_Session_Info>(SharesLinkageSession.SessionList);
+            List<Setting_Plate_Shares_Linkage_Session_Info> sharesList = new List<Setting_Plate_Shares_Linkage_Session_Info>(SharesLinkageSession.SessionList);
             var linkage_sharesKeyList = sharesList.Where(e => !string.IsNullOrEmpty(e.SharesCode)).Select(e => long.Parse(e.SharesCode) * 10 + e.Market).ToList();
 
             if (SharesLinkageSession.IsReal)
@@ -722,19 +825,12 @@ namespace MealTicket_Web_Handler.Runner
                 calCount++;
                 SharesLinkageIndex.KeyList.Add(sharesKey);
             }
-            if (limitUpRate == 0 || calCount==0)
+            if (limitUpRate == 0 || calCount == 0)
             {
                 return;
             }
             SharesLinkageIndex.IndexRate = (int)Math.Round(rate * 1.0 / calCount, 0);
-            if (!sessionContainer.SettingPlateIndexSession.ContainsKey(3))
-            {
-                SharesLinkageIndex.IndexScore = 0;
-            }
-            else
-            {
-                SharesLinkageIndex.IndexScore = (int)Math.Round(rate * 1.0 / limitUpRate * sessionContainer.SettingPlateIndexSession[3].Coefficient, 0);
-            }
+            SharesLinkageIndex.IndexScore = Coefficient == 0 ? 0 : (int)Math.Round(rate * 1.0 / limitUpRate * Coefficient, 0);
         }
 
         /// <summary>
@@ -746,6 +842,7 @@ namespace MealTicket_Web_Handler.Runner
             {
                 IndexRate = 0,
                 IndexScore = 0,
+                Coefficient= coefficient,
                 KeyList = new List<long>()
             };
             long key = plateId * 100 + dayType;
@@ -784,7 +881,7 @@ namespace MealTicket_Web_Handler.Runner
                 NewHighIndex.KeyList.Add(share);
             }
             NewHighIndex.IndexRate = newHighCount;
-            NewHighIndex.IndexScore = (int)Math.Round(newHighCount * 1.0 / totalCount * coefficient, 0);
+            NewHighIndex.IndexScore = coefficient == 0 ? 0 : (int)Math.Round(newHighCount * 1.0 / totalCount * coefficient, 0);
             return;
         }
 
@@ -797,49 +894,57 @@ namespace MealTicket_Web_Handler.Runner
             }
             else
             {
+                Logger.WriteFileLog("21:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                 coefficient = sessionContainer.SettingPlateIndexSession[4].Coefficient;
                 int calDays = sessionContainer.SettingPlateIndexSession[4].CalDays;
                 int calPriceType = sessionContainer.SettingPlateIndexSession[4].CalPriceType;
-                var shares_quotes_date = Singleton.Instance.sessionHandler.GetShares_Quotes_Date_Session(calDays);
+                Logger.WriteFileLog("22:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                var shares_quotes_date = Singleton.Instance.sessionHandler.GetShares_Quotes_Date_Sort_Session(calDays);
+                Logger.WriteFileLog("23:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
 
-                var shares_quote_last = Singleton.Instance.sessionHandler.GetShares_Quotes_Last_Session();
+                var shares_quote_last = sessionContainer.SharesQuotesLastSession;
+                Logger.WriteFileLog("24:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                 foreach (var item in shares_quote_last)
                 {
-                    if (!shares_quotes_date.ContainsKey(item.Key))
+                    if (!shares_quotes_date.SessionDic.ContainsKey(item.Key))
                     {
                         continue;
                     }
+
                     int tempCalDays = calDays;
                     if (item.Value.shares_quotes_info.Date >= DateTime.Now.Date)
                     {
                         tempCalDays = tempCalDays - 1;
                     }
-                    var temp = shares_quotes_date[item.Key].OrderByDescending(e => e.Key).Take(tempCalDays).ToDictionary(k => k.Key, v => v.Value);
-                    if (temp.Count == 0)
+
+                    var temp = shares_quotes_date.SessionDic[item.Key].Take(tempCalDays).LastOrDefault().Value;
+                    if (temp==null)
                     {
                         continue;
                     }
+                    DateTime minDate = temp.Date;
+
                     long maxPrice_date = 0;
                     long price_today = 0;
 
                     if (calPriceType == 1)//开盘价
                     {
-                        maxPrice_date = temp.OrderByDescending(e => e.Value.OpenedPrice).FirstOrDefault().Value.OpenedPrice;
+                        maxPrice_date = shares_quotes_date.OpenSessionDic[item.Key].Where(e=>e.Date>= minDate).FirstOrDefault().OpenedPrice;
                         price_today = item.Value.shares_quotes_info.OpenedPrice;
                     }
                     else if (calPriceType == 2)//收盘价
                     {
-                        maxPrice_date = temp.OrderByDescending(e => e.Value.ClosedPrice).FirstOrDefault().Value.ClosedPrice;
+                        maxPrice_date = shares_quotes_date.CloseSessionDic[item.Key].Where(e => e.Date >= minDate).FirstOrDefault().ClosedPrice;
                         price_today = item.Value.shares_quotes_info.ClosedPrice;
                     }
                     else if (calPriceType == 3)//最高价
                     {
-                        maxPrice_date = temp.OrderByDescending(e => e.Value.MaxPrice).FirstOrDefault().Value.MaxPrice;
+                        maxPrice_date = shares_quotes_date.MaxSessionDic[item.Key].Where(e => e.Date >= minDate).FirstOrDefault().MaxPrice;
                         price_today = item.Value.shares_quotes_info.MaxPrice;
                     }
                     else if (calPriceType == 4)//最低价
                     {
-                        maxPrice_date = temp.OrderByDescending(e => e.Value.MinPrice).FirstOrDefault().Value.MinPrice;
+                        maxPrice_date = shares_quotes_date.MinSessionDic[item.Key].Where(e => e.Date >= minDate).FirstOrDefault().MinPrice;
                         price_today = item.Value.shares_quotes_info.MinPrice;
                     }
 
@@ -848,6 +953,7 @@ namespace MealTicket_Web_Handler.Runner
                         result.Add(item.Key,true);
                     }
                 }
+                Logger.WriteFileLog("25:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             }
             return result;
         }

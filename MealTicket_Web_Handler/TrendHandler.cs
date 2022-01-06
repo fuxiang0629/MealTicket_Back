@@ -6587,6 +6587,7 @@ inner
             {
                 inputSharesKey = long.Parse(request.SharesCode) * 10 + request.Market;
             }
+            //var sharesRankDic = new Dictionary<long, List<SharesRank>>();
             var sharesRankDic = GetSharesRank(request.PlateId, inputSharesKey, ref sharesShowList);
 
             var sharesBaseDic = Singleton.Instance.sessionHandler.GetShares_Base_Session();
@@ -6913,75 +6914,71 @@ inner
             return result;
         }
 
-        private bool IsLeader(long sharesKey, Dictionary<long, Dictionary<long, Shares_Tag_Leader_Session_Info>> leader_session , Dictionary<long, Dictionary<long, Shares_Tag_DayLeader_Session_Info>> dayLeader_session, Dictionary<long, Dictionary<long, Shares_Tag_MainArmy_Session_Info>> mainArmy_session, int[] SharesLeaderType=null)
+        private bool IsLeader(long sharesKey, Dictionary<long, Dictionary<long, Shares_Tag_Leader_Session_Info>> leader_session=null, Dictionary<long, Dictionary<long, Shares_Tag_DayLeader_Session_Info>> dayLeader_session = null, Dictionary<long, Dictionary<long, Shares_Tag_MainArmy_Session_Info>> mainArmy_session = null, int[] SharesLeaderType=null)
         {
-            int[] daysType = Singleton.Instance.SharesLeaderDaysType;
-            if (SharesLeaderType == null)
-            {
-                SharesLeaderType = Singleton.Instance.SharesLeaderShowType;
-            }
+            //if (SharesLeaderType == null)
+            //{
+            //    SharesLeaderType = Singleton.Instance.SharesLeaderShowType;
+            //}
 
-            var LeaderDic = Singleton.Instance.sessionHandler.GetShares_Tag_Leader_Session();
-            var DayLeaderDic = Singleton.Instance.sessionHandler.GetShares_Tag_DayLeader_Session();
-            var MainArmyDic = Singleton.Instance.sessionHandler.GetShares_Tag_MainArmy_Session();
-
-            if (SharesLeaderType.Contains(1))
-            {
-                foreach (var item in LeaderDic)
-                {
-                    int dayType = (int)(item.Key % 100);
-                    if (!daysType.Contains(dayType))
-                    {
-                        continue;
-                    }
-                    if (!item.Value.ContainsKey(sharesKey))
-                    {
-                        continue;
-                    }
-                    if (item.Value[sharesKey].LeaderType > 0)
-                    {
-                        return true;
-                    }
-                }
-            }
-            if (SharesLeaderType.Contains(2))
-            {
-                foreach (var item in DayLeaderDic)
-                {
-                    int dayType = (int)(item.Key % 100);
-                    if (!daysType.Contains(dayType))
-                    {
-                        continue;
-                    }
-                    if (!item.Value.ContainsKey(sharesKey))
-                    {
-                        continue;
-                    }
-                    if (item.Value[sharesKey].DayLeaderType > 0)
-                    {
-                        return true;
-                    }
-                }
-            }
-            if (SharesLeaderType.Contains(3))
-            {
-                foreach (var item in MainArmyDic)
-                {
-                    int dayType = (int)(item.Key % 100);
-                    if (!daysType.Contains(dayType))
-                    {
-                        continue;
-                    }
-                    if (!item.Value.ContainsKey(sharesKey))
-                    {
-                        continue;
-                    }
-                    if (item.Value[sharesKey].MainArmyType > 0)
-                    {
-                        return true;
-                    }
-                }
-            }
+            //if (SharesLeaderType.Contains(1) && leader_session.ContainsKey(sharesKey))
+            //{
+            //    leader_session[sharesKey]
+            //    foreach (var item in LeaderDic)
+            //    {
+            //        int dayType = (int)(item.Key % 100);
+            //        if (!daysType.Contains(dayType))
+            //        {
+            //            continue;
+            //        }
+            //        if (!item.Value.ContainsKey(sharesKey))
+            //        {
+            //            continue;
+            //        }
+            //        if (item.Value[sharesKey].LeaderType > 0)
+            //        {
+            //            return true;
+            //        }
+            //    }
+            //}
+            //if (SharesLeaderType.Contains(2))
+            //{
+            //    foreach (var item in DayLeaderDic)
+            //    {
+            //        int dayType = (int)(item.Key % 100);
+            //        if (!daysType.Contains(dayType))
+            //        {
+            //            continue;
+            //        }
+            //        if (!item.Value.ContainsKey(sharesKey))
+            //        {
+            //            continue;
+            //        }
+            //        if (item.Value[sharesKey].DayLeaderType > 0)
+            //        {
+            //            return true;
+            //        }
+            //    }
+            //}
+            //if (SharesLeaderType.Contains(3))
+            //{
+            //    foreach (var item in MainArmyDic)
+            //    {
+            //        int dayType = (int)(item.Key % 100);
+            //        if (!daysType.Contains(dayType))
+            //        {
+            //            continue;
+            //        }
+            //        if (!item.Value.ContainsKey(sharesKey))
+            //        {
+            //            continue;
+            //        }
+            //        if (item.Value[sharesKey].MainArmyType > 0)
+            //        {
+            //            return true;
+            //        }
+            //    }
+            //}
             return false;
         }
 
@@ -25444,7 +25441,6 @@ select @buyId;";
             var plateBase = Singleton.Instance.sessionHandler.GetPlate_Base_Session();
 
             var plate_quotes_last = Singleton.Instance.sessionHandler.GetPlate_Quotes_Last_Session(false);
-            var Shares_Minute_KLine_Session = Singleton.Instance.sessionHandler.GetShares_Minute_KLine_Session();
             var plate_shares_rel = Singleton.Instance.sessionHandler.GetPlate_Shares_Rel_Session();
             bool PlateRiseRateIsReal=Singleton.Instance.PlateRiseRateIsReal;
 
@@ -25500,15 +25496,19 @@ select @buyId;";
                     var plate_monitor_info = tempPlateMonitor[item.Key];
                     LeaderIndex.IndexRate += plate_monitor_info.LeaderIndex.IndexRate;
                     LeaderIndex.IndexScore += plate_monitor_info.LeaderIndex.IndexScore;
+                    LeaderIndex.Coefficient+= plate_monitor_info.LeaderIndex.Coefficient;
                     LeaderIndex.KeyList.AddRange(plate_monitor_info.LeaderIndex.KeyList);
                     PlateLinkageIndex.IndexRate += plate_monitor_info.PlateLinkageIndex.IndexRate;
                     PlateLinkageIndex.IndexScore += plate_monitor_info.PlateLinkageIndex.IndexScore;
+                    PlateLinkageIndex.Coefficient += plate_monitor_info.PlateLinkageIndex.Coefficient;
                     PlateLinkageIndex.KeyList.AddRange(plate_monitor_info.PlateLinkageIndex.KeyList);
                     SharesLinkageIndex.IndexRate += plate_monitor_info.SharesLinkageIndex.IndexRate;
                     SharesLinkageIndex.IndexScore += plate_monitor_info.SharesLinkageIndex.IndexScore;
+                    SharesLinkageIndex.Coefficient += plate_monitor_info.SharesLinkageIndex.Coefficient;
                     SharesLinkageIndex.KeyList.AddRange(plate_monitor_info.SharesLinkageIndex.KeyList);
                     NewHighIndex.IndexRate += plate_monitor_info.NewHighIndex.IndexRate;
                     NewHighIndex.IndexScore += plate_monitor_info.NewHighIndex.IndexScore;
+                    NewHighIndex.Coefficient += plate_monitor_info.NewHighIndex.Coefficient;
                     NewHighIndex.KeyList.AddRange(plate_monitor_info.NewHighIndex.KeyList);
                     PlateVolume.CurrRate += plate_monitor_info.PlateVolume.CurrRate;
                     PlateVolume.ExceptRate += plate_monitor_info.PlateVolume.ExceptRate;
@@ -25519,33 +25519,33 @@ select @buyId;";
                 minSession = minSession.OrderByDescending(e => e.Key).ToDictionary(k => k.Key, v => v.Value);
                 MinuteRiseInfo riseInfo = new MinuteRiseInfo();
                 int idx = 0;
-                long firsrValue = 0;
+                int firsrValue = 0;
                 foreach (var x in minSession)
                 {
                     idx++;
                     if (idx == 1)
                     {
-                        firsrValue = x.Value.EnergyIndex;
+                        firsrValue = x.Value.EnergyIndexRate;
                     }
                     if (idx <= 2)
                     {
-                        riseInfo.Minute1RiseRate = x.Value.EnergyIndex == 0 ? 0 : (int)Math.Round((firsrValue - x.Value.EnergyIndex) * 1.0 / x.Value.EnergyIndex * 10000, 0);
+                        riseInfo.Minute1RiseRate = firsrValue - x.Value.EnergyIndexRate;
                     }
                     if (idx <= 4)
                     {
-                        riseInfo.Minute3RiseRate = x.Value.EnergyIndex == 0 ? 0 : (int)Math.Round((firsrValue - x.Value.EnergyIndex) * 1.0 / x.Value.EnergyIndex * 10000, 0);
+                        riseInfo.Minute3RiseRate = firsrValue - x.Value.EnergyIndex;
                     }
                     if (idx <= 6)
                     {
-                        riseInfo.Minute5RiseRate = x.Value.EnergyIndex == 0 ? 0 : (int)Math.Round((firsrValue - x.Value.EnergyIndex) * 1.0 / x.Value.EnergyIndex * 10000, 0);
+                        riseInfo.Minute5RiseRate = firsrValue - x.Value.EnergyIndex;
                     }
                     if (idx <= 11)
                     {
-                        riseInfo.Minute10RiseRate = x.Value.EnergyIndex == 0 ? 0 : (int)Math.Round((firsrValue - x.Value.EnergyIndex) * 1.0 / x.Value.EnergyIndex * 10000, 0);
+                        riseInfo.Minute10RiseRate =firsrValue - x.Value.EnergyIndex;
                     }
                     if (idx <= 16)
                     {
-                        riseInfo.Minute15RiseRate = x.Value.EnergyIndex == 0 ? 0 : (int)Math.Round((firsrValue - x.Value.EnergyIndex) * 1.0 / x.Value.EnergyIndex * 10000, 0);
+                        riseInfo.Minute15RiseRate = firsrValue - x.Value.EnergyIndex;
                     }
                 }
 
@@ -25567,24 +25567,28 @@ select @buyId;";
                         {
                             IndexRate = SharesLinkageIndex.IndexRate / calCount,
                             IndexScore = SharesLinkageIndex.IndexScore / calCount,
+                            Coefficient= SharesLinkageIndex.Coefficient / calCount,
                             KeyList = SharesLinkageIndex.KeyList.Distinct().ToList()
                         },
                         LeaderIndex = new PlateIndexInfo
                         {
                             IndexRate = LeaderIndex.IndexRate / calCount,
                             IndexScore = LeaderIndex.IndexScore / calCount,
+                            Coefficient = LeaderIndex.Coefficient / calCount,
                             KeyList = LeaderIndex.KeyList.Distinct().ToList()
                         },
                         NewHighIndex = new PlateIndexInfo
                         {
                             IndexRate = NewHighIndex.IndexRate / calCount,
                             IndexScore = NewHighIndex.IndexScore / calCount,
+                            Coefficient = NewHighIndex.Coefficient / calCount,
                             KeyList = NewHighIndex.KeyList.Distinct().ToList()
                         },
                         PlateLinkageIndex = new PlateIndexInfo
                         {
                             IndexRate = PlateLinkageIndex.IndexRate / calCount,
                             IndexScore = PlateLinkageIndex.IndexScore / calCount,
+                            Coefficient = PlateLinkageIndex.Coefficient / calCount,
                             KeyList = PlateLinkageIndex.KeyList.Distinct().ToList()
                         },
                         PlateRank = rank,

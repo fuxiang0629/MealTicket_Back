@@ -6,8 +6,38 @@ using System.Threading.Tasks;
 
 namespace MealTicket_Web_Handler
 {
-    public class Shares_Quotes_Session_Info
+    public class Shares_Quotes_Session_Info:IComparable<Shares_Quotes_Session_Info>
     {
+        /// <summary>
+        /// 排序类型0时间 1.开盘价 2收盘价 3最高价 4最低价
+        /// </summary>
+        public int SortedType { get; set; }
+
+
+        public int CompareTo(Shares_Quotes_Session_Info other)
+        {
+            if (SortedType == 1)
+            {
+                return other.OpenedPrice.CompareTo(this.OpenedPrice) > 0 ? 1 : -1;
+            }
+            else if (SortedType == 2)
+            {
+                return other.ClosedPrice.CompareTo(this.ClosedPrice) > 0 ? 1 : -1;
+            }
+            else if (SortedType == 3)
+            {
+                return other.MaxPrice.CompareTo(this.MaxPrice) > 0 ? 1 : -1;
+            }
+            else if (SortedType == 4)
+            {
+                return other.MinPrice.CompareTo(this.MinPrice) > 0 ? 1 : -1;
+            }
+            else 
+            {
+                return other.Date.CompareTo(this.Date);
+            }
+        }
+
         /// <summary>
         /// 市场代码
         /// </summary>
@@ -195,5 +225,25 @@ namespace MealTicket_Web_Handler
         /// 缓存
         /// </summary>
         public Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> SessionDic { get; set; }
+
+        /// <summary>
+        /// 开盘价缓存
+        /// </summary>
+        public Dictionary<long, SortedSet<Shares_Quotes_Session_Info>> OpenSessionDic { get; set; }
+
+        /// <summary>
+        /// 收盘价缓存
+        /// </summary>
+        public Dictionary<long, SortedSet<Shares_Quotes_Session_Info>> CloseSessionDic { get; set; }
+
+        /// <summary>
+        /// 最高价缓存
+        /// </summary>
+        public Dictionary<long, SortedSet<Shares_Quotes_Session_Info>> MaxSessionDic { get; set; }
+
+        /// <summary>
+        /// 最低缓存
+        /// </summary>
+        public Dictionary<long, SortedSet<Shares_Quotes_Session_Info>> MinSessionDic { get; set; }
     }
 }

@@ -387,7 +387,6 @@ update t_shares_monitor set DataType=0 where DataType=1 and SharesInfo in ({0});
         /// <returns></returns>
         private bool LoadToMonitor(List<TransactiondataAnalyseInfo> list)
         {
-            Logger.WriteFileLog("开始加载数据====="+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")+"=============",null);
             try
             {
                 var sharesList = (from item in list
