@@ -19,7 +19,7 @@ namespace MealTicket_Web_Handler.Runner
         {
             GET_DATA_CXT gdc = new GET_DATA_CXT(GET_DATA_CMD_ID_SHARESTAGCALHELPER_CALCULATE, null);
 
-            Singleton.Instance.sessionHandler.GetDataWithLock(string.Empty, gdc);
+            Singleton.Instance.sessionHandler.GetDataWithLock(string.Empty, gdc,true);
 
             Singleton.Instance.sessionHandler.WriteToSharesQuoteCache();
             Singleton.Instance.sessionHandler.WriteToPlateQuoteCache();

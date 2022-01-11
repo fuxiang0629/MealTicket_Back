@@ -42,8 +42,8 @@ namespace MealTicket_Web_APIService.runner
         {
             try
             {
-                //PlateTagCalHelper.Calculate();
-                //SharesTagCalHelper.Calculate();
+                PlateTagCalHelper.Calculate();
+                SharesTagCalHelper.Calculate();
             }
             catch (Exception ex)
             {
