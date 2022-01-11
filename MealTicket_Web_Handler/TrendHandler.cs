@@ -6647,44 +6647,60 @@ inner
                     int rank5 = 0;
                     int rank10 = 0;
                     int rank15 = 0;
-                    int idx = 0;
-                    foreach (var item in session_statistic.Shares_Rank.Rank_3Days)
+                    if (session_statistic.Shares_Rank != null)
                     {
-                        idx++;
-                        if (item.SharesKey == itemkey)
+                        int idx = 0;
+                        if (session_statistic.Shares_Rank.Rank_3Days != null)
                         {
-                            rank3 = idx;
-                            break;
+                            foreach (var item in session_statistic.Shares_Rank.Rank_3Days)
+                            {
+                                idx++;
+                                if (item.SharesKey == itemkey)
+                                {
+                                    rank3 = idx;
+                                    break;
+                                }
+                            }
                         }
-                    }
-                    idx = 0;
-                    foreach (var item in session_statistic.Shares_Rank.Rank_5Days)
-                    {
-                        idx++;
-                        if (item.SharesKey == itemkey)
+                        idx = 0;
+                        if (session_statistic.Shares_Rank.Rank_5Days != null)
                         {
-                            rank5 = idx;
-                            break;
+                            foreach (var item in session_statistic.Shares_Rank.Rank_5Days)
+                            {
+                                idx++;
+                                if (item.SharesKey == itemkey)
+                                {
+                                    rank5 = idx;
+                                    break;
+                                }
+                            }
                         }
-                    }
-                    idx = 0;
-                    foreach (var item in session_statistic.Shares_Rank.Rank_10Days)
-                    {
-                        idx++;
-                        if (item.SharesKey == itemkey)
+                        idx = 0;
+
+                        if (session_statistic.Shares_Rank.Rank_10Days != null)
                         {
-                            rank10 = idx;
-                            break;
+                            foreach (var item in session_statistic.Shares_Rank.Rank_10Days)
+                            {
+                                idx++;
+                                if (item.SharesKey == itemkey)
+                                {
+                                    rank10 = idx;
+                                    break;
+                                }
+                            }
                         }
-                    }
-                    idx = 0;
-                    foreach (var item in session_statistic.Shares_Rank.Rank_15Days)
-                    {
-                        idx++;
-                        if (item.SharesKey == itemkey)
+                        idx = 0;
+                        if (session_statistic.Shares_Rank.Rank_15Days != null)
                         {
-                            rank15 = idx;
-                            break;
+                            foreach (var item in session_statistic.Shares_Rank.Rank_15Days)
+                            {
+                                idx++;
+                                if (item.SharesKey == itemkey)
+                                {
+                                    rank15 = idx;
+                                    break;
+                                }
+                            }
                         }
                     }
 
@@ -6720,71 +6736,74 @@ inner
                             IsForce1 = new List<int>(),
                             IsForce2 = new List<int>()
                         };
-                        if (shares_info.Plate_Tag.Tag_3Days.ContainsKey(plate.Key))
+                        if (shares_info.Plate_Tag != null)
                         {
-                            var tag_days3 = shares_info.Plate_Tag.Tag_3Days[plate.Key];
-                            if (tag_days3.IsForce1)
+                            if (shares_info.Plate_Tag.Tag_3Days!=null && shares_info.Plate_Tag.Tag_3Days.ContainsKey(plate.Key))
                             {
-                                tempPlateInfo.IsForce1.Add(1);
+                                var tag_days3 = shares_info.Plate_Tag.Tag_3Days[plate.Key];
+                                if (tag_days3.IsForce1)
+                                {
+                                    tempPlateInfo.IsForce1.Add(1);
+                                }
+                                if (tag_days3.IsForce2)
+                                {
+                                    tempPlateInfo.IsForce2.Add(1);
+                                }
+                                sharesRank_3day.LeaderType = tag_days3.LeaderType;
+                                sharesRank_3day.MainArmyType = tag_days3.MainarmyType;
+                                sharesRank_3day.DayLeaderType = tag_days3.DayLeaderType;
                             }
-                            if (tag_days3.IsForce2)
+                            if (shares_info.Plate_Tag.Tag_5Days != null && shares_info.Plate_Tag.Tag_5Days.ContainsKey(plate.Key))
                             {
-                                tempPlateInfo.IsForce2.Add(1);
+                                var tag_days5 = shares_info.Plate_Tag.Tag_5Days[plate.Key];
+                                if (tag_days5.IsForce1)
+                                {
+                                    tempPlateInfo.IsForce1.Add(2);
+                                }
+                                if (tag_days5.IsForce2)
+                                {
+                                    tempPlateInfo.IsForce2.Add(2);
+                                }
+                                sharesRank_5day.LeaderType = tag_days5.LeaderType;
+                                sharesRank_5day.MainArmyType = tag_days5.MainarmyType;
+                                sharesRank_5day.DayLeaderType = tag_days5.DayLeaderType;
                             }
-                            sharesRank_3day.LeaderType = tag_days3.LeaderType;
-                            sharesRank_3day.MainArmyType = tag_days3.MainarmyType;
-                            sharesRank_3day.DayLeaderType = tag_days3.DayLeaderType;
-                        }
-                        if (shares_info.Plate_Tag.Tag_5Days.ContainsKey(plate.Key))
-                        {
-                            var tag_days5 = shares_info.Plate_Tag.Tag_5Days[plate.Key];
-                            if (tag_days5.IsForce1)
+                            if (shares_info.Plate_Tag.Tag_10Days != null && shares_info.Plate_Tag.Tag_10Days.ContainsKey(plate.Key))
                             {
-                                tempPlateInfo.IsForce1.Add(2);
+                                var tag_days10 = shares_info.Plate_Tag.Tag_10Days[plate.Key];
+                                if (tag_days10.IsForce1)
+                                {
+                                    tempPlateInfo.IsForce1.Add(3);
+                                }
+                                if (tag_days10.IsForce2)
+                                {
+                                    tempPlateInfo.IsForce2.Add(3);
+                                }
+                                sharesRank_10day.LeaderType = tag_days10.LeaderType;
+                                sharesRank_10day.MainArmyType = tag_days10.MainarmyType;
+                                sharesRank_10day.DayLeaderType = tag_days10.DayLeaderType;
                             }
-                            if (tag_days5.IsForce2)
+                            if (shares_info.Plate_Tag.Tag_15Days != null && shares_info.Plate_Tag.Tag_15Days.ContainsKey(plate.Key))
                             {
-                                tempPlateInfo.IsForce2.Add(2);
+                                var tag_days15 = shares_info.Plate_Tag.Tag_15Days[plate.Key];
+                                if (tag_days15.IsForce1)
+                                {
+                                    tempPlateInfo.IsForce1.Add(4);
+                                }
+                                if (tag_days15.IsForce2)
+                                {
+                                    tempPlateInfo.IsForce2.Add(4);
+                                }
+                                sharesRank_15day.LeaderType = tag_days15.LeaderType;
+                                sharesRank_15day.MainArmyType = tag_days15.MainarmyType;
+                                sharesRank_15day.DayLeaderType = tag_days15.DayLeaderType;
                             }
-                            sharesRank_5day.LeaderType = tag_days5.LeaderType;
-                            sharesRank_5day.MainArmyType = tag_days5.MainarmyType;
-                            sharesRank_5day.DayLeaderType = tag_days5.DayLeaderType;
-                        }
-                        if (shares_info.Plate_Tag.Tag_10Days.ContainsKey(plate.Key))
-                        {
-                            var tag_days10 = shares_info.Plate_Tag.Tag_10Days[plate.Key];
-                            if (tag_days10.IsForce1)
-                            {
-                                tempPlateInfo.IsForce1.Add(3);
-                            }
-                            if (tag_days10.IsForce2)
-                            {
-                                tempPlateInfo.IsForce2.Add(3);
-                            }
-                            sharesRank_10day.LeaderType = tag_days10.LeaderType;
-                            sharesRank_10day.MainArmyType = tag_days10.MainarmyType;
-                            sharesRank_10day.DayLeaderType = tag_days10.DayLeaderType;
-                        }
-                        if (shares_info.Plate_Tag.Tag_15Days.ContainsKey(plate.Key))
-                        {
-                            var tag_days15 = shares_info.Plate_Tag.Tag_15Days[plate.Key];
-                            if (tag_days15.IsForce1)
-                            {
-                                tempPlateInfo.IsForce1.Add(4);
-                            }
-                            if (tag_days15.IsForce2)
-                            {
-                                tempPlateInfo.IsForce2.Add(4);
-                            }
-                            sharesRank_15day.LeaderType = tag_days15.LeaderType;
-                            sharesRank_15day.MainArmyType = tag_days15.MainarmyType;
-                            sharesRank_15day.DayLeaderType = tag_days15.DayLeaderType;
                         }
                         tempInfo.PlateList.Add(tempPlateInfo);
 
                         if (session_statistic.Plate_Rank != null)
                         {
-                            if (session_statistic.Plate_Rank.Rank_3Days.ContainsKey(plate.Key))
+                            if (session_statistic.Plate_Rank.Rank_3Days!=null && session_statistic.Plate_Rank.Rank_3Days.ContainsKey(plate.Key))
                             {
                                 var sharesList = session_statistic.Plate_Rank.Rank_3Days[plate.Key];
                                 sharesRank_3day.RealSharesCount = sharesList.Count();
@@ -6801,7 +6820,7 @@ inner
                                     }
                                 }
                             }
-                            if (session_statistic.Plate_Rank.Rank_5Days.ContainsKey(plate.Key))
+                            if (session_statistic.Plate_Rank.Rank_5Days != null && session_statistic.Plate_Rank.Rank_5Days.ContainsKey(plate.Key))
                             {
                                 var sharesList = session_statistic.Plate_Rank.Rank_5Days[plate.Key];
                                 sharesRank_5day.RealSharesCount = sharesList.Count();
@@ -6818,7 +6837,7 @@ inner
                                     }
                                 }
                             }
-                            if (session_statistic.Plate_Rank.Rank_10Days.ContainsKey(plate.Key))
+                            if (session_statistic.Plate_Rank.Rank_10Days != null && session_statistic.Plate_Rank.Rank_10Days.ContainsKey(plate.Key))
                             {
                                 var sharesList = session_statistic.Plate_Rank.Rank_10Days[plate.Key];
                                 sharesRank_10day.RealSharesCount = sharesList.Count();
@@ -6835,7 +6854,7 @@ inner
                                     }
                                 }
                             }
-                            if (session_statistic.Plate_Rank.Rank_15Days.ContainsKey(plate.Key))
+                            if (session_statistic.Plate_Rank.Rank_15Days != null && session_statistic.Plate_Rank.Rank_15Days.ContainsKey(plate.Key))
                             {
                                 var sharesList = session_statistic.Plate_Rank.Rank_15Days[plate.Key];
                                 sharesRank_15day.RealSharesCount = sharesList.Count();

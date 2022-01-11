@@ -66,8 +66,9 @@ namespace FXCommon.Common
         /// </summary>
         ReaderWriterLockSlim _sessionReadWriteLock = new ReaderWriterLockSlim();
 
-        public object GetDataWithLock(string DataKey, GET_DATA_CXT _cxt=null, bool isUpgradeable = false)
+        public object GetDataWithLock(string DataKey, GET_DATA_CXT _cxt = null, bool isUpgradeable = false)
         {
+
             if (isUpgradeable)
             {
                 _sessionReadWriteLock.EnterUpgradeableReadLock();
@@ -76,23 +77,30 @@ namespace FXCommon.Common
             {
                 _sessionReadWriteLock.EnterReadLock();
             }
-            
-            object _ret = OnGetData(DataKey, _cxt);
 
-            if (isUpgradeable)
+            try
             {
-                _sessionReadWriteLock.ExitUpgradeableReadLock();
+                return OnGetData(DataKey, _cxt);
             }
-            else
+            catch (Exception)
+            { }
+            finally
             {
-                _sessionReadWriteLock.ExitReadLock();
+                if (isUpgradeable)
+                {
+                    _sessionReadWriteLock.ExitUpgradeableReadLock();
+                }
+                else
+                {
+                    _sessionReadWriteLock.ExitReadLock();
+                }
             }
-            return _ret;
+            return null;
         }
 
-        public object GetDataWithNoLock(string key, object oct = null)
+        public object GetDataWithNoLock(string key, bool bCopyData = false)
         {
-            return _getSession(key);
+            return (bCopyData ? OnGetData(key, null) : _getSession(key));
         }
 
         public virtual object OnGetData(string DataKey, GET_DATA_CXT _cxt)
@@ -122,8 +130,18 @@ namespace FXCommon.Common
         public void SetSessionWithLock(string key, object value)
         {
             _sessionReadWriteLock.EnterWriteLock();
-            _setSession(key, value);
-            _sessionReadWriteLock.ExitWriteLock();
+            try
+            {
+                _setSession(key, value);
+
+                OnSessionAfterWriting(key);
+            }
+            catch (Exception)
+            { }
+            finally
+            {
+                _sessionReadWriteLock.ExitWriteLock();
+            }
         }
         public void SetSessionWithNolock(string key, object value)
         {
@@ -139,6 +157,8 @@ namespace FXCommon.Common
         {
             return objData;
         }
+        protected virtual void OnSessionAfterWriting(string key)
+        { }
         #endregion
 
         /// <summary>

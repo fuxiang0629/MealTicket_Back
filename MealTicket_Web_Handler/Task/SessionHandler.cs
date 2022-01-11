@@ -251,6 +251,23 @@ namespace MealTicket_Web_Handler
             SetSessionWithNolock(dataKey, newSession);
         }
 
+        protected override void OnSessionAfterWriting(string key)
+        {
+            if (tempPlate_Quotes_Date_Session != null)
+            {
+                string dataKey = Enum_Excute_DataKey.Plate_Quotes_Date_Session.ToString();
+                SetSessionWithNolock(dataKey, tempPlate_Quotes_Date_Session);
+                tempPlate_Quotes_Date_Session = null;
+            }
+
+            if (tempShares_Quotes_Date_Session != null)
+            {
+                string dataKey = Enum_Excute_DataKey.Shares_Quotes_Date_Session.ToString();
+                SetSessionWithNolock(dataKey, tempShares_Quotes_Date_Session);
+                tempShares_Quotes_Date_Session = null;
+            }
+        }
+
         public override object CopySessionData(object objData, string dataKey)
         {
             switch ((Enum_Excute_DataKey)System.Enum.Parse(typeof(Enum_Excute_DataKey), dataKey))
@@ -655,19 +672,6 @@ namespace MealTicket_Web_Handler
         object GetPlate_Quotes_Date_Session_Lock = new object();
         Plate_Quotes_Session_Info_Obj tempPlate_Quotes_Date_Session = null;
 
-        public void WriteToPlateQuoteCache()
-        {
-            lock (GetPlate_Quotes_Date_Session_Lock)
-            {
-                if (tempPlate_Quotes_Date_Session == null)
-                {
-                    return;
-                }
-                string dataKey = Enum_Excute_DataKey.Plate_Quotes_Date_Session.ToString();
-                SetSessionWithLock(dataKey, tempPlate_Quotes_Date_Session);
-                tempPlate_Quotes_Date_Session = null;
-            }
-        }
         public Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> GetPlate_Quotes_Date_Session(int days = 0,bool withlock = true)
         {
             return GetPlate_Quotes_Date(days, withlock).SessionDic;
@@ -675,7 +679,8 @@ namespace MealTicket_Web_Handler
         private Plate_Quotes_Session_Info_Obj _getPlate_Quotes_Date_Session(bool withlock = true)
         {
             string dataKey = Enum_Excute_DataKey.Plate_Quotes_Date_Session.ToString();
-            var session = withlock ? GetDataWithLock(dataKey) : GetDataWithNoLock(dataKey);
+            var session = GetDataWithNoLock(dataKey, withlock);
+            //var session = withlock ? GetDataWithLock(dataKey) : GetDataWithNoLock(dataKey);
             if (session == null)
             {
                 return new Plate_Quotes_Session_Info_Obj
@@ -825,7 +830,8 @@ namespace MealTicket_Web_Handler
         private Shares_Quotes_Session_Info_Obj _getShares_Quotes_Date_Session(bool withlock = true)
         {
             string dataKey = Enum_Excute_DataKey.Shares_Quotes_Date_Session.ToString();
-            var session = withlock ? GetDataWithLock(dataKey) : GetDataWithNoLock(dataKey);
+            var session = GetDataWithNoLock(dataKey, withlock);
+            //var session = withlock ? GetDataWithLock(dataKey) : GetDataWithNoLock(dataKey);
             if (session == null)
             {
                 return new Shares_Quotes_Session_Info_Obj
@@ -842,20 +848,6 @@ namespace MealTicket_Web_Handler
         }
 
         Shares_Quotes_Session_Info_Obj tempShares_Quotes_Date_Session = null;
-
-        public void WriteToSharesQuoteCache()
-        {
-            lock (GetShares_Quotes_Date_Session_Lock)
-            {
-                if (tempShares_Quotes_Date_Session == null)
-                {
-                    return;
-                }
-                string dataKey = Enum_Excute_DataKey.Shares_Quotes_Date_Session.ToString();
-                SetSessionWithLock(dataKey, tempShares_Quotes_Date_Session);
-                tempShares_Quotes_Date_Session = null;
-            }
-        }
 
         public Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> GetShares_Quotes_Date_Session(int days = 0, bool withlock = true)
         {
