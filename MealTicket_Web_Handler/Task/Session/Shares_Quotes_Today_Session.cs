@@ -18,10 +18,6 @@ namespace MealTicket_Web_Handler
                 return result.ToDictionary(k => long.Parse(k.SharesCode) * 10 + k.Market, v => v);
             }
         }
-        public static Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>> UpdateSessionPart(object newData)
-        {
-            throw new NotSupportedException();
-        }
 
         public static Dictionary<long, Shares_Quotes_Session_Info> CopySessionData(object objData)
         {

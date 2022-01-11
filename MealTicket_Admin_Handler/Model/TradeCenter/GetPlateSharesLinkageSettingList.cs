@@ -10,6 +10,14 @@ namespace MealTicket_Admin_Handler.Model
     {
     }
 
+    public class GetPlateSharesLinkageSettingListRequest:PageRequest
+    { 
+        /// <summary>
+        /// 板块名称
+        /// </summary>
+        public string PlateName { get; set; }
+    }
+
     public class PlateSharesLinkageSettingInfo
     {
         /// <summary>

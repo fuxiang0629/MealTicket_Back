@@ -8977,5 +8977,23 @@ namespace MealTicket_Web_APIService.controller
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.GetPlateRiseSpeedList(basedata);
         }
+
+        /// <summary>
+        /// 获取所有基础板块
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("plate/base/list"), HttpPost]
+        [Description("获取所有基础板块")]
+        [CheckUserLoginFilter]
+        public List<Plate_Base_Session_Info> GetPlateBaseList(GetPlateBaseListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetPlateBaseList(request,basedata);
+        }
     }
 }

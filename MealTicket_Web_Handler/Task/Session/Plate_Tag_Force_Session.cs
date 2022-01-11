@@ -16,17 +16,8 @@ namespace MealTicket_Web_Handler
         {
             using (var db = new meal_ticketEntities())
             {
-                DateTime dateNow = DateTime.Now.Date;
-                string sql = string.Format(@"merge into t_shares_plate_rel_tag_force_date as t
-using (select * from t_shares_plate_rel_tag_force) as t1
-ON t.Market = t1.Market and t.SharesCode = t1.SharesCode and t.PlateId=t1.PlateId and t.[Type]=t1.[Type] and t.[Date]='{0}'
-when matched
-then update set t.IsForce1 = t1.IsForce1,t.IsForce2 = t1.IsForce2
-when not matched by target
-then insert([Type],Market,SharesCode,PlateId,IsForce1,IsForce2,[Date]) values(t1.[Type],t1.Market,t1.SharesCode,t1.PlateId,t1.IsForce1,t1.IsForce2,'{0}');", dateNow.ToString("yyyy-MM-dd"));
-                db.Database.ExecuteSqlCommand(sql);
-
                 var tag_force = (from item in db.t_shares_plate_rel_tag_force
+                                 where item.IsForce1 || item.IsForce2
                                  select new Plate_Tag_Force_Session_Info
                                  {
                                      SharesCode = item.SharesCode,
@@ -71,11 +62,15 @@ then insert([Type],Market,SharesCode,PlateId,IsForce1,IsForce2,[Date]) values(t1
         {
             var newDataResult = newData as List<Plate_Tag_Force_Session_Info>;
             var resultData = new Plate_Tag_Force_Session_Obj();
-            resultData.Shares_Plate_Force_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_Force_Session();
-            resultData.Plate_Shares_Force_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_Force_Session_ByPlate();
+            resultData.Shares_Plate_Force_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_Force_Session_ByShares(false);
+            resultData.Plate_Shares_Force_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_Force_Session_ByPlate(false);
 
             foreach (var item in newDataResult)
             {
+                if (!item.IsForce1 && !item.IsForce2)
+                {
+                    continue;
+                }
                 long key1 = long.Parse(item.SharesCode) * 1000 + item.Market*100+item.Type;
                 long key2 = item.PlateId;
                 if (!resultData.Shares_Plate_Force_Session.ContainsKey(key1))

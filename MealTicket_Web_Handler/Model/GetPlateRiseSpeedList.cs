@@ -35,8 +35,28 @@ namespace MealTicket_Web_Handler.Model
         public int Rank { get; set; }
 
         /// <summary>
+        /// 涨停数量
+        /// </summary>
+        public int RiseUpLimitCount { get; set; }
+
+        /// <summary>
+        /// 跌停数量
+        /// </summary>
+        public int DownUpLimitCount { get; set; }
+
+        /// <summary>
+        /// 股票总数量
+        /// </summary>
+        public int SharesTotalCount { get; set; }
+
+        /// <summary>
         /// 涨速
         /// </summary>
         public MinuteRiseInfo MinuteRise { get; set; }
+
+        /// <summary>
+        /// 涨跌幅
+        /// </summary>
+        public int RiseRate { get; set; }
     }
 }

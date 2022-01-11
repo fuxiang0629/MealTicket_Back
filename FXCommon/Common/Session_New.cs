@@ -10,6 +10,17 @@ namespace FXCommon.Common
 {
     public abstract class Session_New
     {
+        public class GET_DATA_CXT
+        {
+            public GET_DATA_CXT(int _cmd_id, object _cxt)
+            {
+                CmdId = _cmd_id;
+                cmd_cxt = _cxt;
+            }
+            public int CmdId;
+            public object cmd_cxt;
+        }
+
         /// <summary>
         /// 最小时间间隔
         /// </summary>
@@ -42,7 +53,7 @@ namespace FXCommon.Common
         ThreadMsgTemplate<Session_Time_Info_Msg> UpdateWait = new ThreadMsgTemplate<Session_Time_Info_Msg>();
 
         Timer UpdateTimer = null;
-        Task[] taskArr = null;
+        Thread[] threadArr = null;
 
         #region===缓存信息===
         /// <summary>
@@ -53,21 +64,44 @@ namespace FXCommon.Common
         /// <summary>
         /// 缓存锁
         /// </summary>
-        ReaderWriterLock _sessionReadWriteLock = new ReaderWriterLock();
+        ReaderWriterLockSlim _sessionReadWriteLock = new ReaderWriterLockSlim();
 
-        /// <summary>
-        /// 获取缓存
-        /// </summary>
-        /// <returns></returns>
-        public object GetSession(string key, object oct = null)
+        public object GetDataWithLock(string DataKey, GET_DATA_CXT _cxt=null, bool isUpgradeable = false)
         {
-            _sessionReadWriteLock.AcquireReaderLock(Timeout.Infinite);
-            object value = _getSession(key);
+            if (isUpgradeable)
+            {
+                _sessionReadWriteLock.EnterUpgradeableReadLock();
+            }
+            else
+            {
+                _sessionReadWriteLock.EnterReadLock();
+            }
+            
+            object _ret = OnGetData(DataKey, _cxt);
+
+            if (isUpgradeable)
+            {
+                _sessionReadWriteLock.ExitUpgradeableReadLock();
+            }
+            else
+            {
+                _sessionReadWriteLock.ExitReadLock();
+            }
+            return _ret;
+        }
+
+        public object GetDataWithNoLock(string key, object oct = null)
+        {
+            return _getSession(key);
+        }
+
+        public virtual object OnGetData(string DataKey, GET_DATA_CXT _cxt)
+        {
+            object value = _getSession(DataKey);
             if (value != null)
             {
-                value = CopySessionData(value, key);
+                value = CopySessionData(value, DataKey);
             }
-            _sessionReadWriteLock.ReleaseReaderLock();
             return value;
         }
 
@@ -80,34 +114,20 @@ namespace FXCommon.Common
             return SessionData[key];
         }
 
-        public object GetData(string DataKey)
-        {
-            _sessionReadWriteLock.AcquireReaderLock(Timeout.Infinite);
-            object _ret = OnGetData(DataKey);
-            _sessionReadWriteLock.ReleaseReaderLock();
-            return _ret;
-        }
-
-        protected virtual object OnGetData(string DataKey)
-        {
-            return null;
-        }
-
         /// <summary>
         /// 设置缓存
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void SetSession(string key, object value, bool isCopyValue = false)
+        public void SetSessionWithLock(string key, object value)
         {
-            if (value != null && isCopyValue)
-            {
-                value = CopySessionData(value, key);
-            }
-
-            _sessionReadWriteLock.AcquireWriterLock(Timeout.Infinite);
+            _sessionReadWriteLock.EnterWriteLock();
             _setSession(key, value);
-            _sessionReadWriteLock.ReleaseWriterLock();
+            _sessionReadWriteLock.ExitWriteLock();
+        }
+        public void SetSessionWithNolock(string key, object value)
+        {
+            _setSession(key, value);
         }
 
         private void _setSession(string key, object value)
@@ -141,10 +161,10 @@ namespace FXCommon.Common
 
             SYSTEM_INFO systemInfo=new SYSTEM_INFO();
             Utils.GetSystemInfo(ref systemInfo);
-            taskArr = new Task[systemInfo.dwNumberOfProcessors];
+            threadArr = new Thread[systemInfo.dwNumberOfProcessors];
             for (int i = 0; i < systemInfo.dwNumberOfProcessors; i++)
             {
-                taskArr[i]=Task.Factory.StartNew(()=> 
+                threadArr[i]=new Thread(()=> 
                 {
                     do
                     {
@@ -162,6 +182,7 @@ namespace FXCommon.Common
 
                     } while (true);
                 });
+                threadArr[i].Start();
             }
 
             UpdateTimer = new Timer(DoTimeTask, null, MinInterval, MinInterval);
@@ -217,7 +238,13 @@ namespace FXCommon.Common
         private void _toUpdateSession(string DataKey,int ExcuteType, object oct = null)
         {
             object data = UpdateSession(ExcuteType, oct);
-            SetSession(DataKey, data);
+            SetSessionWithLock(DataKey, data);
+        }
+
+        private void _toUpdateSession2(string DataKey, int ExcuteType, object oct = null)
+        {
+            object data = UpdateSession(ExcuteType, oct);
+            _setSession(DataKey, data);
         }
 
         /// <summary>
@@ -254,7 +281,26 @@ namespace FXCommon.Common
         /// <param name="dataKey"></param>
         public void UpdateSessionManual(string DataKey,int ExcuteType,object oct=null)
         {
-            _toUpdateSession(DataKey, ExcuteType, oct);
+            try
+            {
+                _toUpdateSession(DataKey, ExcuteType, oct);
+            }
+            catch (Exception ex)
+            { }
+        }
+
+        /// <summary>
+        /// 手动更新某个数据缓存
+        /// </summary>
+        /// <param name="dataKey"></param>
+        public void UpdateSessionManual2(string DataKey, int ExcuteType, object oct = null)
+        {
+            try
+            {
+                _toUpdateSession2(DataKey, ExcuteType, oct);
+            }
+            catch (Exception ex)
+            { }
         }
 
         /// <summary>
@@ -267,16 +313,20 @@ namespace FXCommon.Common
                 UpdateTimer.Dispose();
                 UpdateTimer = null;
             }
-            if (taskArr != null)
+            if (threadArr != null)
             {
-                for (int i = 0; i < taskArr.Count(); i++)
+                for (int i = 0; i < threadArr.Count(); i++)
                 {
                     UpdateWait.AddMessage(new Session_Time_Info_Msg 
                     {
                         Msg_Id=-1
                     });
                 }
-                Task.WaitAll(taskArr);
+                for (int i = 0; i < threadArr.Count(); i++)
+                {
+                    threadArr[i].Join();
+                }
+                threadArr = null;
             }
             if (UpdateWait != null)
             {

@@ -55,3 +55,4 @@ F:\项目\饭票后端\FXCommon\bin\Release\PInvoke.Windows.Core.xml
 D:\项目\饭票\后端\FXCommon\bin\Release\PInvoke.Windows.Core.dll
 D:\项目\饭票\后端\FXCommon\bin\Release\PInvoke.Windows.Core.xml
 D:\项目\饭票\后端\FXCommon\obj\Release\FXCommon.csprojAssemblyReference.cache
+F:\项目\饭票后端\FXCommon\obj\Release\FXCommon.csprojAssemblyReference.cache

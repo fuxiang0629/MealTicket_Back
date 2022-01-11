@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace MealTicket_Web_Handler
 {
-    [Serializable]
     public class Shares_Tag_Leader_Session_Info
     {
         /// <summary>
@@ -33,5 +32,16 @@ namespace MealTicket_Web_Handler
         /// 龙头类型
         /// </summary>
         public int LeaderType { get; set; }
+    }
+
+    public class Shares_Tag_Leader_Session_Obj
+    {
+        //PlateId*100+Type
+        //SharesCode*10+Market
+        public Dictionary<long, Dictionary<long, Shares_Tag_Leader_Session_Info>> Shares_Tag_Leader_Session_ByPlate { get; set; }
+
+        //SharesCode*10+Market
+        //PlateId*100+Type
+        public Dictionary<long, Dictionary<long, Shares_Tag_Leader_Session_Info>> Shares_Tag_Leader_Session_ByShares { get; set; }
     }
 }

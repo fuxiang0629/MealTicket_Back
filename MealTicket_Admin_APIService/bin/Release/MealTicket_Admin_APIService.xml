@@ -3833,7 +3833,7 @@
             <param name="request"></param>
             <returns></returns>
         </member>
-        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetPlateLinkageSettingList(MealTicket_Admin_Handler.Model.PageRequest)">
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetPlateLinkageSettingList(MealTicket_Admin_Handler.Model.GetPlateLinkageSettingRequest)">
             <summary>
             获取板块联动列表
             </summary>
@@ -3880,7 +3880,7 @@
             <param name="request"></param>
             <returns></returns>
         </member>
-        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetPlateSharesLinkageSettingList(MealTicket_Admin_Handler.Model.PageRequest)">
+        <member name="M:MealTicket_Admin_APIService.controller.TradeCenterController.GetPlateSharesLinkageSettingList(MealTicket_Admin_Handler.Model.GetPlateSharesLinkageSettingListRequest)">
             <summary>
             获取板块股票联动列表
             </summary>

@@ -19,11 +19,6 @@ namespace MealTicket_Web_Handler
                 return result.ToDictionary(k => k.PlateId, v => v);
             }
         }
-        public static Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>> UpdateSessionPart(object newData)
-        {
-            throw new NotSupportedException();
-        }
-
         public static Dictionary<long, Plate_Quotes_Session_Info> CopySessionData(object objData)
         {
             var data = objData as Dictionary<long, Plate_Quotes_Session_Info>;

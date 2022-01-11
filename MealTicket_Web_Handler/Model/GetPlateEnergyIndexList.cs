@@ -38,6 +38,11 @@ namespace MealTicket_Web_Handler.Model
         public string PlateNameOnly { get; set; }
 
         /// <summary>
+        /// 当日涨跌幅
+        /// </summary>
+        public int PlateRate { get; set; }
+
+        /// <summary>
         /// 板块市场排名
         /// </summary>
         public int PlateRank { get; set; }

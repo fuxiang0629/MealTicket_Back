@@ -9,23 +9,54 @@ namespace MealTicket_Web_Handler
 {
     public class Plate_Shares_Rel_Session
     {
-        public static Dictionary<long, List<Plate_Shares_Rel_Session_Info>> UpdateSession()
+        public static Plate_Shares_Rel_Session_Obj UpdateSession()
         {
             using (var db = new meal_ticketEntities())
             {
-                string sql = @"select PlateId,Market,SharesCode from t_shares_plate_rel";
+                string sql = @"select PlateId,Market,SharesCode from v_shares_plate_rel";
                 var result = db.Database.SqlQuery<Plate_Shares_Rel_Session_Info>(sql).ToList();
-                return result.GroupBy(e=>e.PlateId).ToDictionary(k => k.Key, v => v.ToList());
+                return BuildDic(result);
             }
         }
 
-        public static Dictionary<long, List<Plate_Shares_Rel_Session_Info>> CopySessionData(object objData)
+        private static Plate_Shares_Rel_Session_Obj BuildDic(List<Plate_Shares_Rel_Session_Info> dataList)
         {
-            var data = objData as Dictionary<long, List<Plate_Shares_Rel_Session_Info>>;
-            var resultData = new Dictionary<long, List<Plate_Shares_Rel_Session_Info>>();
-            foreach (var item in data)
+            Plate_Shares_Rel_Session_Obj result = new Plate_Shares_Rel_Session_Obj();
+            result.Plate_Shares_Rel_Session = new Dictionary<long, List<Plate_Shares_Rel_Session_Info>>();
+            result.Shares_Plate_Rel_Session = new Dictionary<long, List<Plate_Shares_Rel_Session_Info>>();
+            foreach (var item in dataList)
             {
-                resultData[item.Key] = new List<Plate_Shares_Rel_Session_Info>(item.Value);
+                long key1 = long.Parse(item.SharesCode) * 10 + item.Market;
+                long key2 = item.PlateId;
+                if (!result.Shares_Plate_Rel_Session.ContainsKey(key1))
+                {
+                    result.Shares_Plate_Rel_Session.Add(key1, new List<Plate_Shares_Rel_Session_Info>());
+                }
+                result.Shares_Plate_Rel_Session[key1].Add(item);
+
+
+                if (!result.Plate_Shares_Rel_Session.ContainsKey(key2))
+                {
+                    result.Plate_Shares_Rel_Session.Add(key2, new List<Plate_Shares_Rel_Session_Info>());
+                }
+                result.Plate_Shares_Rel_Session[key2].Add(item);
+            }
+            return result;
+        }
+
+        public static Plate_Shares_Rel_Session_Obj CopySessionData(object objData)
+        {
+            var data = objData as Plate_Shares_Rel_Session_Obj;
+            var resultData = new Plate_Shares_Rel_Session_Obj();
+            resultData.Plate_Shares_Rel_Session = new Dictionary<long, List<Plate_Shares_Rel_Session_Info>>();
+            resultData.Shares_Plate_Rel_Session = new Dictionary<long, List<Plate_Shares_Rel_Session_Info>>();
+            foreach (var item in data.Plate_Shares_Rel_Session)
+            {
+                resultData.Plate_Shares_Rel_Session[item.Key] = new List<Plate_Shares_Rel_Session_Info>(item.Value);
+            }
+            foreach (var item in data.Shares_Plate_Rel_Session)
+            {
+                resultData.Shares_Plate_Rel_Session[item.Key] = new List<Plate_Shares_Rel_Session_Info>(item.Value);
             }
             return resultData;
         }

@@ -21,6 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -199,6 +200,7 @@
     <Compile Include="Model\GetConditiontradeTemplateJoinDetailsList.cs" />
     <Compile Include="Model\GetConditiontradeTemplateList.cs" />
     <Compile Include="Model\GetConditiontradeTemplateSellDetailsList.cs" />
+    <Compile Include="Model\GetPlateBaseList.cs" />
     <Compile Include="Model\GetPlateEnergyIndexList.cs" />
     <Compile Include="Model\GetPlateKLineList.cs" />
     <Compile Include="Model\GetPlateLeaderModelSharesList.cs" />
@@ -336,6 +338,7 @@
     <Compile Include="Task\Model\Shares_Minute_KLine_Session_Info.cs" />
     <Compile Include="Task\Model\Shares_Name_Info.cs" />
     <Compile Include="Task\Model\Shares_Quotes_Session_Info.cs" />
+    <Compile Include="Task\Model\Shares_Statistic_Session_Info.cs" />
     <Compile Include="Task\Model\Shares_Tag_DayLeader_Session_Info.cs" />
     <Compile Include="Task\Model\Shares_Tag_Leader_Session_Info.cs" />
     <Compile Include="Task\Model\Shares_Tag_MainArmy_Session_Info.cs" />
@@ -362,6 +365,7 @@
     <Compile Include="Task\Session\Shares_Quotes_Date_Session.cs" />
     <Compile Include="Task\Session\Shares_Minute_KLine_Session.cs" />
     <Compile Include="Task\Session\Shares_Quotes_Today_Session.cs" />
+    <Compile Include="Task\Session\Shares_Statistic_Session.cs" />
     <Compile Include="Task\Session\Shares_Tag_DayLeader_Session.cs" />
     <Compile Include="Task\Session\Shares_Tag_Leader_Session.cs" />
     <Compile Include="Task\Session\Shares_Tag_MainArmy_Session.cs" />

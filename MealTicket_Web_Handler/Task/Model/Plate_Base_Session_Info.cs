@@ -32,5 +32,10 @@ namespace MealTicket_Web_Handler
         /// 基础板块状态
         /// </summary>
         public int BaseStatus { get; set; }
+
+        /// <summary>
+        /// 股票数量
+        /// </summary>
+        public int SharesCount { get; set; }
     }
 }

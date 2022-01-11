@@ -31,6 +31,26 @@ namespace MealTicket_Web_Handler.Model
         public int DayLeaderType { get; set; }
 
         public int MainArmyType { get; set; }
+
+        public bool IsLeader 
+        {
+            get 
+            {
+                if (Singleton.Instance.SharesLeaderType.Contains(1) && LeaderType > 0)
+                {
+                    return true;
+                }
+                if (Singleton.Instance.SharesLeaderType.Contains(2) && DayLeaderType > 0)
+                {
+                    return true;
+                }
+                if (Singleton.Instance.SharesLeaderType.Contains(3) && MainArmyType > 0)
+                {
+                    return true;
+                }
+                return false;
+            }  
+        }
     }
     public class PlateSharesInfo
     {
@@ -200,6 +220,11 @@ namespace MealTicket_Web_Handler.Model
         public List<SharesRank> Rank { get; set; }
 
         /// <summary>
+        /// 板块内股票排名信息
+        /// </summary>
+        public List<PlateSharesRank> PlateSharesRank { get; set; }
+
+        /// <summary>
         /// 综合排名
         /// </summary>
         public int OverallRank { get; set; }
@@ -207,13 +232,26 @@ namespace MealTicket_Web_Handler.Model
         /// <summary>
         /// 综合涨跌幅
         /// </summary>
-        public int OverallRiseRate
+        public int OverallRiseRate { get; set; }
+    }
+
+    public class PlateSharesRank 
+    {
+        public long PlateId { get; set; }
+
+        public bool IsLeader 
         {
             get 
             {
-                return (int)Rank.Average(e => e.RiseRate);
+                if (Rank.Count() == 0)
+                {
+                    return false;
+                }
+                return Rank.Where(e => e.IsLeader).Count() > 0;
             }
         }
+
+        public List<SharesRank> Rank { get; set; }
     }
 
     public class SharesRankInfo
@@ -247,6 +285,11 @@ namespace MealTicket_Web_Handler.Model
         public long PlateId { get; set; }
 
         /// <summary>
+        /// 是否展示联动板块龙头股票
+        /// </summary>
+        public bool IsLinkagePlate { get; set; }
+
+        /// <summary>
         /// 排序方式1.根据排名排序 2.根据涨跌幅排序
         /// </summary>
         public int OrderType { get; set; }
@@ -265,5 +308,7 @@ namespace MealTicket_Web_Handler.Model
         /// 自带股票code
         /// </summary>
         public string SharesCode { get; set; }
+
+        public bool IsShowPlateSharesLeader { get; set; }
     }
 }

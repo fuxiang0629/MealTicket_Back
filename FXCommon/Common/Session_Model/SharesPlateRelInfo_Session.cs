@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace FXCommon.Common
 {
-    [Serializable]
     public class SharesPlateRelInfo_Session
     {
         /// <summary>
@@ -28,6 +27,14 @@ namespace FXCommon.Common
         /// 股票代码
         /// </summary>
         public string SharesCode { get; set; }
+
+        public long SharesKey
+        {
+            get
+            {
+                return long.Parse(SharesCode) * 10 + Market;
+            }
+        }
 
         /// <summary>
         /// 计算走势最像用

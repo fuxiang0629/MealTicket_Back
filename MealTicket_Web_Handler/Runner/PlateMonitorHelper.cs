@@ -503,7 +503,7 @@ namespace MealTicket_Web_Handler.Runner
                         PlateIndexInfo SharesLinkageIndex = new PlateIndexInfo();
                         CalSharesLinkageIndex(item.Key, plate_real_shares, ref SharesLinkageIndex);
                         PlateIndexInfo NewHighIndex = new PlateIndexInfo();
-                        CalNewHeightIndex(dayType, item.Key, coefficient, newHighResult, ref NewHighIndex);
+                        CalNewHeightIndex(item.Key, coefficient, newHighResult, plate_real_shares, ref NewHighIndex);
                         PlateVolumeInfo PlateVolume = new PlateVolumeInfo();
                         CalVolumeRate(item.Key, ref PlateVolume);
                         plateMonitors.Add(new PlateMonitor
@@ -635,15 +635,15 @@ namespace MealTicket_Web_Handler.Runner
             List<long> sharesKeyList = new List<long>();
             if (sessionContainer.LeaderSession.ContainsKey(key))
             {
-                sharesKeyList.AddRange(sessionContainer.LeaderSession[key].Where(e => e.Value.LeaderType > 0).Select(e => e.Key).ToList());
+                sharesKeyList.AddRange(sessionContainer.LeaderSession[key].Keys.ToList());
             }
             if (sessionContainer.DayLeaderSession.ContainsKey(key))
             {
-                sharesKeyList.AddRange(sessionContainer.DayLeaderSession[key].Where(e => e.Value.DayLeaderType > 0).Select(e => e.Key).ToList());
+                sharesKeyList.AddRange(sessionContainer.DayLeaderSession[key].Keys.ToList());
             }
             if (sessionContainer.MainArmySession.ContainsKey(key))
             {
-                sharesKeyList.AddRange(sessionContainer.MainArmySession[key].Where(e => e.Value.MainArmyType > 0).Select(e => e.Key).ToList());
+                sharesKeyList.AddRange(sessionContainer.MainArmySession[key].Keys.ToList());
             }
             sharesKeyList = sharesKeyList.Distinct().ToList();
 
@@ -835,9 +835,9 @@ namespace MealTicket_Web_Handler.Runner
         }
 
         /// <summary>
-        /// 计算新高指数(龙头新高)
+        /// 计算新高指数(真实板块新高)
         /// </summary>
-        private void CalNewHeightIndex(int dayType, long plateId,int coefficient, Dictionary<long, bool> newHighResult, ref PlateIndexInfo NewHighIndex)
+        private void CalNewHeightIndex(long plateId,int coefficient, Dictionary<long, bool> newHighResult, Dictionary<long, List<long>> Plate_Real_Shares_Session, ref PlateIndexInfo NewHighIndex)
         {
             NewHighIndex = new PlateIndexInfo
             {
@@ -846,19 +846,11 @@ namespace MealTicket_Web_Handler.Runner
                 Coefficient= coefficient,
                 KeyList = new List<long>()
             };
-            long key = plateId * 100 + dayType;
+            long key = plateId;
             List<long> sharesKeyList = new List<long>();
-            if (sessionContainer.LeaderSession.ContainsKey(key))
+            if (Plate_Real_Shares_Session.ContainsKey(key))
             {
-                sharesKeyList.AddRange(sessionContainer.LeaderSession[key].Where(e => e.Value.LeaderType > 0).Select(e => e.Key).ToList());
-            }
-            if (sessionContainer.DayLeaderSession.ContainsKey(key))
-            {
-                sharesKeyList.AddRange(sessionContainer.DayLeaderSession[key].Where(e => e.Value.DayLeaderType > 0).Select(e => e.Key).ToList());
-            }
-            if (sessionContainer.MainArmySession.ContainsKey(key))
-            {
-                sharesKeyList.AddRange(sessionContainer.MainArmySession[key].Where(e => e.Value.MainArmyType > 0).Select(e => e.Key).ToList());
+                sharesKeyList.AddRange(Plate_Real_Shares_Session[key]);
             }
             sharesKeyList = sharesKeyList.Distinct().ToList();
 
@@ -926,27 +918,23 @@ namespace MealTicket_Web_Handler.Runner
                     DateTime minDate = temp.Date;
 
                     long maxPrice_date = 0;
-                    long price_today = 0;
+                    long price_today = item.Value.shares_quotes_info.ClosedPrice;
 
                     if (calPriceType == 1)//开盘价
                     {
                         maxPrice_date = shares_quotes_date.OpenSessionDic[item.Key].Where(e=>e.Date>= minDate).FirstOrDefault().OpenedPrice;
-                        price_today = item.Value.shares_quotes_info.OpenedPrice;
                     }
                     else if (calPriceType == 2)//收盘价
                     {
                         maxPrice_date = shares_quotes_date.CloseSessionDic[item.Key].Where(e => e.Date >= minDate).FirstOrDefault().ClosedPrice;
-                        price_today = item.Value.shares_quotes_info.ClosedPrice;
                     }
                     else if (calPriceType == 3)//最高价
                     {
                         maxPrice_date = shares_quotes_date.MaxSessionDic[item.Key].Where(e => e.Date >= minDate).FirstOrDefault().MaxPrice;
-                        price_today = item.Value.shares_quotes_info.MaxPrice;
                     }
                     else if (calPriceType == 4)//最低价
                     {
                         maxPrice_date = shares_quotes_date.MinSessionDic[item.Key].Where(e => e.Date >= minDate).FirstOrDefault().MinPrice;
-                        price_today = item.Value.shares_quotes_info.MinPrice;
                     }
 
                     if (price_today >= maxPrice_date)

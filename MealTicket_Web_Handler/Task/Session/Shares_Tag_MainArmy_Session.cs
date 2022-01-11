@@ -12,21 +12,12 @@ namespace MealTicket_Web_Handler
     {  
         //PlateId*100+Type
         //SharesCode*10+Market
-        public static Dictionary<long, Dictionary<long, Shares_Tag_MainArmy_Session_Info>> UpdateSession()
+        public static Shares_Tag_MainArmy_Session_Obj UpdateSession()
         {
             using (var db = new meal_ticketEntities())
             {
-                DateTime dateNow = DateTime.Now.Date;
-                string sql = string.Format(@"merge into t_plate_shares_rel_tag_mainarmy_date as t
-using (select * from t_plate_shares_rel_tag_mainarmy) as t1
-ON t.Market = t1.Market and t.SharesCode = t1.SharesCode and t.PlateId=t1.PlateId and t.[Type]=t1.[Type] and t.[Date]='{0}'
-when matched
-then update set t.MainArmyType = t1.MainArmyType
-when not matched by target
-then insert([Type],Market,SharesCode,PlateId,MainArmyType,[Date]) values(t1.[Type],t1.Market,t1.SharesCode,t1.PlateId,t1.MainArmyType,'{0}');", dateNow.ToString("yyyy-MM-dd"));
-                db.Database.ExecuteSqlCommand(sql);
-
                 var dataList = (from item in db.t_plate_shares_rel_tag_mainarmy
+                                where item.MainArmyType>0
                                 select new Shares_Tag_MainArmy_Session_Info
                                 {
                                     SharesCode = item.SharesCode,
@@ -39,54 +30,81 @@ then insert([Type],Market,SharesCode,PlateId,MainArmyType,[Date]) values(t1.[Typ
             }
         }
 
-        private static Dictionary<long, Dictionary<long, Shares_Tag_MainArmy_Session_Info>> BuildDic(List<Shares_Tag_MainArmy_Session_Info> dataList)
+        private static Shares_Tag_MainArmy_Session_Obj BuildDic(List<Shares_Tag_MainArmy_Session_Info> dataList)
         {
-            Dictionary<long, Dictionary<long, Shares_Tag_MainArmy_Session_Info>> session_Dic = new Dictionary<long, Dictionary<long, Shares_Tag_MainArmy_Session_Info>>();
+            Shares_Tag_MainArmy_Session_Obj session_Dic = new Shares_Tag_MainArmy_Session_Obj();
+            session_Dic.Shares_Tag_MainArmy_Session_BuyPlate = new Dictionary<long, Dictionary<long, Shares_Tag_MainArmy_Session_Info>>();
+            session_Dic.Shares_Tag_MainArmy_Session_BuyShares = new Dictionary<long, Dictionary<long, Shares_Tag_MainArmy_Session_Info>>();
             foreach (var item in dataList)
             {
                 long key1 = item.PlateId * 100 + item.Type;
-                if (!session_Dic.ContainsKey(key1))
-                {
-                    session_Dic.Add(key1, new Dictionary<long, Shares_Tag_MainArmy_Session_Info>());
-                }
                 long key2 = long.Parse(item.SharesCode) * 10 + item.Market;
-                session_Dic[key1][key2] = item;
+                if (!session_Dic.Shares_Tag_MainArmy_Session_BuyPlate.ContainsKey(key1))
+                {
+                    session_Dic.Shares_Tag_MainArmy_Session_BuyPlate.Add(key1, new Dictionary<long, Shares_Tag_MainArmy_Session_Info>());
+                }
+                session_Dic.Shares_Tag_MainArmy_Session_BuyPlate[key1][key2] = item;
+
+                if (!session_Dic.Shares_Tag_MainArmy_Session_BuyShares.ContainsKey(key2))
+                {
+                    session_Dic.Shares_Tag_MainArmy_Session_BuyShares.Add(key2, new Dictionary<long, Shares_Tag_MainArmy_Session_Info>());
+                }
+                session_Dic.Shares_Tag_MainArmy_Session_BuyShares[key2][key1] = item;
             }
             return session_Dic;
         }
 
-        public static Dictionary<long, Dictionary<long, Shares_Tag_MainArmy_Session_Info>> UpdateSessionPart(object newData)
+        public static Shares_Tag_MainArmy_Session_Obj UpdateSessionPart(object newData)
         {
             var newDataResult = newData as List<Shares_Tag_MainArmy_Session_Info>;
-            var disData = new Dictionary<long, Dictionary<long, Shares_Tag_MainArmy_Session_Info>>();
+            var disData = new Shares_Tag_MainArmy_Session_Obj();
+            disData.Shares_Tag_MainArmy_Session_BuyPlate = new Dictionary<long, Dictionary<long, Shares_Tag_MainArmy_Session_Info>>();
+            disData.Shares_Tag_MainArmy_Session_BuyShares = new Dictionary<long, Dictionary<long, Shares_Tag_MainArmy_Session_Info>>();
 
             foreach (var item in newDataResult)
             {
+                if (item.MainArmyType <= 0)
+                {
+                    continue;
+                }
                 long key1 = item.PlateId * 100 + item.Type;
-                if (!disData.ContainsKey(key1))
-                {
-                    disData.Add(key1, new Dictionary<long, Shares_Tag_MainArmy_Session_Info>());
-                }
                 long key2 = long.Parse(item.SharesCode) * 10 + item.Market;
-                if (!disData[key1].ContainsKey(key2))
+                if (!disData.Shares_Tag_MainArmy_Session_BuyPlate.ContainsKey(key1))
                 {
-                    disData[key1].Add(key2, item);
+                    disData.Shares_Tag_MainArmy_Session_BuyPlate.Add(key1, new Dictionary<long, Shares_Tag_MainArmy_Session_Info>());
                 }
-                else
+                if (!disData.Shares_Tag_MainArmy_Session_BuyPlate[key1].ContainsKey(key2))
                 {
-                    disData[key1][key2] = item;
+                    disData.Shares_Tag_MainArmy_Session_BuyPlate[key1].Add(key2, new Shares_Tag_MainArmy_Session_Info());
                 }
+                disData.Shares_Tag_MainArmy_Session_BuyPlate[key1][key2] = item;
+
+                if (!disData.Shares_Tag_MainArmy_Session_BuyShares.ContainsKey(key2))
+                {
+                    disData.Shares_Tag_MainArmy_Session_BuyShares.Add(key2, new Dictionary<long, Shares_Tag_MainArmy_Session_Info>());
+                }
+                if (!disData.Shares_Tag_MainArmy_Session_BuyShares[key2].ContainsKey(key1))
+                {
+                    disData.Shares_Tag_MainArmy_Session_BuyShares[key2].Add(key1, new Shares_Tag_MainArmy_Session_Info());
+                }
+                disData.Shares_Tag_MainArmy_Session_BuyShares[key2][key1] = item;
             }
             return disData;
         }
 
-        public static Dictionary<long, Dictionary<long, Shares_Tag_MainArmy_Session_Info>> CopySessionData(object objData)
+        public static Shares_Tag_MainArmy_Session_Obj CopySessionData(object objData)
         {
-            var data = objData as Dictionary<long, Dictionary<long, Shares_Tag_MainArmy_Session_Info>>;
-            var resultData = new Dictionary<long, Dictionary<long, Shares_Tag_MainArmy_Session_Info>>();
-            foreach (var item in data)
+            var data = objData as Shares_Tag_MainArmy_Session_Obj;
+            var resultData = new Shares_Tag_MainArmy_Session_Obj();
+            resultData.Shares_Tag_MainArmy_Session_BuyPlate = new Dictionary<long, Dictionary<long, Shares_Tag_MainArmy_Session_Info>>();
+            resultData.Shares_Tag_MainArmy_Session_BuyShares = new Dictionary<long, Dictionary<long, Shares_Tag_MainArmy_Session_Info>>();
+            foreach (var item in data.Shares_Tag_MainArmy_Session_BuyPlate)
             {
-                resultData[item.Key] = new Dictionary<long, Shares_Tag_MainArmy_Session_Info>(item.Value);
+                resultData.Shares_Tag_MainArmy_Session_BuyPlate[item.Key] = new Dictionary<long, Shares_Tag_MainArmy_Session_Info>(item.Value);
+            }
+            foreach (var item in data.Shares_Tag_MainArmy_Session_BuyShares)
+            {
+                resultData.Shares_Tag_MainArmy_Session_BuyShares[item.Key] = new Dictionary<long, Shares_Tag_MainArmy_Session_Info>(item.Value);
             }
             return resultData;
         }

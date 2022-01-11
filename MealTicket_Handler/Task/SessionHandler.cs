@@ -82,9 +82,10 @@ namespace MealTicket_Handler
         }
 
         //板块基础数据缓存
-        public Dictionary<long, Plate_Base_Session_Info> GetPlate_Base_Session()
+        public Dictionary<long, Plate_Base_Session_Info> GetPlate_Base_Session(bool withlock=true)
         {
-            var sessionData = GetSession(Enum_Excute_DataKey.Plate_Base_Session.ToString());
+            string dataKey = Enum_Excute_DataKey.Plate_Base_Session.ToString();
+            var sessionData = withlock ? GetDataWithLock(dataKey) : GetDataWithNoLock(dataKey);
             if (sessionData == null)
             {
                 return new Dictionary<long, Plate_Base_Session_Info>();
@@ -93,9 +94,10 @@ namespace MealTicket_Handler
         }
 
         //板块股票关系数据缓存（板块分组）
-        public Dictionary<long, Dictionary<long,Plate_Shares_Rel_Session_Info>> GetPlate_Shares_Rel_Session()
+        public Dictionary<long, Dictionary<long,Plate_Shares_Rel_Session_Info>> GetPlate_Shares_Rel_Session(bool withlock = true)
         {
-            var sessionData = GetSession(Enum_Excute_DataKey.Plate_Shares_Rel_Session.ToString());
+            string dataKey = Enum_Excute_DataKey.Plate_Shares_Rel_Session.ToString();
+            var sessionData = withlock ? GetDataWithLock(dataKey) : GetDataWithNoLock(dataKey);
             if (sessionData == null)
             {
                 return new Dictionary<long, Dictionary<long, Plate_Shares_Rel_Session_Info>>();
@@ -105,9 +107,10 @@ namespace MealTicket_Handler
         }
 
         //板块股票关系数据缓存（股票分组）
-        public Dictionary<long, Dictionary<long, Plate_Shares_Rel_Session_Info>> GetShares_Plate_Rel_Session()
+        public Dictionary<long, Dictionary<long, Plate_Shares_Rel_Session_Info>> GetShares_Plate_Rel_Session(bool withlock = true)
         {
-            var sessionData = GetSession(Enum_Excute_DataKey.Plate_Shares_Rel_Session.ToString());
+            string dataKey = Enum_Excute_DataKey.Plate_Shares_Rel_Session.ToString();
+            var sessionData = withlock ? GetDataWithLock(dataKey) : GetDataWithNoLock(dataKey);
             if (sessionData == null)
             {
                 return new Dictionary<long, Dictionary<long, Plate_Shares_Rel_Session_Info>>();

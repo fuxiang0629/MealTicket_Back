@@ -6204,6 +6204,11 @@
             数据最后修改时间
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetPlateLinkageSettingRequest.PlateName">
+            <summary>
+            板块名称
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.PlateLinkageSettingInfo.MainPlateId">
             <summary>
             主板块Id
@@ -6277,6 +6282,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.SharesNameInfo.SharesName">
             <summary>
             股票名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.GetPlateSharesLinkageSettingListRequest.PlateName">
+            <summary>
+            板块名称
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.PlateSharesLinkageSettingInfo.MainPlateId">
@@ -14743,7 +14753,7 @@
             <param name="request"></param>
             <param name="basedata"></param>
         </member>
-        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetPlateLinkageSettingList(MealTicket_Admin_Handler.Model.PageRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetPlateLinkageSettingList(MealTicket_Admin_Handler.Model.GetPlateLinkageSettingRequest,MealTicket_Admin_Handler.Model.HeadBase)">
             <summary>
             获取板块联动列表
             </summary>
@@ -14792,7 +14802,7 @@
             <param name="basedata"></param>
             <returns></returns>
         </member>
-        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetPlateSharesLinkageSettingList(MealTicket_Admin_Handler.Model.PageRequest,MealTicket_Admin_Handler.Model.HeadBase)">
+        <member name="M:MealTicket_Admin_Handler.TradeCenterHandler.GetPlateSharesLinkageSettingList(MealTicket_Admin_Handler.Model.GetPlateSharesLinkageSettingListRequest,MealTicket_Admin_Handler.Model.HeadBase)">
             <summary>
             获取板块股票联动列表
             </summary>
