@@ -6105,7 +6105,7 @@ namespace MealTicket_Admin_APIService.controller
         [CheckUserPowerFilter]
         [Route("plate/linkage/setting/list"), HttpPost]
         [Description("获取板块联动列表")]
-        public PageRes<PlateLinkageSettingInfo> GetPlateLinkageSettingList(PageRequest request)
+        public PageRes<PlateLinkageSettingInfo> GetPlateLinkageSettingList(GetPlateLinkageSettingRequest request)
         {
             if (request == null)
             {
@@ -6278,7 +6278,7 @@ namespace MealTicket_Admin_APIService.controller
         [CheckUserPowerFilter]
         [Route("plate/shares/linkage/setting/list"), HttpPost]
         [Description("获取板块股票联动列表")]
-        public PageRes<PlateSharesLinkageSettingInfo> GetPlateSharesLinkageSettingList(PageRequest request)
+        public PageRes<PlateSharesLinkageSettingInfo> GetPlateSharesLinkageSettingList(GetPlateSharesLinkageSettingListRequest request)
         {
             if (request == null)
             {

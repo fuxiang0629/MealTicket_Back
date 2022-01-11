@@ -11538,7 +11538,7 @@ namespace MealTicket_Admin_Handler
         /// <param name="request"></param>
         /// <param name="basedata"></param>
         /// <returns></returns>
-        public PageRes<PlateLinkageSettingInfo> GetPlateLinkageSettingList(PageRequest request, HeadBase basedata)
+        public PageRes<PlateLinkageSettingInfo> GetPlateLinkageSettingList(GetPlateLinkageSettingRequest request, HeadBase basedata)
         {
             using (var db = new meal_ticketEntities())
             {
@@ -11547,6 +11547,12 @@ namespace MealTicket_Admin_Handler
                                     where item2.Status == 1 && item2.BaseStatus == 1
                                     group item by new { item2.Id, item2.Name,item.IsReal } into g
                                     select g;
+                if (!string.IsNullOrEmpty(request.PlateName))
+                {
+                    plate_linkage = from item in plate_linkage
+                                    where item.Key.Name.Contains(request.PlateName)
+                                    select item;
+                }
                 int totalCount = plate_linkage.Count();
                 var list = (from item in plate_linkage
                             orderby item.Key.Name
@@ -11866,7 +11872,7 @@ namespace MealTicket_Admin_Handler
         /// <param name="request"></param>
         /// <param name="basedata"></param>
         /// <returns></returns>
-        public PageRes<PlateSharesLinkageSettingInfo> GetPlateSharesLinkageSettingList(PageRequest request, HeadBase basedata)
+        public PageRes<PlateSharesLinkageSettingInfo> GetPlateSharesLinkageSettingList(GetPlateSharesLinkageSettingListRequest request, HeadBase basedata)
         {
             using (var db = new meal_ticketEntities())
             {
@@ -11875,6 +11881,12 @@ namespace MealTicket_Admin_Handler
                                     where item2.Status == 1 && item2.BaseStatus == 1
                                     group item by new { item2.Id, item2.Name,item.IsReal,item.IsDefault} into g
                                     select g;
+                if (!string.IsNullOrEmpty(request.PlateName))
+                {
+                    shares_linkage = from item in shares_linkage
+                                     where item.Key.Name.Contains(request.PlateName)
+                                     select item;
+                }
                 int totalCount = shares_linkage.Count();
                 var list = (from item in shares_linkage
                             orderby item.Key.Name

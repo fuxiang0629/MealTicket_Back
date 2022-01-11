@@ -13,7 +13,17 @@ namespace MealTicket_Web_Handler
         {
             using (var db = new meal_ticketEntities())
             {
-                string sql = @"select Id PlateId,Name PlateName,[Type] PlateType,CalType,BaseStatus from t_shares_plate where [Status]=1";
+                string sql = @"select t.Id PlateId,t.Name PlateName,t.[Type] PlateType,t.CalType,t.BaseStatus,isnull(t1.SharesCount,0) SharesCount
+from t_shares_plate t
+left join 
+(
+	select m.PlateId,count(PlateId) SharesCount
+	from t_shares_plate_rel m
+	inner join t_shares_all m1 on m.Market=m1.Market and m.SharesCode=m1.SharesCode
+	where m1.[Status]=1
+	group by m.PlateId
+)t1 on t.Id=t1.PlateId
+where t.[Status]=1";
                 var result = db.Database.SqlQuery<Plate_Base_Session_Info>(sql).ToList();
                 return result.ToDictionary(k => k.PlateId, v => v);
             }

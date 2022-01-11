@@ -45,11 +45,6 @@ namespace MealTicket_Web_Handler
             return session_Dic;
         }
 
-        public static Dictionary<int, List<Plate_Shares_Rel_Tag_Setting_Session_Info>> UpdateSessionPart(object newData)
-        {
-            throw new NotSupportedException();
-        }
-
         public static Dictionary<int, List<Plate_Shares_Rel_Tag_Setting_Session_Info>> CopySessionData(object objData)
         {
             var data = objData as Dictionary<int, List<Plate_Shares_Rel_Tag_Setting_Session_Info>>;

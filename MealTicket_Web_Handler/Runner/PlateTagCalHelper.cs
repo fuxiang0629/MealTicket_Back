@@ -12,15 +12,25 @@ namespace MealTicket_Web_Handler.Runner
 {
     public class PlateTagCalHelper
     {
+        public static void Calculate()
+        {
+            Session_New.GET_DATA_CXT gdc = new Session_New.GET_DATA_CXT(SessionHandler.GET_DATA_CMD_ID_PlATETAG_CALCULATE, null);
+
+            Singleton.Instance.sessionHandler.GetDataWithLock(string.Empty, gdc);
+
+            Singleton.Instance.sessionHandler.WriteToSharesQuoteCache();
+            Singleton.Instance.sessionHandler.WriteToPlateQuoteCache();
+
+        }
         /// <summary>
         /// 计算板块标记
         /// </summary>
-        public static void Calculate() 
+        public static void _Calculate()
         {
-            Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> Plate_Quotes_Date_Session = Singleton.Instance.sessionHandler.GetPlate_Quotes_Date_Session(Singleton.Instance.TrendLikeDays);
-            Dictionary<long, Plate_Quotes_Session_Info> Plate_Quotes_Today_Session = Singleton.Instance.sessionHandler.GetPlate_Quotes_Today_Session();
-            Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> Shares_Quotes_Date_Session = Singleton.Instance.sessionHandler.GetShares_Quotes_Date_Session(Singleton.Instance.TrendLikeDays);
-            Dictionary<long, Shares_Quotes_Session_Info> Shares_Quotes_Today_Session = Singleton.Instance.sessionHandler.GetShares_Quotes_Today_Session();
+            Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> Plate_Quotes_Date_Session = Singleton.Instance.sessionHandler.GetPlate_Quotes_Date_Session(Singleton.Instance.TrendLikeDays,false);
+            Dictionary<long, Plate_Quotes_Session_Info> Plate_Quotes_Today_Session = Singleton.Instance.sessionHandler.GetPlate_Quotes_Today_Session(false);
+            Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> Shares_Quotes_Date_Session = Singleton.Instance.sessionHandler.GetShares_Quotes_Date_Session(Singleton.Instance.TrendLikeDays, false);
+            Dictionary<long, Shares_Quotes_Session_Info> Shares_Quotes_Today_Session = Singleton.Instance.sessionHandler.GetShares_Quotes_Today_Session(false);
 
             List<SharesPlateRelInfo_Session> PlateRel = new List<SharesPlateRelInfo_Session>();
             ToGetPlateRelSession(ref PlateRel);
@@ -285,7 +295,7 @@ namespace MealTicket_Web_Handler.Runner
             table.Columns.Add("IsForce1", typeof(bool));
             table.Columns.Add("IsForce2", typeof(bool));
 
-            var tag_setting = Singleton.Instance.sessionHandler.GetPlate_Tag_Setting_Session();
+            var tag_setting = Singleton.Instance.sessionHandler.GetPlate_Tag_Setting_Session(false);
             foreach (var item in new_data_list)
             {
                 long key = long.Parse(item.SharesCode) * 10 + item.Market;
@@ -456,7 +466,7 @@ namespace MealTicket_Web_Handler.Runner
             table.Columns.Add("IsTrendLike", typeof(bool));
             table.Columns.Add("Score", typeof(int));
 
-            var tag_setting = Singleton.Instance.sessionHandler.GetPlate_Tag_Setting_Session();
+            var tag_setting = Singleton.Instance.sessionHandler.GetPlate_Tag_Setting_Session(false);
             foreach (var item in new_data_list)
             {
                 long key = long.Parse(item.SharesCode) * 10 + item.Market;

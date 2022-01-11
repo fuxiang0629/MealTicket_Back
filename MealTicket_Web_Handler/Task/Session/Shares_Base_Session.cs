@@ -19,11 +19,6 @@ namespace MealTicket_Web_Handler
             }
         }
 
-        public static Dictionary<long, Shares_Base_Session_Info> UpdateSessionPart(object newData)
-        {
-            throw new NotSupportedException();
-        }
-
         public static Dictionary<long, Shares_Base_Session_Info> CopySessionData(object objData)
         {
             var data = objData as Dictionary<long, Shares_Base_Session_Info>;

@@ -190,6 +190,7 @@ namespace SecurityBarsDataUpdate
                         }
                     };
                 }
+
                 if (spanNow > TimeSpan.Parse(Singleton.Instance.TradeTime2) && spanNow < TimeSpan.Parse(Singleton.Instance.TradeTime3))
                 {
                     var quotes = GetSharesQuotes(sharesData.Market, sharesData.SharesCode, timeNow.Date);

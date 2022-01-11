@@ -54,6 +54,21 @@ namespace MealTicket_Web_Handler
         public int Rank { get; set; }
 
         /// <summary>
+        /// 涨停数量
+        /// </summary>
+        public int RiseUpLimitCount { get; set; }
+
+        /// <summary>
+        /// 跌停数量
+        /// </summary>
+        public int DownUpLimitCount { get; set; }
+
+        /// <summary>
+        /// 股票总数量
+        /// </summary>
+        public int SharesTotalCount { get; set; }
+
+        /// <summary>
         /// 今日此刻每分钟平均成交量
         /// </summary>
         public long TotalCount_Today_Now { get; set; }

@@ -6,69 +6,98 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
+using static FXCommon.Common.Session_New;
+using static MealTicket_Web_Handler.SessionHandler;
 
 namespace MealTicket_Web_Handler.Runner
 {
     public class SharesTagCalHelper
     {
+        public static void Calculate()
+        {
+            GET_DATA_CXT gdc = new GET_DATA_CXT(GET_DATA_CMD_ID_SHARESTAGCALHELPER_CALCULATE, null);
+
+            Singleton.Instance.sessionHandler.GetDataWithLock(string.Empty, gdc);
+
+            Singleton.Instance.sessionHandler.WriteToSharesQuoteCache();
+            Singleton.Instance.sessionHandler.WriteToPlateQuoteCache();
+
+        }
         /// <summary>
         /// 计算股票标签
         /// </summary>
-        public static void Calculate()
+        public static void _Calculate()
         {
-            Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> Plate_Quotes_Date_Session = Singleton.Instance.sessionHandler.GetPlate_Quotes_Date_Session();
-            Dictionary<long, Plate_Quotes_Session_Info> Plate_Quotes_Today_Session = Singleton.Instance.sessionHandler.GetPlate_Quotes_Today_Session();
-            Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> Shares_Quotes_Date_Session = Singleton.Instance.sessionHandler.GetShares_Quotes_Date_Session();
-            Dictionary<long, Shares_Quotes_Session_Info> Shares_Quotes_Today_Session = Singleton.Instance.sessionHandler.GetShares_Quotes_Today_Session();
-            Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>> Plate_Tag_FocusOn_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_FocusOn_Session();
-            Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>> Plate_Tag_Force_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_Force_Session();
-            Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>> Plate_Tag_TrendLike_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_TrendLike_Session();
-            Dictionary<int, List<Plate_Shares_Rel_Tag_Setting_Session_Info>> Plate_Shares_Rel_Tag_Setting_Session = Singleton.Instance.sessionHandler.GetPlate_Shares_Rel_Tag_Setting_Session();
-            Dictionary<long, Shares_Base_Session_Info> Shares_Base_Session= Singleton.Instance.sessionHandler.GetShares_Base_Session();
-            List<SharesPlateRelInfo_Session> PlateRel = new List<SharesPlateRelInfo_Session>();
-            ToGetPlateRelSession(Shares_Base_Session,ref PlateRel);
-
-            var calTypeArr = System.Enum.GetValues(typeof(Enum_SharesTag_CalType));
-            int taskCount = calTypeArr.Length;
-            Task[] taskArr = new Task[taskCount];
-            int idx = 0;
-            foreach (Enum_SharesTag_CalType calType in calTypeArr)
+            try
             {
-                Enum_SharesTag_CalType _calType = calType;
-                taskArr[idx]=Task.Factory.StartNew(() =>
+                Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> Plate_Quotes_Date_Session = Singleton.Instance.sessionHandler.GetPlate_Quotes_Date_Session(0, false);
+                Dictionary<long, Plate_Quotes_Session_Info> Plate_Quotes_Today_Session = Singleton.Instance.sessionHandler.GetPlate_Quotes_Today_Session(false);
+                Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> Shares_Quotes_Date_Session = Singleton.Instance.sessionHandler.GetShares_Quotes_Date_Session(0, false);
+                Dictionary<long, Shares_Quotes_Session_Info> Shares_Quotes_Today_Session = Singleton.Instance.sessionHandler.GetShares_Quotes_Today_Session(false);
+                Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>> Plate_Tag_FocusOn_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_FocusOn_Session_ByShares(false);
+                Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>> Plate_Tag_Force_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_Force_Session_ByShares(false);
+                Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>> Plate_Tag_TrendLike_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_TrendLike_Session_ByShares(false);
+                Dictionary<int, List<Plate_Shares_Rel_Tag_Setting_Session_Info>> Plate_Shares_Rel_Tag_Setting_Session = Singleton.Instance.sessionHandler.GetPlate_Shares_Rel_Tag_Setting_Session(false);
+                Dictionary<long, Shares_Base_Session_Info> Shares_Base_Session = Singleton.Instance.sessionHandler.GetShares_Base_Session(false);
+                List<SharesPlateRelInfo_Session> PlateRel = new List<SharesPlateRelInfo_Session>();
+                ToGetPlateRelSession(Shares_Base_Session, ref PlateRel);
+
+                var calTypeArr = System.Enum.GetValues(typeof(Enum_SharesTag_CalType));
+                int taskCount = calTypeArr.Length;
+                WaitHandle[] taskArr = new WaitHandle[taskCount];
+                int idx = 0;
+                foreach (Enum_SharesTag_CalType calType in calTypeArr)
                 {
-                    _calculate(_calType, PlateRel, Plate_Quotes_Date_Session, Plate_Quotes_Today_Session, Shares_Quotes_Date_Session, Shares_Quotes_Today_Session, Plate_Tag_FocusOn_Session, Plate_Tag_Force_Session, Plate_Tag_TrendLike_Session, Plate_Shares_Rel_Tag_Setting_Session, Shares_Base_Session);
-                });
-                idx++;
+                    Enum_SharesTag_CalType _calType = calType;
+                    taskArr[idx] = TaskThread.CreateTask((e) =>
+                    {
+                        _calculate(_calType, PlateRel, Plate_Quotes_Date_Session, Plate_Quotes_Today_Session, Shares_Quotes_Date_Session, Shares_Quotes_Today_Session, Plate_Tag_FocusOn_Session, Plate_Tag_Force_Session, Plate_Tag_TrendLike_Session, Plate_Shares_Rel_Tag_Setting_Session, Shares_Base_Session);
+                    }, null);
+                    idx++;
+                }
+                TaskThread.WaitAll(taskArr, Timeout.Infinite);
+                TaskThread.CloseAllTasks(taskArr);
             }
-            Task.WaitAll(taskArr);
+            catch (Exception ex) { }
 
         }
 
         private static void ToGetPlateRelSession(Dictionary<long, Shares_Base_Session_Info> Shares_Base_Session,ref List<SharesPlateRelInfo_Session> PlateRel)
         {
-            var tempPlateRel = (from item in Singleton.Instance._SharesPlateSession.GetSessionData()
-                                join item2 in Singleton.Instance._SharesPlateRelSession.GetSessionData() on item.PlateId equals item2.PlateId
-                                where item.BaseStatus == 1 && (item.PlateType == 3 || item.PlateType == 1)
-                                select new SharesPlateRelInfo_Session
-                                {
-                                    PlateId = item.PlateId,
-                                    PlateType = item.PlateType,
-                                    Market = item2.Market,
-                                    SharesCode = item2.SharesCode
-                                }).ToList();
-            var limit_session=Singleton.Instance.sessionHandler.GetShares_Limit_Session();
-            foreach (var item in tempPlateRel)
+            var plate_base = Singleton.Instance.sessionHandler.GetPlate_Base_Session(false);
+            var plate_shares_rel = Singleton.Instance.sessionHandler.GetPlate_Shares_Rel_Session(false);
+            var limit_session = Singleton.Instance.sessionHandler.GetShares_Limit_Session(false);
+            foreach (var item in plate_base)
             {
-                long key = long.Parse(item.SharesCode) * 10 + item.Market;
-                if (!Shares_Base_Session.ContainsKey(key))
+                if (item.Value.BaseStatus != 1)
                 {
                     continue;
                 }
-                if (!limit_session.ContainsKey(key))
+                if (item.Value.PlateType != 1 && item.Value.PlateType != 3)
                 {
-                    PlateRel.Add(item);
+                    continue;
+                }
+                if (!plate_shares_rel.ContainsKey(item.Key))
+                {
+                    continue;
+                }
+                var sharesList = plate_shares_rel[item.Key];
+                foreach (var share in sharesList)
+                {
+                    long key = share.SharesKey;
+                    if (!limit_session.Contains(key))
+                    {
+                        SharesPlateRelInfo_Session temp = new SharesPlateRelInfo_Session
+                        {
+                            Market=share.Market,
+                            SharesCode=share.SharesCode,
+                            PlateId=share.PlateId,
+                            PlateType=item.Value.PlateType
+                        };
+                        PlateRel.Add(temp);
+                    }
                 }
             }
         }
@@ -95,15 +124,15 @@ namespace MealTicket_Web_Handler.Runner
         {
             var dayTypeArr = System.Enum.GetValues(typeof(Enum_PlateTag_DayType));
             int dayTypeCount = dayTypeArr.Length;
-            Task[] taskArr = new Task[dayTypeCount];
+            WaitHandle[] taskArr = new WaitHandle[dayTypeCount];
             int idx = 0;
             List<Shares_Tag_Leader_Session_Info> new_data = new List<Shares_Tag_Leader_Session_Info>();
             object dayTypeLock = new object();
             foreach (Enum_PlateTag_DayType item in dayTypeArr)
             {
-                int dayType = (int)item;
-                taskArr[idx] = Task.Factory.StartNew(() =>
+                taskArr[idx] = TaskThread.CreateTask((xc) =>
                 {
+                    int dayType = (int)xc;
                     var _plateRel = new List<SharesPlateRelInfo_Session>();
                     CheckPlateTagExist(dayType, plateRel, _plate_Tag_FocusOn_Session, _plate_Tag_Force_Session, _plate_Tag_TrendLike_Session, ref _plateRel);
                     var plate_Quotes_Date_Session = new Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>>();
@@ -118,10 +147,12 @@ namespace MealTicket_Web_Handler.Runner
                     {
                         new_data.AddRange(tempData);
                     }
-                });
+                }, item);
                 idx++;
             }
-            Task.WaitAll(taskArr);
+            TaskThread.WaitAll(taskArr,Timeout.Infinite);
+            TaskThread.CloseAllTasks(taskArr);
+
             //设置缓存
             Singleton.Instance.sessionHandler.UpdateSessionPart((int)SessionHandler.Enum_Excute_Type.Shares_Tag_Leader_Session, new_data);
             //入库
@@ -140,15 +171,6 @@ namespace MealTicket_Web_Handler.Runner
             List<Shares_Tag_Leader_Session_Info> new_data = new List<Shares_Tag_Leader_Session_Info>();
             foreach (var item in plateRelDic)
             {
-                //long plateId = item.Key;
-                ////1.查询板块最低点日期
-                //DateTime lowestDate = DateTime.Now.Date;
-                //DateTime lastDate = DateTime.Now.Date;
-                //bool isVaild = QueryPlateLowestDate(plateId, _plate_Quotes_Date_Session, _plate_Quotes_Today_Session, ref lowestDate, ref lastDate);
-                //if (!isVaild)
-                //{
-                //    continue;
-                //}
                 //2.查询板块涨幅最高排名
                 int disCount=GetDisCount((int)Enum_SharesTag_CalType.LEADER, item.Value.Count(), _plate_Shares_Rel_Tag_Setting_Session);
                 if (disCount <= 0)
@@ -208,7 +230,7 @@ namespace MealTicket_Web_Handler.Runner
                 temp.Market = item.Market;
                 temp.PlateId = item.PlateId;
                 tempSharesList.Add(temp);
-                long key = long.Parse(item.SharesCode) * 10 + item.Market;
+                long key = item.SharesKey;
                 Dictionary<DateTime, Shares_Quotes_Session_Info> shares_quotes_date_dic = new Dictionary<DateTime, Shares_Quotes_Session_Info>();
                 if (!_shares_Quotes_Date_Session.TryGetValue(key, out shares_quotes_date_dic))
                 {
@@ -595,9 +617,9 @@ namespace MealTicket_Web_Handler.Runner
             }
 
             int mainArmyRankRate = Singleton.Instance.MainArmyRankRate;
-            int takeCount = (int)Math.Round(tempSharesList.Count() * (mainArmyRankRate * 1.0 / 10000),0);
+            int takeCount = (int)Math.Round(tempSharesList.Count() * (mainArmyRankRate * 1.0 / 10000), 0);
             var rankList = tempSharesList.OrderByDescending(e => e.MarketValue).Take(takeCount).ToList();
-            rankList=rankList.Where(e => e.Score >= 0).OrderBy(e => e.Score).ToList();
+            rankList = rankList.Where(e => e.Score >= 0).OrderBy(e => e.Score).ToList();
 
             Dictionary<long, int> sharesDic = new Dictionary<long, int>();
             int idx = 1;
@@ -684,38 +706,20 @@ namespace MealTicket_Web_Handler.Runner
                 bool isVaild = false;
                 if (item.PlateType == 3)
                 {
-                    long key1 = long.Parse(item.SharesCode) * 10 + item.Market;
+                    long key1 = item.SharesKey;
                     long key2 = item.PlateId;
-                    if (Plate_Tag_FocusOn_Session.ContainsKey(key1))
+                    if (Plate_Tag_FocusOn_Session.ContainsKey(key1) && Plate_Tag_FocusOn_Session[key1].ContainsKey(key2))
                     {
-                        if (Plate_Tag_FocusOn_Session[key1].ContainsKey(key2))
-                        {
-                            if (Plate_Tag_FocusOn_Session[key1][key2].IsFocusOn)
-                            {
-                                isVaild = true;
-                            }
-                        }
+                        isVaild = true;
                     }
-                    if (Plate_Tag_TrendLike_Session.ContainsKey(key1))
+                    if (Plate_Tag_TrendLike_Session.ContainsKey(key1) && Plate_Tag_TrendLike_Session[key1].ContainsKey(key2))
                     {
-                        if (Plate_Tag_TrendLike_Session[key1].ContainsKey(key2))
-                        {
-                            if (Plate_Tag_TrendLike_Session[key1][key2].IsTrendLike)
-                            {
-                                isVaild = true;
-                            }
-                        }
+                        isVaild = true;
                     }
-                    key1 = long.Parse(item.SharesCode) * 1000 + item.Market * 100 + dayType;
-                    if (Plate_Tag_Force_Session.ContainsKey(key1))
+                    key1 = item.SharesKey * 100 + dayType;
+                    if (Plate_Tag_Force_Session.ContainsKey(key1) && Plate_Tag_Force_Session[key1].ContainsKey(key2))
                     {
-                        if (Plate_Tag_Force_Session[key1].ContainsKey(key2))
-                        {
-                            if (Plate_Tag_Force_Session[key1][key2].IsForce1 || Plate_Tag_Force_Session[key1][key2].IsForce2)
-                            {
-                                isVaild = true;
-                            }
-                        }
+                        isVaild = true;
                     }
                 }
                 else 
