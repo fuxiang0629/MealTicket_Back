@@ -16,10 +16,12 @@ namespace MealTicket_Web_Handler
             {
                 days = (int)oct;
             }
+
             if (days < 15)
             {
                 days = 15;
             }
+
             using (var db = new meal_ticketEntities())
             {
                 string sql = string.Format("exec P_GetPlate_Quotes_Date_Session {0}", days);
