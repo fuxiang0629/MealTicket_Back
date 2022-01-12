@@ -17,9 +17,12 @@ namespace MealTicket_Web_Handler.Runner
             Session_New.GET_DATA_CXT gdc = new Session_New.GET_DATA_CXT(SessionHandler.GET_DATA_CMD_ID_PlATETAG_CALCULATE, null);
 
             Singleton.Instance.sessionHandler.GetDataWithLock(string.Empty, gdc);
+<<<<<<< HEAD
 
             //Singleton.Instance.sessionHandler.WriteToSharesQuoteCache();
             //Singleton.Instance.sessionHandler.WriteToPlateQuoteCache();
+=======
+>>>>>>> 5a1707417dc4d61ff2e73c7dc661ec5d27060817
 
         }
         /// <summary>

@@ -20,8 +20,13 @@ namespace MealTicket_Web_Handler.Runner
             GET_DATA_CXT gdc = new GET_DATA_CXT(GET_DATA_CMD_ID_SHARESTAGCALHELPER_CALCULATE, null);
             Singleton.Instance.sessionHandler.GetDataWithLock(string.Empty, gdc);
 
+<<<<<<< HEAD
             //Singleton.Instance.sessionHandler.WriteToSharesQuoteCache();
             //Singleton.Instance.sessionHandler.WriteToPlateQuoteCache();
+=======
+            Singleton.Instance.sessionHandler.GetDataWithLock(string.Empty, gdc);
+
+>>>>>>> 5a1707417dc4d61ff2e73c7dc661ec5d27060817
         }
         /// <summary>
         /// 计算股票标签

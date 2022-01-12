@@ -66,9 +66,13 @@ namespace FXCommon.Common
         /// </summary>
         ReaderWriterLockSlim _sessionReadWriteLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
 
-        public object GetDataWithLock(string DataKey, GET_DATA_CXT _cxt=null, bool isUpgradeable = false)
+        public object GetDataWithLock(string DataKey, GET_DATA_CXT _cxt = null, bool isUpgradeable = false)
         {
+<<<<<<< HEAD
             
+=======
+
+>>>>>>> 5a1707417dc4d61ff2e73c7dc661ec5d27060817
             if (isUpgradeable)
             {
                 _sessionReadWriteLock.EnterUpgradeableReadLock();
@@ -82,7 +86,11 @@ namespace FXCommon.Common
             {
                 return OnGetData(DataKey, _cxt);
             }
+<<<<<<< HEAD
             catch(Exception)
+=======
+            catch (Exception)
+>>>>>>> 5a1707417dc4d61ff2e73c7dc661ec5d27060817
             { }
             finally
             {
@@ -136,7 +144,11 @@ namespace FXCommon.Common
 
                 OnSessionAfterWriting(key);
             }
+<<<<<<< HEAD
             catch(Exception)
+=======
+            catch (Exception)
+>>>>>>> 5a1707417dc4d61ff2e73c7dc661ec5d27060817
             { }
             finally
             {
@@ -161,6 +173,8 @@ namespace FXCommon.Common
         {
             return objData;
         }
+        protected virtual void OnSessionAfterWriting(string key)
+        { }
         #endregion
 
         /// <summary>
