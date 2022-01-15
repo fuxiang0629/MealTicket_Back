@@ -13,13 +13,14 @@ namespace MealTicket_Web_Handler
         {
             using (var db = new meal_ticketEntities())
             {
-                string sql = @"select t.Id PlateId,t.Name PlateName,t.[Type] PlateType,t.CalType,t.BaseStatus,isnull(t1.SharesCount,0) SharesCount
+                string sql = @"select t.Id PlateId,t.Name PlateName,t.[Type] PlateType,t.CalType,t.BaseStatus,isnull(t1.SharesCount,0) SharesCount,isnull(t1.CirculatingCapital,0)CirculatingCapital
 from t_shares_plate t
 left join 
 (
-	select m.PlateId,count(PlateId) SharesCount
+	select m.PlateId,count(PlateId) SharesCount,sum(isnull(m2.CirculatingCapital,0))CirculatingCapital
 	from t_shares_plate_rel m
 	inner join t_shares_all m1 on m.Market=m1.Market and m.SharesCode=m1.SharesCode
+	left join t_shares_markettime m2 on m.Market=m2.Market and m.SharesCode=m2.SharesCode
 	where m1.[Status]=1
 	group by m.PlateId
 )t1 on t.Id=t1.PlateId

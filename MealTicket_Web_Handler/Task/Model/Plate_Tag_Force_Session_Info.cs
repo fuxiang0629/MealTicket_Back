@@ -41,6 +41,7 @@ namespace MealTicket_Web_Handler
 
     public class Plate_Tag_Force_Session_Obj
     {
+        public List<Plate_Tag_Force_Session_Info> Force_List { get; set; }
         public Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>> Plate_Shares_Force_Session { get; set; }
 
         public Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>> Shares_Plate_Force_Session { get; set; }

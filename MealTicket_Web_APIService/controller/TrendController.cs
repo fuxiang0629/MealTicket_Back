@@ -8965,6 +8965,20 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 获取板块龙头股票
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("shares/energy/index/list"), HttpPost]
+        [Description("获取板块龙头股票")]
+        [CheckUserLoginFilter]
+        public SortedSet<SharesEnergyIndex> GetSharesEnergyIndexList()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesEnergyIndexList(basedata);
+        }
+
+        /// <summary>
         /// 获取板块涨速列表
         /// </summary>
         /// <param name="request"></param>
@@ -8994,6 +9008,24 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.GetPlateBaseList(request,basedata);
+        }
+
+        /// <summary>
+        /// 获取联动板块列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("plate/linkage/list"), HttpPost]
+        [Description("获取联动板块列表")]
+        [CheckUserLoginFilter]
+        public List<PlateLinkageInfo> GetPlateLinkageList(GetPlateLinkageListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetPlateLinkageList(request, basedata);
         }
     }
 }

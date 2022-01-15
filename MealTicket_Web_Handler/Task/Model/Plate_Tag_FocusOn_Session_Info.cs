@@ -31,6 +31,7 @@ namespace MealTicket_Web_Handler
 
     public class Plate_Tag_FocusOn_Session_Obj 
     {
+        public List<Plate_Tag_FocusOn_Session_Info> FocusOn_List { get; set; }
         public Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>> Plate_Shares_FocusOn_Session { get; set; }
         public Dictionary<long, Dictionary<long, Plate_Tag_FocusOn_Session_Info>> Shares_Plate_FocusOn_Session { get; set; }
     }

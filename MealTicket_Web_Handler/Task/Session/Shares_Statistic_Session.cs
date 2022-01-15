@@ -6,7 +6,6 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using static FXCommon.Common.Session_New;
-using static MealTicket_Web_Handler.SessionHandler;
 
 namespace MealTicket_Web_Handler
 {
@@ -14,13 +13,19 @@ namespace MealTicket_Web_Handler
     {
         public static Shares_Statistic_Session_Obj UpdateSession()
         {
-            GET_DATA_CXT gdc = new GET_DATA_CXT(GET_ALL_SHARES_STATISTIC_INFO, null);
+            GET_DATA_CXT gdc = new GET_DATA_CXT(SessionHandler.GET_ALL_SHARES_STATISTIC_INFO, null);
             var result= (Singleton.Instance.sessionHandler.GetDataWithLock("", gdc)) as Shares_Statistic_Session_Obj;
             return result;
+        }
+        private static void ToWriteDebugLog(string message, Exception ex)
+        {
+            return;
+            Logger.WriteFileLog(message, ex);
         }
 
         public static Shares_Statistic_Session_Obj Cal_Shares_Statistic() 
         {
+            ToWriteDebugLog("1："+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"),null);
             var result = new Shares_Statistic_Session_Obj();
             result.Shares_Info = new Dictionary<long, Statistic_Shares_Info>();
             result.Plate_Rank = new Statistic_Plate_Rank_Obj();
@@ -29,10 +34,12 @@ namespace MealTicket_Web_Handler
             result.Shares_Rank.Rank_5Days = new SortedSet<Shares_Statistic_Session_Overall>();
             result.Shares_Rank.Rank_10Days = new SortedSet<Shares_Statistic_Session_Overall>();
             result.Shares_Rank.Rank_15Days = new SortedSet<Shares_Statistic_Session_Overall>();
+            result.Shares_Rank.Rank_Overall = new SortedSet<Shares_Statistic_Session_Overall>();
             result.Plate_Rank.Rank_3Days = new Dictionary<long, SortedSet<Shares_Statistic_Session_Overall>>();
             result.Plate_Rank.Rank_5Days = new Dictionary<long, SortedSet<Shares_Statistic_Session_Overall>>();
             result.Plate_Rank.Rank_10Days = new Dictionary<long, SortedSet<Shares_Statistic_Session_Overall>>();
             result.Plate_Rank.Rank_15Days = new Dictionary<long, SortedSet<Shares_Statistic_Session_Overall>>();
+            result.Plate_Rank.Rank_Overall = new Dictionary<long, SortedSet<Shares_Statistic_Session_Overall>>();
 
             var shares_quotes_date = Singleton.Instance.sessionHandler.GetShares_Quotes_Date_Session(0, false);
             var shares_quotes_today = Singleton.Instance.sessionHandler.GetShares_Quotes_Today_Session(false);
@@ -48,23 +55,43 @@ namespace MealTicket_Web_Handler
             var shares_Tag_DayLeader_Session = Singleton.Instance.sessionHandler.GetShares_Tag_DayLeader_Session_ByShares(false);
             var shares_Tag_Mainarmy_Session = Singleton.Instance.sessionHandler.GetShares_Tag_MainArmy_Session_ByShares(false);
 
+            ToWriteDebugLog("2：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             int[] daysType = Singleton.Instance.SharesLeaderDaysType;//计算天数类型
             calSharesBaseInfo(shares_base, shares_quotes, plate_base, shares_plate_rel, plate_quotes, shares_focusOn, shares_trendlike, ref result);
 
+            ToWriteDebugLog("3：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             WaitHandle[] taskArr = new WaitHandle[daysType.Length];
             for (int i = 0; i < daysType.Length; i++)
             {
                 taskArr[i] = TaskThread.CreateTask((par) =>
                 {
                     int dayType = (int)par;
+                    if (dayType == 4)
+                    {
+                        ToWriteDebugLog("31：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                    }
                     var shares_plate_real = Singleton.Instance.sessionHandler.GetShares_Real_Plate_Session(dayType, false);
+                    if (dayType == 4)
+                    {
+                        ToWriteDebugLog("32：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                    }
                     Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> new_shares_quotes_date = getNewSharesDateQuotes(dayType, shares_quotes_date, shares_quotes_today);
+                    if (dayType == 4)
+                    {
+                        ToWriteDebugLog("33：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                    }
                     calSharesRiseRate(dayType, new_shares_quotes_date, shares_plate_real, shares_force, shares_Tag_Leader_Session, shares_Tag_DayLeader_Session, shares_Tag_Mainarmy_Session, ref result);
+                    if (dayType == 4)
+                    {
+                        ToWriteDebugLog("34：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                    }
                 }, daysType[i]);
             }
             TaskThread.WaitAll(taskArr, Timeout.Infinite);
             TaskThread.CloseAllTasks(taskArr);
+            ToWriteDebugLog("4：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             calSharesOverallRiseRate(ref result);
+            ToWriteDebugLog("5：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             return result;
         }
 
@@ -152,35 +179,48 @@ namespace MealTicket_Web_Handler
 
         private static Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> getNewSharesDateQuotes(int dayType, Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> shares_quotes_date, Dictionary<long, Shares_Quotes_Session_Info> shares_quotes_today)
         {
-            Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> new_shares_quotes_date = new Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>>();
+            Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> result = new Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>>();
+            Dictionary<long, SortedDictionary<DateTime, Shares_Quotes_Session_Info>> new_shares_quotes_date = new Dictionary<long, SortedDictionary<DateTime, Shares_Quotes_Session_Info>>();
             foreach (var item in shares_quotes_date)
             {
-                new_shares_quotes_date.Add(item.Key, new Dictionary<DateTime, Shares_Quotes_Session_Info>(item.Value));
+                if (!new_shares_quotes_date.ContainsKey(item.Key))
+                {
+                    new_shares_quotes_date.Add(item.Key, new SortedDictionary<DateTime, Shares_Quotes_Session_Info>());
+                    result.Add(item.Key, new Dictionary<DateTime, Shares_Quotes_Session_Info>());
+                }
+                foreach (var item2 in item.Value)
+                {
+                    new_shares_quotes_date[item.Key].Add(item2.Key,item2.Value);
+                }
             }
+            int CalDays = dayType == 1 ? 3 : dayType == 2 ? 5 : dayType == 3 ? 10 : dayType == 4 ? 15 : 0;
             foreach (var item in shares_quotes_today)
             {
                 long shareKey = item.Key;
                 if (!new_shares_quotes_date.ContainsKey(shareKey))
                 {
-                    new_shares_quotes_date.Add(shareKey, new Dictionary<DateTime, Shares_Quotes_Session_Info>());
+                    new_shares_quotes_date.Add(shareKey, new SortedDictionary<DateTime, Shares_Quotes_Session_Info>());
                 }
                 if (!new_shares_quotes_date[shareKey].ContainsKey(item.Value.Date))
                 {
                     new_shares_quotes_date[shareKey].Add(item.Value.Date, item.Value);
                 }
             }
-            return new_shares_quotes_date;
+            foreach (var item in new_shares_quotes_date)
+            {
+                long shareKey = item.Key;
+                int count = item.Value.Count();
+                count = count < CalDays ? 0 : (count - CalDays);
+                result[shareKey] = item.Value.Skip(count).ToDictionary(k => k.Key, v => v.Value);
+            }
+            return result;
         }
 
         private static void calSharesRiseRate(int dayType, Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> new_shares_quotes_date,Dictionary<long,List<long>> shares_plate_real,Dictionary<long,Dictionary<long,Plate_Tag_Force_Session_Info>> shares_force,Dictionary<long,Dictionary<long,Shares_Tag_Leader_Session_Info>> shares_Tag_Leader_Session, Dictionary<long, Dictionary<long, Shares_Tag_DayLeader_Session_Info>> shares_Tag_DayLeader_Session, Dictionary<long, Dictionary<long, Shares_Tag_MainArmy_Session_Info>> shares_Tag_MainArmy_Session, ref Shares_Statistic_Session_Obj result) 
         {
-            int CalDays = dayType == 1 ? 3 : dayType == 2 ? 5 : dayType == 3 ? 10 : dayType == 4 ? 15 : 0;
-            if (CalDays == 0)
-            {
-                return;
-            }
             SortedSet<Shares_Statistic_Session_Overall> tempSharesRank = calObjDays_Shares_Rank(dayType, result.Shares_Rank);
             Dictionary<long, SortedSet<Shares_Statistic_Session_Overall>> tempPlateRank = calObjDays_Plate_Rank(dayType, result.Plate_Rank);
+
             foreach (var share in result.Shares_Info)
             {
                 Dictionary<long, Statistic_Plate_Tag> tempPlateTag = calObjDays_Plate_Tag(dayType, share.Value.Plate_Tag);
@@ -189,9 +229,8 @@ namespace MealTicket_Web_Handler
                     continue;
                 }
                 var share_quote = new_shares_quotes_date[share.Key];
-                var shares_quotes_date_new = share_quote.OrderByDescending(e => e.Key).Take(CalDays).ToDictionary(k => k.Key, v => v.Value);
-                var lastQuote = shares_quotes_date_new.OrderByDescending(e => e.Key).FirstOrDefault().Value;
-                var tempQuote = shares_quotes_date_new.OrderBy(e => e.Value.ClosedPrice).FirstOrDefault().Value;
+                var lastQuote = share_quote.LastOrDefault().Value;
+                var tempQuote = share_quote.OrderBy(e => e.Value.ClosedPrice).FirstOrDefault().Value;
                 if (lastQuote == null || tempQuote == null)
                 {
                     continue;
@@ -210,8 +249,34 @@ namespace MealTicket_Web_Handler
                     RiseRate = RiseRate
                 };
                 tempSharesRank.Add(shares_Overall);
-                //股票所属真实板块
+
+                List<long> realPlate = new List<long>();
                 if (shares_plate_real.ContainsKey(share.Key))
+                {
+                    realPlate = shares_plate_real[share.Key];
+                }
+                foreach (var plate in share.Value.Plate_Dic)
+                {
+                    if (!tempPlateRank.ContainsKey(plate.Key))
+                    {
+                        tempPlateRank.Add(plate.Key,new SortedSet<Shares_Statistic_Session_Overall>());
+                    }
+                    bool IsReal = false;
+                    if (realPlate.Contains(plate.Key))
+                    {
+                        IsReal = true;
+                    }
+                    tempPlateRank[plate.Key].Add(new Shares_Statistic_Session_Overall 
+                    {
+                        SharesKey= shares_Overall.SharesKey,
+                        RealDays= shares_Overall.RealDays,
+                        RiseRate = shares_Overall.RiseRate,
+                        IsRealPlate= IsReal
+                    });
+                }
+
+                //股票所属真实板块
+                if (realPlate.Count()>0)
                 {
                     long forceKey = share.Key * 100 + dayType;
                     Dictionary<long, Plate_Tag_Force_Session_Info> forceInfo = new Dictionary<long, Plate_Tag_Force_Session_Info>();
@@ -234,14 +299,8 @@ namespace MealTicket_Web_Handler
                     {
                         mainArmy_info = shares_Tag_MainArmy_Session[share.Key];
                     }
-                    foreach (long plateId in shares_plate_real[share.Key])
+                    foreach (long plateId in realPlate)
                     {
-                        if (!tempPlateRank.ContainsKey(plateId))
-                        {
-                            tempPlateRank.Add(plateId, new SortedSet<Shares_Statistic_Session_Overall>());
-                        }
-                        tempPlateRank[plateId].Add(shares_Overall);
-
                         if (!tempPlateTag.ContainsKey(plateId))
                         {
                             tempPlateTag.Add(plateId, new Statistic_Plate_Tag());
@@ -273,52 +332,76 @@ namespace MealTicket_Web_Handler
 
         private static void calSharesOverallRiseRate(ref Shares_Statistic_Session_Obj result) 
         {
+            if (result.Shares_Rank == null)
+            {
+                return;
+            }
+            var Rank_3Days_dic = new Dictionary<long, Shares_Statistic_Session_Overall>();
+            var Rank_5Days_dic = new Dictionary<long, Shares_Statistic_Session_Overall>();
+            var Rank_10Days_dic = new Dictionary<long, Shares_Statistic_Session_Overall>();
+            var Rank_15Days_dic = new Dictionary<long, Shares_Statistic_Session_Overall>();
+            if (result.Shares_Rank.Rank_3Days != null && result.Shares_Rank.Rank_3Days.Count()>0)
+            {
+                Rank_3Days_dic = result.Shares_Rank.Rank_3Days.ToDictionary(k => k.SharesKey, v => v);
+            }
+            if (result.Shares_Rank.Rank_5Days != null && result.Shares_Rank.Rank_5Days.Count() > 0)
+            {
+                Rank_5Days_dic = result.Shares_Rank.Rank_5Days.ToDictionary(k => k.SharesKey, v => v);
+            }
+            if (result.Shares_Rank.Rank_10Days != null && result.Shares_Rank.Rank_10Days.Count() > 0)
+            {
+                Rank_10Days_dic = result.Shares_Rank.Rank_10Days.ToDictionary(k => k.SharesKey, v => v);
+            }
+            if (result.Shares_Rank.Rank_15Days != null && result.Shares_Rank.Rank_15Days.Count() > 0)
+            {
+                Rank_15Days_dic = result.Shares_Rank.Rank_15Days.ToDictionary(k => k.SharesKey, v => v);
+            }
             foreach (var item in result.Shares_Info)
             {
                 int totalRiseRate = 0;
                 int totalCount = 0;
 
-                if (result.Shares_Rank != null && result.Shares_Rank.Rank_3Days != null)
+                if (Rank_3Days_dic.ContainsKey(item.Key))
                 {
-                    var days3 = result.Shares_Rank.Rank_3Days.Where(e => e.SharesKey == item.Key).FirstOrDefault();
-                    if (days3 != null)
-                    {
-                        totalRiseRate += days3.RiseRate;
-                        totalCount++;
-                    }
+                    totalRiseRate += Rank_3Days_dic[item.Key].RiseRate;
+                    totalCount++;
                 }
-                if (result.Shares_Rank != null && result.Shares_Rank.Rank_5Days != null)
+                if (Rank_5Days_dic.ContainsKey(item.Key))
                 {
-                    var days5 = result.Shares_Rank.Rank_5Days.Where(e => e.SharesKey == item.Key).FirstOrDefault();
-                    if (days5 != null)
-                    {
-                        totalRiseRate += days5.RiseRate;
-                        totalCount++;
-                    }
+                    totalRiseRate += Rank_5Days_dic[item.Key].RiseRate;
+                    totalCount++;
                 }
-                if (result.Shares_Rank != null && result.Shares_Rank.Rank_10Days != null)
+                if (Rank_10Days_dic.ContainsKey(item.Key))
                 {
-                    var days10 = result.Shares_Rank.Rank_10Days.Where(e => e.SharesKey == item.Key).FirstOrDefault();
-                    if (days10 != null)
-                    {
-                        totalRiseRate += days10.RiseRate;
-                        totalCount++;
-                    }
+                    totalRiseRate += Rank_10Days_dic[item.Key].RiseRate;
+                    totalCount++;
                 }
-                if (result.Shares_Rank != null && result.Shares_Rank.Rank_15Days != null)
+                if (Rank_15Days_dic.ContainsKey(item.Key))
                 {
-                    var days15 = result.Shares_Rank.Rank_15Days.Where(e => e.SharesKey == item.Key).FirstOrDefault();
-                    if (days15 != null)
-                    {
-                        totalRiseRate += days15.RiseRate;
-                        totalCount++;
-                    }
+                    totalRiseRate += Rank_15Days_dic[item.Key].RiseRate;
+                    totalCount++;
                 }
                 if (totalCount == 0)
                 {
                     continue;
                 }
                 item.Value.OverallRiseRate = (int)Math.Round(totalRiseRate * 1.0 / totalCount, 0);
+
+                var tempOverall = new Shares_Statistic_Session_Overall
+                {
+                    SharesKey= item.Key,
+                    RiseRate= item.Value.OverallRiseRate
+                };
+                result.Shares_Rank.Rank_Overall.Add(tempOverall);
+
+                foreach (var plate in item.Value.Plate_Dic)
+                {
+                    if (!result.Plate_Rank.Rank_Overall.ContainsKey(plate.Key))
+                    {
+                        result.Plate_Rank.Rank_Overall.Add(plate.Key, new SortedSet<Shares_Statistic_Session_Overall>());
+                    }
+                    result.Plate_Rank.Rank_Overall[plate.Key].Add(tempOverall);
+                }
             }
         }
 

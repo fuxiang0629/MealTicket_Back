@@ -162,6 +162,16 @@ namespace MealTicket_Web_Handler
         /// </summary>
         public int RealDays { get; set; }
 
+        /// <summary>
+        /// 总市场排名
+        /// </summary>
+        public int TotalRank { get; set; }
+
+        /// <summary>
+        /// 是否真实板块
+        /// </summary>
+        public bool IsRealPlate { get; set; }
+
         public int CompareTo(Shares_Statistic_Session_Overall other)
         {
             return (other.RiseRate.CompareTo(this.RiseRate) > 0 ? 1 : -1);
@@ -293,6 +303,11 @@ namespace MealTicket_Web_Handler
         /// 股票15天排名
         /// </summary>
         public SortedSet<Shares_Statistic_Session_Overall> Rank_15Days { get; set; }
+
+        /// <summary>
+        /// 股票综合排名
+        /// </summary>
+        public SortedSet<Shares_Statistic_Session_Overall> Rank_Overall { get; set; }
     }
 
     public class Statistic_Plate_Rank_Obj
@@ -301,6 +316,7 @@ namespace MealTicket_Web_Handler
         public Dictionary<long, SortedSet<Shares_Statistic_Session_Overall>> Rank_5Days { get; set; }
         public Dictionary<long, SortedSet<Shares_Statistic_Session_Overall>> Rank_10Days { get; set; }
         public Dictionary<long, SortedSet<Shares_Statistic_Session_Overall>> Rank_15Days { get; set; }
+        public Dictionary<long, SortedSet<Shares_Statistic_Session_Overall>> Rank_Overall { get; set; }
     }
 
     public class Statistic_Plate_Tag_Obj

@@ -251,30 +251,31 @@ namespace MealTicket_Web_Handler.Model
             }
         }
 
+        public bool IsShowPlate { get; set; }
+
+        public int OverallRank 
+        {
+            get 
+            {
+                if (Rank == null)
+                {
+                    return int.MaxValue;
+                }
+                var temp = Rank.Where(e => e.PlateRank > 0).ToList();
+                if (temp.Count() == 0)
+                {
+                    return int.MaxValue;
+                }
+                return (int)(temp.Average(e => e.PlateRank) * 10000);
+            }
+        }
+
+        /// <summary>
+        /// 板块内综合排名
+        /// </summary>
+        public int OverallPlateRank { get; set; }
+
         public List<SharesRank> Rank { get; set; }
-    }
-
-    public class SharesRankInfo
-    {
-        /// <summary>
-        /// 实际天数
-        /// </summary>
-        public int RealDays { get; set; }
-
-        /// <summary>
-        /// 涨跌幅
-        /// </summary>
-        public int RiseRate { get; set; }
-
-        /// <summary>
-        /// 板块内排名
-        /// </summary>
-        public int PlateRank { get; set; }
-
-        /// <summary>
-        /// 总排名
-        /// </summary>
-        public int TotalRank { get; set; }
     }
 
     public class GetPlateLeaderModelSharesListRequest:PageRequest

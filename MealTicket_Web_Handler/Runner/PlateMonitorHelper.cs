@@ -336,19 +336,21 @@ namespace MealTicket_Web_Handler.Runner
                     plateListDic[plate.Key] = temp;
                 }
             }
+            Dictionary<long, Dictionary<DateTime, PlateMonitor>> tempPlateMonitorMinSessionDic = new Dictionary<long, Dictionary<DateTime, PlateMonitor>>();
             foreach (var item in PlateMonitorMinSessionDic)
             {
-                if (plateListDic.ContainsKey(item.Key) && plateListDic[item.Key].CalCount>0)
+                Dictionary<DateTime, PlateMonitor> tempPm = new Dictionary<DateTime, PlateMonitor>();
+                if (plateListDic.ContainsKey(item.Key) && plateListDic[item.Key].CalCount > 0)
                 {
                     int calCount = plateListDic[item.Key].CalCount;
-                    item.Value[timeNow] = new PlateMonitor 
+                    item.Value[timeNow] = new PlateMonitor
                     {
-                        PlateId=item.Key,
-                        LeaderIndex= new PlateIndexInfo
+                        PlateId = item.Key,
+                        LeaderIndex = new PlateIndexInfo
                         {
                             IndexRate = plateListDic[item.Key].LeaderIndex.IndexRate / calCount,
                             IndexScore = plateListDic[item.Key].LeaderIndex.IndexScore / calCount,
-                            Coefficient= plateListDic[item.Key].LeaderIndex.Coefficient / calCount,
+                            Coefficient = plateListDic[item.Key].LeaderIndex.Coefficient / calCount,
                         },
                         SharesLinkageIndex = new PlateIndexInfo
                         {
@@ -369,10 +371,17 @@ namespace MealTicket_Web_Handler.Runner
                             Coefficient = plateListDic[item.Key].NewHighIndex.Coefficient / calCount,
                         },
                     };
-                    var temp = item.Value;
-                    temp = item.Value.OrderByDescending(e => e.Key).Take(16).ToDictionary(k => k.Key, v => v.Value);
+
+                    SortedDictionary<DateTime, PlateMonitor> temp = new SortedDictionary<DateTime, PlateMonitor>(item.Value);
+                    int count = item.Value.Count();
+                    count = count < 16 ? 0 : (count - 16);
+                    temp = new SortedDictionary<DateTime, PlateMonitor>(temp.Skip(count).ToDictionary(k => k.Key, v => v.Value));
+                    tempPm = temp.Reverse().ToDictionary(k=>k.Key,v=>v.Value);
                 }
+
+                tempPlateMonitorMinSessionDic.Add(item.Key, tempPm);
             }
+            PlateMonitorMinSessionDic = tempPlateMonitorMinSessionDic;
             _sessionReadWriteLock.ReleaseWriterLock();
         }
 
@@ -420,25 +429,25 @@ namespace MealTicket_Web_Handler.Runner
 
         private void UpdateSessionContainer()
         {
-            Logger.WriteFileLog("11:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            ToWriteDebugLog("11:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             var DayLeaderSession = Singleton.Instance.sessionHandler.GetShares_Tag_DayLeader_Session();
-            Logger.WriteFileLog("12:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            ToWriteDebugLog("12:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             var LeaderSession = Singleton.Instance.sessionHandler.GetShares_Tag_Leader_Session();
-            Logger.WriteFileLog("13:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            ToWriteDebugLog("13:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             var MainArmySession = Singleton.Instance.sessionHandler.GetShares_Tag_MainArmy_Session();
-            Logger.WriteFileLog("14:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            ToWriteDebugLog("14:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             var SettingPlateIndexSession = Singleton.Instance.sessionHandler.GetSetting_Plate_Index_Session();
-            Logger.WriteFileLog("15:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            ToWriteDebugLog("15:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             var SettingPlateLinkageSession = Singleton.Instance.sessionHandler.GetSetting_Plate_Linkage_Session();
-            Logger.WriteFileLog("16:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            ToWriteDebugLog("16:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             var SharesQuotesLastSession = Singleton.Instance.sessionHandler.GetShares_Quotes_Last_Session();
-            Logger.WriteFileLog("17:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            ToWriteDebugLog("17:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             var PlateQuotesLastSession = Singleton.Instance.sessionHandler.GetPlate_Quotes_Last_Session();
-            Logger.WriteFileLog("18:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            ToWriteDebugLog("18:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             var Plate_Shares_Rel_Session = Singleton.Instance.sessionHandler.GetPlate_Shares_Rel_Session();
-            Logger.WriteFileLog("19:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            ToWriteDebugLog("19:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             var SettingPlateSharesLinkageSession = Singleton.Instance.sessionHandler.GetSetting_Plate_Shares_Linkage_Session();
-            Logger.WriteFileLog("110:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            ToWriteDebugLog("110:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             var PlateBasePlate = Singleton.Instance.sessionHandler.GetPlate_Base_Session();
             sessionContainer = new SessionContainer
             {
@@ -455,89 +464,102 @@ namespace MealTicket_Web_Handler.Runner
             };
         }
 
+        private void ToWriteDebugLog(string message,Exception ex) 
+        {
+            return;
+            Logger.WriteFileLog(message, ex);
+        }
+
         public void _doCalTask(object obj) 
         {
-            Logger.WriteFileLog("1:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
-            var time_limit = Singleton.Instance.sessionHandler.GetShares_Limit_Time_Session();
-            if (!DbHelper.CheckTradeTime7(null, time_limit) && !IsFirst)
+            try
             {
-                ChangeTimer();
-                return;
-            }
+                ToWriteDebugLog("1:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                var time_limit = Singleton.Instance.sessionHandler.GetShares_Limit_Time_Session();
+                //if (!DbHelper.CheckTradeTime7(null, time_limit) && !IsFirst)
+                //{
+                //    ChangeTimer();
+                //    return;
+                //}
 
-            IsFirst = false;
-            UpdateSessionContainer();//获取公用缓存
+                IsFirst = false;
+                UpdateSessionContainer();//获取公用缓存
 
-            Logger.WriteFileLog("2:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                ToWriteDebugLog("2:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
 
-            int coefficient = 0;
-            var newHighResult = CheckNewHeightIndex(ref coefficient);
+                int coefficient = 0;
+                var newHighResult = CheckNewHeightIndex(ref coefficient);
 
-            Logger.WriteFileLog("3:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
-            WaitHandle[] taskArr = new WaitHandle[DaysType.Count()];
-            for (int idx = 0; idx < DaysType.Count(); idx++)
-            {
-                int dayType = DaysType[idx];
-                taskArr[idx] = TaskThread.CreateTask((e) =>
+                ToWriteDebugLog("3:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                WaitHandle[] taskArr = new WaitHandle[DaysType.Count()];
+                for (int idx = 0; idx < DaysType.Count(); idx++)
                 {
-                    List<PlateMonitor> plateMonitors = new List<PlateMonitor>();
-                    if (dayType == 4)
+                    int dayType = DaysType[idx];
+                    taskArr[idx] = TaskThread.CreateTask((e) =>
                     {
-                        Logger.WriteFileLog("31:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
-                    }
-                    var plate_real_shares = Singleton.Instance.sessionHandler.GetPlate_Real_Shares_Session(dayType);
-                    if (dayType == 4)
-                    {
-                        Logger.WriteFileLog("33:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
-                    }
-                    foreach (var item in sessionContainer.PlateBasePlate)
-                    {
-                        if (!plate_real_shares.ContainsKey(item.Key))
+                        List<PlateMonitor> plateMonitors = new List<PlateMonitor>();
+                        if (dayType == 4)
                         {
-                            continue;
+                            ToWriteDebugLog("31:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                         }
-                        PlateIndexInfo LeaderIndex = new PlateIndexInfo();
-                        CalLeaderIndex(dayType, item.Key, ref LeaderIndex);
-                        PlateIndexInfo PlateLinkageIndex = new PlateIndexInfo();
-                        CalPlateLinkageIndex(item.Key, dayType, ref PlateLinkageIndex, plate_real_shares);
-                        PlateIndexInfo SharesLinkageIndex = new PlateIndexInfo();
-                        CalSharesLinkageIndex(item.Key, plate_real_shares, ref SharesLinkageIndex);
-                        PlateIndexInfo NewHighIndex = new PlateIndexInfo();
-                        CalNewHeightIndex(item.Key, coefficient, newHighResult, plate_real_shares, ref NewHighIndex);
-                        PlateVolumeInfo PlateVolume = new PlateVolumeInfo();
-                        CalVolumeRate(item.Key, ref PlateVolume);
-                        plateMonitors.Add(new PlateMonitor
+                        var plate_real_shares = Singleton.Instance.sessionHandler.GetPlate_Real_Shares_Session(dayType);
+                        if (dayType == 4)
                         {
-                            PlateId = item.Key,
-                            LeaderIndex = LeaderIndex,
-                            PlateLinkageIndex = PlateLinkageIndex,
-                            SharesLinkageIndex = SharesLinkageIndex,
-                            NewHighIndex = NewHighIndex,
-                            PlateVolume = PlateVolume
-                        });
-                    }
-                    if (dayType == 4)
-                    {
-                        Logger.WriteFileLog("34:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
-                    }
-                    SetSession(dayType, plateMonitors);
-                    if (dayType == 4)
-                    {
-                        Logger.WriteFileLog("35:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
-                    }
-                    InsertIntoDataBase(dayType, plateMonitors);
-                    if (dayType == 4)
-                    {
-                        Logger.WriteFileLog("36:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
-                    }
-                }, null);
+                            ToWriteDebugLog("33:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                        }
+                        foreach (var item in sessionContainer.PlateBasePlate)
+                        {
+                            if (!plate_real_shares.ContainsKey(item.Key))
+                            {
+                                continue;
+                            }
+                            PlateIndexInfo LeaderIndex = new PlateIndexInfo();
+                            CalLeaderIndex(dayType, item.Key, ref LeaderIndex);
+                            PlateIndexInfo PlateLinkageIndex = new PlateIndexInfo();
+                            CalPlateLinkageIndex(item.Key, dayType, ref PlateLinkageIndex, plate_real_shares);
+                            PlateIndexInfo SharesLinkageIndex = new PlateIndexInfo();
+                            CalSharesLinkageIndex(item.Key, plate_real_shares, ref SharesLinkageIndex);
+                            PlateIndexInfo NewHighIndex = new PlateIndexInfo();
+                            CalNewHeightIndex(item.Key, coefficient, newHighResult, plate_real_shares, ref NewHighIndex);
+                            PlateVolumeInfo PlateVolume = new PlateVolumeInfo();
+                            CalVolumeRate(item.Key, ref PlateVolume);
+                            plateMonitors.Add(new PlateMonitor
+                            {
+                                PlateId = item.Key,
+                                LeaderIndex = LeaderIndex,
+                                PlateLinkageIndex = PlateLinkageIndex,
+                                SharesLinkageIndex = SharesLinkageIndex,
+                                NewHighIndex = NewHighIndex,
+                                PlateVolume = PlateVolume
+                            });
+                        }
+                        if (dayType == 4)
+                        {
+                            ToWriteDebugLog("34:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                        }
+                        SetSession(dayType, plateMonitors);
+                        if (dayType == 4)
+                        {
+                            ToWriteDebugLog("35:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                        }
+                        InsertIntoDataBase(dayType, plateMonitors);
+                        if (dayType == 4)
+                        {
+                            ToWriteDebugLog("36:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                        }
+                    }, null);
+                }
+                TaskThread.WaitAll(taskArr, Timeout.Infinite);
+                TaskThread.CloseAllTasks(taskArr);
+                ToWriteDebugLog("4:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                SetMinSession();
+                ToWriteDebugLog("5:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                ChangeTimer();
             }
-            TaskThread.WaitAll(taskArr,Timeout.Infinite);
-            TaskThread.CloseAllTasks(taskArr);
-            Logger.WriteFileLog("4:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
-            SetMinSession();
-            Logger.WriteFileLog("5:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
-            ChangeTimer();
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("计算板块动能失败",ex);
+            }
         }
 
         /// <summary>
@@ -887,16 +909,16 @@ namespace MealTicket_Web_Handler.Runner
             }
             else
             {
-                Logger.WriteFileLog("21:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                ToWriteDebugLog("21:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                 coefficient = sessionContainer.SettingPlateIndexSession[4].Coefficient;
                 int calDays = sessionContainer.SettingPlateIndexSession[4].CalDays;
                 int calPriceType = sessionContainer.SettingPlateIndexSession[4].CalPriceType;
-                Logger.WriteFileLog("22:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                ToWriteDebugLog("22:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                 var shares_quotes_date = Singleton.Instance.sessionHandler.GetShares_Quotes_Date_Sort_Session(calDays);
-                Logger.WriteFileLog("23:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                ToWriteDebugLog("23:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
 
                 var shares_quote_last = sessionContainer.SharesQuotesLastSession;
-                Logger.WriteFileLog("24:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                ToWriteDebugLog("24:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                 foreach (var item in shares_quote_last)
                 {
                     if (!shares_quotes_date.SessionDic.ContainsKey(item.Key))
@@ -942,7 +964,7 @@ namespace MealTicket_Web_Handler.Runner
                         result.Add(item.Key,true);
                     }
                 }
-                Logger.WriteFileLog("25:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                ToWriteDebugLog("25:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             }
             return result;
         }

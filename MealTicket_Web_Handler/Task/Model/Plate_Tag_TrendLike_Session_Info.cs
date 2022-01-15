@@ -36,6 +36,7 @@ namespace MealTicket_Web_Handler
 
     public class Plate_Tag_TrendLike_Session_Obj
     {
+        public List<Plate_Tag_TrendLike_Session_Info> TrendLike_List { get; set; }
         public Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>> Plate_Shares_TrendLike_Session { get; set; }
 
         public Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>> Shares_Plate_TrendLike_Session { get; set; }

@@ -32,10 +32,12 @@ namespace MealTicket_Web_Handler
 
         private static Plate_Tag_TrendLike_Session_Obj BuildDic(List<Plate_Tag_TrendLike_Session_Info> dataList)
         {
+            List<Plate_Tag_TrendLike_Session_Info> trendLike_List = new List<Plate_Tag_TrendLike_Session_Info>();
             Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>> session_Dic1 = new Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>>();
             Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>> session_Dic2 = new Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>>();
             foreach (var item in dataList)
             {
+                trendLike_List.Add(item);
                 long key1 = long.Parse(item.SharesCode) * 10 + item.Market;
                 long key2 = item.PlateId;
                 if (!session_Dic1.ContainsKey(key1))
@@ -53,54 +55,72 @@ namespace MealTicket_Web_Handler
             return new Plate_Tag_TrendLike_Session_Obj 
             {
                 Shares_Plate_TrendLike_Session= session_Dic1,
-                Plate_Shares_TrendLike_Session= session_Dic2
+                Plate_Shares_TrendLike_Session= session_Dic2,
+                TrendLike_List= trendLike_List
             };
         }
 
         public static Plate_Tag_TrendLike_Session_Obj UpdateSessionPart(object newData)
         {
             var newDataResult = newData as List<Plate_Tag_TrendLike_Session_Info>;
-            var resultData = new Plate_Tag_TrendLike_Session_Obj();
-            resultData.Shares_Plate_TrendLike_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_TrendLike_Session_ByShares(false);
-            resultData.Plate_Shares_TrendLike_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_TrendLike_Session_ByPlate(false);
+
+            var isAuto_shares = Singleton.Instance.sessionHandler.GetShares_PlateTag_IsAuto_Session(false);
+            var oldData = Singleton.Instance.sessionHandler.GetPlate_Tag_TrendLike_Session_List(false);
+
+            List<Plate_Tag_TrendLike_Session_Info> resultSource = new List<Plate_Tag_TrendLike_Session_Info>();
+            foreach (var item in oldData)
+            {
+                long key = long.Parse(item.SharesCode) * 10 + item.Market;
+                if (isAuto_shares.ContainsKey(key))
+                {
+                    resultSource.Add(item);
+                }
+            }
             foreach (var item in newDataResult)
+            {
+                long key = long.Parse(item.SharesCode) * 10 + item.Market;
+                if (isAuto_shares.ContainsKey(key))
+                {
+                    continue;
+                }
+                resultSource.Add(item);
+            }
+            var result = new Plate_Tag_TrendLike_Session_Obj();
+            result.Shares_Plate_TrendLike_Session = new Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>>();
+            result.Plate_Shares_TrendLike_Session = new Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>>();
+            result.TrendLike_List = new List<Plate_Tag_TrendLike_Session_Info>();
+            foreach (var item in resultSource)
             {
                 if (!item.IsTrendLike)
                 {
                     continue;
                 }
+                result.TrendLike_List.Add(item);
+
                 long key1 = long.Parse(item.SharesCode) * 10 + item.Market;
                 long key2 = item.PlateId;
-                if (!resultData.Shares_Plate_TrendLike_Session.ContainsKey(key1))
+                if (!result.Shares_Plate_TrendLike_Session.ContainsKey(key1))
                 {
-                    resultData.Shares_Plate_TrendLike_Session.Add(key1, new Dictionary<long, Plate_Tag_TrendLike_Session_Info>());
+                    result.Shares_Plate_TrendLike_Session.Add(key1, new Dictionary<long, Plate_Tag_TrendLike_Session_Info>());
                 }
+                if (!result.Shares_Plate_TrendLike_Session[key1].ContainsKey(key2))
+                {
+                    result.Shares_Plate_TrendLike_Session[key1].Add(key2, new Plate_Tag_TrendLike_Session_Info());
+                }
+                result.Shares_Plate_TrendLike_Session[key1][key2] = item;
 
-                if (!resultData.Shares_Plate_TrendLike_Session[key1].ContainsKey(key2))
-                {
-                    resultData.Shares_Plate_TrendLike_Session[key1].Add(key2, item);
-                }
-                else
-                {
-                    resultData.Shares_Plate_TrendLike_Session[key1][key2] = item;
-                }
 
-                if (!resultData.Plate_Shares_TrendLike_Session.ContainsKey(key2))
+                if (!result.Plate_Shares_TrendLike_Session.ContainsKey(key2))
                 {
-                    resultData.Plate_Shares_TrendLike_Session.Add(key2, new Dictionary<long, Plate_Tag_TrendLike_Session_Info>());
+                    result.Plate_Shares_TrendLike_Session.Add(key2, new Dictionary<long, Plate_Tag_TrendLike_Session_Info>());
                 }
-
-                if (!resultData.Plate_Shares_TrendLike_Session[key2].ContainsKey(key1))
+                if (!result.Plate_Shares_TrendLike_Session[key2].ContainsKey(key1))
                 {
-                    resultData.Plate_Shares_TrendLike_Session[key2].Add(key1, item);
+                    result.Plate_Shares_TrendLike_Session[key2].Add(key1, new Plate_Tag_TrendLike_Session_Info());
                 }
-                else
-                {
-                    resultData.Plate_Shares_TrendLike_Session[key2][key1] = item;
-                }
+                result.Plate_Shares_TrendLike_Session[key2][key1] = item;
             }
-
-            return resultData;
+            return result;
         }
 
         public static Plate_Tag_TrendLike_Session_Obj CopySessionData(object objData)
@@ -109,6 +129,9 @@ namespace MealTicket_Web_Handler
             var resultData = new Plate_Tag_TrendLike_Session_Obj();
             resultData.Shares_Plate_TrendLike_Session = new Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>>();
             resultData.Plate_Shares_TrendLike_Session = new Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>>();
+
+            resultData.TrendLike_List = new List<Plate_Tag_TrendLike_Session_Info>(data.TrendLike_List);
+
             foreach (var item in data.Shares_Plate_TrendLike_Session)
             {
                 if (!resultData.Shares_Plate_TrendLike_Session.ContainsKey(item.Key))

@@ -17,26 +17,27 @@ namespace MealTicket_Web_Handler.Runner
             Session_New.GET_DATA_CXT gdc = new Session_New.GET_DATA_CXT(SessionHandler.GET_DATA_CMD_ID_PlATETAG_CALCULATE, null);
 
             Singleton.Instance.sessionHandler.GetDataWithLock(string.Empty, gdc);
-<<<<<<< HEAD
-
-            //Singleton.Instance.sessionHandler.WriteToSharesQuoteCache();
-            //Singleton.Instance.sessionHandler.WriteToPlateQuoteCache();
-=======
->>>>>>> 5a1707417dc4d61ff2e73c7dc661ec5d27060817
-
+        }
+        private static void ToWriteDebugLog(string message, Exception ex)
+        {
+            return;
+            Logger.WriteFileLog(message, ex);
         }
         /// <summary>
         /// 计算板块标记
         /// </summary>
         public static void _Calculate()
         {
+            ToWriteDebugLog("1：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> Plate_Quotes_Date_Session = Singleton.Instance.sessionHandler.GetPlate_Quotes_Date_Session(Singleton.Instance.TrendLikeDays,false);
             Dictionary<long, Plate_Quotes_Session_Info> Plate_Quotes_Today_Session = Singleton.Instance.sessionHandler.GetPlate_Quotes_Today_Session(false);
             Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> Shares_Quotes_Date_Session = Singleton.Instance.sessionHandler.GetShares_Quotes_Date_Session(Singleton.Instance.TrendLikeDays, false);
             Dictionary<long, Shares_Quotes_Session_Info> Shares_Quotes_Today_Session = Singleton.Instance.sessionHandler.GetShares_Quotes_Today_Session(false);
 
             List<SharesPlateRelInfo_Session> PlateRel = new List<SharesPlateRelInfo_Session>();
+            ToWriteDebugLog("2：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             ToGetPlateRelSession(ref PlateRel);
+            ToWriteDebugLog("3：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
 
             var calTypeArr = System.Enum.GetValues(typeof(Enum_PlateTag_CalType));
             int taskCount = calTypeArr.Length;
@@ -52,14 +53,55 @@ namespace MealTicket_Web_Handler.Runner
                 idx++;
             }
             Task.WaitAll(taskArr);
+            ToWriteDebugLog("4：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
         }
 
         private static void ToGetPlateRelSession(ref List<SharesPlateRelInfo_Session> PlateRel) 
         {
-            PlateRel = (from item in Singleton.Instance._SharesPlateSession.GetSessionData()
-                        join item2 in Singleton.Instance._SharesPlateRelSession.GetSessionData() on item.PlateId equals item2.PlateId
-                        where item.BaseStatus == 1 && item.PlateType == 3
-                        select item2).ToList();
+            var shares_base = Singleton.Instance.sessionHandler.GetShares_Base_Session(false);
+            var plate_base = Singleton.Instance.sessionHandler.GetPlate_Base_Session(false);
+            var shares_plate_rel = Singleton.Instance.sessionHandler.GetShares_Plate_Rel_Session(false);
+            var limit_session = Singleton.Instance.sessionHandler.GetShares_Limit_Session(false);
+            var shares_IsAuto = Singleton.Instance.sessionHandler.GetShares_PlateTag_IsAuto_Session(false);
+            foreach (var item in shares_base)
+            {
+                if (shares_IsAuto.ContainsKey(item.Key))
+                {
+                    continue;
+                }
+                if (limit_session.Contains(item.Key))
+                {
+                    continue;
+                }
+                if (!shares_plate_rel.ContainsKey(item.Key))
+                {
+                    continue;
+                }
+                var plateList = shares_plate_rel[item.Key];
+                foreach (var plate in plateList)
+                {
+                    if (!plate_base.ContainsKey(plate.PlateId))
+                    {
+                        continue;
+                    }
+                    var baseP = plate_base[plate.PlateId];
+                    if (baseP.PlateType != 3)
+                    {
+                        continue;
+                    }
+                    if (baseP.BaseStatus != 1)
+                    {
+                        continue;
+                    }
+                    PlateRel.Add(new SharesPlateRelInfo_Session 
+                    {
+                        SharesCode= item.Value.SharesCode,
+                        Market= item.Value.Market,
+                        PlateId=plate.PlateId,
+                        PlateType= baseP.PlateType
+                    });
+                }
+            }
         }
 
         private static void _calculate(Enum_PlateTag_CalType type, List<SharesPlateRelInfo_Session> plateRel, Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> _plate_Quotes_Date_Session, Dictionary<long, Plate_Quotes_Session_Info> _plate_Quotes_Today_Session, Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> _shares_Quotes_Date_Session, Dictionary<long, Shares_Quotes_Session_Info> _shares_Quotes_Today_Session)
@@ -107,11 +149,16 @@ namespace MealTicket_Web_Handler.Runner
             }
             Task.WaitAll(taskArr);
             //设置缓存
-            Singleton.Instance.sessionHandler.UpdateSessionPart((int)SessionHandler.Enum_Excute_Type.Plate_Tag_Force_Session, new_force_data);
+            var sessionData=Singleton.Instance.sessionHandler.UpdateSessionPart((int)SessionHandler.Enum_Excute_Type.Plate_Tag_Force_Session, new_force_data);
             //入库
             try
             {
-                DoForceToDataBase(new_force_data);
+                var newList = (sessionData as Plate_Tag_Force_Session_Obj).Force_List;
+                if (newList == null)
+                {
+                    return;
+                }
+                DoForceToDataBase(newList);
             }
             catch (Exception ex)
             {
@@ -298,15 +345,8 @@ namespace MealTicket_Web_Handler.Runner
             table.Columns.Add("IsForce1", typeof(bool));
             table.Columns.Add("IsForce2", typeof(bool));
 
-            var tag_setting = Singleton.Instance.sessionHandler.GetPlate_Tag_Setting_Session(false);
             foreach (var item in new_data_list)
             {
-                long key = long.Parse(item.SharesCode) * 10 + item.Market;
-                if (!CheckSharesAuto(key, tag_setting))
-                {
-                    continue;
-                }
-
                 DataRow row = table.NewRow();
                 row["PlateId"] = item.PlateId;
                 row["Market"] = item.Market;
@@ -349,11 +389,16 @@ namespace MealTicket_Web_Handler.Runner
             _buidTrendLikePar(diffDay, Plate_Quotes_Date_Session, Shares_Quotes_Date_Session, ref _plate_Quotes_Date_Session, ref _shares_Quotes_Date_Session);
             List<Plate_Tag_TrendLike_Session_Info> new_trendlike_data = _doTrendLikeHandler(plateRelDic, _plate_Quotes_Date_Session, Plate_Quotes_Today_Session, _shares_Quotes_Date_Session, Shares_Quotes_Today_Session);
             //设置缓存
-            Singleton.Instance.sessionHandler.UpdateSessionPart((int)SessionHandler.Enum_Excute_Type.Plate_Tag_TrendLike_Session, new_trendlike_data);
+            var sessionData = Singleton.Instance.sessionHandler.UpdateSessionPart((int)SessionHandler.Enum_Excute_Type.Plate_Tag_TrendLike_Session, new_trendlike_data);
             //入库
             try
             {
-                DoTrendLikeToDataBase(new_trendlike_data);
+                var newList = (sessionData as Plate_Tag_TrendLike_Session_Obj).TrendLike_List;
+                if (newList == null)
+                {
+                    return;
+                }
+                DoTrendLikeToDataBase(newList);
             }
             catch (Exception ex)
             {
@@ -469,14 +514,8 @@ namespace MealTicket_Web_Handler.Runner
             table.Columns.Add("IsTrendLike", typeof(bool));
             table.Columns.Add("Score", typeof(int));
 
-            var tag_setting = Singleton.Instance.sessionHandler.GetPlate_Tag_Setting_Session(false);
             foreach (var item in new_data_list)
             {
-                long key = long.Parse(item.SharesCode) * 10 + item.Market;
-                if (!CheckSharesAuto(key, tag_setting))
-                {
-                    continue;
-                }
                 DataRow row = table.NewRow();
                 row["PlateId"] = item.PlateId;
                 row["Market"] = item.Market;

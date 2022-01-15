@@ -43,6 +43,11 @@ namespace MealTicket_Web_Handler.Model
         public int PlateRate { get; set; }
 
         /// <summary>
+        /// 综合涨幅
+        /// </summary>
+        public int OverallRiseRate { get; set; }
+
+        /// <summary>
         /// 板块市场排名
         /// </summary>
         public int PlateRank { get; set; }

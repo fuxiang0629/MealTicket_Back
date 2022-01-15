@@ -44,6 +44,31 @@ namespace MealTicket_Web_Handler
         }
 
         /// <summary>
+        /// 最高价
+        /// </summary>
+        public long MaxPrice { get; set; }
+
+        /// <summary>
+        /// 最低价
+        /// </summary>
+        public long MinPrice { get; set; }
+
+        /// <summary>
+        /// 开盘价
+        /// </summary>
+        public long OpenedPrice { get; set; }
+
+        /// <summary>
+        /// 成交额
+        /// </summary>
+        public long DealAmount { get; set; }
+
+        /// <summary>
+        /// 成交量
+        /// </summary>
+        public long DealCount { get; set; }
+
+        /// <summary>
         /// 真实天数（计算板块排名用）
         /// </summary>
         public int RealDays { get; set; }

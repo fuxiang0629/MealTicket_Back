@@ -19,14 +19,11 @@ namespace MealTicket_Web_Handler.Runner
         {
             GET_DATA_CXT gdc = new GET_DATA_CXT(GET_DATA_CMD_ID_SHARESTAGCALHELPER_CALCULATE, null);
             Singleton.Instance.sessionHandler.GetDataWithLock(string.Empty, gdc);
-
-<<<<<<< HEAD
-            //Singleton.Instance.sessionHandler.WriteToSharesQuoteCache();
-            //Singleton.Instance.sessionHandler.WriteToPlateQuoteCache();
-=======
-            Singleton.Instance.sessionHandler.GetDataWithLock(string.Empty, gdc);
-
->>>>>>> 5a1707417dc4d61ff2e73c7dc661ec5d27060817
+        }
+        private static void ToWriteDebugLog(string message, Exception ex)
+        {
+            return;
+            Logger.WriteFileLog(message, ex);
         }
         /// <summary>
         /// 计算股票标签
@@ -35,6 +32,7 @@ namespace MealTicket_Web_Handler.Runner
         {
             try
             {
+                ToWriteDebugLog("1：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                 Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> Plate_Quotes_Date_Session = Singleton.Instance.sessionHandler.GetPlate_Quotes_Date_Session(0, false);
                 Dictionary<long, Plate_Quotes_Session_Info> Plate_Quotes_Today_Session = Singleton.Instance.sessionHandler.GetPlate_Quotes_Today_Session(false);
                 Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> Shares_Quotes_Date_Session = Singleton.Instance.sessionHandler.GetShares_Quotes_Date_Session(0, false);
@@ -44,8 +42,10 @@ namespace MealTicket_Web_Handler.Runner
                 Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>> Plate_Tag_TrendLike_Session = Singleton.Instance.sessionHandler.GetPlate_Tag_TrendLike_Session_ByShares(false);
                 Dictionary<int, List<Plate_Shares_Rel_Tag_Setting_Session_Info>> Plate_Shares_Rel_Tag_Setting_Session = Singleton.Instance.sessionHandler.GetPlate_Shares_Rel_Tag_Setting_Session(false);
                 Dictionary<long, Shares_Base_Session_Info> Shares_Base_Session = Singleton.Instance.sessionHandler.GetShares_Base_Session(false);
+                ToWriteDebugLog("2：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                 List<SharesPlateRelInfo_Session> PlateRel = new List<SharesPlateRelInfo_Session>();
                 ToGetPlateRelSession(Shares_Base_Session, ref PlateRel);
+                ToWriteDebugLog("3：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
 
                 var calTypeArr = System.Enum.GetValues(typeof(Enum_SharesTag_CalType));
                 int taskCount = calTypeArr.Length;
@@ -62,6 +62,7 @@ namespace MealTicket_Web_Handler.Runner
                 }
                 TaskThread.WaitAll(taskArr, Timeout.Infinite);
                 TaskThread.CloseAllTasks(taskArr);
+                ToWriteDebugLog("4：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             }
             catch (Exception ex) { }
 
@@ -422,7 +423,7 @@ namespace MealTicket_Web_Handler.Runner
                     {
                         continue;
                     }
-                    today_info = shares_quotes_date_dic.OrderByDescending(e => e.Key).FirstOrDefault().Value;
+                    today_info = shares_quotes_date_dic.FirstOrDefault().Value;
                 }
                 else
                 {
@@ -596,7 +597,7 @@ namespace MealTicket_Web_Handler.Runner
                 Shares_Quotes_Session_Info today_info = new Shares_Quotes_Session_Info();
                 if (!_shares_Quotes_Today_Session.ContainsKey(key))
                 {
-                    today_info = shares_quotes_date_dic.OrderByDescending(e => e.Key).FirstOrDefault().Value;
+                    today_info = shares_quotes_date_dic.FirstOrDefault().Value;
                 }
                 else
                 {
@@ -759,12 +760,12 @@ namespace MealTicket_Web_Handler.Runner
             }
             foreach (var item in Plate_Quotes_Date_Session)
             {
-                var temp = item.Value.OrderByDescending(e => e.Key).Take(takeCount).ToDictionary(k => k.Key, v => v.Value);
+                var temp = item.Value.Take(takeCount).ToDictionary(k => k.Key, v => v.Value);
                 _plate_Quotes_Date_Session.Add(item.Key, temp);
             }
             foreach (var item in Shares_Quotes_Date_Session)
             {
-                var temp = item.Value.OrderByDescending(e => e.Key).Take(takeCount).ToDictionary(k => k.Key, v => v.Value);
+                var temp = item.Value.Take(takeCount).ToDictionary(k => k.Key, v => v.Value);
                 _shares_Quotes_Date_Session.Add(item.Key, temp);
             }
         }

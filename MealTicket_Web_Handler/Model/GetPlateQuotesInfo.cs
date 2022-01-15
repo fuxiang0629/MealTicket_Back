@@ -62,6 +62,16 @@ namespace MealTicket_Web_Handler.Model
         public int Day15Rank { get; set; }
 
         public int Day15RealDays { get; set; }
+
+        /// <summary>
+        /// 综合涨跌幅
+        /// </summary>
+        public int OverallRiseRate { get; set; }
+
+        /// <summary>
+        /// 综合排名
+        /// </summary>
+        public int OverallRank { get; set; }
     }
 
     public class PlateQuotesInfo
