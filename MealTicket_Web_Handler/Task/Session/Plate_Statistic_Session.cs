@@ -36,7 +36,8 @@ namespace MealTicket_Web_Handler
             var plate_quotes_date = Singleton.Instance.sessionHandler.GetPlate_Quotes_Date_Session(0,false);
             var plate_quotes_today = Singleton.Instance.sessionHandler.GetPlate_Quotes_Today_Session(false);
 
-            int[] daysType = Singleton.Instance.SharesLeaderDaysType;//计算天数类型
+            //int[] daysType = Singleton.Instance.SharesLeaderDaysType;//计算天数类型
+            int[] daysType = { 1, 2, 3, 4 };//计算天数类型
             ToWriteDebugLog("2：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             calPlateBaseInfo(plate_base, plate_quotes, ref result);
             ToWriteDebugLog("3：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);

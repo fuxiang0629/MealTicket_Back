@@ -44,7 +44,7 @@ namespace MealTicket_Web_Handler.Runner
                 Dictionary<long, Shares_Base_Session_Info> Shares_Base_Session = Singleton.Instance.sessionHandler.GetShares_Base_Session(false);
                 ToWriteDebugLog("2：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                 List<SharesPlateRelInfo_Session> PlateRel = new List<SharesPlateRelInfo_Session>();
-                ToGetPlateRelSession(Shares_Base_Session, ref PlateRel);
+                ToGetPlateRelSession(ref PlateRel);
                 ToWriteDebugLog("3：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
 
                 var calTypeArr = System.Enum.GetValues(typeof(Enum_SharesTag_CalType));
@@ -68,7 +68,7 @@ namespace MealTicket_Web_Handler.Runner
 
         }
 
-        private static void ToGetPlateRelSession(Dictionary<long, Shares_Base_Session_Info> Shares_Base_Session,ref List<SharesPlateRelInfo_Session> PlateRel)
+        private static void ToGetPlateRelSession(ref List<SharesPlateRelInfo_Session> PlateRel)
         {
             var plate_base = Singleton.Instance.sessionHandler.GetPlate_Base_Session(false);
             var plate_shares_rel = Singleton.Instance.sessionHandler.GetPlate_Shares_Rel_Session(false);

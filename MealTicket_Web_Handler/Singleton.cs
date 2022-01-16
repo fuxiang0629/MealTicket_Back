@@ -154,7 +154,6 @@ namespace MealTicket_Web_Handler
         public int TrendLikeDays = 20;
 
         public int[] SharesLeaderType = new[] { 1, 2, 3 };
-        public int[] SharesLeaderShowType = new[] { 1, 2, 3 };
         public int[] SharesLeaderDaysType = new [] { 1, 2, 3, 4 };
 
         /// <summary>
@@ -739,16 +738,6 @@ namespace MealTicket_Web_Handler
                             }
                         }
                         SharesLeaderType = tempSharesLeaderType.ToArray();
-
-                        List<int> tempSharesLeaderShowType = new List<int>();
-                        if (sysValue.ShowTypeList != null)
-                        {
-                            foreach (int tem in sysValue.ShowTypeList)
-                            {
-                                tempSharesLeaderShowType.Add(tem);
-                            }
-                        }
-                        SharesLeaderShowType = tempSharesLeaderShowType.ToArray();
                         
                         List<int> tempSharesLeaderDaysType = new List<int>();
                         if (sysValue.DaysTypeList != null)
