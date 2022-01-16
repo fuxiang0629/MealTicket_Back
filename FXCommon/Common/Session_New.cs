@@ -59,42 +59,40 @@ namespace FXCommon.Common
         /// <summary>
         /// 缓存信息
         /// </summary>
+        Dictionary<string, object> SessionData2 = new Dictionary<string, object>();
+        /// <summary>
+        /// 缓存锁
+        /// </summary>
+        object _sessionData2Lock = new object();
+
+        int ReadLockCounter = 0;
+
+        /// <summary>
+        /// 缓存信息
+        /// </summary>
         Dictionary<string, object> SessionData = new Dictionary<string, object>();
 
         /// <summary>
         /// 缓存锁
         /// </summary>
-        ReaderWriterLockSlim _sessionReadWriteLock = new ReaderWriterLockSlim();
+        ReaderWriterLockSlim _sessionReadWriteLock = new ReaderWriterLockSlim(LockRecursionPolicy.SupportsRecursion);
 
         public object GetDataWithLock(string DataKey, GET_DATA_CXT _cxt = null, bool isUpgradeable = false)
         {
-
-            if (isUpgradeable)
-            {
-                _sessionReadWriteLock.EnterUpgradeableReadLock();
-            }
-            else
-            {
-                _sessionReadWriteLock.EnterReadLock();
-            }
-
             try
             {
+                EnterReadLock(isUpgradeable);
                 return OnGetData(DataKey, _cxt);
             }
-            catch (Exception)
-            { }
+            catch(Exception ex)
+            {
+                Logger.WriteFileLog("OnGetData出错",ex);
+            }
             finally
             {
-                if (isUpgradeable)
-                {
-                    _sessionReadWriteLock.ExitUpgradeableReadLock();
-                }
-                else
-                {
-                    _sessionReadWriteLock.ExitReadLock();
-                }
+                ExitReadLock(isUpgradeable);
             }
+
             return null;
         }
 
@@ -127,22 +125,100 @@ namespace FXCommon.Common
         /// </summary>
         /// <param name="key"></param>
         /// <param name="value"></param>
-        public void SetSessionWithLock(string key, object value)
+        public void SetSessionWithLock(string key, object value, bool bWriteToSecondIfLock = true)
         {
-            _sessionReadWriteLock.EnterWriteLock();
-            try
+            if (bWriteToSecondIfLock)
             {
+                if (_sessionReadWriteLock.TryEnterWriteLock(0))
+                {
+                    _setSession(key, value);
+                    OnSessionAfterWriting(key);
+                    _sessionReadWriteLock.ExitWriteLock();
+                }
+                else
+                {
+                    EnterReadLock(false);
+                    SetSessionToSecond(key, value);
+                    ExitReadLock(false);
+                }
+            }
+            else
+            {
+                _sessionReadWriteLock.EnterWriteLock();
                 _setSession(key, value);
+                RemoveSecondSession(key);
 
                 OnSessionAfterWriting(key);
-            }
-            catch (Exception)
-            { }
-            finally
-            {
                 _sessionReadWriteLock.ExitWriteLock();
             }
         }
+
+        private void EnterReadLock(bool isUpgradeable)
+        {
+            Interlocked.Increment(ref ReadLockCounter);
+
+            if (isUpgradeable)
+            {
+                _sessionReadWriteLock.EnterUpgradeableReadLock();
+            }
+            else
+            {
+                _sessionReadWriteLock.EnterReadLock();
+            }
+        }
+
+        private void ExitReadLock(bool isUpgradeable)
+        {
+            if (isUpgradeable)
+            {
+                _sessionReadWriteLock.ExitUpgradeableReadLock();
+            }
+            else
+            {
+                _sessionReadWriteLock.ExitReadLock();
+            }
+            
+
+            if (Interlocked.Decrement(ref ReadLockCounter) == 0)
+            {
+                _sessionReadWriteLock.EnterWriteLock();
+                MoveSecondSession();
+                _sessionReadWriteLock.ExitWriteLock();
+            }
+        }
+
+        public void SetSessionToSecond(string key, object value)
+        {
+            lock (_sessionData2Lock)
+            {
+                SessionData2[key] = value;
+            }
+        }
+
+        private void RemoveSecondSession(string key)
+        {
+            lock (_sessionData2Lock)
+            {
+                SessionData2.Remove(key);
+            }
+        }
+
+        private void MoveSecondSession()
+        {
+            lock (_sessionData2Lock)
+            {
+                foreach (var _item in SessionData2)
+                {
+                    SessionData[_item.Key] = _item.Value;
+                }
+
+                SessionData2.Clear();
+            }
+        }
+
+        protected virtual void OnSessionAfterWriting(string key)
+        { }
+
         public void SetSessionWithNolock(string key, object value)
         {
             _setSession(key, value);
@@ -157,8 +233,6 @@ namespace FXCommon.Common
         {
             return objData;
         }
-        protected virtual void OnSessionAfterWriting(string key)
-        { }
         #endregion
 
         /// <summary>
@@ -255,16 +329,10 @@ namespace FXCommon.Common
             }
         }
 
-        private void _toUpdateSession(string DataKey,int ExcuteType, object oct = null)
+        private void _toUpdateSession(string DataKey, int ExcuteType, object oct = null)
         {
             object data = UpdateSession(ExcuteType, oct);
             SetSessionWithLock(DataKey, data);
-        }
-
-        private void _toUpdateSession2(string DataKey, int ExcuteType, object oct = null)
-        {
-            object data = UpdateSession(ExcuteType, oct);
-            _setSession(DataKey, data);
         }
 
         /// <summary>
@@ -304,20 +372,6 @@ namespace FXCommon.Common
             try
             {
                 _toUpdateSession(DataKey, ExcuteType, oct);
-            }
-            catch (Exception ex)
-            { }
-        }
-
-        /// <summary>
-        /// 手动更新某个数据缓存
-        /// </summary>
-        /// <param name="dataKey"></param>
-        public void UpdateSessionManual2(string DataKey, int ExcuteType, object oct = null)
-        {
-            try
-            {
-                _toUpdateSession2(DataKey, ExcuteType, oct);
             }
             catch (Exception ex)
             { }

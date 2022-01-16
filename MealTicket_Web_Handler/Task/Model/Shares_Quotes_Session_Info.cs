@@ -157,6 +157,21 @@ namespace MealTicket_Web_Handler
         /// 涨停
         /// </summary>
         public int PriceType { get; set; }
+
+        /// <summary>
+        /// 是否炸板
+        /// </summary>
+        public bool IsLimitUpBomb 
+        { 
+            get
+            {
+                if (LimitUpCount > 0 && PriceType != 1)
+                {
+                    return true;
+                }
+                return false;
+            } 
+        }
     }
 
     public class Shares_Quotes_Session_Info_Last

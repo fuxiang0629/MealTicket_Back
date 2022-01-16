@@ -18,6 +18,10 @@ namespace MealTicket_Web_Handler
 
         public const int GET_DATA_CMD_ID_PlATETAG_CALCULATE = 3;//股票标签计算
 
+        public const int GET_ALL_PLATE_STATISTIC_INFO = 4;//板块统计信息
+
+        public const int GET_SHARES_ENERGY_TABLE_SESSION_INFO = 5;//板块龙头股票列表
+
         /// <summary>
         /// 最小间隔
         /// </summary>
@@ -49,7 +53,10 @@ namespace MealTicket_Web_Handler
             Plate_Minute_KLine_Session,
             Shares_Minute_KLine_Session,
             Shares_Limit_Time_Session,
-            Shares_Statistic_Session
+            Shares_Statistic_Session,
+            Shares_PlateTag_IsAuto_Session,
+            Plate_Statistic_Session,
+            Shares_Energy_Table_Session
         }
 
         public enum Enum_Excute_DataKey
@@ -78,7 +85,10 @@ namespace MealTicket_Web_Handler
             Plate_Minute_KLine_Session,
             Shares_Minute_KLine_Session,
             Shares_Limit_Time_Session,
-            Shares_Statistic_Session
+            Shares_Statistic_Session,
+            Shares_PlateTag_IsAuto_Session,
+            Plate_Statistic_Session,
+            Shares_Energy_Table_Session
         }
 
         public SessionHandler() 
@@ -140,10 +150,16 @@ namespace MealTicket_Web_Handler
             result.Add(_toBuildTimeInfo(Enum_Excute_DataKey.Shares_Limit_Time_Session.ToString(), 60 * 10, (int)Enum_Excute_Type.Shares_Limit_Time_Session, null, 0, 0));
             //股票统计信息
             result.Add(_toBuildTimeInfo(Enum_Excute_DataKey.Shares_Statistic_Session.ToString(), 3, (int)Enum_Excute_Type.Shares_Statistic_Session, null, 0, 1));
+            //股票板块标签计算是否可修改缓存
+            result.Add(_toBuildTimeInfo(Enum_Excute_DataKey.Shares_PlateTag_IsAuto_Session.ToString(), 60*10, (int)Enum_Excute_Type.Shares_PlateTag_IsAuto_Session, null, 0, 1));
+            //板块统计信息
+            result.Add(_toBuildTimeInfo(Enum_Excute_DataKey.Plate_Statistic_Session.ToString(), 3, (int)Enum_Excute_Type.Plate_Statistic_Session, null, 0, 1));
+            //板块龙头信息
+            result.Add(_toBuildTimeInfo(Enum_Excute_DataKey.Shares_Energy_Table_Session.ToString(), 3, (int)Enum_Excute_Type.Shares_Energy_Table_Session, null, 0, 0));
             return result;
         }
 
-        private Session_Time_Info _toBuildTimeInfo(string DataKey,int ExcuteInterval,int ExcuteType,DateTime? NextExcuteTime,int TimerStatus,int TimerType)
+        private Session_Time_Info _toBuildTimeInfo(string DataKey,int ExcuteInterval,int ExcuteType,DateTime? NextExcuteTime,int TimerStatus,int TimerType,bool WriteToSecond=false)
         {
             return new Session_Time_Info
             {
@@ -152,178 +168,198 @@ namespace MealTicket_Web_Handler
                 ExcuteType = ExcuteType,
                 NextExcuteTime = NextExcuteTime,
                 TimerStatus = TimerStatus,
-                TimerType = TimerType,
+                TimerType = TimerType
             };
         }
 
         public override object UpdateSession(int ExcuteType, object oct = null)
         {
-            switch (ExcuteType) 
+            try
             {
-                case (int)Enum_Excute_Type.Plate_Quotes_Date_Session:
-                    return Plate_Quotes_Date_Session.UpdateSession(oct);
-                case (int)Enum_Excute_Type.Plate_Quotes_Today_Session:
-                    return Plate_Quotes_Today_Session.UpdateSession();
-                case (int)Enum_Excute_Type.Plate_Tag_FocusOn_Session:
-                    return Plate_Tag_FocusOn_Session.UpdateSession();
-                case (int)Enum_Excute_Type.Plate_Tag_Force_Session:
-                    return Plate_Tag_Force_Session.UpdateSession();
-                case (int)Enum_Excute_Type.Plate_Tag_TrendLike_Session:
-                    return Plate_Tag_TrendLike_Session.UpdateSession();
-                case (int)Enum_Excute_Type.Shares_Quotes_Date_Session:
-                    return Shares_Quotes_Date_Session.UpdateSession(oct);
-                case (int)Enum_Excute_Type.Shares_Quotes_Today_Session:
-                    return Shares_Quotes_Today_Session.UpdateSession();
-                case (int)Enum_Excute_Type.Plate_Tag_Setting_Session:
-                    return Plate_Tag_Setting_Session.UpdateSession();
-                case (int)Enum_Excute_Type.Shares_Tag_Leader_Session:
-                    return Shares_Tag_Leader_Session.UpdateSession();
-                case (int)Enum_Excute_Type.Shares_Tag_DayLeader_Session:
-                    return Shares_Tag_DayLeader_Session.UpdateSession();
-                case (int)Enum_Excute_Type.Shares_Tag_MainArmy_Session:
-                    return Shares_Tag_MainArmy_Session.UpdateSession();
-                case (int)Enum_Excute_Type.Plate_Shares_Rel_Tag_Setting_Session:
-                    return Plate_Shares_Rel_Tag_Setting_Session.UpdateSession();
-                case (int)Enum_Excute_Type.Shares_Base_Session:
-                    return Shares_Base_Session.UpdateSession();
-                case (int)Enum_Excute_Type.Shares_TradeStock_Session:
-                    return Shares_TradeStock_Session.UpdateSession();
-                case (int)Enum_Excute_Type.Plate_Shares_Rel_Session:
-                    return Plate_Shares_Rel_Session.UpdateSession();
-                case (int)Enum_Excute_Type.Shares_Limit_Session:
-                    return Shares_Limit_Session.UpdateSession();
-                case (int)Enum_Excute_Type.Plate_Base_Session:
-                    return Plate_Base_Session.UpdateSession();
-                case (int)Enum_Excute_Type.Setting_Plate_Index_Session:
-                    return Setting_Plate_Index_Session.UpdateSession();
-                case (int)Enum_Excute_Type.Setting_Plate_Linkage_Session:
-                    return Setting_Plate_Linkage_Session.UpdateSession();
-                case (int)Enum_Excute_Type.Setting_Plate_Shares_Linkage_Session:
-                    return Setting_Plate_Shares_Linkage_Session.UpdateSession();
-                case (int)Enum_Excute_Type.Plate_TradeStock_Session:
-                    return Plate_TradeStock_Session.UpdateSession();
-                case (int)Enum_Excute_Type.Plate_Minute_KLine_Session:
-                    return Plate_Minute_KLine_Session.UpdateSession();
-                case (int)Enum_Excute_Type.Shares_Minute_KLine_Session:
-                    return Shares_Minute_KLine_Session.UpdateSession();
-                case (int)Enum_Excute_Type.Shares_Limit_Time_Session:
-                    return Shares_Limit_Time_Session.UpdateSession();
-                case (int)Enum_Excute_Type.Shares_Statistic_Session:
-                    return Shares_Statistic_Session.UpdateSession();
-                default:
-                    return null;
+                switch (ExcuteType)
+                {
+                    case (int)Enum_Excute_Type.Plate_Quotes_Date_Session:
+                        return Plate_Quotes_Date_Session.UpdateSession(oct);
+                    case (int)Enum_Excute_Type.Plate_Quotes_Today_Session:
+                        return Plate_Quotes_Today_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Plate_Tag_FocusOn_Session:
+                        return Plate_Tag_FocusOn_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Plate_Tag_Force_Session:
+                        return Plate_Tag_Force_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Plate_Tag_TrendLike_Session:
+                        return Plate_Tag_TrendLike_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Shares_Quotes_Date_Session:
+                        return Shares_Quotes_Date_Session.UpdateSession(oct);
+                    case (int)Enum_Excute_Type.Shares_Quotes_Today_Session:
+                        return Shares_Quotes_Today_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Plate_Tag_Setting_Session:
+                        return Plate_Tag_Setting_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Shares_Tag_Leader_Session:
+                        return Shares_Tag_Leader_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Shares_Tag_DayLeader_Session:
+                        return Shares_Tag_DayLeader_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Shares_Tag_MainArmy_Session:
+                        return Shares_Tag_MainArmy_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Plate_Shares_Rel_Tag_Setting_Session:
+                        return Plate_Shares_Rel_Tag_Setting_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Shares_Base_Session:
+                        return Shares_Base_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Shares_TradeStock_Session:
+                        return Shares_TradeStock_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Plate_Shares_Rel_Session:
+                        return Plate_Shares_Rel_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Shares_Limit_Session:
+                        return Shares_Limit_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Plate_Base_Session:
+                        return Plate_Base_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Setting_Plate_Index_Session:
+                        return Setting_Plate_Index_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Setting_Plate_Linkage_Session:
+                        return Setting_Plate_Linkage_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Setting_Plate_Shares_Linkage_Session:
+                        return Setting_Plate_Shares_Linkage_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Plate_TradeStock_Session:
+                        return Plate_TradeStock_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Plate_Minute_KLine_Session:
+                        return Plate_Minute_KLine_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Shares_Minute_KLine_Session:
+                        return Shares_Minute_KLine_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Shares_Limit_Time_Session:
+                        return Shares_Limit_Time_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Shares_Statistic_Session:
+                        return Shares_Statistic_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Shares_PlateTag_IsAuto_Session:
+                        return Shares_PlateTag_IsAuto_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Plate_Statistic_Session:
+                        return Plate_Statistic_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Shares_Energy_Table_Session:
+                        return Shares_Energy_Table_Session.UpdateSession();
+                    default:
+                        return null;
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("UpdateSession出错",ex);
+                return null;
             }
         }
 
-        public void UpdateSessionPart(int ExcuteType, object newData)
+        public object UpdateSessionPart(int ExcuteType, object newData)
         {
-            object newSession = new object();
-            string dataKey = "";
-            switch (ExcuteType)
+            try
             {
-                case (int)Enum_Excute_Type.Plate_Tag_FocusOn_Session:
-                    newSession = Plate_Tag_FocusOn_Session.UpdateSessionPart(newData);
-                    dataKey = Enum_Excute_DataKey.Plate_Tag_FocusOn_Session.ToString();
-                    break;
-                case (int)Enum_Excute_Type.Plate_Tag_Force_Session:
-                    newSession = Plate_Tag_Force_Session.UpdateSessionPart(newData);
-                    dataKey = Enum_Excute_DataKey.Plate_Tag_Force_Session.ToString();
-                    break;
-                case (int)Enum_Excute_Type.Plate_Tag_TrendLike_Session:
-                    newSession = Plate_Tag_TrendLike_Session.UpdateSessionPart(newData);
-                    dataKey = Enum_Excute_DataKey.Plate_Tag_TrendLike_Session.ToString();
-                    break;
-                case (int)Enum_Excute_Type.Shares_Tag_Leader_Session:
-                    newSession = Shares_Tag_Leader_Session.UpdateSessionPart(newData);
-                    dataKey = Enum_Excute_DataKey.Shares_Tag_Leader_Session.ToString();
-                    break;
-                case (int)Enum_Excute_Type.Shares_Tag_DayLeader_Session:
-                    newSession = Shares_Tag_DayLeader_Session.UpdateSessionPart(newData);
-                    dataKey = Enum_Excute_DataKey.Shares_Tag_DayLeader_Session.ToString();
-                    break;
-                case (int)Enum_Excute_Type.Shares_Tag_MainArmy_Session:
-                    newSession = Shares_Tag_MainArmy_Session.UpdateSessionPart(newData);
-                    dataKey = Enum_Excute_DataKey.Shares_Tag_MainArmy_Session.ToString();
-                    break;
-                default:
-                    break;
+                object newSession = new object();
+                string dataKey = "";
+                switch (ExcuteType)
+                {
+                    case (int)Enum_Excute_Type.Plate_Tag_FocusOn_Session:
+                        newSession = Plate_Tag_FocusOn_Session.UpdateSessionPart(newData);
+                        dataKey = Enum_Excute_DataKey.Plate_Tag_FocusOn_Session.ToString();
+                        break;
+                    case (int)Enum_Excute_Type.Plate_Tag_Force_Session:
+                        newSession = Plate_Tag_Force_Session.UpdateSessionPart(newData);
+                        dataKey = Enum_Excute_DataKey.Plate_Tag_Force_Session.ToString();
+                        break;
+                    case (int)Enum_Excute_Type.Plate_Tag_TrendLike_Session:
+                        newSession = Plate_Tag_TrendLike_Session.UpdateSessionPart(newData);
+                        dataKey = Enum_Excute_DataKey.Plate_Tag_TrendLike_Session.ToString();
+                        break;
+                    case (int)Enum_Excute_Type.Shares_Tag_Leader_Session:
+                        newSession = Shares_Tag_Leader_Session.UpdateSessionPart(newData);
+                        dataKey = Enum_Excute_DataKey.Shares_Tag_Leader_Session.ToString();
+                        break;
+                    case (int)Enum_Excute_Type.Shares_Tag_DayLeader_Session:
+                        newSession = Shares_Tag_DayLeader_Session.UpdateSessionPart(newData);
+                        dataKey = Enum_Excute_DataKey.Shares_Tag_DayLeader_Session.ToString();
+                        break;
+                    case (int)Enum_Excute_Type.Shares_Tag_MainArmy_Session:
+                        newSession = Shares_Tag_MainArmy_Session.UpdateSessionPart(newData);
+                        dataKey = Enum_Excute_DataKey.Shares_Tag_MainArmy_Session.ToString();
+                        break;
+                    default:
+                        break;
+                }
+                SetSessionToSecond(dataKey, newSession);
+                return newSession;
             }
-            SetSessionWithNolock(dataKey, newSession);
-        }
-
-        protected override void OnSessionAfterWriting(string key)
-        {
-            if (tempPlate_Quotes_Date_Session != null)
+            catch (Exception ex)
             {
-                string dataKey = Enum_Excute_DataKey.Plate_Quotes_Date_Session.ToString();
-                SetSessionWithNolock(dataKey, tempPlate_Quotes_Date_Session);
-                tempPlate_Quotes_Date_Session = null;
-            }
-
-            if (tempShares_Quotes_Date_Session != null)
-            {
-                string dataKey = Enum_Excute_DataKey.Shares_Quotes_Date_Session.ToString();
-                SetSessionWithNolock(dataKey, tempShares_Quotes_Date_Session);
-                tempShares_Quotes_Date_Session = null;
+                Logger.WriteFileLog("UpdateSessionPart出错", ex);
+                return null;
             }
         }
 
         public override object CopySessionData(object objData, string dataKey)
         {
-            switch ((Enum_Excute_DataKey)System.Enum.Parse(typeof(Enum_Excute_DataKey), dataKey))
+            try
             {
-                case Enum_Excute_DataKey.Plate_Tag_FocusOn_Session:
-                    return Plate_Tag_FocusOn_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Plate_Tag_Force_Session:
-                    return Plate_Tag_Force_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Plate_Tag_TrendLike_Session:
-                    return Plate_Tag_TrendLike_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Plate_Quotes_Date_Session:
-                    return Plate_Quotes_Date_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Plate_Quotes_Today_Session:
-                    return Plate_Quotes_Today_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Shares_Quotes_Date_Session:
-                    return Shares_Quotes_Date_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Shares_Quotes_Today_Session:
-                    return Shares_Quotes_Today_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Shares_TradeStock_Session:
-                    return Shares_TradeStock_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Plate_Tag_Setting_Session:
-                    return Plate_Tag_Setting_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Shares_Tag_Leader_Session:
-                    return Shares_Tag_Leader_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Shares_Tag_DayLeader_Session:
-                    return Shares_Tag_DayLeader_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Shares_Tag_MainArmy_Session:
-                    return Shares_Tag_MainArmy_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Plate_Shares_Rel_Tag_Setting_Session:
-                    return Plate_Shares_Rel_Tag_Setting_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Shares_Base_Session:
-                    return Shares_Base_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Plate_Shares_Rel_Session:
-                    return Plate_Shares_Rel_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Shares_Limit_Session:
-                    return Shares_Limit_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Plate_Base_Session:
-                    return Plate_Base_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Setting_Plate_Index_Session:
-                    return Setting_Plate_Index_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Setting_Plate_Linkage_Session:
-                    return Setting_Plate_Linkage_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Setting_Plate_Shares_Linkage_Session:
-                    return Setting_Plate_Shares_Linkage_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Plate_TradeStock_Session:
-                    return Plate_TradeStock_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Plate_Minute_KLine_Session:
-                    return Plate_Minute_KLine_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Shares_Minute_KLine_Session:
-                    return Shares_Minute_KLine_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Shares_Limit_Time_Session:
-                    return Shares_Limit_Time_Session.CopySessionData(objData);
-                case Enum_Excute_DataKey.Shares_Statistic_Session:
-                    return Shares_Statistic_Session.CopySessionData(objData);
-                default:
-                    return base.CopySessionData(objData, dataKey);
+                switch ((Enum_Excute_DataKey)System.Enum.Parse(typeof(Enum_Excute_DataKey), dataKey))
+                {
+                    case Enum_Excute_DataKey.Plate_Tag_FocusOn_Session:
+                        return Plate_Tag_FocusOn_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Plate_Tag_Force_Session:
+                        return Plate_Tag_Force_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Plate_Tag_TrendLike_Session:
+                        return Plate_Tag_TrendLike_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Plate_Quotes_Date_Session:
+                        return Plate_Quotes_Date_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Plate_Quotes_Today_Session:
+                        return Plate_Quotes_Today_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Shares_Quotes_Date_Session:
+                        return Shares_Quotes_Date_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Shares_Quotes_Today_Session:
+                        return Shares_Quotes_Today_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Shares_TradeStock_Session:
+                        return Shares_TradeStock_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Plate_Tag_Setting_Session:
+                        return Plate_Tag_Setting_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Shares_Tag_Leader_Session:
+                        return Shares_Tag_Leader_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Shares_Tag_DayLeader_Session:
+                        return Shares_Tag_DayLeader_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Shares_Tag_MainArmy_Session:
+                        return Shares_Tag_MainArmy_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Plate_Shares_Rel_Tag_Setting_Session:
+                        return Plate_Shares_Rel_Tag_Setting_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Shares_Base_Session:
+                        return Shares_Base_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Plate_Shares_Rel_Session:
+                        return Plate_Shares_Rel_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Shares_Limit_Session:
+                        return Shares_Limit_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Plate_Base_Session:
+                        return Plate_Base_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Setting_Plate_Index_Session:
+                        return Setting_Plate_Index_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Setting_Plate_Linkage_Session:
+                        return Setting_Plate_Linkage_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Setting_Plate_Shares_Linkage_Session:
+                        return Setting_Plate_Shares_Linkage_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Plate_TradeStock_Session:
+                        return Plate_TradeStock_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Plate_Minute_KLine_Session:
+                        return Plate_Minute_KLine_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Shares_Minute_KLine_Session:
+                        return Shares_Minute_KLine_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Shares_Limit_Time_Session:
+                        return Shares_Limit_Time_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Shares_Statistic_Session:
+                        return Shares_Statistic_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Shares_PlateTag_IsAuto_Session:
+                        return Shares_PlateTag_IsAuto_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Plate_Statistic_Session:
+                        return Plate_Statistic_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Shares_Energy_Table_Session:
+                        return Shares_Energy_Table_Session.CopySessionData(objData);
+                    default:
+                        return base.CopySessionData(objData, dataKey);
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("CopySessionData出错,dataKey:"+ dataKey, ex);
+                return null;
             }
         }
 
@@ -342,13 +378,32 @@ namespace MealTicket_Web_Handler
                     return Shares_Statistic_Session.Cal_Shares_Statistic();
                 case GET_DATA_CMD_ID_PlATETAG_CALCULATE:
                     PlateTagCalHelper._Calculate();
-                    return null; 
+                    return null;
+                case GET_ALL_PLATE_STATISTIC_INFO:
+                    return Plate_Statistic_Session.Cal_Plate_Statistic();
+                case GET_SHARES_ENERGY_TABLE_SESSION_INFO:
+                    return Shares_Energy_Table_Session.Cal_Shares_Energy_Table();
                 default:
                     return base.OnGetData(DataKey, _cxt);
-
             }
         }
 
+        protected override void OnSessionAfterWriting(string key)
+        {
+            if (tempPlate_Quotes_Date_Session != null)
+            {
+                string dataKey = Enum_Excute_DataKey.Plate_Quotes_Date_Session.ToString();
+                SetSessionWithNolock(dataKey, tempPlate_Quotes_Date_Session);
+                tempPlate_Quotes_Date_Session = null;
+            }
+
+            if (tempShares_Quotes_Date_Session != null)
+            {
+                string dataKey = Enum_Excute_DataKey.Shares_Quotes_Date_Session.ToString();
+                SetSessionWithNolock(dataKey, tempShares_Quotes_Date_Session);
+                tempShares_Quotes_Date_Session = null;
+            }
+        }
 
         //股票交易时间缓存
         public List<t_shares_limit_time> GetShares_Limit_Time_Session(bool withlock=true)
@@ -397,6 +452,18 @@ namespace MealTicket_Web_Handler
                 return new Dictionary<long, Shares_Base_Session_Info>();
             }
             return session as Dictionary<long, Shares_Base_Session_Info>;
+        }
+
+        //股票板块计算是否可修改缓存
+        public Dictionary<long, Shares_Name_Info> GetShares_PlateTag_IsAuto_Session(bool withlock = true)
+        {
+            string dataKey = Enum_Excute_DataKey.Shares_PlateTag_IsAuto_Session.ToString();
+            var session = withlock ? GetDataWithLock(dataKey) : GetDataWithNoLock(dataKey);
+            if (session == null)
+            {
+                return new Dictionary<long, Shares_Name_Info>();
+            }
+            return session as Dictionary<long, Shares_Name_Info>;
         }
 
         //板块指数系数设置缓存
@@ -495,7 +562,19 @@ namespace MealTicket_Web_Handler
             }
             return (session as Plate_Tag_FocusOn_Session_Obj).Plate_Shares_FocusOn_Session;
         }
-        
+
+        //关注缓存
+        public List<Plate_Tag_FocusOn_Session_Info> GetPlate_Tag_FocusOn_Session_List(bool withlock = true)
+        {
+            string dataKey = Enum_Excute_DataKey.Plate_Tag_FocusOn_Session.ToString();
+            var session = withlock ? GetDataWithLock(dataKey) : GetDataWithNoLock(dataKey);
+            if (session == null)
+            {
+                return new List<Plate_Tag_FocusOn_Session_Info>();
+            }
+            return (session as Plate_Tag_FocusOn_Session_Obj).FocusOn_List;
+        }
+
         //涨缓存（根据股票获取）
         public Dictionary<long, Dictionary<long, Plate_Tag_Force_Session_Info>> GetPlate_Tag_Force_Session_ByShares(bool withlock = true)
         {
@@ -520,6 +599,18 @@ namespace MealTicket_Web_Handler
             return (session as Plate_Tag_Force_Session_Obj).Plate_Shares_Force_Session;
         }
 
+        //涨缓存
+        public List<Plate_Tag_Force_Session_Info> GetPlate_Tag_Force_Session_List(bool withlock = true)
+        {
+            string dataKey = Enum_Excute_DataKey.Plate_Tag_Force_Session.ToString();
+            var session = withlock ? GetDataWithLock(dataKey) : GetDataWithNoLock(dataKey);
+            if (session == null)
+            {
+                return new List<Plate_Tag_Force_Session_Info>();
+            }
+            return (session as Plate_Tag_Force_Session_Obj).Force_List;
+        }
+
         //走势缓存（根据股票获取）
         public Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>> GetPlate_Tag_TrendLike_Session_ByShares(bool withlock = true)
         {
@@ -542,6 +633,18 @@ namespace MealTicket_Web_Handler
                 return new Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>>();
             }
             return (session as Plate_Tag_TrendLike_Session_Obj).Plate_Shares_TrendLike_Session;
+        }
+
+        //涨缓存
+        public List<Plate_Tag_TrendLike_Session_Info> GetPlate_Tag_TrendLike_Session_List(bool withlock = true)
+        {
+            string dataKey = Enum_Excute_DataKey.Plate_Tag_TrendLike_Session.ToString();
+            var session = withlock ? GetDataWithLock(dataKey) : GetDataWithNoLock(dataKey);
+            if (session == null)
+            {
+                return new List<Plate_Tag_TrendLike_Session_Info>();
+            }
+            return (session as Plate_Tag_TrendLike_Session_Obj).TrendLike_List;
         }
 
 
@@ -667,6 +770,27 @@ namespace MealTicket_Web_Handler
             return result;
         }
 
+        //计算全市场龙头股票(从全市场股票出发)
+        public List<long> GetLeaderShares_ByAllShares(bool withlock = true)
+        {
+            List<long> result = new List<long>();
+
+            if (Singleton.Instance.SharesLeaderType.Contains(1))
+            {
+                result.AddRange(GetShares_Tag_Leader_Session_ByShares(withlock).Where(e => e.Value.Count() > 0).Select(e => e.Key).ToList());
+            }
+            if (Singleton.Instance.SharesLeaderType.Contains(2))
+            {
+                result.AddRange(GetShares_Tag_DayLeader_Session_ByShares(withlock).Where(e => e.Value.Count() > 0).Select(e => e.Key).ToList());
+            }
+            if (Singleton.Instance.SharesLeaderType.Contains(3))
+            {
+                result.AddRange(GetShares_Tag_MainArmy_Session_ByShares(withlock).Where(e => e.Value.Count() > 0).Select(e => e.Key).ToList());
+            }
+
+            return result.Distinct().ToList();
+        }
+
 
         //板块历史行情缓存
         object GetPlate_Quotes_Date_Session_Lock = new object();
@@ -676,6 +800,7 @@ namespace MealTicket_Web_Handler
         {
             return GetPlate_Quotes_Date(days, withlock).SessionDic;
         }
+
         private Plate_Quotes_Session_Info_Obj _getPlate_Quotes_Date_Session(bool withlock = true)
         {
             string dataKey = Enum_Excute_DataKey.Plate_Quotes_Date_Session.ToString();
@@ -729,20 +854,22 @@ namespace MealTicket_Web_Handler
         {
             Dictionary<long, Plate_Quotes_Session_Info> result = new Dictionary<long, Plate_Quotes_Session_Info>();
             var date_session = GetPlate_Quotes_Date_Session(0, withlock);
-            var today_session = GetPlate_Quotes_Today_Session(withlock);
             var plate_base_session = GetPlate_Base_Session(withlock);
+
+            var newData = new Dictionary<long, Plate_Quotes_Session_Info>(GetPlate_Quotes_Today_Session(withlock));
+
             foreach (var item in date_session)
             {
-                if (!today_session.ContainsKey(item.Key))
+                if (!newData.ContainsKey(item.Key))
                 {
                     var last = item.Value.FirstOrDefault().Value;
-                    today_session.Add(item.Key, last);
+                    newData.Add(item.Key, last);
                 }
             }
 
-            today_session = today_session.OrderByDescending(e => e.Value.RiseRate).ThenBy(e => e.Value.PlateId).ToDictionary(k => k.Key, v => v.Value);
+            newData = newData.OrderByDescending(e => e.Value.RiseRate).ThenBy(e => e.Value.PlateId).ToDictionary(k => k.Key, v => v.Value);
             int idx = 0;
-            foreach (var item in today_session)
+            foreach (var item in newData)
             {
                 if (!plate_base_session.ContainsKey(item.Key))
                 {
@@ -758,10 +885,15 @@ namespace MealTicket_Web_Handler
 
             int tempSharesStockCal_Type = Singleton.Instance.SharesStockCal_Type;
             var stockDic = isGetVolumeRate ? GetPlate_TradeStock_Session(withlock) : new Dictionary<long, Plate_TradeStock_Session_Info>();
-            foreach (var item in today_session)
+            foreach (var item in newData)
             {
                 Plate_Quotes_Session_Info temp = new Plate_Quotes_Session_Info();
                 temp.ClosedPrice = item.Value.ClosedPrice;
+                temp.MaxPrice = item.Value.MaxPrice;
+                temp.MinPrice = item.Value.MinPrice;
+                temp.OpenedPrice= item.Value.OpenedPrice;
+                temp.DealCount = item.Value.DealCount;
+                temp.DealAmount = item.Value.DealAmount;
                 temp.Date = item.Value.Date;
                 temp.PlateId = item.Value.PlateId;
                 temp.Rank = item.Value.Rank;
@@ -830,7 +962,7 @@ namespace MealTicket_Web_Handler
         private Shares_Quotes_Session_Info_Obj _getShares_Quotes_Date_Session(bool withlock = true)
         {
             string dataKey = Enum_Excute_DataKey.Shares_Quotes_Date_Session.ToString();
-            var session = GetDataWithNoLock(dataKey, withlock);
+            var session =  GetDataWithNoLock(dataKey, withlock);
             //var session = withlock ? GetDataWithLock(dataKey) : GetDataWithNoLock(dataKey);
             if (session == null)
             {
@@ -911,20 +1043,21 @@ namespace MealTicket_Web_Handler
         {
             Dictionary<long, Shares_Quotes_Session_Info_Last> result = new Dictionary<long, Shares_Quotes_Session_Info_Last>();
             var date_session = GetShares_Quotes_Date_Session(0,withlock);
-            var today_session = GetShares_Quotes_Today_Session(withlock);
+
+            var newData= new Dictionary<long, Shares_Quotes_Session_Info>(GetShares_Quotes_Today_Session(withlock));
 
             foreach (var item in date_session)
             {
-                if (!today_session.ContainsKey(item.Key))
+                if (!newData.ContainsKey(item.Key))
                 {
                     var last = item.Value.FirstOrDefault().Value;
-                    today_session.Add(item.Key, last);
+                    newData.Add(item.Key, last);
                 }
             }
 
             if (!isGetVolumeRate)
             {
-                foreach (var item in today_session)
+                foreach (var item in newData)
                 {
                     result.Add(item.Key, new Shares_Quotes_Session_Info_Last
                     {
@@ -936,7 +1069,7 @@ namespace MealTicket_Web_Handler
 
             int tempSharesStockCal_Type = Singleton.Instance.SharesStockCal_Type;
             var stockDic = GetShares_TradeStock_Session(withlock);
-            foreach (var item in today_session)
+            foreach (var item in newData)
             {
                 Shares_Quotes_Session_Info_Last temp = new Shares_Quotes_Session_Info_Last();
                 temp.shares_quotes_info = item.Value;
@@ -1125,6 +1258,30 @@ namespace MealTicket_Web_Handler
                 return new Shares_Statistic_Session_Obj();
             }
             return session as Shares_Statistic_Session_Obj;
+        }
+
+        //板块统计信息缓存
+        public Plate_Statistic_Session_Info GetPlate_Statistic_Session(bool withlock = true)
+        {
+            string dataKey = Enum_Excute_DataKey.Plate_Statistic_Session.ToString();
+            var session = withlock ? GetDataWithLock(dataKey) : GetDataWithNoLock(dataKey);
+            if (session == null)
+            {
+                return new Plate_Statistic_Session_Info();
+            }
+            return session as Plate_Statistic_Session_Info;
+        }
+
+        //板块龙头信息缓存
+        public Dictionary<long, Shares_Energy_Table_Session_Info> GetShares_Energy_Table_Session(bool withlock = true)
+        {
+            string dataKey = Enum_Excute_DataKey.Shares_Energy_Table_Session.ToString();
+            var session = withlock ? GetDataWithLock(dataKey) : GetDataWithNoLock(dataKey);
+            if (session == null)
+            {
+                return new Dictionary<long, Shares_Energy_Table_Session_Info>();
+            }
+            return session as Dictionary<long, Shares_Energy_Table_Session_Info>;
         }
     }
 }

@@ -88,10 +88,43 @@ namespace Test
         static List<A> aList = new List<A>();
         static void Main(string[] args)
         {
-            aDic.Add(1, new Dictionary<int, A>());
-            var t=aDic[1].FirstOrDefault();
-            
-            var v = t.Value;
+            A a = new A { Id=1};
+
+            var b = new A 
+            {
+                Id=5
+            };
+
+            var c = b;
+            b = new A 
+            {
+                Id=6
+            } ;
+
+            var ttt = a;
+
+            //var a = new SortedDictionary<int, A>();
+            //a.Add(2,new A 
+            //{
+            //    Id=2
+            //});
+            //a.Add(1, new A
+            //{
+            //    Id = 1
+            //});
+            //a.Add(3, new A
+            //{
+            //    Id = 3
+            //});
+            //Dictionary<int, A> b=new Dictionary<int, A>();
+            //var c = b;
+            //c = a.ToDictionary(k => k.Key, v => v.Value);
+            //c.Add(4,new A 
+            //{
+            //    Id=4
+            //});
+
+            // var rr = a;
             //List<A> alist = new List<A>
             //{
             //    new A

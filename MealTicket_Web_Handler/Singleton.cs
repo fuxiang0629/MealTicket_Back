@@ -130,8 +130,8 @@ namespace MealTicket_Web_Handler
         //板块监控涨跌幅排行颜色列表
         public string[] RiseRankBgColorList = new[] { "#ff0019", "#c3535e", "#d7a1a6" };
         public string[] DownRankBgColorList = new[] { "#52f900", "#5f8f48", "#accf9b" };
-        public bool PlateRiseRateIsReal = false;
         public int[] EnergyIndexTypeList = new[] { 1, 2, 3, 4 };
+        public int LeaderMinRiseRate = 500;//板块龙头最小涨跌幅
 
         /// <summary>
         /// 自动买入最大任务数量
@@ -717,7 +717,7 @@ namespace MealTicket_Web_Handler
                         }
                         EnergyIndexTypeList = tempEnergyIndexTypeList.ToArray();
 
-                        PlateRiseRateIsReal = sysValue.IsReal;
+                        LeaderMinRiseRate = sysValue.LeaderMinRiseRate;
                     }
                 }
                 catch { }

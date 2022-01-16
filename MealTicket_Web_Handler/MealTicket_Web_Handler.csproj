@@ -204,6 +204,7 @@
     <Compile Include="Model\GetPlateEnergyIndexList.cs" />
     <Compile Include="Model\GetPlateKLineList.cs" />
     <Compile Include="Model\GetPlateLeaderModelSharesList.cs" />
+    <Compile Include="Model\GetPlateLinkageList.cs" />
     <Compile Include="Model\GetPlateMinutetimedataList.cs" />
     <Compile Include="Model\GetPlateQuotesInfo.cs" />
     <Compile Include="Model\GetPlateRiseSpeedList.cs" />
@@ -211,6 +212,7 @@
     <Compile Include="Model\GetSharesBasePlateList.cs" />
     <Compile Include="Model\GetSharesConditionSearch.cs" />
     <Compile Include="Model\GetSharesConditionTrendList.cs" />
+    <Compile Include="Model\GetSharesEnergyIndexList.cs" />
     <Compile Include="Model\GetSharesKLineList.cs" />
     <Compile Include="Model\GetSharesKLineTypeList.cs" />
     <Compile Include="Model\GetSharesListQuotes.cs" />
@@ -326,6 +328,7 @@
     <Compile Include="Task\Model\Plate_Quotes_Session_Info.cs" />
     <Compile Include="Task\Model\Plate_Shares_Rel_Session_Info.cs" />
     <Compile Include="Task\Model\Plate_Shares_Rel_Tag_Setting_Session_Info.cs" />
+    <Compile Include="Task\Model\Plate_Statistic_Session_Info.cs" />
     <Compile Include="Task\Model\Plate_Tag_FocusOn_Session_Info.cs" />
     <Compile Include="Task\Model\Plate_Tag_Force_Session_Info.cs" />
     <Compile Include="Task\Model\Plate_Tag_TrendLike_Session_Info.cs" />
@@ -334,6 +337,7 @@
     <Compile Include="Task\Model\Setting_Plate_Linkage_Session_Info.cs" />
     <Compile Include="Task\Model\Setting_Plate_Shares_Linkage_Session_Info.cs" />
     <Compile Include="Task\Model\Shares_Base_Session_Info.cs" />
+    <Compile Include="Task\Model\Shares_Energy_Table_Session_Info.cs" />
     <Compile Include="Task\Model\Shares_Limit_Session_Info.cs" />
     <Compile Include="Task\Model\Shares_Minute_KLine_Session_Info.cs" />
     <Compile Include="Task\Model\Shares_Name_Info.cs" />
@@ -351,6 +355,7 @@
     <Compile Include="Task\SessionSetting.cs" />
     <Compile Include="Task\Session\Plate_Shares_Rel_Session.cs" />
     <Compile Include="Task\Session\Plate_Shares_Rel_Tag_Setting_Session.cs" />
+    <Compile Include="Task\Session\Plate_Statistic_Session.cs" />
     <Compile Include="Task\Session\Plate_Tag_FocusOn_Session.cs" />
     <Compile Include="Task\Session\Plate_Tag_Force_Session.cs" />
     <Compile Include="Task\Session\Plate_Tag_Setting_Session.cs" />
@@ -360,8 +365,10 @@
     <Compile Include="Task\Session\Setting_Plate_Linkage_Session.cs" />
     <Compile Include="Task\Session\Setting_Plate_Shares_Linkage_Session.cs" />
     <Compile Include="Task\Session\Shares_Base_Session.cs" />
+    <Compile Include="Task\Session\Shares_Energy_Table_Session.cs" />
     <Compile Include="Task\Session\Shares_Limit_Session.cs" />
     <Compile Include="Task\Session\Shares_Limit_Time_Session.cs" />
+    <Compile Include="Task\Session\Shares_PlateTag_IsAuto_Session.cs" />
     <Compile Include="Task\Session\Shares_Quotes_Date_Session.cs" />
     <Compile Include="Task\Session\Shares_Minute_KLine_Session.cs" />
     <Compile Include="Task\Session\Shares_Quotes_Today_Session.cs" />

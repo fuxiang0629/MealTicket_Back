@@ -37,5 +37,10 @@ namespace MealTicket_Web_Handler
         /// 股票数量
         /// </summary>
         public int SharesCount { get; set; }
+
+        /// <summary>
+        /// 流通股本
+        /// </summary>
+        public long CirculatingCapital { get; set; }
     }
 }
