@@ -56,7 +56,8 @@ namespace MealTicket_Web_Handler
             var shares_Tag_Mainarmy_Session = Singleton.Instance.sessionHandler.GetShares_Tag_MainArmy_Session_ByShares(false);
 
             ToWriteDebugLog("2：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
-            int[] daysType = Singleton.Instance.SharesLeaderDaysType;//计算天数类型
+            //int[] daysType = Singleton.Instance.SharesLeaderDaysType;//计算天数类型
+            int[] daysType = { 1, 2, 3, 4 };//计算天数类型
             calSharesBaseInfo(shares_base, shares_quotes, plate_base, shares_plate_rel, plate_quotes, shares_focusOn, shares_trendlike, ref result);
 
             ToWriteDebugLog("3：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
@@ -356,6 +357,9 @@ namespace MealTicket_Web_Handler
             {
                 Rank_15Days_dic = result.Shares_Rank.Rank_15Days.ToDictionary(k => k.SharesKey, v => v);
             }
+
+            var leaderPlate = Singleton.Instance.sessionHandler.GetLeaderShares_ByShares(false);
+
             foreach (var item in result.Shares_Info)
             {
                 int totalRiseRate = 0;
@@ -394,8 +398,17 @@ namespace MealTicket_Web_Handler
                 };
                 result.Shares_Rank.Rank_Overall.Add(tempOverall);
 
+                if (!leaderPlate.ContainsKey(item.Key))
+                {
+                    continue;
+                }
+                var realPlate = leaderPlate[item.Key];
                 foreach (var plate in item.Value.Plate_Dic)
                 {
+                    if (!realPlate.Contains(plate.Key))
+                    {
+                        continue;
+                    }
                     if (!result.Plate_Rank.Rank_Overall.ContainsKey(plate.Key))
                     {
                         result.Plate_Rank.Rank_Overall.Add(plate.Key, new SortedSet<Shares_Statistic_Session_Overall>());

@@ -19,6 +19,11 @@ namespace MealTicket_Web_Handler
         public int RiseRate { get; set; }
 
         /// <summary>
+        /// 涨跌额
+        /// </summary>
+        public long RiseAmount { get; set; }
+
+        /// <summary>
         /// 是否炸板
         /// </summary>
         public bool IsLimitUpBomb { get; set; }
@@ -32,5 +37,15 @@ namespace MealTicket_Web_Handler
         /// 触发次数
         /// </summary>
         public int TriCount { get; set; }
+
+        /// <summary>
+        /// 预期量比
+        /// </summary>
+        public int RateExpect { get; set; }
+
+        /// <summary>
+        /// 当前量比
+        /// </summary>
+        public int RateNow { get; set; }
     }
 }

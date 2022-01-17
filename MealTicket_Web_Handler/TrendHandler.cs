@@ -486,7 +486,7 @@ namespace MealTicket_Web_Handler
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public PlateQuotesInfo GetPlateQuotesInfo(GetPlateQuotesInfoRequest request, HeadBase basedata) 
+        public PlateQuotesInfo GetPlateQuotesInfo(GetPlateQuotesInfoRequest request, HeadBase basedata)
         {
             PlateQuotesInfo result = new PlateQuotesInfo();
             result.RankInfo = new PlateRankInfo();
@@ -506,7 +506,7 @@ namespace MealTicket_Web_Handler
             result.CirculatingCapital = plate_base.CirculatingCapital;
             result.ClosedPrice = plate_base.ClosedPrice;
             result.MaxPrice = plate_base.MaxPrice;
-            result.MinPrice= plate_base.MinPrice;
+            result.MinPrice = plate_base.MinPrice;
             result.OpenedPrice = plate_base.OpenedPrice;
             result.PresentPrice = plate_base.CurrPrice;
             result.TodayDealAmount = plate_base.DealAmount;
@@ -518,63 +518,51 @@ namespace MealTicket_Web_Handler
             if (plate_statistic.Plate_Rank != null)
             {
                 int idx = 0;
-                if (Singleton.Instance.SharesLeaderDaysType.Contains(1))
+                foreach (var item in plate_statistic.Plate_Rank.Rank_3Days)
                 {
-                    foreach (var item in plate_statistic.Plate_Rank.Rank_3Days)
+                    idx++;
+                    if (item.PlateId == request.PlateId)
                     {
-                        idx++;
-                        if (item.PlateId == request.PlateId)
-                        {
-                            result.RankInfo.Day3Rank = idx;
-                            result.RankInfo.Day3RealDays = item.RealDays;
-                            result.RankInfo.Day3RiseRate = item.RiseRate;
-                            break;
-                        }
+                        result.RankInfo.Day3Rank = idx;
+                        result.RankInfo.Day3RealDays = item.RealDays;
+                        result.RankInfo.Day3RiseRate = item.RiseRate;
+                        break;
                     }
                 }
                 idx = 0;
-                if (Singleton.Instance.SharesLeaderDaysType.Contains(2))
+                foreach (var item in plate_statistic.Plate_Rank.Rank_5Days)
                 {
-                    foreach (var item in plate_statistic.Plate_Rank.Rank_5Days)
+                    idx++;
+                    if (item.PlateId == request.PlateId)
                     {
-                        idx++;
-                        if (item.PlateId == request.PlateId)
-                        {
-                            result.RankInfo.Day5Rank = idx;
-                            result.RankInfo.Day5RealDays = item.RealDays;
-                            result.RankInfo.Day5RiseRate = item.RiseRate;
-                            break;
-                        }
+                        result.RankInfo.Day5Rank = idx;
+                        result.RankInfo.Day5RealDays = item.RealDays;
+                        result.RankInfo.Day5RiseRate = item.RiseRate;
+                        break;
                     }
                 }
                 idx = 0;
-                if (Singleton.Instance.SharesLeaderDaysType.Contains(3))
+                foreach (var item in plate_statistic.Plate_Rank.Rank_10Days)
                 {
-                    foreach (var item in plate_statistic.Plate_Rank.Rank_10Days)
+                    idx++;
+                    if (item.PlateId == request.PlateId)
                     {
-                        idx++;
-                        if (item.PlateId == request.PlateId)
-                        {
-                            result.RankInfo.Day10Rank = idx;
-                            result.RankInfo.Day10RealDays = item.RealDays;
-                            result.RankInfo.Day10RiseRate = item.RiseRate;
-                            break;
-                        }
+                        result.RankInfo.Day10Rank = idx;
+                        result.RankInfo.Day10RealDays = item.RealDays;
+                        result.RankInfo.Day10RiseRate = item.RiseRate;
+                        break;
                     }
                 }
                 idx = 0;
-                if (Singleton.Instance.SharesLeaderDaysType.Contains(4))
+                foreach (var item in plate_statistic.Plate_Rank.Rank_15Days)
                 {
-                    foreach (var item in plate_statistic.Plate_Rank.Rank_15Days)
+                    idx++;
+                    if (item.PlateId == request.PlateId)
                     {
-                        idx++;
-                        if (item.PlateId == request.PlateId)
-                        {
-                            result.RankInfo.Day15Rank = idx;
-                            result.RankInfo.Day15RealDays = item.RealDays;
-                            result.RankInfo.Day15RiseRate = item.RiseRate;
-                            break;
-                        }
+                        result.RankInfo.Day15Rank = idx;
+                        result.RankInfo.Day15RealDays = item.RealDays;
+                        result.RankInfo.Day15RiseRate = item.RiseRate;
+                        break;
                     }
                 }
                 idx = 0;
@@ -25034,6 +25022,115 @@ select @buyId;";
             Dictionary<long, Dictionary<long, Shares_Statistic_Session_Overall>> plateRank_5Days = new Dictionary<long, Dictionary<long, Shares_Statistic_Session_Overall>>();
             Dictionary<long, Dictionary<long, Shares_Statistic_Session_Overall>> plateRank_10Days = new Dictionary<long, Dictionary<long, Shares_Statistic_Session_Overall>>();
             Dictionary<long, Dictionary<long, Shares_Statistic_Session_Overall>> plateRank_15Days = new Dictionary<long, Dictionary<long, Shares_Statistic_Session_Overall>>();
+<<<<<<< HEAD
+=======
+            foreach (var item in shares_session.Plate_Rank.Rank_Overall)
+            {
+                plateRank_overall.Add(item.Key, new Dictionary<long, Shares_Statistic_Session_Overall>());
+                var tempRank = plateRank_overall[item.Key];
+                idx = 0;
+                foreach (var item2 in item.Value)
+                {
+                    idx++;
+                    tempRank.Add(item2.SharesKey, new Shares_Statistic_Session_Overall 
+                    {
+                        SharesKey= item2.SharesKey,
+                        RealDays=item2.RealDays,
+                        RiseRate=item2.RiseRate,
+                        IsRealPlate=item2.IsRealPlate,
+                        TotalRank= idx
+                    });
+                }
+            }
+            foreach (var item in shares_session.Plate_Rank.Rank_3Days)
+            {
+                plateRank_3Days.Add(item.Key, new Dictionary<long, Shares_Statistic_Session_Overall>());
+                var tempRank = plateRank_3Days[item.Key];
+                idx = 0;
+                foreach (var item2 in item.Value)
+                {
+                    if (!item2.IsRealPlate)
+                    {
+                        continue;
+                    }
+                    idx++;
+                    tempRank.Add(item2.SharesKey, new Shares_Statistic_Session_Overall
+                    {
+                        SharesKey = item2.SharesKey,
+                        RealDays = item2.RealDays,
+                        RiseRate = item2.RiseRate,
+                        IsRealPlate = item2.IsRealPlate,
+                        TotalRank = idx
+                    });
+                }
+            }
+            foreach (var item in shares_session.Plate_Rank.Rank_5Days)
+            {
+                plateRank_5Days.Add(item.Key, new Dictionary<long, Shares_Statistic_Session_Overall>());
+                var tempRank = plateRank_5Days[item.Key];
+                idx = 0;
+                foreach (var item2 in item.Value)
+                {
+                    if (!item2.IsRealPlate)
+                    {
+                        continue;
+                    }
+                    idx++;
+                    tempRank.Add(item2.SharesKey, new Shares_Statistic_Session_Overall
+                    {
+                        SharesKey = item2.SharesKey,
+                        RealDays = item2.RealDays,
+                        RiseRate = item2.RiseRate,
+                        IsRealPlate = item2.IsRealPlate,
+                        TotalRank = idx
+                    });
+                }
+            }
+            foreach (var item in shares_session.Plate_Rank.Rank_10Days)
+            {
+                plateRank_10Days.Add(item.Key, new Dictionary<long, Shares_Statistic_Session_Overall>());
+                var tempRank = plateRank_10Days[item.Key];
+                idx = 0;
+                foreach (var item2 in item.Value)
+                {
+                    if (!item2.IsRealPlate)
+                    {
+                        continue;
+                    }
+                    idx++;
+                    tempRank.Add(item2.SharesKey, new Shares_Statistic_Session_Overall
+                    {
+                        SharesKey = item2.SharesKey,
+                        RealDays = item2.RealDays,
+                        RiseRate = item2.RiseRate,
+                        IsRealPlate = item2.IsRealPlate,
+                        TotalRank = idx
+                    });
+                }
+            }
+            foreach (var item in shares_session.Plate_Rank.Rank_15Days)
+            {
+                plateRank_15Days.Add(item.Key, new Dictionary<long, Shares_Statistic_Session_Overall>());
+                var tempRank = plateRank_15Days[item.Key];
+                idx = 0;
+                foreach (var item2 in item.Value)
+                {
+                    if (!item2.IsRealPlate)
+                    {
+                        continue;
+                    }
+                    idx++;
+                    tempRank.Add(item2.SharesKey, new Shares_Statistic_Session_Overall
+                    {
+                        SharesKey = item2.SharesKey,
+                        RealDays = item2.RealDays,
+                        RiseRate = item2.RiseRate,
+                        IsRealPlate = item2.IsRealPlate,
+                        TotalRank = idx
+                    });
+                }
+            }
+>>>>>>> 466b79e3a2296140e0bf5a8feca47293bd422fb7
 
             foreach (var item in sharesKeyList)
             {
@@ -25044,6 +25141,9 @@ select @buyId;";
                 itemTemp.TriTime = item.Value.TriTime;
                 itemTemp.RiseRate = item.Value.RiseRate;
                 itemTemp.IsLimitUpBomb = item.Value.IsLimitUpBomb;
+                itemTemp.RateNow = item.Value.RateNow;
+                itemTemp.RateExpect = item.Value.RateExpect;
+                itemTemp.RiseAmount = item.Value.RiseAmount;
 
                 if (shares_session.Shares_Info.ContainsKey(item.Key))
                 {
@@ -25151,13 +25251,16 @@ select @buyId;";
                         if (shareInfo.Plate_Tag.Tag_3Days.ContainsKey(plate.Key))
                         {
                             var day3 = shareInfo.Plate_Tag.Tag_3Days[plate.Key];
-                            if (day3.IsForce1)
+                            if (Singleton.Instance.SharesLeaderDaysType.Contains(1))
                             {
-                                force1.Add(1);
-                            }
-                            if (day3.IsForce2)
-                            {
-                                force2.Add(1);
+                                if (day3.IsForce1)
+                                {
+                                    force1.Add(1);
+                                }
+                                if (day3.IsForce2)
+                                {
+                                    force2.Add(1);
+                                }
                             }
                             rank3.LeaderType = day3.LeaderType;
                             rank3.MainArmyType = day3.MainarmyType;
@@ -25166,13 +25269,16 @@ select @buyId;";
                         if (shareInfo.Plate_Tag.Tag_5Days.ContainsKey(plate.Key))
                         {
                             var day5 = shareInfo.Plate_Tag.Tag_5Days[plate.Key];
-                            if (day5.IsForce1)
+                            if (Singleton.Instance.SharesLeaderDaysType.Contains(2))
                             {
-                                force1.Add(2);
-                            }
-                            if (day5.IsForce2)
-                            {
-                                force2.Add(2);
+                                if (day5.IsForce1)
+                                {
+                                    force1.Add(2);
+                                }
+                                if (day5.IsForce2)
+                                {
+                                    force2.Add(2);
+                                }
                             }
                             rank5.LeaderType = day5.LeaderType;
                             rank5.MainArmyType = day5.MainarmyType;
@@ -25181,13 +25287,16 @@ select @buyId;";
                         if (shareInfo.Plate_Tag.Tag_10Days.ContainsKey(plate.Key))
                         {
                             var day10 = shareInfo.Plate_Tag.Tag_10Days[plate.Key];
-                            if (day10.IsForce1)
+                            if (Singleton.Instance.SharesLeaderDaysType.Contains(3))
                             {
-                                force1.Add(3);
-                            }
-                            if (day10.IsForce2)
-                            {
-                                force2.Add(3);
+                                if (day10.IsForce1)
+                                {
+                                    force1.Add(3);
+                                }
+                                if (day10.IsForce2)
+                                {
+                                    force2.Add(3);
+                                }
                             }
                             rank10.LeaderType = day10.LeaderType;
                             rank10.MainArmyType = day10.MainarmyType;
@@ -25196,13 +25305,16 @@ select @buyId;";
                         if (shareInfo.Plate_Tag.Tag_15Days.ContainsKey(plate.Key))
                         {
                             var day15 = shareInfo.Plate_Tag.Tag_15Days[plate.Key];
-                            if (day15.IsForce1)
+                            if (Singleton.Instance.SharesLeaderDaysType.Contains(4))
                             {
-                                force1.Add(4);
-                            }
-                            if (day15.IsForce2)
-                            {
-                                force2.Add(4);
+                                if (day15.IsForce1)
+                                {
+                                    force1.Add(4);
+                                }
+                                if (day15.IsForce2)
+                                {
+                                    force2.Add(4);
+                                }
                             }
                             rank15.LeaderType = day15.LeaderType;
                             rank15.MainArmyType = day15.MainarmyType;

@@ -247,7 +247,8 @@ namespace MealTicket_Web_Handler.Model
                 {
                     return false;
                 }
-                return Rank.Where(e => e.IsLeader).Count() > 0;
+                int[] daysType = Singleton.Instance.SharesLeaderDaysType;
+                return Rank.Where(e => e.IsLeader && daysType.Contains(e.DayType)).Count() > 0;
             }
         }
 
