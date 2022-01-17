@@ -309,7 +309,5 @@ namespace MealTicket_Web_Handler.Model
         /// 自带股票code
         /// </summary>
         public string SharesCode { get; set; }
-
-        public bool IsShowPlateSharesLeader { get; set; }
     }
 }

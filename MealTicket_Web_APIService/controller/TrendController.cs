@@ -1531,23 +1531,6 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
-        /// 获取板块龙头模式股票列表
-        /// </summary>
-        /// <returns></returns>
-        [Route("plate/leadermodel/shares/list"), HttpPost]
-        [Description("获取板块龙头模式股票列表(新)")]
-        [CheckUserLoginFilter]
-        public object GetPlateLeaderModelSharesList(GetPlateLeaderModelSharesListRequest request)
-        {
-            if (request == null)
-            {
-                throw new WebApiException(400, "参数错误");
-            }
-            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
-            return trendHandler.GetPlateLeaderModelSharesList(request, basedata);
-        }
-
-        /// <summary>
         /// 添加买入条件单股票
         /// </summary>
         /// <returns></returns>
@@ -8965,17 +8948,34 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
-        /// 获取板块龙头股票
+        /// 获取所有板块龙头股票
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
         [Route("shares/energy/index/list"), HttpPost]
-        [Description("获取板块龙头股票")]
+        [Description("获取所有板块龙头股票")]
         [CheckUserLoginFilter]
         public SortedSet<SharesEnergyIndex> GetSharesEnergyIndexList()
         {
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.GetSharesEnergyIndexList(basedata);
+        }
+
+        /// <summary>
+        /// 获取某个板块龙头股票
+        /// </summary>
+        /// <returns></returns>
+        [Route("plate/leadermodel/shares/list"), HttpPost]
+        [Description("获取某个板块龙头股票")]
+        [CheckUserLoginFilter]
+        public object GetPlateLeaderModelSharesList(GetPlateLeaderModelSharesListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetPlateLeaderModelSharesList(request, basedata);
         }
 
         /// <summary>
