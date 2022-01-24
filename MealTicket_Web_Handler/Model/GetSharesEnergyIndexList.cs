@@ -10,6 +10,14 @@ namespace MealTicket_Web_Handler.Model
     {
     }
 
+    public class GetSharesEnergyIndexListRequest
+    {
+        /// <summary>
+        /// 是否仅刷新数据
+        /// </summary>
+        public bool IsRefreshOnly { get; set; }
+    }
+
     public class SharesEnergyIndex : IComparable<SharesEnergyIndex>
     {
         /// <summary>
@@ -38,6 +46,16 @@ namespace MealTicket_Web_Handler.Model
         public DateTime TriTime{ get; set; }
 
         /// <summary>
+        /// 类型1新数据 2当日新高 3当日新低 4涨幅达标 5跌幅达标
+        /// </summary>
+        public int TriType { get; set; }
+
+        /// <summary>
+        /// 最近获取数据时间
+        /// </summary>
+        public DateTime? DataGetTime { get; set; }
+
+        /// <summary>
         /// 触发次数
         /// </summary>
         public int TriCount { get; set; }
@@ -49,8 +67,12 @@ namespace MealTicket_Web_Handler.Model
         {
             get
             {
+                if (DataGetTime == null)
+                {
+                    return "-1";
+                }
                 DateTime timeNow = DateTime.Now;
-                int intervalSecond = (int)(timeNow - TriTime).TotalSeconds;
+                int intervalSecond = (int)(timeNow - DataGetTime.Value).TotalSeconds;
                 if (TriCount > 1)
                 {
                     if (intervalSecond < 60)
@@ -102,6 +124,11 @@ namespace MealTicket_Web_Handler.Model
         /// 股票当前涨跌幅
         /// </summary>
         public int RiseRate { get; set; }
+
+        /// <summary>
+        /// 昨日收盘价
+        /// </summary>
+        public long ClosedPrice { get; set; }
 
         /// <summary>
         /// 涨跌额

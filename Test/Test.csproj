@@ -80,6 +80,10 @@
       <Project>{100aabcb-bbbc-46dd-b494-57d56083590a}</Project>
       <Name>MealTicket_DBCommon</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MealTicket_Handler\MealTicket_Handler.csproj">
+      <Project>{24FC1167-EA9E-4E74-8842-EA959B2E4D7F}</Project>
+      <Name>MealTicket_Handler</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MealTicket_Web_Handler\MealTicket_Web_Handler.csproj">
       <Project>{209718FF-927C-4DDA-B3DC-24B49FE643AE}</Project>
       <Name>MealTicket_Web_Handler</Name>

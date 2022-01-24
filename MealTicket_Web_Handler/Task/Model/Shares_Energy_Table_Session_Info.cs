@@ -24,6 +24,11 @@ namespace MealTicket_Web_Handler
         public long RiseAmount { get; set; }
 
         /// <summary>
+        /// 昨日收盘价
+        /// </summary>
+        public long ClosedPrice { get; set; }
+
+        /// <summary>
         /// 是否炸板
         /// </summary>
         public bool IsLimitUpBomb { get; set; }
@@ -47,5 +52,10 @@ namespace MealTicket_Web_Handler
         /// 当前量比
         /// </summary>
         public int RateNow { get; set; }
+
+        /// <summary>
+        /// 是否有效
+        /// </summary>
+        public bool IsVaild { get; set; }
     }
 }

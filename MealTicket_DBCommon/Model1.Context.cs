@@ -339,6 +339,10 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_setting_plate_index> t_setting_plate_index { get; set; }
         public virtual DbSet<t_setting_plate_linkage> t_setting_plate_linkage { get; set; }
         public virtual DbSet<t_setting_plate_shares_linkage> t_setting_plate_shares_linkage { get; set; }
+        public virtual DbSet<t_plate_leader_tri> t_plate_leader_tri { get; set; }
+        public virtual DbSet<t_plate_leader_tri_record> t_plate_leader_tri_record { get; set; }
+        public virtual DbSet<t_plate_energyindex> t_plate_energyindex { get; set; }
+        public virtual DbSet<t_plate_energyindex_min> t_plate_energyindex_min { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)

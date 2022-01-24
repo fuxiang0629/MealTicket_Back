@@ -5076,5 +5076,102 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="t_plate_leader_tri">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_plate_leader_tri">
+        <MappingFragment StoreEntitySet="t_plate_leader_tri">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="DataGetTime" ColumnName="DataGetTime" />
+          <ScalarProperty Name="PushDesc" ColumnName="PushDesc" />
+          <ScalarProperty Name="TriCount" ColumnName="TriCount" />
+          <ScalarProperty Name="MinPushDownRateInterval" ColumnName="MinPushDownRateInterval" />
+          <ScalarProperty Name="MinPushRiseRateInterval" ColumnName="MinPushRiseRateInterval" />
+          <ScalarProperty Name="MinPushMinRateInterval" ColumnName="MinPushMinRateInterval" />
+          <ScalarProperty Name="MinPushMaxRateInterval" ColumnName="MinPushMaxRateInterval" />
+          <ScalarProperty Name="MinPushTimeInterval" ColumnName="MinPushTimeInterval" />
+          <ScalarProperty Name="LastPushMinRate" ColumnName="LastPushMinRate" />
+          <ScalarProperty Name="LastPushMaxRate" ColumnName="LastPushMaxRate" />
+          <ScalarProperty Name="LastPushType" ColumnName="LastPushType" />
+          <ScalarProperty Name="LastPushPrice" ColumnName="LastPushPrice" />
+          <ScalarProperty Name="LastPushRate" ColumnName="LastPushRate" />
+          <ScalarProperty Name="LastPushTime" ColumnName="LastPushTime" />
+          <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+          <ScalarProperty Name="Market" ColumnName="Market" />
+          <ScalarProperty Name="SharesKey" ColumnName="SharesKey" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_plate_leader_tri_record">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_plate_leader_tri_record">
+        <MappingFragment StoreEntitySet="t_plate_leader_tri_record">
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="PushRate" ColumnName="PushRate" />
+          <ScalarProperty Name="PushPrice" ColumnName="PushPrice" />
+          <ScalarProperty Name="PushType" ColumnName="PushType" />
+          <ScalarProperty Name="PushDesc" ColumnName="PushDesc" />
+          <ScalarProperty Name="PushTime" ColumnName="PushTime" />
+          <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+          <ScalarProperty Name="Market" ColumnName="Market" />
+          <ScalarProperty Name="SharesKey" ColumnName="SharesKey" />
+          <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_plate_energyindex">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_plate_energyindex">
+        <MappingFragment StoreEntitySet="t_plate_energyindex">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="PlateVolumeExceptRate" ColumnName="PlateVolumeExceptRate" />
+          <ScalarProperty Name="PlateVolumeCurrRate" ColumnName="PlateVolumeCurrRate" />
+          <ScalarProperty Name="NewHighKeyList" ColumnName="NewHighKeyList" />
+          <ScalarProperty Name="NewHighIndexScore" ColumnName="NewHighIndexScore" />
+          <ScalarProperty Name="NewHighIndexRate" ColumnName="NewHighIndexRate" />
+          <ScalarProperty Name="SharesLinkageKeyList" ColumnName="SharesLinkageKeyList" />
+          <ScalarProperty Name="SharesLinkageIndexScore" ColumnName="SharesLinkageIndexScore" />
+          <ScalarProperty Name="SharesLinkageIndexRate" ColumnName="SharesLinkageIndexRate" />
+          <ScalarProperty Name="PlateLinkageKeyList" ColumnName="PlateLinkageKeyList" />
+          <ScalarProperty Name="PlateLinkageIndexScore" ColumnName="PlateLinkageIndexScore" />
+          <ScalarProperty Name="PlateLinkageIndexRate" ColumnName="PlateLinkageIndexRate" />
+          <ScalarProperty Name="LeaderKeyList" ColumnName="LeaderKeyList" />
+          <ScalarProperty Name="LeaderIndexScore" ColumnName="LeaderIndexScore" />
+          <ScalarProperty Name="LeaderIndexRate" ColumnName="LeaderIndexRate" />
+          <ScalarProperty Name="EnergyIndex" ColumnName="EnergyIndex" />
+          <ScalarProperty Name="Time" ColumnName="Time" />
+          <ScalarProperty Name="DayType" ColumnName="DayType" />
+          <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="t_plate_energyindex_min">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_plate_energyindex_min">
+        <MappingFragment StoreEntitySet="t_plate_energyindex_min">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="PlateVolumeExceptRate" ColumnName="PlateVolumeExceptRate" />
+          <ScalarProperty Name="PlateVolumeCurrRate" ColumnName="PlateVolumeCurrRate" />
+          <ScalarProperty Name="NewHighKeyList" ColumnName="NewHighKeyList" />
+          <ScalarProperty Name="NewHighIndexScore" ColumnName="NewHighIndexScore" />
+          <ScalarProperty Name="NewHighIndexRate" ColumnName="NewHighIndexRate" />
+          <ScalarProperty Name="SharesLinkageKeyList" ColumnName="SharesLinkageKeyList" />
+          <ScalarProperty Name="SharesLinkageIndexScore" ColumnName="SharesLinkageIndexScore" />
+          <ScalarProperty Name="SharesLinkageIndexRate" ColumnName="SharesLinkageIndexRate" />
+          <ScalarProperty Name="PlateLinkageKeyList" ColumnName="PlateLinkageKeyList" />
+          <ScalarProperty Name="PlateLinkageIndexScore" ColumnName="PlateLinkageIndexScore" />
+          <ScalarProperty Name="PlateLinkageIndexRate" ColumnName="PlateLinkageIndexRate" />
+          <ScalarProperty Name="LeaderKeyList" ColumnName="LeaderKeyList" />
+          <ScalarProperty Name="LeaderIndexScore" ColumnName="LeaderIndexScore" />
+          <ScalarProperty Name="LeaderIndexRate" ColumnName="LeaderIndexRate" />
+          <ScalarProperty Name="EnergyIndex" ColumnName="EnergyIndex" />
+          <ScalarProperty Name="Time" ColumnName="Time" />
+          <ScalarProperty Name="DayType" ColumnName="DayType" />
+          <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

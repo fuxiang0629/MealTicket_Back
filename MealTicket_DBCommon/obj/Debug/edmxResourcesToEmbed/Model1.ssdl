@@ -2213,6 +2213,99 @@
     <Property Name="CreateTime" Type="datetime" Nullable="false" />
     <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
+  <EntityType Name="t_plate_energyindex">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PlateId" Type="bigint" Nullable="false" />
+    <Property Name="DayType" Type="int" Nullable="false" />
+    <Property Name="Time" Type="datetime" Nullable="false" />
+    <Property Name="EnergyIndex" Type="int" Nullable="false" />
+    <Property Name="LeaderIndexRate" Type="int" Nullable="false" />
+    <Property Name="LeaderIndexScore" Type="int" Nullable="false" />
+    <Property Name="LeaderKeyList" Type="varchar(max)" />
+    <Property Name="PlateLinkageIndexRate" Type="int" Nullable="false" />
+    <Property Name="PlateLinkageIndexScore" Type="int" Nullable="false" />
+    <Property Name="PlateLinkageKeyList" Type="varchar(max)" />
+    <Property Name="SharesLinkageIndexRate" Type="int" Nullable="false" />
+    <Property Name="SharesLinkageIndexScore" Type="int" Nullable="false" />
+    <Property Name="SharesLinkageKeyList" Type="varchar(max)" />
+    <Property Name="NewHighIndexRate" Type="int" Nullable="false" />
+    <Property Name="NewHighIndexScore" Type="int" Nullable="false" />
+    <Property Name="NewHighKeyList" Type="varchar(max)" />
+    <Property Name="PlateVolumeCurrRate" Type="int" Nullable="false" />
+    <Property Name="PlateVolumeExceptRate" Type="int" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_plate_energyindex_min">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="PlateId" Type="bigint" Nullable="false" />
+    <Property Name="DayType" Type="int" Nullable="false" />
+    <Property Name="Time" Type="datetime" Nullable="false" />
+    <Property Name="EnergyIndex" Type="int" Nullable="false" />
+    <Property Name="LeaderIndexRate" Type="int" Nullable="false" />
+    <Property Name="LeaderIndexScore" Type="int" Nullable="false" />
+    <Property Name="LeaderKeyList" Type="varchar(max)" />
+    <Property Name="PlateLinkageIndexRate" Type="int" Nullable="false" />
+    <Property Name="PlateLinkageIndexScore" Type="int" Nullable="false" />
+    <Property Name="PlateLinkageKeyList" Type="varchar(max)" />
+    <Property Name="SharesLinkageIndexRate" Type="int" Nullable="false" />
+    <Property Name="SharesLinkageIndexScore" Type="int" Nullable="false" />
+    <Property Name="SharesLinkageKeyList" Type="varchar(max)" />
+    <Property Name="NewHighIndexRate" Type="int" Nullable="false" />
+    <Property Name="NewHighIndexScore" Type="int" Nullable="false" />
+    <Property Name="NewHighKeyList" Type="varchar(max)" />
+    <Property Name="PlateVolumeCurrRate" Type="int" Nullable="false" />
+    <Property Name="PlateVolumeExceptRate" Type="int" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_plate_leader_tri">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="SharesKey" Type="bigint" StoreGeneratedPattern="Computed" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="LastPushTime" Type="datetime" />
+    <Property Name="LastPushRate" Type="int" />
+    <Property Name="LastPushPrice" Type="bigint" />
+    <Property Name="LastPushType" Type="int" />
+    <Property Name="LastPushMaxRate" Type="int" />
+    <Property Name="LastPushMinRate" Type="int" />
+    <Property Name="MinPushTimeInterval" Type="int" Nullable="false" />
+    <Property Name="MinPushMaxRateInterval" Type="int" Nullable="false" />
+    <Property Name="MinPushMinRateInterval" Type="int" Nullable="false" />
+    <Property Name="MinPushRiseRateInterval" Type="int" Nullable="false" />
+    <Property Name="MinPushDownRateInterval" Type="int" Nullable="false" />
+    <Property Name="TriCount" Type="int" Nullable="false" />
+    <Property Name="PushDesc" Type="nvarchar" MaxLength="200" />
+    <Property Name="DataGetTime" Type="datetime" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_plate_leader_tri_record">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="SharesKey" Type="bigint" StoreGeneratedPattern="Computed" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="PushTime" Type="datetime" Nullable="false" />
+    <Property Name="PushDesc" Type="nvarchar" MaxLength="200" />
+    <Property Name="PushType" Type="int" Nullable="false" />
+    <Property Name="PushPrice" Type="bigint" Nullable="false" />
+    <Property Name="PushRate" Type="int" Nullable="false" />
+    <Property Name="Date" Type="varchar" MaxLength="10" StoreGeneratedPattern="Computed" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_plate_shares_rel_tag_dayleader">
     <Key>
       <PropertyRef Name="Id" />
@@ -5486,6 +5579,10 @@
     <EntitySet Name="t_payment_channel" EntityType="Self.t_payment_channel" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_payment_channel_account_rel" EntityType="Self.t_payment_channel_account_rel" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_payment_channel_group" EntityType="Self.t_payment_channel_group" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_plate_energyindex" EntityType="Self.t_plate_energyindex" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_plate_energyindex_min" EntityType="Self.t_plate_energyindex_min" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_plate_leader_tri" EntityType="Self.t_plate_leader_tri" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_plate_leader_tri_record" EntityType="Self.t_plate_leader_tri_record" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_plate_shares_rel_tag_dayleader" EntityType="Self.t_plate_shares_rel_tag_dayleader" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_plate_shares_rel_tag_dayleader_date" EntityType="Self.t_plate_shares_rel_tag_dayleader_date" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_plate_shares_rel_tag_leader" EntityType="Self.t_plate_shares_rel_tag_leader" Schema="dbo" store:Type="Tables" />

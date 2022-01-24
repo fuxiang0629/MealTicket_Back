@@ -22,6 +22,36 @@ namespace MealTicket_Web_Handler.Model
 
         public int TotalRank { get; set; }
 
+        /// <summary>
+        /// 板块内排名是否加粗
+        /// </summary>
+        public bool PlateRankFocuson
+        {
+            get 
+            {
+                if (PlateRank > 0 && PlateRank <= Singleton.Instance.SharesLeaderPlateRank)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 板块内排名是否加粗
+        /// </summary>
+        public bool TotalRankFocuson
+        {
+            get
+            {
+                if (TotalRank > 0 && TotalRank <= Singleton.Instance.SharesLeaderTotalRank)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
         public int RealSharesCount { get; set; }
 
         public int RealDays { get; set; }
@@ -254,23 +284,6 @@ namespace MealTicket_Web_Handler.Model
 
         public bool IsShowPlate { get; set; }
 
-        public int OverallRank 
-        {
-            get 
-            {
-                if (Rank == null)
-                {
-                    return int.MaxValue;
-                }
-                var temp = Rank.Where(e => e.PlateRank > 0).ToList();
-                if (temp.Count() == 0)
-                {
-                    return int.MaxValue;
-                }
-                return (int)(temp.Average(e => e.PlateRank) * 10000);
-            }
-        }
-
         /// <summary>
         /// 板块内综合排名
         /// </summary>
@@ -311,4 +324,61 @@ namespace MealTicket_Web_Handler.Model
         /// </summary>
         public string SharesCode { get; set; }
     }
+
+    public class SharesAccountInfo 
+    {
+
+        /// <summary>
+        /// 条件买入Id
+        /// </summary>
+        public long Id { get; set; }
+
+        /// <summary>
+        /// 条件买入状态
+        /// </summary>
+        public int ConditionStatus { get; set; }
+
+        /// <summary>
+        /// 关系Id
+        /// </summary>
+        public long RelId { get; set; }
+
+        /// <summary>
+        /// 自定义分组Id
+        /// </summary>
+        public List<long> GroupList { get; set; }
+
+        /// <summary>
+        /// 是否外面传入的股票
+        /// </summary>
+        public bool IsMain { get; set; }
+
+        /// <summary>
+        /// 自选股分组数量
+        /// </summary>
+        public List<long> MySharesGroupList { get; set; }
+
+        /// <summary>
+        /// 是否存在股票监控列表
+        /// </summary>
+        public bool IsExists { get; set; }
+
+        /// <summary>
+        /// 最大涨跌幅
+        /// </summary>
+        public int Range { get; set; }
+
+        /// <summary>
+        /// 杠杆倍数
+        /// </summary>
+        public int Fundmultiple { get; set; }
+    }
+
+    public class SharesLeaderTotalInfo 
+    {
+        public SharesAccountInfo SharesAccountInfo { get; set; }
+
+        public SharesEnergyIndex SharesEnergyIndex { get; set; }
+    }
 }
+

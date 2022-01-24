@@ -93,3 +93,11 @@ D:\项目\饭票\后端\Test\bin\Debug\stock_db_core.pdb
 F:\项目\饭票后端\Test\bin\Debug\NCalc.dll
 F:\项目\饭票后端\Test\bin\Debug\FanpCommonBusinessCore.dll
 F:\项目\饭票后端\Test\bin\Debug\FanpCommonLibrary.dll
+F:\项目\饭票后端\Test\bin\Debug\MealTicket_Handler.dll
+F:\项目\饭票后端\Test\bin\Debug\AopSdk.dll
+F:\项目\饭票后端\Test\bin\Debug\NoticeHandler.dll
+F:\项目\饭票后端\Test\bin\Debug\MealTicket_Handler.pdb
+F:\项目\饭票后端\Test\bin\Debug\MealTicket_Handler.xml
+F:\项目\饭票后端\Test\bin\Debug\MealTicket_Handler.dll.config
+F:\项目\饭票后端\Test\bin\Debug\NoticeHandler.pdb
+F:\项目\饭票后端\Test\bin\Debug\NoticeHandler.dll.config

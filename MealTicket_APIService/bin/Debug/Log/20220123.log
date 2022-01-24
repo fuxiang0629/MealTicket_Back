@@ -1,0 +1,192 @@
+2022/1/23 11:07:25
+===开始初始化最后一条数据缓存===
+
+
+2022/1/23 11:07:26
+===结束初始化最后一条数据缓存===
+
+
+2022/1/23 11:07:26
+===开始当天板块内股票快照缓存===
+
+
+2022/1/23 11:07:26
+===加载快照缓存===
+
+
+2022/1/23 11:07:27
+===加载快照缓存1===
+
+
+2022/1/23 11:07:27
+===加载快照缓存2===
+
+
+2022/1/23 11:07:27
+===加载快照缓存3===
+
+
+2022/1/23 11:07:27
+===加载快照缓存4===
+
+
+2022/1/23 11:07:27
+===结束当天板块内股票快照缓存===
+
+
+2022/1/23 11:07:27
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1day' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 389
+ClientConnectionId:a5937a26-46ae-4dbb-b636-11703601c381
+Error Number:308,State:1,Class:16
+
+2022/1/23 11:07:27
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1min' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 389
+ClientConnectionId:d6bf37d9-48c0-4154-a6f7-22ccdbc61ed2
+Error Number:308,State:1,Class:16
+
+2022/1/23 11:07:27
+===结束加载板块计算结果缓存===
+
+
+2022/1/23 11:07:27
+监听队列已链接
+
+
+2022/1/23 11:10:28
+短信发送出错
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2022/1/23 11:20:17
+需要更新K线的股票数据扔到队列失败
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2022/1/23 11:30:57
+需要更新K线的股票数据扔到队列失败
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2022/1/23 21:34:27
+监听队列链接断开
+
+
+2022/1/23 21:34:27
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 你的主机中的软件中止了一个已建立的连接。。 ---> System.Net.Sockets.SocketException: 你的主机中的软件中止了一个已建立的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect() 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 190
+
+2022/1/23 21:34:30
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 你的主机中的软件中止了一个已建立的连接。。 ---> System.Net.Sockets.SocketException: 你的主机中的软件中止了一个已建立的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect() 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 190
+
+2022/1/23 21:34:33
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 你的主机中的软件中止了一个已建立的连接。。 ---> System.Net.Sockets.SocketException: 你的主机中的软件中止了一个已建立的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect() 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 190
+
+2022/1/23 21:34:36
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 你的主机中的软件中止了一个已建立的连接。。 ---> System.Net.Sockets.SocketException: 你的主机中的软件中止了一个已建立的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect() 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 190
+
+2022/1/23 21:34:39
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 你的主机中的软件中止了一个已建立的连接。。 ---> System.Net.Sockets.SocketException: 你的主机中的软件中止了一个已建立的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect() 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 190
+
+2022/1/23 21:34:41
+需要更新K线的股票数据扔到队列失败
+System.ComponentModel.Win32Exception (0x80004005): 不能访问网络位置。有关网络排除故障的信息，请参阅 Windows 帮助。
+
+2022/1/23 21:34:41
+SharesQuotesSession缓存加载失败
+System.ComponentModel.Win32Exception (0x80004005): 不能访问网络位置。有关网络排除故障的信息，请参阅 Windows 帮助。
+
+2022/1/23 21:34:41
+每天任务意外出错,继续执行
+System.ComponentModel.Win32Exception (0x80004005): 不能访问网络位置。有关网络排除故障的信息，请参阅 Windows 帮助。
+
+2022/1/23 21:34:41
+短信发送出错
+System.ComponentModel.Win32Exception (0x80004005): 不能访问网络位置。有关网络排除故障的信息，请参阅 Windows 帮助。
+
+2022/1/23 21:34:42
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 你的主机中的软件中止了一个已建立的连接。。 ---> System.Net.Sockets.SocketException: 你的主机中的软件中止了一个已建立的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect() 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 190
+

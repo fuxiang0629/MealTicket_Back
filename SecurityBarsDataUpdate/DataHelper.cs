@@ -186,7 +186,9 @@ namespace SecurityBarsDataUpdate
                             PreClosePrice=sharesData.YestodayClosedPrice,
                             Time=DateTime.Parse(timeNow.ToString("yyyy-MM-dd 09:30:00")),
                             TradeAmount=0,
-                            YestodayClosedPrice=sharesData.YestodayClosedPrice
+                            YestodayClosedPrice=sharesData.YestodayClosedPrice,
+                            PlateId=sharesData.PlateId,
+                            WeightType=sharesData.WeightType
                         }
                     };
                 }
@@ -223,7 +225,9 @@ namespace SecurityBarsDataUpdate
                             PreClosePrice=quotes.ClosedPrice,
                             Time=DateTime.Parse(timeNow.ToString("yyyy-MM-dd 09:30:00")),
                             TradeAmount=quotes.TotalAmount,
-                            YestodayClosedPrice=quotes.ClosedPrice
+                            YestodayClosedPrice=quotes.ClosedPrice,
+                            PlateId=sharesData.PlateId,
+                            WeightType=sharesData.WeightType
                         }
                     };
                 }
@@ -684,7 +688,7 @@ namespace SecurityBarsDataUpdate
             {
                 return false;
             }
-            if (result.PresentPrice > 0)
+            if (result.PresentPrice > 0 && result.ClosedPrice > 0 && result.OpenedPrice > 0 && result.MaxPrice > 0 && result.MinPrice > 0)
             {
                 return true;
             }

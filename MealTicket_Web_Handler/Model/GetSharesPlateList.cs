@@ -105,6 +105,11 @@ namespace MealTicket_Web_Handler
         /// </summary>
         public int Rank { get; set; }
 
+        /// <summary>
+        /// 综合涨跌幅
+        /// </summary>
+        public int OverallRank { get; set; }
+
         public bool IsFocusOn { get; set; }
 
         public List<int> IsForce1 { get; set; }

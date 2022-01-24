@@ -8955,10 +8955,10 @@ namespace MealTicket_Web_APIService.controller
         [Route("shares/energy/index/list"), HttpPost]
         [Description("获取所有板块龙头股票")]
         [CheckUserLoginFilter]
-        public SortedSet<SharesEnergyIndex> GetSharesEnergyIndexList()
+        public SortedSet<SharesEnergyIndex> GetSharesEnergyIndexList(GetSharesEnergyIndexListRequest request)
         {
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
-            return trendHandler.GetSharesEnergyIndexList(basedata);
+            return trendHandler.GetSharesEnergyIndexList(request,basedata);
         }
 
         /// <summary>

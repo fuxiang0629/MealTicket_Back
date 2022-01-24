@@ -470,17 +470,12 @@ namespace MealTicket_Web_Handler.Runner
             Logger.WriteFileLog(message, ex);
         }
 
-        public void _doCalTask(object obj) 
+        public void _doCalTask(object obj)
         {
             try
             {
                 ToWriteDebugLog("1:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                 var time_limit = Singleton.Instance.sessionHandler.GetShares_Limit_Time_Session();
-                //if (!DbHelper.CheckTradeTime7(null, time_limit) && !IsFirst)
-                //{
-                //    ChangeTimer();
-                //    return;
-                //}
 
                 IsFirst = false;
                 UpdateSessionContainer();//获取公用缓存
@@ -542,7 +537,10 @@ namespace MealTicket_Web_Handler.Runner
                         {
                             ToWriteDebugLog("35:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                         }
-                        InsertIntoDataBase(dayType, plateMonitors);
+                        if (DbHelper.CheckTradeTime7(null, time_limit))
+                        {
+                            InsertIntoDataBase(dayType, plateMonitors);
+                        }
                         if (dayType == 4)
                         {
                             ToWriteDebugLog("36:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
@@ -552,13 +550,16 @@ namespace MealTicket_Web_Handler.Runner
                 TaskThread.WaitAll(taskArr, Timeout.Infinite);
                 TaskThread.CloseAllTasks(taskArr);
                 ToWriteDebugLog("4:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
-                SetMinSession();
+                if (DbHelper.CheckTradeTime7(null, time_limit))
+                {
+                    SetMinSession();
+                }
                 ToWriteDebugLog("5:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                 ChangeTimer();
             }
             catch (Exception ex)
             {
-                Logger.WriteFileLog("计算板块动能失败",ex);
+                Logger.WriteFileLog("计算板块动能失败", ex);
             }
         }
 

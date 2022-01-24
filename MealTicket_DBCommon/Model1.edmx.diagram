@@ -317,6 +317,10 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_setting_plate_index" Width="1.5" PointX="54.375" PointY="10.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_setting_plate_linkage" Width="1.5" PointX="54.375" PointY="14.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_setting_plate_shares_linkage" Width="1.5" PointX="54.375" PointY="17.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_plate_leader_tri" Width="1.5" PointX="54.375" PointY="20.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_plate_leader_tri_record" Width="1.5" PointX="54.375" PointY="35.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_plate_energyindex" Width="1.5" PointX="44.375" PointY="54.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_plate_energyindex_min" Width="1.5" PointX="53.375" PointY="54.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

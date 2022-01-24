@@ -165,5 +165,10 @@ namespace MealTicket_Web_Handler.Model
         /// 板块排名
         /// </summary>
         public PlateRankInfo RankInfo { get; set; }
+
+        /// <summary>
+        /// 涨速
+        /// </summary>
+        public MinuteRiseInfo MinuteRise { get; set; }
     }
 }

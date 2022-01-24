@@ -1,0 +1,318 @@
+2022/1/20 14:51:29
+===开始初始化最后一条数据缓存===
+
+
+2022/1/20 14:51:30
+===结束初始化最后一条数据缓存===
+
+
+2022/1/20 14:51:30
+===开始当天板块内股票快照缓存===
+
+
+2022/1/20 14:51:30
+===加载快照缓存===
+
+
+2022/1/20 14:51:30
+===加载快照缓存1===
+
+
+2022/1/20 14:51:30
+===加载快照缓存2===
+
+
+2022/1/20 14:51:30
+===加载快照缓存3===
+
+
+2022/1/20 14:51:30
+===加载快照缓存4===
+
+
+2022/1/20 14:51:31
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 744
+
+2022/1/20 14:51:31
+===结束当天板块内股票快照缓存===
+
+
+2022/1/20 14:51:31
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1min' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 384
+ClientConnectionId:ea117165-9970-468a-bb1a-63c033581e05
+Error Number:308,State:1,Class:16
+
+2022/1/20 14:51:31
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1day' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 384
+ClientConnectionId:855771da-2a9d-40a0-99fa-b595cb5c5783
+Error Number:308,State:1,Class:16
+
+2022/1/20 14:51:31
+===结束加载板块计算结果缓存===
+
+
+2022/1/20 14:51:43
+监听队列已链接
+
+
+2022/1/20 14:53:47
+开始执行指令2022-01-20 14:53:43.799
+
+
+2022/1/20 14:54:01
+执行指令结束2022-01-20 14:54:01.906
+
+
+2022/1/20 14:54:01
+开始重算2022-01-20 14:54:01.959
+
+
+2022/1/20 14:54:14
+重算结束2022-01-20 14:54:14.332
+
+
+2022/1/20 14:54:14
+开始加载缓存2022-01-20 14:54:14.332
+
+
+2022/1/20 14:54:14
+===开始初始化最后一条数据缓存===
+
+
+2022/1/20 14:54:14
+===结束初始化最后一条数据缓存===
+
+
+2022/1/20 14:54:14
+===开始当天板块内股票快照缓存===
+
+
+2022/1/20 14:54:14
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1min' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 384
+ClientConnectionId:ea117165-9970-468a-bb1a-63c033581e05
+Error Number:308,State:1,Class:16
+
+2022/1/20 14:54:14
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1day' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 384
+ClientConnectionId:855771da-2a9d-40a0-99fa-b595cb5c5783
+Error Number:308,State:1,Class:16
+
+2022/1/20 14:54:14
+===结束加载板块计算结果缓存===
+
+
+2022/1/20 14:54:14
+加载缓存结束2022-01-20 14:54:14.732
+
+
+2022/1/20 14:56:53
+===开始初始化最后一条数据缓存===
+
+
+2022/1/20 14:56:54
+===结束初始化最后一条数据缓存===
+
+
+2022/1/20 14:56:54
+===开始当天板块内股票快照缓存===
+
+
+2022/1/20 14:56:54
+===加载快照缓存===
+
+
+2022/1/20 14:56:54
+===加载快照缓存1===
+
+
+2022/1/20 14:56:54
+===加载快照缓存2===
+
+
+2022/1/20 14:56:54
+===加载快照缓存3===
+
+
+2022/1/20 14:56:54
+===加载快照缓存4===
+
+
+2022/1/20 14:56:54
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 744
+
+2022/1/20 14:56:54
+===结束当天板块内股票快照缓存===
+
+
+2022/1/20 14:56:54
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1day' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 384
+ClientConnectionId:d792279c-32e1-4c53-9b49-958a0f3b3d6b
+Error Number:308,State:1,Class:16
+
+2022/1/20 14:56:54
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1min' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 384
+ClientConnectionId:070bb488-da8e-4054-9cb1-5cd3f1ca44d5
+Error Number:308,State:1,Class:16
+
+2022/1/20 14:56:54
+===结束加载板块计算结果缓存===
+
+
+2022/1/20 14:57:10
+监听队列已链接
+
+
+2022/1/20 14:57:27
+开始执行指令2022-01-20 14:57:27.798
+
+
+2022/1/20 14:57:27
+执行指令结束2022-01-20 14:57:27.802
+
+
+2022/1/20 14:57:27
+开始重算2022-01-20 14:57:27.802
+
+
+2022/1/20 17:38:10
+===开始初始化最后一条数据缓存===
+
+
+2022/1/20 17:38:11
+===结束初始化最后一条数据缓存===
+
+
+2022/1/20 17:38:11
+===开始当天板块内股票快照缓存===
+
+
+2022/1/20 17:38:11
+===加载快照缓存===
+
+
+2022/1/20 17:38:11
+===加载快照缓存1===
+
+
+2022/1/20 17:38:11
+===加载快照缓存2===
+
+
+2022/1/20 17:38:11
+===加载快照缓存3===
+
+
+2022/1/20 17:38:11
+===加载快照缓存4===
+
+
+2022/1/20 17:38:11
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 745
+
+2022/1/20 17:38:11
+===结束当天板块内股票快照缓存===
+
+
+2022/1/20 17:38:12
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1min' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 385
+ClientConnectionId:c5e066bb-1574-4949-aac5-8ed9e1756341
+Error Number:308,State:1,Class:16
+
+2022/1/20 17:38:12
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1day' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 385
+ClientConnectionId:c52fe13b-81d4-4e69-981f-77d9a3feb76c
+Error Number:308,State:1,Class:16
+
+2022/1/20 17:38:12
+===结束加载板块计算结果缓存===
+
+
+2022/1/20 17:38:12
+监听队列已链接
+
+
+2022/1/20 17:41:22
+===开始初始化最后一条数据缓存===
+
+
+2022/1/20 17:41:22
+===结束初始化最后一条数据缓存===
+
+
+2022/1/20 17:41:23
+===开始当天板块内股票快照缓存===
+
+
+2022/1/20 17:41:23
+===加载快照缓存===
+
+
+2022/1/20 17:41:23
+===加载快照缓存1===
+
+
+2022/1/20 17:41:23
+===加载快照缓存2===
+
+
+2022/1/20 17:41:23
+===加载快照缓存3===
+
+
+2022/1/20 17:41:23
+===加载快照缓存4===
+
+
+2022/1/20 17:41:23
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 745
+
+2022/1/20 17:41:23
+===结束当天板块内股票快照缓存===
+
+
+2022/1/20 17:41:23
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1day' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 385
+ClientConnectionId:f59aa617-d0eb-46a0-a6e0-37d28734a3ea
+Error Number:308,State:1,Class:16
+
+2022/1/20 17:41:23
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1min' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 385
+ClientConnectionId:97bb907a-d424-427f-acba-88f3336316a8
+Error Number:308,State:1,Class:16
+
+2022/1/20 17:41:23
+===结束加载板块计算结果缓存===
+
+
+2022/1/20 17:41:24
+监听队列已链接
+
+

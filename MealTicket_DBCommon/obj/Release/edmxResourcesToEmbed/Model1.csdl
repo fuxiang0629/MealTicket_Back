@@ -4164,6 +4164,10 @@
     <EntitySet Name="t_setting_plate_index" EntityType="meal_ticketModel.t_setting_plate_index" />
     <EntitySet Name="t_setting_plate_linkage" EntityType="meal_ticketModel.t_setting_plate_linkage" />
     <EntitySet Name="t_setting_plate_shares_linkage" EntityType="meal_ticketModel.t_setting_plate_shares_linkage" />
+    <EntitySet Name="t_plate_leader_tri" EntityType="meal_ticketModel.t_plate_leader_tri" />
+    <EntitySet Name="t_plate_leader_tri_record" EntityType="meal_ticketModel.t_plate_leader_tri_record" />
+    <EntitySet Name="t_plate_energyindex" EntityType="meal_ticketModel.t_plate_energyindex" />
+    <EntitySet Name="t_plate_energyindex_min" EntityType="meal_ticketModel.t_plate_energyindex_min" />
   </EntityContainer>
   <EntityType Name="t_account_baseinfo">
     <Key>
@@ -5601,5 +5605,98 @@
     <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
     <Property Name="IsReal" Type="Boolean" Nullable="false" />
     <Property Name="IsDefault" Type="Boolean" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_plate_leader_tri">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="SharesKey" Type="Int64" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="LastPushTime" Type="DateTime" Precision="3" />
+    <Property Name="LastPushRate" Type="Int32" />
+    <Property Name="LastPushPrice" Type="Int64" />
+    <Property Name="LastPushType" Type="Int32" />
+    <Property Name="LastPushMaxRate" Type="Int32" />
+    <Property Name="LastPushMinRate" Type="Int32" />
+    <Property Name="MinPushTimeInterval" Type="Int32" Nullable="false" />
+    <Property Name="MinPushMaxRateInterval" Type="Int32" Nullable="false" />
+    <Property Name="MinPushMinRateInterval" Type="Int32" Nullable="false" />
+    <Property Name="MinPushRiseRateInterval" Type="Int32" Nullable="false" />
+    <Property Name="MinPushDownRateInterval" Type="Int32" Nullable="false" />
+    <Property Name="TriCount" Type="Int32" Nullable="false" />
+    <Property Name="PushDesc" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="DataGetTime" Type="DateTime" Precision="3" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_plate_leader_tri_record">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+    <Property Name="SharesKey" Type="Int64" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="PushTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="PushDesc" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="PushType" Type="Int32" Nullable="false" />
+    <Property Name="PushPrice" Type="Int64" Nullable="false" />
+    <Property Name="PushRate" Type="Int32" Nullable="false" />
+    <Property Name="Date" Type="String" MaxLength="10" FixedLength="false" Unicode="false" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_plate_energyindex">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="DayType" Type="Int32" Nullable="false" />
+    <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="EnergyIndex" Type="Int32" Nullable="false" />
+    <Property Name="LeaderIndexRate" Type="Int32" Nullable="false" />
+    <Property Name="LeaderIndexScore" Type="Int32" Nullable="false" />
+    <Property Name="LeaderKeyList" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="PlateLinkageIndexRate" Type="Int32" Nullable="false" />
+    <Property Name="PlateLinkageIndexScore" Type="Int32" Nullable="false" />
+    <Property Name="PlateLinkageKeyList" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="SharesLinkageIndexRate" Type="Int32" Nullable="false" />
+    <Property Name="SharesLinkageIndexScore" Type="Int32" Nullable="false" />
+    <Property Name="SharesLinkageKeyList" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="NewHighIndexRate" Type="Int32" Nullable="false" />
+    <Property Name="NewHighIndexScore" Type="Int32" Nullable="false" />
+    <Property Name="NewHighKeyList" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="PlateVolumeCurrRate" Type="Int32" Nullable="false" />
+    <Property Name="PlateVolumeExceptRate" Type="Int32" Nullable="false" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_plate_energyindex_min">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+    <Property Name="DayType" Type="Int32" Nullable="false" />
+    <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="EnergyIndex" Type="Int32" Nullable="false" />
+    <Property Name="LeaderIndexRate" Type="Int32" Nullable="false" />
+    <Property Name="LeaderIndexScore" Type="Int32" Nullable="false" />
+    <Property Name="LeaderKeyList" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="PlateLinkageIndexRate" Type="Int32" Nullable="false" />
+    <Property Name="PlateLinkageIndexScore" Type="Int32" Nullable="false" />
+    <Property Name="PlateLinkageKeyList" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="SharesLinkageIndexRate" Type="Int32" Nullable="false" />
+    <Property Name="SharesLinkageIndexScore" Type="Int32" Nullable="false" />
+    <Property Name="SharesLinkageKeyList" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="NewHighIndexRate" Type="Int32" Nullable="false" />
+    <Property Name="NewHighIndexScore" Type="Int32" Nullable="false" />
+    <Property Name="NewHighKeyList" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+    <Property Name="PlateVolumeCurrRate" Type="Int32" Nullable="false" />
+    <Property Name="PlateVolumeExceptRate" Type="Int32" Nullable="false" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
 </Schema>

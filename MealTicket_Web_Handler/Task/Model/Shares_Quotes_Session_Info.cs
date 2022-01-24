@@ -74,7 +74,7 @@ namespace MealTicket_Web_Handler
                 {
                     return 0;
                 }
-                return (int)((ClosedPrice - YestodayClosedPrice) * 1.0 / YestodayClosedPrice * 10000 + 0.5);
+                return (int)Math.Round((ClosedPrice - YestodayClosedPrice) * 1.0 / YestodayClosedPrice * 10000,0);
             }
         }
 

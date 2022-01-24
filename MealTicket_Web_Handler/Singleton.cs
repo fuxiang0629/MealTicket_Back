@@ -155,6 +155,8 @@ namespace MealTicket_Web_Handler
 
         public int[] SharesLeaderType = new[] { 1, 2, 3 };
         public int[] SharesLeaderDaysType = new [] { 1, 2, 3, 4 };
+        public int SharesLeaderPlateRank = 5;
+        public int SharesLeaderTotalRank = 20;
 
         /// <summary>
         /// adb.net操作对象
@@ -748,6 +750,9 @@ namespace MealTicket_Web_Handler
                             }
                         }
                         SharesLeaderDaysType = tempSharesLeaderDaysType.ToArray();
+
+                        SharesLeaderPlateRank = sysValue.PlateRank;
+                        SharesLeaderTotalRank = sysValue.TotalRank;
                     }
                 }
                 catch { }

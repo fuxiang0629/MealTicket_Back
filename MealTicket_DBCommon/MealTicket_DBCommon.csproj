@@ -580,6 +580,18 @@
     <Compile Include="t_pay_callback.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="t_plate_energyindex.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_plate_energyindex_min.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_plate_leader_tri.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_plate_leader_tri_record.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="t_plate_shares_rel_tag_dayleader.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

@@ -95,8 +95,8 @@ namespace MealTicket_Handler.SecurityBarsData
         /// </summary>
         public void LoadPlateKlineLastSession()
         {
-            DateTime date = DateTime.Now.AddDays(1).Date;
             PlateKlineLastSessionDic.Clear();
+            DateTime date = DateTime.Now.AddDays(1).Date;
             List<int> dataTypeList = GetPlateDataType();
 
             for (int i = 0; i < dataTypeList.Count(); i++)
@@ -134,6 +134,7 @@ inner join
                 foreach (var item in lastData)
                 {
                     long key = item.PlateId * 1000 + item.WeightType * 100 + dataType;
+                    item.DataType = dataType;
                     SetPlateKlineLastSession(key, item);
                 }
             }
@@ -141,12 +142,11 @@ inner join
         #endregion
 
         #region===板块计算结果缓存===
-
-        object SetPlateKlineSessionLock = new object();
+        ReaderWriterLock SetPlateKlineSessionLock = new ReaderWriterLock();
         /// <summary>
         /// 板块Id*100+K线类型=>计算结果
         /// </summary>
-        private Dictionary<long, Dictionary<long, PlateKlineSession>> PlateKlineSessionDic = new Dictionary<long, Dictionary<long, PlateKlineSession>>();
+        private Dictionary<long, Dictionary<long, PlateKlineSession>> PlateKlineSessionDic = new Dictionary<long, Dictionary<long, PlateKlineSession>>(14000);
 
         /// <summary>
         /// 获取所有键
@@ -154,11 +154,9 @@ inner join
         /// <returns></returns>
         private List<long> GetPlateKlineSessionAllKey()
         {
-            List<long> temp;
-            lock (SetPlateKlineSessionLock)
-            {
-                temp = PlateKlineSessionDic.Keys.ToList();
-            }
+            SetPlateKlineSessionLock.AcquireReaderLock(Timeout.Infinite);
+            List<long>  temp = PlateKlineSessionDic.Keys.ToList();
+            SetPlateKlineSessionLock.ReleaseReaderLock();
             return temp;
         }
 
@@ -167,19 +165,18 @@ inner join
         /// </summary>
         private void ResetPlateKlineSessionIsUpdate()
         {
-            lock (SetPlateKlineSessionLock)
+            SetPlateKlineSessionLock.AcquireWriterLock(Timeout.Infinite);
+            foreach (var item in PlateKlineSessionDic)
             {
-                foreach (var item in PlateKlineSessionDic)
+                foreach (var item2 in item.Value)
                 {
-                    foreach (var item2 in item.Value)
+                    if (item2.Value.IsUpdate == true)
                     {
-                        if (item2.Value.IsUpdate == true)
-                        {
-                            item2.Value.IsUpdate = false;
-                        }
+                        item2.Value.IsUpdate = false;
                     }
                 }
             }
+            SetPlateKlineSessionLock.ReleaseWriterLock();
         }
 
         /// <summary>
@@ -188,23 +185,28 @@ inner join
         /// <returns></returns>
         private Dictionary<long, PlateKlineSession> GetPlateKlineSession(long key)
         {
-            Dictionary<long, PlateKlineSession> temp = new Dictionary<long, PlateKlineSession>();
-            lock (SetPlateKlineSessionLock)
+            SetPlateKlineSessionLock.AcquireReaderLock(Timeout.Infinite);
+            if (!PlateKlineSessionDic.ContainsKey(key))
             {
-                if (PlateKlineSessionDic.ContainsKey(key))
-                {
-                    temp = PlateKlineSessionDic[key];
-                }
+                PlateKlineSessionDic.Add(key, new Dictionary<long, PlateKlineSession>(500));
             }
+            Dictionary<long, PlateKlineSession> temp = PlateKlineSessionDic[key];
+            SetPlateKlineSessionLock.ReleaseReaderLock();
             return temp;
         }
 
         private void SetPlateKlineSession(long keyMain, Dictionary<long, PlateKlineSession> dicValue)
         {
-            lock (SetPlateKlineSessionLock)
+            SetPlateKlineSessionLock.AcquireWriterLock(Timeout.Infinite);
+            if (!PlateKlineSessionDic.ContainsKey(keyMain))
             {
-                PlateKlineSessionDic[keyMain] = dicValue;
+                PlateKlineSessionDic.Add(keyMain, new Dictionary<long, PlateKlineSession>(500));
             }
+            foreach (var item in dicValue)
+            {
+                PlateKlineSessionDic[keyMain][item.Key] = item.Value;
+            }
+            SetPlateKlineSessionLock.ReleaseWriterLock();
         }
 
         /// <summary>
@@ -212,13 +214,16 @@ inner join
         /// </summary>
         private void SetPlateKlineSession(Dictionary<long, Dictionary<long, PlateKlineSession>> refDicSession)
         {
-            lock (SetPlateKlineSessionLock)
+            SetPlateKlineSessionLock.AcquireWriterLock(Timeout.Infinite);
+            foreach (var item in refDicSession)
             {
-                foreach (var item in refDicSession)
+                PlateKlineSessionDic.Add(item.Key, new Dictionary<long, PlateKlineSession>(500));
+                foreach (var item2 in item.Value)
                 {
-                    PlateKlineSessionDic[item.Key] = item.Value;
+                    PlateKlineSessionDic[item.Key].Add(item2.Key, item2.Value);
                 }
             }
+            SetPlateKlineSessionLock.ReleaseWriterLock();
         }
 
         /// <summary>
@@ -778,6 +783,7 @@ inner join
         /// </summary>
         public void Init()
         {
+            LoadPlateSession();
             LoadAllSession();
 
             SharesKlineQueue = new ThreadMsgTemplate<SharesKlineDataContain>();
@@ -791,7 +797,6 @@ inner join
 
         public void LoadAllSession()
         {
-            LoadPlateSession();
             //获取股票最后一条数据缓存
             LoadSecurityBarsLastData();
             //加载板块最新缓存
@@ -873,6 +878,7 @@ inner join
                 return;
             }
             TaskSuccessLastTime = DateTime.Now;
+            LoadPlateSession();
             //指令数据执行
             DoExcuteOrder();
             //扔入重算队列
@@ -944,12 +950,12 @@ inner join
             }
             if (!plate_base_session.ContainsKey(plateId))
             {
-                return;
+                throw new Exception("板块Id不存在");
             }
             var baseInfo = plate_base_session[plateId];
             if (baseInfo.BaseDate == null)
             {
-                return;
+                throw new Exception("基准日不存在");
             }
             long initIndex = Singleton.Instance.IndexInitValueDic[baseInfo.CalType];
 
@@ -1190,10 +1196,7 @@ inner join
             Dictionary<long, PlateImportData> lastKLineData = new Dictionary<long, PlateImportData>(PlateKlineLastSessionDic);
             foreach (var item in lastKLineData)
             {
-                PlateImportData tempData = item.Value;
-                //PlateId*1000+WeightType*100+DataType
-                tempData.DataType = (int)(item.Key % 100);
-                if (tempData.DataType > 7)
+                if (item.Value.DataType > 7)
                 {
                     continue;
                 }
@@ -1471,6 +1474,7 @@ inner join
                         if (data.CalType == 1)
                         {
                             var list = (from item in data.SharesKlineData
+                                        where item.PlateId>0
                                         select new PlateImportData
                                         {
                                             LastTradeStock = item.LastTradeStock,
@@ -1566,10 +1570,19 @@ inner join
                 isCalNoWeight = false;
             }
 
-            //1.查询原板块计算结果
-            var calResult = GetPlateKlineSession(plateId * 100 + dataType);
 
             var sharesDic = GetSharesByPlateSession(plateId * 100 + dataType);
+
+            //1.查询原板块计算结果
+            var calResult = GetPlateKlineSession(plateId * 100 + dataType);
+            int shareKey = (int)data.SharesCodeNum * 10 + data.Market;
+            foreach (var item in calResult)
+            {
+                if (item.Value.GroupTimeKey < data.GroupTimeKey && item.Value.LastTempData.ContainsKey(shareKey))
+                {
+                    item.Value.LastTempData[shareKey] = new SharesKlineData();
+                }
+            }
 
             #region===不加权===
             if (isCalWeight)
@@ -1586,7 +1599,7 @@ inner join
             #endregion
 
             //设置结果集
-            SetPlateKlineSession(plateId * 100 + dataType, calResult);
+            //SetPlateKlineSession(plateId * 100 + dataType, calResult);
         }
 
         private void _calPlateKlineResult_NoWeight(ref Dictionary<long, PlateKlineSession> calResult, Dictionary<long, SharesKlineData> sharesDic, SharesKlineData data, long plateId, int dataType)
@@ -2130,7 +2143,9 @@ inner join
             foreach (var item in tempList)
             {
                 long key = item.Key.PlateId * 1000 + item.Key.WeightType * 100 + dataType;
-                SetPlateKlineLastSession(key, item.OrderByDescending(e => e.GroupTimeKey).First());
+                var temp = item.OrderByDescending(e => e.GroupTimeKey).First();
+                temp.DataType = dataType;
+                SetPlateKlineLastSession(key, temp);
             }
         }
 

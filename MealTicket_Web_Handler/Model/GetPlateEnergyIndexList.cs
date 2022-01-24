@@ -164,5 +164,30 @@ namespace MealTicket_Web_Handler.Model
         /// 15分钟涨幅
         /// </summary>
         public int Minute15RiseRate { get; set; }
+
+        /// <summary>
+        /// 1分钟涨幅排名
+        /// </summary>
+        public int Minute1RiseRateRank { get; set; }
+
+        /// <summary>
+        /// 3分钟涨幅排名
+        /// </summary>
+        public int Minute3RiseRateRank { get; set; }
+
+        /// <summary>
+        /// 5分钟涨幅排名
+        /// </summary>
+        public int Minute5RiseRateRank { get; set; }
+
+        /// <summary>
+        /// 10分钟涨幅排名
+        /// </summary>
+        public int Minute10RiseRateRank { get; set; }
+
+        /// <summary>
+        /// 15分钟涨幅排名
+        /// </summary>
+        public int Minute15RiseRateRank { get; set; }
     }
 }

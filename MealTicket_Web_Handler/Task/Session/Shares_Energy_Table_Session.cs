@@ -26,8 +26,12 @@ namespace MealTicket_Web_Handler
 
             var limit_fundmultiple=Singleton.Instance.sessionHandler.GetShares_Limit_Fundmultiple_Session();
 
+            List<long> oldIdList = oldData.Keys.ToList();
+            List<long> totalIdList = new List<long>();
+            totalIdList = leaderShares.Union(oldIdList).ToList();
+
             DateTime timeNow = DateTime.Now;
-            foreach (var share in leaderShares)
+            foreach (var share in totalIdList)
             {
                 if (!limit_fundmultiple.ContainsKey(share))
                 {
@@ -44,25 +48,49 @@ namespace MealTicket_Web_Handler
                 {
                     continue;
                 }
-                if (lastQuotes.RiseRate < minRiseRate)
+                bool isVaild = false;
+                if (lastQuotes.RiseRate >= minRiseRate)
                 {
-                    continue;
+                    isVaild = true;
                 }
                 Shares_Energy_Table_Session_Info tempItem = new Shares_Energy_Table_Session_Info();
                 tempItem.SharesKey = share;
                 tempItem.RiseRate = lastQuotes.RiseRate;
+                tempItem.ClosedPrice = lastQuotes.YestodayClosedPrice;
                 tempItem.RiseAmount = lastQuotes.ClosedPrice - lastQuotes.YestodayClosedPrice;
                 tempItem.IsLimitUpBomb = lastQuotes.IsLimitUpBomb;
                 tempItem.RateExpect = shares_last.RateExpect;
                 tempItem.RateNow = shares_last.RateNow;
-                if (oldData.ContainsKey(share))
+                if (!leaderShares.Contains(share) || !isVaild)
                 {
+                    if (!oldData.ContainsKey(share))
+                    {
+                        continue;
+                    }
+                    tempItem.IsVaild = false;
                     tempItem.TriTime = oldData[share].TriTime;
+                    tempItem.TriCount = oldData[share].TriCount;
+                }
+                else if (oldData.ContainsKey(share))
+                {
+                    var oldData_info = oldData[share];
+                    if (oldData_info.IsVaild)
+                    {
+                        tempItem.TriTime = oldData_info.TriTime;
+                        tempItem.TriCount = oldData_info.TriCount;
+                    }
+                    else
+                    {
+                        tempItem.TriTime = DateTime.Now;
+                        tempItem.TriCount++;
+                    }
+                    tempItem.IsVaild = true;
                 }
                 else
                 {
+                    tempItem.IsVaild = true;
                     tempItem.TriTime = timeNow;
-                    tempItem.TriCount++;
+                    tempItem.TriCount = 1;
                 }
                 result.Add(share, tempItem);
             }
