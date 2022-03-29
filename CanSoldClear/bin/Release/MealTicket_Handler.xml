@@ -3603,11 +3603,6 @@
             是否更新变动
             </summary>
         </member>
-        <member name="P:MealTicket_Handler.SecurityBarsData.PlateKlineSession.LastTempData">
-            <summary>
-            记录上一次统计进入板块的股票数据
-            </summary>
-        </member>
         <member name="T:MealTicket_Handler.SecurityBarsData.SharesKlineData">
             <summary>
             股票K线实时数据
@@ -4041,7 +4036,7 @@
             2.查找需要计算的板块
             </summary>
         </member>
-        <member name="M:MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.DoDailyTask(System.DateTime@)">
+        <member name="M:MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.DoDailyTask(System.DateTime@,System.Boolean@)">
             <summary>
             每日任务
             1.更新所有板块缓存

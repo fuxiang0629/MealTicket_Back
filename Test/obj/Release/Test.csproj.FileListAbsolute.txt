@@ -94,3 +94,13 @@ F:\项目\饭票后端\Test\bin\Release\NCalc.dll
 D:\项目\饭票\后端\Test\bin\Release\NCalc.dll
 D:\项目\饭票\后端\Test\bin\Release\FanpCommonBusinessCore.dll
 D:\项目\饭票\后端\Test\bin\Release\FanpCommonLibrary.dll
+F:\项目\饭票后端\Test\bin\Release\FanpCommonBusinessCore.dll
+F:\项目\饭票后端\Test\bin\Release\FanpCommonLibrary.dll
+F:\项目\饭票后端\Test\bin\Release\MealTicket_Handler.dll
+F:\项目\饭票后端\Test\bin\Release\AopSdk.dll
+F:\项目\饭票后端\Test\bin\Release\NoticeHandler.dll
+F:\项目\饭票后端\Test\bin\Release\MealTicket_Handler.pdb
+F:\项目\饭票后端\Test\bin\Release\MealTicket_Handler.xml
+F:\项目\饭票后端\Test\bin\Release\MealTicket_Handler.dll.config
+F:\项目\饭票后端\Test\bin\Release\NoticeHandler.pdb
+F:\项目\饭票后端\Test\bin\Release\NoticeHandler.dll.config

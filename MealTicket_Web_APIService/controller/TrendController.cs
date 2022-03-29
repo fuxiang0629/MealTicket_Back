@@ -59,6 +59,26 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 根据股票代码获取股票列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("根据股票代码获取股票列表")]
+        [Route("allshares/list"), HttpPost]
+        public GetTradeSharesListRes GetTradeSharesList(GetTradeSharesListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            if (request.SharesCode == null)
+            {
+                request.SharesCode = "";
+            }
+            request.SharesCode = request.SharesCode.ToLower();
+            return trendHandler.GetTradeSharesList(request);
+        }
+
+        /// <summary>
         /// 获取股票涨跌幅
         /// </summary>
         /// <returns></returns>
@@ -1246,25 +1266,6 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.GetAccountTradeEntrustDealList(request, basedata);
-        }
-
-        /// <summary>
-        /// 根据股票代码获取股票列表
-        /// </summary>
-        /// <returns></returns>
-        [Description("根据股票代码获取股票列表")]
-        [Route("allshares/list"), HttpPost]
-        public GetTradeSharesListRes GetTradeSharesList(GetTradeSharesListRequest request)
-        {
-            if (request == null)
-            {
-                throw new WebApiException(400, "参数错误");
-            }
-            if (string.IsNullOrEmpty(request.SharesCode))
-            {
-                throw new WebApiException(400, "请输入股票代码");
-            }
-            return trendHandler.GetTradeSharesList(request);
         }
 
         /// <summary>
@@ -8979,6 +8980,23 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 获取板块龙头股票
+        /// </summary>
+        /// <returns></returns>
+        [Route("plate/leadermodel/shares/OnlyId/list"), HttpPost]
+        [Description("获取板块龙头股票")]
+        [CheckUserLoginFilter]
+        public object GetPlateLeaderModelSharesOnlyIdList(DetailsRequest request)
+        {
+            var session=Singleton.Instance.sessionHandler.GetLeaderShares_ByPlate(false);
+            if (session.ContainsKey(request.Id))
+            {
+                return session[request.Id];
+            }
+            return new List<long>();
+        }
+
+        /// <summary>
         /// 获取板块涨速列表
         /// </summary>
         /// <param name="request"></param>
@@ -9026,6 +9044,591 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.GetPlateLinkageList(request, basedata);
+        }
+
+        /// <summary>
+        /// 获取板块联动股票列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("plate/linkage/shares/list"), HttpPost]
+        [Description("获取板块联动股票列表")]
+        [CheckUserLoginFilter]
+        public List<long> GetPlateLinkageSharesList(GetPlateLinkageListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetPlateLinkageSharesList(request, basedata);
+        }
+
+        /// <summary>
+        /// 获取股票综合涨幅排名列表
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("shares/riserate/overallrank/list"), HttpPost]
+        [Description("获取股票综合涨幅排名列表")]
+        [CheckUserLoginFilter]
+        public List<SharesRiserateRankInfo> GetSharesRiserateRankList(GetSharesRiserateRankListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400,"参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesRiserateRankList(request,basedata);
+        }
+
+        /// <summary>
+        /// 获取股票所属排序板块
+        /// </summary>
+        /// <returns></returns>
+        [Route("shares/plate/order/list"), HttpPost]
+        [Description("获取股票所属排序板块")]
+        [CheckUserLoginFilter]
+        public SharesRiserateRankDetails GetSharesPlateOrderList(GetSharesPlateOrderListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesPlateOrderList(request, basedata);
+        }
+
+        /// <summary>
+        /// 获取股票热点题材默认背景色
+        /// </summary>
+        /// <returns></returns>
+        [Route("shares/hotspot/default/bgcolor"), HttpPost]
+        [Description("获取股票热点题材默认背景色")]
+        [CheckUserLoginFilter]
+        public List<string> GetSharesHotSpotDefaultBgcolor()
+        {
+            return Singleton.Instance.HotSpotColorList.ToList();
+        }
+
+        /// <summary>
+        /// 获取股票热点题材
+        /// </summary>
+        /// <returns></returns>
+        [Route("shares/hotspot/list"), HttpPost]
+        [Description("获取股票热点题材")]
+        [CheckUserLoginFilter]
+        public List<SharesHotSpotInfo> GetSharesHotSpotList(GetSharesHotSpotListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400,"参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesHotSpotList(request,basedata);
+        }
+
+        /// <summary>
+        /// 获取股票热点题材(历史)
+        /// </summary>
+        /// <returns></returns>
+        [Route("shares/hotspot/his/list"), HttpPost]
+        [Description("获取股票热点题材(历史)")]
+        [CheckUserLoginFilter]
+        public List<SharesHotSpotInfo> GetSharesHotSpotHisList(GetSharesHotSpotHisListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesHotSpotHisList(request, basedata);
+        }
+
+        /// <summary>
+        /// 获取全市场股票涨停情况
+        /// </summary>
+        /// <returns></returns>
+        [Route("shares/all/limitup/list"), HttpPost]
+        [Description("获取全市场股票涨停情况")]
+        [CheckUserLoginFilter]
+        public SharesHotSpotInfo GetSharesAllLimitUpList(GetSharesHotSpotListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesAllLimitUpList(request,basedata);
+        }
+
+        /// <summary>
+        /// 获取全市场股票涨停情况(历史)
+        /// </summary>
+        /// <returns></returns>
+        [Route("shares/all/limitup/his/list"), HttpPost]
+        [Description("获取全市场股票涨停情况(历史)")]
+        [CheckUserLoginFilter]
+        public SharesHotSpotInfo GetSharesAllLimitUpHisList(GetSharesAllLimitUpHisListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesAllLimitUpHisList(request, basedata);
+        }
+
+        /// <summary>
+        /// 获取非交易日期
+        /// </summary>
+        /// <returns></returns>
+        [Route("shares/notradedate/list"), HttpPost]
+        [Description("获取非交易日期")]
+        [CheckUserLoginFilter]
+        public List<SharesNoTradeDateInfo> GetSharesNoTradeDateList()
+        {
+            return trendHandler.GetSharesNoTradeDateList();
+        }
+
+        /// <summary>
+        /// 添加股票热点题材
+        /// </summary>
+        /// <returns></returns>
+        [Route("shares/hotspot/add"), HttpPost]
+        [Description("添加股票热点题材")]
+        [CheckUserLoginFilter]
+        public object AddSharesHotSpot(AddSharesHotSpotRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddSharesHotSpot(request,basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑股票热点题材
+        /// </summary>
+        /// <returns></returns>
+        [Route("shares/hotspot/modify"), HttpPost]
+        [Description("编辑股票热点题材")]
+        [CheckUserLoginFilter]
+        public object ModifySharesHotSpot(ModifySharesHotSpotRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifySharesHotSpot(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑股票热点题材是否只显示关注股票
+        /// </summary>
+        /// <returns></returns>
+        [Route("shares/hotspot/isshowfocuson/modify"), HttpPost]
+        [Description("编辑股票热点题材是否只显示关注股票")]
+        [CheckUserLoginFilter]
+        public object ModifySharesHotSpotIsShowFocuson(ModifySharesHotSpotIsShowFocusonRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifySharesHotSpotIsShowFocuson(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除股票热点题材
+        /// </summary>
+        /// <returns></returns>
+        [Route("shares/hotspot/delete"), HttpPost]
+        [Description("删除股票热点题材")]
+        [CheckUserLoginFilter]
+        public object DeleteSharesHotSpot(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteSharesHotSpot(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量删除股票热点题材
+        /// </summary>
+        /// <returns></returns>
+        [Route("shares/hotspot/delete/batch"), HttpPost]
+        [Description("批量删除股票热点题材")]
+        [CheckUserLoginFilter]
+        public object BatchDeleteSharesHotSpot(BatchDeleteSharesHotSpotRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BatchDeleteSharesHotSpot(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取股票热点题材分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("shares/hotspot/group/list"), HttpPost]
+        [Description("获取股票热点题材分组")]
+        [CheckUserLoginFilter]
+        public PageRes<SharesHotSpotGroupInfo> GetSharesHotSpotGroupList(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesHotSpotGroupList(request, basedata);
+        }
+
+        /// <summary>
+        /// 获取股票热点题材分组详情
+        /// </summary>
+        /// <returns></returns>
+        [Route("shares/hotspot/group/details"), HttpPost]
+        [Description("获取股票热点题材分组详情")]
+        [CheckUserLoginFilter]
+        public List<SharesHotSpotGroupDetails> GetSharesHotSpotGroupDetails()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesHotSpotGroupDetails(basedata);
+        }
+
+        /// <summary>
+        /// 添加股票热点题材分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("shares/hotspot/group/add"), HttpPost]
+        [Description("添加股票热点题材分组")]
+        [CheckUserLoginFilter]
+        public object AddSharesHotSpotGroup(AddSharesHotSpotGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddSharesHotSpotGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑股票热点题材分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("shares/hotspot/group/modify"), HttpPost]
+        [Description("编辑股票热点题材分组")]
+        [CheckUserLoginFilter]
+        public object ModifySharesHotSpotGroup(ModifySharesHotSpotGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifySharesHotSpotGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除股票热点题材分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("shares/hotspot/group/delete"), HttpPost]
+        [Description("删除股票热点题材分组")]
+        [CheckUserLoginFilter]
+        public object DeleteSharesHotSpotGroup(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteSharesHotSpotGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取股票热点题材关注列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("shares/hotspot/focuson/list"), HttpPost]
+        [Description("获取股票热点题材关注列表")]
+        [CheckUserLoginFilter]
+        public List<SharesHotFocusonInfo> GetSharesHotFocusonList(GetSharesHotFocusonListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesHotFocusonList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加股票热点题材关注
+        /// </summary>
+        /// <returns></returns>
+        [Route("shares/hotspot/focuson/add"), HttpPost]
+        [Description("添加股票热点题材关注")]
+        [CheckUserLoginFilter]
+        public object AddSharesHotFocuson(AddSharesHotFocusonRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddSharesHotFocuson(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除股票热点题材关注
+        /// </summary>
+        /// <returns></returns>
+        [Route("shares/hotspot/focuson/delete"), HttpPost]
+        [Description("删除股票热点题材关注")]
+        [CheckUserLoginFilter]
+        public object DeleteSharesHotFocuson(DeleteSharesHotFocusonRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteSharesHotFocuson(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 批量删除股票热点题材关注
+        /// </summary>
+        /// <returns></returns>
+        [Route("shares/hotspot/focuson/delete/batch"), HttpPost]
+        [Description("批量删除股票热点题材关注")]
+        [CheckUserLoginFilter]
+        public object BatchDeleteSharesHotFocuson(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BatchDeleteSharesHotFocuson(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取个股监控分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("stock/monitor/group/list"), HttpPost]
+        [Description("获取个股监控分组")]
+        [CheckUserLoginFilter]
+        public PageRes<StockMonitorGroupInfo> GetStockMonitorGroupList(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetStockMonitorGroupList(request, basedata);
+        }
+
+        /// <summary>
+        /// 获取个股监控分组内股票
+        /// </summary>
+        /// <returns></returns>
+        [Route("stock/monitor/group/shares/list"), HttpPost]
+        [Description("获取个股监控分组内股票")]
+        [CheckUserLoginFilter]
+        public List<StockMonitorGroupSharesInfo> GetStockMonitorGroupSharesList(DetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetStockMonitorGroupSharesList(request, basedata);
+        }
+
+        /// <summary>
+        /// 编辑个股监控分组内股票排序
+        /// </summary>
+        /// <returns></returns>
+        [Route("stock/monitor/group/shares/orderindex/modify"), HttpPost]
+        [Description("编辑个股监控分组内股票排序")]
+        [CheckUserLoginFilter]
+        public object ModifyStockMonitorGroupSharesOrderIndex(ModifyStockMonitorGroupSharesOrderIndexRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyStockMonitorGroupSharesOrderIndex(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 添加个股监控分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("stock/monitor/group/add"), HttpPost]
+        [Description("添加个股监控分组")]
+        [CheckUserLoginFilter]
+        public object AddStockMonitorGroup(AddStockMonitorGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddStockMonitorGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑个股监控分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("stock/monitor/group/modify"), HttpPost]
+        [Description("编辑个股监控分组")]
+        [CheckUserLoginFilter]
+        public object ModifyStockMonitorGroup(ModifyStockMonitorGroupRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifyStockMonitorGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除个股监控分组
+        /// </summary>
+        /// <returns></returns>
+        [Route("stock/monitor/group/delete"), HttpPost]
+        [Description("删除个股监控分组")]
+        [CheckUserLoginFilter]
+        public object DeleteStockMonitorGroup(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteStockMonitorGroup(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取个股监控列表
+        /// </summary>
+        /// <returns></returns>
+        [Route("stock/monitor/list"), HttpPost]
+        [Description("获取个股监控列表")]
+        [CheckUserLoginFilter]
+        public List<StockMonitorInfo> GetStockMonitorList()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetStockMonitorList(basedata);
+        }
+
+        /// <summary>
+        /// 添加个股监控
+        /// </summary>
+        /// <returns></returns>
+        [Route("stock/monitor/add"), HttpPost]
+        [Description("添加个股监控")]
+        [CheckUserLoginFilter]
+        public object AddStockMonitor(AddStockMonitorRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddStockMonitor(request,basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除个股监控
+        /// </summary>
+        /// <returns></returns>
+        [Route("stock/monitor/delete"), HttpPost]
+        [Description("删除个股监控")]
+        [CheckUserLoginFilter]
+        public object DeleteStockMonitor(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteStockMonitor(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 置顶个股监控
+        /// </summary>
+        /// <returns></returns>
+        [Route("stock/monitor/top"), HttpPost]
+        [Description("置顶个股监控")]
+        [CheckUserLoginFilter]
+        public object TopStockMonitor(DetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.TopStockMonitor(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取闪烁触发股票
+        /// </summary>
+        /// <returns></returns>
+        [Route("stock/search/mark/list"), HttpPost]
+        [Description("获取闪烁触发股票")]
+        [CheckUserLoginFilter]
+        public List<long> GetStockSearchMarkList(DetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            List<long> result = new List<long>();
+            var session=Singleton.Instance.sessionHandler.GetSearch_Mark_Tri_Session(false);
+            if (session.ContainsKey(request.Id))
+            {
+                result = session[request.Id].Keys.ToList();
+            }
+            return result;
         }
     }
 }

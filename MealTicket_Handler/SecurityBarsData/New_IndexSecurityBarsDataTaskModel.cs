@@ -101,9 +101,6 @@ namespace MealTicket_Handler.SecurityBarsData
         /// </summary>
         public bool IsUpdate { get; set; }
 
-        /// <summary>
-        /// 记录上一次统计进入板块的股票数据
-        /// </summary>
         public Dictionary<int, SharesKlineData> LastTempData { get; set; }
     }
 

@@ -3603,11 +3603,6 @@
             是否更新变动
             </summary>
         </member>
-        <member name="P:MealTicket_Handler.SecurityBarsData.PlateKlineSession.LastTempData">
-            <summary>
-            记录上一次统计进入板块的股票数据
-            </summary>
-        </member>
         <member name="T:MealTicket_Handler.SecurityBarsData.SharesKlineData">
             <summary>
             股票K线实时数据

@@ -365,7 +365,7 @@ namespace SharesHqService
 
         public int GetSshqUpdateRate() 
         {
-            var HqServerPar = GetSession(Enum_Excute_DataKey.HqServerPar.ToString());
+            var HqServerPar = GetDataWithLock(Enum_Excute_DataKey.HqServerPar.ToString());
             if (HqServerPar == null)
             {
                 return 3000;
@@ -374,7 +374,7 @@ namespace SharesHqService
         }
         public int GetQuotesCount()
         {
-            var HqServerPar = GetSession(Enum_Excute_DataKey.HqServerPar.ToString());
+            var HqServerPar = GetDataWithLock(Enum_Excute_DataKey.HqServerPar.ToString());
             if (HqServerPar == null)
             {
                 return 75;
@@ -383,7 +383,7 @@ namespace SharesHqService
         }
         public TimeSpan GetAllSharesStartHour()
         {
-            var HqServerPar = GetSession(Enum_Excute_DataKey.HqServerPar.ToString());
+            var HqServerPar = GetDataWithLock(Enum_Excute_DataKey.HqServerPar.ToString());
             if (HqServerPar == null)
             {
                 return TimeSpan.Parse("01:00:00");
@@ -392,7 +392,7 @@ namespace SharesHqService
         }
         public TimeSpan GetAllSharesEndHour()
         {
-            var HqServerPar = GetSession(Enum_Excute_DataKey.HqServerPar.ToString());
+            var HqServerPar = GetDataWithLock(Enum_Excute_DataKey.HqServerPar.ToString());
             if (HqServerPar == null)
             {
                 return TimeSpan.Parse("04:00:00");
@@ -401,7 +401,7 @@ namespace SharesHqService
         }
         public int GetBusinessRunTime()
         {
-            var HqServerPar = GetSession(Enum_Excute_DataKey.HqServerPar.ToString());
+            var HqServerPar = GetDataWithLock(Enum_Excute_DataKey.HqServerPar.ToString());
             if (HqServerPar == null)
             {
                 return 3000;
@@ -410,7 +410,7 @@ namespace SharesHqService
         }
         public string GetSharesCodeMatch0()
         {
-            var SharesCodeMatch0 = GetSession(Enum_Excute_DataKey.SharesCodeMatch0.ToString());
+            var SharesCodeMatch0 = GetDataWithLock(Enum_Excute_DataKey.SharesCodeMatch0.ToString());
             if (SharesCodeMatch0 == null)
             {
                 return "(^00.*)|(^30.*)";
@@ -419,7 +419,7 @@ namespace SharesHqService
         }
         public string GetSharesCodeMatch1()
         {
-            var SharesCodeMatch1 = GetSession(Enum_Excute_DataKey.SharesCodeMatch1.ToString());
+            var SharesCodeMatch1 = GetDataWithLock(Enum_Excute_DataKey.SharesCodeMatch1.ToString());
             if (SharesCodeMatch1 == null)
             {
                 return "(^6.*)";
@@ -428,7 +428,7 @@ namespace SharesHqService
         }
         public List<t_shares_limit_fundmultiple> GetRangeList()
         {
-            var RangeList = GetSession(Enum_Excute_DataKey.RangeList.ToString());
+            var RangeList = GetDataWithLock(Enum_Excute_DataKey.RangeList.ToString());
             if (RangeList == null)
             {
                 return new List<t_shares_limit_fundmultiple>();
@@ -437,7 +437,7 @@ namespace SharesHqService
         }
         public List<t_shares_limit_time> GetLimitTimeList()
         {
-            var LimitTimeList = GetSession(Enum_Excute_DataKey.LimitTimeList.ToString());
+            var LimitTimeList = GetDataWithLock(Enum_Excute_DataKey.LimitTimeList.ToString());
             if (LimitTimeList == null)
             {
                 return new List<t_shares_limit_time>();
@@ -446,7 +446,7 @@ namespace SharesHqService
         }
         public List<HostInfo> GetHostList()
         {
-            var HostList = GetSession(Enum_Excute_DataKey.HostList.ToString());
+            var HostList = GetDataWithLock(Enum_Excute_DataKey.HostList.ToString());
             if (HostList == null)
             {
                 return new List<HostInfo>();
@@ -455,7 +455,7 @@ namespace SharesHqService
         }
         public List<SharesBaseInfo> GetSharesBaseInfoList()
         {
-            var SharesBaseInfoList = GetSession(Enum_Excute_DataKey.SharesBaseInfoList.ToString());
+            var SharesBaseInfoList = GetDataWithLock(Enum_Excute_DataKey.SharesBaseInfoList.ToString());
             if (SharesBaseInfoList == null)
             {
                 return new List<SharesBaseInfo>();
@@ -464,7 +464,7 @@ namespace SharesHqService
         }
         public Dictionary<int, SharesQuotesInfo> GetLastSharesQuotesList()
         {
-            var LastSharesQuotesList = GetSession(Enum_Excute_DataKey.LastSharesQuotesList.ToString());
+            var LastSharesQuotesList = GetDataWithLock(Enum_Excute_DataKey.LastSharesQuotesList.ToString());
             if (LastSharesQuotesList == null)
             {
                 return new Dictionary<int, SharesQuotesInfo>();

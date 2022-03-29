@@ -56,6 +56,11 @@ namespace MealTicket_Web_Handler
         public string SharesName { get; set; }
 
         /// <summary>
+        /// 股票拼音
+        /// </summary>
+        public string SharesPy { get; set; }
+
+        /// <summary>
         /// 当前价格
         /// </summary>
         public long PresentPrice { get; set; }

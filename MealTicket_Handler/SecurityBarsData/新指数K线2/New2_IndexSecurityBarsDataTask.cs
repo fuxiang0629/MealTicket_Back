@@ -31,7 +31,7 @@ namespace MealTicket_Handler.SecurityBarsData
         private Dictionary<long, Plate_Base_Session_Info> PlateSessionDic = new Dictionary<long, Plate_Base_Session_Info>();
         ReaderWriterLock PlateSessionDicLock = new ReaderWriterLock();
 
-        public Dictionary<long, Plate_Base_Session_Info> GetPlateBaseSession() 
+        public Dictionary<long, Plate_Base_Session_Info> GetPlateBaseSession()
         {
             Dictionary<long, Plate_Base_Session_Info> result;
             PlateSessionDicLock.AcquireReaderLock(Timeout.Infinite);
@@ -155,7 +155,7 @@ inner join
         private List<long> GetPlateKlineSessionAllKey()
         {
             SetPlateKlineSessionLock.AcquireReaderLock(Timeout.Infinite);
-            List<long>  temp = PlateKlineSessionDic.Keys.ToList();
+            List<long> temp = PlateKlineSessionDic.Keys.ToList();
             SetPlateKlineSessionLock.ReleaseReaderLock();
             return temp;
         }
@@ -177,6 +177,14 @@ inner join
                 }
             }
             SetPlateKlineSessionLock.ReleaseWriterLock();
+        }
+
+        private Dictionary<long, Dictionary<long, PlateKlineSession>> GetAllData()
+        {
+            SetPlateKlineSessionLock.AcquireReaderLock(Timeout.Infinite);
+            Dictionary<long, Dictionary<long, PlateKlineSession>> tempDic = PlateKlineSessionDic;
+            SetPlateKlineSessionLock.ReleaseReaderLock();
+            return tempDic;
         }
 
         /// <summary>
@@ -279,7 +287,7 @@ inner join
   SUM(t.TotalCapital)TotalCapital,
   count(*)CalCount,
   convert(bit,1)IsUpdate
-  from {2} t with(index=index_groupTimeKey_only)
+  from {2} t with(index=index_grouptimekey_only)
   inner join
   (
 	  select t.PlateId,t.Market,t.SharesCode
@@ -309,7 +317,7 @@ inner join
   SUM(t.TotalCapital)TotalCapital,
   count(*)CalCount,
   convert(bit,1)IsUpdate
-  from {2} t with(index=index_groupTimeKey_only)
+  from {2} t with(index=index_grouptimekey_only)
   inner join
   (
 	  select t.PlateId,t.Market,t.SharesCode
@@ -398,10 +406,10 @@ inner join
                     {
                         Logger.WriteFileLog("板块计算结果缓存加载失败", ex);
                     }
-                },null);
+                }, null);
             }
 
-            TaskThread.WaitAll(taskArr,Timeout.Infinite);
+            TaskThread.WaitAll(taskArr, Timeout.Infinite);
             TaskThread.CloseAllTasks(taskArr);
             Logger.WriteFileLog("===结束加载板块计算结果缓存===", null);
         }
@@ -539,13 +547,13 @@ inner join v_shares_quotes_last t2 on t.Market=t2.Market and t.SharesCode=t2.Sha
                         return;
                     }
                     try
-                      {
-                          using (SqlConnection conn = new SqlConnection(connString_meal_ticket))
-                          {
-                              conn.Open();
-                              try
-                              {
-                                  string sql = string.Format(@"select t.Market,t.SharesCode,t.GroupTimeKey,t.PreClosePrice,t.LastTradeStock,t.LastTradeAmount,t.ClosedPrice,t.TradeStock,t.MaxPrice,t.MinPrice,t.OpenedPrice,
+                    {
+                        using (SqlConnection conn = new SqlConnection(connString_meal_ticket))
+                        {
+                            conn.Open();
+                            try
+                            {
+                                string sql = string.Format(@"select t.Market,t.SharesCode,t.GroupTimeKey,t.PreClosePrice,t.LastTradeStock,t.LastTradeAmount,t.ClosedPrice,t.TradeStock,t.MaxPrice,t.MinPrice,t.OpenedPrice,
   t.[Time],t.TotalCapital,t.Tradable,t.TradeAmount,t2.ClosedPrice YestodayClosedPrice
 from {0} t with(nolock)
 inner join 
@@ -557,60 +565,60 @@ inner join
 )t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode and t.GroupTimeKey=t1.GroupTimeKey
 inner join v_shares_quotes_last t2 on t.Market=t2.Market and t.SharesCode=t2.SharesCode", tableName);
 
-                                  using (var cmd = conn.CreateCommand())
-                                  {
-                                      cmd.CommandType = CommandType.Text;
-                                      cmd.CommandText = sql;   //sql语句
-                                      cmd.CommandTimeout = 600;
+                                using (var cmd = conn.CreateCommand())
+                                {
+                                    cmd.CommandType = CommandType.Text;
+                                    cmd.CommandText = sql;   //sql语句
+                                    cmd.CommandTimeout = 600;
 
-                                      SqlDataReader reader = cmd.ExecuteReader();
-                                      while (reader.Read())
-                                      {
-                                          long sharesCodeNum = Convert.ToInt64(reader["SharesCode"]);
-                                          int market = Convert.ToInt32(reader["Market"]);
-                                          SharesKlineData item = new SharesKlineData
-                                          {
-                                              ClosedPrice = Convert.ToInt64(reader["ClosedPrice"]),
-                                              GroupTimeKey = Convert.ToInt64(reader["GroupTimeKey"]),
-                                              SharesCode = Convert.ToString(reader["SharesCode"]),
-                                              LastTradeStock = Convert.ToInt64(reader["LastTradeStock"]),
-                                              TradeStock = Convert.ToInt64(reader["TradeStock"]),
-                                              LastTradeAmount = Convert.ToInt64(reader["LastTradeAmount"]),
-                                              Market = Convert.ToInt32(reader["Market"]),
-                                              MaxPrice = Convert.ToInt64(reader["MaxPrice"]),
-                                              MinPrice = Convert.ToInt64(reader["MinPrice"]),
-                                              OpenedPrice = Convert.ToInt64(reader["OpenedPrice"]),
-                                              PreClosePrice = Convert.ToInt64(reader["PreClosePrice"]),
-                                              Time = Convert.ToDateTime(reader["Time"]),
-                                              Tradable = Convert.ToInt64(reader["Tradable"]),
-                                              TotalCapital = Convert.ToInt64(reader["TotalCapital"]),
-                                              TradeAmount = Convert.ToInt64(reader["TradeAmount"]),
-                                              YestodayClosedPrice = Convert.ToInt64(reader["YestodayClosedPrice"])
-                                          };
+                                    SqlDataReader reader = cmd.ExecuteReader();
+                                    while (reader.Read())
+                                    {
+                                        long sharesCodeNum = Convert.ToInt64(reader["SharesCode"]);
+                                        int market = Convert.ToInt32(reader["Market"]);
+                                        SharesKlineData item = new SharesKlineData
+                                        {
+                                            ClosedPrice = Convert.ToInt64(reader["ClosedPrice"]),
+                                            GroupTimeKey = Convert.ToInt64(reader["GroupTimeKey"]),
+                                            SharesCode = Convert.ToString(reader["SharesCode"]),
+                                            LastTradeStock = Convert.ToInt64(reader["LastTradeStock"]),
+                                            TradeStock = Convert.ToInt64(reader["TradeStock"]),
+                                            LastTradeAmount = Convert.ToInt64(reader["LastTradeAmount"]),
+                                            Market = Convert.ToInt32(reader["Market"]),
+                                            MaxPrice = Convert.ToInt64(reader["MaxPrice"]),
+                                            MinPrice = Convert.ToInt64(reader["MinPrice"]),
+                                            OpenedPrice = Convert.ToInt64(reader["OpenedPrice"]),
+                                            PreClosePrice = Convert.ToInt64(reader["PreClosePrice"]),
+                                            Time = Convert.ToDateTime(reader["Time"]),
+                                            Tradable = Convert.ToInt64(reader["Tradable"]),
+                                            TotalCapital = Convert.ToInt64(reader["TotalCapital"]),
+                                            TradeAmount = Convert.ToInt64(reader["TradeAmount"]),
+                                            YestodayClosedPrice = Convert.ToInt64(reader["YestodayClosedPrice"])
+                                        };
 
-                                          SetSharesKlineLastSession(sharesCodeNum * 1000 + market * 100 + dataType, item);
-                                      }
-                                      reader.Close();
-                                  }
-                              }
-                              catch (Exception ex)
-                              {
-                                  throw ex;
-                              }
-                              finally
-                              {
-                                  conn.Close();
-                              }
-                          }
-                      }
-                      catch (Exception ex)
-                      {
-                          Logger.WriteFileLog("最后一条数据缓存加载失败", ex);
-                      }
-                  },null);
+                                        SetSharesKlineLastSession(sharesCodeNum * 1000 + market * 100 + dataType, item);
+                                    }
+                                    reader.Close();
+                                }
+                            }
+                            catch (Exception ex)
+                            {
+                                throw ex;
+                            }
+                            finally
+                            {
+                                conn.Close();
+                            }
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Logger.WriteFileLog("最后一条数据缓存加载失败", ex);
+                    }
+                }, null);
             }
 
-            TaskThread.WaitAll(taskArr,Timeout.Infinite);
+            TaskThread.WaitAll(taskArr, Timeout.Infinite);
             TaskThread.CloseAllTasks(taskArr);
             Logger.WriteFileLog("===结束初始化最后一条数据缓存===", null);
         }
@@ -833,6 +841,7 @@ inner join
             DailyInitThread = new Thread(() =>
             {
                 DateTime TaskSuccessLastTime = DateTime.Now.Date;
+                bool TaskMiddleExcute = true;
                 while (true)
                 {
                     try
@@ -846,7 +855,7 @@ inner join
                         {
                             continue;
                         }
-                        DoDailyTask(ref TaskSuccessLastTime);
+                        DoDailyTask(ref TaskSuccessLastTime,ref TaskMiddleExcute);
                         if (!RunnerHelper.CheckTradeTime2(DateTime.Now.AddSeconds(-180)) && !RunnerHelper.CheckTradeTime2(DateTime.Now.AddSeconds(180)))
                         {
                             continue;
@@ -866,9 +875,16 @@ inner join
         /// 每日任务
         /// 1.更新所有板块缓存
         /// </summary>
-        private void DoDailyTask(ref DateTime TaskSuccessLastTime)
+        private void DoDailyTask(ref DateTime TaskSuccessLastTime,ref bool TaskMiddleExcute)
         {
             TimeSpan spanNow = TimeSpan.Parse(DateTime.Now.ToString("HH:mm:ss"));
+            //if (spanNow > TimeSpan.Parse("11:45:00") && spanNow < TimeSpan.Parse("12:30:00") && TaskMiddleExcute)
+            //{
+            //    //更新当天计算结果缓存
+            //    LoadPlateKlineSession();
+            //    TaskMiddleExcute = false;
+            //    return;
+            //}
             if (spanNow < TimeSpan.Parse("00:30:00") || spanNow > TimeSpan.Parse("05:30:00"))
             {
                 return;
@@ -878,6 +894,7 @@ inner join
                 return;
             }
             TaskSuccessLastTime = DateTime.Now;
+            TaskMiddleExcute = true;
             LoadPlateSession();
             //指令数据执行
             DoExcuteOrder();
@@ -907,7 +924,7 @@ inner join
                             item.ExcuteTime = DateTime.Now;
                             db.SaveChanges();
 
-                            _doExcuteOrder(item, plate_base_session,db);
+                            _doExcuteOrder(item, plate_base_session, db);
                             tran.Commit();
                         }
                         catch (Exception ex)
@@ -920,12 +937,12 @@ inner join
             }
         }
 
-        private void _doExcuteOrder(t_shares_plate_rel_snapshot_instructions item, Dictionary<long, Plate_Base_Session_Info> plate_base_session ,meal_ticketEntities db)
+        private void _doExcuteOrder(t_shares_plate_rel_snapshot_instructions item, Dictionary<long, Plate_Base_Session_Info> plate_base_session, meal_ticketEntities db)
         {
             //重置基准日
             if (item.Type == 1)
             {
-                _doExcuteOrder1(item.PlateId,plate_base_session, db);
+                _doExcuteOrder1(item.PlateId, plate_base_session, db);
             }
             //重置K线
             else if (item.Type == 2)
@@ -942,7 +959,7 @@ inner join
         /// <summary>
         /// 重置基准日指令
         /// </summary>
-        private void _doExcuteOrder1(long plateId,Dictionary<long, Plate_Base_Session_Info> plate_base_session, meal_ticketEntities db)
+        private void _doExcuteOrder1(long plateId, Dictionary<long, Plate_Base_Session_Info> plate_base_session, meal_ticketEntities db)
         {
             if (plate_base_session.Count() == 0)
             {
@@ -1000,7 +1017,7 @@ inner join
         /// <summary>
         /// 重置K线
         /// </summary>
-        private void _doExcuteOrder2(long plateId,int dataType,string contextStr, meal_ticketEntities db) 
+        private void _doExcuteOrder2(long plateId, int dataType, string contextStr, meal_ticketEntities db)
         {
             var context = JsonConvert.DeserializeObject<dynamic>(contextStr);
             long groupTimeKey = Convert.ToInt64(context.GroupTimeKey);
@@ -1283,7 +1300,7 @@ inner join
                 }
                 catch (Exception ex)
                 {
-                    Logger.WriteFileLog("重算板块K线有误",ex);
+                    Logger.WriteFileLog("重算板块K线有误", ex);
                 }
             } while (true);
         }
@@ -1474,7 +1491,7 @@ inner join
                         if (data.CalType == 1)
                         {
                             var list = (from item in data.SharesKlineData
-                                        where item.PlateId>0
+                                        where item.PlateId > 0
                                         select new PlateImportData
                                         {
                                             LastTradeStock = item.LastTradeStock,
@@ -1503,10 +1520,14 @@ inner join
                         }
                         else
                         {
+                            Logger.WriteFileLog("开始计算单包板块K线" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                             _calToday(data);
+                            Logger.WriteFileLog("单包板块K线计算完成"+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                             if (data.IsFinish)
                             {
+                                Logger.WriteFileLog("===整体板块K线计算完成" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                                 InsertToDatabase();
+                                Logger.WriteFileLog("===整体板块K线导入完成" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                             }
                         }
                     }
@@ -1575,14 +1596,14 @@ inner join
 
             //1.查询原板块计算结果
             var calResult = GetPlateKlineSession(plateId * 100 + dataType);
-            int shareKey = (int)data.SharesCodeNum * 10 + data.Market;
-            foreach (var item in calResult)
-            {
-                if (item.Value.GroupTimeKey < data.GroupTimeKey && item.Value.LastTempData.ContainsKey(shareKey))
-                {
-                    item.Value.LastTempData[shareKey] = new SharesKlineData();
-                }
-            }
+            //int shareKey = (int)data.SharesCodeNum * 10 + data.Market;
+            //foreach (var item in calResult)
+            //{
+            //    if (item.Value.GroupTimeKey < data.GroupTimeKey && item.Value.LastTempData.ContainsKey(shareKey))
+            //    {
+            //        item.Value.LastTempData.Remove(shareKey);
+            //    }
+            //}
 
             #region===不加权===
             if (isCalWeight)
@@ -2256,7 +2277,7 @@ inner join
         {
             SharesKlineQueue.AddMessage(data);
         }
-        
+
         /// <summary>
         /// 板块K线重置队列
         /// </summary>
@@ -2330,10 +2351,10 @@ inner join
 
         public void ToReceiveSharesRetry(int handlerType, List<SecurityBarsDataParList> packageList)
         {
-            retryQueue.AddMessage(new retryParData 
-            { 
-                HandlerType=handlerType,
-                PackageList= packageList
+            retryQueue.AddMessage(new retryParData
+            {
+                HandlerType = handlerType,
+                PackageList = packageList
             });
         }
 
@@ -2353,7 +2374,7 @@ inner join
                     }
                     try
                     {
-                        if(!ToExecuteRetry(tempData.HandlerType, tempData.PackageList))
+                        if (!ToExecuteRetry(tempData.HandlerType, tempData.PackageList))
                         {
                             continue;
                         }
@@ -2366,7 +2387,7 @@ inner join
                     }
                     catch (Exception ex)
                     {
-                        Logger.WriteFileLog("重置操作出错",ex);
+                        Logger.WriteFileLog("重置操作出错", ex);
                     }
                 } while (true);
             });
@@ -2417,9 +2438,9 @@ inner join
                         {
                             GroupTimeKey = minGroupTimeKey
                         });
-                        sql_instructions.AppendLine(string.Format("insert into t_shares_plate_rel_snapshot_instructions([Date],[Type],PlateId,PlateType,Market,SharesCode,DataType,Context,IsExcute,ExcuteTime,CreateTime,LastModified) values('{0}',{1},{2},{3},{4},'{5}',{6},'{7}',{8},'{9}','{10}','{10}');", DateTime.Now.ToString("yyyy-MM-dd"),2, plateId,0,0,"", package.DataType, Context,0,null, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
+                        sql_instructions.AppendLine(string.Format("insert into t_shares_plate_rel_snapshot_instructions([Date],[Type],PlateId,PlateType,Market,SharesCode,DataType,Context,IsExcute,ExcuteTime,CreateTime,LastModified) values('{0}',{1},{2},{3},{4},'{5}',{6},'{7}',{8},'{9}','{10}','{10}');", DateTime.Now.ToString("yyyy-MM-dd"), 2, plateId, 0, 0, "", package.DataType, Context, 0, null, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")));
                     }
-                    else if(handlerType==21)//立即执行
+                    else if (handlerType == 21)//立即执行
                     {
                         string tableName = "";
                         if (!ParsePlateTableName(package.DataType, ref tableName))

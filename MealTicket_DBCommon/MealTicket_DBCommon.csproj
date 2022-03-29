@@ -640,6 +640,9 @@
     <Compile Include="t_recharge_record.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="t_search_mark_tri.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="t_search_tri.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
@@ -689,6 +692,27 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_shares_bars_temp.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_hotspot.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_hotspot_auto.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_hotspot_focuson.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_hotspot_group.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_hotspot_group_rel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_hotspot_his.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_hotspot_plate.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_shares_hq_host.cs">
@@ -868,7 +892,13 @@
     <Compile Include="t_shares_quotes_record.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="t_shares_quotes_riselimit.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="t_shares_quotes_temp.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_shares_riserate_rank.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_shares_search.cs">
@@ -929,6 +959,18 @@
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_sms_template.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_stock_monitor_group.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_stock_monitor_rel.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_stock_monitor_tri.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
+    <Compile Include="t_stock_monitor_tri_record.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
     <Compile Include="t_system_param.cs">

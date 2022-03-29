@@ -106,7 +106,7 @@ namespace FXCommon.Common
             object value = _getSession(DataKey);
             if (value != null)
             {
-                value = CopySessionData(value, DataKey);
+                //value = CopySessionData(value, DataKey);
             }
             return value;
         }

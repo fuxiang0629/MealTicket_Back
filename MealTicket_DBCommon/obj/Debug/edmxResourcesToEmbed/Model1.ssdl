@@ -2767,6 +2767,44 @@
     <Property Name="LastModified" Type="datetime" Nullable="false" />
     <Property Name="BatchTime" Type="varchar" MaxLength="50" Nullable="false" />
   </EntityType>
+  <EntityType Name="t_shares_hotspot">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="200" />
+    <Property Name="OrderIndex" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_hotspot_group">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="AccountId" Type="bigint" Nullable="false" />
+    <Property Name="GroupName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_hotspot_group_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="GroupId" Type="bigint" Nullable="false" />
+    <Property Name="HostId" Type="bigint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_hotspot_plate">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="HotId" Type="bigint" Nullable="false" />
+    <Property Name="PlateId" Type="bigint" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_shares_hq_host">
     <Key>
       <PropertyRef Name="Id" />
@@ -3816,6 +3854,23 @@
     <Property Name="TotalCapital" Type="bigint" Nullable="false" />
     <Property Name="CirculatingCapital" Type="bigint" Nullable="false" />
   </EntityType>
+  <EntityType Name="t_shares_quotes_riselimit">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SharesKey" Type="bigint" StoreGeneratedPattern="Computed" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="RiseLimitDays" Type="int" Nullable="false" />
+    <Property Name="RiseLimitCount" Type="int" Nullable="false" />
+    <Property Name="LastRiseLimitTime" Type="datetime" Nullable="false" />
+    <Property Name="LastRiseLimitDate" Type="datetime" Nullable="false" />
+    <Property Name="IsLimitUpToday" Type="bit" Nullable="false" />
+    <Property Name="IsLimitUpYesday" Type="bit" Nullable="false" />
+    <Property Name="DataDate" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_shares_quotes_temp">
     <Key>
       <PropertyRef Name="Id" />
@@ -3862,6 +3917,22 @@
     <Property Name="PriceType" Type="int" Nullable="false" />
     <Property Name="TriPriceType" Type="int" Nullable="false" />
     <Property Name="TriNearLimitType" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_riserate_rank">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Date" Type="datetime" Nullable="false" />
+    <Property Name="DayType" Type="int" Nullable="false" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="SharesKey" Type="bigint" StoreGeneratedPattern="Computed" />
+    <Property Name="RealDays" Type="int" Nullable="false" />
+    <Property Name="RiseRate" Type="int" Nullable="false" />
+    <Property Name="Rank" Type="int" Nullable="false" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="t_shares_search">
     <Key>
@@ -5331,6 +5402,8 @@
     <Parameter Name="errorCode" Type="int" Mode="InOut" />
     <Parameter Name="errorMessage" Type="nvarchar" Mode="InOut" />
   </Function>
+  <Function Name="P_Shares_LimitUp_His_Cal" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
+  <Function Name="P_Shares_Riserate_His_Update" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
   <Function Name="P_SharesQuotes_Update" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
   <Function Name="P_SharesSeatBuy_PayResultCallback" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
     <Parameter Name="orderSN" Type="varchar" Mode="In" />
@@ -5616,6 +5689,10 @@
     <EntitySet Name="t_shares_bars_index" EntityType="Self.t_shares_bars_index" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_bars_index_temp" EntityType="Self.t_shares_bars_index_temp" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_bars_temp" EntityType="Self.t_shares_bars_temp" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_hotspot" EntityType="Self.t_shares_hotspot" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_hotspot_group" EntityType="Self.t_shares_hotspot_group" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_hotspot_group_rel" EntityType="Self.t_shares_hotspot_group_rel" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_hotspot_plate" EntityType="Self.t_shares_hotspot_plate" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_hq_host" EntityType="Self.t_shares_hq_host" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_info_fund_group" EntityType="Self.t_shares_info_fund_group" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_info_fund_group_details" EntityType="Self.t_shares_info_fund_group_details" Schema="dbo" store:Type="Tables" />
@@ -5675,7 +5752,9 @@
     <EntitySet Name="t_shares_quotes_last" EntityType="Self.t_shares_quotes_last" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_quotes_last_temp" EntityType="Self.t_shares_quotes_last_temp" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_quotes_record" EntityType="Self.t_shares_quotes_record" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_quotes_riselimit" EntityType="Self.t_shares_quotes_riselimit" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_quotes_temp" EntityType="Self.t_shares_quotes_temp" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_riserate_rank" EntityType="Self.t_shares_riserate_rank" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_search" EntityType="Self.t_shares_search" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_securitybarsdata_15min" EntityType="Self.t_shares_securitybarsdata_15min" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_securitybarsdata_1day" EntityType="Self.t_shares_securitybarsdata_1day" Schema="dbo" store:Type="Tables" />

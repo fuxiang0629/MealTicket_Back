@@ -174,13 +174,13 @@ namespace MealTicket_Web_Handler.Runner
                 //1.查询股票最低点日期
                 DateTime lowestDate = DateTime.Now.Date;
                 DateTime lastDate = DateTime.Now.Date;
-                bool isVaild = QuerySharesLowestDate(item.Key, _shares_Quotes_Date_Session, Shares_Quotes_Today_Session, ref lowestDate,ref lastDate);
+                bool isVaild = QuerySharesLowestDate(item.Key, _shares_Quotes_Date_Session, Shares_Quotes_Today_Session, ref lowestDate, ref lastDate);
                 if (!isVaild)
                 {
                     continue;
                 }
                 //2.查询板块涨幅最高前两名
-                var new_force_data_temp=QueryMaxRiseRatePlate(forceType,item.Value, lowestDate, lastDate, _plate_Quotes_Date_Session, Plate_Quotes_Today_Session);
+                var new_force_data_temp=QueryMaxRiseRatePlate(forceType,item.Value, lowestDate, lastDate, _plate_Quotes_Date_Session, Plate_Quotes_Today_Session,item.Key);
                 new_force_data.AddRange(new_force_data_temp);
             }
             return new_force_data;
@@ -255,11 +255,11 @@ namespace MealTicket_Web_Handler.Runner
             return true;
         }
 
-        private static List<Plate_Tag_Force_Session_Info> QueryMaxRiseRatePlate(int forceType, List<SharesPlateRelInfo_Session> plateList, DateTime lowestDate, DateTime lastDate, Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> Plate_Quotes_Date_Session, Dictionary<long, Plate_Quotes_Session_Info> Plate_Quotes_Today_Session)
+        private static List<Plate_Tag_Force_Session_Info> QueryMaxRiseRatePlate(int forceType, List<SharesPlateRelInfo_Session> plateList, DateTime lowestDate, DateTime lastDate, Dictionary<long, Dictionary<DateTime, Plate_Quotes_Session_Info>> Plate_Quotes_Date_Session, Dictionary<long, Plate_Quotes_Session_Info> Plate_Quotes_Today_Session,long sharesKey)
         {
-            int riseRate1 = 0;
+            int riseRate1 = -int.MaxValue;
             long plateId1 = 0;
-            int riseRate2 = 0;
+            int riseRate2 = -int.MaxValue;
             long plateId2 = 0;
             foreach (var item in plateList)
             {
@@ -269,35 +269,83 @@ namespace MealTicket_Web_Handler.Runner
                     continue;
                 }
                 Plate_Quotes_Session_Info plate_quotes_date = new Plate_Quotes_Session_Info();
-                if (!plate_quotes_date_dic.TryGetValue(lowestDate, out plate_quotes_date))
+                if (Singleton.Instance.PlateTagCalType==2)
                 {
-                    continue;
-                }
-
-                Plate_Quotes_Session_Info plate_quotes_today = new Plate_Quotes_Session_Info();
-                if (lastDate == DateTime.Now.Date)
-                {
-                    if (!Plate_Quotes_Today_Session.TryGetValue(item.PlateId, out plate_quotes_today))
+                    if (plate_quotes_date_dic == null)
+                    {
+                        continue;
+                    }
+                    if (plate_quotes_date_dic.Count() == 0)
+                    {
+                        continue;
+                    }
+                    plate_quotes_date = plate_quotes_date_dic.OrderBy(e => e.Value.ClosedPrice).FirstOrDefault().Value;
+                    if (plate_quotes_date == null)
                     {
                         continue;
                     }
                 }
                 else
                 {
-                    if (!plate_quotes_date_dic.TryGetValue(lastDate, out plate_quotes_today))
+                    if (!plate_quotes_date_dic.TryGetValue(lowestDate, out plate_quotes_date))
                     {
                         continue;
                     }
                 }
-                if (plate_quotes_date.ClosedPrice >= plate_quotes_today.ClosedPrice)
+
+                Plate_Quotes_Session_Info plate_quotes_today = new Plate_Quotes_Session_Info();
+                if (Singleton.Instance.PlateTagCalType == 2)
                 {
-                    continue;
+                    if (Plate_Quotes_Today_Session == null) 
+                    {
+                        continue;
+                    }
+                    if (!Plate_Quotes_Today_Session.ContainsKey(item.PlateId))
+                    {
+                        plate_quotes_today = plate_quotes_date_dic.OrderByDescending(e => e.Key).FirstOrDefault().Value;
+                    }
+                    else
+                    {
+                        plate_quotes_today = Plate_Quotes_Today_Session[item.PlateId];
+                    }
+
+                    if (plate_quotes_date.ClosedPrice >= plate_quotes_today.ClosedPrice)
+                    {
+                        plate_quotes_date = plate_quotes_date_dic.OrderByDescending(e => e.Value.ClosedPrice).FirstOrDefault().Value;
+                        if (plate_quotes_date == null)
+                        {
+                            continue;
+                        }
+                    }
                 }
-                int riseRate = (int)((plate_quotes_today.ClosedPrice - plate_quotes_date.ClosedPrice) * 1.0 / plate_quotes_date.ClosedPrice * 10000 + 0.5);
+                else 
+                {
+                    if (lastDate == DateTime.Now.Date)
+                    {
+                        if (!Plate_Quotes_Today_Session.TryGetValue(item.PlateId, out plate_quotes_today))
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        if (!plate_quotes_date_dic.TryGetValue(lastDate, out plate_quotes_today))
+                        {
+                            continue;
+                        }
+                    }
+                }
+                //if (plate_quotes_date.ClosedPrice >= plate_quotes_today.ClosedPrice)
+                //{
+                //    continue;
+                //}
+
+                long tempPrice = (plate_quotes_date.ClosedPrice > plate_quotes_date.YestodayClosedPrice && plate_quotes_date.YestodayClosedPrice > 0) ? plate_quotes_date.YestodayClosedPrice : plate_quotes_date.ClosedPrice;
+                int riseRate = (int)Math.Round((plate_quotes_today.ClosedPrice - tempPrice) * 1.0 / tempPrice * 10000,0);
                 if (riseRate1 < riseRate)
                 {
-                    riseRate1 = riseRate;
                     riseRate2 = riseRate1;
+                    riseRate1 = riseRate;
 
                     plateId2 = plateId1;
                     plateId1 = item.PlateId;

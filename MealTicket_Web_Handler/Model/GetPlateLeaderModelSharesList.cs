@@ -323,6 +323,13 @@ namespace MealTicket_Web_Handler.Model
         /// 自带股票code
         /// </summary>
         public string SharesCode { get; set; }
+
+        public long AccountId { get; set; }
+
+        /// <summary>
+        /// 是否只获取龙头股票
+        /// </summary>
+        public bool IsLeader { get; set; }
     }
 
     public class SharesAccountInfo 

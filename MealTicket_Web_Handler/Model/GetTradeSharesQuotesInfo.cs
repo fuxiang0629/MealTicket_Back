@@ -236,6 +236,26 @@ namespace MealTicket_Web_Handler.Model
         /// 总涨跌幅
         /// </summary>
         public int TotalRise { get; set; }
+
+        /// <summary>
+        /// 流通股
+        /// </summary>
+        public long CirculatingCapital { get; set; }
+
+        /// <summary>
+        /// 换手率
+        /// </summary>
+        public int TodayHandsRate 
+        {
+            get 
+            {
+                if (CirculatingCapital == 0)
+                {
+                    return 0;
+                }
+                return (int)Math.Round((TotalCount * 1.0 / CirculatingCapital) * 10000,0);
+            }
+        }
     }
 
     public class GetTradeSharesQuotesInfoRequest

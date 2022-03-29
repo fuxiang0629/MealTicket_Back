@@ -1,5 +1,6 @@
 ﻿using FXCommon.Common;
 using MealTicket_DBCommon;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -203,6 +204,38 @@ namespace MealTicket_Web_Handler.Runner
         public int DayType { get; set; }
     }
 
+    public class PlateMonitorDatabase
+    {
+        public long PlateId { get; set; }
+
+        public DateTime Time { get; set; }
+
+        public int LeaderIndexRate { get; set; }
+
+        public int LeaderIndexScore { get; set; }
+
+        public int PlateLinkageIndexRate { get; set; }
+
+        public int PlateLinkageIndexScore { get; set; }
+
+
+        public int SharesLinkageIndexRate { get; set; }
+
+
+        public int SharesLinkageIndexScore { get; set; }
+
+
+        public int NewHighIndexRate { get; set; }
+
+
+        public int NewHighIndexScore { get; set; }
+
+
+        public int PlateVolumeCurrRate { get; set; }
+
+        public int PlateVolumeExceptRate { get; set; }
+    }
+
     public class PlateMonitorHelper
     {
         Dictionary<int, Dictionary<long, PlateMonitor>> PlateMonitorSessionDic;
@@ -257,7 +290,7 @@ namespace MealTicket_Web_Handler.Runner
 
         Dictionary<long, Dictionary<DateTime, PlateMonitor>> PlateMonitorMinSessionDic;
 
-        private void SetMinSession() 
+        private void SetMinSession()
         {
             DateTime timeNow = DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd HH:mm:00"));
             _sessionReadWriteLock.AcquireWriterLock(Timeout.Infinite);
@@ -274,16 +307,17 @@ namespace MealTicket_Web_Handler.Runner
                     {
                         PlateMonitorMinSessionDic[plate.Key].Add(timeNow, new PlateMonitor());
                     }
+
                     if (!plateListDic.ContainsKey(plate.Key))
                     {
-                        plateListDic.Add(plate.Key, new PlateMonitor 
+                        plateListDic.Add(plate.Key, new PlateMonitor
                         {
-                            PlateId= plate.Key,
-                            SharesLinkageIndex =new PlateIndexInfo 
+                            PlateId = plate.Key,
+                            SharesLinkageIndex = new PlateIndexInfo
                             {
-                                IndexRate=0,
-                                IndexScore=0,
-                                Coefficient=0
+                                IndexRate = 0,
+                                IndexScore = 0,
+                                Coefficient = 0
                             },
                             LeaderIndex = new PlateIndexInfo
                             {
@@ -308,10 +342,10 @@ namespace MealTicket_Web_Handler.Runner
                                 CurrRate = 0,
                                 ExceptRate = 0
                             },
-                            CalCount=0
+                            CalCount = 0
                         });
                     }
-                    var temp=plateListDic[plate.Key];
+                    var temp = plateListDic[plate.Key];
                     var tempLeaderIndex = temp.LeaderIndex;
                     tempLeaderIndex.IndexRate = tempLeaderIndex.IndexRate + plate.Value.LeaderIndex.IndexRate;
                     tempLeaderIndex.IndexScore = tempLeaderIndex.IndexScore + plate.Value.LeaderIndex.IndexScore;
@@ -337,6 +371,7 @@ namespace MealTicket_Web_Handler.Runner
                 }
             }
             Dictionary<long, Dictionary<DateTime, PlateMonitor>> tempPlateMonitorMinSessionDic = new Dictionary<long, Dictionary<DateTime, PlateMonitor>>();
+
             foreach (var item in PlateMonitorMinSessionDic)
             {
                 Dictionary<DateTime, PlateMonitor> tempPm = new Dictionary<DateTime, PlateMonitor>();
@@ -376,12 +411,13 @@ namespace MealTicket_Web_Handler.Runner
                     int count = item.Value.Count();
                     count = count < 16 ? 0 : (count - 16);
                     temp = new SortedDictionary<DateTime, PlateMonitor>(temp.Skip(count).ToDictionary(k => k.Key, v => v.Value));
-                    tempPm = temp.Reverse().ToDictionary(k=>k.Key,v=>v.Value);
+                    tempPm = temp.Reverse().ToDictionary(k => k.Key, v => v.Value);
                 }
 
                 tempPlateMonitorMinSessionDic.Add(item.Key, tempPm);
             }
             PlateMonitorMinSessionDic = tempPlateMonitorMinSessionDic;
+
             _sessionReadWriteLock.ReleaseWriterLock();
         }
 
@@ -399,6 +435,89 @@ namespace MealTicket_Web_Handler.Runner
             }
             _sessionReadWriteLock.ReleaseReaderLock();
             return result;
+        }
+
+        public void LoadMinSession() 
+        {
+            DateTime dateNow = DbHelper.GetLastTradeDate2(-9);
+            string startTime = dateNow.ToString("yyyy-MM-dd 00:00:00");
+            string endTime = dateNow.ToString("yyyy-MM-dd 15:00:00");
+            string sql = string.Format(@"select PlateId,[Time],LeaderIndexRate,LeaderIndexScore,PlateLinkageIndexRate,PlateLinkageIndexScore,SharesLinkageIndexRate,SharesLinkageIndexScore,
+  NewHighIndexRate,NewHighIndexScore,PlateVolumeCurrRate,PlateVolumeExceptRate
+  from
+  (
+	  select PlateId,[Time],LeaderIndexRate,LeaderIndexScore,PlateLinkageIndexRate,PlateLinkageIndexScore,SharesLinkageIndexRate,SharesLinkageIndexScore,
+	  NewHighIndexRate,NewHighIndexScore,PlateVolumeCurrRate,PlateVolumeExceptRate,ROW_NUMBER()OVER(partition by PlateId order by [Time] desc)num
+	  from
+	  (
+		  select PlateId,[Time],avg(LeaderIndexRate)LeaderIndexRate,avg(LeaderIndexScore)LeaderIndexScore,avg(PlateLinkageIndexRate)PlateLinkageIndexRate,
+		  avg(PlateLinkageIndexScore)PlateLinkageIndexScore,avg(SharesLinkageIndexRate)SharesLinkageIndexRate,avg(SharesLinkageIndexScore)SharesLinkageIndexScore,
+		  avg(NewHighIndexRate)NewHighIndexRate,avg(NewHighIndexScore)NewHighIndexScore,avg(PlateVolumeCurrRate)PlateVolumeCurrRate,avg(PlateVolumeExceptRate)PlateVolumeExceptRate
+		  from t_plate_energyindex_min
+		  where [Time]>'{0}' and [Time]<='{1}'
+		  group by PlateId,[Time]
+	  )t
+  )t
+  where t.num<16
+  order by PlateId,[Time] desc", startTime, endTime);
+
+
+            int LeaderIndex_Coefficient = sessionContainer.SettingPlateIndexSession[1].Coefficient;
+            int PlateLinkageIndex_Coefficient = sessionContainer.SettingPlateIndexSession[2].Coefficient;
+            int NewHighIndex_Coefficient = sessionContainer.SettingPlateIndexSession[4].Coefficient;
+            int SharesLinkageIndex_Coefficient = sessionContainer.SettingPlateIndexSession[3].Coefficient;
+
+            using (var db = new meal_ticketEntities())
+            {
+                Dictionary<long, Dictionary<DateTime, PlateMonitor>> tempResult = new Dictionary<long, Dictionary<DateTime, PlateMonitor>>();
+                var result=db.Database.SqlQuery<PlateMonitorDatabase>(sql).ToList();
+                foreach (var item in result)
+                {
+                    if (!tempResult.ContainsKey(item.PlateId))
+                    {
+                        tempResult.Add(item.PlateId, new Dictionary<DateTime, PlateMonitor>());
+                    }
+                    var tempA = tempResult[item.PlateId];
+                    if (!tempA.ContainsKey(item.Time))
+                    {
+                        tempA.Add(item.Time, new PlateMonitor());
+                    }
+                    PlateMonitor temoM = new PlateMonitor();
+                    temoM.PlateId = item.PlateId;
+                    temoM.CalCount = 1;
+                    temoM.LeaderIndex =new PlateIndexInfo 
+                    {
+                        IndexScore= item.LeaderIndexScore,
+                        IndexRate= item.LeaderIndexRate,
+                        Coefficient= LeaderIndex_Coefficient
+                    };
+                    temoM.PlateLinkageIndex = new PlateIndexInfo
+                    {
+                        IndexScore = item.PlateLinkageIndexRate,
+                        IndexRate = item.PlateLinkageIndexRate,
+                        Coefficient= PlateLinkageIndex_Coefficient
+                    };
+                    temoM.PlateVolume = new PlateVolumeInfo
+                    {
+                        CurrRate = item.PlateVolumeCurrRate,
+                        ExceptRate=item.PlateVolumeExceptRate
+                    };
+                    temoM.SharesLinkageIndex = new PlateIndexInfo
+                    {
+                        IndexScore=item.SharesLinkageIndexScore,
+                        IndexRate=item.SharesLinkageIndexRate,
+                        Coefficient= SharesLinkageIndex_Coefficient
+                    };
+                    temoM.NewHighIndex = new PlateIndexInfo 
+                    {
+                        IndexScore= item.NewHighIndexScore,
+                        IndexRate=item.NewHighIndexRate,
+                        Coefficient= NewHighIndex_Coefficient
+                    };
+                    tempA[item.Time] = temoM;
+                }
+                PlateMonitorMinSessionDic = tempResult;
+            }
         }
 
         SessionContainer sessionContainer;
@@ -476,9 +595,12 @@ namespace MealTicket_Web_Handler.Runner
             {
                 ToWriteDebugLog("1:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                 var time_limit = Singleton.Instance.sessionHandler.GetShares_Limit_Time_Session();
-
-                IsFirst = false;
                 UpdateSessionContainer();//获取公用缓存
+                if (IsFirst)
+                {
+                    LoadMinSession();
+                }
+                IsFirst = false;
 
                 ToWriteDebugLog("2:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
 

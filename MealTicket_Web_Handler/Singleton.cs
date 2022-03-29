@@ -88,6 +88,10 @@ namespace MealTicket_Web_Handler
         /// 监控搜索间隔
         /// </summary>
         public int SearchInterval = 15000;
+        /// <summary>
+        /// 监控搜索间隔
+        /// </summary>
+        public int SearchMarkInterval = 3000;
 
         #region===再触发设置===
         public int MinPushTimeInterval = 180;
@@ -133,6 +137,9 @@ namespace MealTicket_Web_Handler
         public int[] EnergyIndexTypeList = new[] { 1, 2, 3, 4 };
         public int LeaderMinRiseRate = 500;//板块龙头最小涨跌幅
 
+        //热点题材默认背景色
+        public string[] HotSpotColorList = new string[] { };
+
         /// <summary>
         /// 自动买入最大任务数量
         /// </summary>
@@ -149,6 +156,11 @@ namespace MealTicket_Web_Handler
         public int MainArmyRankRate = 5000;
 
         /// <summary>
+        /// 1绝对天数 2相对天数
+        /// </summary>
+        public int PlateTagCalType = 1;
+
+        /// <summary>
         /// 走势最像天数
         /// </summary>
         public int TrendLikeDays = 20;
@@ -157,6 +169,14 @@ namespace MealTicket_Web_Handler
         public int[] SharesLeaderDaysType = new [] { 1, 2, 3, 4 };
         public int SharesLeaderPlateRank = 5;
         public int SharesLeaderTotalRank = 20;
+        public int SharesLeaderOverallRank = 20;//股票综合排名加粗
+        public int SharesLeaderPlateDayRank = 20;//板块排名加粗
+
+        public int SharesRankHisDays = 5;//股票排名历史天数
+        public int SharesRankShowCount = 50;//股票排名展示数量
+        public int SharesPlateRankHisDays = 3;//股票板块内排名历史天数
+        public int SharesPlateRankShowCount = 10;//股票板块内排名展示数量
+        public string[] sharesRankBgColorList = new[] { "#ff0019", "#c3535e", "#d7a1a6" };
 
         /// <summary>
         /// adb.net操作对象
@@ -589,6 +609,11 @@ namespace MealTicket_Web_Handler
                         {
                             SearchInterval = tempSearchInterval;
                         }
+                        int tempSearchMarkInterval = sysValue.SearchMarkInterval;
+                        if (tempSearchMarkInterval > 0)
+                        {
+                            SearchMarkInterval = tempSearchMarkInterval;
+                        }
                         int tempMaxTrendCheckTaskCount= sysValue.TempThreadCount;
                         if (tempMaxTrendCheckTaskCount > 0)
                         {
@@ -646,6 +671,11 @@ namespace MealTicket_Web_Handler
                         {
                             MainArmyRankRate = tempMainArmyRankRate;
                         }
+                        int tempPlateTagCalType = sysValue.PlateTagCalType;
+                        if (tempPlateTagCalType > 0)
+                        {
+                            PlateTagCalType = tempPlateTagCalType;
+                        } 
                     }
                 }
                 catch { }
@@ -753,6 +783,98 @@ namespace MealTicket_Web_Handler
 
                         SharesLeaderPlateRank = sysValue.PlateRank;
                         SharesLeaderTotalRank = sysValue.TotalRank;
+
+                        SharesLeaderOverallRank = sysValue.OverallRank;
+                        SharesLeaderPlateDayRank = sysValue.PlateDayRank;
+                    }
+                }
+                catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "SharesRankPar"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                        int tempHisDays = 5;
+                        if (sysValue.HisDays != null)
+                        {
+                            tempHisDays = sysValue.HisDays;
+                        }
+                        if (tempHisDays < 0)
+                        {
+                            tempHisDays = 5;
+                        }
+                        if (tempHisDays > 10)
+                        {
+                            tempHisDays = 10;
+                        }
+                        SharesRankHisDays = tempHisDays;
+
+                        int tempShowCount = 50;
+                        if (sysValue.ShowCount != null)
+                        {
+                            tempShowCount = sysValue.ShowCount;
+                        }
+                        if (tempShowCount <= 0)
+                        {
+                            tempShowCount = 50;
+                        }
+                        if (tempShowCount > 100)
+                        {
+                            tempShowCount = 100;
+                        }
+                        SharesRankShowCount = tempShowCount;
+
+
+
+                        int tempPlateHisDays = 3;
+                        if (sysValue.PlateHisDays != null)
+                        {
+                            tempPlateHisDays = sysValue.PlateHisDays;
+                        }
+                        if (tempPlateHisDays < 0)
+                        {
+                            tempPlateHisDays = 3;
+                        }
+                        if (tempPlateHisDays > 10)
+                        {
+                            tempPlateHisDays = 10;
+                        }
+                        SharesPlateRankHisDays = tempPlateHisDays;
+
+                        int tempPlateShowCount = 10;
+                        if (sysValue.PlateShowCount != null)
+                        {
+                            tempPlateShowCount = sysValue.PlateShowCount;
+                        }
+                        if (tempPlateShowCount <= 0)
+                        {
+                            tempPlateShowCount = 10;
+                        }
+                        if (tempPlateShowCount > 100)
+                        {
+                            tempPlateShowCount = 10;
+                        }
+                        SharesPlateRankShowCount = tempPlateShowCount;
+
+                        string sharesRankBgColorStr = sysValue.RankColorList;
+                        sharesRankBgColorList = sharesRankBgColorStr.Split(';');
+                    }
+                }
+                catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "HotSpotPar"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+
+                        string hotSpotColorListStr = sysValue.HotSpotColorList;
+                        HotSpotColorList = hotSpotColorListStr.Split(';');
                     }
                 }
                 catch { }

@@ -36,5 +36,7 @@ namespace MealTicket_Web_Handler
     {
         public Dictionary<long, List<Plate_Shares_Rel_Session_Info>> Plate_Shares_Rel_Session { get; set; }
         public Dictionary<long, List<Plate_Shares_Rel_Session_Info>> Shares_Plate_Rel_Session { get; set; }
+        public Dictionary<long,Dictionary<long,Plate_Shares_Rel_Session_Info>> Shares_Plate_Rel_Dic_Session { get; set; }
+        public Dictionary<long, Dictionary<long, Plate_Shares_Rel_Session_Info>> Plate_Shares_Rel_Dic_Session { get; set; }
     }
 }

@@ -16,5 +16,10 @@ namespace MealTicket_Web_Handler.Model
         /// 板块名称
         /// </summary>
         public string PlateName { get; set; }
+
+        /// <summary>
+        /// 股票唯一Key
+        /// </summary>
+        public long SharesKey { get; set; }
     }
 }

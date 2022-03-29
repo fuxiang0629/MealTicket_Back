@@ -13,6 +13,10 @@ namespace MealTicket_Web_Handler.Model
 
     public class GetPlateEnergyIndexListRequest
     {
+        /// <summary>
+        /// 1.按板块动能 2.按板块涨幅
+        /// </summary>
+        public int SpeedType { get; set; }
     }
 
     public class PlateEnergyIndexInfo

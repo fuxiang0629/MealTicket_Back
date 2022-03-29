@@ -11,7 +11,7 @@ namespace MealTicket_Web_Handler
     {
         public static Plate_Minute_KLine_RiseRate_Obj UpdateSession()
 		{
-			DateTime dateNow = DbHelper.GetLastTradeDate2();
+			DateTime dateNow = DbHelper.GetLastTradeDate2(-9);
 			using (var db = new meal_ticketEntities())
             {
                 string sql = string.Format(@"declare @paramValue_IndexInitValue nvarchar(max);

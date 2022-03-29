@@ -146,6 +146,16 @@ namespace MealTicket_Web_Handler.Model
         /// 预计量比
         /// </summary>
         public int StockRate_All { get; set; }
+
+        /// <summary>
+        /// 股票综合涨跌幅
+        /// </summary>
+        public int OverallRiseRate { get; set; }
+
+        /// <summary>
+        /// 股票综合排名
+        /// </summary>
+        public int OverallRank { get; set; }
     }
 
     public class AccountShareGroupCountInfo

@@ -72,6 +72,14 @@ namespace MealTicket_Web_Handler.Model
         /// 综合排名
         /// </summary>
         public int OverallRank { get; set; }
+
+        public int FocusOnRank 
+        {
+            get 
+            {
+                return Singleton.Instance.SharesLeaderPlateDayRank;
+            }
+        }
     }
 
     public class PlateQuotesInfo

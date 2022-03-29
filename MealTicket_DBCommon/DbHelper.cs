@@ -317,6 +317,190 @@ namespace MealTicket_DBCommon
         }
 
         /// <summary>
+        /// 检查当前是否Level1开始时间
+        /// </summary>
+        /// <returns></returns>
+        public static bool CheckTradeTime7Start(DateTime? time = null, List<t_shares_limit_time> timeSession = null)
+        {
+            DateTime timeDis = DateTime.Now;
+            if (time != null)
+            {
+                timeDis = time.Value;
+            }
+            if (!CheckTradeDate(timeDis))
+            {
+                return true;
+            }
+
+            List<t_shares_limit_time> timeLimit = null;
+            if (timeSession != null)
+            {
+                timeLimit = timeSession;
+            }
+            else
+            {
+                using (var db = new meal_ticketEntities())
+                {
+                    var tradeTime = (from item in db.t_shares_limit_time
+                                     select item).ToList();
+                    timeLimit = tradeTime;
+                }
+            }
+
+            TimeSpan timeSpanNow = TimeSpan.Parse(timeDis.ToString("HH:mm:ss"));
+            foreach (var item in timeLimit)
+            {
+                //解析time7
+                if (item.Time7 != null)
+                {
+                    string[] timeArr = item.Time7.Split(',');
+                    if (timeArr.Length <= 0)
+                    {
+                        continue;
+                    }
+                    var timeSpanArr = timeArr[0].Split('-');
+                    if (timeSpanArr.Length != 2)
+                    {
+                        continue;
+                    }
+                    TimeSpan timeStart = TimeSpan.Parse(timeSpanArr[0]);
+                    if (timeSpanNow < timeStart)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 检查当前是否Level1结束时间
+        /// </summary>
+        /// <returns></returns>
+        public static bool CheckTradeTime7Over(DateTime? time = null, List<t_shares_limit_time> timeSession = null)
+        {
+            DateTime timeDis = DateTime.Now;
+            if (time != null)
+            {
+                timeDis = time.Value;
+            }
+            if (!CheckTradeDate(timeDis))
+            {
+                return false;
+            }
+
+            List<t_shares_limit_time> timeLimit = null;
+            if (timeSession != null)
+            {
+                timeLimit = timeSession;
+            }
+            else
+            {
+                using (var db = new meal_ticketEntities())
+                {
+                    var tradeTime = (from item in db.t_shares_limit_time
+                                     select item).ToList();
+                    timeLimit = tradeTime;
+                }
+            }
+
+            TimeSpan timeSpanNow = TimeSpan.Parse(timeDis.ToString("HH:mm:ss"));
+            foreach (var item in timeLimit)
+            {
+                //解析time7
+                if (item.Time7 != null)
+                {
+                    string[] timeArr = item.Time7.Split(',');
+                    for (int i = 0; i < timeArr.Length; i++)
+                    {
+                        if (i != timeArr.Length - 1)
+                        {
+                            continue;
+                        }
+                        var timeSpanArr = timeArr[i].Split('-');
+                        if (timeSpanArr.Length != 2)
+                        {
+                            continue;
+                        }
+                        TimeSpan timeEnd = TimeSpan.Parse(timeSpanArr[1]);
+                        if (timeSpanNow > timeEnd)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// 检查当前是否Level1总时间内
+        /// </summary>
+        /// <returns></returns>
+        public static bool CheckTradeTime7Outside(DateTime? time = null, List<t_shares_limit_time> timeSession = null)
+        {
+            DateTime timeDis = DateTime.Now;
+            if (time != null)
+            {
+                timeDis = time.Value;
+            }
+            if (!CheckTradeDate(timeDis))
+            {
+                return true;
+            }
+
+            List<t_shares_limit_time> timeLimit = null;
+            if (timeSession != null)
+            {
+                timeLimit = timeSession;
+            }
+            else
+            {
+                using (var db = new meal_ticketEntities())
+                {
+                    var tradeTime = (from item in db.t_shares_limit_time
+                                     select item).ToList();
+                    timeLimit = tradeTime;
+                }
+            }
+
+            TimeSpan timeSpanNow = TimeSpan.Parse(timeDis.ToString("HH:mm:ss"));
+            foreach (var item in timeLimit)
+            {
+                //解析time7
+                if (item.Time7 != null)
+                {
+                    string[] timeArr = item.Time7.Split(',');
+                    for (int i = 0; i < timeArr.Length; i++)
+                    {
+                        var timeSpanArr = timeArr[i].Split('-');
+                        if (timeSpanArr.Length != 2)
+                        {
+                            continue;
+                        }
+                        if (i == 0)
+                        {
+                            TimeSpan timeStart = TimeSpan.Parse(timeSpanArr[0]); 
+                            if (timeSpanNow < timeStart)
+                            {
+                                return true;
+                            }
+                        }
+                        if (i == timeArr.Length - 1)
+                        {
+                            TimeSpan timeEnd = TimeSpan.Parse(timeSpanArr[1]);
+                            if (timeSpanNow > timeEnd)
+                            {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// 获取最近交易日日期
         /// </summary>
         /// <returns></returns>

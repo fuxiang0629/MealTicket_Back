@@ -116,7 +116,7 @@ namespace MealTicket_Web_Handler
         {
             get
             {
-                if (ClosedPrice == 0)
+                if (ClosedPrice == 0 || CurrPrice==0)
                 {
                     return 0;
                 }

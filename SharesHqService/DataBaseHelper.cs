@@ -163,7 +163,7 @@ namespace SharesHqService
                 if (!IsNewSharesFeatures)
                 {
                     var range = Singleton.Instance.session.GetRangeList().Where(e => (e.LimitMarket == item.Market || e.LimitMarket == -1) && item.SharesCode.StartsWith(e.LimitKey)).FirstOrDefault();
-                    if (range != null && item.ClosedPrice > 0 && item.PresentPrice > 0)
+                    if (range != null && item.ClosedPrice > 0 && item.PresentPrice > 0 && item.OpenedPrice>0 && item.MaxPrice>0 && item.MinPrice>0)
                     {
                         int maxRange = range.Range;
                         int maxNearLimitRange = range.NearLimitRange;

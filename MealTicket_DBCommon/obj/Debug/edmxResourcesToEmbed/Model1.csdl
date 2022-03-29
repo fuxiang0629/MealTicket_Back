@@ -4168,6 +4168,14 @@
     <EntitySet Name="t_plate_leader_tri_record" EntityType="meal_ticketModel.t_plate_leader_tri_record" />
     <EntitySet Name="t_plate_energyindex" EntityType="meal_ticketModel.t_plate_energyindex" />
     <EntitySet Name="t_plate_energyindex_min" EntityType="meal_ticketModel.t_plate_energyindex_min" />
+    <EntitySet Name="t_shares_riserate_rank" EntityType="meal_ticketModel.t_shares_riserate_rank" />
+    <EntitySet Name="t_shares_hotspot" EntityType="meal_ticketModel.t_shares_hotspot" />
+    <EntitySet Name="t_shares_hotspot_plate" EntityType="meal_ticketModel.t_shares_hotspot_plate" />
+    <EntitySet Name="t_shares_quotes_riselimit" EntityType="meal_ticketModel.t_shares_quotes_riselimit" />
+    <FunctionImport Name="P_Shares_LimitUp_His_Cal" />
+    <FunctionImport Name="P_Shares_Riserate_His_Update" />
+    <EntitySet Name="t_shares_hotspot_group" EntityType="meal_ticketModel.t_shares_hotspot_group" />
+    <EntitySet Name="t_shares_hotspot_group_rel" EntityType="meal_ticketModel.t_shares_hotspot_group_rel" />
   </EntityContainer>
   <EntityType Name="t_account_baseinfo">
     <Key>
@@ -5698,5 +5706,76 @@
     <Property Name="PlateVolumeCurrRate" Type="Int32" Nullable="false" />
     <Property Name="PlateVolumeExceptRate" Type="Int32" Nullable="false" />
     <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_riserate_rank">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="DayType" Type="Int32" Nullable="false" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="SharesKey" Type="Int64" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="RealDays" Type="Int32" Nullable="false" />
+    <Property Name="RiseRate" Type="Int32" Nullable="false" />
+    <Property Name="Rank" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_hotspot">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="OrderIndex" Type="Int32" Nullable="false" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_hotspot_plate">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="HotId" Type="Int64" Nullable="false" />
+    <Property Name="PlateId" Type="Int64" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_quotes_riselimit">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SharesKey" Type="Int64" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="RiseLimitDays" Type="Int32" Nullable="false" />
+    <Property Name="RiseLimitCount" Type="Int32" Nullable="false" />
+    <Property Name="LastRiseLimitTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastRiseLimitDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="IsLimitUpToday" Type="Boolean" Nullable="false" />
+    <Property Name="IsLimitUpYesday" Type="Boolean" Nullable="false" />
+    <Property Name="DataDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_hotspot_group">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="GroupName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="AccountId" Type="Int64" Nullable="false" />
+  </EntityType>
+  <EntityType Name="t_shares_hotspot_group_rel">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="GroupId" Type="Int64" Nullable="false" />
+    <Property Name="HostId" Type="Int64" Nullable="false" />
   </EntityType>
 </Schema>

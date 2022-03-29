@@ -343,6 +343,20 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_plate_leader_tri_record> t_plate_leader_tri_record { get; set; }
         public virtual DbSet<t_plate_energyindex> t_plate_energyindex { get; set; }
         public virtual DbSet<t_plate_energyindex_min> t_plate_energyindex_min { get; set; }
+        public virtual DbSet<t_shares_riserate_rank> t_shares_riserate_rank { get; set; }
+        public virtual DbSet<t_shares_hotspot> t_shares_hotspot { get; set; }
+        public virtual DbSet<t_shares_hotspot_plate> t_shares_hotspot_plate { get; set; }
+        public virtual DbSet<t_shares_quotes_riselimit> t_shares_quotes_riselimit { get; set; }
+        public virtual DbSet<t_shares_hotspot_group> t_shares_hotspot_group { get; set; }
+        public virtual DbSet<t_shares_hotspot_group_rel> t_shares_hotspot_group_rel { get; set; }
+        public virtual DbSet<t_shares_hotspot_focuson> t_shares_hotspot_focuson { get; set; }
+        public virtual DbSet<t_shares_hotspot_auto> t_shares_hotspot_auto { get; set; }
+        public virtual DbSet<t_shares_hotspot_his> t_shares_hotspot_his { get; set; }
+        public virtual DbSet<t_stock_monitor_group> t_stock_monitor_group { get; set; }
+        public virtual DbSet<t_stock_monitor_rel> t_stock_monitor_rel { get; set; }
+        public virtual DbSet<t_search_mark_tri> t_search_mark_tri { get; set; }
+        public virtual DbSet<t_stock_monitor_tri> t_stock_monitor_tri { get; set; }
+        public virtual DbSet<t_stock_monitor_tri_record> t_stock_monitor_tri_record { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)
@@ -1694,6 +1708,16 @@ namespace MealTicket_DBCommon
                 new ObjectParameter("tradeAccountCode", typeof(string));
     
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_ApplyTradeBuy_sys", accountIdParameter, marketParameter, sharesCodeParameter, dealCountParameter, dealPriceParameter, realFundMultipleParameter, createTimeParameter, tradeAccountCodeParameter, errorCode, errorMessage);
+        }
+    
+        public virtual int P_Shares_LimitUp_His_Cal()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Shares_LimitUp_His_Cal");
+        }
+    
+        public virtual int P_Shares_Riserate_His_Update()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Shares_Riserate_His_Update");
         }
     }
 }

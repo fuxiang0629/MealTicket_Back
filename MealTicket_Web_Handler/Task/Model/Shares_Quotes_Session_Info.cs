@@ -70,13 +70,15 @@ namespace MealTicket_Web_Handler
         {
             get
             {
-                if (YestodayClosedPrice == 0)
+                if (YestodayClosedPrice == 0 || ClosedPrice==0)
                 {
                     return 0;
                 }
                 return (int)Math.Round((ClosedPrice - YestodayClosedPrice) * 1.0 / YestodayClosedPrice * 10000,0);
             }
         }
+
+        public bool IsSuspension { get; set; }
 
         /// <summary>
         /// 是否涨停
@@ -87,6 +89,16 @@ namespace MealTicket_Web_Handler
         /// 涨停时间
         /// </summary>
         public DateTime? LimitUpTime { get; set; }
+
+        /// <summary>
+        /// 炸板时间
+        /// </summary>
+        public DateTime? LimitUpBombTime { get; set; }
+
+        /// <summary>
+        /// 即将涨停时间
+        /// </summary>
+        public DateTime? NearLimitUpTime { get; set; }
 
         /// <summary>
         /// 开盘价格
@@ -159,6 +171,11 @@ namespace MealTicket_Web_Handler
         public int PriceType { get; set; }
 
         /// <summary>
+        /// 接近涨停
+        /// </summary>
+        public int TriNearLimitType { get; set; }
+
+        /// <summary>
         /// 是否炸板
         /// </summary>
         public bool IsLimitUpBomb 
@@ -170,7 +187,37 @@ namespace MealTicket_Web_Handler
                     return true;
                 }
                 return false;
-            } 
+            }
+        }
+
+        /// <summary>
+        /// 是否一字
+        /// </summary>
+        public bool IsLimitUpLikeOne
+        {
+            get
+            {
+                if (LimitUpPrice== MinPrice && PriceType == 1)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// 是否T字
+        /// </summary>
+        public bool IsLimitUpLikeT
+        {
+            get
+            {
+                if (LimitUpPrice == OpenedPrice && PriceType == 1 && LimitUpBombCount > 0)
+                {
+                    return true;
+                }
+                return false;
+            }
         }
     }
 

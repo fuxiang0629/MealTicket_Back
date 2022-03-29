@@ -249,5 +249,15 @@ namespace MealTicket_Web_Handler.Model
         /// 是否外面传入的股票
         /// </summary>
         public bool IsMain { get; set; }
+
+        /// <summary>
+        /// 股票综合涨跌幅
+        /// </summary>
+        public int OverallRiseRate { get; set; }
+
+        /// <summary>
+        /// 股票综合排名
+        /// </summary>
+        public int OverallRank { get; set; }
     }
 }

@@ -228,6 +228,15 @@ namespace MealTicket_Web_Handler.Runner
         public object ResultListLock { get; set; }
     }
 
+    public class Template_Source_Info 
+    {
+        public long TemplateId { get; set; }
+
+        public string TemplateContent { get; set; }
+
+        public int TemplateType { get; set; }
+    }
+
     public class SearchHelper
     {
         private SessionDataSet sessionDataSet = new SessionDataSet();
@@ -268,12 +277,12 @@ namespace MealTicket_Web_Handler.Runner
         /// <summary>
         /// 模板自动搜索
         /// </summary>
-        public void SearchMonitor()
+        public void SearchMonitor(int type)
         {
             //查询需要搜索的模板
-            ThreadMsgTemplate<t_sys_conditiontrade_template_search> template_queue = new ThreadMsgTemplate<t_sys_conditiontrade_template_search>();
+            ThreadMsgTemplate<Template_Source_Info> template_queue = new ThreadMsgTemplate<Template_Source_Info>();
             template_queue.Init();
-            if (!BuildSearchTemplateQueue(ref template_queue))
+            if (!BuildSearchTemplateQueue(type,ref template_queue))
             {
                 return;
             }
@@ -296,14 +305,19 @@ namespace MealTicket_Web_Handler.Runner
         /// </summary>
         /// <param name="data"></param>
         /// <returns></returns>
-        private bool BuildSearchTemplateQueue(ref ThreadMsgTemplate<t_sys_conditiontrade_template_search> data)
+        private bool BuildSearchTemplateQueue(int type,ref ThreadMsgTemplate<Template_Source_Info> data)
         {
             using (var db = new meal_ticketEntities())
             {
                 var searchTemplate = (from item in db.t_sys_conditiontrade_template
                                       join item2 in db.t_sys_conditiontrade_template_search on item.Id equals item2.TemplateId
-                                      where item.Status == 1 && item.Type == 5
-                                      select item2).ToList();
+                                      where item.Status == 1 && ((type==1 && item.Type == 5) || (type==2 &&item.Type==6))
+                                      select new Template_Source_Info 
+                                      {
+                                          TemplateId=item2.TemplateId,
+                                          TemplateContent=item2.TemplateContent,
+                                          TemplateType=item.Type
+                                      }).ToList();
                 if (searchTemplate.Count() == 0)
                 {
                     return false;
@@ -322,10 +336,10 @@ namespace MealTicket_Web_Handler.Runner
         /// <param name="data_queue"></param>
         private void DoSearchTemplate(object context)
         {
-            var template_queue = context as ThreadMsgTemplate<t_sys_conditiontrade_template_search>;
+            var template_queue = context as ThreadMsgTemplate<Template_Source_Info>;
             do
             {
-                t_sys_conditiontrade_template_search searchCondition = new t_sys_conditiontrade_template_search();
+                Template_Source_Info searchCondition = new Template_Source_Info();
                 if (!template_queue.GetMessage(ref searchCondition, true))
                 {
                     break;
@@ -333,7 +347,14 @@ namespace MealTicket_Web_Handler.Runner
                 var searchList=ParseSearchCondition(searchCondition.TemplateContent);
                 var dataResult=DoSearchTemplate(searchList);
                 //入库
-                CalDataToDataBase(dataResult, searchCondition.TemplateId);
+                if (searchCondition.TemplateType == 5)
+                {
+                    CalDataToDataBase(dataResult, searchCondition.TemplateId);
+                }
+                else if (searchCondition.TemplateType == 6)
+                {
+                    CalDataToDataBase_Type6(dataResult, searchCondition.TemplateId);
+                }
             } while (true);
         }
 
@@ -705,6 +726,52 @@ namespace MealTicket_Web_Handler.Runner
                     }
                 }
                 SearchToDataBase(resultList);
+            }
+        }
+
+        private void CalDataToDataBase_Type6(List<SharesBase> dataList, long templateId)
+        {
+            DataTable table = new DataTable();
+
+            #region====定义表字段数据类型====
+            table.Columns.Add("TemplateId", typeof(long));
+            table.Columns.Add("SharesKey", typeof(long));
+            table.Columns.Add("Market", typeof(int));
+            table.Columns.Add("SharesCode", typeof(string));
+            #endregion
+
+            #region====绑定数据====
+            foreach (var item in dataList)
+            {
+                long sharesKey = long.Parse(item.SharesCode) * 10 + item.Market;
+                DataRow row = table.NewRow();
+                row["TemplateId"] = templateId;
+                row["SharesKey"] = sharesKey;
+                row["Market"] = item.Market;
+                row["SharesCode"] = item.SharesCode;
+                table.Rows.Add(row);
+            }
+            #endregion
+
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //关键是类型
+                    SqlParameter parameter = new SqlParameter("@searchMonitorMarkList", SqlDbType.Structured);
+                    //必须指定表类型名
+                    parameter.TypeName = "dbo.SearchMonitorMark";
+                    //赋值
+                    parameter.Value = table;
+                    db.Database.ExecuteSqlCommand("exec P_SearchMonitorMark_Update @searchMonitorMarkList", parameter);
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteFileLog("搜索结果入库失败了2", ex);
+                    tran.Rollback();
+                }
             }
         }
         private void SearchToDataBase(List<dynamic> list)

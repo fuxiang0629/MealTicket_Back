@@ -152,7 +152,8 @@ namespace MealTicket_Web_Handler
                     tempQuote = plate_quote.OrderByDescending(e => e.Value.ClosedPrice).FirstOrDefault().Value;
                 }
                 int RealDays = plate_quote.Where(e => e.Key >= tempQuote.Date && e.Key <= lastQuote.Date).Count();
-                int RiseRate = tempQuote.ClosedPrice == 0 ? 0 : (int)Math.Round((lastQuote.ClosedPrice - tempQuote.ClosedPrice) * 1.0 / tempQuote.ClosedPrice * 10000, 0);
+                long tempQuotePrice = (tempQuote.ClosedPrice > tempQuote.YestodayClosedPrice && tempQuote.YestodayClosedPrice > 0) ? tempQuote.YestodayClosedPrice : tempQuote.ClosedPrice;
+                int RiseRate = tempQuotePrice == 0 ? 0 : (int)Math.Round((lastQuote.ClosedPrice - tempQuotePrice) * 1.0 / tempQuotePrice * 10000, 0);
 
                 Plate_Statistic_Session_Overall shares_Overall = new Plate_Statistic_Session_Overall
                 {

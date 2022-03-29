@@ -1,20 +1,78 @@
 ﻿using FXCommon.Common;
+using MealTicket_DBCommon;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using static FXCommon.Common.Session_New;
+using static MealTicket_Web_Handler.SessionHandler;
 
 namespace MealTicket_Web_Handler
 {
+    public struct SharesRiseRateStc
+    {
+        /// <summary>
+        /// 日期类型0综合 1.3天 2.5天 3.10天 4.15天
+        /// </summary>
+        public int DayType { get; set; }
+
+        /// <summary>
+        /// 股票唯一值
+        /// </summary>
+        public long SharesKey { get; set; }
+
+        /// <summary>
+        /// 市场
+        /// </summary>
+        public int Market { get; set; }
+
+        /// <summary>
+        /// 股票代码
+        /// </summary>
+        public string SharesCode { get; set; }
+
+        /// <summary>
+        /// 涨跌幅
+        /// </summary>
+        public int RiseRate { get; set; }
+
+        /// <summary>
+        /// 实际天数
+        /// </summary>
+        public int RealDays { get; set; }
+
+        /// <summary>
+        /// 总市场排名
+        /// </summary>
+        public int TotalRank { get; set; }
+
+        /// <summary>
+        /// 日期
+        /// </summary>
+        public DateTime Date { get; set; }
+    }
+
     public class Shares_Statistic_Session
     {
         public static Shares_Statistic_Session_Obj UpdateSession()
         {
             GET_DATA_CXT gdc = new GET_DATA_CXT(SessionHandler.GET_ALL_SHARES_STATISTIC_INFO, null);
             var result= (Singleton.Instance.sessionHandler.GetDataWithLock("", gdc)) as Shares_Statistic_Session_Obj;
+
+            ToWriteDebugLog("5：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+
+            var time_limit_session = Singleton.Instance.sessionHandler.GetShares_Limit_Time_Session();
+            if (DbHelper.CheckTradeTime7(null, time_limit_session))
+            {
+                ToWriteDebugLog("51：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                ToWriteSharesRiseRateHis(result.Shares_Rank);
+            }
+
+            ToWriteDebugLog("6：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             return result;
         }
         private static void ToWriteDebugLog(string message, Exception ex)
@@ -92,8 +150,160 @@ namespace MealTicket_Web_Handler
             TaskThread.CloseAllTasks(taskArr);
             ToWriteDebugLog("4：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             calSharesOverallRiseRate(ref result);
-            ToWriteDebugLog("5：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             return result;
+        }
+
+        /// <summary>
+        /// 涨跌幅入库
+        /// </summary>
+        /// <param name="shares_rank"></param>
+        private static void ToWriteSharesRiseRateHis(Statistic_Shares_Rank_Obj shares_rank) 
+        {
+            List<SharesRiseRateStc> dataList = new List<SharesRiseRateStc>();
+            int totalRank = 0;
+            foreach (var item in shares_rank.Rank_3Days)
+            {
+                totalRank++;
+                string sharesCode = (item.SharesKey / 10).ToString().PadLeft(6, '0');
+                int market = (int)(item.SharesKey % 10);
+                dataList.Add(new SharesRiseRateStc
+                {
+                    SharesCode = sharesCode,
+                    Market = market,
+                    SharesKey = item.SharesKey,
+                    DayType = 1,
+                    RealDays = item.RealDays,
+                    RiseRate = item.RiseRate,
+                    TotalRank = totalRank,
+                    Date=DateTime.Now.Date
+                });
+            }
+            totalRank = 0;
+            foreach (var item in shares_rank.Rank_5Days)
+            {
+                totalRank++;
+                string sharesCode = (item.SharesKey / 10).ToString().PadLeft(6, '0');
+                int market = (int)(item.SharesKey % 10);
+                dataList.Add(new SharesRiseRateStc
+                {
+                    SharesCode = sharesCode,
+                    Market = market,
+                    SharesKey = item.SharesKey,
+                    DayType = 2,
+                    RealDays = item.RealDays,
+                    RiseRate = item.RiseRate,
+                    TotalRank = totalRank,
+                    Date = DateTime.Now.Date
+                });
+            }
+            totalRank = 0;
+            foreach (var item in shares_rank.Rank_10Days)
+            {
+                totalRank++;
+                string sharesCode = (item.SharesKey / 10).ToString().PadLeft(6, '0');
+                int market = (int)(item.SharesKey % 10);
+                dataList.Add(new SharesRiseRateStc
+                {
+                    SharesCode = sharesCode,
+                    Market = market,
+                    SharesKey = item.SharesKey,
+                    DayType = 3,
+                    RealDays = item.RealDays,
+                    RiseRate = item.RiseRate,
+                    TotalRank = totalRank,
+                    Date = DateTime.Now.Date
+                });
+            }
+            totalRank = 0;
+            foreach (var item in shares_rank.Rank_15Days)
+            {
+                totalRank++;
+                string sharesCode = (item.SharesKey / 10).ToString().PadLeft(6, '0');
+                int market = (int)(item.SharesKey % 10);
+                dataList.Add(new SharesRiseRateStc
+                {
+                    SharesCode = sharesCode,
+                    Market = market,
+                    SharesKey = item.SharesKey,
+                    DayType = 4,
+                    RealDays = item.RealDays,
+                    RiseRate = item.RiseRate,
+                    TotalRank = totalRank,
+                    Date = DateTime.Now.Date
+                });
+            }
+            totalRank = 0;
+            foreach (var item in shares_rank.Rank_Overall)
+            {
+                totalRank++;
+                string sharesCode = (item.SharesKey / 10).ToString().PadLeft(6, '0');
+                int market = (int)(item.SharesKey % 10);
+                dataList.Add(new SharesRiseRateStc
+                {
+                    SharesCode = sharesCode,
+                    Market = market,
+                    SharesKey = item.SharesKey,
+                    DayType = 0,
+                    RealDays = item.RealDays,
+                    RiseRate = item.RiseRate,
+                    TotalRank = totalRank,
+                    Date = DateTime.Now.Date
+                });
+            }
+
+            ToWriteDebugLog("52：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+            _toWriteSharesRiseRateHis(dataList);
+            Singleton.Instance.sessionHandler.UpdateSessionPart((int)Enum_Excute_Type.Shares_RiseRate_His_Session, dataList);
+            ToWriteDebugLog("53：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+        }
+
+        private static void _toWriteSharesRiseRateHis(List<SharesRiseRateStc> dataList)
+        {
+            DataTable table = new DataTable();
+            table.Columns.Add("Date", typeof(DateTime));
+            table.Columns.Add("DayType", typeof(int));
+            table.Columns.Add("Market", typeof(int));
+            table.Columns.Add("SharesCode", typeof(string));
+            table.Columns.Add("SharesKey", typeof(long));
+            table.Columns.Add("RealDays", typeof(int));
+            table.Columns.Add("RiseRate", typeof(int));
+            table.Columns.Add("Rank", typeof(int));
+
+            foreach (var item in dataList)
+            {
+                DataRow row = table.NewRow();
+                row["Date"] = DateTime.Now.Date;
+                row["DayType"] = item.DayType;
+                row["Market"] = item.Market;
+                row["SharesCode"] = item.SharesCode;
+                row["SharesKey"] = item.SharesKey;
+                row["RealDays"] = item.RealDays;
+                row["RiseRate"] = item.RiseRate;
+                row["Rank"] = item.TotalRank;
+                table.Rows.Add(row);
+            }
+
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //关键是类型
+                    SqlParameter parameter = new SqlParameter("@sharesRiserateHis", SqlDbType.Structured);
+                    //必须指定表类型名
+                    parameter.TypeName = "dbo.SharesRiserateHis";
+                    //赋值
+                    parameter.Value = table;
+
+                    db.Database.ExecuteSqlCommand("exec P_Shares_Riserate_His_Update @sharesRiserateHis", parameter);
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteFileLog("股票历史涨跌幅排名入库失败", ex);
+                    tran.Rollback();
+                }
+            }
         }
 
         private static void calSharesBaseInfo(Dictionary<long, Shares_Base_Session_Info> shares_base, Dictionary<long, Shares_Quotes_Session_Info_Last> shares_quotes, Dictionary<long, Plate_Base_Session_Info> plate_base,Dictionary<long,List<Plate_Shares_Rel_Session_Info>> shares_plate_rel, Dictionary<long, Plate_Quotes_Session_Info> plate_quotes, Dictionary<long, Dictionary<long,Plate_Tag_FocusOn_Session_Info>> shares_focusOn, Dictionary<long, Dictionary<long, Plate_Tag_TrendLike_Session_Info>> shares_trendlike,ref Shares_Statistic_Session_Obj result) 
@@ -191,6 +401,10 @@ namespace MealTicket_Web_Handler
                 }
                 foreach (var item2 in item.Value)
                 {
+                    //if (item2.Value.IsSuspension)
+                    //{
+                    //    continue;
+                    //}
                     new_shares_quotes_date[item.Key].Add(item2.Key,item2.Value);
                 }
             }
@@ -241,7 +455,8 @@ namespace MealTicket_Web_Handler
                     tempQuote = share_quote.OrderByDescending(e => e.Value.ClosedPrice).FirstOrDefault().Value;
                 }
                 int RealDays = share_quote.Where(e => e.Key >= tempQuote.Date && e.Key <= lastQuote.Date).Count();
-                int RiseRate = tempQuote.ClosedPrice == 0 ? 0 : (int)Math.Round((lastQuote.ClosedPrice - tempQuote.ClosedPrice) * 1.0 / tempQuote.ClosedPrice * 10000, 0);
+                long tempQuotePrice = (tempQuote.ClosedPrice > tempQuote.YestodayClosedPrice && tempQuote.YestodayClosedPrice > 0) ? tempQuote.YestodayClosedPrice : tempQuote.ClosedPrice;
+                int RiseRate = tempQuotePrice == 0 ? 0 : (int)Math.Round((lastQuote.ClosedPrice - tempQuotePrice) * 1.0 / tempQuotePrice * 10000, 0);
 
                 Shares_Statistic_Session_Overall shares_Overall = new Shares_Statistic_Session_Overall
                 {

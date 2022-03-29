@@ -42,5 +42,7 @@ namespace MealTicket_Web_Handler
         /// 流通股本
         /// </summary>
         public long CirculatingCapital { get; set; }
+
+        public int RiseRate { get; set; }
     }
 }

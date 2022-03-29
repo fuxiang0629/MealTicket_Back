@@ -16,6 +16,8 @@ namespace MealTicket_Web_Handler.Model
         /// 是否仅刷新数据
         /// </summary>
         public bool IsRefreshOnly { get; set; }
+
+        public long AccountId { get; set; }
     }
 
     public class SharesEnergyIndex : IComparable<SharesEnergyIndex>
@@ -144,6 +146,26 @@ namespace MealTicket_Web_Handler.Model
         /// 股票综合排名
         /// </summary>
         public int OverallRank { get; set; }
+
+        /// <summary>
+        /// 板块内综合排名
+        /// </summary>
+        public int PlateOverallRank { get; set; }
+
+        /// <summary>
+        /// 综合排名字段是否加粗
+        /// </summary>
+        public bool OverallPlateRankFocuson
+        {
+            get
+            {
+                if (OverallRank > 0 && OverallRank <= Singleton.Instance.SharesLeaderOverallRank)
+                {
+                    return true;
+                }
+                return false;
+            }
+        }
 
         /// <summary>
         /// 预期量比

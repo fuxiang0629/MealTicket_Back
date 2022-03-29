@@ -29,7 +29,7 @@ namespace MealTicket_APIService
         {
             // 启动 OWIN host
             var _manager = new WebApiManager();
-            _manager.Start<Startup>("http://localhost:8800/");
+            _manager.Start<Startup>("http://127.0.0.1:6801/");
             Console.WriteLine("程序已启动,按任意键退出");
             Console.ReadLine();
         }

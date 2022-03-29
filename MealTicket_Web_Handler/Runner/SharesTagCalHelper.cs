@@ -265,7 +265,9 @@ namespace MealTicket_Web_Handler.Runner
                 {
                     continue;
                 }
-                temp.RiseRate = (int)((shares_quotes_today.ClosedPrice - shares_quotes_date.ClosedPrice) * 1.0 / shares_quotes_date.ClosedPrice * 10000 + 0.5);
+
+                var tempPrice = (shares_quotes_date.ClosedPrice > shares_quotes_date.YestodayClosedPrice && shares_quotes_date.YestodayClosedPrice > 0) ? shares_quotes_date.YestodayClosedPrice : shares_quotes_date.ClosedPrice;
+                temp.RiseRate = (int)((shares_quotes_today.ClosedPrice - tempPrice) * 1.0 / tempPrice * 10000 + 0.5);
             }
 
             List<Shares_Tag_Leader_Session_Info> new_data = new List<Shares_Tag_Leader_Session_Info>();

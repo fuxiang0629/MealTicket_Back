@@ -1,0 +1,939 @@
+2022/1/26 9:19:36
+===开始初始化最后一条数据缓存===
+
+
+2022/1/26 9:19:37
+===结束初始化最后一条数据缓存===
+
+
+2022/1/26 9:19:37
+===开始当天板块内股票快照缓存===
+
+
+2022/1/26 9:19:39
+===加载快照缓存===
+
+
+2022/1/26 9:19:39
+===加载快照缓存1===
+
+
+2022/1/26 9:19:39
+===加载快照缓存2===
+
+
+2022/1/26 9:19:39
+===加载快照缓存3===
+
+
+2022/1/26 9:19:39
+===加载快照缓存4===
+
+
+2022/1/26 9:19:39
+===结束当天板块内股票快照缓存===
+
+
+2022/1/26 9:19:39
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1day' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 389
+ClientConnectionId:523fbb19-be11-4b12-8657-00a6ef4099cd
+Error Number:308,State:1,Class:16
+
+2022/1/26 9:19:39
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1min' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 389
+ClientConnectionId:43e4811e-9a8a-4faa-b556-7b7f06de7a55
+Error Number:308,State:1,Class:16
+
+2022/1/26 9:19:39
+===结束加载板块计算结果缓存===
+
+
+2022/1/26 9:19:39
+监听队列已链接
+
+
+2022/1/26 9:41:16
+需要更新K线的股票数据扔到队列失败
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2022/1/26 9:52:27
+RechargeRefundQuery出错
+System.Data.SqlClient.SqlException (0x80131904): 在从服务器接收结果时发生传输级错误。 (provider: Session Provider, error: 19 - 物理连接不可用)
+   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParserStateObject.ThrowExceptionAndWarning(Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParserStateObject.ReadSniError(TdsParserStateObject stateObj, UInt32 error)
+   在 System.Data.SqlClient.TdsParserStateObject.ReadSniSyncOverAsync()
+   在 System.Data.SqlClient.TdsParserStateObject.TryReadNetworkPacket()
+   在 System.Data.SqlClient.TdsParserStateObject.TryPrepareBuffer()
+   在 System.Data.SqlClient.TdsParserStateObject.TryReadByte(Byte& value)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.<>c.<Reader>b__6_0(DbCommand t, DbCommandInterceptionContext`1 c)
+   在 System.Data.Entity.Infrastructure.Interception.InternalDispatcher`1.Dispatch[TTarget,TInterceptionContext,TResult](TTarget target, Func`3 operation, TInterceptionContext interceptionContext, Action`3 executing, Action`3 executed)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.Reader(DbCommand command, DbCommandInterceptionContext interceptionContext)
+   在 System.Data.Entity.Internal.InterceptableDbCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Core.EntityClient.Internal.EntityCommandDefinition.ExecuteStoreCommands(EntityCommand entityCommand, CommandBehavior behavior)
+ClientConnectionId:771fa8db-be99-429d-b761-afaacd66b1f1
+Error Number:-1,State:0,Class:20
+
+2022/1/26 9:52:27
+充值订单关闭退款出错
+System.Data.SqlClient.SqlException (0x80131904): 在从服务器接收结果时发生传输级错误。 (provider: Session Provider, error: 19 - 物理连接不可用)
+   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParserStateObject.ThrowExceptionAndWarning(Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParserStateObject.ReadSniError(TdsParserStateObject stateObj, UInt32 error)
+   在 System.Data.SqlClient.TdsParserStateObject.ReadSniSyncOverAsync()
+   在 System.Data.SqlClient.TdsParserStateObject.TryReadNetworkPacket()
+   在 System.Data.SqlClient.TdsParserStateObject.TryPrepareBuffer()
+   在 System.Data.SqlClient.TdsParserStateObject.TryReadByte(Byte& value)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.<>c.<Reader>b__6_0(DbCommand t, DbCommandInterceptionContext`1 c)
+   在 System.Data.Entity.Infrastructure.Interception.InternalDispatcher`1.Dispatch[TTarget,TInterceptionContext,TResult](TTarget target, Func`3 operation, TInterceptionContext interceptionContext, Action`3 executing, Action`3 executed)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.Reader(DbCommand command, DbCommandInterceptionContext interceptionContext)
+   在 System.Data.Entity.Internal.InterceptableDbCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Core.EntityClient.Internal.EntityCommandDefinition.ExecuteStoreCommands(EntityCommand entityCommand, CommandBehavior behavior)
+ClientConnectionId:a2500d45-6d85-470d-ae9c-4620a0b0c080
+Error Number:-1,State:0,Class:20
+
+2022/1/26 9:52:56
+每天任务意外出错,继续执行
+System.ComponentModel.Win32Exception (0x80004005): 等待的操作过时。
+
+2022/1/26 9:55:20
+短信发送出错
+System.Data.SqlClient.SqlException (0x80131904): 在从服务器接收结果时发生传输级错误。 (provider: Session Provider, error: 19 - 物理连接不可用)
+   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParserStateObject.ThrowExceptionAndWarning(Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParserStateObject.ReadSniError(TdsParserStateObject stateObj, UInt32 error)
+   在 System.Data.SqlClient.TdsParserStateObject.ReadSniSyncOverAsync()
+   在 System.Data.SqlClient.TdsParserStateObject.TryReadNetworkPacket()
+   在 System.Data.SqlClient.TdsParserStateObject.TryPrepareBuffer()
+   在 System.Data.SqlClient.TdsParserStateObject.TryReadByte(Byte& value)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.<>c.<Reader>b__6_0(DbCommand t, DbCommandInterceptionContext`1 c)
+   在 System.Data.Entity.Infrastructure.Interception.InternalDispatcher`1.Dispatch[TTarget,TInterceptionContext,TResult](TTarget target, Func`3 operation, TInterceptionContext interceptionContext, Action`3 executing, Action`3 executed)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.Reader(DbCommand command, DbCommandInterceptionContext interceptionContext)
+   在 System.Data.Entity.Internal.InterceptableDbCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Core.EntityClient.Internal.EntityCommandDefinition.ExecuteStoreCommands(EntityCommand entityCommand, CommandBehavior behavior)
+ClientConnectionId:8773adf9-4b85-447d-b1c5-95895a89ec41
+Error Number:-1,State:0,Class:20
+
+2022/1/26 9:56:04
+充值订单关闭出错
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2022/1/26 9:56:04
+短信发送出错
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2022/1/26 9:56:04
+充值订单关闭退款出错
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2022/1/26 9:56:04
+每天任务意外出错,继续执行
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2022/1/26 9:56:04
+RechargeRefundQuery出错
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2022/1/26 10:06:37
+充值订单关闭退款出错
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2022/1/26 10:15:52
+需要更新K线的股票数据扔到队列失败
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2022/1/26 10:17:56
+===开始初始化最后一条数据缓存===
+
+
+2022/1/26 10:17:57
+===结束初始化最后一条数据缓存===
+
+
+2022/1/26 10:17:57
+===开始当天板块内股票快照缓存===
+
+
+2022/1/26 10:17:57
+===加载快照缓存===
+
+
+2022/1/26 10:17:57
+===加载快照缓存1===
+
+
+2022/1/26 10:17:57
+===加载快照缓存2===
+
+
+2022/1/26 10:17:57
+===加载快照缓存3===
+
+
+2022/1/26 10:17:57
+===加载快照缓存4===
+
+
+2022/1/26 10:17:58
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 749
+
+2022/1/26 10:17:58
+===结束当天板块内股票快照缓存===
+
+
+2022/1/26 10:17:58
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1min' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 389
+ClientConnectionId:85d8ca75-d1c0-423f-a245-9c07ad21eb04
+Error Number:308,State:1,Class:16
+
+2022/1/26 10:17:58
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1day' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 389
+ClientConnectionId:897b93ee-19cc-4ed7-8598-c6f4c60c35fc
+Error Number:308,State:1,Class:16
+
+2022/1/26 10:17:58
+===结束加载板块计算结果缓存===
+
+
+2022/1/26 10:17:58
+监听队列已链接
+
+
+2022/1/26 10:18:54
+业务处理意外出错,继续执行
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2022/1/26 10:18:54
+SharesQuotesSession缓存加载失败
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2022/1/26 10:18:54
+短信发送出错
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2022/1/26 10:22:20
+监听队列链接断开
+
+
+2022/1/26 10:22:27
+启动队列监听出错
+RabbitMQ.Client.Exceptions.AlreadyClosedException: Already closed: The AMQP operation was interrupted: AMQP close-reason, initiated by Library, code=541, text='Unexpected Exception', classId=0, methodId=0, cause=System.IO.IOException: 无法从传输连接中读取数据: 远程主机强迫关闭了一个现有的连接。。 ---> System.Net.Sockets.SocketException: 远程主机强迫关闭了一个现有的连接。
+   在 System.Net.Sockets.Socket.Receive(Byte[] buffer, Int32 offset, Int32 size, SocketFlags socketFlags)
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   --- 内部异常堆栈跟踪的结尾 ---
+   在 System.Net.Sockets.NetworkStream.Read(Byte[] buffer, Int32 offset, Int32 size)
+   在 System.IO.BufferedStream.ReadByte()
+   在 RabbitMQ.Client.Impl.InboundFrame.ReadFrom(Stream reader)
+   在 RabbitMQ.Client.Impl.SocketFrameHandler.ReadFrame()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoopIteration()
+   在 RabbitMQ.Client.Framing.Impl.Connection.MainLoop()
+   在 RabbitMQ.Client.Framing.Impl.Connection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.EnsureIsOpen()
+   在 RabbitMQ.Client.Framing.Impl.AutorecoveringConnection.CreateModel()
+   在 FXCommon.MqQueue.MQTask.ListenModelConnect() 位置 F:\项目\饭票后端\FXCommon\MqQueue\MQTask.cs:行号 190
+
+2022/1/26 10:22:35
+监听队列已链接
+
+
+2022/1/26 10:23:08
+强制平仓出错
+System.Data.SqlClient.SqlException (0x80131904): 在从服务器接收结果时发生传输级错误。 (provider: Session Provider, error: 19 - 物理连接不可用)
+   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParserStateObject.ReadSniError(TdsParserStateObject stateObj, UInt32 error)
+   在 System.Data.SqlClient.TdsParserStateObject.ReadSniSyncOverAsync()
+   在 System.Data.SqlClient.TdsParserStateObject.TryReadNetworkPacket()
+   在 System.Data.SqlClient.TdsParserStateObject.TryPrepareBuffer()
+   在 System.Data.SqlClient.TdsParserStateObject.TryReadByte(Byte& value)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.<>c.<Reader>b__6_0(DbCommand t, DbCommandInterceptionContext`1 c)
+   在 System.Data.Entity.Infrastructure.Interception.InternalDispatcher`1.Dispatch[TTarget,TInterceptionContext,TResult](TTarget target, Func`3 operation, TInterceptionContext interceptionContext, Action`3 executing, Action`3 executed)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.Reader(DbCommand command, DbCommandInterceptionContext interceptionContext)
+   在 System.Data.Entity.Internal.InterceptableDbCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Core.EntityClient.Internal.EntityCommandDefinition.ExecuteStoreCommands(EntityCommand entityCommand, CommandBehavior behavior)
+ClientConnectionId:3c56721b-860a-4017-a482-6c38aca93366
+Error Number:-1,State:0,Class:20
+
+2022/1/26 10:26:20
+===开始初始化最后一条数据缓存===
+
+
+2022/1/26 10:26:20
+===结束初始化最后一条数据缓存===
+
+
+2022/1/26 10:26:20
+===开始当天板块内股票快照缓存===
+
+
+2022/1/26 10:26:21
+===加载快照缓存===
+
+
+2022/1/26 10:26:21
+===加载快照缓存1===
+
+
+2022/1/26 10:26:21
+===加载快照缓存2===
+
+
+2022/1/26 10:26:21
+===加载快照缓存3===
+
+
+2022/1/26 10:26:21
+===加载快照缓存4===
+
+
+2022/1/26 10:26:21
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 749
+
+2022/1/26 10:26:21
+===结束当天板块内股票快照缓存===
+
+
+2022/1/26 10:26:21
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1min' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 389
+ClientConnectionId:7941871a-744c-41fc-91c7-1af55a5ec3ec
+Error Number:308,State:1,Class:16
+
+2022/1/26 10:26:21
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1day' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 389
+ClientConnectionId:32e2a4aa-edf0-45e7-96c6-a1adf7a9c945
+Error Number:308,State:1,Class:16
+
+2022/1/26 10:26:21
+===结束加载板块计算结果缓存===
+
+
+2022/1/26 10:26:21
+监听队列已链接
+
+
+2022/1/26 10:29:20
+===开始初始化最后一条数据缓存===
+
+
+2022/1/26 10:29:21
+===结束初始化最后一条数据缓存===
+
+
+2022/1/26 10:29:21
+===开始当天板块内股票快照缓存===
+
+
+2022/1/26 10:29:21
+===加载快照缓存===
+
+
+2022/1/26 10:29:21
+===加载快照缓存1===
+
+
+2022/1/26 10:29:21
+===加载快照缓存2===
+
+
+2022/1/26 10:29:21
+===加载快照缓存3===
+
+
+2022/1/26 10:29:21
+===加载快照缓存4===
+
+
+2022/1/26 10:29:21
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 749
+
+2022/1/26 10:29:21
+===结束当天板块内股票快照缓存===
+
+
+2022/1/26 10:29:21
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1min' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 389
+ClientConnectionId:26c42616-4ed5-49ef-86db-e725f342a026
+Error Number:308,State:1,Class:16
+
+2022/1/26 10:29:21
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1day' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 389
+ClientConnectionId:1dc35b64-4b9d-4a52-9947-5fc3d0630aeb
+Error Number:308,State:1,Class:16
+
+2022/1/26 10:29:21
+===结束加载板块计算结果缓存===
+
+
+2022/1/26 10:29:22
+监听队列已链接
+
+
+2022/1/26 10:32:08
+短信发送出错
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2022/1/26 10:35:57
+===开始初始化最后一条数据缓存===
+
+
+2022/1/26 10:35:57
+===结束初始化最后一条数据缓存===
+
+
+2022/1/26 10:35:57
+===开始当天板块内股票快照缓存===
+
+
+2022/1/26 10:35:57
+===加载快照缓存===
+
+
+2022/1/26 10:35:57
+===加载快照缓存1===
+
+
+2022/1/26 10:35:57
+===加载快照缓存2===
+
+
+2022/1/26 10:35:57
+===加载快照缓存3===
+
+
+2022/1/26 10:35:57
+===加载快照缓存4===
+
+
+2022/1/26 10:35:58
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 749
+
+2022/1/26 10:35:58
+===结束当天板块内股票快照缓存===
+
+
+2022/1/26 10:35:58
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1min' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 389
+ClientConnectionId:68a5f696-224c-4cbf-84a3-4d0ac276877a
+Error Number:308,State:1,Class:16
+
+2022/1/26 10:35:58
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1day' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 389
+ClientConnectionId:2972513c-dd1d-4124-9f0f-c37f25b460a9
+Error Number:308,State:1,Class:16
+
+2022/1/26 10:35:58
+===结束加载板块计算结果缓存===
+
+
+2022/1/26 10:35:58
+监听队列已链接
+
+
+2022/1/26 10:38:20
+===开始初始化最后一条数据缓存===
+
+
+2022/1/26 10:38:21
+===结束初始化最后一条数据缓存===
+
+
+2022/1/26 10:38:21
+===开始当天板块内股票快照缓存===
+
+
+2022/1/26 10:38:21
+===加载快照缓存===
+
+
+2022/1/26 10:38:21
+===加载快照缓存1===
+
+
+2022/1/26 10:38:21
+===加载快照缓存2===
+
+
+2022/1/26 10:38:21
+===加载快照缓存3===
+
+
+2022/1/26 10:38:21
+===加载快照缓存4===
+
+
+2022/1/26 10:38:21
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 749
+
+2022/1/26 10:38:21
+===结束当天板块内股票快照缓存===
+
+
+2022/1/26 10:38:21
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1min' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 389
+ClientConnectionId:4877d4d0-1935-4856-8dba-28efaed7a1bc
+Error Number:308,State:1,Class:16
+
+2022/1/26 10:38:21
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1day' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 389
+ClientConnectionId:69519643-2872-41fb-977b-9c38bf84ba29
+Error Number:308,State:1,Class:16
+
+2022/1/26 10:38:21
+===结束加载板块计算结果缓存===
+
+
+2022/1/26 10:38:21
+监听队列已链接
+
+
+2022/1/26 10:40:51
+===开始初始化最后一条数据缓存===
+
+
+2022/1/26 10:40:51
+===结束初始化最后一条数据缓存===
+
+
+2022/1/26 10:40:51
+===开始当天板块内股票快照缓存===
+
+
+2022/1/26 10:40:51
+===加载快照缓存===
+
+
+2022/1/26 10:40:52
+===加载快照缓存1===
+
+
+2022/1/26 10:40:52
+===加载快照缓存2===
+
+
+2022/1/26 10:40:52
+===加载快照缓存3===
+
+
+2022/1/26 10:40:52
+===加载快照缓存4===
+
+
+2022/1/26 10:40:52
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 749
+
+2022/1/26 10:40:52
+===结束当天板块内股票快照缓存===
+
+
+2022/1/26 10:40:52
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1min' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 389
+ClientConnectionId:de9ce347-23e2-49c1-9bda-1786aba18522
+Error Number:308,State:1,Class:16
+
+2022/1/26 10:40:52
+板块计算结果缓存加载失败
+System.Data.SqlClient.SqlException (0x80131904): 表 't_shares_securitybarsdata_1day' 的索引 'index_groupTimeKey_only' (在 FROM 子句中指定)不存在。
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.<>c__DisplayClass18_1.<LoadPlateKlineSession>b__0(Object e) 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 389
+ClientConnectionId:7c2d2fa4-71ec-4b89-b617-fee077eff6b7
+Error Number:308,State:1,Class:16
+
+2022/1/26 10:40:52
+===结束加载板块计算结果缓存===
+
+
+2022/1/26 10:40:52
+监听队列已链接
+
+
+2022/1/26 10:42:36
+===开始初始化最后一条数据缓存===
+
+
+2022/1/26 10:42:37
+===结束初始化最后一条数据缓存===
+
+
+2022/1/26 10:42:37
+===开始当天板块内股票快照缓存===
+
+
+2022/1/26 10:42:37
+===加载快照缓存===
+
+
+2022/1/26 10:42:37
+===加载快照缓存1===
+
+
+2022/1/26 10:42:37
+===加载快照缓存2===
+
+
+2022/1/26 10:42:37
+===加载快照缓存3===
+
+
+2022/1/26 10:42:37
+===加载快照缓存4===
+
+
+2022/1/26 10:42:37
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 749
+
+2022/1/26 10:42:37
+===结束当天板块内股票快照缓存===
+
+
+2022/1/26 10:43:34
+===开始初始化最后一条数据缓存===
+
+
+2022/1/26 10:43:34
+===结束初始化最后一条数据缓存===
+
+
+2022/1/26 10:43:34
+===开始当天板块内股票快照缓存===
+
+
+2022/1/26 10:43:34
+===加载快照缓存===
+
+
+2022/1/26 10:43:34
+===加载快照缓存1===
+
+
+2022/1/26 10:43:34
+===加载快照缓存2===
+
+
+2022/1/26 10:43:35
+===加载快照缓存3===
+
+
+2022/1/26 10:43:35
+===加载快照缓存4===
+
+
+2022/1/26 10:43:35
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 749
+
+2022/1/26 10:43:35
+===结束当天板块内股票快照缓存===
+
+
+2022/1/26 10:43:43
+===结束加载板块计算结果缓存===
+
+
+2022/1/26 10:43:43
+监听队列已链接
+
+
+2022/1/26 10:47:55
+===开始初始化最后一条数据缓存===
+
+
+2022/1/26 10:47:55
+===结束初始化最后一条数据缓存===
+
+
+2022/1/26 10:47:56
+===开始当天板块内股票快照缓存===
+
+
+2022/1/26 10:47:56
+===加载快照缓存===
+
+
+2022/1/26 10:47:56
+===加载快照缓存1===
+
+
+2022/1/26 10:47:56
+===加载快照缓存2===
+
+
+2022/1/26 10:47:56
+===加载快照缓存3===
+
+
+2022/1/26 10:47:56
+===加载快照缓存4===
+
+
+2022/1/26 10:47:56
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 749
+
+2022/1/26 10:47:56
+===结束当天板块内股票快照缓存===
+
+
+2022/1/26 10:47:57
+===结束加载板块计算结果缓存===
+
+
+2022/1/26 10:47:58
+监听队列已链接
+
+
+2022/1/26 10:52:45
+强制平仓出错
+System.Data.SqlClient.SqlException (0x80131904): 在从服务器接收结果时发生传输级错误。 (provider: Session Provider, error: 19 - 物理连接不可用)
+   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParserStateObject.ThrowExceptionAndWarning(Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParserStateObject.ReadSniError(TdsParserStateObject stateObj, UInt32 error)
+   在 System.Data.SqlClient.TdsParserStateObject.ReadSniSyncOverAsync()
+   在 System.Data.SqlClient.TdsParserStateObject.TryReadNetworkPacket()
+   在 System.Data.SqlClient.TdsParserStateObject.TryPrepareBuffer()
+   在 System.Data.SqlClient.TdsParserStateObject.TryReadByte(Byte& value)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.<>c.<Reader>b__6_0(DbCommand t, DbCommandInterceptionContext`1 c)
+   在 System.Data.Entity.Infrastructure.Interception.InternalDispatcher`1.Dispatch[TTarget,TInterceptionContext,TResult](TTarget target, Func`3 operation, TInterceptionContext interceptionContext, Action`3 executing, Action`3 executed)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.Reader(DbCommand command, DbCommandInterceptionContext interceptionContext)
+   在 System.Data.Entity.Internal.InterceptableDbCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Core.EntityClient.Internal.EntityCommandDefinition.ExecuteStoreCommands(EntityCommand entityCommand, CommandBehavior behavior)
+ClientConnectionId:bbb9b121-141d-4d1c-a144-da5c088046b6
+Error Number:-1,State:0,Class:20
+
+2022/1/26 10:52:45
+每天任务意外出错,继续执行
+System.Data.SqlClient.SqlException (0x80131904): 在从服务器接收结果时发生传输级错误。 (provider: Session Provider, error: 19 - 物理连接不可用)
+   在 System.Data.SqlClient.SqlConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.SqlInternalConnection.OnError(SqlException exception, Boolean breakConnection, Action`1 wrapCloseInAction)
+   在 System.Data.SqlClient.TdsParser.ThrowExceptionAndWarning(TdsParserStateObject stateObj, Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParserStateObject.ThrowExceptionAndWarning(Boolean callerHasConnectionLock, Boolean asyncClose)
+   在 System.Data.SqlClient.TdsParserStateObject.ReadSniError(TdsParserStateObject stateObj, UInt32 error)
+   在 System.Data.SqlClient.TdsParserStateObject.ReadSniSyncOverAsync()
+   在 System.Data.SqlClient.TdsParserStateObject.TryReadNetworkPacket()
+   在 System.Data.SqlClient.TdsParserStateObject.TryPrepareBuffer()
+   在 System.Data.SqlClient.TdsParserStateObject.TryReadByte(Byte& value)
+   在 System.Data.SqlClient.TdsParser.TryRun(RunBehavior runBehavior, SqlCommand cmdHandler, SqlDataReader dataStream, BulkCopySimpleResultSet bulkCopyHandler, TdsParserStateObject stateObj, Boolean& dataReady)
+   在 System.Data.SqlClient.SqlDataReader.TryConsumeMetaData()
+   在 System.Data.SqlClient.SqlDataReader.get_MetaData()
+   在 System.Data.SqlClient.SqlCommand.FinishExecuteReader(SqlDataReader ds, RunBehavior runBehavior, String resetOptionsString, Boolean isInternal, Boolean forDescribeParameterEncryption, Boolean shouldCacheForAlwaysEncrypted)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReaderTds(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, Boolean async, Int32 timeout, Task& task, Boolean asyncWrite, Boolean inRetry, SqlDataReader ds, Boolean describeParameterEncryptionRequest)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method, TaskCompletionSource`1 completion, Int32 timeout, Task& task, Boolean& usedCache, Boolean asyncWrite, Boolean inRetry)
+   在 System.Data.SqlClient.SqlCommand.RunExecuteReader(CommandBehavior cmdBehavior, RunBehavior runBehavior, Boolean returnStream, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteReader(CommandBehavior behavior, String method)
+   在 System.Data.SqlClient.SqlCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.<>c.<Reader>b__6_0(DbCommand t, DbCommandInterceptionContext`1 c)
+   在 System.Data.Entity.Infrastructure.Interception.InternalDispatcher`1.Dispatch[TTarget,TInterceptionContext,TResult](TTarget target, Func`3 operation, TInterceptionContext interceptionContext, Action`3 executing, Action`3 executed)
+   在 System.Data.Entity.Infrastructure.Interception.DbCommandDispatcher.Reader(DbCommand command, DbCommandInterceptionContext interceptionContext)
+   在 System.Data.Entity.Internal.InterceptableDbCommand.ExecuteDbDataReader(CommandBehavior behavior)
+   在 System.Data.Common.DbCommand.ExecuteReader(CommandBehavior behavior)
+   在 System.Data.Entity.Core.EntityClient.Internal.EntityCommandDefinition.ExecuteStoreCommands(EntityCommand entityCommand, CommandBehavior behavior)
+ClientConnectionId:6340bab5-72cd-4621-bdd6-7523cb178107
+Error Number:-1,State:0,Class:20
+
+2022/1/26 10:53:28
+充值订单关闭退款出错
+System.ComponentModel.Win32Exception (0x80004005): 找不到网络路径。
+
+2022/1/26 10:55:29
+===开始初始化最后一条数据缓存===
+
+
+2022/1/26 10:55:29
+===结束初始化最后一条数据缓存===
+
+
+2022/1/26 10:55:30
+===开始当天板块内股票快照缓存===
+
+
+2022/1/26 10:55:30
+===加载快照缓存===
+
+
+2022/1/26 10:55:30
+===加载快照缓存1===
+
+
+2022/1/26 10:55:30
+===加载快照缓存2===
+
+
+2022/1/26 10:55:30
+===加载快照缓存3===
+
+
+2022/1/26 10:55:31
+===加载快照缓存4===
+
+
+2022/1/26 10:55:31
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 749
+
+2022/1/26 10:55:31
+===结束当天板块内股票快照缓存===
+
+
+2022/1/26 10:55:32
+===结束加载板块计算结果缓存===
+
+
+2022/1/26 10:55:32
+监听队列已链接
+
+
+2022/1/26 12:35:23
+===开始初始化最后一条数据缓存===
+
+
+2022/1/26 12:35:24
+===结束初始化最后一条数据缓存===
+
+
+2022/1/26 12:35:24
+===开始当天板块内股票快照缓存===
+
+
+2022/1/26 12:35:24
+===加载快照缓存===
+
+
+2022/1/26 12:35:25
+===加载快照缓存1===
+
+
+2022/1/26 12:35:25
+===加载快照缓存2===
+
+
+2022/1/26 12:35:25
+===加载快照缓存3===
+
+
+2022/1/26 12:35:25
+===加载快照缓存4===
+
+
+2022/1/26 12:35:25
+更新当天板块内股票快照失败
+System.Exception: 今日快照已更新
+   在 MealTicket_Handler.SecurityBarsData.New2_IndexSecurityBarsDataTask.UpdateTodayPlateRelSnapshot() 位置 F:\项目\饭票后端\MealTicket_Handler\SecurityBarsData\新指数K线2\New2_IndexSecurityBarsDataTask.cs:行号 757
+
+2022/1/26 12:35:25
+===结束当天板块内股票快照缓存===
+
+
+2022/1/26 12:35:26
+===结束加载板块计算结果缓存===
+
+
+2022/1/26 12:35:27
+监听队列已链接
+
+

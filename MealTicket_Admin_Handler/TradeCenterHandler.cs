@@ -4063,7 +4063,7 @@ namespace MealTicket_Admin_Handler
                 if (request.Type == 45)
                 {
                     template = from item in db.t_sys_conditiontrade_template
-                               where item.Type == 4 || item.Type == 5
+                               where item.Type == 4 || item.Type == 5 || item.Type==6
                                select item;
                 }
                 else
@@ -4134,7 +4134,7 @@ namespace MealTicket_Admin_Handler
                     {
                         CopyConditiontradeTemplate_Join(request.Id, newTemplate.Id, db);
                     }
-                    else if (template.Type == 4 || template.Type==5)//自动加入模板复制
+                    else if (template.Type == 4 || template.Type==5 || template.Type == 6)//自动加入模板复制
                     {
                         CopyConditiontradeTemplate_Search(request.Id, newTemplate.Id, db);
                     }
@@ -11018,42 +11018,71 @@ namespace MealTicket_Admin_Handler
                                  }).ToList();
                 foreach (var item in plateList)
                 {
+                    bool IsForce1_3 = false;
+                    bool IsForce2_3 = false;
+                    bool IsForce1_5 = false;
+                    bool IsForce2_5 = false;
+                    bool IsForce1_10 = false;
+                    bool IsForce2_10 = false;
+                    bool IsForce1_15 = false;
+                    bool IsForce2_15 = false;
                     if (force.ContainsKey(item.PlateId))
                     {
-                        item.ForceList = force[item.PlateId];
+                        var forceList = force[item.PlateId];
+                        var item3 = forceList.Where(e => e.ForceType == 1).FirstOrDefault();
+                        if (item3 != null)
+                        {
+                            IsForce1_3 = item3.IsForce1;
+                            IsForce2_3 = item3.IsForce2;
+                        }
+                        var item5 = forceList.Where(e => e.ForceType == 2).FirstOrDefault();
+                        if (item5 != null)
+                        {
+                            IsForce1_5 = item5.IsForce1;
+                            IsForce2_5 = item5.IsForce2;
+                        }
+                        var item10 = forceList.Where(e => e.ForceType == 3).FirstOrDefault();
+                        if (item10 != null)
+                        {
+                            IsForce1_10 = item10.IsForce1;
+                            IsForce2_10 = item10.IsForce2;
+                        }
+                        var item15 = forceList.Where(e => e.ForceType == 4).FirstOrDefault();
+                        if (item15 != null)
+                        {
+                            IsForce1_15 = item15.IsForce1;
+                            IsForce2_15 = item15.IsForce2;
+                        }
                     }
-                    else
+                    item.ForceList = new List<ForceInfo>();
+                    item.ForceList.Add(new ForceInfo
                     {
-                        item.ForceList = new List<ForceInfo>();
-                        item.ForceList.Add(new ForceInfo
-                        {
-                            PlateId = item.PlateId,
-                            ForceType = 1,
-                            IsForce1 = false,
-                            IsForce2 = false,
-                        });
-                        item.ForceList.Add(new ForceInfo
-                        {
-                            PlateId = item.PlateId,
-                            ForceType = 2,
-                            IsForce1 = false,
-                            IsForce2 = false,
-                        });
-                        item.ForceList.Add(new ForceInfo
-                        {
-                            PlateId = item.PlateId,
-                            ForceType = 3,
-                            IsForce1 = false,
-                            IsForce2 = false,
-                        });
-                        item.ForceList.Add(new ForceInfo
-                        {
-                            PlateId = item.PlateId,
-                            ForceType = 4,
-                            IsForce1 = false,
-                            IsForce2 = false,
-                        });
-                    }
+                        PlateId = item.PlateId,
+                        ForceType = 1,
+                        IsForce1 = IsForce1_3,
+                        IsForce2 = IsForce2_3,
+                    });
+                    item.ForceList.Add(new ForceInfo
+                    {
+                        PlateId = item.PlateId,
+                        ForceType = 2,
+                        IsForce1 = IsForce1_5,
+                        IsForce2 = IsForce2_5,
+                    });
+                    item.ForceList.Add(new ForceInfo
+                    {
+                        PlateId = item.PlateId,
+                        ForceType = 3,
+                        IsForce1 = IsForce1_10,
+                        IsForce2 = IsForce2_10,
+                    });
+                    item.ForceList.Add(new ForceInfo
+                    {
+                        PlateId = item.PlateId,
+                        ForceType = 4,
+                        IsForce1 = IsForce1_15,
+                        IsForce2 = IsForce2_15,
+                    });
                 }
                 bool isAuto = true;
                 var setting = (from item in db.t_shares_plate_rel_tag_setting
