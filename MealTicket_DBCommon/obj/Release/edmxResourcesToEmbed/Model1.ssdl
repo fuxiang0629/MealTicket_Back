@@ -3965,6 +3965,23 @@
     <Property Name="TriPriceType" Type="int" Nullable="false" />
     <Property Name="TriNearLimitType" Type="int" Nullable="false" />
   </EntityType>
+  <EntityType Name="t_shares_quotes_tri">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="SharesKey" Type="bigint" StoreGeneratedPattern="Computed" />
+    <Property Name="Market" Type="int" Nullable="false" />
+    <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="LastPushTime" Type="datetime" />
+    <Property Name="LastPushPrice" Type="bigint" />
+    <Property Name="LastPushType" Type="int" />
+    <Property Name="LastPushRate" Type="int" />
+    <Property Name="LastPushMaxRate" Type="int" />
+    <Property Name="LastPushMinRate" Type="int" />
+    <Property Name="CreateTime" Type="datetime" Nullable="false" />
+    <Property Name="LastModified" Type="datetime" Nullable="false" />
+  </EntityType>
   <EntityType Name="t_shares_riserate_rank">
     <Key>
       <PropertyRef Name="Id" />
@@ -5872,6 +5889,7 @@
     <EntitySet Name="t_shares_quotes_record" EntityType="Self.t_shares_quotes_record" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_quotes_riselimit" EntityType="Self.t_shares_quotes_riselimit" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_quotes_temp" EntityType="Self.t_shares_quotes_temp" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="t_shares_quotes_tri" EntityType="Self.t_shares_quotes_tri" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_riserate_rank" EntityType="Self.t_shares_riserate_rank" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_search" EntityType="Self.t_shares_search" Schema="dbo" store:Type="Tables" />
     <EntitySet Name="t_shares_securitybarsdata_15min" EntityType="Self.t_shares_securitybarsdata_15min" Schema="dbo" store:Type="Tables" />

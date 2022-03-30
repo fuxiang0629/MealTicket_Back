@@ -583,6 +583,9 @@ namespace MealTicket_Web_Handler.Runner
                 case 11:
                     result = Analysis_SharesMarket(par.content);
                     break;
+                case 12:
+                    result = Analysis_DealCondition(par.content);
+                    break;
                 default:
                     break;
             }
@@ -3330,5 +3333,183 @@ from t_shares_quotes with(nolock)";
             return result;
         }
         #endregion
+
+        #region====成交量条件====
+        //分析成交量条件
+        public List<SharesBase> Analysis_DealCondition(string par)
+        {
+            List<SharesBase> result = new List<SharesBase>();
+            try
+            {
+                int startDay1 = 0;
+                int endDay1 = 0;
+                int dealType = 0;
+                int compare = 0;
+                int startDay2 = 0;
+                int endDay2 = 0;
+                int dealCompareType = 0;
+                double count = 0;
+                if (!Analysis_DealCondition_BuildPar(par, ref startDay1, ref endDay1, ref dealType, ref compare, ref startDay2, ref endDay2, ref dealCompareType, ref count))
+                {
+                    return new List<SharesBase>();
+                }
+
+                int days = endDay1 > endDay2 ? endDay1 : endDay2;
+                var shares_quotes_date_session = Singleton.Instance.sessionHandler.GetShares_Quotes_Date_Session(days,false);
+
+                foreach (var item in shares_quotes_date_session)
+                {
+                    var list1 = item.Value.Values.Skip(startDay1 - 1).Take(endDay1 - startDay1 + 1).ToList();
+                    var list2 = item.Value.Values.Skip(startDay2 - 1).Take(endDay2 - startDay2 + 1).ToList();
+                    if (list1.Count() <= 0 || list2.Count()<=0) 
+                    {
+                        continue;
+                    }
+
+                    long dealValue1 = 0;
+                    long dealValue2 = 0;
+                    if (dealType == 1)
+                    {
+                        dealValue1 = (long)list1.Average(e => e.TotalCount);
+                        if (dealCompareType == 1)
+                        {
+                            dealValue2= (long)list2.Max(e => e.TotalCount);
+                        }
+                        else if (dealCompareType == 2)
+                        {
+                            dealValue2 = (long)list2.Min(e => e.TotalCount);
+                        }
+                        else if (dealCompareType == 3)
+                        {
+                            dealValue2 = (long)list2.Average(e => e.TotalCount);
+                        }
+                        else 
+                        {
+                            continue;
+                        }
+                    }
+                    else if (dealType == 2)
+                    {
+                        dealValue1 = (long)list1.Average(e => e.TotalAmount);
+                        if (dealCompareType == 1)
+                        {
+                            dealValue2 = (long)list2.Max(e => e.TotalAmount);
+                        }
+                        else if (dealCompareType == 2)
+                        {
+                            dealValue2 = (long)list2.Min(e => e.TotalAmount);
+                        }
+                        else if (dealCompareType == 3)
+                        {
+                            dealValue2 = (long)list2.Average(e => e.TotalAmount);
+                        }
+                        else
+                        {
+                            continue;
+                        }
+                    }
+                    else 
+                    {
+                        continue;
+                    }
+
+                    if ((compare == 1 && dealValue1>= dealValue2* (count/100)) || (compare == 2 && dealValue1 <= dealValue2 * (count / 100)))
+                    {
+                        result.Add(new SharesBase
+                        {
+                            Market = (int)(item.Key % 10),
+                            SharesCode = (item.Key / 10).ToString().PadLeft(6, '0')
+                        });
+                    }
+                }
+
+            }
+            catch (Exception ex)
+            {
+                result = new List<SharesBase>();
+                Logger.WriteFileLog("Analysis_DealCondition出错", ex);
+            }
+            return result;
+        }
+
+        private bool Analysis_DealCondition_BuildPar(string par, ref int startDay1, ref int endDay1, ref int dealType, ref int compare, ref int startDay2, ref int endDay2, ref int dealCompareType,ref double count)
+        {
+            var temp = JsonConvert.DeserializeObject<dynamic>(par);
+            try
+            {
+                startDay1 = Convert.ToInt32(temp.startDay1);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("分析成交量条件-startDay1参数解析出错", ex);
+                return false;
+            }
+            try
+            {
+                endDay1 = Convert.ToInt32(temp.endDay1);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("分析成交量条件-endDay1参数解析出错", ex);
+                return false;
+            }
+            try
+            {
+                dealType = Convert.ToInt32(temp.dealType);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("分析成交量条件-dealType参数解析出错", ex);
+                return false;
+            }
+            try
+            {
+                compare = Convert.ToInt32(temp.Compare);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("分析成交量条件-Compare参数解析出错", ex);
+                return false;
+            }
+            try
+            {
+                startDay2 = Convert.ToInt32(temp.startDay2);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("分析成交量条件-startDay2参数解析出错", ex);
+                return false;
+            }
+            try
+            {
+                endDay2 = Convert.ToInt32(temp.endDay2);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("分析成交量条件-endDay2参数解析出错", ex);
+                return false;
+            }
+            try
+            {
+                dealCompareType = Convert.ToInt32(temp.dealCompareType);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("分析成交量条件-dealCompareType参数解析出错", ex);
+                return false;
+            }
+            try
+            {
+                count = Convert.ToDouble(temp.count);
+            }
+            catch (Exception ex)
+            {
+                Logger.WriteFileLog("分析成交量条件-count参数解析出错", ex);
+                return false;
+            }
+            return true;
+        }
+        #endregion
+
     }
 }

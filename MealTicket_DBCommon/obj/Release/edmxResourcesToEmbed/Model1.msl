@@ -5374,5 +5374,23 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
+    <EntitySetMapping Name="t_shares_quotes_tri">
+      <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes_tri">
+        <MappingFragment StoreEntitySet="t_shares_quotes_tri">
+          <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+          <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+          <ScalarProperty Name="LastPushMinRate" ColumnName="LastPushMinRate" />
+          <ScalarProperty Name="LastPushMaxRate" ColumnName="LastPushMaxRate" />
+          <ScalarProperty Name="LastPushRate" ColumnName="LastPushRate" />
+          <ScalarProperty Name="LastPushType" ColumnName="LastPushType" />
+          <ScalarProperty Name="LastPushPrice" ColumnName="LastPushPrice" />
+          <ScalarProperty Name="LastPushTime" ColumnName="LastPushTime" />
+          <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+          <ScalarProperty Name="Market" ColumnName="Market" />
+          <ScalarProperty Name="SharesKey" ColumnName="SharesKey" />
+          <ScalarProperty Name="Id" ColumnName="Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
   </EntityContainerMapping>
 </Mapping>

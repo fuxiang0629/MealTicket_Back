@@ -76,7 +76,8 @@ namespace MealTicket_Web_Handler
             Shares_Limit_Fundmultiple_Session,
             Shares_RiseRate_His_Session,
             Shares_RiseLimit_Session,
-            Search_Mark_Tri_Session
+            Search_Mark_Tri_Session,
+            Shares_Quotes_Tri_Session
         }
 
         public enum Enum_Excute_DataKey
@@ -112,7 +113,8 @@ namespace MealTicket_Web_Handler
             Shares_Limit_Fundmultiple_Session, 
             Shares_RiseRate_His_Session,
             Shares_RiseLimit_Session,
-            Search_Mark_Tri_Session
+            Search_Mark_Tri_Session,
+            Shares_Quotes_Tri_Session
         }
 
         public SessionHandler() 
@@ -188,6 +190,8 @@ namespace MealTicket_Web_Handler
             result.Add(_toBuildTimeInfo(Enum_Excute_DataKey.Shares_RiseLimit_Session.ToString(), 60 * 60 * 24, (int)Enum_Excute_Type.Shares_RiseLimit_Session, DateTime.Now.Date.AddHours(15).AddMinutes(5).AddSeconds(15), 0, 0));
             //闪烁搜索缓存
             result.Add(_toBuildTimeInfo(Enum_Excute_DataKey.Search_Mark_Tri_Session.ToString(),3, (int)Enum_Excute_Type.Search_Mark_Tri_Session, null, 0, 0));
+            //即将涨停触发缓存
+            result.Add(_toBuildTimeInfo(Enum_Excute_DataKey.Shares_Quotes_Tri_Session.ToString(), 3, (int)Enum_Excute_Type.Shares_Quotes_Tri_Session, null, 0, 0));
             return result;
         }
 
@@ -274,6 +278,8 @@ namespace MealTicket_Web_Handler
                         return Shares_RiseLimit_Session.UpdateSession();
                     case (int)Enum_Excute_Type.Search_Mark_Tri_Session:
                         return Search_Mark_Tri_Session.UpdateSession();
+                    case (int)Enum_Excute_Type.Shares_Quotes_Tri_Session:
+                        return Shares_Quotes_Tri_Session.UpdateSession();
                     default:
                         return null;
                 }
@@ -402,6 +408,8 @@ namespace MealTicket_Web_Handler
                         return Shares_RiseRate_His_Session.CopySessionData(objData);
                     case Enum_Excute_DataKey.Search_Mark_Tri_Session:
                         return Search_Mark_Tri_Session.CopySessionData(objData);
+                    case Enum_Excute_DataKey.Shares_Quotes_Tri_Session:
+                        return Shares_Quotes_Tri_Session.CopySessionData(objData);
                     default:
                         return base.CopySessionData(objData, dataKey);
                 }
@@ -1494,6 +1502,18 @@ namespace MealTicket_Web_Handler
                 return new Dictionary<long, Dictionary<long, DateTime>>();
             }
             return session as Dictionary<long, Dictionary<long, DateTime>>;
+        }
+
+        //即将涨停触发缓存
+        public Dictionary<long, t_shares_quotes_tri> GetShares_Quotes_Tri_Session(bool withlock = true)
+        {
+            string dataKey = Enum_Excute_DataKey.Shares_Quotes_Tri_Session.ToString();
+            var session = withlock ? GetDataWithLock(dataKey) : GetDataWithNoLock(dataKey);
+            if (session == null)
+            {
+                return new Dictionary<long, t_shares_quotes_tri>();
+            }
+            return session as Dictionary<long, t_shares_quotes_tri>;
         }
     }
 }

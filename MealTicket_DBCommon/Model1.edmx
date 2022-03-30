@@ -3970,6 +3970,23 @@
           <Property Name="TriPriceType" Type="int" Nullable="false" />
           <Property Name="TriNearLimitType" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="t_shares_quotes_tri">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SharesKey" Type="bigint" StoreGeneratedPattern="Computed" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="LastPushTime" Type="datetime" />
+          <Property Name="LastPushPrice" Type="bigint" />
+          <Property Name="LastPushType" Type="int" />
+          <Property Name="LastPushRate" Type="int" />
+          <Property Name="LastPushMaxRate" Type="int" />
+          <Property Name="LastPushMinRate" Type="int" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="t_shares_riserate_rank">
           <Key>
             <PropertyRef Name="Id" />
@@ -5877,6 +5894,7 @@
           <EntitySet Name="t_shares_quotes_record" EntityType="Self.t_shares_quotes_record" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_quotes_riselimit" EntityType="Self.t_shares_quotes_riselimit" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_quotes_temp" EntityType="Self.t_shares_quotes_temp" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_quotes_tri" EntityType="Self.t_shares_quotes_tri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_riserate_rank" EntityType="Self.t_shares_riserate_rank" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_search" EntityType="Self.t_shares_search" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_securitybarsdata_15min" EntityType="Self.t_shares_securitybarsdata_15min" Schema="dbo" store:Type="Tables" />
@@ -10276,6 +10294,7 @@
           <EntitySet Name="t_search_mark_tri" EntityType="meal_ticketModel.t_search_mark_tri" />
           <EntitySet Name="t_stock_monitor_tri" EntityType="meal_ticketModel.t_stock_monitor_tri" />
           <EntitySet Name="t_stock_monitor_tri_record" EntityType="meal_ticketModel.t_stock_monitor_tri_record" />
+          <EntitySet Name="t_shares_quotes_tri" EntityType="meal_ticketModel.t_shares_quotes_tri" />
         </EntityContainer>
         <EntityType Name="t_account_baseinfo">
           <Key>
@@ -11991,6 +12010,23 @@
           <Property Name="PushRate" Type="Int32" Nullable="false" />
           <Property Name="Date" Type="String" MaxLength="10" FixedLength="false" Unicode="false" annotation:StoreGeneratedPattern="Computed" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_quotes_tri">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SharesKey" Type="Int64" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="LastPushTime" Type="DateTime" Precision="3" />
+          <Property Name="LastPushPrice" Type="Int64" />
+          <Property Name="LastPushType" Type="Int32" />
+          <Property Name="LastPushRate" Type="Int32" />
+          <Property Name="LastPushMaxRate" Type="Int32" />
+          <Property Name="LastPushMinRate" Type="Int32" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -17367,6 +17403,24 @@
                 <ScalarProperty Name="Market" ColumnName="Market" />
                 <ScalarProperty Name="SharesKey" ColumnName="SharesKey" />
                 <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_quotes_tri">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes_tri">
+              <MappingFragment StoreEntitySet="t_shares_quotes_tri">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="LastPushMinRate" ColumnName="LastPushMinRate" />
+                <ScalarProperty Name="LastPushMaxRate" ColumnName="LastPushMaxRate" />
+                <ScalarProperty Name="LastPushRate" ColumnName="LastPushRate" />
+                <ScalarProperty Name="LastPushType" ColumnName="LastPushType" />
+                <ScalarProperty Name="LastPushPrice" ColumnName="LastPushPrice" />
+                <ScalarProperty Name="LastPushTime" ColumnName="LastPushTime" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="SharesKey" ColumnName="SharesKey" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

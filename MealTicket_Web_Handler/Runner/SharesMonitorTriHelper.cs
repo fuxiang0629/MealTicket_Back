@@ -49,11 +49,7 @@ namespace MealTicket_Web_Handler.Runner
 
                 sharesList.Add(share);
             }
-
-            if (sharesList.Count() > 0)
-            {
-                _insert_To_Database(sharesList);
-            }
+            _insert_To_Database(sharesList);
         }
 
         public static void _insert_To_Database(List<long> sharesList)

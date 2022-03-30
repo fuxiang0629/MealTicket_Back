@@ -357,6 +357,7 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_search_mark_tri> t_search_mark_tri { get; set; }
         public virtual DbSet<t_stock_monitor_tri> t_stock_monitor_tri { get; set; }
         public virtual DbSet<t_stock_monitor_tri_record> t_stock_monitor_tri_record { get; set; }
+        public virtual DbSet<t_shares_quotes_tri> t_shares_quotes_tri { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)

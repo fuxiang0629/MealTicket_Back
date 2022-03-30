@@ -4184,6 +4184,7 @@
     <EntitySet Name="t_search_mark_tri" EntityType="meal_ticketModel.t_search_mark_tri" />
     <EntitySet Name="t_stock_monitor_tri" EntityType="meal_ticketModel.t_stock_monitor_tri" />
     <EntitySet Name="t_stock_monitor_tri_record" EntityType="meal_ticketModel.t_stock_monitor_tri_record" />
+    <EntitySet Name="t_shares_quotes_tri" EntityType="meal_ticketModel.t_shares_quotes_tri" />
   </EntityContainer>
   <EntityType Name="t_account_baseinfo">
     <Key>
@@ -5899,5 +5900,22 @@
     <Property Name="PushRate" Type="Int32" Nullable="false" />
     <Property Name="Date" Type="String" MaxLength="10" FixedLength="false" Unicode="false" annotation:StoreGeneratedPattern="Computed" />
     <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="t_shares_quotes_tri">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="SharesKey" Type="Int64" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="Market" Type="Int32" Nullable="false" />
+    <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="LastPushTime" Type="DateTime" Precision="3" />
+    <Property Name="LastPushPrice" Type="Int64" />
+    <Property Name="LastPushType" Type="Int32" />
+    <Property Name="LastPushRate" Type="Int32" />
+    <Property Name="LastPushMaxRate" Type="Int32" />
+    <Property Name="LastPushMinRate" Type="Int32" />
+    <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
   </EntityType>
 </Schema>

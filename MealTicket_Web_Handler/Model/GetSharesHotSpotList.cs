@@ -176,6 +176,16 @@ namespace MealTicket_Web_Handler.Model
         public DateTime LimitUpTime { get; set; }
 
         /// <summary>
+        /// 即将涨停触发时间
+        /// </summary>
+        public DateTime NearLimitUpTime { get; set; }
+
+        /// <summary>
+        /// 再触发类型
+        /// </summary>
+        public int NearLimitLastPushType { get; set; }
+
+        /// <summary>
         /// 炸板时间
         /// </summary>
         public DateTime LimitUpBombTime { get; set; }

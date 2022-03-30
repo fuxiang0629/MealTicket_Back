@@ -335,6 +335,7 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_search_mark_tri" Width="1.5" PointX="50.375" PointY="55.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_stock_monitor_tri" Width="1.5" PointX="55.375" PointY="54.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_stock_monitor_tri_record" Width="1.5" PointX="56.375" PointY="0.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_quotes_tri" Width="1.5" PointX="56.375" PointY="4.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
