@@ -19,5 +19,6 @@ namespace MealTicket_DBCommon
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
         public long AccountId { get; set; }
+        public int Status { get; set; }
     }
 }

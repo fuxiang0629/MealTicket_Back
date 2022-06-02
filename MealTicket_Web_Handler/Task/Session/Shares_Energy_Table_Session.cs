@@ -16,7 +16,7 @@ namespace MealTicket_Web_Handler
             return result;
         }
 
-        public static Dictionary<long, Shares_Energy_Table_Session_Info> Cal_Shares_Energy_Table() 
+        public static Dictionary<long, Shares_Energy_Table_Session_Info> Cal_Shares_Energy_Table_bak() 
         {
             Dictionary<long, Shares_Energy_Table_Session_Info> result = new Dictionary<long, Shares_Energy_Table_Session_Info>();
             var oldData = Singleton.Instance.sessionHandler.GetShares_Energy_Table_Session(false);

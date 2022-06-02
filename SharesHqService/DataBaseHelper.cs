@@ -72,7 +72,7 @@ namespace SharesHqService
         /// 更新股票实时行情数据
         /// </summary>
         /// <param name="list"></param>
-        public static void UpdateSharesQuotes(List<SharesQuotesInfo> list)
+        public static void UpdateSharesQuotes(List<SharesQuotesInfo> list,ref Dictionary<int, SharesQuotesInfo> lastQuotes)
         {
             Stopwatch stopwatch = new Stopwatch();
             stopwatch.Start();
@@ -137,6 +137,7 @@ namespace SharesHqService
                         TriPriceType = x.TriPriceType
                     }).ToList();
 
+            var sharesYesQuotesLimitSession = Singleton.Instance.session.GetSharesYesQuotesLimit();
             foreach (var item in list)
             {
                 item.LimitUpPrice = 0;
@@ -144,6 +145,11 @@ namespace SharesHqService
                 item.PriceType = 0;
                 item.TriPriceType = 0;
                 item.TriNearLimitType = 0;
+                long sharesKey = long.Parse(item.SharesCode) * 10 + item.Market;
+                if (sharesYesQuotesLimitSession.ContainsKey(sharesKey))
+                {
+                    item.PriceTypeYestoday = sharesYesQuotesLimitSession[sharesKey].PriceTypeYestoday;
+                }
 
                 if (item.SharesName.Contains("ST"))
                 {
@@ -175,7 +181,7 @@ namespace SharesHqService
                             }
                             item.LimitUpPrice = (long)((item.ClosedPrice + item.ClosedPrice * (maxRange * 1.0 / 10000)) / 100 + 0.5) * 100;
                             item.LimitDownPrice = (long)((item.ClosedPrice - item.ClosedPrice * (maxRange * 1.0 / 10000)) / 100 + 0.5) * 100;
-                            item.PriceType = item.LimitUpPrice == item.BuyPrice1 ? 1 : item.LimitDownPrice == item.SellPrice1 ? 2 : 0;
+                            item.PriceType = (item.LimitUpPrice == item.BuyPrice1 || (item.LimitUpPrice == item.PresentPrice && item.BuyPrice1 == 0)) ? 1 : item.LimitDownPrice == item.SellPrice1 ? 2 : 0;
                             item.TriPriceType = item.LimitUpPrice == item.PresentPrice ? 1 : item.LimitDownPrice == item.PresentPrice ? 2 : 0;
                         }
                         if (maxNearLimitRange > 0)
@@ -206,6 +212,7 @@ namespace SharesHqService
             Task[] tArr1 = null;
             if (taskExec)
             {
+                var templastQuotes = lastQuotes;
                 taskData1.Init();
                 taskData1.AddMessage(1);
                 int taskCount = taskData1.GetCount();
@@ -226,7 +233,7 @@ namespace SharesHqService
                             {
                                 try
                                 {
-                                    UpdateQuotesDate(list);
+                                    UpdateQuotesDate(list, templastQuotes);
                                 }
                                 catch (Exception ex)
                                 {
@@ -256,7 +263,6 @@ namespace SharesHqService
             stopwatch.Stop();
             Console.WriteLine("\t=====任务执行结束:" + stopwatch.ElapsedMilliseconds + "============");
 
-            var lastQuotes = Singleton.Instance.session.GetLastSharesQuotesList();
             foreach (var x in list)
             {
                 SharesQuotesInfo temp = new SharesQuotesInfo 
@@ -303,7 +309,8 @@ namespace SharesHqService
                     TotalAmount = x.TotalAmount,
                     TotalCount = x.TotalCount,
                     TriPriceType = x.TriPriceType,
-                    Market = x.Market
+                    Market = x.Market,
+                    PriceTypeYestoday=x.PriceTypeYestoday
                 };
                 int key = int.Parse(x.SharesCode) * 10 + x.Market;
                 if (lastQuotes.ContainsKey(key))
@@ -365,6 +372,7 @@ namespace SharesHqService
             table.Columns.Add("TriPriceType", typeof(int));
             table.Columns.Add("TriNearLimitType", typeof(int));
             table.Columns.Add("DataType", typeof(int));
+            table.Columns.Add("PriceTypeYestoday", typeof(int));
             #endregion
 
             #region====绑定数据====
@@ -417,6 +425,7 @@ namespace SharesHqService
                 row["TriPriceType"] = item.TriPriceType;
                 row["TriNearLimitType"] = item.TriNearLimitType;
                 row["DataType"] = 0;
+                row["PriceTypeYestoday"] = item.PriceTypeYestoday;
                 table.Rows.Add(row);
             }
             #endregion
@@ -447,7 +456,7 @@ namespace SharesHqService
         /// <summary>
         /// 更新每天五档数据
         /// </summary>
-        private static void UpdateQuotesDate(List<SharesQuotesInfo> list)
+        private static void UpdateQuotesDate(List<SharesQuotesInfo> list, Dictionary<int, SharesQuotesInfo> lastQuotes)
         {
             DataTable table = new DataTable();
             #region====定义表字段数据类型====
@@ -476,9 +485,10 @@ namespace SharesHqService
             table.Columns.Add("TotalAmount", typeof(long));
             table.Columns.Add("TotalCount", typeof(int));
             table.Columns.Add("IsST", typeof(bool));
+            table.Columns.Add("PriceTypeYestoday", typeof(int));
+            table.Columns.Add("BuyCount1", typeof(int));
             #endregion
 
-            var lastQuotes = Singleton.Instance.session.GetLastSharesQuotesList();
             foreach (var item in list)
             {
                 int LimitUpCount = 0;
@@ -551,6 +561,8 @@ namespace SharesHqService
                 row["TotalAmount"] = item.TotalAmount;
                 row["TotalCount"] = item.TotalCount;
                 row["IsST"] = item.IsST;
+                row["PriceTypeYestoday"] = item.PriceTypeYestoday;
+                row["BuyCount1"] = item.BuyCount1;
                 table.Rows.Add(row);
             }
 

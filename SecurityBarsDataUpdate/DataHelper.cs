@@ -177,7 +177,7 @@ namespace SecurityBarsDataUpdate
                             ClosedPrice=sharesData.YestodayClosedPrice,
                             DataType=datatype,
                             GroupTimeKey=groupTimeKey,
-                            IsLast=true,
+                            IsLast=false,
                             IsVaild=true,
                             LastTradeAmount=0,
                             MaxPrice=sharesData.YestodayClosedPrice,
@@ -216,7 +216,7 @@ namespace SecurityBarsDataUpdate
                             ClosedPrice=quotes.PresentPrice==0?quotes.ClosedPrice:quotes.PresentPrice,
                             DataType=datatype,
                             GroupTimeKey=groupTimeKey,
-                            IsLast=true,
+                            IsLast=false,
                             IsVaild=true,
                             LastTradeAmount=0,
                             MaxPrice=quotes.MaxPrice==0?quotes.ClosedPrice:quotes.MaxPrice,
@@ -384,6 +384,7 @@ namespace SecurityBarsDataUpdate
             {
                 isNew = true;
             }
+            int priceType = 0;
             foreach (var item in resultlist)
             {
                 if (lastDate != null && lastDate.Value != item.Time.Value.Date)
@@ -416,7 +417,7 @@ namespace SecurityBarsDataUpdate
                 {
                     if (lastDate == null || lastDate.Value != item.Time.Value.Date)
                     {
-                        if (CheckQuotes(item.Market, item.SharesCode, item.Time.Value.Date))
+                        if (CheckQuotes(item.Market, item.SharesCode, item.Time.Value.Date,ref priceType))
                         {
                             isVaild = true;
                         }
@@ -437,6 +438,7 @@ namespace SecurityBarsDataUpdate
                     }
                 }
 
+                item.PriceType = priceType;
                 item.YestodayClosedPrice = yestodayClosedPrice;
 
                 item.PreClosePrice = preClosePrice;
@@ -681,8 +683,9 @@ namespace SecurityBarsDataUpdate
             }
         }
 
-        private static bool CheckQuotes(int market,string sharesCode,DateTime date) 
+        private static bool CheckQuotes(int market,string sharesCode,DateTime date,ref int priceType) 
         {
+            priceType = 0;
             var result=GetSharesQuotes(market, sharesCode, date);
             if (result == null)
             {
@@ -690,6 +693,7 @@ namespace SecurityBarsDataUpdate
             }
             if (result.PresentPrice > 0 && result.ClosedPrice > 0 && result.OpenedPrice > 0 && result.MaxPrice > 0 && result.MinPrice > 0)
             {
+                priceType = result.PriceType;
                 return true;
             }
             return false;

@@ -2311,6 +2311,20 @@
           <Property Name="Date" Type="varchar" MaxLength="10" StoreGeneratedPattern="Computed" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="t_plate_quotes_date_bidding">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DateKey" Type="bigint" StoreGeneratedPattern="Computed" />
+          <Property Name="PlateId" Type="bigint" Nullable="false" />
+          <Property Name="RiseRate" Type="int" Nullable="false" />
+          <Property Name="TotalAmount" Type="bigint" Nullable="false" />
+          <Property Name="TotalCount" Type="bigint" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="t_plate_shares_rel_tag_dayleader">
           <Key>
             <PropertyRef Name="Id" />
@@ -2783,6 +2797,103 @@
           <Property Name="LastModified" Type="datetime" Nullable="false" />
           <Property Name="BatchTime" Type="varchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="t_shares_cycle_manager">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountId" Type="bigint" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="200" />
+          <Property Name="SharesKey" Type="bigint" Nullable="false" />
+          <Property Name="PlateId" Type="varchar(max)" Nullable="false" />
+          <Property Name="StartDate" Type="date" Nullable="false" />
+          <Property Name="EndDate" Type="date" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="MainCycleId" Type="bigint" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="LineColor" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="BgColor" Type="varchar" MaxLength="200" Nullable="false" />
+          <Property Name="DefaultActive" Type="bit" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_cycle_manager_stock">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CycleId" Type="bigint" Nullable="false" />
+          <Property Name="SharesKey" Type="bigint" Nullable="false" />
+          <Property Name="Type" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_group_statistic">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="DateKey" Type="bigint" StoreGeneratedPattern="Computed" />
+          <Property Name="ContextId" Type="bigint" Nullable="false" />
+          <Property Name="ContextType" Type="int" Nullable="false" />
+          <Property Name="LimitUpCount" Type="int" Nullable="false" />
+          <Property Name="LimitDownCount" Type="int" Nullable="false" />
+          <Property Name="LimitUpBombCount" Type="int" Nullable="false" />
+          <Property Name="LimitDownBombCount" Type="int" Nullable="false" />
+          <Property Name="UpCount" Type="int" Nullable="false" />
+          <Property Name="DownCount" Type="int" Nullable="false" />
+          <Property Name="FlatCount" Type="int" Nullable="false" />
+          <Property Name="RiseRate" Type="int" Nullable="false" />
+          <Property Name="TotalCount" Type="bigint" Nullable="false" />
+          <Property Name="TotalAmount" Type="bigint" Nullable="false" />
+          <Property Name="TotalCountYestoday" Type="bigint" Nullable="false" />
+          <Property Name="TotalAmountYestoday" Type="bigint" Nullable="false" />
+          <Property Name="LimitUpCountYestoday" Type="int" Nullable="false" />
+          <Property Name="LimitDownCountYestoday" Type="int" Nullable="false" />
+          <Property Name="LimitUpBombCountYestoday" Type="int" Nullable="false" />
+          <Property Name="LimitDownBombCountYestoday" Type="int" Nullable="false" />
+          <Property Name="UpCountYestoday" Type="int" Nullable="false" />
+          <Property Name="DownCountYestoday" Type="int" Nullable="false" />
+          <Property Name="FlatCountYestoday" Type="int" Nullable="false" />
+          <Property Name="RiseRateYestoday" Type="int" Nullable="false" />
+          <Property Name="SharesKeyYestodayList" Type="nvarchar(max)" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_group_statistic_mtline">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="ContextId" Type="bigint" Nullable="false" />
+          <Property Name="ContextType" Type="int" Nullable="false" />
+          <Property Name="GroupTimeKey" Type="bigint" Nullable="false" />
+          <Property Name="Time" Type="datetime" Nullable="false" />
+          <Property Name="RiseRate" Type="int" Nullable="false" />
+          <Property Name="TradeStock" Type="bigint" Nullable="false" />
+          <Property Name="TradeAmount" Type="bigint" Nullable="false" />
+          <Property Name="LimitUpCount" Type="int" Nullable="false" />
+          <Property Name="RiseUpCount" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_group_statistic_mtline_all">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="ContextId" Type="bigint" Nullable="false" />
+          <Property Name="ContextType" Type="int" Nullable="false" />
+          <Property Name="GroupTimeKey" Type="bigint" Nullable="false" />
+          <Property Name="Time" Type="datetime" Nullable="false" />
+          <Property Name="RiseRate" Type="int" Nullable="false" />
+          <Property Name="TradeStock" Type="bigint" Nullable="false" />
+          <Property Name="TradeAmount" Type="bigint" Nullable="false" />
+          <Property Name="LimitUpCount" Type="int" Nullable="false" />
+          <Property Name="RiseUpCount" Type="int" Nullable="false" />
+        </EntityType>
         <EntityType Name="t_shares_hotspot">
           <Key>
             <PropertyRef Name="Id" />
@@ -2828,6 +2939,7 @@
           <Property Name="GroupName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_hotspot_group_rel">
           <Key>
@@ -2836,6 +2948,23 @@
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="GroupId" Type="bigint" Nullable="false" />
           <Property Name="HostId" Type="bigint" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_hotspot_highmark">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountId" Type="bigint" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="SharesKey" Type="bigint" Nullable="false" />
+          <Property Name="AutoType" Type="int" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+          <Property Name="RiseLimitCount" Type="int" Nullable="false" />
+          <Property Name="RiseLimitDays" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_hotspot_his">
           <Key>
@@ -2856,6 +2985,20 @@
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="HotId" Type="bigint" Nullable="false" />
           <Property Name="PlateId" Type="bigint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_hotspot_quotes_date_bidding">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DateKey" Type="bigint" StoreGeneratedPattern="Computed" />
+          <Property Name="HotspotId" Type="bigint" Nullable="false" />
+          <Property Name="RiseRate" Type="int" Nullable="false" />
+          <Property Name="TotalAmount" Type="bigint" Nullable="false" />
+          <Property Name="TotalCount" Type="bigint" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_hq_host">
           <Key>
@@ -3690,6 +3833,7 @@
           <Property Name="TriPriceType" Type="int" Nullable="false" />
           <Property Name="TriNearLimitType" Type="int" Nullable="false" />
           <Property Name="DataType" Type="int" Nullable="false" />
+          <Property Name="PriceTypeYestoday" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_quotes_date">
           <Key>
@@ -3698,6 +3842,7 @@
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="Market" Type="int" Nullable="false" />
           <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="SharesKey" Type="bigint" StoreGeneratedPattern="Computed" />
           <Property Name="SharesInfo" Type="varchar" MaxLength="31" StoreGeneratedPattern="Computed" />
           <Property Name="PresentPrice" Type="bigint" Nullable="false" />
           <Property Name="ClosedPrice" Type="bigint" Nullable="false" />
@@ -3723,6 +3868,26 @@
           <Property Name="TotalCount" Type="int" Nullable="false" />
           <Property Name="LimitUpDays" Type="int" Nullable="false" />
           <Property Name="IsST" Type="bit" Nullable="false" />
+          <Property Name="PriceTypeYestoday" Type="int" Nullable="false" />
+          <Property Name="BuyCount1" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_quotes_date_bidding">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="DateKey" Type="bigint" StoreGeneratedPattern="Computed" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="SharesKey" Type="bigint" StoreGeneratedPattern="Computed" />
+          <Property Name="PresentPrice" Type="bigint" Nullable="false" />
+          <Property Name="TotalAmount" Type="bigint" Nullable="false" />
+          <Property Name="TotalCount" Type="int" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+          <Property Name="BuyCount1" Type="int" Nullable="false" />
+          <Property Name="PriceType" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_quotes_date_temp">
           <Key>
@@ -4093,6 +4258,7 @@
           <Property Name="YestodayClosedPrice" Type="bigint" Nullable="false" />
           <Property Name="SharesNumber" Type="int" StoreGeneratedPattern="Computed" />
           <Property Name="IsVaild" Type="bit" Nullable="false" />
+          <Property Name="PriceType" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_securitybarsdata_1month">
           <Key>
@@ -4303,6 +4469,25 @@
           <Property Name="LastModified" Type="datetime" Nullable="false" />
           <Property Name="ShowName" Type="nvarchar" MaxLength="50" Nullable="false" />
         </EntityType>
+        <EntityType Name="t_shares_tradestock_statistic">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="SharesKey" Type="bigint" Nullable="false" />
+          <Property Name="SharesCode" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Market" Type="int" Nullable="false" />
+          <Property Name="TradeStockAvg" Type="bigint" Nullable="false" />
+          <Property Name="TradeStockNow" Type="bigint" Nullable="false" />
+          <Property Name="GroupTimeKey" Type="bigint" Nullable="false" />
+          <Property Name="Time" Type="datetime" Nullable="false" />
+          <Property Name="YesTime" Type="datetime" Nullable="false" />
+          <Property Name="TimeSpan" Type="bigint" Nullable="false" />
+          <Property Name="IntervalMinute" Type="int" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
+          <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="LastModified" Type="datetime" Nullable="false" />
+        </EntityType>
         <EntityType Name="t_shares_transactiondata">
           <Key>
             <PropertyRef Name="Id" />
@@ -4412,6 +4597,7 @@
           <Property Name="OrderIndex" Type="int" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="t_stock_monitor_rel">
           <Key>
@@ -4425,6 +4611,7 @@
           <Property Name="OrderIndex" Type="int" Nullable="false" />
           <Property Name="IsTop" Type="bit" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
+          <Property Name="Status" Type="int" Nullable="false" />
         </EntityType>
         <EntityType Name="t_stock_monitor_tri">
           <Key>
@@ -4479,6 +4666,7 @@
           <Property Name="Type" Type="int" Nullable="false" />
           <Property Name="CreateTime" Type="datetime" Nullable="false" />
           <Property Name="LastModified" Type="datetime" Nullable="false" />
+          <Property Name="BgColor" Type="nvarchar" MaxLength="200" />
         </EntityType>
         <EntityType Name="t_sys_conditiontrade_template_buy">
           <Key>
@@ -5023,6 +5211,7 @@
             <PropertyRef Name="LimitUpPrice" />
             <PropertyRef Name="LimitDownPrice" />
             <PropertyRef Name="PriceType" />
+            <PropertyRef Name="PriceTypeYestoday" />
             <PropertyRef Name="TriPriceType" />
             <PropertyRef Name="TriNearLimitType" />
             <PropertyRef Name="DataType" />
@@ -5066,6 +5255,7 @@
           <Property Name="LimitUpPrice" Type="bigint" Nullable="false" />
           <Property Name="LimitDownPrice" Type="bigint" Nullable="false" />
           <Property Name="PriceType" Type="int" Nullable="false" />
+          <Property Name="PriceTypeYestoday" Type="int" Nullable="false" />
           <Property Name="TriPriceType" Type="int" Nullable="false" />
           <Property Name="TriNearLimitType" Type="int" Nullable="false" />
           <Property Name="DataType" Type="int" Nullable="false" />
@@ -5792,6 +5982,7 @@
           <EntitySet Name="t_plate_energyindex_min" EntityType="Self.t_plate_energyindex_min" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_plate_leader_tri" EntityType="Self.t_plate_leader_tri" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_plate_leader_tri_record" EntityType="Self.t_plate_leader_tri_record" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_plate_quotes_date_bidding" EntityType="Self.t_plate_quotes_date_bidding" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_plate_shares_rel_tag_dayleader" EntityType="Self.t_plate_shares_rel_tag_dayleader" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_plate_shares_rel_tag_dayleader_date" EntityType="Self.t_plate_shares_rel_tag_dayleader_date" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_plate_shares_rel_tag_leader" EntityType="Self.t_plate_shares_rel_tag_leader" Schema="dbo" store:Type="Tables" />
@@ -5826,13 +6017,20 @@
           <EntitySet Name="t_shares_bars_index" EntityType="Self.t_shares_bars_index" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_bars_index_temp" EntityType="Self.t_shares_bars_index_temp" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_bars_temp" EntityType="Self.t_shares_bars_temp" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_cycle_manager" EntityType="Self.t_shares_cycle_manager" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_cycle_manager_stock" EntityType="Self.t_shares_cycle_manager_stock" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_group_statistic" EntityType="Self.t_shares_group_statistic" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_group_statistic_mtline" EntityType="Self.t_shares_group_statistic_mtline" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_group_statistic_mtline_all" EntityType="Self.t_shares_group_statistic_mtline_all" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_hotspot" EntityType="Self.t_shares_hotspot" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_hotspot_auto" EntityType="Self.t_shares_hotspot_auto" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_hotspot_focuson" EntityType="Self.t_shares_hotspot_focuson" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_hotspot_group" EntityType="Self.t_shares_hotspot_group" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_hotspot_group_rel" EntityType="Self.t_shares_hotspot_group_rel" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_hotspot_highmark" EntityType="Self.t_shares_hotspot_highmark" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_hotspot_his" EntityType="Self.t_shares_hotspot_his" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_hotspot_plate" EntityType="Self.t_shares_hotspot_plate" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_hotspot_quotes_date_bidding" EntityType="Self.t_shares_hotspot_quotes_date_bidding" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_hq_host" EntityType="Self.t_shares_hq_host" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_info_fund_group" EntityType="Self.t_shares_info_fund_group" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_info_fund_group_details" EntityType="Self.t_shares_info_fund_group_details" Schema="dbo" store:Type="Tables" />
@@ -5887,6 +6085,7 @@
           <EntitySet Name="t_shares_plate_type_business" EntityType="Self.t_shares_plate_type_business" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_quotes" EntityType="Self.t_shares_quotes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_quotes_date" EntityType="Self.t_shares_quotes_date" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_quotes_date_bidding" EntityType="Self.t_shares_quotes_date_bidding" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_quotes_date_temp" EntityType="Self.t_shares_quotes_date_temp" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_quotes_history" EntityType="Self.t_shares_quotes_history" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_quotes_last" EntityType="Self.t_shares_quotes_last" Schema="dbo" store:Type="Tables" />
@@ -5909,6 +6108,7 @@
           <EntitySet Name="t_shares_securitybarsdata_60min" EntityType="Self.t_shares_securitybarsdata_60min" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_suspension" EntityType="Self.t_shares_suspension" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_today" EntityType="Self.t_shares_today" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="t_shares_tradestock_statistic" EntityType="Self.t_shares_tradestock_statistic" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_transactiondata" EntityType="Self.t_shares_transactiondata" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_shares_transactiondata_update" EntityType="Self.t_shares_transactiondata_update" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="t_sms_callback" EntityType="Self.t_sms_callback" Schema="dbo" store:Type="Tables" />
@@ -6100,6 +6300,7 @@
     [v_shares_quotes_last].[LimitUpPrice] AS [LimitUpPrice], 
     [v_shares_quotes_last].[LimitDownPrice] AS [LimitDownPrice], 
     [v_shares_quotes_last].[PriceType] AS [PriceType], 
+    [v_shares_quotes_last].[PriceTypeYestoday] AS [PriceTypeYestoday], 
     [v_shares_quotes_last].[TriPriceType] AS [TriPriceType], 
     [v_shares_quotes_last].[TriNearLimitType] AS [TriNearLimitType], 
     [v_shares_quotes_last].[DataType] AS [DataType]
@@ -8606,6 +8807,7 @@
           <Property Name="TriPriceType" Type="Int32" Nullable="false" />
           <Property Name="TriNearLimitType" Type="Int32" Nullable="false" />
           <Property Name="DataType" Type="Int32" Nullable="false" />
+          <Property Name="PriceTypeYestoday" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_quotes_date">
           <Key>
@@ -8639,6 +8841,9 @@
           <Property Name="TotalCount" Type="Int32" Nullable="false" />
           <Property Name="LimitUpDays" Type="Int32" Nullable="false" />
           <Property Name="IsST" Type="Boolean" Nullable="false" />
+          <Property Name="PriceTypeYestoday" Type="Int32" Nullable="false" />
+          <Property Name="BuyCount1" Type="Int32" Nullable="false" />
+          <Property Name="SharesKey" Type="Int64" annotation:StoreGeneratedPattern="Computed" />
         </EntityType>
         <EntityType Name="t_shares_quotes_date_temp">
           <Key>
@@ -9006,6 +9211,7 @@
           <Property Name="Type" Type="Int32" Nullable="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="BgColor" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="t_sys_conditiontrade_template_buy">
           <Key>
@@ -9399,6 +9605,7 @@
             <PropertyRef Name="TriPriceType" />
             <PropertyRef Name="TriNearLimitType" />
             <PropertyRef Name="DataType" />
+            <PropertyRef Name="PriceTypeYestoday" />
           </Key>
           <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Market" Type="Int32" Nullable="false" />
@@ -9442,6 +9649,7 @@
           <Property Name="TriPriceType" Type="Int32" Nullable="false" />
           <Property Name="TriNearLimitType" Type="Int32" Nullable="false" />
           <Property Name="DataType" Type="Int32" Nullable="false" />
+          <Property Name="PriceTypeYestoday" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityContainer Name="meal_ticketEntities" annotation:LazyLoadingEnabled="true">
           <EntitySet Name="t_account_api" EntityType="Self.t_account_api" />
@@ -10295,6 +10503,16 @@
           <EntitySet Name="t_stock_monitor_tri" EntityType="meal_ticketModel.t_stock_monitor_tri" />
           <EntitySet Name="t_stock_monitor_tri_record" EntityType="meal_ticketModel.t_stock_monitor_tri_record" />
           <EntitySet Name="t_shares_quotes_tri" EntityType="meal_ticketModel.t_shares_quotes_tri" />
+          <EntitySet Name="t_shares_cycle_manager_stock" EntityType="meal_ticketModel.t_shares_cycle_manager_stock" />
+          <EntitySet Name="t_shares_quotes_date_bidding" EntityType="meal_ticketModel.t_shares_quotes_date_bidding" />
+          <EntitySet Name="t_shares_cycle_manager" EntityType="meal_ticketModel.t_shares_cycle_manager" />
+          <EntitySet Name="t_shares_group_statistic_mtline" EntityType="meal_ticketModel.t_shares_group_statistic_mtline" />
+          <EntitySet Name="t_plate_quotes_date_bidding" EntityType="meal_ticketModel.t_plate_quotes_date_bidding" />
+          <EntitySet Name="t_shares_hotspot_quotes_date_bidding" EntityType="meal_ticketModel.t_shares_hotspot_quotes_date_bidding" />
+          <EntitySet Name="t_shares_group_statistic_mtline_all" EntityType="meal_ticketModel.t_shares_group_statistic_mtline_all" />
+          <EntitySet Name="t_shares_tradestock_statistic" EntityType="meal_ticketModel.t_shares_tradestock_statistic" />
+          <EntitySet Name="t_shares_group_statistic" EntityType="meal_ticketModel.t_shares_group_statistic" />
+          <EntitySet Name="t_shares_hotspot_highmark" EntityType="meal_ticketModel.t_shares_hotspot_highmark" />
         </EntityContainer>
         <EntityType Name="t_account_baseinfo">
           <Key>
@@ -10802,6 +11020,7 @@
           <Property Name="YestodayClosedPrice" Type="Int64" Nullable="false" />
           <Property Name="SharesNumber" Type="Int32" annotation:StoreGeneratedPattern="Computed" />
           <Property Name="IsVaild" Type="Boolean" Nullable="false" />
+          <Property Name="PriceType" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_securitybarsdata_1month">
           <Key>
@@ -11892,6 +12111,7 @@
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_shares_hotspot_group_rel">
           <Key>
@@ -11900,6 +12120,8 @@
           <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="GroupId" Type="Int64" Nullable="false" />
           <Property Name="HostId" Type="Int64" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
         </EntityType>
         <EntityType Name="t_shares_hotspot_focuson">
           <Key>
@@ -11943,6 +12165,7 @@
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="OrderIndex" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_stock_monitor_rel">
           <Key>
@@ -11956,6 +12179,7 @@
           <Property Name="IsTop" Type="Boolean" Nullable="false" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="OrderIndex" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
         </EntityType>
         <EntityType Name="t_search_mark_tri">
           <Key>
@@ -12027,6 +12251,183 @@
           <Property Name="LastPushMinRate" Type="Int32" />
           <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_cycle_manager_stock">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CycleId" Type="Int64" Nullable="false" />
+          <Property Name="SharesKey" Type="Int64" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_quotes_date_bidding">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DateKey" Type="Int64" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="SharesKey" Type="Int64" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="PresentPrice" Type="Int64" Nullable="false" />
+          <Property Name="TotalAmount" Type="Int64" Nullable="false" />
+          <Property Name="TotalCount" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="BuyCount1" Type="Int32" Nullable="false" />
+          <Property Name="PriceType" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_cycle_manager">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="SharesKey" Type="Int64" Nullable="false" />
+          <Property Name="PlateId" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <Property Name="StartDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="EndDate" Type="DateTime" Precision="0" />
+          <Property Name="Type" Type="Int32" Nullable="false" />
+          <Property Name="MainCycleId" Type="Int64" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="LineColor" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="BgColor" Type="String" Nullable="false" MaxLength="200" FixedLength="false" Unicode="false" />
+          <Property Name="DefaultActive" Type="Boolean" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_group_statistic_mtline">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ContextId" Type="Int64" Nullable="false" />
+          <Property Name="ContextType" Type="Int32" Nullable="false" />
+          <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
+          <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RiseRate" Type="Int32" Nullable="false" />
+          <Property Name="TradeStock" Type="Int64" Nullable="false" />
+          <Property Name="TradeAmount" Type="Int64" Nullable="false" />
+          <Property Name="LimitUpCount" Type="Int32" Nullable="false" />
+          <Property Name="RiseUpCount" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_plate_quotes_date_bidding">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DateKey" Type="Int64" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="PlateId" Type="Int64" Nullable="false" />
+          <Property Name="TotalAmount" Type="Int64" Nullable="false" />
+          <Property Name="TotalCount" Type="Int64" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RiseRate" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_hotspot_quotes_date_bidding">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="DateKey" Type="Int64" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="HotspotId" Type="Int64" Nullable="false" />
+          <Property Name="TotalAmount" Type="Int64" Nullable="false" />
+          <Property Name="TotalCount" Type="Int64" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RiseRate" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_group_statistic_mtline_all">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ContextId" Type="Int64" Nullable="false" />
+          <Property Name="ContextType" Type="Int32" Nullable="false" />
+          <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
+          <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RiseRate" Type="Int32" Nullable="false" />
+          <Property Name="TradeStock" Type="Int64" Nullable="false" />
+          <Property Name="TradeAmount" Type="Int64" Nullable="false" />
+          <Property Name="LimitUpCount" Type="Int32" Nullable="false" />
+          <Property Name="RiseUpCount" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="t_shares_tradestock_statistic">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="SharesKey" Type="Int64" Nullable="false" />
+          <Property Name="SharesCode" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Market" Type="Int32" Nullable="false" />
+          <Property Name="TradeStockAvg" Type="Int64" Nullable="false" />
+          <Property Name="TradeStockNow" Type="Int64" Nullable="false" />
+          <Property Name="GroupTimeKey" Type="Int64" Nullable="false" />
+          <Property Name="Time" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TimeSpan" Type="Int64" Nullable="false" />
+          <Property Name="IntervalMinute" Type="Int32" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="YesTime" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_group_statistic">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DateKey" Type="Int64" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="ContextId" Type="Int64" Nullable="false" />
+          <Property Name="ContextType" Type="Int32" Nullable="false" />
+          <Property Name="LimitUpCount" Type="Int32" Nullable="false" />
+          <Property Name="LimitDownCount" Type="Int32" Nullable="false" />
+          <Property Name="LimitUpBombCount" Type="Int32" Nullable="false" />
+          <Property Name="LimitDownBombCount" Type="Int32" Nullable="false" />
+          <Property Name="UpCount" Type="Int32" Nullable="false" />
+          <Property Name="DownCount" Type="Int32" Nullable="false" />
+          <Property Name="FlatCount" Type="Int32" Nullable="false" />
+          <Property Name="RiseRate" Type="Int32" Nullable="false" />
+          <Property Name="TotalCount" Type="Int64" Nullable="false" />
+          <Property Name="TotalAmount" Type="Int64" Nullable="false" />
+          <Property Name="TotalCountYestoday" Type="Int64" Nullable="false" />
+          <Property Name="TotalAmountYestoday" Type="Int64" Nullable="false" />
+          <Property Name="LimitUpCountYestoday" Type="Int32" Nullable="false" />
+          <Property Name="LimitDownCountYestoday" Type="Int32" Nullable="false" />
+          <Property Name="LimitUpBombCountYestoday" Type="Int32" Nullable="false" />
+          <Property Name="LimitDownBombCountYestoday" Type="Int32" Nullable="false" />
+          <Property Name="UpCountYestoday" Type="Int32" Nullable="false" />
+          <Property Name="DownCountYestoday" Type="Int32" Nullable="false" />
+          <Property Name="FlatCountYestoday" Type="Int32" Nullable="false" />
+          <Property Name="RiseRateYestoday" Type="Int32" Nullable="false" />
+          <Property Name="SharesKeyYestodayList" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="t_shares_hotspot_highmark">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="AccountId" Type="Int64" Nullable="false" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="SharesKey" Type="Int64" Nullable="false" />
+          <Property Name="AutoType" Type="Int32" Nullable="false" />
+          <Property Name="Status" Type="Int32" Nullable="false" />
+          <Property Name="CreateTime" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="LastModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RiseLimitCount" Type="Int32" Nullable="false" />
+          <Property Name="RiseLimitDays" Type="Int32" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -14652,6 +15053,7 @@
           <EntitySetMapping Name="t_shares_quotes">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes">
               <MappingFragment StoreEntitySet="t_shares_quotes">
+                <ScalarProperty Name="PriceTypeYestoday" ColumnName="PriceTypeYestoday" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Market" ColumnName="Market" />
                 <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
@@ -14700,6 +15102,9 @@
           <EntitySetMapping Name="t_shares_quotes_date">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes_date">
               <MappingFragment StoreEntitySet="t_shares_quotes_date">
+                <ScalarProperty Name="SharesKey" ColumnName="SharesKey" />
+                <ScalarProperty Name="BuyCount1" ColumnName="BuyCount1" />
+                <ScalarProperty Name="PriceTypeYestoday" ColumnName="PriceTypeYestoday" />
                 <ScalarProperty Name="IsST" ColumnName="IsST" />
                 <ScalarProperty Name="LimitUpDays" ColumnName="LimitUpDays" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -15105,6 +15510,7 @@
           <EntitySetMapping Name="t_sys_conditiontrade_template">
             <EntityTypeMapping TypeName="meal_ticketModel.t_sys_conditiontrade_template">
               <MappingFragment StoreEntitySet="t_sys_conditiontrade_template">
+                <ScalarProperty Name="BgColor" ColumnName="BgColor" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Status" ColumnName="Status" />
@@ -15454,6 +15860,7 @@
           <EntitySetMapping Name="v_shares_quotes_last">
             <EntityTypeMapping TypeName="meal_ticketModel.v_shares_quotes_last">
               <MappingFragment StoreEntitySet="v_shares_quotes_last">
+                <ScalarProperty Name="PriceTypeYestoday" ColumnName="PriceTypeYestoday" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
                 <ScalarProperty Name="Market" ColumnName="Market" />
                 <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
@@ -16113,6 +16520,7 @@
           <EntitySetMapping Name="t_shares_securitybarsdata_1min">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_securitybarsdata_1min">
               <MappingFragment StoreEntitySet="t_shares_securitybarsdata_1min">
+                <ScalarProperty Name="PriceType" ColumnName="PriceType" />
                 <ScalarProperty Name="IsVaild" ColumnName="IsVaild" />
                 <ScalarProperty Name="SharesNumber" ColumnName="SharesNumber" />
                 <ScalarProperty Name="YestodayClosedPrice" ColumnName="YestodayClosedPrice" />
@@ -17272,6 +17680,7 @@
           <EntitySetMapping Name="t_shares_hotspot_group">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_hotspot_group">
               <MappingFragment StoreEntitySet="t_shares_hotspot_group">
+                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="AccountId" ColumnName="AccountId" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
@@ -17283,6 +17692,8 @@
           <EntitySetMapping Name="t_shares_hotspot_group_rel">
             <EntityTypeMapping TypeName="meal_ticketModel.t_shares_hotspot_group_rel">
               <MappingFragment StoreEntitySet="t_shares_hotspot_group_rel">
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="HostId" ColumnName="HostId" />
                 <ScalarProperty Name="GroupId" ColumnName="GroupId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
@@ -17327,6 +17738,7 @@
           <EntitySetMapping Name="t_stock_monitor_group">
             <EntityTypeMapping TypeName="meal_ticketModel.t_stock_monitor_group">
               <MappingFragment StoreEntitySet="t_stock_monitor_group">
+                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
                 <ScalarProperty Name="LastModified" ColumnName="LastModified" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
@@ -17339,6 +17751,7 @@
           <EntitySetMapping Name="t_stock_monitor_rel">
             <EntityTypeMapping TypeName="meal_ticketModel.t_stock_monitor_rel">
               <MappingFragment StoreEntitySet="t_stock_monitor_rel">
+                <ScalarProperty Name="Status" ColumnName="Status" />
                 <ScalarProperty Name="OrderIndex" ColumnName="OrderIndex" />
                 <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
                 <ScalarProperty Name="IsTop" ColumnName="IsTop" />
@@ -17421,6 +17834,193 @@
                 <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
                 <ScalarProperty Name="Market" ColumnName="Market" />
                 <ScalarProperty Name="SharesKey" ColumnName="SharesKey" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_cycle_manager_stock">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_cycle_manager_stock">
+              <MappingFragment StoreEntitySet="t_shares_cycle_manager_stock">
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="SharesKey" ColumnName="SharesKey" />
+                <ScalarProperty Name="CycleId" ColumnName="CycleId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_quotes_date_bidding">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_quotes_date_bidding">
+              <MappingFragment StoreEntitySet="t_shares_quotes_date_bidding">
+                <ScalarProperty Name="PriceType" ColumnName="PriceType" />
+                <ScalarProperty Name="BuyCount1" ColumnName="BuyCount1" />
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="TotalCount" ColumnName="TotalCount" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+                <ScalarProperty Name="PresentPrice" ColumnName="PresentPrice" />
+                <ScalarProperty Name="SharesKey" ColumnName="SharesKey" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="DateKey" ColumnName="DateKey" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_cycle_manager">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_cycle_manager">
+              <MappingFragment StoreEntitySet="t_shares_cycle_manager">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="DefaultActive" ColumnName="DefaultActive" />
+                <ScalarProperty Name="BgColor" ColumnName="BgColor" />
+                <ScalarProperty Name="LineColor" ColumnName="LineColor" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="MainCycleId" ColumnName="MainCycleId" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+                <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+                <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+                <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+                <ScalarProperty Name="SharesKey" ColumnName="SharesKey" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_group_statistic_mtline">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_group_statistic_mtline">
+              <MappingFragment StoreEntitySet="t_shares_group_statistic_mtline">
+                <ScalarProperty Name="RiseUpCount" ColumnName="RiseUpCount" />
+                <ScalarProperty Name="LimitUpCount" ColumnName="LimitUpCount" />
+                <ScalarProperty Name="TradeAmount" ColumnName="TradeAmount" />
+                <ScalarProperty Name="TradeStock" ColumnName="TradeStock" />
+                <ScalarProperty Name="RiseRate" ColumnName="RiseRate" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="GroupTimeKey" ColumnName="GroupTimeKey" />
+                <ScalarProperty Name="ContextType" ColumnName="ContextType" />
+                <ScalarProperty Name="ContextId" ColumnName="ContextId" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_plate_quotes_date_bidding">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_plate_quotes_date_bidding">
+              <MappingFragment StoreEntitySet="t_plate_quotes_date_bidding">
+                <ScalarProperty Name="RiseRate" ColumnName="RiseRate" />
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="TotalCount" ColumnName="TotalCount" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+                <ScalarProperty Name="PlateId" ColumnName="PlateId" />
+                <ScalarProperty Name="DateKey" ColumnName="DateKey" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_hotspot_quotes_date_bidding">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_hotspot_quotes_date_bidding">
+              <MappingFragment StoreEntitySet="t_shares_hotspot_quotes_date_bidding">
+                <ScalarProperty Name="RiseRate" ColumnName="RiseRate" />
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="TotalCount" ColumnName="TotalCount" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+                <ScalarProperty Name="HotspotId" ColumnName="HotspotId" />
+                <ScalarProperty Name="DateKey" ColumnName="DateKey" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_group_statistic_mtline_all">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_group_statistic_mtline_all">
+              <MappingFragment StoreEntitySet="t_shares_group_statistic_mtline_all">
+                <ScalarProperty Name="RiseUpCount" ColumnName="RiseUpCount" />
+                <ScalarProperty Name="LimitUpCount" ColumnName="LimitUpCount" />
+                <ScalarProperty Name="TradeAmount" ColumnName="TradeAmount" />
+                <ScalarProperty Name="TradeStock" ColumnName="TradeStock" />
+                <ScalarProperty Name="RiseRate" ColumnName="RiseRate" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="GroupTimeKey" ColumnName="GroupTimeKey" />
+                <ScalarProperty Name="ContextType" ColumnName="ContextType" />
+                <ScalarProperty Name="ContextId" ColumnName="ContextId" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_tradestock_statistic">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_tradestock_statistic">
+              <MappingFragment StoreEntitySet="t_shares_tradestock_statistic">
+                <ScalarProperty Name="YesTime" ColumnName="YesTime" />
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="IntervalMinute" ColumnName="IntervalMinute" />
+                <ScalarProperty Name="TimeSpan" ColumnName="TimeSpan" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="GroupTimeKey" ColumnName="GroupTimeKey" />
+                <ScalarProperty Name="TradeStockNow" ColumnName="TradeStockNow" />
+                <ScalarProperty Name="TradeStockAvg" ColumnName="TradeStockAvg" />
+                <ScalarProperty Name="Market" ColumnName="Market" />
+                <ScalarProperty Name="SharesCode" ColumnName="SharesCode" />
+                <ScalarProperty Name="SharesKey" ColumnName="SharesKey" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_group_statistic">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_group_statistic">
+              <MappingFragment StoreEntitySet="t_shares_group_statistic">
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="SharesKeyYestodayList" ColumnName="SharesKeyYestodayList" />
+                <ScalarProperty Name="RiseRateYestoday" ColumnName="RiseRateYestoday" />
+                <ScalarProperty Name="FlatCountYestoday" ColumnName="FlatCountYestoday" />
+                <ScalarProperty Name="DownCountYestoday" ColumnName="DownCountYestoday" />
+                <ScalarProperty Name="UpCountYestoday" ColumnName="UpCountYestoday" />
+                <ScalarProperty Name="LimitDownBombCountYestoday" ColumnName="LimitDownBombCountYestoday" />
+                <ScalarProperty Name="LimitUpBombCountYestoday" ColumnName="LimitUpBombCountYestoday" />
+                <ScalarProperty Name="LimitDownCountYestoday" ColumnName="LimitDownCountYestoday" />
+                <ScalarProperty Name="LimitUpCountYestoday" ColumnName="LimitUpCountYestoday" />
+                <ScalarProperty Name="TotalAmountYestoday" ColumnName="TotalAmountYestoday" />
+                <ScalarProperty Name="TotalCountYestoday" ColumnName="TotalCountYestoday" />
+                <ScalarProperty Name="TotalAmount" ColumnName="TotalAmount" />
+                <ScalarProperty Name="TotalCount" ColumnName="TotalCount" />
+                <ScalarProperty Name="RiseRate" ColumnName="RiseRate" />
+                <ScalarProperty Name="FlatCount" ColumnName="FlatCount" />
+                <ScalarProperty Name="DownCount" ColumnName="DownCount" />
+                <ScalarProperty Name="UpCount" ColumnName="UpCount" />
+                <ScalarProperty Name="LimitDownBombCount" ColumnName="LimitDownBombCount" />
+                <ScalarProperty Name="LimitUpBombCount" ColumnName="LimitUpBombCount" />
+                <ScalarProperty Name="LimitDownCount" ColumnName="LimitDownCount" />
+                <ScalarProperty Name="LimitUpCount" ColumnName="LimitUpCount" />
+                <ScalarProperty Name="ContextType" ColumnName="ContextType" />
+                <ScalarProperty Name="ContextId" ColumnName="ContextId" />
+                <ScalarProperty Name="DateKey" ColumnName="DateKey" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Id" ColumnName="Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="t_shares_hotspot_highmark">
+            <EntityTypeMapping TypeName="meal_ticketModel.t_shares_hotspot_highmark">
+              <MappingFragment StoreEntitySet="t_shares_hotspot_highmark">
+                <ScalarProperty Name="RiseLimitDays" ColumnName="RiseLimitDays" />
+                <ScalarProperty Name="RiseLimitCount" ColumnName="RiseLimitCount" />
+                <ScalarProperty Name="LastModified" ColumnName="LastModified" />
+                <ScalarProperty Name="CreateTime" ColumnName="CreateTime" />
+                <ScalarProperty Name="Status" ColumnName="Status" />
+                <ScalarProperty Name="AutoType" ColumnName="AutoType" />
+                <ScalarProperty Name="SharesKey" ColumnName="SharesKey" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="AccountId" ColumnName="AccountId" />
                 <ScalarProperty Name="Id" ColumnName="Id" />
               </MappingFragment>
             </EntityTypeMapping>

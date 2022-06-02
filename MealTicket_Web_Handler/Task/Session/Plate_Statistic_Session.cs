@@ -64,7 +64,7 @@ namespace MealTicket_Web_Handler
         {
             foreach (var item in plate_base)
             {
-                if (item.Value.BaseStatus != 1)
+                if (item.Value.BaseStatus != 1 && item.Value.PlateType!=4)
                 {
                     continue;
                 }

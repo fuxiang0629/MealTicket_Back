@@ -4188,6 +4188,31 @@
             资源释放
             </summary>
         </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.LastDataSessionInfo.EveryMinData">
+            <summary>
+            每分钟数据
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.LastDataSessionInfo.LastMinData">
+            <summary>
+            最后一分钟数据
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.LastDataSessionInfo.TradeStockAvg">
+            <summary>
+            平均成交量
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.LastDataSessionInfo.IntervalMinute">
+            <summary>
+            计算分钟数
+            </summary>
+        </member>
+        <member name="P:MealTicket_Handler.SecurityBarsData.LastDataSessionInfo.Date">
+            <summary>
+            数据日期
+            </summary>
+        </member>
         <member name="F:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.TaskHandle">
             <summary>
             任务线程

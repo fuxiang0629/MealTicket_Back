@@ -20,5 +20,6 @@ namespace MealTicket_DBCommon
         public int Type { get; set; }
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
+        public string BgColor { get; set; }
     }
 }

@@ -143,6 +143,11 @@ namespace MealTicket_Web_Handler
         /// 预期量比
         /// </summary>
         public int RateExpect { get; set; }
+
+        /// <summary>
+        /// 涨停时间
+        /// </summary>
+        public DateTime LimitUpTime { get; set; }
     }
 
     public class Shares_Statistic_Session_Overall:IComparable<Shares_Statistic_Session_Overall>

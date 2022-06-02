@@ -8749,6 +8749,11 @@
             模板名称
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateRequest.BgColor">
+            <summary>
+            背景色
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.AddConditiontradeTemplateBuyAutoRequest.RelId">
             <summary>
             关系Id
@@ -9689,6 +9694,11 @@
             类型
             </summary>
         </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateInfo.BgColor">
+            <summary>
+            背景色
+            </summary>
+        </member>
         <member name="P:MealTicket_Admin_Handler.Model.ConditiontradeTemplateInfo.CreateTime">
             <summary>
             创建时间
@@ -10447,6 +10457,11 @@
         <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateRequest.Name">
             <summary>
             模板名称
+            </summary>
+        </member>
+        <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateRequest.BgColor">
+            <summary>
+            背景色
             </summary>
         </member>
         <member name="P:MealTicket_Admin_Handler.Model.ModifyConditiontradeTemplateBuyAutoRequest.Id">

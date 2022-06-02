@@ -149,6 +149,11 @@ namespace MealTicket_Web_Handler.Model
         public string TradeAmount { get; set; }
 
         /// <summary>
+        /// 成交额
+        /// </summary>
+        public long TradeAmountNum { get; set; }
+
+        /// <summary>
         /// 流通量
         /// </summary>
         public string Tradable { get; set; }
@@ -162,6 +167,26 @@ namespace MealTicket_Web_Handler.Model
         /// 涨跌幅
         /// </summary>
         public string RiseRate { get; set; }
+
+        /// <summary>
+        /// 竞价成交量
+        /// </summary>
+        public string BiddingTradeStock { get; set; }
+
+        /// <summary>
+        /// 竞价成交量
+        /// </summary>
+        public long BiddingTradeStockNum { get; set; }
+
+        /// <summary>
+        /// 竞价成交额
+        /// </summary>
+        public string BiddingTradeAmount { get; set; }
+
+        /// <summary>
+        /// 竞价成交额
+        /// </summary>
+        public long BiddingTradeAmountNum { get; set; }
     }
 
     public class DB_SharesKLineInfo 

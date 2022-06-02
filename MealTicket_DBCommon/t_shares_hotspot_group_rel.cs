@@ -17,5 +17,7 @@ namespace MealTicket_DBCommon
         public long Id { get; set; }
         public long GroupId { get; set; }
         public long HostId { get; set; }
+        public int Status { get; set; }
+        public System.DateTime CreateTime { get; set; }
     }
 }

@@ -102,6 +102,11 @@ namespace MealTicket_Web_Handler.Model
         public bool IsSuspension{ get; set; }
 
         /// <summary>
+        /// 开盘价
+        /// </summary>
+        public long OpenPrice { get; set; }
+
+        /// <summary>
         /// 昨日收盘价
         /// </summary>
         public long ClosedPrice { get; set; }
@@ -125,6 +130,11 @@ namespace MealTicket_Web_Handler.Model
         /// 是否涨停
         /// </summary>
         public bool IsLimitUp { get; set; }
+
+        /// <summary>
+        /// 涨停时间
+        /// </summary>
+        public DateTime LimitUpTime { get; set; }
 
         /// <summary>
         /// 涨跌额

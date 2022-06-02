@@ -19,12 +19,18 @@ namespace MealTicket_Web_APIService
             Bind<IFilter>().To<LogActionFilter>();
             Bind<IFilter>().To<AuthorizationFilter>();
             Bind<IFilter>().To<CustomExceptionFilter>();
-            Bind<Runner>().To<SearchMonitorRunner>();
-            Bind<Runner>().To<SearchMonitorMarkRunner>();
             Bind<Runner>().To<PlateTagCalRunner>();
             Bind<Runner>().To<PlateLeaderTriRunner>();
+            Bind<Runner>().To<SharesGroupStatisticMtlineRunner>();
             Bind<Runner>().To<HotSpotHisRunner>();
+            Bind<Runner>().To<SharesGroupStatisticRunner>();
+            Bind<Runner>().To<BiddingRunner>();
+            Bind<Runner>().To<SearchMonitorRunner>();
+            Bind<Runner>().To<SearchMonitorMarkRunner>();
             Bind<Runner>().To<SharesMonitorTriRunner>();
+            Bind<Runner>().To<HotSpotHighMarkRunner>();
+            Bind<Runner>().To<HotSpotHighMark_TodayRunner>();
+            //Bind<Runner>().To<SharesCycleManagerStockRunner>();
         }
     }
 }

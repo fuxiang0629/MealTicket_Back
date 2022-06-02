@@ -25,7 +25,8 @@ namespace SharesHqService
             LimitTimeList,
             HostList,
             SharesBaseInfoList,
-            LastSharesQuotesList
+            LastSharesQuotesList,
+            SharesYesQuotesLimit
         }
 
         public enum Enum_Excute_DataKey
@@ -37,7 +38,8 @@ namespace SharesHqService
             LimitTimeList,
             HostList,
             SharesBaseInfoList,
-            LastSharesQuotesList
+            LastSharesQuotesList,
+            SharesYesQuotesLimit
         }
 
         private List<Session_Time_Info>  Session_Time_Info_List_Init() 
@@ -115,6 +117,15 @@ namespace SharesHqService
                 TimerStatus = 1,
                 TimerType = 0,
             });
+            result.Add(new Session_Time_Info
+            {
+                DataKey = Enum_Excute_DataKey.SharesYesQuotesLimit.ToString(),
+                ExcuteInterval = 60 * 60 * 24,
+                ExcuteType = (int)Enum_Excute_Type.SharesYesQuotesLimit,
+                NextExcuteTime = DateTime.Now.Date.AddHours(1),
+                TimerStatus = 1,
+                TimerType = 0,
+            });
 
             return result;
         }
@@ -147,6 +158,8 @@ namespace SharesHqService
                         return DoSharesBaseInfoListUpdate(db);
                     case (int)Enum_Excute_Type.LastSharesQuotesList:
                         return DoLastSharesQuotesListUpdate(db);
+                    case (int)Enum_Excute_Type.SharesYesQuotesLimit:
+                        return DoSharesYesQuotesLimitUpdate(db);
                     default:
                         return null;
                 }
@@ -362,6 +375,17 @@ namespace SharesHqService
                 return null;
             }
         }
+        private static Dictionary<long, Shares_Quotes_IsYesLimitUp_Session_Info> DoSharesYesQuotesLimitUpdate(meal_ticketEntities db)
+        {
+            string sql = @"declare @dateNow datetime
+  set @dateNow=dbo.f_getTradeDate(convert(varchar(10),getdate()),-1);
+  select convert(bigint,SharesCode)*10+Market SharesKey,PriceType PriceTypeYestoday
+  from t_shares_quotes_date
+  where [Date]=@dateNow";
+            var result = db.Database.SqlQuery<Shares_Quotes_IsYesLimitUp_Session_Info>(sql).ToList();
+            return result.ToDictionary(k => k.SharesKey, v => v);
+        }
+
 
         public int GetSshqUpdateRate() 
         {
@@ -470,6 +494,15 @@ namespace SharesHqService
                 return new Dictionary<int, SharesQuotesInfo>();
             }
             return LastSharesQuotesList as Dictionary<int, SharesQuotesInfo>;
+        }
+        public Dictionary<long, Shares_Quotes_IsYesLimitUp_Session_Info> GetSharesYesQuotesLimit()
+        {
+            var SharesYesQuotesLimit = GetDataWithLock(Enum_Excute_DataKey.SharesYesQuotesLimit.ToString());
+            if (SharesYesQuotesLimit == null)
+            {
+                return new Dictionary<long, Shares_Quotes_IsYesLimitUp_Session_Info>();
+            }
+            return SharesYesQuotesLimit as Dictionary<long, Shares_Quotes_IsYesLimitUp_Session_Info>;
         }
     }
 }

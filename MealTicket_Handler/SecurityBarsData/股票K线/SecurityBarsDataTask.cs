@@ -16,6 +16,65 @@ using System.Threading.Tasks;
 
 namespace MealTicket_Handler.SecurityBarsData
 {
+    public class LastDataSessionInfo
+    {
+        /// <summary>
+        /// 每分钟数据
+        /// </summary>
+        public List<SecurityBarsDataInfo> EveryMinData { get; set; }
+
+        /// <summary>
+        /// 最后一分钟数据
+        /// </summary>
+        public SecurityBarsDataInfo LastMinData 
+        {
+            get
+            {
+                if (EveryMinData.Count() == 0)
+                {
+                    return new SecurityBarsDataInfo();
+                }
+                return EveryMinData.First();
+            }
+        }
+
+        /// <summary>
+        /// 平均成交量
+        /// </summary>
+        public long TradeStockAvg 
+        {
+            get
+            {
+                if (EveryMinData.Count() <Singleton.Instance.SharesStockCal_MinMinute)
+                {
+                    return 0;
+                }
+                return (long)EveryMinData.Average(e => e.TradeStock);
+            }
+        }
+
+        /// <summary>
+        /// 计算分钟数
+        /// </summary>
+        public int IntervalMinute
+        {
+            get
+            {
+                int count = EveryMinData.Count();
+                if (count < Singleton.Instance.SharesStockCal_MinMinute)
+                {
+                    return 0;
+                }
+                return count;
+            }
+        }
+
+        /// <summary>
+        /// 数据日期
+        /// </summary>
+        public DateTime Date { get; set; }
+    }
+
     public class SecurityBarsDataTask
     {
         /// <summary>
@@ -34,12 +93,15 @@ namespace MealTicket_Handler.SecurityBarsData
 
         private DateTime LastUpdateDate;
 
+        private Dictionary<long, LastDataSessionInfo> LastDataListDic;
+
         /// <summary>
         /// 任务初始化
         /// </summary>
         public void Init()
         {
             LastUpdateDate = DateTime.Parse("1991-01-01 00:00:00");
+            LastDataListDic = new Dictionary<long, LastDataSessionInfo>();
             SecurityBarsIntervalTime = Singleton.Instance.SecurityBarsIntervalTime;
             SecurityBarsDataQueue = new ThreadMsgTemplate<QueueMsgObj>();
             SecurityBarsDataQueue.Init();
@@ -55,6 +117,32 @@ namespace MealTicket_Handler.SecurityBarsData
                 SuccessPackageList = new List<SecurityBarsDataParList>(),
                 FailPackageList = new List<SecurityBarsDataParList>()
             };
+
+            InitLastDataListDic();
+        }
+
+        private void InitLastDataListDic() 
+        {
+            string sql = @"select Market,SharesCode,TradeStock,LastTradeStock,GroupTimeKey,[Time]
+	from
+	(
+		select Market,SharesCode,TradeStock,LastTradeStock,GroupTimeKey,[Time],ROW_NUMBER()OVER(partition by Market,SharesCode order by [Time] desc) num
+		from t_shares_securitybarsdata_1min WITH (INDEX(index_time_key))
+		where [Time]>'{0}' and [Time]<'{1}'
+	)t
+	where num<={2}";
+
+            DateTime startDate = DateTime.Now.Date;
+            DateTime endDate = startDate.AddDays(1);
+            using (var db = new meal_ticketEntities())
+            {
+                var tempList = db.Database.SqlQuery<SecurityBarsDataInfo>(string.Format(sql, startDate.ToString("yyyy-MM-dd"), endDate.ToString("yyyy-MM-dd"), Singleton.Instance.SharesStockCal_IntervalMinute)).ToList();
+                LastDataListDic = tempList.GroupBy(e => e.SharesKey).ToDictionary(k => k.Key, v => new LastDataSessionInfo
+                {
+                    EveryMinData = v.ToList(),
+                    Date = startDate,
+                });
+            }
         }
 
         /// <summary>
@@ -458,11 +546,18 @@ namespace MealTicket_Handler.SecurityBarsData
             int taskCount = dataObj.PackageList.Count();
             Task[] taskArr = new Task[taskCount];
             int i = 0;
+            List<SecurityBarsDataInfo> avgDataList = new List<SecurityBarsDataInfo>();
             foreach (var dataDic in dataObj.PackageList)
             {
                 int dataType = dataDic.Key;
                 var dataList = dataDic.Value.DataList;
                 int haldlerType = dataObj.HandlerType;
+
+                if (dataType == 2 && haldlerType == 1)
+                {
+                    avgDataList.AddRange(dataList);
+                }
+
                 taskArr[i] = Task.Factory.StartNew(() =>
                 {
                     try
@@ -512,6 +607,8 @@ namespace MealTicket_Handler.SecurityBarsData
                 i++;
             }
             Task.WaitAll(taskArr);
+
+            _updateToAvgDataBase(avgDataList);
         }
 
         private Dictionary<long, SecurityBarsImportData> _updateToDataBase(List<SecurityBarsDataInfo> datalist, int dataType)
@@ -566,7 +663,8 @@ namespace MealTicket_Handler.SecurityBarsData
                         TotalCapital = sharesInfo.TotalCapital,
                         Tradable = sharesInfo.CirculatingCapital,
                         TradeAmount = item.TradeAmount,
-                        YestodayClosedPrice = item.YestodayClosedPrice
+                        YestodayClosedPrice = item.YestodayClosedPrice,
+                        PriceType=item.PriceType
                     };
                 }
 
@@ -592,6 +690,7 @@ namespace MealTicket_Handler.SecurityBarsData
                 table.Columns.Add("IsLast", typeof(bool));
                 table.Columns.Add("YestodayClosedPrice", typeof(long));
                 table.Columns.Add("IsVaild", typeof(bool));
+                table.Columns.Add("PriceType", typeof(int));
                 foreach (var item in importDic)
                 {
                     DataRow row = table.NewRow();
@@ -616,6 +715,7 @@ namespace MealTicket_Handler.SecurityBarsData
                     row["IsLast"] = item.Value.IsLast;
                     row["YestodayClosedPrice"] = item.Value.YestodayClosedPrice;
                     row["IsVaild"] = item.Value.IsVaild;
+                    row["PriceType"] = item.Value.PriceType;
                     table.Rows.Add(row);
                 }
 
@@ -653,6 +753,115 @@ namespace MealTicket_Handler.SecurityBarsData
             }
 
             return totalImportDic;
+        }
+
+        private void _updateToAvgDataBase(List<SecurityBarsDataInfo> dataList)
+        {
+            DateTime currDate = DateTime.Now.Date;
+            int minCount = Singleton.Instance.SharesStockCal_IntervalMinute;
+            foreach (var item in dataList)
+            {
+                if (!LastDataListDic.ContainsKey(item.SharesKey))
+                {
+                    LastDataListDic.Add(item.SharesKey, new LastDataSessionInfo
+                    {
+                        EveryMinData = new List<SecurityBarsDataInfo>(),
+                        Date = currDate
+                    });
+                }
+                var temp = LastDataListDic[item.SharesKey];
+                if (temp.Date != currDate)
+                {
+                    temp.EveryMinData.Clear();
+                    temp.Date = currDate;
+                }
+                int dataCount = temp.EveryMinData.Count();
+                if (dataCount == 0)
+                {
+                    temp.EveryMinData.Add(item);
+                    continue;
+                }
+                var first = temp.EveryMinData.First();
+                if (first.GroupTimeKey > item.GroupTimeKey)
+                {
+                    continue;
+                }
+                if (first.GroupTimeKey == item.GroupTimeKey)
+                {
+                    first = item;
+                    continue;
+                }
+                if(dataCount>= minCount)
+                {
+                    temp.EveryMinData.RemoveAt(dataCount-1);
+                }
+                temp.EveryMinData.Insert(0, item);
+            }
+
+            _updateToAvgDataBase();
+        }
+
+        private void _updateToAvgDataBase()
+        {
+            DateTime preDate = DbHelper.GetLastTradeDate2(0,0,0,-1);
+            DataTable table = new DataTable();
+            table.Columns.Add("SharesKey", typeof(long));
+            table.Columns.Add("SharesCode", typeof(string));
+            table.Columns.Add("Market", typeof(int));
+            table.Columns.Add("TradeStockAvg", typeof(long));
+            table.Columns.Add("TradeStockNow", typeof(long));
+            table.Columns.Add("GroupTimeKey", typeof(long));
+            table.Columns.Add("Time", typeof(DateTime));
+            table.Columns.Add("YesTime", typeof(DateTime));
+            table.Columns.Add("TimeSpan", typeof(long));
+            table.Columns.Add("IntervalMinute", typeof(int));
+            table.Columns.Add("Date", typeof(DateTime));
+            table.Columns.Add("CreateTime", typeof(DateTime));
+            table.Columns.Add("LastModified", typeof(DateTime));
+            foreach (var item in LastDataListDic)
+            {
+                if (item.Value.LastMinData.SharesKey == 0)
+                {
+                    continue;
+                }
+                DataRow row = table.NewRow();
+                row["SharesKey"] = item.Value.LastMinData.SharesKey;
+                row["SharesCode"] = item.Value.LastMinData.SharesCode;
+                row["Market"] = item.Value.LastMinData.Market;
+                row["TradeStockAvg"] = item.Value.TradeStockAvg;
+                row["TradeStockNow"] = item.Value.LastMinData.LastTradeStock + item.Value.LastMinData.TradeStock;
+                row["GroupTimeKey"] = item.Value.LastMinData.GroupTimeKey;
+                row["Time"] = item.Value.LastMinData.Time;
+                row["YesTime"] = preDate.AddHours(item.Value.LastMinData.Time.Value.Hour).AddMinutes(item.Value.LastMinData.Time.Value.Minute);
+                row["TimeSpan"] = item.Value.LastMinData.GroupTimeKey % 10000;
+                row["IntervalMinute"] = item.Value.IntervalMinute;
+                row["Date"] = item.Value.Date;
+                row["CreateTime"] = DateTime.Now;
+                row["LastModified"] = DateTime.Now;
+                table.Rows.Add(row);
+            }
+
+            using (var db = new meal_ticketEntities())
+            using (var tran = db.Database.BeginTransaction())
+            {
+                try
+                {
+                    //关键是类型
+                    SqlParameter parameter = new SqlParameter("@sharesTradestockStatisticData", SqlDbType.Structured);
+                    //必须指定表类型名
+                    parameter.TypeName = "dbo.SharesTradestockStatisticData";
+                    //赋值
+                    parameter.Value = table;
+
+                    db.Database.ExecuteSqlCommand("exec P_Shares_TradestockStatisticData_Update @sharesTradestockStatisticData", parameter);
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteFileLog("更新股票成交量统计数据出错", ex);
+                    tran.Rollback();
+                }
+            }
         }
 
         /// <summary>

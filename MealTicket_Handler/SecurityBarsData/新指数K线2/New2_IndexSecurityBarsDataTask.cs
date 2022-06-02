@@ -273,65 +273,132 @@ inner join
                             conn.Open();
                             try
                             {
-                                string sql = string.Format(@"select t1.PlateId,1 WeightType,t.GroupTimeKey,MAX(t.[Time])[Time],
-  SUM(case when t2.ClosedPrice=0 then 0 else cast(round((t.OpenedPrice-t2.ClosedPrice)*1.0/t2.ClosedPrice*10000,0) as bigint) end) TotalOpenedPrice,
-  SUM(case when t2.ClosedPrice=0 then 0 else cast(round((t.ClosedPrice-t2.ClosedPrice)*1.0/t2.ClosedPrice*10000,0) as bigint) end) TotalClosedPrice,
-  SUM(case when t2.ClosedPrice=0 then 0 else cast(round((t.MinPrice-t2.ClosedPrice)*1.0/t2.ClosedPrice*10000,0) as bigint) end) TotalMinPrice,
-  SUM(case when t2.ClosedPrice=0 then 0 else cast(round((t.MaxPrice-t2.ClosedPrice)*1.0/t2.ClosedPrice*10000,0) as bigint) end) TotalMaxPrice,
-  convert(bigint,0) TotalPreClosePrice,
-  SUM(t.TradeStock) TotalTradeStock,
-  SUM(t.TradeAmount) TotalTradeAmount,
-  SUM(t.LastTradeStock)TotalLastTradeStock,
-  SUM(t.LastTradeAmount)TotalLastTradeAmount,
-  SUM(t.Tradable)Tradable,
-  SUM(t.TotalCapital)TotalCapital,
-  count(*)CalCount,
-  convert(bit,1)IsUpdate
-  from {2} t with(index=index_grouptimekey_only)
-  inner join
-  (
-	  select t.PlateId,t.Market,t.SharesCode
-	  from t_shares_plate_rel_snapshot t with(nolock)
-	  where t.[Date] in 
-	  (
-		  select Min([Date])
-		  from t_shares_plate_rel_snapshot
-		  where [Date]>='{1}'
-	  )
-  )t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode
-  inner join t_shares_quotes_date t2 on t.Market=t2.Market and t.SharesCode=t2.SharesCode and t2.[Date]='{1}'
-  where t.GroupTimeKey>={0} and [Time]<'{3}'
-  group by t.GroupTimeKey,t1.PlateId
-  union all
-  select t1.PlateId,2 WeightType,t.GroupTimeKey,MAX(t.[Time])[Time],
-  SUM(t.OpenedPrice*t.TotalCapital) TotalOpenedPrice,
-  SUM(t.ClosedPrice*t.TotalCapital) TotalClosedPrice,
-  SUM(t.MinPrice*t.TotalCapital) TotalMinPrice,
-  SUM(t.MaxPrice*t.TotalCapital) TotalMaxPrice,
-  SUM(t2.ClosedPrice*t.TotalCapital) TotalPreClosePrice,
-  SUM(t.TradeStock) TotalTradeStock,
-  SUM(t.TradeAmount) TotalTradeAmount,
-  SUM(t.LastTradeStock)TotalLastTradeStock,
-  SUM(t.LastTradeAmount)TotalLastTradeAmount,
-  SUM(t.Tradable)Tradable,
-  SUM(t.TotalCapital)TotalCapital,
-  count(*)CalCount,
-  convert(bit,1)IsUpdate
-  from {2} t with(index=index_grouptimekey_only)
-  inner join
-  (
-	  select t.PlateId,t.Market,t.SharesCode
-	  from t_shares_plate_rel_snapshot t with(nolock)
-	  where t.[Date] in 
-	  (
-		  select Min([Date])
-		  from t_shares_plate_rel_snapshot
-		  where [Date]>='{1}'
-	  )
-  )t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode
-  inner join t_shares_quotes_date t2 on t.Market=t2.Market and t.SharesCode=t2.SharesCode and t2.[Date]='{1}'
-  where t.GroupTimeKey>={0} and [Time]<'{3}'
-  group by t.GroupTimeKey,t1.PlateId", groupTimeKey, date.ToString("yyyy-MM-dd"), tableName, date.AddDays(1).ToString("yyyy-MM-dd"));
+                                #region=====旧sql====
+                                //                              string sql = string.Format(@"select t1.PlateId,1 WeightType,t.GroupTimeKey,MAX(t.[Time])[Time],
+                                //SUM(case when t2.ClosedPrice=0 then 0 else cast(round((t.OpenedPrice-t2.ClosedPrice)*1.0/t2.ClosedPrice*10000,0) as bigint) end) TotalOpenedPrice,
+                                //SUM(case when t2.ClosedPrice=0 then 0 else cast(round((t.ClosedPrice-t2.ClosedPrice)*1.0/t2.ClosedPrice*10000,0) as bigint) end) TotalClosedPrice,
+                                //SUM(case when t2.ClosedPrice=0 then 0 else cast(round((t.MinPrice-t2.ClosedPrice)*1.0/t2.ClosedPrice*10000,0) as bigint) end) TotalMinPrice,
+                                //SUM(case when t2.ClosedPrice=0 then 0 else cast(round((t.MaxPrice-t2.ClosedPrice)*1.0/t2.ClosedPrice*10000,0) as bigint) end) TotalMaxPrice,
+                                //convert(bigint,0) TotalPreClosePrice,
+                                //SUM(t.TradeStock) TotalTradeStock,
+                                //SUM(t.TradeAmount) TotalTradeAmount,
+                                //SUM(t.LastTradeStock)TotalLastTradeStock,
+                                //SUM(t.LastTradeAmount)TotalLastTradeAmount,
+                                //SUM(t.Tradable)Tradable,
+                                //SUM(t.TotalCapital)TotalCapital,
+                                //count(*)CalCount,
+                                //convert(bit,1)IsUpdate
+                                //from {2} t with(index=index_grouptimekey_only)
+                                //inner join
+                                //(
+                                // select t.PlateId,t.Market,t.SharesCode
+                                // from t_shares_plate_rel_snapshot t with(nolock)
+                                // where t.[Date] in 
+                                // (
+                                //  select Min([Date])
+                                //  from t_shares_plate_rel_snapshot
+                                //  where [Date]>='{1}'
+                                // )
+                                //)t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode
+                                //inner join t_shares_quotes_date t2 on t.Market=t2.Market and t.SharesCode=t2.SharesCode and t2.[Date]='{1}'
+                                //where t.GroupTimeKey>={0} and [Time]<'{3}'
+                                //group by t.GroupTimeKey,t1.PlateId
+                                //union all
+                                //select t1.PlateId,2 WeightType,t.GroupTimeKey,MAX(t.[Time])[Time],
+                                //SUM(t.OpenedPrice*t.TotalCapital) TotalOpenedPrice,
+                                //SUM(t.ClosedPrice*t.TotalCapital) TotalClosedPrice,
+                                //SUM(t.MinPrice*t.TotalCapital) TotalMinPrice,
+                                //SUM(t.MaxPrice*t.TotalCapital) TotalMaxPrice,
+                                //SUM(t2.ClosedPrice*t.TotalCapital) TotalPreClosePrice,
+                                //SUM(t.TradeStock) TotalTradeStock,
+                                //SUM(t.TradeAmount) TotalTradeAmount,
+                                //SUM(t.LastTradeStock)TotalLastTradeStock,
+                                //SUM(t.LastTradeAmount)TotalLastTradeAmount,
+                                //SUM(t.Tradable)Tradable,
+                                //SUM(t.TotalCapital)TotalCapital,
+                                //count(*)CalCount,
+                                //convert(bit,1)IsUpdate
+                                //from {2} t with(index=index_grouptimekey_only)
+                                //inner join
+                                //(
+                                // select t.PlateId,t.Market,t.SharesCode
+                                // from t_shares_plate_rel_snapshot t with(nolock)
+                                // where t.[Date] in 
+                                // (
+                                //  select Min([Date])
+                                //  from t_shares_plate_rel_snapshot
+                                //  where [Date]>='{1}'
+                                // )
+                                //)t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode
+                                //inner join t_shares_quotes_date t2 on t.Market=t2.Market and t.SharesCode=t2.SharesCode and t2.[Date]='{1}'
+                                //where t.GroupTimeKey>={0} and [Time]<'{3}'
+                                //group by t.GroupTimeKey,t1.PlateId", groupTimeKey, date.ToString("yyyy-MM-dd"), tableName, date.AddDays(1).ToString("yyyy-MM-dd"));
+                                #endregion
+
+                                string sql = string.Format(@"select t.PlateId,t.Market,t.SharesCode
+into #snapshotInfo{3} --插入临时表
+from t_shares_plate_rel_snapshot t with(nolock)
+where t.[Date] in 
+(
+	select Min([Date])
+	from t_shares_plate_rel_snapshot
+	where [Date]>='{0}'
+);
+CREATE INDEX snapshotInfo_Index{3} ON #snapshotInfo{3}(Market,SharesCode);
+
+select Market,SharesCode,ClosedPrice
+into #quotesdateInfo{3} --插入临时表
+from t_shares_quotes_date where [Date]='{0}';
+CREATE INDEX quotesdate_Index{3} ON #quotesdateInfo{3}(Market,SharesCode);
+
+select Market,SharesCode,GroupTimeKey,[Time],OpenedPrice,ClosedPrice,MinPrice,MaxPrice,TradeStock,TradeAmount,LastTradeStock,LastTradeAmount,Tradable,TotalCapital
+into #securitybarsdata1minInfo{3} --插入临时表
+from {1} with(nolock)
+where [Time]<'{2}' and [Time]>'{0}';
+CREATE INDEX securitybarsdata1min_Index{3} ON #securitybarsdata1minInfo{3}(Market,SharesCode,GroupTimeKey);
+
+
+select t1.PlateId,1 WeightType,t.GroupTimeKey,MAX(t.[Time])[Time],
+SUM(case when t2.ClosedPrice=0 then 0 else cast(round((t.OpenedPrice-t2.ClosedPrice)*1.0/t2.ClosedPrice*10000,0) as bigint) end) TotalOpenedPrice,
+SUM(case when t2.ClosedPrice=0 then 0 else cast(round((t.ClosedPrice-t2.ClosedPrice)*1.0/t2.ClosedPrice*10000,0) as bigint) end) TotalClosedPrice,
+SUM(case when t2.ClosedPrice=0 then 0 else cast(round((t.MinPrice-t2.ClosedPrice)*1.0/t2.ClosedPrice*10000,0) as bigint) end) TotalMinPrice,
+SUM(case when t2.ClosedPrice=0 then 0 else cast(round((t.MaxPrice-t2.ClosedPrice)*1.0/t2.ClosedPrice*10000,0) as bigint) end) TotalMaxPrice,
+convert(bigint,0) TotalPreClosePrice,
+SUM(t.TradeStock) TotalTradeStock,
+SUM(t.TradeAmount) TotalTradeAmount,
+SUM(t.LastTradeStock)TotalLastTradeStock,
+SUM(t.LastTradeAmount)TotalLastTradeAmount,
+SUM(t.Tradable)Tradable,
+SUM(t.TotalCapital)TotalCapital,
+count(*)CalCount,
+convert(bit,1)IsUpdate
+from #securitybarsdata1minInfo{3} t
+inner join #snapshotInfo{3} t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode
+inner join #quotesdateInfo{3} t2 on t.Market=t2.Market and t.SharesCode=t2.SharesCode
+group by t.GroupTimeKey,t1.PlateId
+union all
+select t1.PlateId,2 WeightType,t.GroupTimeKey,MAX(t.[Time])[Time],
+SUM(t.OpenedPrice*t.TotalCapital) TotalOpenedPrice,
+SUM(t.ClosedPrice*t.TotalCapital) TotalClosedPrice,
+SUM(t.MinPrice*t.TotalCapital) TotalMinPrice,
+SUM(t.MaxPrice*t.TotalCapital) TotalMaxPrice,
+SUM(t2.ClosedPrice*t.TotalCapital) TotalPreClosePrice,
+SUM(t.TradeStock) TotalTradeStock,
+SUM(t.TradeAmount) TotalTradeAmount, 
+SUM(t.LastTradeStock)TotalLastTradeStock,
+SUM(t.LastTradeAmount)TotalLastTradeAmount,
+SUM(t.Tradable)Tradable,
+SUM(t.TotalCapital)TotalCapital,
+count(*)CalCount,
+convert(bit,1)IsUpdate
+from #securitybarsdata1minInfo{3} t
+inner join #snapshotInfo{3} t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode
+inner join #quotesdateInfo{3} t2 on t.Market=t2.Market and t.SharesCode=t2.SharesCode
+group by t.GroupTimeKey,t1.PlateId;
+
+DROP TABLE #snapshotInfo{3};
+DROP TABLE #quotesdateInfo{3};
+DROP TABLE #securitybarsdata1minInfo{3};", date.ToString("yyyy-MM-dd"), tableName, date.AddDays(1).ToString("yyyy-MM-dd"),dataType);
 
                                 Dictionary<long, Dictionary<long, PlateKlineSession>> resultGroup = new Dictionary<long, Dictionary<long, PlateKlineSession>>();
                                 using (var cmd = conn.CreateCommand())
@@ -1417,7 +1484,7 @@ inner join
 	  )
   )t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode
   inner join t_shares_quotes_date t2 on t.Market=t2.Market and t.SharesCode=t2.SharesCode and t2.[Date]='{1}'
-  where t.GroupTimeKey>={3} and [Time]<'{4}'
+  where [Time]<'{4}' and [Time]>'{1}'
   group by t.GroupTimeKey,t1.PlateId", tableName, date.ToString("yyyy-MM-dd"), plateId, groupTimeKey, date.AddDays(1).ToString("yyyy-MM-dd"));
 
             }
@@ -1450,7 +1517,7 @@ inner join
 	  )
   )t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode
   inner join t_shares_quotes_date t2 on t.Market=t2.Market and t.SharesCode=t2.SharesCode and t2.[Date]='{1}'
-  where t.GroupTimeKey>={3} and [Time]<'{4}'
+  where [Time]<'{4}' and [Time]>'{1}'
   group by t.GroupTimeKey,t1.PlateId", tableName, date.ToString("yyyy-MM-dd"), plateId, groupTimeKey, date.AddDays(1).ToString("yyyy-MM-dd"));
             }
             else
@@ -2308,7 +2375,6 @@ inner join
                         LoadPlateKlineLastSession();
 
                         //执行指数板块补全
-
                         Logger.WriteFileLog("开始执行指令" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                         DoRealTimeTask_Push();
                         Logger.WriteFileLog("执行指令结束" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);

@@ -23,10 +23,10 @@ namespace MealTicket_Web_APIService.runner
             {
                 try
                 {
-                    //if (!DbHelper.CheckTradeTime2())
-                    //{
-                    //    return false;
-                    //}
+                    if (!DbHelper.CheckTradeTime2())
+                    {
+                        return false;
+                    }
                     return true;
                 }
                 catch (Exception ex)

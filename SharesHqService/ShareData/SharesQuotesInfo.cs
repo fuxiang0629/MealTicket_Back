@@ -222,5 +222,10 @@ namespace SharesHqService
         /// 数据时间
         /// </summary>
         public DateTime LastModified { get; set; }
+
+        /// <summary>
+        /// 昨日是否涨停
+        /// </summary>
+        public int PriceTypeYestoday { get; set; }
     }
 }

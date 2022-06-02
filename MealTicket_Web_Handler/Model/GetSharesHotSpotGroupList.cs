@@ -10,6 +10,16 @@ namespace MealTicket_Web_Handler.Model
     {
     }
 
+    public class GetSharesHotSpotGroupListRequest:PageRequest
+    {
+        /// <summary>
+        /// 状态
+        /// </summary>
+        public int Status { get; set; }
+
+        public bool GetAll { get; set; }
+    }
+
     public class SharesHotSpotGroupInfo
     {
         /// <summary>
@@ -23,6 +33,11 @@ namespace MealTicket_Web_Handler.Model
         public string Name { get; set; }
 
         /// <summary>
+        /// 状态
+        /// </summary>
+        public int Status { get; set; }
+
+        /// <summary>
         /// 数据时间
         /// </summary>
         public DateTime CreateTime { get; set; }
@@ -31,5 +46,7 @@ namespace MealTicket_Web_Handler.Model
         /// 题材数量
         /// </summary>
         public int HotspotCount { get; set; }
+
+        public int ValidHotspotCount { get; set; }
     }
 }

@@ -28,13 +28,28 @@ namespace MealTicket_Web_Handler.Model
         public int StockCount { get; set; }
 
         /// <summary>
+        /// 有效股票数量
+        /// </summary>
+        public int ValidStockCount { get; set; }
+
+        /// <summary>
         /// 排序值
         /// </summary>
         public int OrderIndex { get; set; }
 
         /// <summary>
+        /// 状态1有效 2无效
+        /// </summary>
+        public int Status { get; set; }
+
+        /// <summary>
         /// 数据创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }
+    }
+
+    public class GetStockMonitorGroupListRequest:PageRequest
+    {
+        public int Status { get; set; }
     }
 }

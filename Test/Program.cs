@@ -89,121 +89,18 @@ namespace Test
         static List<A> aList = new List<A>();
         static void Main(string[] args)
         {
-            Dictionary<int, A> a = new Dictionary<int, A>();
-            a.Add(1,new A 
+            while (true)
             {
-                Id=1
-            });
-            a.Remove(1);
-            var b = a;
-            //Dictionary<long, Dictionary<long,PlateImportData>> a = new Dictionary<long, Dictionary<long, PlateImportData>>();
-            //Dictionary<long, Dictionary<long, PlateImportData>> b = new Dictionary<long, Dictionary<long, PlateImportData>>();
-            //do
-            //{
-            //    for (long i = 1000000; i < 1001000; i++)
-            //    {
-            //        for (long j = 100000000000; j < 100000000480; j++)
-            //        {
-            //            if (!b.ContainsKey(i))
-            //            {
-            //                b.Add(i,new Dictionary<long, PlateImportData>());
-            //            }
-            //            if (!b[i].ContainsKey(j))
-            //            {
-            //                b[i].Add(j, new PlateImportData());
-            //            }
-            //            b[i][j] = new PlateImportData
-            //            {
-            //                SharesCode = "123456",
-            //                LastTradeStock = 1000000,
-            //                ClosedPrice = 1000000,
-            //                DataType = 2,
-            //                GroupTimeKey = 202020000000,
-            //                LastTradeAmount = 2020202020,
-            //                Market = 1,
-            //                MaxPrice = 2929292,
-            //                MinPrice = 29292929,
-            //                OpenedPrice = 29828282,
-            //                PlateId = 22323,
-            //                PreClosePrice = 39232323,
-            //                Time = DateTime.Now,
-            //                TotalCapital = 2342424234234,
-            //                Tradable = 12341132123,
-            //                TradeAmount = 12313123123123,
-            //                TradeStock = 12312313,
-            //                WeightType = 1,
-            //                YestodayClosedPrice = 12312313123132
-            //            };
-            //        }
-            //    }
-            //    a = b;
-            //    a.Clear();
-            //    Thread.Sleep(500);
-            //} while (true);
-
-
-            //var tt = a;
-            //var a = new SortedDictionary<int, A>();
-            //a.Add(2,new A 
-            //{
-            //    Id=2
-            //});
-            //a.Add(1, new A
-            //{
-            //    Id = 1
-            //});
-            //a.Add(3, new A
-            //{
-            //    Id = 3
-            //});
-            //Dictionary<int, A> b=new Dictionary<int, A>();
-            //var c = b;
-            //c = a.ToDictionary(k => k.Key, v => v.Value);
-            //c.Add(4,new A 
-            //{
-            //    Id=4
-            //});
-
-            // var rr = a;
-            //List<A> alist = new List<A>
-            //{
-            //    new A
-            //    {
-            //        Id=1,
-            //        Name="1"
-            //    }
-            //};
-            //List<A> blist = new List<A>(alist);
-            //alist.Clear();
-            //var c = blist;
-
-            //TaskThread.SetTaskThreads();
-            //int i = 0;
-            //int idx = 0;
-            //while (true)
-            //{
-            //    i++;
-            //    if (i % 2 == 0)
-            //    {
-            //        RunOneThread(idx);
-            //        idx += 400000;
-            //        RunOneThreadOne(idx);
-            //        idx += 100000;
-            //        RunMoreThread(idx);
-            //        idx += 400000;
-            //    }
-            //    else
-            //    {
-            //        RunMoreThread(idx);
-            //        idx += 400000;
-            //        RunOneThreadOne(idx);
-            //        idx += 100000;
-            //        RunOneThread(idx);
-            //        idx += 400000;
-            //    }
-            //    Console.WriteLine("=============================================");
-            //    Thread.Sleep(5000);
-            //}
+                Console.WriteLine("=======开始时间"+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"),null);
+                for (int i = 0; i < 5000; i++)
+                {
+                    string checkStr = "(1=1 or 0=0 and 1=0 and 0=1) or 1=1 and (0=0 and 0=1 and 1=0)";
+                    NCalc.Expression expr = new NCalc.Expression(checkStr);
+                    var ttt=(bool)expr.Evaluate();
+                }
+                Console.WriteLine("结束时间" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                Thread.Sleep(3000);
+            }
         }
 
         static void RunOneThread(int idx)

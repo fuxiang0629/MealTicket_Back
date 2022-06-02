@@ -41,6 +41,11 @@ namespace MealTicket_Admin_Handler.Model
         public int Type { get; set; }
 
         /// <summary>
+        /// 背景色
+        /// </summary>
+        public string BgColor { get; set; }
+
+        /// <summary>
         /// 创建时间
         /// </summary>
         public DateTime CreateTime { get; set; }

@@ -46,6 +46,39 @@ namespace MealTicket_DBCommon
         }
 
         /// <summary>
+        /// 检查当天是否交易日
+        /// </summary>
+        /// <returns></returns>
+        public static bool CheckTradeDate(List<t_dim_time> dim_time_session, List<t_shares_limit_date_group> shares_limit_date_group_session, List<t_shares_limit_date> shares_limit_date_session, DateTime? time = null)
+        {
+            DateTime timeDate = DateTime.Now.Date;
+            if (time != null)
+            {
+                timeDate = time.Value.Date;
+            }
+            int timeDateInt = int.Parse(timeDate.ToString("yyyyMMdd"));
+            //排除周末
+            var timeWeek = (from item in dim_time_session
+                            where item.the_date == timeDateInt
+                            select item).FirstOrDefault();
+            if (timeWeek == null || timeWeek.week_day == 7 || timeWeek.week_day == 1)
+            {
+                return false;
+            }
+            //排除节假日
+            var tradeDate = (from item in shares_limit_date_group_session
+                             join item2 in shares_limit_date_session on item.Id equals item2.GroupId
+                             where item.Status == 1 && item2.Status == 1 && item2.BeginDate <= timeDate && item2.EndDate >= timeDate
+                             select item2).FirstOrDefault();
+            if (tradeDate != null)
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// 检查当前是否交易时间
         /// </summary>
         /// <returns></returns>

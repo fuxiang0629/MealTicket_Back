@@ -256,6 +256,11 @@ namespace MealTicket_Web_Handler.Model
                 return (int)Math.Round((TotalCount * 1.0 / CirculatingCapital) * 10000,0);
             }
         }
+
+        /// <summary>
+        /// 昨日竞价买一
+        /// </summary>
+        public int YesBiddingBuyCount1 { get; set; }
     }
 
     public class GetTradeSharesQuotesInfoRequest

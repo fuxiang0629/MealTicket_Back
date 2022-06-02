@@ -15,6 +15,8 @@ namespace SharesHqService
         object quotesLock = new object();
         private bool QuotesCanEnter = true;
 
+        Dictionary<int, SharesQuotesInfo> lastQuotes = null;
+
         private bool TryQuotesCanEnter()
         {
             lock (quotesLock)
@@ -89,7 +91,11 @@ namespace SharesHqService
                     stopwatch.Restart();
                     if (list != null && list.Count() > 0)
                     {
-                        DataBaseHelper.UpdateSharesQuotes(list);
+                        if (lastQuotes == null)
+                        {
+                            lastQuotes = Singleton.Instance.session.GetLastSharesQuotesList();
+                        }
+                        DataBaseHelper.UpdateSharesQuotes(list,ref lastQuotes);
                         //Singleton.Instance.mqHandler.ClearQueueData("TransactionDataQuotes");
                         Singleton.Instance.mqHandler.SendMessage(Encoding.GetEncoding("utf-8").GetBytes(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")), "TransactionData", "quotes");
                     }

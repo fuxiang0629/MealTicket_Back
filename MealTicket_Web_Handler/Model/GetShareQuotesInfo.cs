@@ -101,6 +101,10 @@ namespace MealTicket_Web_Handler.Model
                 return (int)Math.Round(TodayDealCount * 1.0 / CirculatingCapital * 10000, 0);
             }
         }
+
+        public DateTime LimitUpTime { get; set; }
+
+        public int PriceType { get; set; }
     }
 
     public class ShareStatisticInfo

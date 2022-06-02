@@ -452,7 +452,7 @@ inner join
 	from t_shares_securitybarsdata_1min with(nolock)
 	where [Time]<convert(varchar(10),dateadd(DAY,1,getdate()),120)
 	group by Market,SharesCode
-)t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode and t.GroupTimeKey=t1.GroupTimeKey";
+)t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode and t.Time=t1.Time";
                             lastData = db.Database.SqlQuery<SharesKlineData>(sql).ToList();
                         }
                         else

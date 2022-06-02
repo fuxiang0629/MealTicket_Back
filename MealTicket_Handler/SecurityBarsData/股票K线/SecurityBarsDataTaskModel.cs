@@ -197,6 +197,14 @@ namespace MealTicket_Handler.SecurityBarsData
         /// </summary>
         public string SharesCode { get; set; }
 
+        public long SharesKey 
+        {
+            get 
+            {
+                return long.Parse(SharesCode) * 10 + Market;
+            }
+        }
+
         /// <summary>
         /// 分组时段
         /// </summary>
@@ -211,18 +219,6 @@ namespace MealTicket_Handler.SecurityBarsData
         /// 时间
         /// </summary>
         public string TimeStr { get; set; }
-
-        public DateTime? Date 
-        {
-            get
-            {
-                if (Time == null)
-                {
-                    return null;
-                }
-                return Time.Value.Date;
-            }
-        }
 
         /// <summary>
         /// 开盘价
@@ -288,6 +284,8 @@ namespace MealTicket_Handler.SecurityBarsData
         public long TotalCapital { get; set; }
 
         public bool IsVaild { get; set; }
+
+        public int PriceType { get; set; }
     }
 
     public class SecurityBarsData_1minInfo
@@ -556,5 +554,7 @@ namespace MealTicket_Handler.SecurityBarsData
         public long YestodayClosedPrice { get; set; }
 
         public bool IsVaild { get; set; }
+
+        public int PriceType { get; set; }
     }
 }

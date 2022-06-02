@@ -9,6 +9,8 @@ namespace MealTicket_Web_Handler
     [Serializable]
     public class Shares_TradeStock_Session_Info
     {
+        public long SharesKey { get; set; }
+
         /// <summary>
         /// 市场
         /// </summary>
@@ -20,33 +22,23 @@ namespace MealTicket_Web_Handler
         public string SharesCode { get; set; }
 
         /// <summary>
-        /// 昨日总成交量
+        /// 昨日此刻成交量
         /// </summary>
-        public long TradeStock_Yestoday { get; set; }
+        public long TradeStock_Yes { get; set; }
 
         /// <summary>
-        /// 昨日此刻成交量
+        /// 此刻成交量
         /// </summary>
         public long TradeStock_Now { get; set; }
 
         /// <summary>
+        /// 每分钟内成交量
+        /// </summary>
+        public long TradeStock_Avg { get; set; }
+
+        /// <summary>
         /// 此刻时间
         /// </summary>
-        public long GroupTimeKey { get; set; }
-
-        /// <summary>
-        /// 今日总成交量
-        /// </summary>
-        public long TradeStock { get; set; }
-
-        /// <summary>
-        /// 5分钟内成交量
-        /// </summary>
-        public long TradeStock_Interval { get; set; }
-
-        /// <summary>
-        /// 5分钟内成交量真实分钟数
-        /// </summary>
-        public int TradeStock_Interval_Count { get; set; }
+        public long TimeSpan { get; set; }
     }
 }

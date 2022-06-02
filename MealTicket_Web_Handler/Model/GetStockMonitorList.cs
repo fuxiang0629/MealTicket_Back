@@ -76,6 +76,11 @@ namespace MealTicket_Web_Handler.Model
         public int PriceType { get; set; }
 
         /// <summary>
+        /// 涨停时间
+        /// </summary>
+        public DateTime LimitUpTime { get; set; }
+
+        /// <summary>
         /// 昨日收盘价
         /// </summary>
         public long ClosedPrice { get; set; }

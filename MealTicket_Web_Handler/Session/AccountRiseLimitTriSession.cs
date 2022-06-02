@@ -62,20 +62,18 @@ namespace MealTicket_Web_Handler
                                }).ToList().ToDictionary(k => k.PriceType * 10000000 + int.Parse(k.SharesCode) * 10 + k.Market, v => v);
                 //历史数据
                 var hisDic = (from item in db.t_shares_quotes_history
-                              where item.Date == dateNowStr
+                              where item.Date == dateNowStr && (item.Type==1 || item.Type==2 || (item.Type==3 && item.BusinessType==1) || (item.Type == 4 && item.BusinessType == 1) || (item.Type == 5 && item.BusinessType == 2) || (item.Type == 6 && item.BusinessType == 2)) 
                               group item by new
                               {
                                   item.Market,
                                   item.SharesCode,
-                                  item.Type,
-                                  item.BusinessType
+                                  item.Type
                               } into g
                               select new
                               {
                                   Market = g.Key.Market,
                                   SharesCode = g.Key.SharesCode,
-                                  Type = (g.Key.Type == 1 && g.Key.BusinessType == 1) ? -1 : (g.Key.Type == 2 && g.Key.BusinessType == 1) ? -2 : (g.Key.Type == 3 && g.Key.BusinessType == 1) ? -3 : (g.Key.Type == 4 && g.Key.BusinessType == 1) ? -4 : (g.Key.Type == 5 && g.Key.BusinessType == 2) ? -5 : (g.Key.Type == 6 && g.Key.BusinessType == 2) ? -6 : 0,
-                                  BusinessType = g.Key.BusinessType,
+                                  Type = g.Key.Type == 1 ? -1 : g.Key.Type == 2 ? -2 : g.Key.Type == 3 ? -3 : g.Key.Type == 4 ? -4 : g.Key.Type == 5 ? -5 : g.Key.Type == 6? -6 : 0,
                                   TriCountToday = g.Count(),
                                   PushTime = g.Max(e => e.CreateTime)
                               }).Where(e=>e.Type!=0).ToDictionary(k => -k.Type * 10000000 + int.Parse(k.SharesCode) * 10 + k.Market);

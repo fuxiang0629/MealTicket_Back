@@ -358,6 +358,16 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_stock_monitor_tri> t_stock_monitor_tri { get; set; }
         public virtual DbSet<t_stock_monitor_tri_record> t_stock_monitor_tri_record { get; set; }
         public virtual DbSet<t_shares_quotes_tri> t_shares_quotes_tri { get; set; }
+        public virtual DbSet<t_shares_cycle_manager_stock> t_shares_cycle_manager_stock { get; set; }
+        public virtual DbSet<t_shares_quotes_date_bidding> t_shares_quotes_date_bidding { get; set; }
+        public virtual DbSet<t_shares_cycle_manager> t_shares_cycle_manager { get; set; }
+        public virtual DbSet<t_shares_group_statistic_mtline> t_shares_group_statistic_mtline { get; set; }
+        public virtual DbSet<t_plate_quotes_date_bidding> t_plate_quotes_date_bidding { get; set; }
+        public virtual DbSet<t_shares_hotspot_quotes_date_bidding> t_shares_hotspot_quotes_date_bidding { get; set; }
+        public virtual DbSet<t_shares_group_statistic_mtline_all> t_shares_group_statistic_mtline_all { get; set; }
+        public virtual DbSet<t_shares_tradestock_statistic> t_shares_tradestock_statistic { get; set; }
+        public virtual DbSet<t_shares_group_statistic> t_shares_group_statistic { get; set; }
+        public virtual DbSet<t_shares_hotspot_highmark> t_shares_hotspot_highmark { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)

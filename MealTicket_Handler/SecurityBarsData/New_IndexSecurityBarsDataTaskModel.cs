@@ -245,6 +245,8 @@ namespace MealTicket_Handler.SecurityBarsData
         /// </summary>
         public long TotalCapital { get; set; }
 
+        public int PriceType { get; set; }
+
         /// <summary>
         /// 板块Id
         /// </summary>

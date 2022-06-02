@@ -1,4 +1,5 @@
 ﻿using FXCommon.Common;
+using MealTicket_DBCommon;
 using MealTicket_Web_Handler;
 using MealTicket_Web_Handler.Runner;
 using System;
@@ -30,8 +31,10 @@ namespace MealTicket_Web_APIService.runner
         {
             try
             {
+                Logger.WriteFileLog("开始执行搜索"+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"),null);
                 SearchHelper searchHelper = new SearchHelper();
                 searchHelper.SearchMonitor(2);
+                Logger.WriteFileLog("结束执行搜索" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             }
             catch (Exception ex)
             {

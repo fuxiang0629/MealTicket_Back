@@ -4063,7 +4063,7 @@ namespace MealTicket_Admin_Handler
                 if (request.Type == 45)
                 {
                     template = from item in db.t_sys_conditiontrade_template
-                               where item.Type == 4 || item.Type == 5 || item.Type==6
+                               where item.Type == 4 || item.Type == 5 || item.Type==6 || item.Type==7
                                select item;
                 }
                 else
@@ -4086,7 +4086,8 @@ namespace MealTicket_Admin_Handler
                                 CreateTime = item.CreateTime,
                                 Id = item.Id,
                                 Type = item.Type,
-                                Name = item.Name
+                                Name = item.Name,
+                                BgColor=item.BgColor
                             }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
                 };
             }
@@ -4117,7 +4118,8 @@ namespace MealTicket_Admin_Handler
                         CreateTime = DateTime.Now,
                         LastModified = DateTime.Now,
                         Name = template.Name,
-                        Type = template.Type
+                        Type = template.Type,
+                        BgColor=template.BgColor
                     };
                     db.t_sys_conditiontrade_template.Add(newTemplate);
                     db.SaveChanges();
@@ -4134,7 +4136,7 @@ namespace MealTicket_Admin_Handler
                     {
                         CopyConditiontradeTemplate_Join(request.Id, newTemplate.Id, db);
                     }
-                    else if (template.Type == 4 || template.Type==5 || template.Type == 6)//自动加入模板复制
+                    else if (template.Type == 4 || template.Type==5 || template.Type == 6 || template.Type == 7)//自动加入模板复制
                     {
                         CopyConditiontradeTemplate_Search(request.Id, newTemplate.Id, db);
                     }
@@ -4571,7 +4573,8 @@ namespace MealTicket_Admin_Handler
                     CreateTime = DateTime.Now,
                     LastModified = DateTime.Now,
                     Name = request.Name,
-                    Type = request.Type
+                    Type = request.Type,
+                    BgColor=request.BgColor
                 });
                 db.SaveChanges();
             }
@@ -4604,6 +4607,7 @@ namespace MealTicket_Admin_Handler
 
                 template.Name = request.Name;
                 template.Type = request.Type;
+                template.BgColor = request.BgColor;
                 template.LastModified = DateTime.Now;
                 db.SaveChanges();
             }

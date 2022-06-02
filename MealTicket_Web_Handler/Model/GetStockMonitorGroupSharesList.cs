@@ -10,8 +10,14 @@ namespace MealTicket_Web_Handler.Model
     {
     }
 
+    public class GetStockMonitorGroupSharesListRequest:DetailsRequest
+    {
+        public int Status { get; set; }
+    }
     public class StockMonitorGroupSharesInfo
     {
+
+        public long Id { get; set; }
         public long SharesKey { get; set; }
 
         public int Market { get; set; }
@@ -21,5 +27,9 @@ namespace MealTicket_Web_Handler.Model
         public string SharesName { get; set; }
 
         public int OrderIndex { get; set; }
+
+        public int Status { get; set; }
+
+        public DateTime CreateTime { get; set; }
     }
 }

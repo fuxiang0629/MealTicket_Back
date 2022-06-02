@@ -21,8 +21,6 @@ namespace MealTicket_Web_Handler.Runner
 
         public static void _cal_Shares_Energy_Table()
         {
-            Dictionary<long, Shares_Energy_Table_Session_Info> result = new Dictionary<long, Shares_Energy_Table_Session_Info>();
-
             List<long> leaderShares = Singleton.Instance.sessionHandler.GetLeaderShares_ByAllShares(false);
             var shares_quotes_today = Singleton.Instance.sessionHandler.GetShares_Quotes_Today_Session(false);
             var limit_fundmultiple = Singleton.Instance.sessionHandler.GetShares_Limit_Fundmultiple_Session(false);

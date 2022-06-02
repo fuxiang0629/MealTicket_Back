@@ -137,6 +137,9 @@ namespace MealTicket_Web_Handler
         public int[] EnergyIndexTypeList = new[] { 1, 2, 3, 4 };
         public int LeaderMinRiseRate = 500;//板块龙头最小涨跌幅
 
+        public TimeSpan HotspotDataUpdateStartTime = TimeSpan.Parse("21:00:00");
+        public TimeSpan HotspotDataUpdateEndTime = TimeSpan.Parse("23:30:00");
+
         //热点题材默认背景色
         public string[] HotSpotColorList = new string[] { };
 
@@ -177,6 +180,9 @@ namespace MealTicket_Web_Handler
         public int SharesPlateRankHisDays = 3;//股票板块内排名历史天数
         public int SharesPlateRankShowCount = 10;//股票板块内排名展示数量
         public string[] sharesRankBgColorList = new[] { "#ff0019", "#c3535e", "#d7a1a6" };
+
+        public int HighMarkLimitUpOrder = 5;//连板前5
+        public int HighMarkLimitUpCount = 3;//最低3板
 
         /// <summary>
         /// adb.net操作对象
@@ -614,7 +620,7 @@ namespace MealTicket_Web_Handler
                         {
                             SearchMarkInterval = tempSearchMarkInterval;
                         }
-                        int tempMaxTrendCheckTaskCount= sysValue.TempThreadCount;
+                        int tempMaxTrendCheckTaskCount = sysValue.TempThreadCount;
                         if (tempMaxTrendCheckTaskCount > 0)
                         {
                             TempThreadCount = tempMaxTrendCheckTaskCount;
@@ -878,6 +884,50 @@ namespace MealTicket_Web_Handler
                     }
                 }
                 catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "SecurityBarsPar"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                        
+                        string tempHotspotDataUpdateStartTime = sysValue.HotspotDataUpdateStartTime;
+                        if (!TimeSpan.TryParse(tempHotspotDataUpdateStartTime, out HotspotDataUpdateStartTime))
+                        {
+                            HotspotDataUpdateStartTime = TimeSpan.Parse("21:00:00");
+                        }
+                        string tempHotspotDataUpdateEndTime = sysValue.HotspotDataUpdateEndTime;
+                        if (!TimeSpan.TryParse(tempHotspotDataUpdateEndTime, out HotspotDataUpdateEndTime))
+                        {
+                            HotspotDataUpdateEndTime = TimeSpan.Parse("23:30:00");
+                        }
+                    }
+                }
+                catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "SharesHighMarkPar"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+
+                        int tempHighMarkLimitUpOrder = sysValue.HighMarkLimitUpOrder;
+                        if (tempHighMarkLimitUpOrder>0)
+                        {
+                            HighMarkLimitUpOrder = tempHighMarkLimitUpOrder;
+                        }
+                        int tempHighMarkLimitUpCount = sysValue.HighMarkLimitUpCount;
+                        if (tempHighMarkLimitUpCount > 0)
+                        {
+                            HighMarkLimitUpCount = tempHighMarkLimitUpCount;
+                        }
+                    }
+                }
+                catch { }
             }
 
             _tradeTime = GetTradeCloseTime();
@@ -1090,17 +1140,16 @@ namespace MealTicket_Web_Handler
             var sharesPlateTagMQHandler = StartSharesPlateTagMQHandler();//生成Mq队列对象
             sharesPlateTagMQHandler.StartListen();
 
-            _SharesQuotesSession.StartUpdate(3000);
-            _SharesBaseSession.StartUpdate(600000);
             _SharesPlateSession.StartUpdate(600000);
-            _SharesPlateRelSession.StartUpdate(600000);
-            _SharesPlateQuotesSession.StartUpdate(3000);
-            _SharesPlateQuotesSession_New.StartUpdate(3000);
-            _BuyTipSession.StartUpdate(1000);
+            _SharesBaseSession.StartUpdate(600000);
+            _SharesQuotesSession.StartUpdate(3000);
+            _BuyTipSession.StartUpdate(3000);
             _AccountRiseLimitTriSession.StartUpdate(3000);
             _AccountTrendTriSession.StartUpdate(3000);
             _AccountSearchTriSession.StartUpdate(15000);
+            _SharesPlateRelSession.StartUpdate(600000);
             _SharesHisRiseRateSession.StartUpdate(600000);
+            _SharesPlateQuotesSession.StartUpdate(3000);
         }
 
         #region===缓存===

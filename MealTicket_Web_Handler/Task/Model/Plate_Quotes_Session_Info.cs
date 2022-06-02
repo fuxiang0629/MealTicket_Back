@@ -13,6 +13,8 @@ namespace MealTicket_Web_Handler
         /// </summary>
         public long PlateId { get; set; }
 
+        public int PlateBaseStatus { get; set; }
+
         /// <summary>
         /// 日期
         /// </summary>

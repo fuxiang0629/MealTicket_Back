@@ -58,6 +58,11 @@ namespace MealTicket_Web_Handler.Model
         public string Description { get; set; }
 
         /// <summary>
+        /// 昨日涨停表现
+        /// </summary>
+        public int RiseRateYestoday { get; set; }
+
+        /// <summary>
         /// 排序值
         /// </summary>
         public int OrderIndex { get; set; }
@@ -66,6 +71,11 @@ namespace MealTicket_Web_Handler.Model
         /// 今日涨停家数
         /// </summary>
         public int LimitUpCount { get; set; }
+
+        /// <summary>
+        /// 今日跌停家数
+        /// </summary>
+        public int LimitDownCount { get; set; }
 
         /// <summary>
         /// 炸板家数

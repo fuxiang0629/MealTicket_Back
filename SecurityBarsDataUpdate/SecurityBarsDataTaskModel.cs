@@ -126,6 +126,11 @@ namespace SecurityBarsDataUpdate
         /// 是否错误数据
         /// </summary>
         public bool IsError { get; set; }
+
+        /// <summary>
+        /// 1涨停 2跌停
+        /// </summary>
+        public int PriceType { get; set; }
     }
 
     public class SecurityBarsDataTaskInfo

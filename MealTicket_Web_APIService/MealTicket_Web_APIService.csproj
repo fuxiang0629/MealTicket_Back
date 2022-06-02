@@ -108,12 +108,18 @@
     <Compile Include="HttpRequestMessageExtensions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="runner\BiddingRunner.cs" />
     <Compile Include="runner\ClearTransactiondataRunner.cs" />
+    <Compile Include="runner\HotSpotHighMarkRunner.cs" />
+    <Compile Include="runner\HotSpotHighMark_TodayRunner.cs" />
     <Compile Include="runner\HotSpotHisRunner.cs" />
     <Compile Include="runner\PlateLeaderTriRunner.cs" />
     <Compile Include="runner\PlateTagCalRunner.cs" />
     <Compile Include="runner\SearchMonitorMarkRunner.cs" />
     <Compile Include="runner\SearchMonitorRunner.cs" />
+    <Compile Include="runner\SharesCycleManagerStockRunner.cs" />
+    <Compile Include="runner\SharesGroupStatisticMtlineRunner.cs" />
+    <Compile Include="runner\SharesGroupStatisticRunner.cs" />
     <Compile Include="runner\SharesMonitorTriRunner.cs" />
   </ItemGroup>
   <ItemGroup>

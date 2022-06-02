@@ -56,5 +56,6 @@ namespace MealTicket_DBCommon
         public int TriPriceType { get; set; }
         public int TriNearLimitType { get; set; }
         public int DataType { get; set; }
+        public int PriceTypeYestoday { get; set; }
     }
 }

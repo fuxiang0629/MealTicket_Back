@@ -20,5 +20,6 @@ namespace MealTicket_DBCommon
         public System.DateTime CreateTime { get; set; }
         public System.DateTime LastModified { get; set; }
         public int OrderIndex { get; set; }
+        public int Status { get; set; }
     }
 }

@@ -42,5 +42,8 @@ namespace MealTicket_DBCommon
         public int TotalCount { get; set; }
         public int LimitUpDays { get; set; }
         public bool IsST { get; set; }
+        public int PriceTypeYestoday { get; set; }
+        public int BuyCount1 { get; set; }
+        public Nullable<long> SharesKey { get; set; }
     }
 }

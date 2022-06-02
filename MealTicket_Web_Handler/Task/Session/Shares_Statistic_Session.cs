@@ -1,5 +1,6 @@
 ﻿using FXCommon.Common;
 using MealTicket_DBCommon;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -99,8 +100,7 @@ namespace MealTicket_Web_Handler
             result.Plate_Rank.Rank_15Days = new Dictionary<long, SortedSet<Shares_Statistic_Session_Overall>>();
             result.Plate_Rank.Rank_Overall = new Dictionary<long, SortedSet<Shares_Statistic_Session_Overall>>();
 
-            var shares_quotes_date = Singleton.Instance.sessionHandler.GetShares_Quotes_Date_Session(0, false);
-            var shares_quotes_today = Singleton.Instance.sessionHandler.GetShares_Quotes_Today_Session(false);
+            var shares_quotes_date = Singleton.Instance.sessionHandler.GetShares_Quotes_Total_Session(0,false);
             var shares_base = Singleton.Instance.sessionHandler.GetShares_Base_Session(false);
             var shares_quotes = Singleton.Instance.sessionHandler.GetShares_Quotes_Last_Session(true, false);
             var plate_base = Singleton.Instance.sessionHandler.GetPlate_Base_Session(false);
@@ -134,7 +134,7 @@ namespace MealTicket_Web_Handler
                     {
                         ToWriteDebugLog("32：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
                     }
-                    Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> new_shares_quotes_date = getNewSharesDateQuotes(dayType, shares_quotes_date, shares_quotes_today);
+                    Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> new_shares_quotes_date = getNewSharesDateQuotes(dayType, shares_quotes_date);
                     if (dayType == 4)
                     {
                         ToWriteDebugLog("33：" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
@@ -328,6 +328,7 @@ namespace MealTicket_Web_Handler
                     statistic_Shares_Info.Quotes_Info.OpenedPrice = temp_quotes.shares_quotes_info.OpenedPrice;
                     statistic_Shares_Info.Quotes_Info.RateNow = temp_quotes.RateNow;
                     statistic_Shares_Info.Quotes_Info.RateExpect = temp_quotes.RateExpect;
+                    statistic_Shares_Info.Quotes_Info.LimitUpTime = temp_quotes.shares_quotes_info.LimitUpTime??DateTime.Parse("9999-01-01 00:00:00");
                 }
                 statistic_Shares_Info.Plate_Dic = new Dictionary<long, Statistic_Plate_Info>();
                 if (shares_plate_rel.ContainsKey(item.Key))
@@ -388,45 +389,25 @@ namespace MealTicket_Web_Handler
             }
         }
 
-        private static Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> getNewSharesDateQuotes(int dayType, Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> shares_quotes_date, Dictionary<long, Shares_Quotes_Session_Info> shares_quotes_today)
+        private static Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> getNewSharesDateQuotes(int dayType, Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> shares_quotes_date)
         {
             Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> result = new Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>>();
-            Dictionary<long, SortedDictionary<DateTime, Shares_Quotes_Session_Info>> new_shares_quotes_date = new Dictionary<long, SortedDictionary<DateTime, Shares_Quotes_Session_Info>>();
+            
+            int CalDays = dayType == 1 ? 3 : dayType == 2 ? 5 : dayType == 3 ? 10 : dayType == 4 ? 15 : 0;
             foreach (var item in shares_quotes_date)
             {
-                if (!new_shares_quotes_date.ContainsKey(item.Key))
-                {
-                    new_shares_quotes_date.Add(item.Key, new SortedDictionary<DateTime, Shares_Quotes_Session_Info>());
-                    result.Add(item.Key, new Dictionary<DateTime, Shares_Quotes_Session_Info>());
-                }
+                long shareKey = item.Key;
+                result[shareKey] = new Dictionary<DateTime, Shares_Quotes_Session_Info>();
+                int idx = 0;
                 foreach (var item2 in item.Value)
                 {
-                    //if (item2.Value.IsSuspension)
-                    //{
-                    //    continue;
-                    //}
-                    new_shares_quotes_date[item.Key].Add(item2.Key,item2.Value);
+                    idx++;
+                    if (idx > CalDays)
+                    {
+                        break;
+                    }
+                    result[shareKey][item2.Key] = item2.Value;
                 }
-            }
-            int CalDays = dayType == 1 ? 3 : dayType == 2 ? 5 : dayType == 3 ? 10 : dayType == 4 ? 15 : 0;
-            foreach (var item in shares_quotes_today)
-            {
-                long shareKey = item.Key;
-                if (!new_shares_quotes_date.ContainsKey(shareKey))
-                {
-                    new_shares_quotes_date.Add(shareKey, new SortedDictionary<DateTime, Shares_Quotes_Session_Info>());
-                }
-                if (!new_shares_quotes_date[shareKey].ContainsKey(item.Value.Date))
-                {
-                    new_shares_quotes_date[shareKey].Add(item.Value.Date, item.Value);
-                }
-            }
-            foreach (var item in new_shares_quotes_date)
-            {
-                long shareKey = item.Key;
-                int count = item.Value.Count();
-                count = count < CalDays ? 0 : (count - CalDays);
-                result[shareKey] = item.Value.Skip(count).ToDictionary(k => k.Key, v => v.Value);
             }
             return result;
         }
@@ -444,20 +425,20 @@ namespace MealTicket_Web_Handler
                     continue;
                 }
                 var share_quote = new_shares_quotes_date[share.Key];
-                var lastQuote = share_quote.LastOrDefault().Value;
-                var tempQuote = share_quote.OrderBy(e => e.Value.ClosedPrice).FirstOrDefault().Value;
+                var lastQuote = share_quote.FirstOrDefault().Value;
+                var tempQuote = share_quote.Values.OrderBy(e=>e.ClosedPrice).FirstOrDefault();
                 if (lastQuote == null || tempQuote == null)
                 {
                     continue;
                 }
                 if (tempQuote.ClosedPrice >= lastQuote.ClosedPrice)
                 {
-                    tempQuote = share_quote.OrderByDescending(e => e.Value.ClosedPrice).FirstOrDefault().Value;
+                    tempQuote = share_quote.Values.OrderByDescending(e => e.ClosedPrice).FirstOrDefault();
                 }
                 int RealDays = share_quote.Where(e => e.Key >= tempQuote.Date && e.Key <= lastQuote.Date).Count();
                 long tempQuotePrice = (tempQuote.ClosedPrice > tempQuote.YestodayClosedPrice && tempQuote.YestodayClosedPrice > 0) ? tempQuote.YestodayClosedPrice : tempQuote.ClosedPrice;
                 int RiseRate = tempQuotePrice == 0 ? 0 : (int)Math.Round((lastQuote.ClosedPrice - tempQuotePrice) * 1.0 / tempQuotePrice * 10000, 0);
-
+            
                 Shares_Statistic_Session_Overall shares_Overall = new Shares_Statistic_Session_Overall
                 {
                     SharesKey = share.Key,

@@ -37,5 +37,6 @@ namespace MealTicket_DBCommon
         public long YestodayClosedPrice { get; set; }
         public Nullable<int> SharesNumber { get; set; }
         public bool IsVaild { get; set; }
+        public int PriceType { get; set; }
     }
 }

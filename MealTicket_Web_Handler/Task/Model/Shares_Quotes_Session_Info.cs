@@ -6,6 +6,13 @@ using System.Threading.Tasks;
 
 namespace MealTicket_Web_Handler
 {
+    public class Shares_Quotes_Today_Session_Obj
+    {
+        public Dictionary<long, Shares_Quotes_Session_Info> Shares_Quotes_Today { get; set; }
+
+        public Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> Shares_Quotes_Total { get; set; }
+    }
+
     public class Shares_Quotes_Session_Info:IComparable<Shares_Quotes_Session_Info>
     {
         /// <summary>
@@ -38,6 +45,8 @@ namespace MealTicket_Web_Handler
             }
         }
 
+        public int OrderIndex { get; set; }
+
         /// <summary>
         /// 市场代码
         /// </summary>
@@ -47,6 +56,18 @@ namespace MealTicket_Web_Handler
         /// 股票代码
         /// </summary>
         public string SharesCode { get; set; }
+
+        public long SharesKey 
+        {
+            get 
+            {
+                if (!string.IsNullOrEmpty(SharesCode))
+                {
+                    return long.Parse(SharesCode) * 10 + Market;
+                }
+                return 0;
+            } 
+        }
 
         /// <summary>
         /// 日期
@@ -77,6 +98,56 @@ namespace MealTicket_Web_Handler
                 return (int)Math.Round((ClosedPrice - YestodayClosedPrice) * 1.0 / YestodayClosedPrice * 10000,0);
             }
         }
+
+        /// <summary>
+        /// 开盘涨跌幅
+        /// </summary>
+        public int OpenRiseRate
+        {
+            get
+            {
+                if (YestodayClosedPrice == 0 || OpenedPrice == 0)
+                {
+                    return 0;
+                }
+                return (int)Math.Round((OpenedPrice - YestodayClosedPrice) * 1.0 / YestodayClosedPrice * 10000, 0);
+            }
+        }
+
+        /// <summary>
+        /// 最高涨跌幅
+        /// </summary>
+        public int MaxRiseRate
+        {
+            get
+            {
+                if (YestodayClosedPrice == 0 || MaxPrice == 0)
+                {
+                    return 0;
+                }
+                return (int)Math.Round((MaxPrice - YestodayClosedPrice) * 1.0 / YestodayClosedPrice * 10000, 0);
+            }
+        }
+
+        /// <summary>
+        /// 最低涨跌幅
+        /// </summary>
+        public int MinRiseRate
+        {
+            get
+            {
+                if (YestodayClosedPrice == 0 || MinPrice == 0)
+                {
+                    return 0;
+                }
+                return (int)Math.Round((MinPrice - YestodayClosedPrice) * 1.0 / YestodayClosedPrice * 10000, 0);
+            }
+        }
+
+        /// <summary>
+        /// 换手率
+        /// </summary>
+        public int HandsRate { get; set; }
 
         public bool IsSuspension { get; set; }
 
@@ -150,6 +221,8 @@ namespace MealTicket_Web_Handler
         /// </summary>
         public int LimitUpBombCount { get; set; }
 
+        public int LimitDownBombCount { get; set; }
+
         /// <summary>
         /// 最高价
         /// </summary>
@@ -174,6 +247,33 @@ namespace MealTicket_Web_Handler
         /// 接近涨停
         /// </summary>
         public int TriNearLimitType { get; set; }
+
+        /// <summary>
+        /// 昨日是否涨停
+        /// </summary>
+        public int PriceTypeYestoday { get; set; }
+
+        public bool IsSt { get; set; }
+
+        /// <summary>
+        /// 竞价成交额
+        /// </summary>
+        public long BiddingTotalAmount { get; set; }
+
+        /// <summary>
+        /// 竞价成交量
+        /// </summary>
+        public long BiddingTotalCount { get; set; }
+
+        /// <summary>
+        /// 竞价成交量必
+        /// </summary>
+        public int BiddingTotalCountRate { get; set; }
+
+        /// <summary>
+        /// 竞价成交金额占比
+        /// </summary>
+        public int BiddingTotalAmountRate { get; set; }
 
         /// <summary>
         /// 是否炸板

@@ -10,6 +10,12 @@ namespace MealTicket_Web_Handler.Model
     {
     }
 
+    public class GetSharesHotSpotGroupDetailsRequest
+    {
+        public long SharesKey { get; set; }
+
+        public bool GetAll { get; set; }
+    }
     public class SharesHotSpotGroupDetails
     {
         /// <summary>
@@ -22,6 +28,8 @@ namespace MealTicket_Web_Handler.Model
         /// </summary>
         public string Name { get; set; }
 
+        public bool IsFocuson { get; set; }
+
 
         public List<HotSpotInfo> HotSpotList { get; set; }
     }
@@ -31,5 +39,9 @@ namespace MealTicket_Web_Handler.Model
         public long Id { get; set; }
 
         public string Name { get; set; }
+
+        public bool IsFocuson { get; set; }
+
+        public int RiseRateYestoday { get; set; }
     }
 }

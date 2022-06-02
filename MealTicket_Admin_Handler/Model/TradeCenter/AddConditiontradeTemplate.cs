@@ -21,5 +21,10 @@ namespace MealTicket_Admin_Handler.Model
         /// 模板名称
         /// </summary>
         public string Name { get; set; }
+
+        /// <summary>
+        /// 背景色
+        /// </summary>
+        public string BgColor { get; set; }
     }
 }

@@ -336,6 +336,16 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_stock_monitor_tri" Width="1.5" PointX="55.375" PointY="54.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_stock_monitor_tri_record" Width="1.5" PointX="56.375" PointY="0.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_quotes_tri" Width="1.5" PointX="56.375" PointY="4.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_cycle_manager_stock" Width="1.5" PointX="56.375" PointY="8.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_quotes_date_bidding" Width="1.5" PointX="9.375" PointY="56.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_cycle_manager" Width="1.5" PointX="56.375" PointY="11.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_group_statistic_mtline" Width="1.5" PointX="56.375" PointY="16.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_plate_quotes_date_bidding" Width="1.5" PointX="18.375" PointY="56.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_hotspot_quotes_date_bidding" Width="1.5" PointX="56.375" PointY="20.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_group_statistic_mtline_all" Width="1.5" PointX="20.375" PointY="56.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_tradestock_statistic" Width="1.5" PointX="22.375" PointY="56.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_group_statistic" Width="1.5" PointX="11.375" PointY="56.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_hotspot_highmark" Width="1.5" PointX="30.375" PointY="56.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

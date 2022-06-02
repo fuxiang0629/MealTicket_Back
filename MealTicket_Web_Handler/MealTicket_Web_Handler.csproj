@@ -138,6 +138,8 @@
     <Compile Include="Model\AddConditiontradeTemplateBuyOtherPar.cs" />
     <Compile Include="Model\AddConditiontradeTemplateJoinDetails.cs" />
     <Compile Include="Model\AddConditiontradeTemplateSellDetails.cs" />
+    <Compile Include="Model\AddSharesCycleManager.cs" />
+    <Compile Include="Model\AddSharesCycleManagerStock.cs" />
     <Compile Include="Model\AddSharesHotFocuson.cs" />
     <Compile Include="Model\AddSharesHotSpot.cs" />
     <Compile Include="Model\AddSharesHotSpotGroup.cs" />
@@ -157,11 +159,14 @@
     <Compile Include="Model\BatchDeleteConditiontradeTemplateBuyOtherPar.cs" />
     <Compile Include="Model\BatchDeleteConditiontradeTemplateBuyOtherPar_Other.cs" />
     <Compile Include="Model\BatchDeleteSharesHotSpot.cs" />
+    <Compile Include="Model\BatchGetHotSpotMtLineList.cs" />
+    <Compile Include="Model\BatchGetSharesBiddingKlineBaseInfo.cs" />
     <Compile Include="Model\BatchModifyAccountSharesPlateStatus.cs" />
     <Compile Include="Model\BatchSetConditiontradeBuySharesFollow.cs" />
     <Compile Include="Model\BatchSetConditiontradeBuySharesGroup.cs" />
     <Compile Include="Model\BindAccountAutoBuySyncroSettingAuthorizedGroup.cs" />
     <Compile Include="Model\BindAccountOptionalSeat.cs" />
+    <Compile Include="Model\BuildSharesGroupStatisticData.cs" />
     <Compile Include="Model\ConfirmBuyTipRequest.cs" />
     <Compile Include="Model\DeleteConditiontradeBuyGroup.cs" />
     <Compile Include="Model\DeleteSharesHotFocuson.cs" />
@@ -222,12 +227,19 @@
     <Compile Include="Model\GetSharesBasePlateList.cs" />
     <Compile Include="Model\GetSharesConditionSearch.cs" />
     <Compile Include="Model\GetSharesConditionTrendList.cs" />
+    <Compile Include="Model\GetSharesCycleManagerList.cs" />
+    <Compile Include="Model\GetSharesCycleManagerStockList.cs" />
     <Compile Include="Model\GetSharesEnergyIndexList.cs" />
+    <Compile Include="Model\GetSharesGroupStatisticLineList.cs" />
+    <Compile Include="Model\GetSharesGroupStatisticmtLineList.cs" />
+    <Compile Include="Model\GetSharesHighMarkList.cs" />
     <Compile Include="Model\GetSharesHotFocusonList.cs" />
+    <Compile Include="Model\GetSharesHotspotBiddingList.cs" />
     <Compile Include="Model\GetSharesHotSpotGroupDetails.cs" />
     <Compile Include="Model\GetSharesHotSpotGroupList.cs" />
     <Compile Include="Model\GetSharesHotSpotHisList.cs" />
     <Compile Include="Model\GetSharesHotSpotList.cs" />
+    <Compile Include="Model\GetSharesHotSpotSimpleList.cs" />
     <Compile Include="Model\GetSharesKLineList.cs" />
     <Compile Include="Model\GetSharesKLineTypeList.cs" />
     <Compile Include="Model\GetSharesListQuotes.cs" />
@@ -316,6 +328,8 @@
     <Compile Include="Model\ModifyConditiontradeTemplateSellDetails.cs" />
     <Compile Include="Model\ModifyOrderIndexRequest.cs" />
     <Compile Include="Model\ModifySharesBasePlateTag.cs" />
+    <Compile Include="Model\ModifySharesCycleManager.cs" />
+    <Compile Include="Model\ModifySharesCycleManagerFather.cs" />
     <Compile Include="Model\ModifySharesHotSpot.cs" />
     <Compile Include="Model\ModifySharesHotSpotGroup.cs" />
     <Compile Include="Model\ModifySharesHotSpotIsShowFocuson.cs" />
@@ -324,6 +338,7 @@
     <Compile Include="Model\RelIdInfo.cs" />
     <Compile Include="Model\SetAccountAutoBuySyncroOptAccountRel.cs" />
     <Compile Include="Model\SharesBaseInfo.cs" />
+    <Compile Include="Model\SharesTagInfo.cs" />
     <Compile Include="Model\UserControl1.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -338,12 +353,18 @@
     <Compile Include="PageRequest.cs" />
     <Compile Include="PageRes.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Model\BatchGetSharesQuotesDaysList.cs" />
+    <Compile Include="Runner\BiddingHelper.cs" />
+    <Compile Include="Runner\HotSpotHighMarkHelper.cs" />
     <Compile Include="Runner\HotSpotHisHelper.cs" />
     <Compile Include="Runner\PlateLeaderTriHelper.cs" />
     <Compile Include="Runner\PlateMonitorHelper.cs" />
     <Compile Include="Runner\PlateTagCalHelper.cs" />
     <Compile Include="Runner\RunnerHelper.cs" />
     <Compile Include="Runner\SearchHelper.cs" />
+    <Compile Include="Runner\SharesCycleHelper.cs" />
+    <Compile Include="Runner\SharesGroupStatisticHelper.cs" />
+    <Compile Include="Runner\SharesGroupStatisticMtlineHelper.cs" />
     <Compile Include="Runner\SharesMonitorTriHelper.cs" />
     <Compile Include="Runner\SharesTagCalHelper.cs" />
     <Compile Include="Session\AccountRiseLimitTriSession.cs" />
@@ -374,6 +395,7 @@
     <Compile Include="Task\Model\Setting_Plate_Shares_Linkage_Session_Info.cs" />
     <Compile Include="Task\Model\Shares_Base_Session_Info.cs" />
     <Compile Include="Task\Model\Shares_Energy_Table_Session_Info.cs" />
+    <Compile Include="Task\Model\Shares_Hotspot_Session_Info.cs" />
     <Compile Include="Task\Model\Shares_Limit_Session_Info.cs" />
     <Compile Include="Task\Model\Shares_Minute_KLine_Session_Info.cs" />
     <Compile Include="Task\Model\Shares_Name_Info.cs" />
@@ -404,6 +426,7 @@
     <Compile Include="Task\Session\Setting_Plate_Shares_Linkage_Session.cs" />
     <Compile Include="Task\Session\Shares_Base_Session.cs" />
     <Compile Include="Task\Session\Shares_Energy_Table_Session.cs" />
+    <Compile Include="Task\Session\Shares_Hotspot_Session.cs" />
     <Compile Include="Task\Session\Shares_Limit_Fundmultiple_Session.cs" />
     <Compile Include="Task\Session\Shares_Limit_Session.cs" />
     <Compile Include="Task\Session\Shares_Limit_Time_Session.cs" />

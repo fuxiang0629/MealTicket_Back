@@ -52,7 +52,7 @@ namespace MealTicket_Handler
                                                    PreClosePrice = item.PreClosePrice,
                                                    Time = item.Time,
                                                    TradeAmount = item.TradeAmount,
-                                                   YestodayClosedPrice = item.YestodayClosedPrice
+                                                   YestodayClosedPrice = item.YestodayClosedPrice,
                                                }).ToList();
                         Singleton.Instance._newIindexSecurityBarsDataTask.ToPushData(new SharesKlineDataContain
                         {

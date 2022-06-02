@@ -132,6 +132,8 @@ namespace MealTicket_Web_Handler.Model
         /// </summary>
         public long ClosedPrice { get; set; }
 
+        public int PriceType { get; set; }
+
         /// <summary>
         /// 涨跌额
         /// </summary>

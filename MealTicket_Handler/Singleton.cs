@@ -136,6 +136,9 @@ namespace MealTicket_Handler
         public TimeSpan SecurityBarsDataUpdateEndTime = TimeSpan.Parse("23:00:00");
         #endregion
 
+        public int SharesStockCal_MinMinute = 5;
+        public int SharesStockCal_IntervalMinute = 15;
+
         // 显式静态构造函数告诉C＃编译器
         // 不要将类型标记为BeforeFieldInit
         static Singleton()
@@ -494,6 +497,27 @@ namespace MealTicket_Handler
                         IndexInitValueDic[1] = PlateIndex * 10000;
                         IndexInitValueDic[2] = MarketIndex * 10000;
                         IndexInitValueDic[3] = UnitIndex * 10000;
+                    }
+                }
+                catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "VolumeRatePar"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                        int tempSharesStockCal_MinMinute = sysValue.SharesStockCal_MinMinute;
+                        if (tempSharesStockCal_MinMinute > 0)
+                        {
+                            SharesStockCal_MinMinute = tempSharesStockCal_MinMinute;
+                        }
+                        int tempSharesStockCal_IntervalMinute = sysValue.SharesStockCal_IntervalMinute;
+                        if (tempSharesStockCal_IntervalMinute > 0)
+                        {
+                            SharesStockCal_IntervalMinute = tempSharesStockCal_IntervalMinute;
+                        }
                     }
                 }
                 catch { }
