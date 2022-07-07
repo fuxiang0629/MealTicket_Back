@@ -28,6 +28,9 @@ namespace MealTicket_Web_Handler.Model
         }
 
         public List<HighMarkShares> SharesList { get; set; }
+
+        public List<HighMarkShares> ShowSharesList { get; set; }
+
     }
 
     public class HighMarkShares 
@@ -40,7 +43,15 @@ namespace MealTicket_Web_Handler.Model
 
         public string SharesName { get; set; }
 
+        public int RiseRate { get; set; }
+
+        public bool IsSuspension { get; set; }
+
+        public int PriceType { get; set; }
+
         public int LimitUpCount { get; set; }
+
+        public int LimitUpCountReal { get; set; }
 
         public int RiseLimitDays { get; set; }
     }

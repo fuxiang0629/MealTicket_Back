@@ -4275,7 +4275,7 @@
             通知板块
             </summary>
         </member>
-        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.UpdateToDataBase">
+        <member name="M:MealTicket_Handler.SecurityBarsData.SecurityBarsDataTask.UpdateToDataBase(System.Int32)">
             <summary>
             数据更新到数据库
             </summary>

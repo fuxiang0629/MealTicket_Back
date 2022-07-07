@@ -161,6 +161,11 @@ namespace MealTicket_Web_Handler.Model
         public int BiddingAmountRate { get; set; }
 
         /// <summary>
+        /// 昨日换手率
+        /// </summary>
+        public int HandsRateYes { get; set; }
+
+        /// <summary>
         /// 今日竞价买一量
         /// </summary>
         public int BuyCount1Today { get; set; }
@@ -213,6 +218,16 @@ namespace MealTicket_Web_Handler.Model
         /// 板块排名
         /// </summary>
         public List<PlateSharesRank> PlateSharesRank { get; set; }
+
+        /// <summary>
+        /// 日期
+        /// </summary>
+        public DateTime Date { get; set; }
+
+        /// <summary>
+        /// 是否已添加到竞价统计
+        /// </summary>
+        public bool IsAddBidding { get; set; }
     }
 
     public class BiddingKlineTemplateInfo

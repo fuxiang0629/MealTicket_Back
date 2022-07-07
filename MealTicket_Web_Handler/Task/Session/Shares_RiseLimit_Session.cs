@@ -29,8 +29,9 @@ namespace MealTicket_Web_Handler
 					dataDate = timeNow.Date;
 					if (dataDate > Last_Excute_Date)
 					{
-						db.P_Shares_LimitUp_His_Cal();
-						Last_Excute_Date = dataDate;
+						db.P_Shares_LimitUp_His_Cal(dataDate);
+                        db.P_Shares_LimitDown_His_Cal(dataDate);
+                        Last_Excute_Date = dataDate;
 					}
 				}
 				else

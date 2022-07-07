@@ -8565,6 +8565,20 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 获取溢价走势系统参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("premium/mtline/superposition/sys/par"), HttpPost]
+        [Description("获取溢价走势系统参数")]
+        [CheckUserLoginFilter]
+        public object GetPremiumMtLineSuperpositionSysPar()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetPremiumMtLineSuperpositionSysPar(basedata);
+        }
+
+        /// <summary>
         /// 获取板块监控系统参数
         /// </summary>
         /// <param name="request"></param>
@@ -10230,6 +10244,471 @@ namespace MealTicket_Web_APIService.controller
             }
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.BatchGetSharesQuotesDaysList(request, basedata);
+        }
+
+        /// <summary>
+        /// 获取高标连板统计数据
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取高标连板统计数据")]
+        [Route("shares/highmark/statistic/info"), HttpPost]
+        [CheckUserLoginFilter]
+        public GetSharesHighMarkStatisticInfoRes GetSharesHighMarkStatisticInfo()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesHighMarkStatisticInfo( basedata);
+        }
+
+        /// <summary>
+        /// 批量获取股票标签数据
+        /// </summary>
+        /// <returns></returns>
+        [Description("批量获取股票标签数据")]
+        [Route("shares/tag/list/batch"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<SharesTagInfo> BatchGetSharesTagList(BatchGetSharesTagListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.BatchGetSharesTagList(request, basedata);
+        }
+
+        /// <summary>
+        /// 获取高标管理
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取高标连板统计数据")]
+        [Route("shares/highmark/manager/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<SharesHighMarkManagerInfo> GetSharesHighMarkManagerList(GetSharesHighMarkManagerListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesHighMarkManagerList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加高标管理
+        /// </summary>
+        /// <returns></returns>
+        [Description("添加高标管理")]
+        [Route("shares/highmark/manager/add"), HttpPost]
+        [CheckUserLoginFilter]
+        public object AddSharesHighMarkManager(AddSharesHighMarkManagerRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddSharesHighMarkManager(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 添加高标管理
+        /// </summary>
+        /// <returns></returns>
+        [Description("添加高标管理")]
+        [Route("shares/highmark/manager/add2"), HttpPost]
+        [CheckUserLoginFilter]
+        public object AddSharesHighMarkManager2(AddSharesHighMarkManager2Request request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddSharesHighMarkManager2(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改高标管理虚拟连板数
+        /// </summary>
+        /// <returns></returns>
+        [Description("修改高标管理虚拟连板数")]
+        [Route("shares/highmark/manager/riseLimitcountcustom/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifySharesHighMarkManagerRiseLimitCountCustom(ModifySharesHighMarkManagerRiseLimitCountCustomRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifySharesHighMarkManagerRiseLimitCountCustom(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改高标管理状态
+        /// </summary>
+        /// <returns></returns>
+        [Description("修改高标管理状态")]
+        [Route("shares/highmark/manager/status/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifySharesHighMarkManagerStatus(ModifySharesHighMarkManagerStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifySharesHighMarkManagerStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除高标管理
+        /// </summary>
+        /// <returns></returns>
+        [Description("删除高标管理")]
+        [Route("shares/highmark/manager/delete"), HttpPost]
+        [CheckUserLoginFilter]
+        public object DeleteSharesHighMarkManager(DeleteSharesHighMarkManagerRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteSharesHighMarkManager(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取某一日连板股票
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取某一日连板股票")]
+        [Route("shares/limitup/count/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<SharesLimitUpCountGroup> GetSharesLimitUpCountList(GetSharesLimitUpCountListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesLimitUpCountList(request, basedata);
+        }
+
+        /// <summary>
+        /// 获取板块内股票涨停统计
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取板块内股票涨停统计")]
+        [Route("plate/shareslimitup/statistic/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<PlateSharesLimitUpStatisticInfo> GetPlateSharesLimitUpStatisticList(GetPlateSharesLimitUpStatisticListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            if (request.Date == null)
+            {
+                request.Date = DateTime.Now.Date;
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetPlateSharesLimitUpStatisticList(request,basedata);
+        }
+
+        /// <summary>
+        /// 获取股票溢价条件列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取股票溢价条件列表")]
+        [Route("shares/premium/statistic/condition/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<SharesPremiumStatisticConditionInfo> GetSharesPremiumStatisticConditionList(GetSharesPremiumStatisticConditionListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesPremiumStatisticConditionList(request, basedata);
+        }
+
+        /// <summary>
+        /// 添加股票溢价条件
+        /// </summary>
+        /// <returns></returns>
+        [Description("添加股票溢价条件")]
+        [Route("shares/premium/statistic/condition/add"), HttpPost]
+        [CheckUserLoginFilter]
+        public object AddSharesPremiumStatisticCondition(AddSharesPremiumStatisticConditionRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddSharesPremiumStatisticCondition(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑股票溢价条件
+        /// </summary>
+        /// <returns></returns>
+        [Description("编辑股票溢价条件")]
+        [Route("shares/premium/statistic/condition/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifySharesPremiumStatisticCondition(ModifySharesPremiumStatisticConditionRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifySharesPremiumStatisticCondition(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 编辑股票溢价条件详情
+        /// </summary>
+        /// <returns></returns>
+        [Description("编辑股票溢价条件详情")]
+        [Route("shares/premium/statistic/condition/details/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifySharesPremiumStatisticConditionDetails(ModifySharesPremiumStatisticConditionDetailsRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifySharesPremiumStatisticConditionDetails(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 修改股票溢价条件状态
+        /// </summary>
+        /// <returns></returns>
+        [Description("修改股票溢价条件状态")]
+        [Route("shares/premium/statistic/condition/status/modify"), HttpPost]
+        [CheckUserLoginFilter]
+        public object ModifySharesPremiumStatisticConditionStatus(ModifyStatusRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.ModifySharesPremiumStatisticConditionStatus(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除股票溢价条件
+        /// </summary>
+        /// <returns></returns>
+        [Description("删除股票溢价条件")]
+        [Route("shares/premium/statistic/condition/delete"), HttpPost]
+        [CheckUserLoginFilter]
+        public object DeleteSharesPremiumStatisticCondition(DeleteRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteSharesPremiumStatisticCondition(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取股票溢价结果列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取股票溢价结果列表")]
+        [Route("shares/premium/statistic/result/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<SharesPremiumStatisticResultInfo> GetSharesPremiumStatisticResultList(GetSharesPremiumStatisticResultListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesPremiumStatisticResultList(request, basedata);
+        }
+
+        /// <summary>
+        /// 生成股票溢价结果
+        /// </summary>
+        /// <returns></returns>
+        [Description("生成股票溢价结果")]
+        [Route("shares/premium/statistic/build"), HttpPost]
+        [CheckUserLoginFilter]
+        public object BuildSharesPremiumStatistic(BuildSharesPremiumStatisticRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BuildSharesPremiumStatistic(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 重新生成高标结果
+        /// </summary>
+        /// <returns></returns>
+        [Description("重新生成高标结果")]
+        [Route("shares/highmark/statistic/build"), HttpPost]
+        [CheckUserLoginFilter]
+        public object BuildSharesHighMarkStatistic(BuildSharesHighMarkStatisticRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BuildSharesHighMarkStatistic(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取股票溢价走势数据列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取股票溢价走势数据列表")]
+        [Route("shares/premium/trend/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public GetSharesPremiumTrendListRes GetSharesPremiumTrendList(GetSharesPremiumTrendListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesPremiumTrendList(request, basedata);
+        }
+
+        /// <summary>
+        /// 获取股票溢价走势数据列表(单个参数)
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取股票溢价走势数据列表(单个参数)")]
+        [Route("shares/premium/trend/bycondition/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<SharesPremiumTrend> GetSharesPremiumTrendByConditionIdList(GetSharesPremiumTrendByConditionIdListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetSharesPremiumTrendByConditionIdList(request, basedata);
+        }
+
+        /// <summary>
+        /// 获取当天市场情绪值
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取当天市场情绪值")]
+        [Route("marketsentiment/today/info"), HttpPost]
+        [CheckUserLoginFilter]
+        public MarketSentimentInfo GetMarketSentimentToday()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetMarketSentimentToday(basedata);
+        }
+
+        /// <summary>
+        /// 获取市场情绪值每日折线图
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取市场情绪值每日折线图")]
+        [Route("marketsentiment/mtline/days/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<MarketSentimentInfo> GetMarketSentimentMtLineDaysList()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetMarketSentimentMtLineDaysList(basedata);
+        }
+
+        /// <summary>
+        /// 获取市场情绪值某日折线图
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取市场情绪值某日折线图")]
+        [Route("marketsentiment/mtline/daily/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public List<MarketSentimentDailyInfo> GetMarketSentimentMtLineDailyList(GetMarketSentimentMtLineDailyListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetMarketSentimentMtLineDailyList(request,basedata);
+        }
+
+        /// <summary>
+        /// 添加到个人竞价统计
+        /// </summary>
+        /// <returns></returns>
+        [Description("添加到个人竞价统计")]
+        [Route("shares/bidding/statistic/add"), HttpPost]
+        [CheckUserLoginFilter]
+        public object AddSharesBiddingStatistic(AddSharesBiddingStatisticRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.AddSharesBiddingStatistic(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 删除个人竞价统计
+        /// </summary>
+        /// <returns></returns>
+        [Description("删除个人竞价统计")]
+        [Route("shares/bidding/statistic/delete"), HttpPost]
+        [CheckUserLoginFilter]
+        public object DeleteSharesBiddingStatistic(DeleteSharesBiddingStatisticRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.DeleteSharesBiddingStatistic(request, basedata);
+            return null;
+        }
+
+        /// <summary>
+        /// 获取竞价统计股票列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取竞价统计股票列表")]
+        [Route("bidding/statistic/shares/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public GetBiddingStatisticSharesListRes GetBiddingStatisticSharesList(GetBiddingStatisticSharesListRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数有误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetBiddingStatisticSharesList(request, basedata);
         }
     }
 }

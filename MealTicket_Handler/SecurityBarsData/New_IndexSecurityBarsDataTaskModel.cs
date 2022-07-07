@@ -247,6 +247,10 @@ namespace MealTicket_Handler.SecurityBarsData
 
         public int PriceType { get; set; }
 
+        public bool IsLimitUpBomb { get; set; }
+
+        public bool IsLimitDownBomb { get; set; }
+
         /// <summary>
         /// 板块Id
         /// </summary>

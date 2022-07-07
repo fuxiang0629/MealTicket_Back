@@ -26,5 +26,6 @@ namespace MealTicket_DBCommon
         public bool IsLimitUpYesday { get; set; }
         public System.DateTime DataDate { get; set; }
         public System.DateTime LastModified { get; set; }
+        public int RiseLimitCountContinue { get; set; }
     }
 }

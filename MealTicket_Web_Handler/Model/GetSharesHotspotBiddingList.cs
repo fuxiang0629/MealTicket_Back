@@ -76,6 +76,14 @@ namespace MealTicket_Web_Handler.Model
         /// </summary>
         public long ClosedPrice { get; set; }
 
+        public long MaxPrice { get; set; }
+
+        public long MinPrice { get; set; }
+
+        public long LimitUpPrice { get; set; }
+
+        public long LimitDownPrice { get; set; }
+
         /// <summary>
         /// 今日竞价买一量
         /// </summary>
@@ -86,6 +94,9 @@ namespace MealTicket_Web_Handler.Model
         /// </summary>
         public int BuyCount1Yes { get; set; }
 
+        /// <summary>
+        /// 今日竞价涨停类型
+        /// </summary>
         public int PriceTypeToday { get; set; }
 
         public int PriceTypeYes { get; set; }
@@ -152,6 +163,16 @@ namespace MealTicket_Web_Handler.Model
         public int FilterRiseLimitCount { get; set; }
 
         public bool IsLimitUpToday { get; set; }
+
+        /// <summary>
+        /// 昨日换手率
+        /// </summary>
+        public int HandRateYes { get; set; }
+
+        /// <summary>
+        /// 收盘价涨停类型
+        /// </summary>
+        public int PriceType { get; set; }
     }
 
     public class GetSharesBiddingListRequest

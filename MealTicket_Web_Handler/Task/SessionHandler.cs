@@ -538,7 +538,7 @@ namespace MealTicket_Web_Handler
             foreach (var item in baseSession)
             {
                 var temp = (from x in limitSession
-                            where ((x.LimitType == 1 && item.Value.SharesCode.StartsWith(x.LimitKey)) || (x.LimitType == 2 && item.Value.SharesName.StartsWith(x.LimitKey))) && (x.LimitMarket == -1 || x.LimitMarket == item.Value.Market)
+                            where ((x.LimitType == 1 && item.Value.SharesCode.StartsWith(x.LimitKey)) || (x.LimitType == 2 && (item.Value.SharesName.StartsWith(x.LimitKey) || item.Value.SharesName.EndsWith(x.LimitKey)))) && (x.LimitMarket == -1 || x.LimitMarket == item.Value.Market)
                             select x).FirstOrDefault();
                 if (temp != null)
                 {
@@ -1213,7 +1213,7 @@ namespace MealTicket_Web_Handler
             else
             {
                 var result = new Dictionary<long, Shares_Quotes_Session_Info>();
-                var temp=GetShares_Quotes_Date_Session(60, withlock);
+                var temp=GetShares_Quotes_Date_Session(120, withlock);
                 foreach (var item in temp)
                 {
                     if (!item.Value.ContainsKey(date))

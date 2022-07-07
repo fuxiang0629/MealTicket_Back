@@ -4247,7 +4247,7 @@ from t_shares_quotes with(nolock)";
                                 todayTotalCount = quote.Value.BiddingTotalCount;
                             }
 
-                            if (((compare1 == 1 && quote.Value.BiddingTotalCountRate >= count1 * 100) || (compare1 == 2 && quote.Value.BiddingTotalCountRate <= count1 * 100)) && ((compare2 == 1 && quote.Value.BiddingTotalAmount >= count2 * 10000 * 10000) || (compare2 == 2 && quote.Value.BiddingTotalAmount <= count2 * 10000 * 10000)) && !isSuccess)
+                            if (((compare1 == 1 && (quote.Value.BiddingTotalCountRate >= count1 * 100 || quote.Value.BiddingTotalCountRate==-1)) || (compare1 == 2 && quote.Value.BiddingTotalCountRate <= count1 * 100)) && ((compare2 == 1 && quote.Value.BiddingTotalAmount >= count2 * 10000 * 10000) || (compare2 == 2 && quote.Value.BiddingTotalAmount <= count2 * 10000 * 10000)) && !isSuccess)
                             {
                                 isSuccess = true;
                             }

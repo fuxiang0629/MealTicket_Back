@@ -128,7 +128,10 @@ namespace SecurityBarsDataUpdate
                         PreClosePrice = item2.PreClosePrice,
                         YestodayClosedPrice = item2.YestodayClosedPrice,
                         LastTradeStock = item2.LastTradeStock,
-                        LastTradeAmount = item2.LastTradeAmount
+                        LastTradeAmount = item2.LastTradeAmount,
+                        PriceType=item2.PriceType,
+                        IsLimitUpBomb=item2.IsLimitUpBomb,
+                        IsLimitDownBomb=item2.IsLimitDownBomb
                     });
                 }
             }
@@ -227,7 +230,8 @@ namespace SecurityBarsDataUpdate
                             TradeAmount=quotes.TotalAmount,
                             YestodayClosedPrice=quotes.ClosedPrice,
                             PlateId=sharesData.PlateId,
-                            WeightType=sharesData.WeightType
+                            WeightType=sharesData.WeightType,
+                            PriceType=quotes.PriceType
                         }
                     };
                 }
@@ -361,6 +365,9 @@ namespace SecurityBarsDataUpdate
             long lastTradeStock = sharesData.LastTradeStock;
             long lastTradeAmount = sharesData.LastTradeAmount;
             long yestodayClosedPrice = sharesData.YestodayClosedPrice;
+            int lastPriceType = sharesData.PriceType;
+            bool lastIsLimitUpBomb = sharesData.IsLimitUpBomb;
+            bool lastIsLimitDownBomb = sharesData.IsLimitDownBomb;
             DateTime? lastDate = null;
             bool isVaild = true;
 
@@ -438,7 +445,6 @@ namespace SecurityBarsDataUpdate
                     }
                 }
 
-                item.PriceType = priceType;
                 item.YestodayClosedPrice = yestodayClosedPrice;
 
                 item.PreClosePrice = preClosePrice;
@@ -464,6 +470,23 @@ namespace SecurityBarsDataUpdate
                     item.LastTradeStock = lastTradeStock;
                     lastTradeStock = lastTradeStock + item.TradeStock;
                     lastTradeAmount = lastTradeAmount + item.TradeAmount;
+
+                    if (handlerType == 1)
+                    {
+                        item.PriceType = priceType;
+                        if (priceType != 1 && (lastPriceType == 1 || lastIsLimitUpBomb))
+                        {
+                            item.IsLimitUpBomb = true;
+                        }
+                        if (priceType != 2 && (lastPriceType == 2 || lastIsLimitDownBomb))
+                        {
+                            item.IsLimitDownBomb = true;
+                        }
+
+                        lastPriceType = priceType;
+                        lastIsLimitUpBomb = item.IsLimitUpBomb;
+                        lastIsLimitDownBomb = item.IsLimitDownBomb;
+                    }
                 }
                 else
                 {

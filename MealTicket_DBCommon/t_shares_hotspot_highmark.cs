@@ -24,5 +24,7 @@ namespace MealTicket_DBCommon
         public System.DateTime LastModified { get; set; }
         public int RiseLimitCount { get; set; }
         public int RiseLimitDays { get; set; }
+        public bool IsFit { get; set; }
+        public int RiseLimitCountCustom { get; set; }
     }
 }

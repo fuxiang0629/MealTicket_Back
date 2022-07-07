@@ -131,6 +131,12 @@ namespace MealTicket_Web_Handler
         public int MaxCheckedCount = 5;
         public string[] MtLineColorList = new[] { "#1878dd", "#d628d9", "#abb511", "#d51123", "#21b548" };
 
+        /// <summary>
+        ///溢价走势参数
+        /// </summary>
+        public int PremiumMaxCheckedCount = 8;
+        public string[] PremiumMtLineColorList = new[] { "#1878dd", "#d628d9", "#abb511", "#d51123", "#21b548", "#ff0019", "#c3535e", "#d7a1a6" };
+
         //板块监控涨跌幅排行颜色列表
         public string[] RiseRankBgColorList = new[] { "#ff0019", "#c3535e", "#d7a1a6" };
         public string[] DownRankBgColorList = new[] { "#52f900", "#5f8f48", "#accf9b" };
@@ -183,6 +189,27 @@ namespace MealTicket_Web_Handler
 
         public int HighMarkLimitUpOrder = 5;//连板前5
         public int HighMarkLimitUpCount = 3;//最低3板
+        public int HighMarkLimitUpMaxShowCount = 12;//最高显示连板数
+        public int HighMarkLimitUpMaxShowSharesCount = 3;//显示股票数量
+        public int HighMarkLimitUpStastisticDays = 90;//最高/低板统计天数
+        public bool HighMarkLimitUpIsHotSpot = true;//自定义题材是否参与
+        public int HighMarkLimitUpHotSpotOrder = 1;//自定义题材排名
+        
+        public int RiseCountIndex = 10;//上涨家数情绪基准指数
+        public int LimitUpYesRiseRateIndex = 100;//昨涨表现情绪基准指数
+        public int LimitUpBombRateIndex = 100;//炸板率情绪基准指数
+        public int LimitDownBombRateIndex = 100;//撬板率情绪基准指数
+        public int HighMarkAccountId = 2;//高标情绪指定账户
+        public int HighMarkRateIndex = 100;//高标情绪基准指数
+        public int QualifiedScore = -1;//合格情绪指数
+        public int CycleCount = 1;//周期数量
+        public int CycleType = 1;//周期类型
+        public int TradeDaysType = 1;//交易天数类型1当前交易日 2指定日期
+        public string TradeDaysDate = "";//交易天数日期
+        public int TradeDays = 60;//交易天数
+
+
+        public int PlateLimitUpStatisticStatisticDays = 3;//板块涨停统计天数
 
         /// <summary>
         /// adb.net操作对象
@@ -732,6 +759,27 @@ namespace MealTicket_Web_Handler
                 try
                 {
                     var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "SharesPremiumTrendPar"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                        int tempMaxCheckedCount = sysValue.MaxCheckedCount;
+                        if (tempMaxCheckedCount >= 0)
+                        {
+                            PremiumMaxCheckedCount = tempMaxCheckedCount;
+                        }
+                        string mtLineColorListStr = sysValue.MtLineColorList;
+                        if (!string.IsNullOrEmpty(mtLineColorListStr))
+                        {
+                            PremiumMtLineColorList = mtLineColorListStr.Split(';');
+                        }
+                    }
+                }
+                catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
                                   where item.ParamName == "PlateMonitorPar"
                                   select item).FirstOrDefault();
                     if (sysPar != null)
@@ -915,15 +963,134 @@ namespace MealTicket_Web_Handler
                     {
                         var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
 
-                        int tempHighMarkLimitUpOrder = sysValue.HighMarkLimitUpOrder;
+
+                        int tempHighMarkLimitUpOrder = sysValue.LimitUpOrder;
                         if (tempHighMarkLimitUpOrder>0)
                         {
                             HighMarkLimitUpOrder = tempHighMarkLimitUpOrder;
                         }
-                        int tempHighMarkLimitUpCount = sysValue.HighMarkLimitUpCount;
+                        int tempHighMarkLimitUpCount = sysValue.LimitUpCount;
                         if (tempHighMarkLimitUpCount > 0)
                         {
                             HighMarkLimitUpCount = tempHighMarkLimitUpCount;
+                        }
+                        int tempHighMarkLimitUpMaxShowCount = sysValue.MaxLimitUpCount;
+                        if (tempHighMarkLimitUpMaxShowCount > 0)
+                        {
+                            HighMarkLimitUpMaxShowCount = tempHighMarkLimitUpMaxShowCount;
+                        }
+                        int tempHighMarkLimitUpMaxShowSharesCount = sysValue.MaxShowSharesCount;
+                        if (tempHighMarkLimitUpMaxShowSharesCount > 0)
+                        {
+                            HighMarkLimitUpMaxShowSharesCount = tempHighMarkLimitUpMaxShowSharesCount;
+                        }
+                        int tempHighMarkLimitUpStastisticDays = sysValue.StastisticDays;
+                        if (tempHighMarkLimitUpStastisticDays > 0)
+                        {
+                            HighMarkLimitUpStastisticDays = tempHighMarkLimitUpStastisticDays;
+                        }
+                        HighMarkLimitUpIsHotSpot = (bool)sysValue.IsHotSpot;
+                        int tempHighMarkLimitUpHotSpotOrder = sysValue.HotSpotOrder;
+                        if (tempHighMarkLimitUpHotSpotOrder > 0)
+                        {
+                            HighMarkLimitUpHotSpotOrder = tempHighMarkLimitUpHotSpotOrder;
+                        }
+                    }
+                }
+                catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "PlateLimitUpStatisticPar"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+
+
+                        int tempPlateLimitUpStatisticStatisticDays = sysValue.StatisticDays;
+                        if (tempPlateLimitUpStatisticStatisticDays > 0)
+                        {
+                            PlateLimitUpStatisticStatisticDays = tempPlateLimitUpStatisticStatisticDays;
+                        }
+                    }
+                }
+                catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "MarketSentimentPar"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null)
+                    {
+                        var sysValue = JsonConvert.DeserializeObject<dynamic>(sysPar.ParamValue);
+                        
+                        int tempRiseCountIndex = sysValue.RiseCountIndex;
+                        if (tempRiseCountIndex > 0)
+                        {
+                            RiseCountIndex = tempRiseCountIndex;
+                        }
+
+                        int tempLimitUpYesRiseRateIndex = sysValue.LimitUpYesRiseRateIndex;
+                        if (tempLimitUpYesRiseRateIndex > 0)
+                        {
+                            LimitUpYesRiseRateIndex = tempLimitUpYesRiseRateIndex;
+                        }
+
+                        int tempLimitUpBombRateIndex = sysValue.LimitUpBombRateIndex;
+                        if (tempLimitUpBombRateIndex > 0)
+                        {
+                            LimitUpBombRateIndex = tempLimitUpBombRateIndex;
+                        }
+
+                        int tempLimitDownBombRateIndex = sysValue.LimitDownBombRateIndex;
+                        if (tempLimitDownBombRateIndex > 0)
+                        {
+                            LimitDownBombRateIndex = tempLimitDownBombRateIndex;
+                        }
+
+                        int tempHighMarkAccountId = sysValue.HighMarkAccountId;
+                        if (tempHighMarkAccountId > 0)
+                        {
+                            HighMarkAccountId = tempHighMarkAccountId;
+                        }
+
+                        int tempHighMarkRateIndex = sysValue.HighMarkRateIndex;
+                        if (tempHighMarkRateIndex > 0)
+                        {
+                            HighMarkRateIndex = tempHighMarkRateIndex;
+                        }
+
+                        int tempQualifiedScore = sysValue.QualifiedScore;
+                        if (tempQualifiedScore > 0 || tempQualifiedScore == -1)
+                        {
+                            QualifiedScore = tempQualifiedScore;
+                        }
+
+                        int tempCycleCounte = sysValue.CycleCount;
+                        if (tempCycleCounte > 0)
+                        {
+                            CycleCount = tempCycleCounte;
+                        }
+
+                        int tempCycleType = sysValue.CycleType;
+                        if (tempCycleType > 0)
+                        {
+                            CycleType = tempCycleType;
+                        }
+
+                        int tempTradeDaysType = sysValue.TradeDaysType;
+                        if (tempTradeDaysType > 0)
+                        {
+                            TradeDaysType = tempTradeDaysType;
+                        }
+
+                        TradeDaysDate = sysValue.TradeDaysDate;
+
+                        int tempTradeDays = sysValue.TradeDays;
+                        if (tempTradeDays > 0)
+                        {
+                            TradeDays = tempTradeDays;
                         }
                     }
                 }

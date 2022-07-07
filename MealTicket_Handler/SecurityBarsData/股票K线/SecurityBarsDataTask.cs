@@ -517,7 +517,7 @@ namespace MealTicket_Handler.SecurityBarsData
                 }
             }
 
-            UpdateToDataBase();
+            UpdateToDataBase(receivedObj.HandlerType);
 
             //通知板块
             if (dataObj.HandlerType == 2 || dataObj.HandlerType == 21)
@@ -541,7 +541,7 @@ namespace MealTicket_Handler.SecurityBarsData
         /// 数据更新到数据库
         /// </summary>
         /// <returns></returns>
-        private void UpdateToDataBase()
+        private void UpdateToDataBase(int handlerType)
         {
             int taskCount = dataObj.PackageList.Count();
             Task[] taskArr = new Task[taskCount];
@@ -562,7 +562,7 @@ namespace MealTicket_Handler.SecurityBarsData
                 {
                     try
                     {
-                        Dictionary<long, SecurityBarsImportData> successData = _updateToDataBase(dataList, dataType);
+                        Dictionary<long, SecurityBarsImportData> successData = _updateToDataBase(dataList, dataType, handlerType);
                         if (successData.Count()==0)
                         {
                             return;
@@ -588,7 +588,10 @@ namespace MealTicket_Handler.SecurityBarsData
                                     TotalCapital = item.Value.TotalCapital,
                                     Tradable = item.Value.Tradable,
                                     TradeAmount = item.Value.TradeAmount,
-                                    YestodayClosedPrice = item.Value.YestodayClosedPrice
+                                    YestodayClosedPrice = item.Value.YestodayClosedPrice,
+                                    PriceType=item.Value.PriceType,
+                                    IsLimitDownBomb=item.Value.IsLimitDownBomb,
+                                    IsLimitUpBomb=item.Value.IsLimitUpBomb
                                 });
                             }
                             Singleton.Instance._newIindexSecurityBarsDataTask.ToPushData(new SharesKlineDataContain
@@ -611,7 +614,7 @@ namespace MealTicket_Handler.SecurityBarsData
             _updateToAvgDataBase(avgDataList);
         }
 
-        private Dictionary<long, SecurityBarsImportData> _updateToDataBase(List<SecurityBarsDataInfo> datalist, int dataType)
+        private Dictionary<long, SecurityBarsImportData> _updateToDataBase(List<SecurityBarsDataInfo> datalist, int dataType,int handlerType)
         {
             int totalCount = datalist.Count;
             if (totalCount <= 0)
@@ -664,7 +667,9 @@ namespace MealTicket_Handler.SecurityBarsData
                         Tradable = sharesInfo.CirculatingCapital,
                         TradeAmount = item.TradeAmount,
                         YestodayClosedPrice = item.YestodayClosedPrice,
-                        PriceType=item.PriceType
+                        PriceType=item.PriceType,
+                        IsLimitUpBomb=item.IsLimitUpBomb,
+                        IsLimitDownBomb=item.IsLimitDownBomb
                     };
                 }
 
@@ -691,6 +696,8 @@ namespace MealTicket_Handler.SecurityBarsData
                 table.Columns.Add("YestodayClosedPrice", typeof(long));
                 table.Columns.Add("IsVaild", typeof(bool));
                 table.Columns.Add("PriceType", typeof(int));
+                table.Columns.Add("IsLimitUpBomb", typeof(bool));
+                table.Columns.Add("IsLimitDownBomb", typeof(bool));
                 foreach (var item in importDic)
                 {
                     DataRow row = table.NewRow();
@@ -716,6 +723,8 @@ namespace MealTicket_Handler.SecurityBarsData
                     row["YestodayClosedPrice"] = item.Value.YestodayClosedPrice;
                     row["IsVaild"] = item.Value.IsVaild;
                     row["PriceType"] = item.Value.PriceType;
+                    row["IsLimitUpBomb"] = item.Value.IsLimitUpBomb;
+                    row["IsLimitDownBomb"] = item.Value.IsLimitDownBomb;
                     table.Rows.Add(row);
                 }
 
@@ -733,7 +742,12 @@ namespace MealTicket_Handler.SecurityBarsData
 
                         SqlParameter dataType_parameter = new SqlParameter("@dataType", SqlDbType.Int);
                         dataType_parameter.Value = dataType;
-                        db.Database.ExecuteSqlCommand("exec P_Shares_SecurityBarsData_Update @sharesSecurityBarsData,@dataType", parameter, dataType_parameter);
+
+
+                        SqlParameter handlerType_parameter = new SqlParameter("@handlerType", SqlDbType.Int);
+                        handlerType_parameter.Value = handlerType;
+
+                        db.Database.ExecuteSqlCommand("exec P_Shares_SecurityBarsData_Update @sharesSecurityBarsData,@dataType,@handlerType", parameter, dataType_parameter, handlerType_parameter);
                         tran.Commit();
 
                         foreach (var item in importDic)
@@ -928,7 +942,10 @@ namespace MealTicket_Handler.SecurityBarsData
                             PreClosePrice = (lastData == null || lastData.PreClosePrice==0) ? x.PreClosePrice : lastData.PreClosePrice,
                             YestodayClosedPrice = x.PreClosePrice,
                             LastTradeStock = lastData == null ? 0 : lastData.LastTradeStock,
-                            LastTradeAmount = lastData == null ? 0 : lastData.LastTradeAmount
+                            LastTradeAmount = lastData == null ? 0 : lastData.LastTradeAmount,
+                            PriceType= lastData == null ? 0: lastData.PriceType,
+                            IsLimitUpBomb = lastData == null ? false : lastData.IsLimitUpBomb,
+                            IsLimitDownBomb = lastData == null ? false : lastData.IsLimitDownBomb,
                         });
                     }
                     sendList.Add(new

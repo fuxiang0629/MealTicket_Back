@@ -181,6 +181,8 @@ namespace MealTicket_Web_Handler
         /// </summary>
         public long LimitUpPrice { get; set; }
 
+        public int LimitUpDays { get; set; }
+
         /// <summary>
         /// 跌停价格
         /// </summary>

@@ -30,6 +30,8 @@ namespace MealTicket_Web_Handler.Runner
 
         public int LimitUpCount { get; set; }
 
+        public int LimitDownCount { get; set; }
+
         public int RiseUpCount { get; set; }
     }
 
@@ -64,6 +66,7 @@ namespace MealTicket_Web_Handler.Runner
                             Time = x.Time,
                             TradeAmount = x.TradeAmount,
                             LimitUpCount = x.LimitUpCount,
+                            LimitDownCount=x.LimitDownCount,
                             RiseUpCount = x.RiseUpCount
                         });
                     }
@@ -133,7 +136,9 @@ namespace MealTicket_Web_Handler.Runner
             using (var db = new meal_ticketEntities())
             {
                 db.Database.CommandTimeout = 1800;
+                Logger.WriteFileLog("1:"+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"),null);
                 queryList = db.Database.SqlQuery<MtlineInfo>("exec P_GetMtlineInfo_1min @sharesList,@startTime,@endTime", parameter, par1, par2).ToList();
+                Logger.WriteFileLog("2:" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
             }
             if (queryList.Count() > 0 && lastGroupTimeKey != null)
             {
@@ -154,6 +159,7 @@ namespace MealTicket_Web_Handler.Runner
                         Time = item.Time,
                         TradeAmount = item.TradeAmount,
                         LimitUpCount = item.LimitUpCount,
+                        LimitDownCount=item.LimitDownCount,
                         RiseUpCount = item.RiseUpCount
                     });
                 }
@@ -168,6 +174,7 @@ namespace MealTicket_Web_Handler.Runner
                     Time=item.Time,
                     TradeAmount=item.TradeAmount,
                     LimitUpCount=item.LimitUpCount,
+                    LimitDownCount=item.LimitDownCount,
                     RiseUpCount=item.RiseUpCount
                 });
             }

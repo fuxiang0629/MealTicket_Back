@@ -535,6 +535,9 @@ DROP TABLE #securitybarsdata1minInfo{3};", date.ToString("yyyy-MM-dd"), tableNam
             SharesKlineLastSession[key].TradeStock = data.TradeStock;
             SharesKlineLastSession[key].WeightType = data.WeightType;
             SharesKlineLastSession[key].YestodayClosedPrice = data.YestodayClosedPrice;
+            SharesKlineLastSession[key].PriceType = data.PriceType;
+            SharesKlineLastSession[key].IsLimitDownBomb = data.IsLimitDownBomb;
+            SharesKlineLastSession[key].IsLimitUpBomb = data.IsLimitUpBomb;
         }
 
         /// <summary>
@@ -562,9 +565,10 @@ DROP TABLE #securitybarsdata1minInfo{3};", date.ToString("yyyy-MM-dd"), tableNam
                     }
                     List<SharesKlineData> lastData = new List<SharesKlineData>();
 
+                    string otherSql = dataType == 2 ? ",t.PriceType,t.IsLimitUpBomb,t.IsLimitDownBomb" : "";
                     db.Database.CommandTimeout = 600;
                     string sql = string.Format(@"select t.Market,t.SharesCode,t.GroupTimeKey,t.PreClosePrice,t.LastTradeStock,t.LastTradeAmount,t.ClosedPrice,t.TradeStock,t.MaxPrice,t.MinPrice,t.OpenedPrice,
-  t.[Time],t.TotalCapital,t.Tradable,t.TradeAmount,t2.ClosedPrice YestodayClosedPrice
+  t.[Time],t.TotalCapital,t.Tradable,t.TradeAmount,t2.ClosedPrice YestodayClosedPrice{1}
 from {0} t with(nolock)
 inner join 
 (
@@ -573,7 +577,7 @@ inner join
 	where [Time]<convert(varchar(10),dateadd(DAY,1,getdate()),120) and [Time]>convert(varchar(10),getdate(),120)
 	group by Market,SharesCode
 )t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode and t.GroupTimeKey=t1.GroupTimeKey
-inner join v_shares_quotes_last t2 on t.Market=t2.Market and t.SharesCode=t2.SharesCode", tableName);
+inner join v_shares_quotes_last t2 on t.Market=t2.Market and t.SharesCode=t2.SharesCode", tableName, otherSql);
                     lastData = db.Database.SqlQuery<SharesKlineData>(sql).ToList();
                     foreach (var item in lastData)
                     {
@@ -620,8 +624,9 @@ inner join v_shares_quotes_last t2 on t.Market=t2.Market and t.SharesCode=t2.Sha
                             conn.Open();
                             try
                             {
+                                string otherSql = dataType == 2 ? ",t.PriceType,t.IsLimitUpBomb,t.IsLimitDownBomb" : "";
                                 string sql = string.Format(@"select t.Market,t.SharesCode,t.GroupTimeKey,t.PreClosePrice,t.LastTradeStock,t.LastTradeAmount,t.ClosedPrice,t.TradeStock,t.MaxPrice,t.MinPrice,t.OpenedPrice,
-  t.[Time],t.TotalCapital,t.Tradable,t.TradeAmount,t2.ClosedPrice YestodayClosedPrice
+  t.[Time],t.TotalCapital,t.Tradable,t.TradeAmount,t2.ClosedPrice YestodayClosedPrice{1}
 from {0} t with(nolock)
 inner join 
 (
@@ -630,7 +635,7 @@ inner join
 	where [Time]<convert(varchar(10),dateadd(DAY,1,getdate()),120) and [Time]>convert(varchar(10),getdate(),120)
 	group by Market,SharesCode
 )t1 on t.Market=t1.Market and t.SharesCode=t1.SharesCode and t.GroupTimeKey=t1.GroupTimeKey
-inner join v_shares_quotes_last t2 on t.Market=t2.Market and t.SharesCode=t2.SharesCode", tableName);
+inner join v_shares_quotes_last t2 on t.Market=t2.Market and t.SharesCode=t2.SharesCode", tableName, otherSql);
 
                                 using (var cmd = conn.CreateCommand())
                                 {
@@ -660,7 +665,10 @@ inner join v_shares_quotes_last t2 on t.Market=t2.Market and t.SharesCode=t2.Sha
                                             Tradable = Convert.ToInt64(reader["Tradable"]),
                                             TotalCapital = Convert.ToInt64(reader["TotalCapital"]),
                                             TradeAmount = Convert.ToInt64(reader["TradeAmount"]),
-                                            YestodayClosedPrice = Convert.ToInt64(reader["YestodayClosedPrice"])
+                                            YestodayClosedPrice = Convert.ToInt64(reader["YestodayClosedPrice"]),
+                                            PriceType = dataType == 2 ? Convert.ToInt32(reader["PriceType"]) : 0,
+                                            IsLimitUpBomb = dataType == 2 ? Convert.ToBoolean(reader["IsLimitUpBomb"]) : false,
+                                            IsLimitDownBomb = dataType == 2 ? Convert.ToBoolean(reader["IsLimitDownBomb"]) : false
                                         };
 
                                         SetSharesKlineLastSession(sharesCodeNum * 1000 + market * 100 + dataType, item);
@@ -963,6 +971,8 @@ inner join
             TaskSuccessLastTime = DateTime.Now;
             TaskMiddleExcute = true;
             LoadPlateSession();
+            //更新当天股票快照
+            UpdateTodayPlateRelSnapshot();
             //指令数据执行
             DoExcuteOrder();
             //扔入重算队列

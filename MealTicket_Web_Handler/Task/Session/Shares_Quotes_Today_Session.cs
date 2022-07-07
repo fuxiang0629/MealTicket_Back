@@ -20,17 +20,26 @@ namespace MealTicket_Web_Handler
             {
                 string sql = "exec P_GetShares_Quotes_Today_Session";
                 var result = db.Database.SqlQuery<Shares_Quotes_Session_Info>(sql).ToList();
+                int limitUpCount = 0;
                 foreach (var item in result)
                 {
                     if (resultDic.Shares_Quotes_Today.ContainsKey(item.SharesKey))
                     {
                         continue;
                     }
+                    if (item.PriceType == 1)
+                    {
+                        limitUpCount++;
+                        if (item.LimitUpTime == null)
+                        {
+                            item.LimitUpTime = DateTime.Parse(DateTime.Now.ToString("yyyy-MM-dd 14:57:00"));
+                        }
+                    }
                     resultDic.Shares_Quotes_Today.Add(item.SharesKey, item);
                 }
             }
             var quotes_today = resultDic.Shares_Quotes_Today;
-            var quotes_date =Singleton.Instance.sessionHandler.GetShares_Quotes_Date_Session(0, true);
+            var quotes_date =Singleton.Instance.sessionHandler.GetShares_Quotes_Date_Session(0, false);
             var shares_base = Singleton.Instance.sessionHandler.GetShares_Base_Session(false);
             foreach (var item in quotes_date)
             {
@@ -69,12 +78,12 @@ namespace MealTicket_Web_Handler
                 {
                     if (lastTotalCount != -1)
                     {
-                        sortquote.Value.BiddingTotalCountRate = (int)Math.Round(sortquote.Value.BiddingTotalCount * 1.0 / lastTotalCount * 100, 0);
+                        sortquote.Value.BiddingTotalCountRate = lastTotalCount == 0 ? -1 : (int)Math.Round(sortquote.Value.BiddingTotalCount * 1.0 / lastTotalCount * 100, 0);
                     }
                     lastTotalCount = sortquote.Value.BiddingTotalCount;
                     if (lastTotalAmount != -1)
                     {
-                        sortquote.Value.BiddingTotalAmountRate = (int)Math.Round(sortquote.Value.BiddingTotalAmount * 1.0 / lastTotalAmount * 10000, 0);
+                        sortquote.Value.BiddingTotalAmountRate = lastTotalAmount == 0 ? -1 : (int)Math.Round(sortquote.Value.BiddingTotalAmount * 1.0 / lastTotalAmount * 10000, 0);
                     }
                     lastTotalAmount = sortquote.Value.TotalAmount;
                 }

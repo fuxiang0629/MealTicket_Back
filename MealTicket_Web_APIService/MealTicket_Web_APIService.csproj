@@ -113,14 +113,19 @@
     <Compile Include="runner\HotSpotHighMarkRunner.cs" />
     <Compile Include="runner\HotSpotHighMark_TodayRunner.cs" />
     <Compile Include="runner\HotSpotHisRunner.cs" />
+    <Compile Include="runner\MarketSentimentCalRunner.cs" />
+    <Compile Include="runner\MarketSentimentScoreCalRunner.cs" />
     <Compile Include="runner\PlateLeaderTriRunner.cs" />
+    <Compile Include="runner\PlateLimitUpStatisticRunner.cs" />
     <Compile Include="runner\PlateTagCalRunner.cs" />
+    <Compile Include="runner\SearchBiddingRunner.cs" />
     <Compile Include="runner\SearchMonitorMarkRunner.cs" />
     <Compile Include="runner\SearchMonitorRunner.cs" />
     <Compile Include="runner\SharesCycleManagerStockRunner.cs" />
     <Compile Include="runner\SharesGroupStatisticMtlineRunner.cs" />
     <Compile Include="runner\SharesGroupStatisticRunner.cs" />
     <Compile Include="runner\SharesMonitorTriRunner.cs" />
+    <Compile Include="runner\SharesPremiumStatisticRunner.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

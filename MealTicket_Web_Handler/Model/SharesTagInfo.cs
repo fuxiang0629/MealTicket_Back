@@ -28,6 +28,20 @@ namespace MealTicket_Web_Handler.Model
     {
         public long SharesKey { get; set; }
 
+        public int Market { get; set; }
+
+        public string SharesCode { get; set; }
+
+        public string SharesName { get; set; }
+
+        public long ClosedPrice { get; set; }
+
+        public int RiseRate { get; set; }
+
+        public long RiseAmount { get; set; }
+
+        public bool IsSuspension { get; set; }
+
         /// <summary>
         /// 炸板次数
         /// </summary>
@@ -52,5 +66,21 @@ namespace MealTicket_Web_Handler.Model
         /// 标签
         /// </summary>
         public string Tag { get; set; }
+
+        public string BgColor { get; set; }
+
+        public int RiseLimitCount { get; set; }
+
+        public bool IsLimitUpToday { get; set; }
+
+        /// <summary>
+        /// 板块列表
+        /// </summary>
+        public List<SharesPlateInfo> PlateList { get; set; }
+
+        /// <summary>
+        /// 板块排名
+        /// </summary>
+        public List<PlateSharesRank> PlateSharesRank { get; set; }
     }
 }

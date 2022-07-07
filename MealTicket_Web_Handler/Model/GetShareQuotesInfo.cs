@@ -23,6 +23,8 @@ namespace MealTicket_Web_Handler.Model
         /// 股票Key
         /// </summary>
         public List<long> SharesKey { get; set; }
+
+        public DateTime? Date { get; set; }
     }
 
     public class ShareQuotesInfo

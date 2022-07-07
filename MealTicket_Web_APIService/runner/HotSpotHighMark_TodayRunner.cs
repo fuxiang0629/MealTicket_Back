@@ -25,7 +25,7 @@ namespace MealTicket_Web_APIService.runner
             {
                 try
                 {
-                    if (!DbHelper.CheckTradeTime7() && isInit)
+                    if (!DbHelper.CheckTradeDate() && isInit)
                     {
                         return false;
                     }

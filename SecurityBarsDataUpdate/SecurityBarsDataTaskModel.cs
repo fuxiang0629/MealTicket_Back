@@ -131,6 +131,16 @@ namespace SecurityBarsDataUpdate
         /// 1涨停 2跌停
         /// </summary>
         public int PriceType { get; set; }
+
+        /// <summary>
+        /// 是否炸板
+        /// </summary>
+        public bool IsLimitUpBomb { get; set; }
+
+        /// <summary>
+        /// 是否撬板
+        /// </summary>
+        public bool IsLimitDownBomb { get; set; }
     }
 
     public class SecurityBarsDataTaskInfo
@@ -240,6 +250,21 @@ namespace SecurityBarsDataUpdate
         /// 加权类型1不加权 2总股本加权
         /// </summary>
         public int WeightType { get; set; }
+
+        /// <summary>
+        /// 涨跌停状态
+        /// </summary>
+        public int PriceType { get; set; }
+
+        /// <summary>
+        /// 是否炸板
+        /// </summary>
+        public bool IsLimitUpBomb { get; set; }
+
+        /// <summary>
+        /// 是否撬板
+        /// </summary>
+        public bool IsLimitDownBomb { get; set; }
     }
 
     public class MinutetimeData

@@ -53,7 +53,7 @@ namespace MealTicket_Web_APIService.runner
         {
             try
             {
-                Logger.WriteFileLog("开始重算"+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"),null);
+                //Logger.WriteFileLog("开始重算"+DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"),null);
                 Task[] taskArr = new Task[2];
                 taskArr[0] = new Task(()=> 
                 {
@@ -67,7 +67,7 @@ namespace MealTicket_Web_APIService.runner
                 taskArr[1].Start();
 
                 Task.WaitAll(taskArr);
-                Logger.WriteFileLog("结束重算" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
+                //Logger.WriteFileLog("结束重算" + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff"), null);
 
             }
             catch (Exception ex)

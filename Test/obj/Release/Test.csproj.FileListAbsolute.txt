@@ -104,3 +104,4 @@ F:\项目\饭票后端\Test\bin\Release\MealTicket_Handler.xml
 F:\项目\饭票后端\Test\bin\Release\MealTicket_Handler.dll.config
 F:\项目\饭票后端\Test\bin\Release\NoticeHandler.pdb
 F:\项目\饭票后端\Test\bin\Release\NoticeHandler.dll.config
+F:\项目\饭票后端\Test\bin\Release\jsconfig1.json

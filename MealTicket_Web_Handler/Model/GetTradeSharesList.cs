@@ -66,6 +66,11 @@ namespace MealTicket_Web_Handler
         public long PresentPrice { get; set; }
 
         /// <summary>
+        /// 昨日收盘价
+        /// </summary>
+        public long ClosedPrice { get; set; }
+
+        /// <summary>
         /// 涨幅
         /// </summary>
         public string Rise { get; set; }

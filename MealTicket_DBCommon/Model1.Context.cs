@@ -368,6 +368,17 @@ namespace MealTicket_DBCommon
         public virtual DbSet<t_shares_tradestock_statistic> t_shares_tradestock_statistic { get; set; }
         public virtual DbSet<t_shares_group_statistic> t_shares_group_statistic { get; set; }
         public virtual DbSet<t_shares_hotspot_highmark> t_shares_hotspot_highmark { get; set; }
+        public virtual DbSet<t_shares_hotspot_highmark_operation> t_shares_hotspot_highmark_operation { get; set; }
+        public virtual DbSet<t_plate_shareslimitup_statistic> t_plate_shareslimitup_statistic { get; set; }
+        public virtual DbSet<t_shares_premium_statistic_condition> t_shares_premium_statistic_condition { get; set; }
+        public virtual DbSet<t_shares_quotes_riselimit_down> t_shares_quotes_riselimit_down { get; set; }
+        public virtual DbSet<t_shares_premium_statistic> t_shares_premium_statistic { get; set; }
+        public virtual DbSet<t_shares_marketsentiment_baseinfo> t_shares_marketsentiment_baseinfo { get; set; }
+        public virtual DbSet<t_shares_marketsentiment_score> t_shares_marketsentiment_score { get; set; }
+        public virtual DbSet<t_shares_marketsentiment_score_date> t_shares_marketsentiment_score_date { get; set; }
+        public virtual DbSet<t_shares_marketsentiment_score_rel> t_shares_marketsentiment_score_rel { get; set; }
+        public virtual DbSet<t_shares_bidding_sys> t_shares_bidding_sys { get; set; }
+        public virtual DbSet<t_shares_bidding_account> t_shares_bidding_account { get; set; }
     
         [DbFunction("meal_ticketEntities", "fn_split")]
         public virtual IQueryable<fn_split_Result> fn_split(string p_str, string p_split)
@@ -1721,14 +1732,27 @@ namespace MealTicket_DBCommon
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_ApplyTradeBuy_sys", accountIdParameter, marketParameter, sharesCodeParameter, dealCountParameter, dealPriceParameter, realFundMultipleParameter, createTimeParameter, tradeAccountCodeParameter, errorCode, errorMessage);
         }
     
-        public virtual int P_Shares_LimitUp_His_Cal()
+        public virtual int P_Shares_LimitUp_His_Cal(Nullable<System.DateTime> disdate)
         {
-            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Shares_LimitUp_His_Cal");
+            var disdateParameter = disdate.HasValue ?
+                new ObjectParameter("disdate", disdate) :
+                new ObjectParameter("disdate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Shares_LimitUp_His_Cal", disdateParameter);
         }
     
         public virtual int P_Shares_Riserate_His_Update()
         {
             return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Shares_Riserate_His_Update");
+        }
+    
+        public virtual int P_Shares_LimitDown_His_Cal(Nullable<System.DateTime> disdate)
+        {
+            var disdateParameter = disdate.HasValue ?
+                new ObjectParameter("disdate", disdate) :
+                new ObjectParameter("disdate", typeof(System.DateTime));
+    
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction("P_Shares_LimitDown_His_Cal", disdateParameter);
         }
     }
 }

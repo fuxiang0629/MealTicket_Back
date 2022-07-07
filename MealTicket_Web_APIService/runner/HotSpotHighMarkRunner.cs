@@ -1,5 +1,6 @@
 ﻿using FXCommon.Common;
 using MealTicket_DBCommon;
+using MealTicket_Web_Handler;
 using MealTicket_Web_Handler.Runner;
 using System;
 using System.Collections.Generic;
@@ -35,7 +36,7 @@ namespace MealTicket_Web_APIService.runner
                         return false;
                     }
                     TimeSpan spNow = TimeSpan.Parse(DateTime.Now.ToString("HH:mm:ss"));
-                    if (spNow > TimeSpan.Parse("04:00:00"))
+                    if (spNow > TimeSpan.Parse("04:00:00") || spNow < TimeSpan.Parse("02:00:00"))
                     {
                         return false;
                     }

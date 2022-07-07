@@ -286,6 +286,10 @@ namespace MealTicket_Handler.SecurityBarsData
         public bool IsVaild { get; set; }
 
         public int PriceType { get; set; }
+
+        public bool IsLimitUpBomb { get; set; }
+
+        public bool IsLimitDownBomb { get; set; }
     }
 
     public class SecurityBarsData_1minInfo
@@ -556,5 +560,9 @@ namespace MealTicket_Handler.SecurityBarsData
         public bool IsVaild { get; set; }
 
         public int PriceType { get; set; }
+
+        public bool IsLimitUpBomb { get; set; }
+
+        public bool IsLimitDownBomb { get; set; }
     }
 }

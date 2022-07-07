@@ -30,6 +30,10 @@ namespace MealTicket_Web_APIService
             Bind<Runner>().To<SharesMonitorTriRunner>();
             Bind<Runner>().To<HotSpotHighMarkRunner>();
             Bind<Runner>().To<HotSpotHighMark_TodayRunner>();
+            Bind<Runner>().To<PlateLimitUpStatisticRunner>();
+            Bind<Runner>().To<SharesPremiumStatisticRunner>();
+            Bind<Runner>().To<MarketSentimentCalRunner>();
+            Bind<Runner>().To<SearchBiddingRunner>();
             //Bind<Runner>().To<SharesCycleManagerStockRunner>();
         }
     }

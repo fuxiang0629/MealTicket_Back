@@ -346,6 +346,17 @@
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_tradestock_statistic" Width="1.5" PointX="22.375" PointY="56.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_group_statistic" Width="1.5" PointX="11.375" PointY="56.75" />
         <EntityTypeShape EntityType="meal_ticketModel.t_shares_hotspot_highmark" Width="1.5" PointX="30.375" PointY="56.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_hotspot_highmark_operation" Width="1.5" PointX="32.375" PointY="56.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_plate_shareslimitup_statistic" Width="1.5" PointX="56.375" PointY="35.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_premium_statistic_condition" Width="1.5" PointX="38.375" PointY="56.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_quotes_riselimit_down" Width="1.5" PointX="46.375" PointY="56.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_premium_statistic" Width="1.5" PointX="3.375" PointY="57.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_marketsentiment_baseinfo" Width="1.5" PointX="5.375" PointY="57.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_marketsentiment_score" Width="1.5" PointX="57.375" PointY="24.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_marketsentiment_score_date" Width="1.5" PointX="56.375" PointY="39.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_marketsentiment_score_rel" Width="1.5" PointX="57.375" PointY="29.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_bidding_sys" Width="1.5" PointX="57.375" PointY="32.75" />
+        <EntityTypeShape EntityType="meal_ticketModel.t_shares_bidding_account" Width="1.5" PointX="34.375" PointY="57.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

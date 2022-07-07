@@ -1,6 +1,7 @@
 ﻿using FXCommon.Common;
 using FXCommon.Database;
 using MealTicket_DBCommon;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Configuration;
@@ -90,7 +91,8 @@ namespace SharesHqService
 
             var baseList = Singleton.Instance.session.GetSharesBaseInfoList();
             list = (from x in list
-                    join x2 in baseList on new { x.Market, x.SharesCode } equals new { x2.Market, SharesCode = x2.ShareCode }
+                    join x2 in baseList on new { x.Market, x.SharesCode } equals new { x2.Market, SharesCode = x2.ShareCode } into a
+                    from ai in a.DefaultIfEmpty()
                     select new SharesQuotesInfo
                     {
                         SharesCode = x.SharesCode,
@@ -109,7 +111,7 @@ namespace SharesHqService
                         SellPrice4 = x.SellPrice4,
                         SpeedUp = x.SpeedUp,
                         BuyCount2 = x.BuyCount2,
-                        SharesName = x2.ShareName,
+                        SharesName = ai == null ? "" : ai.ShareName,
                         BuyCount3 = x.BuyCount3,
                         BuyCount4 = x.BuyCount4,
                         BuyCount5 = x.BuyCount5,
@@ -138,6 +140,7 @@ namespace SharesHqService
                     }).ToList();
 
             var sharesYesQuotesLimitSession = Singleton.Instance.session.GetSharesYesQuotesLimit();
+            int limitUpCount = 0;
             foreach (var item in list)
             {
                 item.LimitUpPrice = 0;
@@ -202,6 +205,15 @@ namespace SharesHqService
                         }
                     }
                 }
+
+                if (item.PriceType == 1)
+                {
+                    limitUpCount++;
+                }
+            }
+            if (limitUpCount <= 0 && DateTime.Now.Hour>=10)
+            {
+                Logger.WriteFileLog(JsonConvert.SerializeObject(list),null);
             }
 
 
