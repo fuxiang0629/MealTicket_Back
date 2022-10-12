@@ -578,7 +578,6 @@ namespace SharesHqService
                 table.Rows.Add(row);
             }
 
-
             using (var db = new meal_ticketEntities())
             using (var tran = db.Database.BeginTransaction())
             {
