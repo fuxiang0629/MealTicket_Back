@@ -1350,7 +1350,9 @@ namespace MealTicket_Web_Handler.Runner
                 bool limitUpT = false;
                 bool limitDownT = false;
                 int modelType = 2;
-                if (!Analysis_HisRiseRate_BuildPar(par, ref day, ref type, ref compare,ref count, ref rateCompare, ref rateCount, ref limitDay, ref flatRise, ref triPrice, ref priceCompare, ref priceType, ref priceError, ref direct, ref baseType,ref priceType2,ref limitUpT,ref limitDownT,ref modelType))
+                int baseType2 = 2;
+                int day2 = 0;
+                if (!Analysis_HisRiseRate_BuildPar(par, ref day, ref type, ref compare,ref count, ref rateCompare, ref rateCount, ref limitDay, ref flatRise, ref triPrice, ref priceCompare, ref priceType, ref priceError, ref direct, ref baseType,ref priceType2,ref limitUpT,ref limitDownT,ref modelType,ref baseType2,ref day2))
                 {
                     return new List<SharesBase>();
                 }
@@ -1390,10 +1392,10 @@ namespace MealTicket_Web_Handler.Runner
                         result = _analysis_HisRiseRate_14(quotes_date_session,compare,count,flatRise);
                         break;
                     case 15:
-                        result = _analysis_HisRiseRate_15(quotes_date_session,baseType,15);
+                        result = _analysis_HisRiseRate_15(quotes_date_session,baseType,15, baseType2, day2);
                         break;
                     case 16:
-                        result = _analysis_HisRiseRate_15(quotes_date_session,baseType,16);
+                        result = _analysis_HisRiseRate_15(quotes_date_session,baseType,16, baseType2, day2);
                         break;
                     case 17:
                         result = _analysis_HisRiseRate_17(quotes_date_session, compare, count, rateCompare, rateCount, priceType2);
@@ -1421,7 +1423,7 @@ namespace MealTicket_Web_Handler.Runner
             return result;
         }
 
-        private bool Analysis_HisRiseRate_BuildPar(string par, ref int day, ref int type, ref int compare, ref int count, ref int rateCompare, ref int rateCount, ref int limitDay, ref bool flatRise, ref bool triPrice, ref int priceCompare, ref int priceType, ref long priceError, ref int direct, ref int baseType,ref int priceType2,ref bool limitUpT,ref bool limitDownT, ref int modelType)
+        private bool Analysis_HisRiseRate_BuildPar(string par, ref int day, ref int type, ref int compare, ref int count, ref int rateCompare, ref int rateCount, ref int limitDay, ref bool flatRise, ref bool triPrice, ref int priceCompare, ref int priceType, ref long priceError, ref int direct, ref int baseType,ref int priceType2,ref bool limitUpT,ref bool limitDownT, ref int modelType, ref int baseType2, ref int day2)
         {
             var temp = JsonConvert.DeserializeObject<dynamic>(par);
             try
@@ -1520,6 +1522,20 @@ namespace MealTicket_Web_Handler.Runner
             try
             {
                 modelType = Convert.ToInt32(temp.modelType);
+            }
+            catch (Exception ex)
+            {
+            }
+            try
+            {
+                baseType2 = Convert.ToInt32(temp.BaseType2);
+            }
+            catch (Exception ex)
+            {
+            }
+            try
+            {
+                day2 = Convert.ToInt32(temp.Day2);
             }
             catch (Exception ex)
             {
@@ -1965,48 +1981,55 @@ namespace MealTicket_Web_Handler.Runner
             return result;
         }
         //历史涨跌幅-新高/新低
-        private List<SharesBase> _analysis_HisRiseRate_15(Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> quotes_date,int baseType,int type)
+        private List<SharesBase> _analysis_HisRiseRate_15(Dictionary<long, Dictionary<DateTime, Shares_Quotes_Session_Info>> quotes_date,int baseType,int type,int baseType2,int day2)
         {
             List<SharesBase> result = new List<SharesBase>();
             foreach (var item in quotes_date)
             {
-                var currInfo = item.Value.OrderByDescending(e => e.Key).FirstOrDefault();
+                var currInfo = item.Value.OrderByDescending(e => e.Key).Skip(day2).Take(1).FirstOrDefault();
                 var quotes_date_his = item.Value.Where(e => e.Key != currInfo.Key).ToList();
                 if (quotes_date_his.Count() <= 0)
                 {
                     continue;
                 }
-                long sourcePrice = currInfo.Value.ClosedPrice;
-                long disMaxPrice = 0;
-                long disMinPrice = 0;
-                if (baseType == 1)
+                try
                 {
-                    disMaxPrice = quotes_date_his.Max(e => e.Value.OpenedPrice);
-                    disMinPrice = quotes_date_his.Min(e => e.Value.OpenedPrice);
-                }
-                else if (baseType == 3)
-                {
-                    disMaxPrice = quotes_date_his.Max(e => e.Value.MaxPrice);
-                    disMinPrice = quotes_date_his.Min(e => e.Value.MaxPrice);
-                }
-                else if (baseType == 4)
-                {
-                    disMaxPrice = quotes_date_his.Max(e => e.Value.MinPrice);
-                    disMinPrice = quotes_date_his.Min(e => e.Value.MinPrice);
-                }
-                else
-                {
-                    disMaxPrice = quotes_date_his.Max(e => e.Value.ClosedPrice);
-                    disMinPrice = quotes_date_his.Min(e => e.Value.ClosedPrice);
-                }
-
-                if ((type == 15 && sourcePrice >= disMaxPrice) || (type == 16 && sourcePrice <= disMinPrice))
-                {
-                    result.Add(new SharesBase
+                    long sourcePrice = baseType2 == 1 ? currInfo.Value.OpenedPrice : baseType2 == 4 ? currInfo.Value.MinPrice : baseType2 == 3 ? currInfo.Value.MaxPrice : currInfo.Value.ClosedPrice;
+                    long disMaxPrice = 0;
+                    long disMinPrice = 0;
+                    if (baseType == 1)
                     {
-                        Market = (int)(item.Key % 10),
-                        SharesCode = (item.Key / 10).ToString().PadLeft(6, '0')
-                    });
+                        disMaxPrice = quotes_date_his.Max(e => e.Value.OpenedPrice);
+                        disMinPrice = quotes_date_his.Min(e => e.Value.OpenedPrice);
+                    }
+                    else if (baseType == 3)
+                    {
+                        disMaxPrice = quotes_date_his.Max(e => e.Value.MaxPrice);
+                        disMinPrice = quotes_date_his.Min(e => e.Value.MaxPrice);
+                    }
+                    else if (baseType == 4)
+                    {
+                        disMaxPrice = quotes_date_his.Max(e => e.Value.MinPrice);
+                        disMinPrice = quotes_date_his.Min(e => e.Value.MinPrice);
+                    }
+                    else
+                    {
+                        disMaxPrice = quotes_date_his.Max(e => e.Value.ClosedPrice);
+                        disMinPrice = quotes_date_his.Min(e => e.Value.ClosedPrice);
+                    }
+
+                    if ((type == 15 && sourcePrice >= disMaxPrice) || (type == 16 && sourcePrice <= disMinPrice))
+                    {
+                        result.Add(new SharesBase
+                        {
+                            Market = (int)(item.Key % 10),
+                            SharesCode = (item.Key / 10).ToString().PadLeft(6, '0')
+                        });
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Logger.WriteFileLog(JsonConvert.SerializeObject(currInfo), ex);
                 }
             }
             return result;

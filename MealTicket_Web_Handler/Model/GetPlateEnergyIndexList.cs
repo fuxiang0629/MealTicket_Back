@@ -17,6 +17,11 @@ namespace MealTicket_Web_Handler.Model
         /// 1.按板块动能 2.按板块涨幅
         /// </summary>
         public int SpeedType { get; set; }
+
+        /// <summary>
+        /// 0综合 1.3日 2.5日 3.10日 4.15日 
+        /// </summary>
+        public int DaysType { get; set; }
     }
 
     public class PlateEnergyIndexInfo

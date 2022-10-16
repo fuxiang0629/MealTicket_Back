@@ -25104,6 +25104,26 @@ select @buyId;";
             var plate_statistic = Singleton.Instance.sessionHandler.GetPlate_Statistic_Session(false);
             var plate_min_session = Singleton.Instance.sessionHandler.GetPlate_Minute_KLine_Session(false);
 
+            Dictionary<long, int> days3Dic = new Dictionary<long, int>();
+            Dictionary<long, int> days5Dic = new Dictionary<long, int>();
+            Dictionary<long, int> days10Dic = new Dictionary<long, int>();
+            Dictionary<long, int> days15Dic = new Dictionary<long, int>();
+            if (request.DaysType == 1 && plate_statistic.Plate_Rank!=null && plate_statistic.Plate_Rank.Rank_3Days!=null)
+            {
+                days3Dic = plate_statistic.Plate_Rank.Rank_3Days.ToDictionary(k => k.PlateId, v => v.RiseRate);
+            }
+            if (request.DaysType == 2 && plate_statistic.Plate_Rank != null && plate_statistic.Plate_Rank.Rank_5Days != null)
+            {
+                days5Dic = plate_statistic.Plate_Rank.Rank_5Days.ToDictionary(k => k.PlateId, v => v.RiseRate);
+            }
+            if (request.DaysType == 3 && plate_statistic.Plate_Rank != null && plate_statistic.Plate_Rank.Rank_10Days != null)
+            {
+                days10Dic = plate_statistic.Plate_Rank.Rank_10Days.ToDictionary(k => k.PlateId, v => v.RiseRate);
+            }
+            if (request.DaysType == 4 && plate_statistic.Plate_Rank != null && plate_statistic.Plate_Rank.Rank_15Days != null)
+            {
+                days15Dic = plate_statistic.Plate_Rank.Rank_15Days.ToDictionary(k => k.PlateId, v => v.RiseRate);
+            }
             foreach (var item in plateBase)
             {
                 if (!plate_shares_rel.ContainsKey(item.Key))
@@ -25112,9 +25132,25 @@ select @buyId;";
                 }
 
                 int overallRiseRate = 0;
-                if (plate_statistic.Plate_Info != null && plate_statistic.Plate_Info.ContainsKey(item.Key))
+                if (request.DaysType == 0 && plate_statistic.Plate_Info != null && plate_statistic.Plate_Info.ContainsKey(item.Key))
                 {
                     overallRiseRate = plate_statistic.Plate_Info[item.Key].OverallRiseRate;
+                }
+                else if (days3Dic.ContainsKey(item.Key))
+                {
+                    overallRiseRate = days3Dic[item.Key];
+                }
+                else if (days5Dic.ContainsKey(item.Key))
+                {
+                    overallRiseRate = days5Dic[item.Key];
+                }
+                else if (days10Dic.ContainsKey(item.Key))
+                {
+                    overallRiseRate = days10Dic[item.Key];
+                }
+                else if (days15Dic.ContainsKey(item.Key))
+                {
+                    overallRiseRate = days15Dic[item.Key];
                 }
 
                 int calCount = 0;
@@ -28205,6 +28241,8 @@ select @buyId;";
                 DateTime? LastRiseLimitTime = null;
                 bool IsLimitUpToday = false;
                 bool IsLimitUpYesday = false;
+
+                bool IsOtherPush = false;
                 if (shares_riselimit_session.DataDic != null && shares_riselimit_session.DataDic.ContainsKey(sharesKey))
                 {
                     temp_rise = shares_riselimit_session.DataDic[sharesKey];
@@ -28214,6 +28252,7 @@ select @buyId;";
                     LastRiseLimitTime = temp_rise.LastRiseLimitTime;
                     IsLimitUpToday = temp_rise.IsLimitUpToday;
                     IsLimitUpYesday = temp_rise.IsLimitUpYesday;
+                    IsOtherPush = true;
                 }
                 if (isTreadTime)//交易时间
                 {
@@ -28237,11 +28276,10 @@ select @buyId;";
                     RiseLimitDays = RiseLimitDays - 1;
                 }
 
-                bool IsOtherPush = false;
                 if (!IsLimitUpToday && !IsLimitUpYesday && isNearLimit)
                 {
                     RiseLimitDays = 0;
-                    RiseLimitCount = 0;
+                    //RiseLimitCount = 0;
                     LastRiseLimitTime = near_limit_up_time ?? DateTime.Now;
                     IsLimitUpYesday = false;
                     IsLimitUpToday = false;
