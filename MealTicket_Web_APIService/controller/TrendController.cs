@@ -9754,18 +9754,36 @@ namespace MealTicket_Web_APIService.controller
                 return new List<StockSearchMarkTri>();
             }
             var session=Singleton.Instance.sessionHandler.GetSearch_Mark_Tri_Session(false);
+            var sharesDic = Singleton.Instance.sessionHandler.GetShares_Quotes_Last_Session(false, false);
+            var sharesBaseDic= Singleton.Instance.sessionHandler.GetShares_Base_Session(false);
             foreach (long id in request.Id)
             {
                 if (session.ContainsKey(id))
                 {
                     foreach (var item in session[id])
                     {
+                        if (!sharesDic.ContainsKey(item.Key))
+                        {
+                            continue;
+                        }
+                        var sharesInfo=sharesDic[item.Key];
+                        string sharesName = "";
+                        if (sharesBaseDic.ContainsKey(item.Key))
+                        {
+                            sharesName = sharesBaseDic[item.Key].SharesName;
+                        }
                         if (!resultDic.ContainsKey(item.Key))
                         {
                             resultDic.Add(item.Key, new StockSearchMarkTri 
                             {
                                 SharesKey=item.Key,
-                                TemplateList=new List<StockSearchMarkTriTemplateInfo>()
+                                SharesCode= sharesInfo.shares_quotes_info.SharesCode,
+                                SharesName= sharesName,
+                                Market= sharesInfo.shares_quotes_info.Market,
+                                ClosedPrice= sharesInfo.shares_quotes_info.YestodayClosedPrice,
+                                RiseRate= sharesInfo.shares_quotes_info.RiseRate,
+                                IsLimitUpToday= sharesInfo.shares_quotes_info.IsLimitUp,
+                                TemplateList =new List<StockSearchMarkTriTemplateInfo>()
                             });
                         }
                         resultDic[item.Key].TemplateList.Add(new StockSearchMarkTriTemplateInfo 

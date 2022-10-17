@@ -19,6 +19,18 @@ namespace MealTicket_Web_Handler.Model
     {
         public long SharesKey { get; set; }
 
+        public string SharesCode { get; set; }
+
+        public int Market { get; set; }
+
+        public string SharesName { get; set; }
+
+        public long ClosedPrice { get; set; }
+
+        public int RiseRate { get; set; }
+
+        public bool IsLimitUpToday { get; set; }
+
         public List<StockSearchMarkTriTemplateInfo> TemplateList { get; set; }
     }
 
