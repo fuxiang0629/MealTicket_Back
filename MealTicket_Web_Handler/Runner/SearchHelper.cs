@@ -2029,7 +2029,6 @@ namespace MealTicket_Web_Handler.Runner
                 }
                 catch (Exception ex)
                 {
-                    Logger.WriteFileLog(JsonConvert.SerializeObject(currInfo), ex);
                 }
             }
             return result;

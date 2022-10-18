@@ -173,6 +173,22 @@ namespace MealTicket_Web_Handler.Model
         /// 收盘价涨停类型
         /// </summary>
         public int PriceType { get; set; }
+
+        public long AllTodayTotalCount { get; set; }
+
+        public long AllPreTotalCount { get; set; }
+
+        public int RateNow 
+        {
+            get 
+            {
+                if (AllPreTotalCount == 0)
+                {
+                    return 0;
+                }
+                return (int)(AllTodayTotalCount * 1.0 / AllPreTotalCount*100);
+            }
+        }
     }
 
     public class GetSharesBiddingListRequest

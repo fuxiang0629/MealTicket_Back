@@ -31387,6 +31387,7 @@ select @buyId;";
                         var quotesInfo = shares_quotes_date_pre[item.SharesKey];
                         item.AmountRate = quotesInfo.TotalAmount == 0 ? -1 : (int)(item.TotalAmount * 1.0 / quotesInfo.TotalAmount * 10000);
                         item.HandRateYes = quotesInfo.HandsRate;
+                        item.AllPreTotalCount = quotesInfo.TotalCount;
                     }
                     if (shares_quotes_date.ContainsKey(item.SharesKey))
                     {
@@ -31405,6 +31406,7 @@ select @buyId;";
                         item.LimitUpPrice = quotesInfo.LimitUpPrice;
                         item.LimitDownPrice = quotesInfo.LimitDownPrice;
                         item.PriceType = quotesInfo.PriceType;
+                        item.AllTodayTotalCount = quotesInfo.TotalCount;
                         if (riseLimit_session.ContainsKey(item.SharesKey))
                         {
                             var riseInfo = riseLimit_session[item.SharesKey];
@@ -33743,8 +33745,6 @@ select @buyId;";
                 }
             }
 
-            var session = Singleton.Instance.sessionHandler.GetShares_Quotes_Last_Session();
-
             List<BiddingStatisticInfo> List = new List<BiddingStatisticInfo>();
             foreach (var item in dateGroupList)
             {
@@ -33753,6 +33753,7 @@ select @buyId;";
                 List<long> sharesKeyList = item.List.Select(e => e.SharesKey).ToList();
                 var sharesRiseLimitDic = GetSharesBiddingDic(dateToday, datePre, sharesKeyList, sharesBgcolorDic);
                 List<BiddingStatisticSharesInfo> tempList = new List<BiddingStatisticSharesInfo>();
+                var sharesPlateOrderDic = GetSharesPlateOrderListBatch(sharesKeyList);
                 foreach (var shares in item.List)
                 {
                     if (!sharesRiseLimitDic.ContainsKey(shares.SharesKey))
@@ -33762,8 +33763,14 @@ select @buyId;";
                     var sharesRiseLimitInfo = sharesRiseLimitDic[shares.SharesKey];
                     int OverallRank = 0;
                     int OvallRiseRate = 0;
-                    int RateNow = 0;
-                    int RateExpect = 0;
+                    if (sharesPlateOrderDic.ContainsKey(shares.SharesKey))
+                    {
+                        var tempInfo=sharesPlateOrderDic[shares.SharesKey];
+                        OverallRank = tempInfo.OverallRank;
+                        OvallRiseRate = tempInfo.OverallRiseRate;
+                    }
+                    int RateNow = sharesRiseLimitInfo.RateNow;
+                    int RateExpect = sharesRiseLimitInfo.RateNow;
                     tempList.Add(new BiddingStatisticSharesInfo 
                     {
                         SharesKey=shares.SharesKey,
