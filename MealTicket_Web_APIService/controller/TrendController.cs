@@ -9756,6 +9756,7 @@ namespace MealTicket_Web_APIService.controller
             var session=Singleton.Instance.sessionHandler.GetSearch_Mark_Tri_Session(false);
             var sharesDic = Singleton.Instance.sessionHandler.GetShares_Quotes_Last_Session(false, false);
             var sharesBaseDic= Singleton.Instance.sessionHandler.GetShares_Base_Session(false);
+            var limitSharesList = Singleton.Instance.sessionHandler.GetShares_Limit_Session(false);
             foreach (long id in request.Id)
             {
                 if (session.ContainsKey(id))
@@ -9763,6 +9764,10 @@ namespace MealTicket_Web_APIService.controller
                     foreach (var item in session[id])
                     {
                         if (!sharesDic.ContainsKey(item.Key))
+                        {
+                            continue;
+                        }
+                        if (limitSharesList.Contains(item.Key))
                         {
                             continue;
                         }
