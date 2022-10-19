@@ -33745,6 +33745,8 @@ select @buyId;";
                 }
             }
 
+            var session = Singleton.Instance.sessionHandler.GetShares_Quotes_Last_Session(true,false);
+
             List<BiddingStatisticInfo> List = new List<BiddingStatisticInfo>();
             foreach (var item in dateGroupList)
             {
@@ -33771,6 +33773,12 @@ select @buyId;";
                     }
                     int RateNow = sharesRiseLimitInfo.RateNow;
                     int RateExpect = sharesRiseLimitInfo.RateNow;
+                    if (session.ContainsKey(shares.SharesKey))
+                    {
+                        var tempInfo = session[shares.SharesKey];
+                        RateNow = tempInfo.RateNow;
+                        RateExpect = tempInfo.RateExpect;
+                    }
                     tempList.Add(new BiddingStatisticSharesInfo 
                     {
                         SharesKey=shares.SharesKey,
