@@ -28256,11 +28256,11 @@ select @buyId;";
                 }
                 if (isTreadTime)//交易时间
                 {
+                    TempRiseLimitCount = RiseLimitCount + 1;
                     if (isLimit)
                     {
                         RiseLimitDays = RiseLimitDays + 1;
                         RiseLimitCount = RiseLimitCount + 1; 
-                        TempRiseLimitCount = RiseLimitCount + 1;
                         LastRiseLimitTime = limit_up_time;
                         IsLimitUpYesday = IsLimitUpToday;
                         IsLimitUpToday = true;
@@ -28296,7 +28296,11 @@ select @buyId;";
 
                 if (IsPush)
                 {
-                    string Tag = ParseTag(RiseLimitDays, RiseLimitCount);
+                    string Tag = "";
+                    if (IsLimitUpToday || IsLimitUpYesday)
+                    {
+                        Tag = ParseTag(RiseLimitDays, RiseLimitCount);
+                    }
                     bool IsReverse = IsLimitUpToday && !IsLimitUpYesday ? true : false;
                     string LimitUpName = ParseLimitUpName(RiseLimitCount);
 
