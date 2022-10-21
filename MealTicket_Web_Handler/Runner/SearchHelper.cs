@@ -4284,7 +4284,6 @@ from t_shares_quotes with(nolock)";
                                 if (priceType != 1)
                                 {
                                     breakCount++;
-                                    lastValid = false;
                                 }
                                 if (idx > 1 && priceType == 1)
                                 {
@@ -4301,7 +4300,6 @@ from t_shares_quotes with(nolock)";
                                 if (priceType != 2)
                                 {
                                     breakCount++;
-                                    lastValid = false;
                                 }
                                 if (idx > 1 && priceType == 2)
                                 {
@@ -4327,6 +4325,7 @@ from t_shares_quotes with(nolock)";
                             if (idx > 1)
                             {
                                 totalCountList.Add(quote.Value.BiddingTotalCount);
+                                lastValid = (priceType==1);
                             }
                         }
                         if (totalCountList.Count() <= 0 || limitCount <= 0)
