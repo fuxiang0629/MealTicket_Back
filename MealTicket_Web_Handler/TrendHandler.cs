@@ -28285,6 +28285,10 @@ select @buyId;";
                     IsLimitUpToday = false;
                     IsOtherPush = true;
                 }
+                if (!IsLimitUpToday && !IsLimitUpYesday)
+                {
+                    RiseLimitCount = 0;
+                }
 
                 bool IsPush = false;
                 //1.交易时间：昨日涨停或今日涨停
