@@ -28278,8 +28278,6 @@ select @buyId;";
 
                 if (!IsLimitUpToday && !IsLimitUpYesday && isNearLimit)
                 {
-                    RiseLimitDays = 0;
-                    //RiseLimitCount = 0;
                     LastRiseLimitTime = near_limit_up_time ?? DateTime.Now;
                     IsLimitUpYesday = false;
                     IsLimitUpToday = false;
@@ -28287,7 +28285,7 @@ select @buyId;";
                 }
                 if (!IsLimitUpToday && !IsLimitUpYesday)
                 {
-                    RiseLimitCount = 0;
+                    RiseLimitDays = 0;
                 }
 
                 bool IsPush = false;
