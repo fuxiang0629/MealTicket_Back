@@ -45,6 +45,12 @@ namespace MealTicket_Web_Handler.Model
         /// </summary>
         public string SharesName { get; set; }
 
+        public int RiseRate { get; set; }
+
+        public long RiseAmount { get; set; }
+
+        public long ClosedPrice { get; set; }
+
         /// <summary>
         /// 数据添加时间
         /// </summary>

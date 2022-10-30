@@ -28276,6 +28276,13 @@ select @buyId;";
                     RiseLimitDays = RiseLimitDays - 1;
                 }
 
+                bool isFocuson = false;
+                if (focusDic.ContainsKey(sharesKey))
+                {
+                    isFocuson = true;
+                    IsOtherPush = true;
+                }
+
                 if (!IsLimitUpToday && !IsLimitUpYesday && isNearLimit)
                 {
                     LastRiseLimitTime = near_limit_up_time ?? DateTime.Now;
@@ -28334,11 +28341,6 @@ select @buyId;";
                         var tempPlateItem = plateDic[sharesKey];
                         PlateList = tempPlateItem.PlateList;
                         PlateSharesRank = tempPlateItem.PlateSharesRank;
-                    }
-                    bool isFocuson = false;
-                    if (focusDic.ContainsKey(sharesKey))
-                    {
-                        isFocuson = true;
                     }
                     tableList.Add(new SharesRiseLimitInfo
                     {
@@ -28555,7 +28557,7 @@ select @buyId;";
         {
             if (RiseLimitCount == 0)
             {
-                return "即将首板";
+                return "0板";
             }
             string RiseLimitCountStr = "";
             switch (RiseLimitCount)
@@ -29304,6 +29306,7 @@ select @buyId;";
         public List<SharesHotFocusonInfo> GetSharesHotFocusonList(GetSharesHotFocusonListRequest request, HeadBase basedata)
         {
             var shares_base_session = Singleton.Instance.sessionHandler.GetShares_Base_Session();
+            var shares_quotes_session = Singleton.Instance.sessionHandler.GetShares_Quotes_Last_Session(false);
             using (var db = new meal_ticketEntities())
             {
                 var hotspot = (from item in db.t_shares_hotspot_focuson
@@ -29322,6 +29325,13 @@ select @buyId;";
                     if (shares_base_session.ContainsKey(item.SharesKey))
                     {
                         item.SharesName = shares_base_session[item.SharesKey].SharesName;
+                    }
+                    if (shares_quotes_session.ContainsKey(item.SharesKey))
+                    {
+                        var qoutesInfo = shares_quotes_session[item.SharesKey];
+                        item.RiseRate = qoutesInfo.shares_quotes_info.RiseRate;
+                        item.ClosedPrice= qoutesInfo.shares_quotes_info.YestodayClosedPrice;
+                        item.RiseAmount = qoutesInfo.shares_quotes_info.ClosedPrice - qoutesInfo.shares_quotes_info.YestodayClosedPrice;
                     }
                 }
                 return hotspot;
