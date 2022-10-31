@@ -28091,6 +28091,7 @@ select @buyId;";
             var shares_base_session = Singleton.Instance.sessionHandler.GetShares_Base_Session(false);
             var shares_limit_session = Singleton.Instance.sessionHandler.GetShares_Limit_Session(false);
             var shares_quotes_tri_session = Singleton.Instance.sessionHandler.GetShares_Quotes_Tri_Session(false);
+            var shares_plate_rel_session = Singleton.Instance.sessionHandler.GetShares_Plate_Rel_Session(false);
 
 
             //判断当前是否交易时间
@@ -28126,7 +28127,7 @@ select @buyId;";
                 {
                     tempFocusDic = focusonDic[item.Id];
                 }
-                item.TableList = _toGetPlateSharesLimitUpList(tempFocusDic, sharesKeyList, shares_quotes_tri_session, shares_base_session, shares_limit_session, shares_riselimit_session, shares_quotes_last_session, isTreadTime,null,null,-1, ref limitUpCount,ref limitUpBombCount,ref limitDownCount);
+                item.TableList = _toGetPlateSharesLimitUpList(tempFocusDic, sharesKeyList, shares_quotes_tri_session, shares_base_session, shares_limit_session, shares_riselimit_session, shares_quotes_last_session, isTreadTime,null,null,-1, shares_plate_rel_session, ref limitUpCount,ref limitUpBombCount,ref limitDownCount);
                 item.LimitUpCount = limitUpCount;
                 item.LimitDownCount = limitDownCount;
                 item.LimitUpBombCount = limitUpBombCount;
@@ -28144,7 +28145,7 @@ select @buyId;";
             return hotspot;
         }
 
-        private List<SharesRiseLimitInfo> _toGetPlateSharesLimitUpList(Dictionary<long, DateTime> focusDic, List<long> sharesKeyList,Dictionary<long,t_shares_quotes_tri> shares_quotes_tri_session, Dictionary<long,Shares_Base_Session_Info> shares_base_session,List<long> shares_limit_session,Shares_RiseLimit_Session_Obj shares_riselimit_session,Dictionary<long,Shares_Quotes_Session_Info_Last> shares_quotes_last_session,bool isTreadTime, Dictionary<long, List<long>> shares_plate_real_session, Dictionary<long, List<long>> linkage_plate_session,int daysType, ref int limitUpCount,ref int limitUpBomb, ref int limitDownCount)
+        private List<SharesRiseLimitInfo> _toGetPlateSharesLimitUpList(Dictionary<long, DateTime> focusDic, List<long> sharesKeyList,Dictionary<long,t_shares_quotes_tri> shares_quotes_tri_session, Dictionary<long,Shares_Base_Session_Info> shares_base_session,List<long> shares_limit_session,Shares_RiseLimit_Session_Obj shares_riselimit_session,Dictionary<long,Shares_Quotes_Session_Info_Last> shares_quotes_last_session,bool isTreadTime, Dictionary<long, List<long>> shares_plate_real_session, Dictionary<long, List<long>> linkage_plate_session,int daysType, Dictionary<long, List<Plate_Shares_Rel_Session_Info>> shares_plate_rel_session, ref int limitUpCount,ref int limitUpBomb, ref int limitDownCount)
         {
             Dictionary<long, GetSharesPlateOrderListRes> plateDic = new Dictionary<long, GetSharesPlateOrderListRes>();
             if (daysType>=0)
@@ -28334,6 +28335,12 @@ select @buyId;";
                     }
                     TotalLinkagePlateIdList = TotalLinkagePlateIdList.Distinct().ToList();
 
+                    List<long> AllPlateIdList = new List<long>();
+                    if (shares_plate_rel_session != null && shares_plate_rel_session.ContainsKey(sharesKey))
+                    {
+                        AllPlateIdList = shares_plate_rel_session[sharesKey].Select(e => e.PlateId).Distinct().ToList();
+                    }
+
                     var PlateList = new List<SharesPlateInfo>();
                     var PlateSharesRank = new List<PlateSharesRank>();
                     if (plateDic.ContainsKey(sharesKey))
@@ -28370,7 +28377,8 @@ select @buyId;";
                         IsNearLimit = isNearLimit,
                         TotalLinkagePlateIdList= TotalLinkagePlateIdList,
                         TotalPlateIdList= TotalPlateIdList,
-                        PlateSharesRank= PlateSharesRank,
+                        AllPlateIdList= AllPlateIdList,
+                        PlateSharesRank = PlateSharesRank,
                         PlateList= PlateList,
                         IsLimitDownToday= IsLimitDownToday,
                         IsLimitUpYesday = IsLimitUpYesday,
@@ -28507,6 +28515,7 @@ select @buyId;";
             Dictionary<long, List<long>> linkage_plate_session = linkage_plate_session_temp.ToDictionary(k => k.Key, v => v.Value.SessionList.Select(e => e.LinkagePlateId).ToList());
             var plate_base_session = Singleton.Instance.sessionHandler.GetPlate_Base_Session(false);
             var shares_quotes_tri_session = Singleton.Instance.sessionHandler.GetShares_Quotes_Tri_Session(false);
+            var shares_plate_rel_session = Singleton.Instance.sessionHandler.GetShares_Plate_Rel_Session(false);
 
             //判断当前是否交易时间
             bool isTreadTime = !DbHelper.CheckTradeTime7Outside(DateTime.Now, time_limit_session);
@@ -28521,7 +28530,7 @@ select @buyId;";
             int limitUpCount = 0;
             int limitDownCount = 0;
             int limitUpBombCount = 0;
-            var tableList = _toGetPlateSharesLimitUpList(focusonDictionary, sharesKeyList, shares_quotes_tri_session, shares_base_session, shares_limit_session, shares_riselimit_session, shares_quotes_last_session, isTreadTime, shares_plate_real_session, linkage_plate_session, -1, ref limitUpCount,ref limitUpBombCount,ref limitDownCount);
+            var tableList = _toGetPlateSharesLimitUpList(focusonDictionary, sharesKeyList, shares_quotes_tri_session, shares_base_session, shares_limit_session, shares_riselimit_session, shares_quotes_last_session, isTreadTime, shares_plate_real_session, linkage_plate_session, -1, shares_plate_rel_session, ref limitUpCount,ref limitUpBombCount,ref limitDownCount);
 
             if (limitUpCount == 0)
             {

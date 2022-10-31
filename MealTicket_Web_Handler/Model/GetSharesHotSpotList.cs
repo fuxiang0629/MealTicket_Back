@@ -300,9 +300,14 @@ namespace MealTicket_Web_Handler.Model
         public List<PlateSharesRank> PlateSharesRank { get; set; }
 
         /// <summary>
-        /// 所属板块Id列表
+        /// 所属真实板块Id列表
         /// </summary>
         public List<long> TotalPlateIdList{ get; set; }
+
+        /// <summary>
+        /// 所属板块Id列表
+        /// </summary>
+        public List<long> AllPlateIdList { get; set; }
 
         /// <summary>
         /// 所属板块所有联动板块Id列表
