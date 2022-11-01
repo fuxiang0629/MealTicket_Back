@@ -28148,7 +28148,7 @@ select @buyId;";
         private List<SharesRiseLimitInfo> _toGetPlateSharesLimitUpList(Dictionary<long, DateTime> focusDic, List<long> sharesKeyList,Dictionary<long,t_shares_quotes_tri> shares_quotes_tri_session, Dictionary<long,Shares_Base_Session_Info> shares_base_session,List<long> shares_limit_session,Shares_RiseLimit_Session_Obj shares_riselimit_session,Dictionary<long,Shares_Quotes_Session_Info_Last> shares_quotes_last_session,bool isTreadTime, Dictionary<long, List<long>> shares_plate_real_session, Dictionary<long, List<long>> linkage_plate_session,int daysType, Dictionary<long, List<Plate_Shares_Rel_Session_Info>> shares_plate_rel_session, ref int limitUpCount,ref int limitUpBomb, ref int limitDownCount)
         {
             Dictionary<long, GetSharesPlateOrderListRes> plateDic = new Dictionary<long, GetSharesPlateOrderListRes>();
-            if (daysType>=0)
+            if (daysType!=0)
             {
                 plateDic = GetSharesPlateOrderList(sharesKeyList, daysType);
             }
