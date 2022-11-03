@@ -151,6 +151,11 @@ namespace MealTicket_Web_Handler.Model
         public int RiseRate { get; set; }
 
         /// <summary>
+        /// 开盘涨跌幅
+        /// </summary>
+        public int OpenRiseRate { get; set; }
+
+        /// <summary>
         /// 涨跌额
         /// </summary>
         public long RiseAmount { get; set; }

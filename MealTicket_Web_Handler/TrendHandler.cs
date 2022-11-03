@@ -28175,6 +28175,7 @@ select @buyId;";
                 int RateExpect = 0;
                 int RateNow = 0;
                 int RiseRate = 0;
+                int OpenRiseRate = 0;
                 long RiseAmount = 0;
                 bool IsLimitUpBomb = false;
                 bool IsLimitUpLikeOne = false;
@@ -28227,6 +28228,7 @@ select @buyId;";
                         RateExpect = shares_quotes_info.RateExpect;
                         RateNow = shares_quotes_info.RateNow;
                         RiseRate = shares_quotes_info.shares_quotes_info.RiseRate;
+                        OpenRiseRate = shares_quotes_info.shares_quotes_info.OpenRiseRate;
                         RiseAmount = shares_quotes_info.shares_quotes_info.ClosedPrice - shares_quotes_info.shares_quotes_info.YestodayClosedPrice;
                         IsLimitUpBomb = shares_quotes_info.shares_quotes_info.IsLimitUpBomb;
                         LimitUpBombCount = shares_quotes_info.shares_quotes_info.LimitUpBombCount;
@@ -28360,6 +28362,7 @@ select @buyId;";
                         RateExpect = RateExpect,
                         RateNow = RateNow,
                         RiseRate = RiseRate,
+                        OpenRiseRate= OpenRiseRate,
                         RiseAmount = RiseAmount,
                         TriTime = LastRiseLimitTime ?? DateTime.Now,
                         LimitUpTime = limit_up_time == null ? DateTime.Parse("9999-01-01") : limit_up_time.Value,
@@ -28488,7 +28491,7 @@ select @buyId;";
 
 
                 var shares_group_statistic = (from item in db.t_shares_group_statistic
-                                          where item.Date == request.Date && item.ContextType == 1 && item.ContextId == tempResult.Id
+                                          where item.Date == request.Date && item.ContextType == 1 && item.ContextId == 63
                                           select item).FirstOrDefault();
                 if (shares_group_statistic!=null)
                 {
