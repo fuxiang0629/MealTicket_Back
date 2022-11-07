@@ -173,6 +173,7 @@
     <Compile Include="Model\BuildSharesGroupStatisticData.cs" />
     <Compile Include="Model\BuildSharesHighMarkStatistic.cs" />
     <Compile Include="Model\BuildSharesPremiumStatistic.cs" />
+    <Compile Include="Model\BuyAccountSeatRequest.cs" />
     <Compile Include="Model\ConfirmBuyTipRequest.cs" />
     <Compile Include="Model\DeleteConditiontradeBuyGroup.cs" />
     <Compile Include="Model\DeleteSharesBiddingStatistic.cs" />
@@ -202,6 +203,7 @@
     <Compile Include="Model\GetAccountRealTimeTabSetting.cs" />
     <Compile Include="Model\GetAccountRiseLimitTriList.cs" />
     <Compile Include="Model\GetAccountSearchReTri.cs" />
+    <Compile Include="Model\GetAccountSeatBuyRecordList.cs" />
     <Compile Include="Model\GetAccountShareGroupList.cs" />
     <Compile Include="Model\GetAccountShareGroupRelList.cs" />
     <Compile Include="Model\GetAccountShareInGroupList.cs" />

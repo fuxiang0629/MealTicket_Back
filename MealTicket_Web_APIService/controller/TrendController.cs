@@ -557,6 +557,57 @@ namespace MealTicket_Web_APIService.controller
         }
 
         /// <summary>
+        /// 获取用户席位购买参数
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/seat/buy/setting"), HttpPost]
+        [Description("获取用户席位购买参数")]
+        [CheckUserLoginFilter]
+        public object BuyAccountSeatSetting()
+        {
+            return trendHandler.BuyAccountSeatSetting();
+        }
+
+        /// <summary>
+        /// 购买用户席位
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/seat/buy"), HttpPost]
+        [Description("购买用户席位")]
+        [CheckUserLoginFilter]
+        public object BuyAccountSeat(BuyAccountSeatRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            trendHandler.BuyAccountSeat(request, basedata);
+            return null;
+        }
+
+
+        /// <summary>
+        /// 查询用户席位购买记录
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
+        [Route("account/seat/buy/record/list"), HttpPost]
+        [Description("查询用户席位购买记录")]
+        [CheckUserLoginFilter]
+        public PageRes<AccountSeatBuyRecordInfo> GetAccountSeatBuyRecordList(PageRequest request)
+        {
+            if (request == null)
+            {
+                throw new WebApiException(400, "参数错误");
+            }
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetAccountSeatBuyRecordList(request, basedata);
+        }
+
+        /// <summary>
         /// 编辑用户席位
         /// </summary>
         /// <param name="request"></param>

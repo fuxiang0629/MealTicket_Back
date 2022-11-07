@@ -1895,6 +1895,176 @@ namespace MealTicket_Web_Handler
         }
 
         /// <summary>
+        /// 获取用户席位购买参数
+        /// </summary>
+        /// <returns></returns>
+        public object BuyAccountSeatSetting()
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var setting = (from item in db.t_system_param
+                               where item.ParamName == "SeatBuyPar"
+                               select item).FirstOrDefault();
+                if (setting == null)
+                {
+                    throw new WebApiException(400, "配置有误");
+                }
+                return JsonConvert.DeserializeObject<dynamic>(setting.ParamValue);
+            }
+        }
+
+        /// <summary>
+        /// 购买席位
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        public void BuyAccountSeat(BuyAccountSeatRequest request, HeadBase basedata) 
+        {
+            using (var db = new meal_ticketEntities())
+            using (var tran=db.Database.BeginTransaction())
+            {
+                try
+                {
+                    var accountInfo = (from item in db.t_account_wallet
+                                       where item.AccountId == basedata.AccountId
+                                       select item).FirstOrDefault();
+                    if (accountInfo == null)
+                    {
+                        throw new WebApiException(400,"余额不足");
+                    }
+                    if (accountInfo.Status != 1)
+                    {
+                        throw new WebApiException(400, "账户已被禁，请联系客服");
+                    }
+
+                    var setting = (from item in db.t_system_param
+                                   where item.ParamName == "SeatBuyPar"
+                                   select item.ParamValue).FirstOrDefault();
+                    if (string.IsNullOrEmpty(setting))
+                    {
+                        throw new WebApiException(400, "参数设置错误");
+                    }
+                    var settingObj = JsonConvert.DeserializeObject<dynamic>(setting);
+                    if (settingObj == null)
+                    {
+                        throw new WebApiException(400, "参数设置错误");
+                    }
+                    int Price = Convert.ToInt32(settingObj.Price);
+                    int TotalAmount = Price * request.BuyCount * request.BuyMonth;
+                    if (accountInfo.Deposit < TotalAmount)
+                    {
+                        throw new WebApiException(400, "余额不足");
+                    }
+
+                    db.P_Calculate_WalletChange_Account(basedata.AccountId, -TotalAmount, "购买席位", 0, 0);
+
+                    if (request.SeatId > 0)
+                    {
+                        var seatInfo = (from item in db.t_account_shares_seat
+                                        where item.Id == request.SeatId
+                                        select item).FirstOrDefault();
+                        if (seatInfo == null)
+                        {
+                            throw new WebApiException(400, "席位不存在");
+                        }
+                        DateTime newTime = DateTime.Now > seatInfo.ValidEndTime ? DateTime.Now : seatInfo.ValidEndTime;
+                        newTime = newTime.AddMonths(request.BuyMonth);
+                        seatInfo.ValidEndTime = newTime;
+                        db.SaveChanges();
+                    }
+                    else
+                    {
+                        int SeatNumber = 8001;
+                        var seat = (from item in db.t_account_shares_seat
+                                    where item.AccountId == basedata.AccountId && item.SourceForm == 0
+                                    orderby item.Name descending
+                                    select item).FirstOrDefault();
+                        if (seat != null)
+                        {
+                            SeatNumber = int.Parse(seat.Name) + 1;
+                        }
+                        DateTime newTime = DateTime.Now.AddMonths(request.BuyMonth);
+                        //添加席位
+                        for (int i = 0; i < request.BuyCount; i++)
+                        {
+                            db.t_account_shares_seat.Add(new t_account_shares_seat
+                            {
+                                Status = 1,
+                                AccountId = basedata.AccountId,
+                                CreateTime = DateTime.Now,
+                                Description = SeatNumber.ToString(),
+                                LastModified = DateTime.Now,
+                                Name = SeatNumber.ToString(),
+                                SourceForm = 0,
+                                ValidEndTime = newTime,
+                            });
+                            SeatNumber++;
+                        }
+                        db.SaveChanges();
+                    }
+                    db.t_account_shares_seat_order.Add(new t_account_shares_seat_order 
+                    {
+                        SeatCount=request.BuyCount,
+                        OrderSN=DateTime.Now.ToString("yyyyMMddHHmmssfff"),
+                        PayStatus=4,
+                        PayStatusDes="",
+                        PaySuccessTime=DateTime.Now,
+                        RenewSeatId=request.SeatId,
+                        AccountId=basedata.AccountId,
+                        ChannelCode="",
+                        CreateTime=DateTime.Now,
+                        MonthCount=request.BuyMonth,
+                        PayAmount= TotalAmount,
+                        PaymentAccountId=basedata.AccountId,
+                        Price=Price
+                    });
+                    db.SaveChanges();
+
+                    tran.Commit();
+                }
+                catch (Exception ex)
+                {
+                    tran.Rollback();
+                    throw ex;
+                }
+            }
+        }
+
+        /// <summary>
+        /// 查询用户席位购买记录
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public PageRes<AccountSeatBuyRecordInfo> GetAccountSeatBuyRecordList(PageRequest request, HeadBase basedata)
+        {
+            using (var db = new meal_ticketEntities())
+            {
+                var record = from item in db.t_account_shares_seat_order
+                             where item.AccountId == basedata.AccountId
+                             select item;
+                int totalCount = record.Count();
+
+                return new PageRes<AccountSeatBuyRecordInfo>
+                {
+                    MaxId = 0,
+                    TotalCount = totalCount,
+                    List =(from item in record
+                          orderby item.PaySuccessTime descending
+                          select new AccountSeatBuyRecordInfo 
+                          {
+                              SeatCount=item.SeatCount,
+                              Id=item.Id,
+                              MonthCount=item.MonthCount,
+                              PayAmount=item.PayAmount,
+                              Price=item.Price,
+                              PaySuccessTime=item.PaySuccessTime.Value
+                          }).Skip((request.PageIndex - 1) * request.PageSize).Take(request.PageSize).ToList()
+                };
+            }
+        }
+
+        /// <summary>
         /// 编辑用户席位
         /// </summary>
         /// <param name="request"></param>
