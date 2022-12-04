@@ -29350,6 +29350,7 @@ select @buyId;";
                         {
                             item2.RiseRateYestoday = hotspotstatistic[item2.Id];
                         }
+                        item2.LastTreadDate = date;
                     }
                 }
                 return hotspot_group;

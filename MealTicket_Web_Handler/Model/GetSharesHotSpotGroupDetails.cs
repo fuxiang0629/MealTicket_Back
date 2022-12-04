@@ -43,5 +43,7 @@ namespace MealTicket_Web_Handler.Model
         public bool IsFocuson { get; set; }
 
         public int RiseRateYestoday { get; set; }
+
+        public DateTime LastTreadDate { get; set; }
     }
 }
