@@ -211,6 +211,8 @@ namespace MealTicket_Web_Handler
 
         public int PlateLimitUpStatisticStatisticDays = 3;//板块涨停统计天数
 
+        public List<double> RiseRateList = new List<double>();
+
         /// <summary>
         /// adb.net操作对象
         /// </summary>
@@ -1092,6 +1094,23 @@ namespace MealTicket_Web_Handler
                         {
                             TradeDays = tempTradeDays;
                         }
+                    }
+                }
+                catch { }
+                try
+                {
+                    var sysPar = (from item in db.t_system_param
+                                  where item.ParamName == "RiseStatisticPar"
+                                  select item).FirstOrDefault();
+                    if (sysPar != null &&!string.IsNullOrEmpty(sysPar.ParamValue))
+                    {
+                        List<double> tempList = new List<double>();
+                        var tempArr=sysPar.ParamValue.Split(',');
+                        foreach (string inf in tempArr)
+                        {
+                            tempList.Add(Convert.ToDouble(inf));
+                        }
+                        RiseRateList=tempList;
                     }
                 }
                 catch { }

@@ -235,6 +235,7 @@
     <Compile Include="Model\GetPlateQuotesInfo.cs" />
     <Compile Include="Model\GetPlateRiseSpeedList.cs" />
     <Compile Include="Model\GetPlateSharesLimitUpStatisticList.cs" />
+    <Compile Include="Model\GetRiseStatisticList.cs" />
     <Compile Include="Model\GetShareQuotesInfo.cs" />
     <Compile Include="Model\GetSharesAllLimitUpHisList.cs" />
     <Compile Include="Model\GetSharesBasePlateList.cs" />

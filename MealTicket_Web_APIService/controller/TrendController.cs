@@ -10784,5 +10784,18 @@ namespace MealTicket_Web_APIService.controller
             HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
             return trendHandler.GetBiddingStatisticSharesList(request, basedata);
         }
+
+        /// <summary>
+        /// 获取股票涨跌统计列表
+        /// </summary>
+        /// <returns></returns>
+        [Description("获取股票涨跌统计列表")]
+        [Route("rise/statistic/list"), HttpPost]
+        [CheckUserLoginFilter]
+        public GetRiseStatisticListRes GetRiseStatisticList()
+        {
+            HeadBase basedata = ActionContext.ActionArguments["basedata"] as HeadBase;
+            return trendHandler.GetRiseStatisticList(basedata);
+        }
     }
 }

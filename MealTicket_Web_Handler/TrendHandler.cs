@@ -34030,5 +34030,103 @@ select @buyId;";
                 List= List
             };
         }
+
+        /// <summary>
+        /// 获取股票涨跌统计列表
+        /// </summary>
+        /// <param name="basedata"></param>
+        /// <returns></returns>
+        public GetRiseStatisticListRes GetRiseStatisticList(HeadBase basedata)
+        {
+            int DownCount = 0;
+            int DownLimitCount = 0;
+            int FlatCount = 0;
+            int RiseCount = 0;
+            int RiseLimitCount = 0;
+            int TotalCount = 0;
+            List<RiseStatistic> StatisticList = new List<RiseStatistic>();
+            List<string> KeyName = new List<string>();
+
+            for (int i=0;i<Singleton.Instance.RiseRateList.Count();i++)
+            {
+                if (i == 0)
+                {
+                    StatisticList.Add(new RiseStatistic
+                    {
+                        Count = 0,
+                        MinCount = -99999,
+                        MaxCount = Singleton.Instance.RiseRateList[i]
+                    });
+                    KeyName.Add("<"+ Singleton.Instance.RiseRateList[i]);
+                }
+                KeyName.Add(Singleton.Instance.RiseRateList[i].ToString());
+                if (i > 0)
+                {
+                    StatisticList[i].MaxCount = Singleton.Instance.RiseRateList[i];
+                }
+                StatisticList.Add(new RiseStatistic
+                {
+                    Count = 0,
+                    MinCount = Singleton.Instance.RiseRateList[i],
+                    MaxCount = 0
+                });
+                if (i == Singleton.Instance.RiseRateList.Count() - 1)
+                {
+                    StatisticList[i+1].MaxCount = 99999;
+                    KeyName.Add(">" + Singleton.Instance.RiseRateList[i]);
+                }
+            }
+
+            var sharesQuotes= Singleton.Instance.sessionHandler.GetShares_Quotes_Last_Session(false,false);
+            foreach (var item in sharesQuotes)
+            {
+                foreach (var item2 in StatisticList)
+                {
+                    if (item.Value.shares_quotes_info.RiseRate >= item2.MinCount * 100 && item.Value.shares_quotes_info.RiseRate < item2.MaxCount * 100 && item.Value.shares_quotes_info.RiseRate!=0)
+                    {
+                        item2.Count++;
+                        break;
+                    }
+                    if (item.Value.shares_quotes_info.RiseRate==0 && item2.MinCount==0 && item2.MaxCount==0)
+                    {
+                        item2.Count++;
+                        break;
+                    }
+                }
+                if (item.Value.shares_quotes_info.PriceType == 1)
+                {
+                    RiseLimitCount++;
+                }
+                if (item.Value.shares_quotes_info.PriceType == 2)
+                {
+                    DownLimitCount++;
+                }
+                if (item.Value.shares_quotes_info.RiseRate>0)
+                {
+                    RiseCount++;
+                }
+                if (item.Value.shares_quotes_info.RiseRate < 0)
+                {
+                    DownCount++;
+                }
+                if (item.Value.shares_quotes_info.RiseRate == 0)
+                {
+                    FlatCount++;
+                }
+                TotalCount++;
+            }
+
+            return new GetRiseStatisticListRes 
+            {
+                StatisticList= StatisticList,
+                DownCount= DownCount,
+                DownLimitCount= DownLimitCount,
+                FlatCount= FlatCount,
+                RiseCount= RiseCount,
+                RiseLimitCount= RiseLimitCount,
+                TotalCount= TotalCount,
+                KeyName= KeyName
+            };
+        }
     }
 }
